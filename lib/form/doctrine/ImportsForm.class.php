@@ -12,6 +12,10 @@ class ImportsForm extends BaseImportsForm
 {
   public function configure()
   {    
+  
+  	//ftheeten 2018 07 23
+    $this->widgetSchema['source_database'] =  new sfWidgetFormInputText(); 
+    $this->validatorSchema['source_database'] =  new sfValidatorString() ;
     if($this->options['format'] == 'taxon')
     {
       $this->useFields(array('format', 'exclude_invalid_entries')) ;
@@ -24,7 +28,32 @@ class ImportsForm extends BaseImportsForm
         )
       );
     }
-    else
+	elseif($this->options['format'] == 'locality')
+	{
+		//ftheeten 2018 07 15
+		$this->useFields(array('gtu_include_date','gtu_tags_in_merge', 'sensitive_information_withheld', 'collection_ref')) ;
+		
+		$this->widgetSchema['collection_ref'] = new widgetFormButtonRef(
+        array(
+          'model' => 'Collections',
+          'link_url' => 'collection/choose',
+          'method' => 'getName',
+          'box_title' => $this->getI18N()->__('Choose'),
+          'button_class'=>'',
+        ),
+        array(
+          'class'=>'inline',
+        )
+      );
+	    //$this->validatorSchema['collection_ref'] = new sfValidatorInteger(array('required'=>true));
+		$category = array('locality'=>$this->getI18N()->__('Locality')) ;
+		$this->widgetSchema['include_date'] = new sfWidgetFormInputCheckbox();
+		$this->validatorSchema['include_date'] = new sfValidatorBoolean(array('required' => false));
+		$this->widgetSchema['tags_in_merge'] = new sfWidgetFormInputCheckbox();
+		$this->validatorSchema['tags_in_merge'] = new sfValidatorBoolean(array('required' => false));
+    
+	}
+	else
     {
       $this->useFields(array('collection_ref', 'format')) ;
       /* Collection Reference */
@@ -41,10 +70,27 @@ class ImportsForm extends BaseImportsForm
         )
       );
       $category = imports::getFormats();
-      $this->validatorSchema['collection_ref'] = new sfValidatorInteger(array('required'=>true));
+      //ftheeten 2018 08 07
+      print("LULU");
+      if($this->options['format'] == 'locality')
+      {
+         $this->validatorSchema['collection_ref'] = new sfValidatorInteger(array('required'=>false));
+      }
+      else
+      {
+        $this->validatorSchema['collection_ref'] = new sfValidatorInteger(array('required'=>true));
+      } 
+     
+    
     }
+	//ftheeten 2018 07 23810
+    $this->widgetSchema['source_database'] =  new sfWidgetFormInputText(); 
+    $this->validatorSchema['source_database'] =  new sfValidatorString() ;
+    
     $this->widgetSchema['uploadfield'] = new sfWidgetFormInputFile(array(),array('id'=>'uploadfield'));
-    $allowed_types = array('text/xml','application/xml') ;
+    //$allowed_types = array('text/xml','application/xml') ;
+    //ftheeten 2017 09 07
+    $allowed_types = array('text/xml','application/xml', 'text/plain') ;
     $this->widgetSchema['format'] = new sfWidgetFormChoice(
       array(
         'choices' => $category
@@ -69,5 +115,25 @@ class ImportsForm extends BaseImportsForm
         'mime_types' => $allowed_types,
         'validated_file_class' => 'myValidatedFile',
     ));
+	
+	//ftheeten 2017 09 13
+     $this->mergePostValidator(new sfValidatorCallback(
+			array('callback' => array($this, 'setValidatorSetMimeType'))));
+  }
+  
+   //ftheeten 2017 09 13
+  public function setValidatorSetMimeType($validator, $values, $arguments)
+  {
+    $tmpFile=$values["uploadfield"];
+    print($tmpFile);
+      //ftheeten 2018 02 22
+    if(is_object($tmpFile))
+    {
+     if($tmpFile->getType()) 
+     {
+         $this->getObject()->setMimeType($tmpFile->getType());
+     }
+    }
+     return $values;
   }
 }

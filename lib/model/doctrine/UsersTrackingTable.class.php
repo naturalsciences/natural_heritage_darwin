@@ -21,7 +21,9 @@ class UsersTrackingTable extends DarwinTable
     $q = Doctrine_Query::create()
       ->from('UsersTracking r')
       ->where('r.user_ref = ?',$user_id)
-      ->orderBy('r.modification_date_time desc');
+      ->orderBy('r.modification_date_time desc')
+      #ftheeten 2018 05 09
+      ->orderBy('r.id');      
     return $q;
   }
 

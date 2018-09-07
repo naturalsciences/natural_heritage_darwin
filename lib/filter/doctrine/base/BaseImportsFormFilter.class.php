@@ -25,6 +25,10 @@ abstract class BaseImportsFormFilter extends BaseFormFilterDoctrine
       'errors_in_import'        => new sfWidgetFormFilterInput(),
       'template_version'        => new sfWidgetFormFilterInput(),
       'exclude_invalid_entries' => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
+      'creation_date'           => new sfWidgetFormFilterInput(),
+      'creation_date_mask'      => new sfWidgetFormFilterInput(),
+      'working'                 => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
+      'mime_type'               => new sfWidgetFormFilterInput(),
     ));
 
     $this->setValidators(array(
@@ -40,6 +44,10 @@ abstract class BaseImportsFormFilter extends BaseFormFilterDoctrine
       'errors_in_import'        => new sfValidatorPass(array('required' => false)),
       'template_version'        => new sfValidatorPass(array('required' => false)),
       'exclude_invalid_entries' => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
+      'creation_date'           => new sfValidatorPass(array('required' => false)),
+      'creation_date_mask'      => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
+      'working'                 => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
+      'mime_type'               => new sfValidatorPass(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('imports_filters[%s]');
@@ -72,6 +80,10 @@ abstract class BaseImportsFormFilter extends BaseFormFilterDoctrine
       'errors_in_import'        => 'Text',
       'template_version'        => 'Text',
       'exclude_invalid_entries' => 'Boolean',
+      'creation_date'           => 'Text',
+      'creation_date_mask'      => 'Number',
+      'working'                 => 'Boolean',
+      'mime_type'               => 'Text',
     );
   }
 }

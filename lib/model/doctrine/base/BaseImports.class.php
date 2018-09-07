@@ -18,10 +18,15 @@
  * @property string $errors_in_import
  * @property string $template_version
  * @property boolean $exclude_invalid_entries
+ * @property string $creation_date
+ * @property integer $creation_date_mask
+ * @property boolean $working
+ * @property string $mime_type
  * @property Collections $Collections
  * @property Users $Users
  * @property Doctrine_Collection $Staging
  * @property Doctrine_Collection $StagingCatalogue
+ * @property Doctrine_Collection $StagingGtu
  * 
  * @method integer             getId()                      Returns the current record's "id" value
  * @method string              getFilename()                Returns the current record's "filename" value
@@ -36,10 +41,15 @@
  * @method string              getErrorsInImport()          Returns the current record's "errors_in_import" value
  * @method string              getTemplateVersion()         Returns the current record's "template_version" value
  * @method boolean             getExcludeInvalidEntries()   Returns the current record's "exclude_invalid_entries" value
+ * @method string              getCreationDate()            Returns the current record's "creation_date" value
+ * @method integer             getCreationDateMask()        Returns the current record's "creation_date_mask" value
+ * @method boolean             getWorking()                 Returns the current record's "working" value
+ * @method string              getMimeType()                Returns the current record's "mime_type" value
  * @method Collections         getCollections()             Returns the current record's "Collections" value
  * @method Users               getUsers()                   Returns the current record's "Users" value
  * @method Doctrine_Collection getStaging()                 Returns the current record's "Staging" collection
  * @method Doctrine_Collection getStagingCatalogue()        Returns the current record's "StagingCatalogue" collection
+ * @method Doctrine_Collection getStagingGtu()              Returns the current record's "StagingGtu" collection
  * @method Imports             setId()                      Sets the current record's "id" value
  * @method Imports             setFilename()                Sets the current record's "filename" value
  * @method Imports             setUserRef()                 Sets the current record's "user_ref" value
@@ -53,10 +63,15 @@
  * @method Imports             setErrorsInImport()          Sets the current record's "errors_in_import" value
  * @method Imports             setTemplateVersion()         Sets the current record's "template_version" value
  * @method Imports             setExcludeInvalidEntries()   Sets the current record's "exclude_invalid_entries" value
+ * @method Imports             setCreationDate()            Sets the current record's "creation_date" value
+ * @method Imports             setCreationDateMask()        Sets the current record's "creation_date_mask" value
+ * @method Imports             setWorking()                 Sets the current record's "working" value
+ * @method Imports             setMimeType()                Sets the current record's "mime_type" value
  * @method Imports             setCollections()             Sets the current record's "Collections" value
  * @method Imports             setUsers()                   Sets the current record's "Users" value
  * @method Imports             setStaging()                 Sets the current record's "Staging" collection
  * @method Imports             setStagingCatalogue()        Sets the current record's "StagingCatalogue" collection
+ * @method Imports             setStagingGtu()              Sets the current record's "StagingGtu" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -122,6 +137,19 @@ abstract class BaseImports extends DarwinModel
              'notnull' => true,
              'default' => false,
              ));
+        $this->hasColumn('creation_date', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('creation_date_mask', 'integer', null, array(
+             'type' => 'integer',
+             'default' => 0,
+             ));
+        $this->hasColumn('working', 'boolean', null, array(
+             'type' => 'boolean',
+             ));
+        $this->hasColumn('mime_type', 'string', null, array(
+             'type' => 'string',
+             ));
     }
 
     public function setUp()
@@ -140,6 +168,10 @@ abstract class BaseImports extends DarwinModel
              'foreign' => 'import_ref'));
 
         $this->hasMany('StagingCatalogue', array(
+             'local' => 'id',
+             'foreign' => 'import_ref'));
+
+        $this->hasMany('StagingGtu', array(
              'local' => 'id',
              'foreign' => 'import_ref'));
     }

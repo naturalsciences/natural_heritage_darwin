@@ -148,6 +148,36 @@ Gtu:
         lat_long_accuracy: {type: float}
         elevation: {type: float}
         elevation_accuracy: {type: float}
+        #ftheeten 2018 07 26 
+        import_ref: {type: integer}
+        collector_refs: {type: string}
+        expedition_refs: {type: string}
+        collection_ref: {type: integer}
+        #ftheeten rmca 2015 06 01
+        coordinates_source: {type: string}
+        #ftheeten rmca 2015 06 01
+        latitude_dms_degree: {type: integer}
+        #ftheeten rmca 2015 06 01
+        latitude_dms_minutes: {type: float}
+        #ftheeten rmca 2015 06 01
+        latitude_dms_seconds: {type: float}
+        #ftheeten rmca 2015 06 01
+        latitude_dms_direction: {type: integer}
+        #ftheeten rmca 2015 06 01
+        longitude_dms_degree: {type: integer}
+        #ftheeten rmca 2015 06 01
+        longitude_dms_minutes: {type: float}
+        #ftheeten rmca 2015 06 01
+        longitude_dms_seconds: {type: float}
+        #ftheeten rmca 2015 06 01
+        longitude_dms_direction: {type: integer}
+        #ftheeten rmca 2010 02 05
+        latitude_utm: {type: float}
+        #ftheeten rmca 2010 02 05
+        longitude_utm: {type: float}
+        #ftheeten rmca 2010 02 05
+        utm_zone: {type: varchar}
+        location: {type: string}
 
 Properties:
     columns:
@@ -457,6 +487,8 @@ MySavedSearches:
         modification_date_time: { type: string, notnull: true }
         visible_fields_in_result: { type: string, notnull: true}
         subject: { type: string, notnull: true}
+        query_where: { type: string, notnull: true}
+        query_parameters: { type: string, notnull: true}
     relations:
         User:
             class: Users
@@ -496,6 +528,13 @@ Taxonomy:
         path: { type: string, notnull: false, default: '/'}
         parent_ref: { type: integer}
         extinct: { type: boolean, notnull: true, default: false}
+        #2017 03 03
+        is_reference_taxonomy: {type: boolean, notnull: true, default: false}
+        #reference_path: { type: string, notnull: true, default: '/'}
+        #source: {type: string, notnull: false }
+        metadata_ref : {type: integer}
+         #ftheeten 2017 08 XX
+        sensitive_info_withheld : {type: boolean}
     relations:
         Parent:
             class: Taxonomy
@@ -506,6 +545,19 @@ Taxonomy:
             local: level_ref
             foreign: id
 
+#ftheeten 2017 07 17
+TaxonomyMetadata:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        creation_date: { type: string}
+        creation_date_mask: { type: integer, notnull: true, default:0}
+        import_ref: {type: integer}
+        taxonomy_name: {type: string, notnull: true}
+        definition: {type: string}
+        is_reference_taxonomy: {type: boolean, notnull: true, default: false}
+        source: {type: string}
+        url_website: {type: string}
+        url_webservice: {type: string}
 
 ClassificationKeywords:
     columns:
@@ -988,6 +1040,17 @@ Imports:
         errors_in_import: {type: string}
         template_version: {type: string}
         exclude_invalid_entries: {type: boolean, notnull: true, default: false}
+        #ftheeten 2017 07 06
+        creation_date: { type: string}
+        creation_date_mask: { type: integer, default:0}
+        #ftheeten 2017 08 28
+        working : {type:boolean}
+        #ftheeten 2017 09 13
+        mime_type: {type: string}
+        #ftheeten 2017 08 28
+        working : {type:boolean}
+        #ftheeten 2017 09 13
+        mime_type: {type: string}
     relations:
         Collections:
             local: collection_ref
@@ -1186,6 +1249,11 @@ StagingCatalogue:
         level_ref: { type: integer, notnull: true}
         parent_ref: { type: integer}
         catalogue_ref: { type: integer}
+        #ftheeten 2017 07 06
+        is_reference_taxonomy: {type: boolean, notnull: true, default: true}
+        source_taxonomy: {type: string, notnull: false}
+        #ftheeten 2018 06 12
+        name_cluster : {type: integer}    
     relations:
         Parent:
             class: StagingCatalogue
@@ -1336,3 +1404,272 @@ Reports:
         Users:
             local: user_ref
             foreign: id
+            
+SpecimensMaincodes:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        code_main: { type: varchar }
+        category: { type: string, notnull: true, default: physical }
+        collection_ref: { type: integer, notnull: true }
+        expedition_ref: { type: integer}
+        gtu_ref: { type: integer}
+        taxon_ref: { type: integer}
+        litho_ref: { type: integer}
+        chrono_ref: { type: integer}
+        lithology_ref: { type: integer}
+        mineral_ref: { type: integer}
+        acquisition_category: { type: string, default: expedition}
+        acquisition_date_mask: { type: integer, notnull: true, default:0}
+        acquisition_date: { type: string, default: '0001-01-01'}
+        station_visible: { type: boolean, default: true}
+        ig_ref: { type: integer}
+
+        spec_coll_ids: { type:string}
+        spec_ident_ids: { type:string}
+        spec_don_sel_ids: { type:string}
+
+        collection_type: { type: string}
+        collection_code: { type: string}
+        collection_name: { type: string}
+        collection_is_public: {type: boolean}
+        collection_parent_ref: { type: integer}
+        collection_path: { type: string}
+        expedition_name: { type: string}
+        expedition_name_indexed: { type: string}
+        station_visible: { type: boolean}
+        gtu_ref: { type: integer, notnull: true}
+        gtu_code: { type: string}
+        gtu_from_date_mask: { type: integer }
+        gtu_from_date: { type: string}
+        gtu_to_date_mask: { type: integer }
+        gtu_to_date: { type: string}
+        gtu_tag_values_indexed: { type: string}
+        gtu_country_tag_indexed: { type: string}
+        gtu_country_tag_value: { type: string}
+        gtu_location: { type: string}
+        gtu_elevation: { type: float }
+        gtu_elevation_accuracy: { type: float }
+        taxon_name:  { type: string}
+        taxon_name_indexed: { type: string}
+        taxon_level_ref: { type: integer}
+        taxon_level_name: { type: string}
+        taxon_status: { type: string}
+        taxon_path: { type: string}
+        taxon_parent_ref: { type: integer}
+        taxon_extinct: { type: boolean}
+        litho_name: { type: string}
+        litho_name_indexed: { type: string}
+        litho_level_ref: { type: integer}
+        litho_level_name: { type: string}
+        litho_status: { type: string}
+        litho_local: { type: boolean}
+        litho_color: { type: string}
+        litho_path: { type: string}
+        litho_parent_ref: { type: integer}
+        chrono_name: { type: string}
+        chrono_name_indexed: { type: string}
+        chrono_level_ref: { type: integer}
+        chrono_level_name: { type: string}
+        chrono_status: { type: string}
+        chrono_local: {type: boolean}
+        chrono_color: {type: string}
+        chrono_path: { type: string}
+        chrono_parent_ref: { type: integer}
+        lithology_name: { type: string}
+        lithology_name_indexed: { type: string}
+        lithology_level_ref: { type: integer}
+        lithology_level_name: { type: string}
+        lithology_status: { type: string}
+        lithology_local: { type: boolean}
+        lithology_color: { type: string}
+        lithology_path: { type: string}
+        lithology_parent_ref: { type: integer}
+        mineral_name: { type: string}
+        mineral_name_indexed: { type: string}
+        mineral_level_ref: { type: integer}
+        mineral_level_name: { type: string}
+        mineral_status: { type: string}
+        mineral_local: { type: boolean}
+        mineral_color: { type: string}
+        mineral_path: { type: string}
+        mineral_parent_ref: { type: integer}
+        ig_num: { type: string}
+        ig_num_indexed: { type: string}
+        ig_date_mask: { type: integer }
+
+        type: { type: string, notnull: true, default: specimen}
+        type_group: { type: string, notnull: true, default: specimen}
+        type_search: { type: string, notnull: true, default: specimen}
+        sex: { type: string, notnull: true, default: undefined}
+        stage: { type: string, notnull: true, default: undefined}
+        state: { type: string, notnull: true, default: 'not applicable'}
+        social_status: { type: string, notnull: true, default: 'not applicable'}
+        rock_form: { type: string, notnull: true, default: 'not applicable'}
+
+        specimen_part: { type: string, notnull: true, default: specimen}
+        complete: { type: boolean, notnull: true, default: true}
+        institution_ref: {type: integer}
+        building: { type: string}
+        floor: { type: string}
+        room: { type: string}
+        row: { type: string}
+        col: { type: string}
+        shelf: { type: string}
+        container: { type: string}
+        sub_container: { type: string}
+        container_type: { type: string, notnull: true, default: container}
+        sub_container_type: { type: string, notnull: true, default: container}
+        container_storage: { type: string, notnull: true, default: dry}
+        sub_container_storage: { type: string, notnull: true, default: dry}
+        surnumerary: { type: boolean, notnull: true, default: false}
+        specimen_status: { type: string, notnull: true, default: 'good state'}
+        specimen_count_min: { type: integer, notnull: true, default:1}
+        specimen_count_max: { type: integer, notnull: true, default:1}
+        object_name: { type: string}
+        object_name_indexed: { type: string}
+
+    relations:
+        Collections:
+            local: collection_ref
+            foreign: id
+        Expeditions:
+            local: expedition_ref
+            foreign: id
+        Gtu:
+            local: gtu_ref
+            foreign: id
+        Taxonomy:
+            local: taxon_ref
+            foreign: id
+        Lithostratigraphy:
+            local: litho_ref
+            foreign: id
+        Chronostratigraphy:
+            local: chrono_ref
+            foreign: id
+        Lithology:
+            local: lithology_ref
+            foreign: id
+        Mineralogy:
+            local: mineral_ref
+            foreign: id
+        Igs:
+            class: Igs
+            local: ig_ref
+            foreign: id
+        Institution:
+            class: Institutions
+            local: institution_ref
+            foreign: id
+        CollectingMethods:
+            class: CollectingMethods
+            refClass: SpecimensMethods
+            local: specimen_ref
+            foreign: collecting_method_ref
+        CollectingTools:
+            class: CollectingTools
+            refClass: SpecimensTools
+            local: specimen_ref
+            foreign: collecting_tool_ref
+        SubComments:
+            class: SubComments
+            local: id
+            foreign: record_id
+        SubProperties:
+            class: SubProperties
+            local: id
+            foreign: record_id
+
+#ftheeten 2018 07 26        
+StagingGtu:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        import_ref:  { type: integer, notnull: true}
+        status: {type: string}
+        date_included: {type: boolean, default: false }
+        tags_merged: {type: boolean, default: false }
+        sensitive_information_withheld: {type: boolean, default: false }
+        gtu_ref : {type: integer}
+        #'station' or 'event'
+        station_type: {type: string, notnull:false, default: 'station'}
+        sampling_code: {type: string, notnull:true}
+        sampling_field_number: {type: string}
+        event_cluster_code : {type:string}
+        event_order: {type: string}
+        ig_num : {type: string}
+        ig_num_indexed: {type: string}
+        collections: {type: string}
+        collectors: {type: string}
+        expeditions: {type: string }
+        collection_refs: {type: string}
+        collector_refs: {type: string}
+        expedition_refs: {type: string}
+        iso3166: {type: string}
+        iso3166_subdivision: {type: string}
+        countries: {type: string}
+        tags: {type: string}
+        tags_indexed: {type: string}
+        locality_text: {type: string}
+        locality_text_indexed: {type: string}
+        ecology_text: {type: string}
+        ecology_text_indexed: {type: string}
+        coordinates_format: {type: string},
+        latitude1: {type: string},
+        longitude1: {type: string},
+        latitude2: {type: string},
+        longitude2: {type: string},
+        #point, polygon, linestring, eventually bbox
+        gis_type: {type: string} 
+        coordinates_wkt: {type: string}
+        coordinates_datum: {type: string}
+        coordinates_proj_ref: {type: integer}
+        coordinates_original: {type: string}
+        coordinates_accuracy: { type: decimal, length: 15, scale: 4}
+        coordinates_accuracy_text: { type: string}
+        station_baseline_elevation: { type: decimal, length: 10, scale: 4}
+        station_baseline_accuracy: { type: decimal, length: 10, scale: 4}
+        sampling_elevation_start: { type: decimal, length: 10, scale: 4}
+        sampling_elevation_end: { type: decimal, length: 10, scale: 4}
+        sampling_elevation_accuracy: { type: decimal, length: 10, scale: 4}
+        original_elevation_data: {type: string}
+        sampling_depth_start: { type: decimal, length: 10, scale: 4}
+        sampling_depth_end: { type: decimal, length: 10, scale: 4}
+        sampling_depth_accuracy: { type: decimal, length: 10, scale: 4}
+        original_depth_data: {type: string}
+        #this would be in the template but in property table in SQL
+        #event_notes: {type: array} 
+        #event_property: {type: string}
+        #event_properties_type: {type: array}
+        #event_properties_lower_value: {type: array}
+        #event_properties_upper_value: {type: array}
+        #event_properties_unit: {type: array}
+        #time mandatory if station_stype = event
+        collecting_date_begin: {type: string}
+        #VALUE : DAY; MONTH; YEAR
+        collecting_date_begin_mask: {type: string}
+        collecting_date_end: {type: string}
+        collecting_date_end_mask: {type: string}
+        collecting_time_begin: {type: string}        
+        collecting_time_end: {type: string}
+        sampling_method: {type: string }
+        sampling_fixation: {type: string }
+        imported: {type: boolean }
+    relations:
+        Import:
+            local: import_ref
+            foreign: id
+            class: Imports
+            
+#ftheeten 2018 07 29
+StagingGtuTagGroups:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        staging_gtu_ref: { type: integer, notnull: true}
+        group_name: {type: string, notnull: true}
+        sub_group_name:  { type: string, notnull: true }
+        tag_value: { type: string, notnull: true}
+    relations:
+        Staging:
+            local: staging_gtu_ref
+            foreign: id
+            class: StagingGtu

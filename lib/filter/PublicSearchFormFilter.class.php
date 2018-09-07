@@ -12,6 +12,27 @@ class PublicSearchFormFilter extends BaseSpecimensFormFilter
 {
   public function configure()
   {
+  
+    //ftheeten 2018 05 29
+    $this->tmpRequest=array_merge($_GET,$_POST);
+    if(count($this->tmpRequest)>0)
+    {
+   
+        $disable=true;
+        foreach($this->tmpRequest as $key=>$value)
+        {
+            if($key!="specimen_search_filters"&&$key!="include_sub_collections")
+            {
+                $disable=false;
+                break;
+            }
+            
+        }
+        if($disable)
+        {
+         $this->disableLocalCSRFProtection();
+        }         
+    }
     $this->useFields(array(
         'taxon_name', 'taxon_level_ref', 'litho_name', 'litho_level_ref', 'chrono_name', 'chrono_level_ref',
         'lithology_name', 'lithology_level_ref', 'mineral_name', 'mineral_level_ref'));
@@ -77,6 +98,12 @@ class PublicSearchFormFilter extends BaseSpecimensFormFilter
     $this->validatorSchema['col_fields'] = new sfValidatorString(array('required' => false,
                                                                  'trim' => true
                                                                 ));
+                                                                
+                                                                    //ftheeten 2018 05 29
+	$this->widgetSchema['include_sub_collections'] = new sfWidgetFormInputCheckbox();
+  	////ftheeten 2018 05 29
+	$this->validatorSchema['include_sub_collections'] = new sfValidatorPass();
+                                                                
     $this->validatorSchema['search_type'] = new sfValidatorString(array('required' => false));
      $this->validatorSchema['gtu_code'] = new sfValidatorString(array('required' => false,
                                                                  'trim' => true
@@ -209,13 +236,22 @@ class PublicSearchFormFilter extends BaseSpecimensFormFilter
   }
 
   public function addCollectionRefColumnQuery($query, $field, $val)
-  {
-    if (count($val) > 0)
-    {
-      $query->andWhereIn('collection_ref',$val) ;
-    }
+  { 
+        if (count($val) > 0)
+        {
+            //ftheeten 2018 05 29
+            if((boolean)$this->values['include_sub_collections']===true)
+            {
+                $query->andWhere("collection_path||collection_ref::varchar||'/' SIMILAR TO ?", "%/(".implode('|',$val).")/%") ;               
+            }
+            else
+            {
+                $query->andWhereIn('collection_ref',$val) ;               
+            }
+        }
     return $query;
   }
+  
   public function addCommonNamesColumnQuery($query,$relation, $field, $val)
   {
     $query->andWhere($field.' IN ('.$this->ListIdByWord($relation,$val).')');

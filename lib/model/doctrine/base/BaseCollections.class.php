@@ -33,6 +33,7 @@
  * @property Doctrine_Collection $CollectionsRights
  * @property Doctrine_Collection $Specimens
  * @property Doctrine_Collection $Imports
+ * @property Doctrine_Collection $SpecimensMaincodes
  * 
  * @method integer             getId()                                  Returns the current record's "id" value
  * @method enum                getCollectionType()                      Returns the current record's "collection_type" value
@@ -62,6 +63,7 @@
  * @method Doctrine_Collection getCollectionsRights()                   Returns the current record's "CollectionsRights" collection
  * @method Doctrine_Collection getSpecimens()                           Returns the current record's "Specimens" collection
  * @method Doctrine_Collection getImports()                             Returns the current record's "Imports" collection
+ * @method Doctrine_Collection getSpecimensMaincodes()                  Returns the current record's "SpecimensMaincodes" collection
  * @method Collections         setId()                                  Sets the current record's "id" value
  * @method Collections         setCollectionType()                      Sets the current record's "collection_type" value
  * @method Collections         setCode()                                Sets the current record's "code" value
@@ -80,8 +82,8 @@
  * @method Collections         setCodeSuffix()                          Sets the current record's "code_suffix" value
  * @method Collections         setCodeSuffixSeparator()                 Sets the current record's "code_suffix_separator" value
  * @method Collections         setCodeSpecimenDuplicate()               Sets the current record's "code_specimen_duplicate" value
- * @method Collections         setCodeMask()                            Sets the current record's "code_mask" value
  * @method Collections         setIsPublic()                            Sets the current record's "is_public" value
+ * @method Collections         setCodeMask()                            Sets the current record's "code_mask" value
  * @method Collections         setInstitution()                         Sets the current record's "Institution" value
  * @method Collections         setManager()                             Sets the current record's "Manager" value
  * @method Collections         setStaff()                               Sets the current record's "Staff" value
@@ -90,6 +92,7 @@
  * @method Collections         setCollectionsRights()                   Sets the current record's "CollectionsRights" collection
  * @method Collections         setSpecimens()                           Sets the current record's "Specimens" collection
  * @method Collections         setImports()                             Sets the current record's "Imports" collection
+ * @method Collections         setSpecimensMaincodes()                  Sets the current record's "SpecimensMaincodes" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -179,7 +182,7 @@ abstract class BaseCollections extends DarwinModel
              'notnull' => true,
              'default' => false,
              ));
-		$this->hasColumn('is_public', 'boolean', null, array(
+        $this->hasColumn('is_public', 'boolean', null, array(
              'type' => 'boolean',
              'notnull' => true,
              'default' => true,
@@ -221,6 +224,10 @@ abstract class BaseCollections extends DarwinModel
              'foreign' => 'collection_ref'));
 
         $this->hasMany('Imports', array(
+             'local' => 'id',
+             'foreign' => 'collection_ref'));
+
+        $this->hasMany('SpecimensMaincodes', array(
              'local' => 'id',
              'foreign' => 'collection_ref'));
     }

@@ -1,3 +1,31 @@
+<?php
+    $flagMenu="on";
+    
+    
+    if(array_key_exists("menu", $_REQUEST))
+    {       
+        if($_REQUEST['menu']=="off")
+        {
+            $flagMenu="off";
+        }
+    }
+    elseif(array_key_exists("menu", $_SESSION))
+    {       
+        if($_SESSION['menu']=="off")
+        {
+            $flagMenu="off";
+        }
+        
+    }
+    $_SESSION['menu']= $flagMenu;  
+?>
+<?php if($flagMenu!="off"):?>
+<?php 
+if(array_key_exists("menu", $_SESSION))
+{
+    unset($_SESSION['menu']);
+}
+?>
 <td class="header_menu">
   <div class="menu_top">
     <table>
@@ -35,3 +63,4 @@
     <div class="small_blue_line"></div>
   </div>
 </td>
+<?php endif;?>

@@ -49,10 +49,25 @@ class specimensearchActions extends DarwinActions
     // Initialize filter
     $this->form = new SpecimensFormFilter(null,array('user' => $this->getUser()));
     // If the search has been triggered by clicking on the search button or with pinned specimens
-    if(($request->isMethod('post') && $request->getParameter('specimen_search_filters','') !== '' ) || $request->hasParameter('pinned') )
+    //ftheeten 2018 04 17 allow GET aprameters
+    //if(($request->isMethod('post') && $request->getParameter('specimen_search_filters','') !== '' ) || $request->hasParameter('pinned') )
+    if(($request->getParameter('specimen_search_filters','') !== '' ) || $request->hasParameter('pinned') )
     {
       // Store all post parameters
-      $criterias = $request->getPostParameters();
+      //ftheeten 2018 04 17 allow GET aprameters
+      
+      //$criterias = $request->getPostParameters();
+      if($request->isMethod('post'))
+      {
+        // Store all post parameters
+        $criterias = $request->getPostParameters();
+      }
+      //ftheeten 2018 04 17 modified for GET parameters
+      elseif($request->isMethod('get'))
+      {
+
+         $criterias = $request->getGetParameters();
+      }
       // If pinned specimens called
       if($request->hasParameter('pinned'))
       {
@@ -129,7 +144,9 @@ class specimensearchActions extends DarwinActions
 
           if($request->getParameter('export','') != '')
           {
-            $this->specimensearch = $query->limit(1000)->execute();
+            
+				$this->specimensearch = $query->limit(1000)->execute();
+			
             $this->setLayout(false);
             $this->loadRelated();
             $this->getResponse()->setHttpHeader('Pragma: private', true);
@@ -173,6 +190,10 @@ class specimensearchActions extends DarwinActions
           $this->loadRelated();
           $this->field_to_show = $this->getVisibleColumns($this->getUser(), $this->form);
           $this->defineFields($this->source);
+          
+          //ftheeten 2016 06 08 save query for report (via save searc)
+            //$this->queryToSave = $this->form->getQuery();
+            $this->setParamsToSaveQuery();
           return $request->isXmlHttpRequest()? $this->renderPartial('searchSuccess'): null;
         }
       }
@@ -427,5 +448,33 @@ class specimensearchActions extends DarwinActions
           $this->getI18N()->__('Loans'),),
         ));
       }
+  }
+  //ftheeten 2016 06 08
+  function setParamsToSaveQuery()
+  {
+   
+    
+    if($this->form->getQuery())
+    {
+        $stringTmp=$this->form->getQuery()->getSqlQuery();
+        $stringTmp=substr($stringTmp,  strpos($stringTmp,' FROM ' ));
+        $stringTmp=substr($stringTmp, 0, strpos($stringTmp,' LIMIT ' ));
+       $this->getUser()->setAttribute('queryToSaveWhere', $stringTmp);
+    }
+   
+    if($this->form->getQuery()->getParams())
+    {
+        $stringTmp="";
+        $arrayTmp=$this->form->getQuery()->getParams();
+        if(isset($arrayTmp['where']))
+        {
+            foreach($arrayTmp['where'] as $key=>$value)
+            {
+                $stringTmp.=";|".$value."|";
+            }
+           $this->getUser()->setAttribute('queryToSaveParams', $stringTmp);
+        }
+    }
+    return;
   }
 }

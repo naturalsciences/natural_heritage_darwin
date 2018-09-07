@@ -8,8 +8,34 @@
   <p>*Only available in english</p><br />
   
   <p><a href="/help/How to import a XML file in Darwin.pdf">How to import a XML file in Darwin?</a></p><br />
-
-  <h1><?php echo __('Loans Manual :');?></h1>
+  <h1><?php echo __('ABCD EXCEL Generators (Correction from 2018):');?></h1>
+  <!--ftheeten 2018 03 20-->
+  <table class="results ">
+    <thead>
+      <tr>
+        <th>Section</th>
+        <th>Templates</th>
+        <th>User manuals</th>
+      </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>General</td>
+        <td><a href='/help/rmca_macro/macro_abcd_specimens_full_rbins_2018.xlsm' target='_blank'>macro_abcd_specimens_full_rbins_2018.xlsm</a></td>
+        <td><a href="/help/ABCDImport2DaRWIN_General_usermanual_taxonFullName.pdf" target='_blank'>ABCDImport2DaRWIN_General_usermanual.pdf</a></td>
+    </tr>
+    <tr>
+        <td>Taxonomy</td>
+        <td><a href='/help/rmca_macro/TaxonomyImport_rbins_2018.xlsm' target='_blank'>TaxonomyImport_rbins_2018.xlsm</a></td>
+        <td><a href="/help/TaxonomyImport2DaRWIN_usermanual.pdf" target='_blank'>TaxonomyImport2DaRWIN_usermanual.pdf</a></td>
+    </tr>
+    </tbody>
+  </table>
+  <br/>
+  <br/>
+  <br/>
+  <h1 style='text-align:center'><?php echo __('Archives before 2018');?></h1>
+  <h1><?php echo __('Loans Manual and ABCD EXCEL Generators (Archives before 2018):');?></h1>
   <?php if (isset($help_language) && $help_language === 'nl'): ?>
     <p><a href="/help/Gebruikershandleiding DaRWIN Loans NL.pdf">Gebruikershandleiding DaRWIN Loans NL.pdf</a></p><br />
   <?php else: ?>
@@ -28,7 +54,8 @@
       <tr>
         <td>General</td>
         <td>
-          <a href="/help/ABCDImport2DaRWIN_General.xlsm">ABCDImport2DaRWIN_General.xlsm</a><br />
+          <!--<a href="/help/ABCDImport2DaRWIN_General.xlsm">ABCDImport2DaRWIN_General.xlsm</a><br />-->
+          ABCDImport2DaRWIN_General.xlsm General (broken taxonomies !)<br/>
           <a href="/help/ABCDImport2DaRWIN_General_taxonFullName.xlsm">ABCDImport2DaRWIN_General_taxonFullName.xlsm</a>
         </td>
         <td><a href="/help/ABCDImport2DaRWIN_General_usermanual_taxonFullName.pdf">ABCDImport2DaRWIN_General_usermanual.pdf</a></td>   

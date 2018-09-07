@@ -106,6 +106,51 @@ $("#'.$this->generateId($name).'_button a.but_text").click(button_ref_modal);';
       $this->addOption('url_params', array());
       $this->addOption('edit_route', null);
       $this->addOption('edit_route_params', array());
+      
+      	   //ftheeten 2018 02 08
+	  if(strtolower($options["model"])=="collections")
+	  {
+		
+        if(array_key_exists('collection_ref_session',$_COOKIE ))
+         {
+			
+			$findCol=Doctrine::getTable("Collections")->find($_COOKIE['collection_ref_session']);
+			if(!($findCol))
+		    {
+				
+				//setcookie("collection_ref_session", "", time()-3600);
+				unset($_COOKIE['collection_ref_session']);
+				$this->addOption('default',NULL);
+			}
+			else
+			{
+				
+				$this->addOption('default',$_COOKIE['collection_ref_session']);
+			}
+		}
+      }
+     
+	  if(strtolower($options["model"])=="institutions"&&(strpos("/new",$_SERVER['REQUEST_URI'])||strpos("/edit",$_SERVER['REQUEST_URI'])))
+	  {
+		
+        if(array_key_exists('institution_ref_session',$_COOKIE ))
+         {
+			
+			$findCol=Doctrine::getTable("Institutions")->find($_COOKIE['institution_ref_session']);
+			if(!($findCol))
+		    {
+				
+				
+				unset($_COOKIE['institution_ref_session']);
+				$this->addOption('default',NULL);
+			}
+			else
+			{
+				
+				$this->addOption('default',$_COOKIE['institution_ref_session']);
+			}
+		}
+      }
   }
 
   public function getJavaScripts()

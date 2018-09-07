@@ -29,7 +29,7 @@
       </tr>
     </table>
   </div>   
-  <script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
+  <script type="text/javascript" src="https://www.google.com/recaptcha/api.js"></script>
   <script type="text/javascript">
   $(document).ready(function() {
     $('.search_submit').click(function(event) {

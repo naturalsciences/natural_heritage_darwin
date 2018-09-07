@@ -1,5 +1,12 @@
 <table  class="property_values">
   <thead style="<?php echo ($form['Codes']->count() || $form['newCodes']->count())?'':'display: none;';?>">
+  <!--ftheeten 2018 08 07-->
+   <!-- the two TR below 2015 10 15 input mask-->
+	<tr>
+		<td colspan="7" >
+			<div style="font-weight:bold; text-align:center; vertical-align:middle; padding-bottom:10px;">Enable unicity check:<?php echo $form['unicity_check'];?></div>
+		</td>
+	</tr>
     <tr class="code_masking">
       <th colspan="7">
         <div id="mask_display" class="mask_display">
@@ -89,8 +96,36 @@ $(document).ready(function () {
     // store that codes content into an html5-data attribute
     $("tr.code_masking").closest( 'table.property_values' ).data( "initial_values", initial_code_object );
 
+    //ftheeten 2018 08 08 (some collections allow duplciate
+    var  uncheckDuplicates=function()
+    {
+        if(typeof $("#specimen_collection_ref").val() !=="undefined")
+        {
+          //alert($("#specimen_collection_ref").val());
+            jQuery.getJSON( "<?php print(url_for("collection/descCollectionJSON")); ?>", {id:$("#specimen_collection_ref").val()})
+            .done(function(result)
+            {
+                var allow_duplicates=result[0].allow_duplicates;
+                
+                if(allow_duplicates)
+                {
+                    $("#specimen_unicity_check").prop("checked",false);
+                }
+            }
+            );
+        }
+    }
+    <?php if(strpos($_SERVER['REQUEST_URI'],"duplicate_id")):?>
+        uncheckDuplicates();
+    <?php endif;?>
+    //
+    
     $('#add_code').click(function()
     {
+        
+        //ftheeten 2018 08 08 (some collections allow duplciate
+        uncheckDuplicates();
+        
         hideForRefresh('#refCodes');
         var parent_el = $(this).closest('table.property_values');
         var num_pos = 0+$(parent_el).find('tbody').length;

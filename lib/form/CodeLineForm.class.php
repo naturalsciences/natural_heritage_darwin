@@ -23,6 +23,8 @@ class CodeLineForm extends BaseForm
     $this->widgetSchema['code_to'] = new sfWidgetFormInput(array(),array('class'=> 'lsmall_size'));
 
     $this->validatorSchema['code_part'] = new sfValidatorString(array('required'=>false,'trim'=>true));
+    //ftheeten 2015 06 04
+    $this->widgetSchema['code_part']->setAttributes(array('class'=>'autocomplete_for_code'));
     $this->validatorSchema['code_from'] = new sfValidatorString(array('required'=>false,'trim'=>true));
     $this->validatorSchema['code_to'] = new sfValidatorString(array('required'=>false,'trim'=>true));
     $this->mergePostValidator(new CodesLineValidatorSchema());

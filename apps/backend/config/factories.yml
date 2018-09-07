@@ -80,7 +80,7 @@ all:
   user:
     class: myUser
     param:
-      timeout:         7200
+      timeout:         14400
   view_cache:
     class: sfAPCCache
 #    param:

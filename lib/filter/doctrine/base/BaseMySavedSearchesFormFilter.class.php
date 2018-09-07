@@ -21,6 +21,8 @@ abstract class BaseMySavedSearchesFormFilter extends BaseFormFilterDoctrine
       'modification_date_time'   => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'visible_fields_in_result' => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'subject'                  => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'query_where'              => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'query_parameters'         => new sfWidgetFormFilterInput(array('with_empty' => false)),
     ));
 
     $this->setValidators(array(
@@ -32,6 +34,8 @@ abstract class BaseMySavedSearchesFormFilter extends BaseFormFilterDoctrine
       'modification_date_time'   => new sfValidatorPass(array('required' => false)),
       'visible_fields_in_result' => new sfValidatorPass(array('required' => false)),
       'subject'                  => new sfValidatorPass(array('required' => false)),
+      'query_where'              => new sfValidatorPass(array('required' => false)),
+      'query_parameters'         => new sfValidatorPass(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('my_saved_searches_filters[%s]');
@@ -60,6 +64,8 @@ abstract class BaseMySavedSearchesFormFilter extends BaseFormFilterDoctrine
       'modification_date_time'   => 'Text',
       'visible_fields_in_result' => 'Text',
       'subject'                  => 'Text',
+      'query_where'              => 'Text',
+      'query_parameters'         => 'Text',
     );
   }
 }

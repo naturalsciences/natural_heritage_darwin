@@ -63,6 +63,9 @@
                   <?php echo __('n/a');?>
                 <?php endif;?>
               </td>
+			  <!--ftheeten 2018 08 06-->
+             
+			   <?php if($format == 'locality'&& $import->getState() == 'loaded') : ?><td><?php echo link_to("Load GTU in DB",'import/loadGtuInStaging?id='.$import->getId()); ?></td><?php endif ; ?>
               <?php if ($import->getState() == 'error') : ?>
               <td colspan="2">
                   <?php echo link_to(image_tag('warning.png',array('title'=>__('View errors while importing'))),'import/viewError?id='.$import->getId());?>
@@ -91,6 +94,7 @@
              <?php else : ?>
              <td colspan="2">-</td>
              <?php endif ; ?>
+              <?php if($format == 'locality'&& $import->getState() != 'finished') : ?><td><?php echo link_to("View unimported",'import/viewUnimported?id='.$import->getId()); ?></td><?php endif ; ?>
             </tr>
           <?php endforeach;?>
         </tbody>

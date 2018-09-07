@@ -12,6 +12,11 @@
         </td>
       </tr>
       <?php if($gtu->getLocation()):?>
+      <!--ftheeten 2018 08 08-->
+      <tr>
+        <th><?php echo $form['coordinates_source']->renderLabel().":"; ?>:</th>
+        <td><?php echo $gtu->getCoordinatesSource() ; ?></td>
+      </tr>
       <tr>
         <th><?php echo $form['latitude']->renderLabel().":"; ?>:</th>
         <td><?php echo $gtu->getLatitude() ; ?></td>
@@ -20,6 +25,26 @@
         <th><?php echo $form['longitude']->renderLabel().":"; ?></th>
         <td><?php echo $gtu->getLongitude(); ?></td>
       </tr>
+        <?php if($gtu->getCoordinatesSource()=="DMS"): ?>
+        <tr>
+            <th><?php echo __("DMS Latitude") ?></th>
+            <td><?php echo $gtu->getLatitudeDmsDegree(); ?>°<?php echo $gtu->getLatitudeDmsMinutes(); ?>'<?php echo $gtu->getLatitudeDmsSeconds(); ?>" <?php ($gtu->getLatitudeDmsDirection()>0 ? print("N") : print("S") ); ?></td>
+        </tr>
+        <tr>
+            <th><?php echo __("DMS Longitude") ?></th>
+            <td><?php echo $gtu->getLongitudeDmsDegree(); ?>°<?php echo $gtu->getLongitudeDmsMinutes(); ?>'<?php echo $gtu->getLongitudeDmsSeconds(); ?>" <?php ($gtu->getLongitudeDmsDirection()>0 ? print("E") : print("W") ); ?></td>
+        </tr>
+        <?php endif; ?>
+        <?php if($gtu->getCoordinatesSource()=="UTM"): ?>
+        <tr>
+            <th><?php echo __("UTM Northing") ?></th>
+            <td><?php echo $gtu->getLatitudeUtm(); ?></td>
+         </tr>
+         <tr>
+            <th><?php echo __("UTM Easting") ?></th>
+            <td><?php echo $gtu->getLongitudeUtm(); ?></td>
+         </tr>
+        <?php endif; ?>
       <?php endif; ?>
       <?php if($gtu->getElevation() !== null && $gtu->getElevation() !== ''):?>
         <tr>
