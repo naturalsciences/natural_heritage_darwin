@@ -7,9 +7,10 @@
 <?php echo form_tag('gtu/search'.( isset($is_choose) && $is_choose  ? '?is_choose='.$is_choose : '') , array('class'=>'search_form','id'=>'gtu_filter'));?>
   <div class="container">
     <table class="search" id="<?php echo ($is_choose)?'search_and_choose':'search' ?>">
-      <thead>
-        <tr>  
+      <thead>       
+        
         <tr>
+        
           <th><?php echo $form['code']->renderLabel() ?></th>
           <th><?php echo $form['gtu_from_date']->renderLabel(); ?></th>
           <th><?php echo $form['gtu_to_date']->renderLabel(); ?></th>
@@ -17,7 +18,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr>		 
           <td><?php echo $form['code']->render() ?></td>
           <td><?php echo $form['gtu_from_date']->render() ?></td>
           <td><?php echo $form['gtu_to_date']->render() ?></td>
@@ -34,6 +35,20 @@
           <td>
             <?php echo image_tag('add_blue.png');?> <a href="<?php echo url_for('gtu/andSearch');?>" class="and_tag"><?php echo __('And'); ?></a>
           </td>
+        </tr>
+        <!--ftheeten 2018 08 08-->
+        <tr>
+		  <th><?php echo $form['expedition']->renderLabel() ?></th>
+        </tr>
+        <tr>
+        <td><?php echo $form['expedition']->render() ?></td>
+        </tr>
+        <!--ftheeten 2018 08 08-->
+        <tr>
+		  <th><?php echo $form['collection_ref']->renderLabel() ?></th>
+        </tr>
+        <tr>
+        <td><?php echo $form['collection_ref']->render() ?> All :<input type="checkbox" id="all_collections" class="all_collections" checked></td>
         </tr>
       </tbody>
 
@@ -82,7 +97,29 @@
         initSearchMap();
 
         $(document).ready(function () {
-
+        
+       $("#all_collections").change(
+            function()
+            {
+                if(this.checked)
+                {
+                    oldCollId=$(".collection_ref").val();
+                    $(".collection_ref").prop('disabled', true);
+                    $(".collection_ref").val("/");
+                }
+                else
+                {
+                    $(".collection_ref").prop('disabled', false);
+                    $(".collection_ref").val(oldCollId);
+                }
+            }
+       
+       );
+       // onload
+        $('#all_collections').prop('checked', true);
+        $(".collection_ref").prop('disabled', true);
+        $(".collection_ref").val("/");
+        
           $('.catalogue_gtu').choose_form({});
 
           $(".new_link").click( function() {
@@ -111,6 +148,25 @@
 
           });
         });
+        
+          //ftheeten 2018 03 08
+          var url="<?php echo(url_for('catalogue/expeditionsAutocomplete?'));?>";
+          var autocomplete_rmca_array=Array();
+          $('.autocomplete_for_expeditions').autocomplete({
+                source: function (request, response) {
+                    $.getJSON(url, {
+                                term : request.term
+                            } , 
+                            function (data) 
+                                {
+                            response($.map(data, function (value, key) {
+                            return value;
+                            }));
+                    });
+                },
+                minLength: 2,
+                delay: 200
+            });
       </script>
       <div class="search_results">
         <div class="search_results_content"></div>

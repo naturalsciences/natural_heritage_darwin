@@ -21,7 +21,8 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 
     $this->widgetSchema['gtu_code'] = new sfWidgetFormInputText();
     $this->widgetSchema['expedition_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
-
+    //ftheeten 2018 08 09
+     $this->widgetSchema['expedition_name']->setAttributes(array('class'=>'autocomplete_for_expeditions'));
     $this->widgetSchema['taxon_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size taxon_name'));
     $this->widgetSchema['taxon_level_ref'] = new sfWidgetFormDarwinDoctrineChoice(
       array(
@@ -35,7 +36,10 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     );
     $rel = array('child'=>'Is a Child Of','direct_child'=>'Is a Direct Child','synonym'=> 'Is a Synonym Of', 'equal' => 'Is strictly equal to');
 
-    $this->widgetSchema['taxon_relation'] = new sfWidgetFormChoice(array('choices'=> $rel,'expanded'=> true));
+   
+    //ftheeten 2016 03 24
+    $this->widgetSchema['taxon_relation'] = new sfWidgetFormChoice(array('choices'=> $rel,'expanded'=> true, 'multiple'=>true));
+
     $this->widgetSchema['taxon_relation']->setDefault('child');
     $this->widgetSchema['taxon_item_ref'] = new widgetFormCompleteButtonRef(
       array(
@@ -54,7 +58,9 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->widgetSchema['taxon_child_syn_included']->setOption('label','Syn. included ?');
 
     $this->validatorSchema['taxon_item_ref'] = new sfValidatorInteger(array('required'=>false));
-    $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($rel)));
+    //ftheeten 2016 03 24
+    $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($rel), 'multiple'=>true));
+
     $this->validatorSchema['taxon_child_syn_included'] = new sfValidatorBoolean();
 
     $this->widgetSchema['lithology_relation'] = new sfWidgetFormChoice(array('choices'=> $rel,'expanded'=> true));
@@ -255,6 +261,12 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       'required' => false,
       'trim' => true
     ));
+    
+    //ftheeten 2018 05 29
+	$this->widgetSchema['include_sub_collections'] = new sfWidgetFormInputCheckbox();
+  	////ftheeten 2018 05 29
+	$this->validatorSchema['include_sub_collections'] = new sfValidatorPass();
+	
 
     $this->validatorSchema['col_fields'] = new sfValidatorString(array(
       'required' => false,
@@ -644,6 +656,10 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->validatorSchema['lon_from'] = new sfValidatorNumber(array('required'=>false,'min' => '-360', 'max'=>'360'));
     $this->validatorSchema['lat_to'] = new sfValidatorNumber(array('required'=>false,'min' => '-180', 'max'=>'180'));
     $this->validatorSchema['lon_to'] = new sfValidatorNumber(array('required'=>false,'min' => '-360', 'max'=>'360'));
+	
+	//ftheeten 2018 06 20
+	$this->widgetSchema['code_main'] = new sfWidgetFormInput();
+    $this->validatorSchema['code_main'] = new sfValidatorString(array('required' => false));
 
     sfWidgetFormSchema::setDefaultFormFormatterName('list');
     $this->widgetSchema->setNameFormat('specimen_search_filters[%s]');
@@ -1186,14 +1202,27 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
   {
     $this->encoding_collection = $this->getCollectionWithRights($this->options['user'],true);
 
-    $query = DQ::create()
+    /*$query = DQ::create()
       ->select('s.*,
+
+        gtu_location[0] as latitude,
+        gtu_location[1] as longitude,
+        (collection_ref in ('.implode(',',$this->encoding_collection).')) as has_encoding_rights, code_category, code_prefix as codeprefix, 
+       sc.code_prefix_separator as codeprefixseparator, sc.code as codecore, sc.code_suffix_separator as codesuffixseparator, sc.code_suffix as codesuffix'
+      )
+      ->from('Specimens s')
+	  ->leftJoin("s.SpecimensCodes sc on s.id=sc.record_id")->where("sc.code_category='main'");
+*/
+
+$query = DQ::create()
+      ->select('s.*,
+
         gtu_location[0] as latitude,
         gtu_location[1] as longitude,
         (collection_ref in ('.implode(',',$this->encoding_collection).')) as has_encoding_rights'
       )
       ->from('Specimens s');
-
+      
     if($values['with_multimedia'])
       $query->where("EXISTS (select m.id from multimedia m where m.referenced_relation = 'specimens' AND m.record_id = s.id)") ;
 
@@ -1204,6 +1233,24 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->cols = $this->getCollectionWithRights($this->options['user']);
 
     if(!empty($values['collection_ref'])) {
+    
+      //ftheeten 2018 05 29
+      if((boolean)$values['include_sub_collections']===true)
+      {
+
+          foreach($values['collection_ref'] as $tmp_id)
+          {           
+            $sub_cols = Doctrine::getTable("Collections")->fetchByCollectionParent($this->options['user'] , $this->options['user']->getId(), $tmp_id);
+            foreach($sub_cols as $sub_col)
+            {
+           
+                if(!in_array($values['collection_ref'], $this->cols))
+                {
+                    $values['collection_ref'][]=$sub_col->getId();
+                }
+            }
+          }
+       }
       $this->cols = array_intersect($values['collection_ref'], $this->cols);
     }
     $query->andwhereIn('collection_ref ', $this->cols);
@@ -1239,7 +1286,9 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->addDateFromToColumnQuery($query, array('ig_date'), $values['ig_from_date'], $values['ig_to_date']);
     $this->addDateFromToColumnQuery($query, array('acquisition_date'), $values['acquisition_from_date'], $values['acquisition_to_date']);
 
-    $this->addCatalogueRelationColumnQuery($query, $values['taxon_item_ref'], $values['taxon_relation'],'taxonomy','taxon', $values['taxon_child_syn_included']);
+    //$this->addCatalogueRelationColumnQuery($query, $values['taxon_item_ref'], $values['taxon_relation'],'taxonomy','taxon');
+    //ftheeten 2016 03 24
+    $this->addCatalogueRelationColumnQueryArrayRelations($query, $values['taxon_item_ref'], $values['taxon_relation'],'taxonomy','taxon');
     $this->addCatalogueRelationColumnQuery($query, $values['chrono_item_ref'], $values['chrono_relation'],'chronostratigraphy','chrono', $values['chrono_child_syn_included']);
     $this->addCatalogueRelationColumnQuery($query, $values['litho_item_ref'], $values['litho_relation'],'lithostratigraphy','litho', $values['litho_child_syn_included']);
     $this->addCatalogueRelationColumnQuery($query, $values['lithology_item_ref'], $values['lithology_relation'],'lithology','lithology', $values['lithology_child_syn_included']);

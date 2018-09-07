@@ -14,6 +14,11 @@ $(document).ready(function ()
   <table class="search">
     <tbody>
       <?php echo $form->renderGlobalErrors() ?>
+	  <!--ftheeten 2018 08 05-->
+	   <tr>
+        <th><?php echo $form['source_database']->renderLabel(); ?> :</th>
+        <td><?php echo $form['source_database']; ?></td>
+      </tr>
       <tr>
         <th><?php echo $form['uploadfield']->renderLabel() ?> :</th>
         <td>

@@ -12,21 +12,24 @@
  * @property string $ig_date
  * @property Doctrine_Collection $Specimens
  * @property Doctrine_Collection $LoanItems
+ * @property Doctrine_Collection $SpecimensMaincodes
  * 
- * @method integer             getId()             Returns the current record's "id" value
- * @method string              getIgNum()          Returns the current record's "ig_num" value
- * @method string              getIgNumIndexed()   Returns the current record's "ig_num_indexed" value
- * @method integer             getIgDateMask()     Returns the current record's "ig_date_mask" value
- * @method string              getIgDate()         Returns the current record's "ig_date" value
- * @method Doctrine_Collection getSpecimens()      Returns the current record's "Specimens" collection
- * @method Doctrine_Collection getLoanItems()      Returns the current record's "LoanItems" collection
- * @method Igs                 setId()             Sets the current record's "id" value
- * @method Igs                 setIgNum()          Sets the current record's "ig_num" value
- * @method Igs                 setIgNumIndexed()   Sets the current record's "ig_num_indexed" value
- * @method Igs                 setIgDateMask()     Sets the current record's "ig_date_mask" value
- * @method Igs                 setIgDate()         Sets the current record's "ig_date" value
- * @method Igs                 setSpecimens()      Sets the current record's "Specimens" collection
- * @method Igs                 setLoanItems()      Sets the current record's "LoanItems" collection
+ * @method integer             getId()                 Returns the current record's "id" value
+ * @method string              getIgNum()              Returns the current record's "ig_num" value
+ * @method string              getIgNumIndexed()       Returns the current record's "ig_num_indexed" value
+ * @method integer             getIgDateMask()         Returns the current record's "ig_date_mask" value
+ * @method string              getIgDate()             Returns the current record's "ig_date" value
+ * @method Doctrine_Collection getSpecimens()          Returns the current record's "Specimens" collection
+ * @method Doctrine_Collection getLoanItems()          Returns the current record's "LoanItems" collection
+ * @method Doctrine_Collection getSpecimensMaincodes() Returns the current record's "SpecimensMaincodes" collection
+ * @method Igs                 setId()                 Sets the current record's "id" value
+ * @method Igs                 setIgNum()              Sets the current record's "ig_num" value
+ * @method Igs                 setIgNumIndexed()       Sets the current record's "ig_num_indexed" value
+ * @method Igs                 setIgDateMask()         Sets the current record's "ig_date_mask" value
+ * @method Igs                 setIgDate()             Sets the current record's "ig_date" value
+ * @method Igs                 setSpecimens()          Sets the current record's "Specimens" collection
+ * @method Igs                 setLoanItems()          Sets the current record's "LoanItems" collection
+ * @method Igs                 setSpecimensMaincodes() Sets the current record's "SpecimensMaincodes" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -70,6 +73,10 @@ abstract class BaseIgs extends DarwinModel
              'foreign' => 'ig_ref'));
 
         $this->hasMany('LoanItems', array(
+             'local' => 'id',
+             'foreign' => 'ig_ref'));
+
+        $this->hasMany('SpecimensMaincodes', array(
              'local' => 'id',
              'foreign' => 'ig_ref'));
     }

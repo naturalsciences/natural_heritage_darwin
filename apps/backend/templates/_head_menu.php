@@ -1,3 +1,79 @@
+<script>
+ //ftheeten 2018 05 30
+    function disableFrameMenu() {
+    var isInIframe = (parent !== window),
+        parentUrl = null;
+
+        if (isInIframe) {
+        
+            parentUrl = document.referrer;
+            if(parentUrl.indexOf('<?php print(sfConfig::get('dw_domain_disable_menu'));?>') ===-1)
+            {
+                $.ajax({
+                  url: "http://<?php print(parse_url(sfContext::getInstance()->getRequest()->getUri(),PHP_URL_HOST ));?>/search/disableMenu?menu=on",              
+                }).done(function() {
+                  
+                });
+            }
+            
+        }
+        else
+        {
+            
+             $.ajax({
+                  url: "http://<?php print(parse_url(sfContext::getInstance()->getRequest()->getUri(),PHP_URL_HOST ));?>/search/disableMenu?menu=on",              
+                }).done(function() {
+                  
+                });
+        }
+
+    
+    }
+    (function($){ //create closure so we can safely use $ as alias for jQuery
+
+      $(document).ready(function(){
+
+        //ftheeten 2018 05 30
+        disableFrameMenu();
+        
+        
+      });
+
+    })(jQuery);
+    
+    //ftheeten 2018 05 30
+    
+    
+</script>
+
+<?php
+    $flagMenu="on";
+    
+    
+    if(array_key_exists("menu", $_REQUEST))
+    {       
+        if($_REQUEST['menu']=="off")
+        {
+            $flagMenu="off";
+        }
+    }
+    elseif(array_key_exists("menu", $_SESSION))
+    {       
+        if($_SESSION['menu']=="off")
+        {
+            $flagMenu="off";
+        }
+        
+    }
+    $_SESSION['menu']= $flagMenu;  
+?>
+<?php if($flagMenu!="off" ):?>
+<?php 
+if(array_key_exists("menu", $_SESSION))
+{
+    unset($_SESSION['menu']);
+}
+?>
 <div class="menu_top">
     <ul id="navigation" class="sf-menu">
         <li class="house"><?php echo link_to(image_tag('home.png', 'alt=Home'),'board/index');?></li>
@@ -19,6 +95,8 @@
                     <a href="#" class="subtitle"><?php echo __('Catalogues');?> »</a>
                     <ul class="submenu lvl_2">
                         <li><?php echo link_to(__('Taxonomy'),'taxonomy/index');?></li>
+                        <!--ftheeten 2017 07 17--!>
+                        <li><?php echo link_to(__('Taxonomic groups'),'taxonomymetadata/index');?></li>
                         <li><?php echo link_to(__('Chronostratigraphy'),'chronostratigraphy/index');?></li>
                         <li><?php echo link_to(__('Lithostratigraphy'),'lithostratigraphy/index');?></li>
                         <li><?php echo link_to(__('Lithology'),'lithology/index');?></li>
@@ -55,6 +133,8 @@
                     <a href="#" class="subtitle"><?php echo __('Catalogues');?> »</a>
                     <ul class="submenu lvl_2">
                         <li><?php echo link_to(__('Taxonomy'),'taxonomy/new');?></li>
+                         <!--ftheeten 2017 07 17--!>
+                        <li><?php echo link_to(__('Taxonomic groups'),'taxonomymetadata/new');?></li>
                         <li><?php echo link_to(__('Chronostratigraphy'),'chronostratigraphy/new');?></li>
                         <li><?php echo link_to(__('Lithostratigraphy'),'lithostratigraphy/new');?></li>
                         <li><?php echo link_to(__('Lithology'),'lithology/new');?></li>
@@ -87,6 +167,7 @@
                     <ul class="submenu lvl_2">
                         <li><?php echo link_to(__('Specimens'),'import/index');?></li>
                         <li><?php echo link_to(__('Taxonomy'),'import/indexTaxon');?></li>
+						<li><?php echo link_to(__('Localities'),'import/indexLocalities');?></li>
                     </ul>
                 </li>
                 <?php if($sf_user->isAtLeast(Users::ADMIN) ): ?>
@@ -116,8 +197,18 @@
         <li class="exit" ><?php echo link_to(image_tag('exit.png', 'alt=Exit'),'account/logout');?></li>
     </ul>
 </div>
+<?php else:?>    
+    <style>
+        .widget_collection_global {
+    
+            top: 0px;
+            z-index: 1100;
+        }
+    </style>    
+<?php endif;?>
 <script>
-
+ //ftheeten 2018 05 30
+   
     (function($){ //create closure so we can safely use $ as alias for jQuery
 
       $(document).ready(function(){
@@ -128,7 +219,14 @@
           //add options here if required
         });
         $('.lvl_2').hide();
+       
+        
+        
       });
 
     })(jQuery);
+    
+    //ftheeten 2018 05 30
+    
+    
 </script>

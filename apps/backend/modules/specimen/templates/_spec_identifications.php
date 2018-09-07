@@ -1,4 +1,6 @@
-<?php if($form['notion_concerned']->getValue()!=""):?>
+<?php if($form['notion_concerned']->getValue()!=""||
+//ftheeten 2018 09 06
+sfContext::getInstance()->getActionName()=="addIdentification"||sfContext::getInstance()->getActionName()=="edit"):?>
 <tbody class="spec_ident_data" id="spec_ident_data_<?php echo $row_num;?>">
   <?php if($form->hasError()): ?>
   <tr>

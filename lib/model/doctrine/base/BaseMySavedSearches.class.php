@@ -14,6 +14,8 @@
  * @property string $modification_date_time
  * @property string $visible_fields_in_result
  * @property string $subject
+ * @property string $query_where
+ * @property string $query_parameters
  * @property Users $User
  * 
  * @method integer         getId()                       Returns the current record's "id" value
@@ -25,6 +27,8 @@
  * @method string          getModificationDateTime()     Returns the current record's "modification_date_time" value
  * @method string          getVisibleFieldsInResult()    Returns the current record's "visible_fields_in_result" value
  * @method string          getSubject()                  Returns the current record's "subject" value
+ * @method string          getQueryWhere()               Returns the current record's "query_where" value
+ * @method string          getQueryParameters()          Returns the current record's "query_parameters" value
  * @method Users           getUser()                     Returns the current record's "User" value
  * @method MySavedSearches setId()                       Sets the current record's "id" value
  * @method MySavedSearches setUserRef()                  Sets the current record's "user_ref" value
@@ -35,6 +39,8 @@
  * @method MySavedSearches setModificationDateTime()     Sets the current record's "modification_date_time" value
  * @method MySavedSearches setVisibleFieldsInResult()    Sets the current record's "visible_fields_in_result" value
  * @method MySavedSearches setSubject()                  Sets the current record's "subject" value
+ * @method MySavedSearches setQueryWhere()               Sets the current record's "query_where" value
+ * @method MySavedSearches setQueryParameters()          Sets the current record's "query_parameters" value
  * @method MySavedSearches setUser()                     Sets the current record's "User" value
  * 
  * @package    darwin
@@ -83,6 +89,14 @@ abstract class BaseMySavedSearches extends DarwinModel
              'notnull' => true,
              ));
         $this->hasColumn('subject', 'string', null, array(
+             'type' => 'string',
+             'notnull' => true,
+             ));
+        $this->hasColumn('query_where', 'string', null, array(
+             'type' => 'string',
+             'notnull' => true,
+             ));
+        $this->hasColumn('query_parameters', 'string', null, array(
              'type' => 'string',
              'notnull' => true,
              ));

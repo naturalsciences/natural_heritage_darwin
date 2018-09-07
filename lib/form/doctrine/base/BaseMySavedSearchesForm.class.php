@@ -24,6 +24,8 @@ abstract class BaseMySavedSearchesForm extends BaseFormDoctrine
       'modification_date_time'   => new sfWidgetFormTextarea(),
       'visible_fields_in_result' => new sfWidgetFormTextarea(),
       'subject'                  => new sfWidgetFormTextarea(),
+      'query_where'              => new sfWidgetFormTextarea(),
+      'query_parameters'         => new sfWidgetFormTextarea(),
     ));
 
     $this->setValidators(array(
@@ -36,6 +38,8 @@ abstract class BaseMySavedSearchesForm extends BaseFormDoctrine
       'modification_date_time'   => new sfValidatorString(),
       'visible_fields_in_result' => new sfValidatorString(),
       'subject'                  => new sfValidatorString(),
+      'query_where'              => new sfValidatorString(),
+      'query_parameters'         => new sfValidatorString(),
     ));
 
     $this->widgetSchema->setNameFormat('my_saved_searches[%s]');

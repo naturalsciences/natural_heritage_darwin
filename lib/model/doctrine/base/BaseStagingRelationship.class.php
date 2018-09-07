@@ -17,8 +17,7 @@
  * @property string $source_name
  * @property string $source_id
  * @property string $unit
- * @property decimal $quantity
- *
+ * 
  * @method integer             getId()                  Returns the current record's "id" value
  * @method integer             getRecordId()            Returns the current record's "record_id" value
  * @method string              getReferencedRelation()  Returns the current record's "referenced_relation" value
@@ -47,7 +46,38 @@
  * @method StagingRelationship setUnitType()            Sets the current record's "unit_type" value
  * @method StagingRelationship setQuantity()            Sets the current record's "quantity" value
  * @method StagingRelationship setUnit()                Sets the current record's "unit" value_type
- *
+ * @property decimal $quantity
+ * @property string $unit
+ * 
+ * @method integer             getId()                  Returns the current record's "id" value
+ * @method integer             getRecordId()            Returns the current record's "record_id" value
+ * @method string              getReferencedRelation()  Returns the current record's "referenced_relation" value
+ * @method string              getRelationshipType()    Returns the current record's "relationship_type" value
+ * @method integer             getStagingRelatedRef()   Returns the current record's "staging_related_ref" value
+ * @method integer             getTaxonRef()            Returns the current record's "taxon_ref" value
+ * @method integer             getMineralRef()          Returns the current record's "mineral_ref" value
+ * @method integer             getInstitutionRef()      Returns the current record's "institution_ref" value
+ * @method string              getInstitutionName()     Returns the current record's "institution_name" value
+ * @method string              getSourceName()          Returns the current record's "source_name" value
+ * @method string              getSourceId()            Returns the current record's "source_id" value
+ * @method string              getUnitType()            Returns the current record's "unit_type" value
+ * @method decimal             getQuantity()            Returns the current record's "quantity" value
+ * @method string              getUnit()                Returns the current record's "unit" value
+ * @method StagingRelationship setId()                  Sets the current record's "id" value
+ * @method StagingRelationship setRecordId()            Sets the current record's "record_id" value
+ * @method StagingRelationship setReferencedRelation()  Sets the current record's "referenced_relation" value
+ * @method StagingRelationship setRelationshipType()    Sets the current record's "relationship_type" value
+ * @method StagingRelationship setStagingRelatedRef()   Sets the current record's "staging_related_ref" value
+ * @method StagingRelationship setTaxonRef()            Sets the current record's "taxon_ref" value
+ * @method StagingRelationship setMineralRef()          Sets the current record's "mineral_ref" value
+ * @method StagingRelationship setInstitutionRef()      Sets the current record's "institution_ref" value
+ * @method StagingRelationship setInstitutionName()     Sets the current record's "institution_name" value
+ * @method StagingRelationship setSourceName()          Sets the current record's "source_name" value
+ * @method StagingRelationship setSourceId()            Sets the current record's "source_id" value
+ * @method StagingRelationship setUnitType()            Sets the current record's "unit_type" value
+ * @method StagingRelationship setQuantity()            Sets the current record's "quantity" value
+ * @method StagingRelationship setUnit()                Sets the current record's "unit" value
+ * 
  * @package    darwin
  * @subpackage model
  * @author     DB team <darwin-ict@naturalsciences.be>

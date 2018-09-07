@@ -43,6 +43,13 @@ $(document).ready(function () {
     <div class="treelist">
     <?php
       $w = new sfWidgetCollectionList(array('choices'=>array(), 'is_choose' => $is_choose));
+      //ftheeten 2017 03 31
+      
+      if($statistics===TRUE)
+      {
+        $w->attachStatistics();
+       
+      }
       $root = $tree = new Collections();
       foreach($institution->Collections as $item)
       {

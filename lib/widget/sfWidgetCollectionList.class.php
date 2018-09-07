@@ -27,6 +27,19 @@ class sfWidgetCollectionList extends sfWidgetFormChoice
     $this->addOption('multiple', true);
     $this->addOption('extended', true);
     $this->addOption('is_choose',false);
+  //ftheeten 2017 03 30 added statistics
+    $this->withStatistics=FALSE;
+
+  }
+  
+   //ftheeten 2017 03 30 added statistics
+  public function attachStatistics()
+  {
+    //ftheeten 2017 03 30
+     $this->withStatistics=TRUE;
+     
+     //print_r($statistics);
+   
   }
 
   private function getCollectionByIntitution()
@@ -125,7 +138,10 @@ class sfWidgetCollectionList extends sfWidgetFormChoice
             {
              $html .= link_to(image_tag('edit.png',array('title'=>'Edit Collection','class' => 'collection_edit')),'collection/edit?id='.$child->getId());
              $html .= link_to(image_tag('duplicate.png',array('title'=>'Duplicate Collection')),'collection/new?duplicate_id='.$child->getId());
+              //ftheeten 2018 04 24
+             $html .= link_to("Statistics (page)",'collection/statistics?id='.$child->getId());
             }
+
           }
         }
 

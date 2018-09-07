@@ -19,6 +19,9 @@
   </tbody>
 </table>
 <script  type="text/javascript">
+
+
+
 function checkBetween()
 {
   if( $('#code_search tbody .between_col:visible').length)
@@ -72,6 +75,19 @@ $(document).ready(function () {
       $(this).find('.prev').click();
   });
   checkBetween();
+  
+    //ftheeten 2015 06 08
+  //autocomplete for codes number
+  /*
+  $('.col_check').change(
+		function(i)
+		{
+				autocomplete_rmca_array=$('.col_check:checked').map(function(){
+				return $(this).val();
+				}).get();
+			
+		}
+  );*/
 
 });
 </script>

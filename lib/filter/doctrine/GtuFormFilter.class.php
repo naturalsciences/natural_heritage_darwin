@@ -10,6 +10,7 @@
  */
 class GtuFormFilter extends BaseGtuFormFilter
 {
+  protected $idxSubQuery=1;
   public function configure()
   {
 
@@ -77,6 +78,24 @@ class GtuFormFilter extends BaseGtuFormFilter
       array('invalid'=>'The "begin" date cannot be above the "end" date.')
     ));
 
+	
+	//ftheeten 2018 08 05
+	 $this->widgetSchema['collection_ref'] = new widgetFormCompleteButtonRef(array(
+      'model' => 'Collections',
+      'link_url' => 'collection/choose',
+      'method' => 'getName',
+      'box_title' => $this->getI18N()->__('Choose Collection'),
+      'button_class'=>'',
+      'complete_url' => 'catalogue/completeName?table=collections',
+    ));
+    //ftheeten 2017 01 13
+    $this->widgetSchema['collection_ref']->setAttributes(array('class'=>'collection_ref'));
+    $this->validatorSchema['collection_ref'] = new sfValidatorPass(); //Avoid duplicate the query
+    //ftheeten 2008 08 09
+    $this->widgetSchema['expedition'] = new sfWidgetFormInputText();
+    $this->widgetSchema['expedition']->setAttributes(array('class'=>'autocomplete_for_expeditions'));
+    $this->validatorSchema['expedition'] = new sfValidatorString(array('required' => false, 'trim' => true));
+    
     $subForm = new sfForm();
     $this->embedForm('Tags',$subForm);
   }
@@ -125,6 +144,34 @@ class GtuFormFilter extends BaseGtuFormFilter
     }
     return $query;
   }
+  
+  //ftheeten 2018 08 08
+  public function addExpeditionColumnExplicit($query, $values)
+  {
+    if($values['expedition'] !='')
+    {
+        $query->andWhere("(
+        (expedition_refs &&   (SELECT array_agg(e".$this->idxSubQuery.".id) from Expeditions e".$this->idxSubQuery." WHERE e".$this->idxSubQuery.".name_indexed=fulltoindex(?)) 
+        )
+        OR 
+        (
+        id  IN (SELECT s.gtu_ref FROM Specimens s , Expeditions ex".$this->idxSubQuery."   WHERE s.expedition_ref=ex".$this->idxSubQuery.".id AND ex".$this->idxSubQuery.".name_indexed=fulltoindex(?) ) 
+        
+        )) ", Array( $values['expedition'], $values['expedition']));
+        $this->idxSubQuery++;
+    }
+    return $query;
+  }
+  
+    //ftheeten 2018 08 05
+   public function addCollectionRefColumnQuery($query, $values, $val)
+  {
+    if( $val != '' )
+    {     
+      $query->andWhere(' collection_ref = ?  ', $val);
+    }
+    return $query;
+  }
 
   public function bind(array $taintedValues = null, array $taintedFiles = null)
   {
@@ -152,7 +199,11 @@ class GtuFormFilter extends BaseGtuFormFilter
   {
     $query = parent::doBuildQuery($values);
 
+    //ftheeten 2018 08 09   
+    $this->addExpeditionColumnExplicit($query,$values);
+   
     $this->addLatLonColumnQuery($query,$values);
+    
 
     $fields = array('gtu_from_date', 'gtu_to_date');
     $this->addDateFromToColumnQuery($query, $fields, $values['gtu_from_date'], $values['gtu_to_date']);

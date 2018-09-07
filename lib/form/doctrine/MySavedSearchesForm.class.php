@@ -45,6 +45,13 @@ class MySavedSearchesForm extends BaseMySavedSearchesForm
     $this->validatorSchema['name'] = new sfValidatorString() ;
     $this->validatorSchema['modification_date_time'] = new sfValidatorString(array('required' => false)) ;
     $this->validatorSchema['user_ref'] = new sfValidatorString(array('required' => false)) ;
+    
+        //ftheeten 2016 06 08
+    $this->widgetSchema['query_where'] = new sfWidgetFormInputText() ;
+    $this->validatorSchema['query_where'] = new sfValidatorString(array('required' => false)) ;
+    $this->widgetSchema['query_parameters'] = new sfWidgetFormInputText() ;
+    $this->validatorSchema['query_parameters'] = new sfValidatorString(array('required' => false)) ;
+    
   }
   
   public function formatter($widget, $inputs)
@@ -79,7 +86,41 @@ class MySavedSearchesForm extends BaseMySavedSearchesForm
     $string_fields = implode('|',$values['visible_fields_in_result']) ;
     $this->getObject()->setModificationDateTime(date('d/m/Y H:i:s'));
     $this->getObject()->setVisibleFieldsInResult($string_fields) ;
+    //ftheeten 2016 06 08
+    $this->setParamsToSaveQuery();
     $this->getObject()->save();
+    
+    //ftheeten 2016 06 08
+    $this->cleanParamsToSaveQuery();
+  }
+  
+    //ftheeten 2016 06 08
+  function setParamsToSaveQuery()
+  {
+    
+    if((sfContext::getInstance()->getUser()->getAttribute('queryToSaveWhere')))
+    {
+        $this->getObject()->setQueryWhere(sfContext::getInstance()->getUser()->getAttribute('queryToSaveWhere'));
+    }
+    if((sfContext::getInstance()->getUser()->getAttribute('queryToSaveParams')))
+    {
+        $this->getObject()->setQueryParameters(sfContext::getInstance()->getUser()->getAttribute('queryToSaveParams'));
+    }
+    return;
+  }
+  
+  //ftheeten 2016 06 08
+  function cleanParamsToSaveQuery()
+  {
+      
+    if((sfContext::getInstance()->getUser()->getAttribute('queryToSaveWhere')))
+    {
+       sfContext::getInstance()->getUser()->setAttribute('queryToSaveWhere',null);
+    }
+    if((sfContext::getInstance()->getUser()->getAttribute('queryToSaveParams')))
+    {
+       sfContext::getInstance()->getUser()->setAttribute('queryToSaveParams',null);
+    }
   }
   
   

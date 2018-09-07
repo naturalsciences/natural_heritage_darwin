@@ -124,23 +124,24 @@
           </script>
         <?php endif;?>
         <ul>
-        <?php $cpt = 0 ; foreach($codes[$specimen->getId()] as $key=>$code):?>            
-            <?php if($code->getCodeCategory() == 'main') : ?>
-              <?php $cpt++ ; ?>
-              <li <?php if($cpt > 3) echo("class='hidden code_supp'"); ?>>
-                <strong>
-                  <?php echo $code->getFullCode(); ?>
-                </strong>
-              </li> 
-          <?php elseif ($sf_user->isAtLeast(Users::ENCODER)) : ?>
-                      
-            <li class="hidden code_supp" >
-                <?php if ($code->getCodeCategory() == 'main') echo "<strong>" ; ?>            
-                <?php echo $code->getFullCode(); ?>
-                <?php if ($code->getCodeCategory() == 'main') echo "</strong>" ; ?>
-            </li>         
-          <?php endif ; ?>
-        <?php endforeach; ?>
+            <?php $cpt = 0 ; foreach($codes[$specimen->getId()] as $key=>$code):?>            
+                <?php if($code->getCodeCategory() == 'main') : ?>
+                  <?php $cpt++ ; ?>
+                  <li <?php if($cpt > 3) echo("class='hidden code_supp'"); ?>>
+                  <!--rmca 2017 12 13-->
+                   <strong>
+                        <?php echo link_to( $code->getFullCode(), 'specimen/view?id='.$specimen->getId(), array('target' => '_blank'));?>
+                    </strong>
+                  </li> 			  
+              <?php elseif ($sf_user->isAtLeast(Users::ENCODER)) : ?>
+                          
+                <li class="hidden code_supp" >
+                    <?php if ($code->getCodeCategory() == 'main') echo "<strong>" ; ?>            
+                    <?php echo $code->getFullCode(); ?>
+                    <?php if ($code->getCodeCategory() == 'main') echo "</strong>" ; ?>
+                </li>         
+              <?php endif ; ?>
+            <?php endforeach; ?>
         </ul>
       <?php endif;?>
     </td>

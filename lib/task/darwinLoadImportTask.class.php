@@ -33,7 +33,9 @@ EOF;
           ->from('imports p')
           ->where('p.id=?',$id)
           ->fetchOne() ;
-        $file = sfConfig::get('sf_upload_dir').'/uploaded_'.sha1($q->getFilename().$q->getCreatedAt()).'.xml' ;
+        //$file = sfConfig::get('sf_upload_dir').'/uploaded_'.sha1($q->getFilename().$q->getCreatedAt()).'.xml' ;
+		//ftheeten 2018 08 05
+		  $file = sfConfig::get('sf_upload_dir').'/uploaded_'.sha1($q->getFilename().$q->getCreatedAt()).".".(explode(".",$q->getFilename())[1]) ;
         if(file_exists($file))
         {
           try{
@@ -42,7 +44,14 @@ EOF;
               case 'taxon':
                 $import = new importCatalogueXml('taxonomy') ;
                 $count_line = "(select count(*) from staging_catalogue where parent_ref IS NULL AND import_ref = $id )" ;
-                break;              
+                break;
+				//ftheeten 2018 07 15 				
+              case 'locality':
+			  
+				 //fwrite($myfile, "\n!!!!!!!!!!!!!!!!!GTU detected!!!!!!!!!!!!!!!!!!");
+				$import = new ImportGtuCSV() ;
+                $count_line = "(select count(*) from staging where import_ref = $id )" ;
+                break;				
               case 'abcd':
               default:
                 $import = new importABCDXml() ;
@@ -62,7 +71,17 @@ EOF;
           {
             echo $e->getMessage()."\n";
             $conn->rollback();
+            
+            //ftheeten 2018 08 06
+            $import_obj = Doctrine::getTable('Imports')->find($q->getId());
+             $import_obj->setErrorsInImport($e->getMessage());
+             $import_obj->setState("error");
+              $import_obj->setWorking(FALSE);
+             $import_obj->save();
+            
             break;
+            
+            
           }
           Doctrine_Query::create()
             ->update('imports p')

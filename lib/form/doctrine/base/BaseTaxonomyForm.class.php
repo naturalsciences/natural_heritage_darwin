@@ -15,25 +15,31 @@ abstract class BaseTaxonomyForm extends BaseFormDoctrine
   public function setup()
   {
     $this->setWidgets(array(
-      'id'           => new sfWidgetFormInputHidden(),
-      'name'         => new sfWidgetFormTextarea(),
-      'name_indexed' => new sfWidgetFormTextarea(),
-      'level_ref'    => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Level'), 'add_empty' => false)),
-      'status'       => new sfWidgetFormTextarea(),
-      'path'         => new sfWidgetFormTextarea(),
-      'parent_ref'   => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'add_empty' => true)),
-      'extinct'      => new sfWidgetFormInputCheckbox(),
+      'id'                      => new sfWidgetFormInputHidden(),
+      'name'                    => new sfWidgetFormTextarea(),
+      'name_indexed'            => new sfWidgetFormTextarea(),
+      'level_ref'               => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Level'), 'add_empty' => false)),
+      'status'                  => new sfWidgetFormTextarea(),
+      'path'                    => new sfWidgetFormTextarea(),
+      'parent_ref'              => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'add_empty' => true)),
+      'extinct'                 => new sfWidgetFormInputCheckbox(),
+      'is_reference_taxonomy'   => new sfWidgetFormInputCheckbox(),
+      'metadata_ref'            => new sfWidgetFormInputText(),
+      'sensitive_info_withheld' => new sfWidgetFormInputCheckbox(),
     ));
 
     $this->setValidators(array(
-      'id'           => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
-      'name'         => new sfValidatorString(),
-      'name_indexed' => new sfValidatorString(array('required' => false)),
-      'level_ref'    => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Level'))),
-      'status'       => new sfValidatorString(array('required' => false)),
-      'path'         => new sfValidatorString(array('required' => false)),
-      'parent_ref'   => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'required' => false)),
-      'extinct'      => new sfValidatorBoolean(array('required' => false)),
+      'id'                      => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
+      'name'                    => new sfValidatorString(),
+      'name_indexed'            => new sfValidatorString(array('required' => false)),
+      'level_ref'               => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Level'))),
+      'status'                  => new sfValidatorString(array('required' => false)),
+      'path'                    => new sfValidatorString(array('required' => false)),
+      'parent_ref'              => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'required' => false)),
+      'extinct'                 => new sfValidatorBoolean(array('required' => false)),
+      'is_reference_taxonomy'   => new sfValidatorBoolean(array('required' => false)),
+      'metadata_ref'            => new sfValidatorInteger(array('required' => false)),
+      'sensitive_info_withheld' => new sfValidatorBoolean(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('taxonomy[%s]');

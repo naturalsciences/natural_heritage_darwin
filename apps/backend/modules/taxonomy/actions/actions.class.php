@@ -68,6 +68,9 @@ class taxonomyActions extends DarwinActions
 
   public function executeNew(sfWebRequest $request)
   {
+  
+     //ftheeten 2016 07 06
+    $this->collection_ref_for_insertion=-1;
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     $taxa = new Taxonomy() ;
     $taxa = $this->getRecordIfDuplicate($request->getParameter('duplicate_id','0'), $taxa);

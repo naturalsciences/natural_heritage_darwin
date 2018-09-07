@@ -18,19 +18,21 @@
     </tr>
     <tr id="taxon_precise_line">
       <td id="taxon_relation"><?php echo $form['taxon_relation'];?></td>
-      <td><?php echo $form['taxon_item_ref'];?></td>
-      <td>
-        <ul id="taxon_child_syn_included">
-          <li><?php echo $form['taxon_child_syn_included']->renderLabel();?></li>
-          <li><?php echo $form['taxon_child_syn_included'];?></li>
-        </ul>
-      </td>
+      <td><?php echo $form['taxon_item_ref'];?></td>      
     </tr>
   </tbody>
 </table>
 
 <script type="text/javascript">
 $(document).ready(function () {
+
+  //ftheeten 2017 12 14
+  $('#taxon_precise_line :checkbox').each(
+    function()
+    {
+           $(this).prop('checked', true);
+    }
+    );
   $('#taxon_precise').click(function() {
     $('#taxon_precise').attr('disabled','disabled') ;
     $('#taxon_full_text').removeAttr('disabled') ;

@@ -292,6 +292,8 @@ class specimenActions extends DarwinActions
           $autoCodeForUpdate = !$collection->getCodeAutoIncrementForInsertOnly();
         }
         $specimen = $form->save();
+        //ftheeten 2018 02 08
+		$this->addCollectionCookie($specimen);
         if ($wasNew || $autoCodeForUpdate) {
           Doctrine::getTable('Collections')->afterSaveAddCode($specimen->getCollectionRef(), $specimen->getId());
         }
@@ -529,4 +531,12 @@ class specimenActions extends DarwinActions
     $items_ids = $this->getUser()->getAllPinned('specimen');
     $this->items = Doctrine::getTable('Specimens')->getByMultipleIds($items_ids, $this->getUser()->getId(), $this->getUser()->isAtLeast(Users::ADMIN));
   }
+  
+      //ftheeten 2018 02 08
+   public function addCollectionCookie( $specimen)
+   {
+	    $this->getResponse()->setCookie('collection_ref_session',$specimen->getCollectionRef());
+        $this->getResponse()->setCookie('institution_ref_session',$specimen->getCollections()->getInstitutionRef());
+	   
+   }
 }

@@ -507,6 +507,13 @@ class SpecimensForm extends BaseSpecimensForm
       array(),
       array('invalid' => 'The min number ("%left_field%") must be lower or equal the max number ("%right_field%")' )
     ));
+    
+    //ftheeten 2015 01 16
+	$this->widgetSchema['unicity_check'] = new sfWidgetFormInputCheckBox();
+	$this->widgetSchema['unicity_check']->setAttributes(array('class'=>'class_unicity_check'));
+	$this->setDefault('unicity_check', true);
+	////ftheeten 2015 01 16
+	$this->validatorSchema['unicity_check'] = new sfValidatorPass();
   }
 
   public function forceContainerChoices()
@@ -677,6 +684,9 @@ class SpecimensForm extends BaseSpecimensForm
      * test if the widget is on screen by testing a flag field present on the concerned widget
      * If widget is not on screen, remove the field from list of fields to be bound, and than potentially saved
     */
+    	//ftheeten 2015 03 11 ('pass collection id to code form')
+	sfContext::getInstance()->getUser()->setAttribute("collection_for_insertion", $taintedValues['collection_ref'] );
+    
     if(!isset($taintedValues['ident']))
     {
       $this->offsetUnset('Identifications');
@@ -764,6 +774,17 @@ class SpecimensForm extends BaseSpecimensForm
     $this->bindEmbed('Biblio', 'addBiblio' , $taintedValues);
     $this->bindEmbed('Collectors', 'addCollectors' , $taintedValues);
     $this->bindEmbed('Donators', 'addDonators' , $taintedValues);
+    //ftheeten hack to pass the unicity check setting to the "code" embedded subform
+	//via a session variable 2015 01 19
+	sfContext::getInstance()->getUser()->setAttribute("unicity_check_in_session", "off");
+	if(isset($taintedValues['unicity_check']))
+	{
+		$taintedValues['unicity_check']=="on";
+		{
+				sfContext::getInstance()->getUser()->setAttribute("unicity_check_in_session", "on");
+		}
+	}
+    
     $this->bindEmbed('Codes', 'addCodes' , $taintedValues);
     $this->bindEmbed('Comments', 'addComments' , $taintedValues);
     $this->bindEmbed('ExtLinks', 'addExtLinks' , $taintedValues);

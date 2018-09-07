@@ -37,6 +37,25 @@
         <td>
          <?php echo link_to(image_tag('remove.png'), 'savesearch/deleteSavedSearch?table=my_saved_searches&id='.$search->getId(), array('class'=>'del_butt'));?>
         </td>
+        <!--ftheeten 2016 06 14-->
+         <?php if($sf_user->isAtLeast(Users::ENCODER)):?>
+         <td class="rurl_container">
+            <select class="url_report">
+            <option value=<?php echo(url_for("savesearch/excelSpecimens")."/user_id/".sfContext::getInstance()->getUser()->getId()."/query_id/".$search->getId())?>>
+            Excel (specimens)
+            </option> 
+            <option value=<?php echo("http://hippomenes.naturalsciences.be:8088/pentaho/api/repos/%3Apublic%3ADarwin2%3AReports_excel%3Areport_excel_taxonomy.prpt/report?ID_USER=".sfContext::getInstance()->getUser()->getId()."&ID_Q=".$search->getId()."&userid=report&password=report&output-target=table%2Fexcel%3Bpage-mode%3Dflow&accepted-page=-1&showParameters=true&renderMode=REPORT&htmlProportionalWidth=false")?>>
+            Excel (taxonomy)
+            </option>                
+            </select>
+         </td>
+         <td>
+            <input id="report_link" class="save_search report_link" value="Get report" type="button">
+         </td>
+         <td>
+            <a id="geojson_link" target="_blank" href="<?php print(url_for("savesearch/geojson"));?>?query_id=<?php print($search->getId());?>&user_id=<?php print(sfContext::getInstance()->getUser()->getId()); ?>">GIS Layer (.geojson)</a>
+         </td>
+         <?php endif;?>
     </tr>
 <?php endforeach;?>
     </tbody>
@@ -129,5 +148,13 @@ $(document).ready(function () {
     });
     return false;
  });
+ 
+  //ftheeten 2016 10 2016
+ $(".report_link").click(function(event){
+    
+    var url_report = $(this).closest('tr').children("td.rurl_container").find(".url_report").val();
+    window.open(url_report, '_blank');
+ });
+
 });
 </script>

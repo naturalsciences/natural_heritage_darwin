@@ -89,4 +89,4 @@ all:
   user:
     class: myUser
     param:
-      timeout: 3600
+      timeout: 14400 

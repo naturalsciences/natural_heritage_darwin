@@ -9,6 +9,9 @@
       else
         $orderSign = '<span class="order_sign_up">&nbsp;&#9650;</span>';
     ?>
+    
+    <!-- ftheeten 2014 04 17-->
+    <?php include_partial('showurl', array('id'=>1, 'currentPage'=>$currentPage,'postMapper' => $_POST, 'getMapper' => $_GET, 's_url'=>$s_url , 'method'=>$_SERVER['REQUEST_METHOD'])); ?>
     <?php include_partial('global/pager', array('pagerLayout' => $pagerLayout)); ?>
     <?php include_partial('global/pager_info', array('form' => $form, 'pagerLayout' => $pagerLayout, 'container'=> '.spec_results')); ?>
 
@@ -32,12 +35,18 @@
                     <?php echo $col[1];?>
                     <?php if($orderBy == $col[0]) echo $orderSign; ?>
                   </a>
-                <?php else:?>
-                  <?php echo $col[1];?>
+                <?php else:?>                 
+                <!--ftheeten 2018 09 06-->
                   <?php if($col_name == 'codes') : ?>
-                    <!-- Codes --><label class="top_code"><input type="checkbox" /></label>
+					<a class="sort" href="<?php echo url_for($s_url.'&orderby=main_code_indexed'.( ($orderBy=="main_code_indexed" && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.
+                    $currentPage);?>">
+						<?php echo $col[1];?>
+						<?php if($orderBy == $col[0]) echo $orderSign; ?>
+					</a>
+                  <?php else:?>
+						<?php echo $col[1];?>
                   <?php endif ; ?>
-                <?php endif;?>
+                 <?php endif ; ?>
               </th>
             <?php endforeach;?>
             <th><!-- actions --></th>
@@ -60,7 +69,7 @@
               <td>
               <?php if($sf_user->isAtLeast(Users::ADMIN) || $specimen->getHasEncodingRights()) : ?>
                 <?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))), 'specimen/edit?id='.$specimen->getId());?>
-                <?php echo link_to(image_tag('duplicate.png', array("title" => __("Duplicate"))), 'specimen/new?duplicate_id='.$specimen->getId(), array('class' => 'duplicate_link'));?>
+                <?php echo link_to(image_tag('duplicate.png', array("title" => __("Duplicate"))), 'specimen/new?duplicate_id='.$specimen->getId(), array('class' => 'duplicate_link','target' => '_blank'));?>
               <?php endif; ?>
                 <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))), 'specimen/view?id='.$specimen->getId(), array('target' => 'pop'));?>
               </td>
@@ -69,6 +78,8 @@
       </tbody>
       </table>
       <?php include_partial('global/pager', array('pagerLayout' => $pagerLayout)); ?>
+      <!-- ftheeten 2014 04 17-->
+    <?php include_partial('showurl', array('id'=>2, 'currentPage'=>$currentPage,'postMapper' => $_POST, 'getMapper' => $_GET, 's_url'=>$s_url , 'method'=>$_SERVER['REQUEST_METHOD'])); ?>
     <?php else:?>
       <?php echo __('No Specimen Matching');?>
     <?php endif;?>

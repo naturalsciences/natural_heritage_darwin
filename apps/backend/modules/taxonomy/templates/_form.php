@@ -15,6 +15,14 @@
           <?php echo $form['name'] ?>
         </td>
       </tr>
+	  <tr>
+	    <!-- jmherpers 2018 03 08-->
+        <th><?php echo __('Taxonomy');?></th>
+        <td>
+          <?php echo $form['metadata_ref']->renderError() ?>
+          <?php echo $form['metadata_ref'] ?>
+        </td>
+      </tr>
       <tr>
         <th><?php echo $form['level_ref']->renderLabel() ?></th>
         <td>
@@ -36,8 +44,30 @@
           <?php echo $form['extinct'] ?>
         </td>
       </tr>
+      
+        <!-- ftheeten 2017 07 03-->
+      <?php if(sfContext::getInstance()->getActionName()!=="new"&&sfContext::getInstance()->getActionName()!=="edit"): ?>
+      <tr>
+	    <!-- jmherpers 2018 03 08-->
+        <th><?php echo __('Collection');?></th>
+        <td>
+          <?php echo $form['collection_ref']->renderError() ?>
+          <?php echo $form['collection_ref'] ?>
+        </td>
+      </tr>
+      <?php endif;?>
+      <!-- ftheeten 2017 07 03-->
+      <tr>
+        <th><?php echo $form['sensitive_info_withheld']->renderLabel() ?></th>
+        <td>
+          <?php echo $form['sensitive_info_withheld']->renderError() ?>
+          <?php echo $form['sensitive_info_withheld'] ?>
+        </td>
+      </tr>
+        <!-- ftheeten 2017 07 03-->
       <tr id="parent_ref">
-        <th class="ref_name"><?php echo $form['parent_ref']->renderLabel() ?></th>
+	    <!-- jmherpers 2018 03 08-->
+        <th><?php echo __('Parent taxon');?></th>
         <td>
           <?php echo $form['parent_ref']->renderError() ?>
           <?php echo $form['parent_ref'] ?>
@@ -90,5 +120,33 @@ $(document).ready(function () {
         });
       }
     });
+    //ftheeten 2017 07 06
+    <?php if($collection_ref_for_insertion>-1):?>
+         $('.coll_for_taxonomy_insertion_ref option[value="<?php print($collection_ref_for_insertion);?>"]').attr("selected", true);
+     <?php endif?>
+     
+     //ftheeten 2018 03 14
+   $('form').submit(
+        function()
+        {
+            
+            var referrer=document.referrer;
+            var tmpName=$(".taxonomy_name_callback").val();
+            localStorage.setItem("last_scientific_name", tmpName);
+           
+        }
+   ); 
+
+ //ftheeten 2018 03 14
+ <?php if($form->getObject()->isNew()===true): ?>
+
+    if ( $( ".col_check_metadata_ref" ).length ) { 
+    
+        $(".col_check_metadata_ref option:eq(0)").attr("selected", "selected");
+     
+    } 
+    
+    $(".catalogue_level").val("48");
+ <?php endif?>	
 });
 </script>
