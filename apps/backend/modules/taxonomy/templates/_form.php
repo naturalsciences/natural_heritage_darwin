@@ -106,6 +106,7 @@ $(document).ready(function () {
   <?php if($form['level_ref']->getValue())
       echo "$('#taxonomy_level_ref').trigger('change');" ;
   ?>
+
   $('#taxonomy_name').autocomplete({
       minLength: 3,
       source: function( request, response ) {

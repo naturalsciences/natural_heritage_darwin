@@ -123,7 +123,23 @@
     $(document).ready(function () {
       $('a.search_related').click(function(event)
       {
-        $(this).closest('form')[0].reset();
+     
+        //ftheeten 2018 09 10
+        //$(this).closest('form')[0].reset();
+        
+        //ftheeten 2018 09 10
+        var tmpForm=$(this).closest('form')[0];
+        for(var i=0; i < tmpForm.elements.length; i++){
+                var e = tmpForm.elements[i];                
+                if(e.type=="text")
+                {
+                    $(e).val("")
+                }
+                else if(e.type=="select")
+                {
+                    $("#"+e.id+" option:eq(0)").attr("selected", "selected");
+                }
+        }
         event.preventDefault();
         row = $(this).closest('tr');
         iname = row.find('.item_name');
