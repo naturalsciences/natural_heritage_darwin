@@ -130,14 +130,14 @@
         //ftheeten 2018 09 10
         var tmpForm=$(this).closest('form')[0];
         for(var i=0; i < tmpForm.elements.length; i++){
-                var e = tmpForm.elements[i];                
+                var e = tmpForm.elements[i];               
                 if(e.type=="text")
                 {
                     $(e).val("")
                 }
-                else if(e.type=="select")
-                {
-                    $("#"+e.id+" option:eq(0)").attr("selected", "selected");
+                else if(e.type.includes("select"))
+                {                    
+                    e.selectedIndex = 0;                    
                 }
         }
         event.preventDefault();
