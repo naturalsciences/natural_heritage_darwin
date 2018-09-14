@@ -47,6 +47,7 @@
 </table>
 
 <!--  Insert Inverse relationship-->
+<?php if($spec_related_inverse->count()>0): ?>
 <br><b>Inverse relationships:</b><br/><br/>
 <table class="catalogue_table_view">
   <thead style="<?php echo ($spec_related_inverse->count()?'':'display: none;');?>">
@@ -86,3 +87,4 @@
   </tr>
   <?php endforeach;?>
 </table>
+<?php endif;?>

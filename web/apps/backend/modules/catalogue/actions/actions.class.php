@@ -278,28 +278,30 @@ class catalogueActions extends DarwinActions
         //ftheeten 2017 06 26
         if($tbl=="taxonomy" && $request->getParameter('collections') && $request->getParameter('level'))
         {
-            $result =Doctrine::getTable("taxonomy")->getTaxonByNameAndCollectionAndLevel($request->getParameter('term'), $request->getParameter('level'), $request->getParameter('collections'));
+            $result =Doctrine::getTable("taxonomy")->getTaxonByNameAndCollectionAndLevel($request->getParameter('term'), $request->getParameter('level'), $request->getParameter('collections'),true);
         }
         //ftheeten 2017 06 26
         elseif($tbl=="taxonomy" && $request->getParameter('collections') && !$request->getParameter('level'))
         {
-            $result =Doctrine::getTable("taxonomy")->getTaxonByNameAndCollection($request->getParameter('term') , $request->getParameter('collections'));
+            $result =Doctrine::getTable("taxonomy")->getTaxonByNameAndCollection($request->getParameter('term') , $request->getParameter('collections'),true);
         }
         //ftheeten 2017 06 26
         elseif($tbl=="taxonomy" && $request->getParameter('level') && ! $request->getParameter('collections'))
         {
-              $result =Doctrine::getTable("taxonomy")->getTaxonByNameAndLevel($request->getParameter('term') , $request->getParameter('level'));
+              //$result =Doctrine::getTable("taxonomy")->getTaxonByNameAndLevel($request->getParameter('term') , $request->getParameter('level'),true);
+               $model = DarwinTable::getModelForTable($tbl);
+               $result = Doctrine::getTable($model)->completeWithLevelAsArray($this->getUser(), $request->getParameter('term'), $request->getParameter('exact'),30, $request->getParameter('level'),true);
         }
         else
         {
           $model = DarwinTable::getModelForTable($tbl);
           if(! $request->getParameter('level', false))
           {
-            $result = Doctrine::getTable($model)->completeAsArray($this->getUser(), $request->getParameter('term'), $request->getParameter('exact'));
+            $result = Doctrine::getTable($model)->completeAsArray($this->getUser(), $request->getParameter('term'), $request->getParameter('exact'),30,true);
           }
           else
           {
-            $result = Doctrine::getTable($model)->completeWithLevelAsArray($this->getUser(), $request->getParameter('term'), $request->getParameter('exact'));
+            $result = Doctrine::getTable($model)->completeWithLevelAsArray($this->getUser(), $request->getParameter('term'), $request->getParameter('exact'),30, $request->getParameter('level'),true);
            }
         }
     }else{
@@ -359,17 +361,25 @@ class catalogueActions extends DarwinActions
   }
   
   
-    //ftheeten 2015 06 08 autocomplete for codes
-  public function executeCodesAutocomplete(sfWebRequest $request)
+  //ftheeten 2015 06 08 autocomplete for codes
+   public function executeCodesAutocomplete(sfWebRequest $request)
   {
 	$results=Array();
 	if($request->getParameter('term'))
 	{
 		 $conn = Doctrine_Manager::connection();
+         if(is_numeric($request->getParameter('term')))
+         {
+            $pattern="CONCAT('[^\d]', (SELECT * FROM fulltoindex(:term)), '.*')";
+         }
+         else
+         {
+            $pattern="CONCAT((SELECT * FROM fulltoindex(:term)), '.*')";
+         }
 		 if($request->getParameter('collections'))
 		 {
 			$sql = "SELECT DISTINCT COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'') as value, full_code_indexed as value_indexed FROM codes WHERE code_category='main' AND referenced_relation='specimens' AND
-			full_code_indexed LIKE CONCAT('%', (SELECT * FROM fulltoindex(:term)), '%') AND 
+			full_code_indexed ~ $pattern AND 
 			record_id IN (SELECT id FROM specimens WHERE collection_ref IN (".$request->getParameter('collections').") )
 			ORDER by full_code_indexed LIMIT 30;";
 		 }
@@ -377,7 +387,7 @@ class catalogueActions extends DarwinActions
 		 {
 			$sql = "SELECT DISTINCT COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'') as value, full_code_indexed as value_indexed FROM codes WHERE code_category='main' AND
 			referenced_relation='specimens' AND 
-			full_code_indexed LIKE CONCAT('%', (SELECT * FROM fulltoindex(:term)), '%')  ORDER by full_code_indexed LIMIT 30;";
+			full_code_indexed ~  $pattern   ORDER by full_code_indexed LIMIT 30;";
 		}
 		$q = $conn->prepare($sql);
 		$q->execute(array(':term' => $request->getParameter('term')));

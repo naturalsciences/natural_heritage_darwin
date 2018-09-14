@@ -46,6 +46,13 @@ abstract class BaseGtuFormFilter extends BaseFormFilterDoctrine
       'depth_min'               => new sfWidgetFormFilterInput(),
       'depth_max'               => new sfWidgetFormFilterInput(),
       'depth_accuracy'          => new sfWidgetFormFilterInput(),
+      'geom_type'               => new sfWidgetFormFilterInput(),
+      'collection_ref'          => new sfWidgetFormFilterInput(),
+      'import_ref'              => new sfWidgetFormFilterInput(),
+      'collector_refs'          => new sfWidgetFormFilterInput(),
+      'expedition_refs'         => new sfWidgetFormFilterInput(),
+      'the_geom'                => new sfWidgetFormFilterInput(),
+      'epsg'                    => new sfWidgetFormFilterInput(),
     ));
 
     $this->setValidators(array(
@@ -82,6 +89,13 @@ abstract class BaseGtuFormFilter extends BaseFormFilterDoctrine
       'depth_min'               => new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false))),
       'depth_max'               => new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false))),
       'depth_accuracy'          => new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false))),
+      'geom_type'               => new sfValidatorPass(array('required' => false)),
+      'collection_ref'          => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
+      'import_ref'              => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
+      'collector_refs'          => new sfValidatorPass(array('required' => false)),
+      'expedition_refs'         => new sfValidatorPass(array('required' => false)),
+      'the_geom'                => new sfValidatorPass(array('required' => false)),
+      'epsg'                    => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
     ));
 
     $this->widgetSchema->setNameFormat('gtu_filters[%s]');
@@ -135,6 +149,13 @@ abstract class BaseGtuFormFilter extends BaseFormFilterDoctrine
       'depth_min'               => 'Number',
       'depth_max'               => 'Number',
       'depth_accuracy'          => 'Number',
+      'geom_type'               => 'Text',
+      'collection_ref'          => 'Number',
+      'import_ref'              => 'Number',
+      'collector_refs'          => 'Text',
+      'expedition_refs'         => 'Text',
+      'the_geom'                => 'Text',
+      'epsg'                    => 'Number',
     );
   }
 }

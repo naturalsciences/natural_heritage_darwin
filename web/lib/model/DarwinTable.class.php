@@ -265,7 +265,7 @@ class DarwinTable extends Doctrine_Table
   * @return Array of results
   */
   //ftheeten added default to level 2016 11 04
-  public function completeAsArray($user, $needle, $exact, $limit = 30, $level='')
+  public function completeWithLevelAsArray($user, $needle, $exact, $limit = 30, $level='', $agg=false)
   {
 
     $conn_MGR = Doctrine_Manager::connection();
@@ -280,9 +280,10 @@ class DarwinTable extends Doctrine_Table
     if ($level && $level != '') {
       $q->innerJoin('i.Level l')
       ->orderBy('l.level_order DESC, name ASC');
-      $puls = $this->getPossibleUpperLevels($level);
-      if(count($puls))
-        $q->andWhereIn('l.id', $puls);
+      //$puls = $this->getPossibleUpperLevels($level);
+      //if(count($puls))
+       // $q->andWhereIn('l.id', $puls);
+       $q->andWhereIn('l.id', $level);
     }
     else {
       $q->orderBy('name ASC');
@@ -291,6 +292,10 @@ class DarwinTable extends Doctrine_Table
     $result = array();
     foreach($q_results as $item) {
       $result[] = array('label' => $item->getName(), 'name_indexed'=> $item->getNameIndexed(), 'value'=> $item->getId() );
+    }
+    if($agg)
+    {
+       $result=$this->arrayStringAgg($result, Array("value"));
     }
     return $result;
   }
@@ -303,7 +308,7 @@ class DarwinTable extends Doctrine_Table
   * @param $exact bool are we searching the exact term or more or less fuzzy
   * @return Array of results
   */
-  public function completeWithLevelAsArray($user, $needle, $exact, $limit = 30)
+  public function completeAsArray($user, $needle, $exact, $limit = 30, $agg=false)
   {
     $conn_MGR = Doctrine_Manager::connection();
       $q = Doctrine_Query::create()
@@ -319,6 +324,10 @@ class DarwinTable extends Doctrine_Table
     $result = array();
     foreach($q_results as $item) {
       $result[] = array('label' => $item->getName(), 'name_indexed'=> $item->getNameIndexed(), 'value'=> $item->getId() );
+    }
+    if($agg)
+    {
+       $result=$this->arrayStringAgg($result, Array("value"));
     }
     return $result;
   }
@@ -377,5 +386,68 @@ class DarwinTable extends Doctrine_Table
           'class' => $elem ? $elem->getId(): '') ;
       }
       return($catalogue_level) ;
+  }
+  
+  protected function arrayStringAgg($array, $group_fields)
+  {
+
+    $returned=Array();
+    $tmp_distinct_keys=Array();
+    $tmp_merged_keys=Array();
+    foreach($array as $key=> $row)
+    {
+        $tmp=Array();
+        $tmpKeyArray=Array();
+        $merged_values=Array();
+        $distinct_values=Array();
+        foreach($row as $field=>$val)
+        {
+            if(!in_array($field, $group_fields))
+            {
+           
+                 $tmpKeyArray[$field]=$field.":".$val;
+                 $distinct_values[$field]=$val;
+            }
+            else
+            {
+                
+                $merged_values[$field]=Array($val);
+            }
+        }
+       
+        ksort($tmpKeyArray);
+        ksort($merged_values);
+        $newKey=implode("|",$tmpKeyArray);
+        if(array_key_exists($newKey, $tmp_distinct_keys))
+        {
+            foreach( $group_fields as $field)
+            {
+                    $tmp_merged_keys[$newKey][$field][]=$merged_values[$field][0];
+            }
+        }
+        else
+        {
+            $tmp_distinct_keys[$newKey]=$distinct_values;
+            $tmp_merged_keys[$newKey]=$merged_values;
+        }        
+    }
+
+    $i=0;
+    foreach($tmp_merged_keys as $key=>$vals)
+    {
+        $newVals=Array();
+        foreach($vals as $key2=>$vals2)
+        {
+            $newVals[$key2]=implode(";",$vals2);
+        }
+         $tmp_merged_keys[$key]=$newVals;
+    }
+    foreach($tmp_distinct_keys as $key=>$nested_array)
+    {
+
+            $returned[$i]=array_merge($tmp_distinct_keys[$key],$tmp_merged_keys[$key]);
+            $i++;
+     }
+    return $returned;
   }
 }

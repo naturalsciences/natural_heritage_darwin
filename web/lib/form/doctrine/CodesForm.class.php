@@ -11,10 +11,7 @@ class CodesForm extends BaseCodesForm
 {
   public function configure()
   {
-
     $this->useFields(array('code_category', 'code_prefix', 'code_prefix_separator', 'code', 'code_suffix', 'code_suffix_separator'));
-
-	
     $this->widgetSchema['code_category'] = new sfWidgetFormChoice(array(
         'choices' => Codes::getCategories()
       ));
@@ -33,7 +30,7 @@ class CodesForm extends BaseCodesForm
     ));
     $this->widgetSchema['code_prefix_separator']->setAttributes(array('class'=>'vvsmall_size'));
     $this->widgetSchema['code'] = new sfWidgetFormInput();
-	//mrac 2015 06 03 new css class 'mrac_input_mask' for input mask
+	  //mrac 2015 06 03 new css class 'mrac_input_mask' for input mask
     $this->widgetSchema['code']->setAttributes(array('class'=>'medium_small_size mrac_input_mask'));
     $this->validatorSchema['code'] = new sfValidatorString(array('required' => false, 'trim'=>true));
     $this->widgetSchema['code_suffix'] = new sfWidgetFormInput();
@@ -50,27 +47,20 @@ class CodesForm extends BaseCodesForm
     ));
     $this->widgetSchema['code_suffix_separator']->setAttributes(array('class'=>'vvsmall_size'));
     $this->mergePostValidator(new CodesValidatorSchema());
-	//rmca check unique indexed number 2015 01 13
+    //rmca check unique indexed number 2015 01 13
 	$mode_duplicates=sfContext::getInstance()->getUser()->getAttribute("unicity_check_in_session", "off");
 	
 	//ftheeten 2015 03 11
 	$this->colIDSess=sfContext::getInstance()->getUser()->getAttribute("collection_for_insertion", -1);
-	
-		//JMHerpers 2018/02/02
-	$validatorCodeRequired= new sfValidatorString(array('required' => true, 'trim'=>true));
-   	$validatorCodeRequired->setMessage("required", "You must provide a code for the specimen. See the 'code' field below");
-    $this->validatorSchema['code'] = $validatorCodeRequired;
-	
-	if($mode_duplicates=="on")
+     if($mode_duplicates=="on")
 	{
 		$this->mergePostValidator(new sfValidatorCallback(
 			array('callback' => array($this, 'setValidatorUniqueNumber'))));
 	}
-
-		
   }
   
-    //group below RMCA 2014 01 13
+      //group below RMCA 2015 01 13
+
 	
 	public function setValidatorUniqueNumber($validator, $values, $arguments)
 	{
@@ -109,7 +99,7 @@ class CodesForm extends BaseCodesForm
 					$msgTmp=" in collection '".$collection->getName()."'";
 				}
 			
-				throw new sfValidatorError($validator, "RMCA error: indexed form of code already exists".$msgTmp);
+				throw new sfValidatorError($validator, "Code error: code already exists".$msgTmp);
 			}
 		}
 		
@@ -170,7 +160,7 @@ class CodesForm extends BaseCodesForm
 				from('SpecimensCodes a')->
 				innerJoin('a.Specimens b')->
 				where('a.code_category = ?', $category)->
-				andWhere('a.full_code_indexed  =  fulltoindex(?)', $searched)->
+				andWhere("TRIM(COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'')) =  ?", $searched)->
 				andWhere('b.collection_ref = ?', $coll);
 		
 		}

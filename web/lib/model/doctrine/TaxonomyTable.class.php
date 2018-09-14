@@ -123,65 +123,84 @@ WHERE taxonomy_level_ref= min_taxonomy_level_ref";
 
   
   //ftheeten 2017 06 26
-  public function getTaxonByNameAndCollectionAndLevel($name, $level, $collections)
+  public function getTaxonByNameAndCollectionAndLevel($name, $level, $collections, $agg=false)
   {
         $conn = Doctrine_Manager::connection();
-        $sql = "SELECT DISTINCT name as label, name_indexed,  id as value  FROM taxonomy 
-                 INNER JOIN
-                (
-                       SELECT distinct unnest(string_to_array(taxon_path||'/'||taxon_ref::varchar, '/'))  as key_taxon from specimens where  collection_ref IN (".$collections.")
-                        AND taxon_path is not null 
-                ) AS specimens
-                        ON
-                        taxonomy.id::text = specimens.key_taxon
-                WHERE  level_ref=:rank_id
-                AND taxonomy.name_indexed LIKE CONCAT((SELECT * FROM fulltoindex(:prefix)),'%') 
-                ORDER BY name LIMIT 30;";
+
+			$sql = "SELECT DISTINCT name as label, name_indexed,  id as value  FROM taxonomy 
+					 INNER JOIN
+					(
+						   SELECT distinct unnest(string_to_array(taxon_path||'/'||taxon_ref::varchar, '/'))  as key_taxon from specimens where  collection_ref IN (".$collections.")
+							AND taxon_path is not null 
+					) AS specimens
+							ON
+							taxonomy.id::text = specimens.key_taxon
+					WHERE  level_ref=:rank_id
+					AND taxonomy.name_indexed LIKE CONCAT((SELECT * FROM fulltoindex(:prefix)),'%') 
+					ORDER BY name LIMIT 30;";
+		
+
         $q = $conn->prepare($sql);
 		$q->execute(array(':rank_id'=> $level, ':prefix'=>$name ));
         $res = $q->fetchAll(PDO::FETCH_ASSOC);
+        if($agg)
+        {
+           $result=$this->arrayStringAgg($res, Array("value"));
+        }
 
         return $res;
   }
   
   //ftheeten 2017 06 26
-  public function getTaxonByNameAndCollection($name, $collections)
+  public function getTaxonByNameAndCollection($name, $collections, $agg=false)
   {
         $conn = Doctrine_Manager::connection();
-        $sql = "SELECT DISTINCT name as label, name_indexed,  id as value FROM taxonomy 
-                 INNER JOIN
-                (
-                       SELECT distinct unnest(string_to_array(taxon_path||'/'||taxon_ref::varchar, '/'))  as key_taxon from specimens where  collection_ref IN (".$collections.")
-                        AND taxon_path is not null 
-                ) AS specimens
-                        ON
-                        taxonomy.id::text = specimens.key_taxon
-                WHERE taxonomy.name_indexed LIKE CONCAT((SELECT * FROM fulltoindex(:prefix)),'%') 
-                ORDER BY name LIMIT 30;";
+
+			$sql = "SELECT DISTINCT name as label, name_indexed,  id as value FROM taxonomy 
+					 INNER JOIN
+					(
+						   SELECT distinct unnest(string_to_array(taxon_path||'/'||taxon_ref::varchar, '/'))  as key_taxon from specimens where  collection_ref IN (".$collections.")
+							AND taxon_path is not null 
+					) AS specimens
+							ON
+							taxonomy.id::text = specimens.key_taxon
+					WHERE taxonomy.name_indexed LIKE CONCAT((SELECT * FROM fulltoindex(:prefix)),'%') 
+					ORDER BY name LIMIT 30;";
+		
+		
         $q = $conn->prepare($sql);
 		$q->execute(array(':prefix'=>$name ));
         $res = $q->fetchAll(PDO::FETCH_ASSOC);
+        if($agg)
+        {
+           $result=$this->arrayStringAgg($res, Array("value"));
+        }
 
         return $res;
   }
   
    //ftheeten 2017 06 26
-  public function getTaxonByNameAndLevel($name, $level)
+  public function getTaxonByNameAndLevel($name, $level, $agg=false)
   {
         $conn = Doctrine_Manager::connection();
-        $sql = "SELECT DISTINCT name as label, name_indexed,  id as value  FROM taxonomy 
-                 INNER JOIN
-                (
-                       SELECT distinct unnest(string_to_array(taxon_path||'/'||taxon_ref::varchar, '/'))  as key_taxon from specimens where  taxon_path is not null 
-                ) AS specimens
-                        ON
-                        taxonomy.id::text = specimens.key_taxon
-                WHERE  level_ref=:rank_id
-                AND taxonomy.name_indexed LIKE CONCAT((SELECT * FROM fulltoindex(:prefix)),'%') 
-                ORDER BY name LIMIT 30;";
+					$sql = "SELECT DISTINCT name as label, name_indexed,  id as value  FROM taxonomy 
+					 INNER JOIN
+					(
+						   SELECT distinct unnest(string_to_array(taxon_path||'/'||taxon_ref::varchar, '/'))  as key_taxon from specimens where  taxon_path is not null 
+					) AS specimens
+							ON
+							taxonomy.id::text = specimens.key_taxon
+					WHERE  level_ref=:rank_id
+					AND taxonomy.name_indexed LIKE CONCAT((SELECT * FROM fulltoindex(:prefix)),'%') 
+					ORDER BY name LIMIT 30;";
+		
         $q = $conn->prepare($sql);
 		$q->execute(array(':rank_id'=> $level, ':prefix'=>$name ));
         $res = $q->fetchAll(PDO::FETCH_ASSOC);
+        if($agg)
+        {
+           $result=$this->arrayStringAgg($res, Array("value"));
+        }
 
         return $res;
   }

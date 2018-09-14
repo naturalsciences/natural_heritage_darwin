@@ -12,11 +12,13 @@ class ImportsForm extends BaseImportsForm
 {
   public function configure()
   {    
-  //ftheeten july 2017 (fixed january 2018)
+  
+  	//ftheeten 2018 07 23
+    $this->widgetSchema['source_database'] =  new sfWidgetFormInputText(); 
+    $this->validatorSchema['source_database'] =  new sfValidatorString() ;
     if($this->options['format'] == 'taxon')
     {
-     //$this->useFields(array('format', 'exclude_invalid_entries', 'taxonomy_name', 'creation_date', 'is_reference_taxonomy', 'source_taxonomy', 'definition_taxonomy', 'url_website_taxonomy', 'url_webservice_taxonomy')) ;
-     $this->useFields(array('format', 'exclude_invalid_entries', 'specimen_taxonomy_ref')) ;
+      $this->useFields(array('format', 'exclude_invalid_entries')) ;
       $category = array('taxon'=>$this->getI18N()->__('Taxonomy')) ;
       $this->widgetSchema['exclude_invalid_entries'] = new sfWidgetFormChoice(
         array(
@@ -26,16 +28,24 @@ class ImportsForm extends BaseImportsForm
         )
       );
       
-      //ftheeten 2018 03 06
-       $this->widgetSchema['specimen_taxonomy_ref']=new sfWidgetFormChoice(array(
-      'choices' =>  TaxonomyMetadataTable::getAllTaxonomicMetadata('taxonomy_name ASC', true)
-    ));
-         
+      //ftheeten 2017 08 02
+      $this->widgetSchema['specimen_taxonomy_ref'] =new sfWidgetFormChoice(array(
+      //'choices' => array_merge( array(''=>'All'), TaxonomyMetadataTable::getAllTaxonomicMetadata())
+      'choices' =>  TaxonomyMetadataTable::getAllTaxonomicMetadata('id ASC', true)
+        ));
+      $this->validatorSchema['specimen_taxonomy_ref'] = new sfValidatorInteger(array('required'=>false));
+      
+       //ftheeeten 2018 06 06
+      $this->widgetSchema['taxonomy_kingdom'] =new sfWidgetFormChoice(array(
+      
+      'choices' =>  TaxonomyTable::getTaxaByLevel("2")
+        ));
+      $this->validatorSchema['taxonomy_kingdom'] = new sfValidatorInteger(array('required'=>false));
     }
 	elseif($this->options['format'] == 'locality')
 	{
 		//ftheeten 2018 07 15
-		$this->useFields(array('gtu_include_date','gtu_tags_in_merge', 'sensitive_information_withheld')) ;
+		$this->useFields(array('gtu_include_date','gtu_tags_in_merge', 'sensitive_information_withheld', 'collection_ref')) ;
 		
 		$this->widgetSchema['collection_ref'] = new widgetFormButtonRef(
         array(
@@ -49,7 +59,7 @@ class ImportsForm extends BaseImportsForm
           'class'=>'inline',
         )
       );
-	    $this->validatorSchema['collection_ref'] = new sfValidatorInteger(array('required'=>true));
+	    //$this->validatorSchema['collection_ref'] = new sfValidatorInteger(array('required'=>true));
 		$category = array('locality'=>$this->getI18N()->__('Locality')) ;
 		$this->widgetSchema['include_date'] = new sfWidgetFormInputCheckbox();
 		$this->validatorSchema['include_date'] = new sfValidatorBoolean(array('required' => false));
@@ -57,7 +67,7 @@ class ImportsForm extends BaseImportsForm
 		$this->validatorSchema['tags_in_merge'] = new sfValidatorBoolean(array('required' => false));
     
 	}
-    else
+	else
     {
       $this->useFields(array('collection_ref', 'format')) ;
       /* Collection Reference */
@@ -73,18 +83,35 @@ class ImportsForm extends BaseImportsForm
           'class'=>'inline',
         )
       );
-      $category = imports::getFormats();
-      $this->validatorSchema['collection_ref'] = new sfValidatorInteger(array('required'=>true));
-      
-      //ftheeeten 2017 08 02
+       //ftheeten 2017 08 02
       $this->widgetSchema['specimen_taxonomy_ref'] =new sfWidgetFormChoice(array(
       //'choices' => array_merge( array(''=>'All'), TaxonomyMetadataTable::getAllTaxonomicMetadata())
       'choices' =>  TaxonomyMetadataTable::getAllTaxonomicMetadata('id ASC', true)
         ));
       $this->validatorSchema['specimen_taxonomy_ref'] = new sfValidatorInteger(array('required'=>false));
+      
+      //ftheeeten 2018 06 06
+      $this->widgetSchema['taxonomy_kingdom'] =new sfWidgetFormChoice(array(
+      
+      'choices' =>  TaxonomyTable::getTaxaByLevel("2")
+        ));
+      $this->validatorSchema['taxonomy_kingdom'] = new sfValidatorInteger(array('required'=>false));
+      
+      $category = imports::getFormats();
+      //ftheeten 2018 08 07
+     
+      if($this->options['format'] == 'locality')
+      {
+         $this->validatorSchema['collection_ref'] = new sfValidatorInteger(array('required'=>false));
+      }
+      else
+      {
+        $this->validatorSchema['collection_ref'] = new sfValidatorInteger(array('required'=>true));
+      } 
+     
     
     }
-    //ftheeten 2018 07 23810
+	//ftheeten 2018 07 23810
     $this->widgetSchema['source_database'] =  new sfWidgetFormInputText(); 
     $this->validatorSchema['source_database'] =  new sfValidatorString() ;
     
@@ -117,21 +144,12 @@ class ImportsForm extends BaseImportsForm
         'validated_file_class' => 'myValidatedFile',
     ));
 	
-	  //ftheeeten 2018 06 06
-      $this->widgetSchema['taxonomy_kingdom'] =new sfWidgetFormChoice(array(
-      
-      'choices' =>  TaxonomyTable::getTaxaByLevel("2")
-        ));
-      $this->validatorSchema['taxonomy_kingdom'] = new sfValidatorInteger(array('required'=>false));
-    
-    //ftheeten 2017 09 13
+	//ftheeten 2017 09 13
      $this->mergePostValidator(new sfValidatorCallback(
 			array('callback' => array($this, 'setValidatorSetMimeType'))));
-
-    
   }
   
-  //ftheeten 2017 09 13
+   //ftheeten 2017 09 13
   public function setValidatorSetMimeType($validator, $values, $arguments)
   {
     $tmpFile=$values["uploadfield"];
@@ -146,5 +164,5 @@ class ImportsForm extends BaseImportsForm
     }
      return $values;
   }
-		
 }
+

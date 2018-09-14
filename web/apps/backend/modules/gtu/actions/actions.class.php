@@ -44,12 +44,13 @@ class gtuActions extends DarwinActions
 
     if($request->getParameter('gtu_filters','') !== '')
     {
-      $this->form->bind($request->getParameter('gtu_filters'));
+      $this->form->bind($request->getParameter('gtu_filters')) ;
 
       if ($this->form->isValid())
       {
         //@TODO: We need to refactor and avoid doing too much queries when format is xml
         $query = $this->form->getQuery();
+		//echo "<script type='text/javascript'>alert('$query');</script>";
         if($request->getParameter('format') == 'json' || $request->getParameter('format') == 'text')
         {
           $query->orderBy($this->orderBy .' '.$this->orderDir)

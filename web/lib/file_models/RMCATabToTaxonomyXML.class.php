@@ -369,7 +369,7 @@ class RMCATabToTaxonomyXml
         //print($dom->saveXML($dom, LIBXML_NOEMPTYTAG ));
         return $dom->saveXML($dom, LIBXML_NOEMPTYTAG );
     }
-
+/*
     
     public function identifyHeader($p_handle)
     {
@@ -387,7 +387,7 @@ class RMCATabToTaxonomyXml
         $this->number_of_fields = count($this->headers);
         
     }
-    
+  */  
    
     
     public function identifyLines($p_handle)

@@ -82,7 +82,7 @@ EOF;
     }*/
 
     // Define what's checkable (and therefore importable if do-import option is defined)
-    if (empty($options['full-check']))
+    /*if (empty($options['full-check']))
     {
         //print("NO_FULL_CHECK");
         //print("loaded, processing");
@@ -93,7 +93,9 @@ EOF;
      //print("FULL_CHECK");
      //print("loaded, pending, processing");
       $state_to_check = array('loaded','pending','processing');
-    }
+    }*/
+    
+    $state_to_check = array('loaded','pending','processing');
     // let's 'lock' all imports checkable to avoid an other check from the next check task
     $catalogues = Doctrine::getTable('Imports')->tagProcessing('taxon', $options['id']);
     //debug

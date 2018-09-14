@@ -24,7 +24,7 @@
  * @property string $expeditions
  * @property string $collection_refs
  * @property string $collector_refs
- * @property string $expedition_ref
+ * @property string $expedition_refs
  * @property string $iso3166
  * @property string $iso3166_subdivision
  * @property string $countries
@@ -86,7 +86,7 @@
  * @method string              getExpeditions()                    Returns the current record's "expeditions" value
  * @method string              getCollectionRefs()                 Returns the current record's "collection_refs" value
  * @method string              getCollectorRefs()                  Returns the current record's "collector_refs" value
- * @method string              getExpeditionRef()                  Returns the current record's "expedition_ref" value
+ * @method string              getExpeditionRefs()                 Returns the current record's "expedition_refs" value
  * @method string              getIso3166()                        Returns the current record's "iso3166" value
  * @method string              getIso3166Subdivision()             Returns the current record's "iso3166_subdivision" value
  * @method string              getCountries()                      Returns the current record's "countries" value
@@ -147,7 +147,7 @@
  * @method StagingGtu          setExpeditions()                    Sets the current record's "expeditions" value
  * @method StagingGtu          setCollectionRefs()                 Sets the current record's "collection_refs" value
  * @method StagingGtu          setCollectorRefs()                  Sets the current record's "collector_refs" value
- * @method StagingGtu          setExpeditionRef()                  Sets the current record's "expedition_ref" value
+ * @method StagingGtu          setExpeditionRefs()                 Sets the current record's "expedition_refs" value
  * @method StagingGtu          setIso3166()                        Sets the current record's "iso3166" value
  * @method StagingGtu          setIso3166Subdivision()             Sets the current record's "iso3166_subdivision" value
  * @method StagingGtu          setCountries()                      Sets the current record's "countries" value
@@ -266,7 +266,7 @@ abstract class BaseStagingGtu extends DarwinModel
         $this->hasColumn('collector_refs', 'string', null, array(
              'type' => 'string',
              ));
-        $this->hasColumn('expedition_ref', 'string', null, array(
+        $this->hasColumn('expedition_refs', 'string', null, array(
              'type' => 'string',
              ));
         $this->hasColumn('iso3166', 'string', null, array(

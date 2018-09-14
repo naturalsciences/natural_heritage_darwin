@@ -15,7 +15,7 @@ class GtuForm extends BaseGtuForm
       'lat_long_accuracy', 'elevation', 'elevation_accuracy', 'coordinates_source',
 	  'latitude_dms_degree', 'latitude_dms_minutes', 'latitude_dms_seconds','longitude_dms_degree', 'longitude_dms_minutes', 
 	  'longitude_dms_seconds', 'latitude_utm', 'longitude_utm', 'utm_zone', 'latitude_dms_direction', 'longitude_dms_direction', 
-	  'elevation_unit','wkt_str','iso3166', 'iso3166_subdivision','ecosystem','original_coordinates','elevation_max','depth_min','depth_max','depth_accuracy' ));
+	  'elevation_unit','wkt_str','iso3166', 'iso3166_subdivision','ecosystem','original_coordinates','elevation_max','depth_min','depth_max','depth_accuracy','geom_type', 'epsg' ));
 
     $this->widgetSchema['code'] = new sfWidgetFormInput();
 	    //ftheeten 2018 04/05
@@ -291,7 +291,7 @@ class GtuForm extends BaseGtuForm
         ),
         //new sfValidatorCallback(array('callback'=> array($this, 'checkLatLong'))),
         //new sfValidatorCallback(array('callback'=> array($this, 'checkElevation'))),
-        new sfValidatorCallback(array('callback'=> array($this, 'checkElevationUnit')))
+        //new sfValidatorCallback(array('callback'=> array($this, 'checkElevationUnit')))
       )
     ));
 	//JMHerpers 2018 07 05
@@ -321,7 +321,20 @@ class GtuForm extends BaseGtuForm
 	$this->widgetSchema['depth_max']->setAttributes(array('class'=>'depth vsmall_size'));
 	$this->validatorSchema['depth_accuracy'] = new sfValidatorNumber(array('required'=>false, 'trim' => true, 'min' => '0'));
 	$this->widgetSchema['depth_accuracy']->setAttributes(array('class'=>'depthacc vsmall_size'));
-
+	$this->widgetSchema['geom_type'] = new sfWidgetFormInput();
+	$this->widgetSchema['geom_type']->setAttributes(array('class'=>'geom_type'));
+	/*$this->widgetSchema['epsg']=new sfWidgetFormChoice(array('choices'=>array(
+	'4326-WGS84'=> 'EPSG:4326 - WGS 84', 
+	'3857-WGS84'=> 'EPSG:3857 - WGS 84 / Pseudo-Mercator')));*/
+	
+	/*$this->widgetSchema['epsg']=new sfWidgetFormChoice(array('choices'=>array(
+			'choices' =>  GtuTable::getPostGISEPSG()	
+	)));*/
+	$this->widgetSchema['epsg'] =  new sfWidgetFormInput();
+	//$this->widgetSchema['epsg'] = new sfWidgetFormInput();
+	$this->widgetSchema['epsg']->setAttributes(array('class'=>'epsg'));
+	$this->widgetSchema['epsg']->setDefault(4326);
+	
     $subForm = new sfForm();
     $this->embedForm('newVal',$subForm);
     $this->embedRelation('TagGroups');
@@ -449,4 +462,7 @@ class GtuForm extends BaseGtuForm
     $items['/leaflet/leaflet.css']='all';
     return $items;
   }
+  
+  
+ 
 }

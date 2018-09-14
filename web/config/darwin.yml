@@ -9,7 +9,7 @@ all:
     recPerPage: 10
     pagerSlidingSize: 15
     catalogueRecLimit: 500
-    queryTimeout: 30000
+    queryTimeout: 300000
     defaultInstitutionRef: 1
     collect_to_print_thermic: '6,13'
     tagsDisplayLimit: 10

@@ -377,9 +377,13 @@ class ImportABCDXml implements ImportModelsInterface
         case "storage:SubcontainerStorage" : $this->staging->setSubContainerStorage($this->cdata); break;
         case "storage:Position" : $this->staging->setSubContainerType('position'); $this->staging->setSubContainer($this->cdata) ; break;
         case "Text":  if($this->getPreviousTag() == "Biotope") {
-            $this->object->tag_group_name='ecology';
+           /* $this->object->tag_group_name='ecology';
             $this->object->tag_value = $this->cdata;
-            $this->staging_tags[] = $this->object->addTagGroups();
+            $this->staging_tags[] = $this->object->addTagGroups();*/
+			
+			//ftheeten jim herpers 2018 08 02
+			 $this->addComment(true, "ecology");
+			
           } break;
         case "TitleCitation" : if(substr($this->cdata,0,7) == 'http://') $this->addExternalLink($this->cdata) ; if($this->getPreviousTag() == "UnitReference")  $this->addComment(true,'publication') ; else $this->addComment(true, "identifications") ;break;
         case "TypeStatus" : $this->staging->setIndividualType($this->cdata) ; break;

@@ -14,10 +14,26 @@ class stagingActions extends DarwinActions
   {
    //$myfile = fopen("/var/www/web/log_parser.txt", "a") ;
  //fwrite($myfile, "\n!!!!!!!!!!!!!!!!!!!! IN MARKOK");
-
+	
     $this->forward404Unless($request->hasParameter('import'));
     $this->import = Doctrine::getTable('Imports')->find($request->getParameter('import'));
-    print($this->import->getId());
+   //ftheeten 2018 09 02
+	if($request->hasParameter('taxonomy_ref'))
+	{
+		if($request->getParameter('taxonomy_ref'))
+		{
+			$taxonomy_ref=$request->getParameter('taxonomy_ref');
+			$this->import->setSpecimenTaxonomyRef($taxonomy_ref);
+			$this->import->save();
+            
+            Doctrine_Query::create()
+            ->update('staging s')
+            ->set("s.status","s.status::hstore - 'taxon'::varchar")
+            ->where('s.import_ref = ?', $this->import->getId())
+            ->execute();
+		}
+	}
+	//
     //ftheeten 2018 02 26
     $tmp_id=$this->import->getId();
     if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$this->import->getCollectionRef()))
@@ -37,11 +53,12 @@ class stagingActions extends DarwinActions
     
     if(count($mails)>0)
     {
-        $cmd='darwin:check-import --do-import --id='.$tmp_id.' --mailsfornotification='.implode(";",$mails);//." --full-check";;
+        $cmd='darwin:check-import --do-import --id='.$tmp_id.' --mailsfornotification='.implode(";",$mails)." --full-check";;
+        
     }
     else
     {
-         $cmd='darwin:check-import --do-import --id='.$tmp_id;//." --full-check";
+         $cmd='darwin:check-import --do-import --id='.$tmp_id." --full-check";
     }
     $conn = Doctrine_Manager::connection();
     $this->setImportAsWorking($conn, array($request->getParameter('id')), true);
@@ -88,10 +105,15 @@ class stagingActions extends DarwinActions
     }
     else
     {
-        $sql = "SELECT * FROM rmca_create_missing_people_in_staging(:id)";
+       /* $sql = "SELECT * FROM rmca_create_missing_people_in_staging(:id)";
         $conn = Doctrine_Manager::connection();
         $q = $conn->prepare($sql);
-		$q->execute(array(':id' => $this->import->getId()));
+		$q->execute(array(':id' => $this->import->getId()));*/
+		$cmd='darwin:create-people --id='. $this->import->getId();
+		$currentDir=getcwd();
+		chdir(sfconfig::get('sf_root_dir'));    
+		exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+		chdir($currentDir);      
     }
     return $this->redirect('import/index');
 

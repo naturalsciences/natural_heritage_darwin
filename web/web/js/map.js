@@ -133,7 +133,7 @@ function initSearchMap() {
       $('#map_search_form').show();
       map.invalidateSize();
       if($('#gtu_filters_lat_from').val() != '' &&  $('#gtu_filters_lat_to').val() != '' &&
-        $('#gtu_filters_lon_from').val() != '' &&   $('#gtu_filters_lat_to').val() != '')
+        $('#gtu_filters_lon_from').val() != '' &&   $('#gtu_filters_lon_to').val() != '')
       {
           try{
             map.fitBounds([

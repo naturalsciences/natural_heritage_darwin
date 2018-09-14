@@ -27,6 +27,7 @@
  * @property boolean $loan_auto_increment
  * @property integer $loan_last_value
  * @property boolean $code_ai_inherit
+ * @property boolean $allow_duplicates
  * @property People $Institution
  * @property Users $Manager
  * @property Users $Staff
@@ -59,6 +60,7 @@
  * @method boolean             getLoanAutoIncrement()       Returns the current record's "loan_auto_increment" value
  * @method integer             getLoanLastValue()           Returns the current record's "loan_last_value" value
  * @method boolean             getCodeAiInherit()           Returns the current record's "code_ai_inherit" value
+ * @method boolean             getAllowDuplicates()         Returns the current record's "allow_duplicates" value
  * @method People              getInstitution()             Returns the current record's "Institution" value
  * @method Users               getManager()                 Returns the current record's "Manager" value
  * @method Users               getStaff()                   Returns the current record's "Staff" value
@@ -90,6 +92,7 @@
  * @method Collections         setLoanAutoIncrement()       Sets the current record's "loan_auto_increment" value
  * @method Collections         setLoanLastValue()           Sets the current record's "loan_last_value" value
  * @method Collections         setCodeAiInherit()           Sets the current record's "code_ai_inherit" value
+ * @method Collections         setAllowDuplicates()         Sets the current record's "allow_duplicates" value
  * @method Collections         setInstitution()             Sets the current record's "Institution" value
  * @method Collections         setManager()                 Sets the current record's "Manager" value
  * @method Collections         setStaff()                   Sets the current record's "Staff" value
@@ -203,6 +206,11 @@ abstract class BaseCollections extends DarwinModel
              'default' => 0,
              ));
         $this->hasColumn('code_ai_inherit', 'boolean', null, array(
+             'type' => 'boolean',
+             'notnull' => true,
+             'default' => false,
+             ));
+        $this->hasColumn('allow_duplicates', 'boolean', null, array(
              'type' => 'boolean',
              'notnull' => true,
              'default' => false,

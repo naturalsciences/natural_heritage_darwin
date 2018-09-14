@@ -29,6 +29,7 @@ People:
         activity_date_from_mask: { type: integer, notnull: true, default:0}
         activity_date_to: { type: string, notnull: true, default: '2038-12-31'}
         activity_date_to_mask: { type: integer, notnull: true, default:0}
+       
 
 CatalogueRelationships:
     columns:
@@ -199,7 +200,16 @@ Gtu:
         elevation_max: {type: float}
         depth_min: {type: float}
         depth_max: {type: float}
-        depth_accuracy: {type: float}
+        depth_accuracy: {type: float}  
+        geom_type: {type: string}
+        #ftheeten 2018 07 26
+        collection_ref: {type: integer}
+        #ftheeten 2018 07 26 
+        import_ref: {type: integer}
+        collector_refs: {type: string}
+        expedition_refs: {type: string}
+        the_geom: {type: geometry} 
+        epsg: {type: integer}
 Properties:
     columns:
         id: { type: integer, primary: true, autoincrement: true }
@@ -421,6 +431,8 @@ Collections:
         loan_auto_increment: { type: boolean, notnull: true, default: false}
         loan_last_value: { type: integer, notnull: true, default: 0}
         code_ai_inherit: { type: boolean, notnull: true, default: false}
+        #ftheeten 2018 08 08
+        allow_duplicates: { type:boolean, notnull:true,default:false}
 
     relations:
         Institution:
@@ -1175,6 +1187,8 @@ Imports:
         sensitive_information_withheld: {type: boolean, default: false }
         #ftheeten 2018 07 26
         source_database: {type: string}
+        #ftheeten 2018 09 02
+        history_taxonomy: {type: string}
     relations:
         Collections:
             local: collection_ref
@@ -1615,7 +1629,7 @@ StagingGtu:
         expeditions: {type: string }
         collection_refs: {type: string}
         collector_refs: {type: string}
-        expedition_ref: {type: string}
+        expedition_refs: {type: string}
         iso3166: {type: string}
         iso3166_subdivision: {type: string}
         countries: {type: string}
@@ -1670,3 +1684,14 @@ StagingGtu:
             local: import_ref
             foreign: id
             class: Imports
+            
+gtuCollectingEvent:
+    columns:
+        id: {type:serial}
+        event_code: {type: string, notnull:true}
+        gtu_ref : {type: integer}
+        expedition_ref : {type: integer}
+        gtu_from_date_mask: { type: integer }
+        gtu_from_date: { type: string}
+        gtu_to_date_mask: { type: integer }
+        gtu_to_date: { type: string }

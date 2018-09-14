@@ -35,4 +35,22 @@
     }
     checkBetween();
   });
+  //ftheeten 2018 03 08
+  var url="<?php echo(url_for('catalogue/codesAutocomplete?'));?>";
+  $('.autocomplete_for_code').autocomplete({
+		source: function (request, response) {
+			$.getJSON(url, {
+						term : request.term,
+						collections: autocomplete_rmca_array.join()
+					} , 
+					function (data) 
+						{
+					response($.map(data, function (value, key) {
+					return value;
+                    }));
+			});
+		},
+		minLength: 2,
+		delay: 200
+	});
 </script>

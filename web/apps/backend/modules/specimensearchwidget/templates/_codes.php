@@ -106,9 +106,9 @@ $(document).ready(function () {
 			
 		}
   );
-	 var url="<?php echo(url_for('catalogue/codesAutocomplete?'));?>";
+	//var url="<?php echo(url_for('catalogue/codesAutocomplete?'));?>";
 
-	  $('.autocomplete_for_code').autocomplete({
+	 /* $('.autocomplete_for_code').autocomplete({
 		source: function (request, response) {
 			$.getJSON(url, {
 						term : request.term,
@@ -123,7 +123,23 @@ $(document).ready(function () {
 		},
 		minLength: 2,
 		delay: 100
-	});
+	});*/
+    /*$('#code_search').on("autocomplete", '.autocomplete_for_code' ,function() {
+		source: function (request, response) {
+			$.getJSON(url, {
+						term : request.term,
+						collections: autocomplete_rmca_array.join()
+					} , 
+					function (data) 
+						{
+					response($.map(data, function (value, key) {
+					return value;
+                    }));
+			});
+		},
+		minLength: 2,
+		delay: 100
+	});*/
 
 });
 </script>

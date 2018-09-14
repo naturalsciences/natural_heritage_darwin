@@ -20,6 +20,8 @@ class CollectionsForm extends BaseCollectionsForm
       'staff_ref',
       'parent_ref',
       'collection_type',
+      //ftheeten 2018 08 08
+      'allow_duplicates',
     ));
 
     $this->widgetSchema['is_public'] = new sfWidgetFormInputCheckbox(array ('default' => 'true'), array('title' => 'checked = public'));
@@ -88,6 +90,10 @@ class CollectionsForm extends BaseCollectionsForm
     }
     //Re-embedding the container
     $this->embedForm('CollectionsRights', $this->embeddedForms['CollectionsRights']);
+    
+     //ftheeten 2018 08 08
+    $this->widgetSchema['allow_duplicates'] = new sfWidgetFormInputCheckbox(array ('default' => 'false'));
+    $this->validatorSchema['allow_duplicates'] = new sfValidatorBoolean() ;
 
     $subForm = new sfForm();
     $this->embedForm('newVal',$subForm);

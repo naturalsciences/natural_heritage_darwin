@@ -34,6 +34,7 @@ abstract class BaseCollectionsFormFilter extends BaseFormFilterDoctrine
       'loan_auto_increment'     => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
       'loan_last_value'         => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'code_ai_inherit'         => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
+      'allow_duplicates'        => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
     ));
 
     $this->setValidators(array(
@@ -58,6 +59,7 @@ abstract class BaseCollectionsFormFilter extends BaseFormFilterDoctrine
       'loan_auto_increment'     => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
       'loan_last_value'         => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'code_ai_inherit'         => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
+      'allow_duplicates'        => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
     ));
 
     $this->widgetSchema->setNameFormat('collections_filters[%s]');
@@ -99,6 +101,7 @@ abstract class BaseCollectionsFormFilter extends BaseFormFilterDoctrine
       'loan_auto_increment'     => 'Boolean',
       'loan_last_value'         => 'Number',
       'code_ai_inherit'         => 'Boolean',
+      'allow_duplicates'        => 'Boolean',
     );
   }
 }

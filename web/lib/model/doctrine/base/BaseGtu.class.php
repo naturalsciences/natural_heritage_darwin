@@ -39,6 +39,13 @@
  * @property float $depth_min
  * @property float $depth_max
  * @property float $depth_accuracy
+ * @property string $geom_type
+ * @property integer $collection_ref
+ * @property integer $import_ref
+ * @property string $collector_refs
+ * @property string $expedition_refs
+ * @property geometry $the_geom
+ * @property integer $epsg
  * @property Doctrine_Collection $TagGroups
  * @property Doctrine_Collection $Tags
  * @property Doctrine_Collection $Specimens
@@ -77,6 +84,13 @@
  * @method float               getDepthMin()                Returns the current record's "depth_min" value
  * @method float               getDepthMax()                Returns the current record's "depth_max" value
  * @method float               getDepthAccuracy()           Returns the current record's "depth_accuracy" value
+ * @method string              getGeomType()                Returns the current record's "geom_type" value
+ * @method integer             getCollectionRef()           Returns the current record's "collection_ref" value
+ * @method integer             getImportRef()               Returns the current record's "import_ref" value
+ * @method string              getCollectorRefs()           Returns the current record's "collector_refs" value
+ * @method string              getExpeditionRefs()          Returns the current record's "expedition_refs" value
+ * @method geometry            getTheGeom()                 Returns the current record's "the_geom" value
+ * @method integer             getEpsg()                    Returns the current record's "epsg" value
  * @method Doctrine_Collection getTagGroups()               Returns the current record's "TagGroups" collection
  * @method Doctrine_Collection getTags()                    Returns the current record's "Tags" collection
  * @method Doctrine_Collection getSpecimens()               Returns the current record's "Specimens" collection
@@ -114,6 +128,13 @@
  * @method Gtu                 setDepthMin()                Sets the current record's "depth_min" value
  * @method Gtu                 setDepthMax()                Sets the current record's "depth_max" value
  * @method Gtu                 setDepthAccuracy()           Sets the current record's "depth_accuracy" value
+ * @method Gtu                 setGeomType()                Sets the current record's "geom_type" value
+ * @method Gtu                 setCollectionRef()           Sets the current record's "collection_ref" value
+ * @method Gtu                 setImportRef()               Sets the current record's "import_ref" value
+ * @method Gtu                 setCollectorRefs()           Sets the current record's "collector_refs" value
+ * @method Gtu                 setExpeditionRefs()          Sets the current record's "expedition_refs" value
+ * @method Gtu                 setTheGeom()                 Sets the current record's "the_geom" value
+ * @method Gtu                 setEpsg()                    Sets the current record's "epsg" value
  * @method Gtu                 setTagGroups()               Sets the current record's "TagGroups" collection
  * @method Gtu                 setTags()                    Sets the current record's "Tags" collection
  * @method Gtu                 setSpecimens()               Sets the current record's "Specimens" collection
@@ -240,6 +261,27 @@ abstract class BaseGtu extends DarwinModel
              ));
         $this->hasColumn('depth_accuracy', 'float', null, array(
              'type' => 'float',
+             ));
+        $this->hasColumn('geom_type', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('collection_ref', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('import_ref', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('collector_refs', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('expedition_refs', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('the_geom', 'geometry', null, array(
+             'type' => 'geometry',
+             ));
+        $this->hasColumn('epsg', 'integer', null, array(
+             'type' => 'integer',
              ));
     }
 

@@ -161,9 +161,16 @@ $(document).ready(function () {
 
   $('#submit_spec_f1').click(function(event){
 	 //JMHerpers 2018/02/08	  
-	  if($('.mrac_input_mask').val() == null)
+	if($('.mrac_input_mask').val() == null)
     {	
 			alert ("Code is mandatory. Please fill the field");
+			$('#add_code').focus();
+			event.preventDefault();
+	}		
+	//rmca 2018 09 10
+	else if($('.mrac_input_mask').val() == "")
+    {	
+			alert ("Code is mandatory and left empty. Please fill the field");
 			$('#add_code').focus();
 			event.preventDefault();
 	}else{

@@ -76,11 +76,25 @@ class GtuFormFilter extends BaseGtuFormFilter
       array('throw_global_error' => true),
       array('invalid'=>'The "begin" date cannot be above the "end" date.')
     ));
-
+	//JMHerpers 2018 08 16
+	//$this->widgetSchema['wkt'] = new sfWidgetForminput();
     
     //ftheeten 2018 03 23
     $this->widgetSchema['ig_number'] = new sfWidgetFormInputText();
     $this->validatorSchema['ig_number'] = new sfValidatorString(array('required' => false, 'trim' => true));
+	
+	//ftheeten 2018 08 05
+	 $this->widgetSchema['collection_ref'] =  new widgetFormCompleteButtonRef(array(
+      'model' => 'Collections',
+      'link_url' => 'collection/choose',
+      'method' => 'getName',
+      'box_title' => $this->getI18N()->__('Choose Collection'),
+      'button_class'=>'',
+      'complete_url' => 'catalogue/completeName?table=collections',
+    ));
+	$this->widgetSchema['collection_ref']->setAttributes(array('class'=>'collection_ref'));
+    $this->widgetSchema['collection_ref']->addOption('public_only',false);
+    $this->validatorSchema['collection_ref'] = new sfValidatorPass(); //Avoid duplicate the query
     
     $subForm = new sfForm();
     $this->embedForm('Tags',$subForm);
@@ -145,11 +159,12 @@ class GtuFormFilter extends BaseGtuFormFilter
     return $query;
   }
 
-  public function addLatLonColumnQuery($query, $values)
+  //JMHerpers 2018 08 16 rename function to _old
+  public function addLatLonColumnQuery_old($query, $values)
   {
     if( $values['lat_from'] != '' && $values['lon_from'] != '' && $values['lon_to'] != ''  && $values['lat_to'] != '' )
     {
-      //ftheeten 2018 02 03 inver lat lon
+	  //ftheeten 2018 02 03 inver lat lon
       $horizontal_box = "((".$values['lon_from'].",-180),(".$values['lon_to'].",180))";
       $query->andWhere("box(? :: text) @> location",$horizontal_box);
 
@@ -166,12 +181,34 @@ class GtuFormFilter extends BaseGtuFormFilter
     return $query;
   }
   
+  //JMHerpers 2018 08 16
+  public function addLatLonColumnQuery($query, $values)
+  {
+    if( $values['lat_from'] != '' && $values['lon_from'] != '' && $values['lon_to'] != ''  && $values['lat_to'] != '' ){
+		$wkt = "POLYGON((".$values['lon_from']." ".$values['lat_from'].",".$values['lon_to']." ".$values['lat_from'].",".$values['lon_to']." ".$values['lat_to'].",".$values['lon_from']." ".$values['lat_to'].",".$values['lon_from']." ".$values['lat_from']."))";
+
+		$query->andWhere("ST_Intersects( ST_GeomFromText(?,4326), the_geom)",$wkt);
+		$query->andWhere('location is not null');
+    }
+    return $query;
+  }
+  
     //ftheeten 2018 03 23
    public function addIGNumberColumnQuery($query, $values, $val)
   {
     if( $val != '' )
     {     
       $query->andWhere('id IN (SELECT s.gtu_ref FROM specimens s WHERE ig_num= ?)', $val);
+    }
+    return $query;
+  }
+  
+      //ftheeten 2018 08 05
+   public function addCollectionRefColumnQuery($query, $values, $val)
+  {
+    if( $val != '' )
+    {     
+      $query->andWhere(' collection_ref = ?  ', $val);
     }
     return $query;
   }

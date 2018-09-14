@@ -44,6 +44,7 @@ abstract class BaseImportsForm extends BaseFormDoctrine
       'gtu_tags_in_merge'              => new sfWidgetFormInputCheckbox(),
       'sensitive_information_withheld' => new sfWidgetFormInputCheckbox(),
       'source_database'                => new sfWidgetFormTextarea(),
+      'history_taxonomy'               => new sfWidgetFormTextarea(),
     ));
 
     $this->setValidators(array(
@@ -76,6 +77,7 @@ abstract class BaseImportsForm extends BaseFormDoctrine
       'gtu_tags_in_merge'              => new sfValidatorBoolean(array('required' => false)),
       'sensitive_information_withheld' => new sfValidatorBoolean(array('required' => false)),
       'source_database'                => new sfValidatorString(array('required' => false)),
+      'history_taxonomy'               => new sfValidatorString(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('imports[%s]');

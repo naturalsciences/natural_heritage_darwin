@@ -394,7 +394,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
     return $query ;
   }
   
-//ftheeten 2016 03 24
+  //ftheeten 2016 03 24
   public function addCatalogueRelationColumnQueryArrayRelations($query, $item_ref, $relations, $table, $field_prefix)
   {
 
@@ -461,6 +461,24 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
 				{
 					$queryTmp.=$field_prefix."_ref IN (".implode(",", $synonyms ).")";
 					$queryTmp.=" AND ".$field_prefix."_ref != ".$item_ref;
+                    //ftheeten 2018 09 03
+                    if(in_array("child",$relations))
+                    {
+                        //$queryTmp.=" OR 24=24 ";
+                        foreach($synonyms as $syno_object)
+                        {
+                            $queryTmp.=" OR ".$field_prefix."_path like '%/".$syno_object."/%'" ;
+                        }
+                    }
+                    elseif(in_array("direct_child",$relations))
+                    {
+                        foreach($synonyms as $syno_object)
+                        {
+                            $queryTmp.=" OR ".$field_prefix."_parent_ref = ".$syno_object ;
+                        }
+                    }
+                    
+                    
 				}
 				$queryTmp.= " ) ";
 

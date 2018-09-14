@@ -50,7 +50,7 @@
       </td>
     </tr>
     <tr>
-      <td colspan="2" id="specimen_gtu_ref_map"></td>
+      <td colspan="2" id="specimen_gtu_ref_map">widget</td>
     </tr>
   </tbody>
 </table>

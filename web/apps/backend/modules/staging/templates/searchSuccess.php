@@ -67,7 +67,12 @@
   </table>
   <br/>
 </div>
-
+<!--ftheeten 2018 09 02-->
+<div>
+	Taxonomic reference : <?php echo $form["taxonomic_metadata_ref"];?>
+	
+</div>
+<!---->
 <script language="javascript">
 $(document).ready(function () {
   $('.remove_staging').click(function(event)
@@ -87,8 +92,21 @@ $(document).ready(function () {
       });
    }
   });
+  
+  //ftheeten 2018 09 02
+  $(".taxonomy_metadata_ref").val("<?php print($import->getSpecimenTaxonomyRef());?>");
+  
+   $(".taxonomy_metadata_ref").change(
+		function()
+		{
+			var url_link=$(".ok_link").attr("href");
+			url_link=url_link+"/taxonomy_ref/"+$(this).val();
+			$(".ok_link").attr("href", url_link);
+		}
+   );
 });
 </script>
+
 <?php endif;?>
   <div class="blue_link float_left"><?php echo link_to(__('Back to Import'), 'import/index');?></div>
   <!--ftheeten 2016 12 07-->
@@ -100,7 +118,7 @@ $(document).ready(function () {
     <!--ftheeten 2017 08 30-->
    <div class="blue_link float_left"><?php echo link_to(__('Try to create missing peoples'), 'staging/createPeoples?import='.$import->getId() );?></div>
     <!--ftheeten 2018 02 26-->
-   <div class="blue_link float_left"><?php echo link_to(__('Import verified records'), 'staging/markok?import='.$import->getId());?></div>
+   <div class="blue_link float_left"><?php echo link_to(__('Import verified records'), 'staging/markok?import='.$import->getId(), array("class"=> "ok_link"));?></div>
 <?php endif;?>
 <?php //Else not valid form
   else:?>

@@ -63,13 +63,23 @@ class ImportsLocalityFormFilter extends BaseImportsFormFilter
       ->where('i.state != ?', 'deleted')
       ->andWhere('i.format = ?','locality');
      $this->addShowFinishedColumnQuery($query, 'is_finished', $values['show_finished']);
-    if($values['collection_ref'] != 0) $query->addWhere('i.collection_ref = ?', $values['collection_ref']) ;
+    if($values['collection_ref'] != 0) 
+    {
+        $query->addWhere('i.collection_ref = ?', $values['collection_ref']) ;
+    }
+    else
+    {
+        $query->orWhere('i.collection_ref IS NULL' ) ;         
+    }
     if($values['filename']) $query->addWhere('i.filename LIKE \'%'.$values['filename'].'%\'');
     if($values['state']) $query->addWhere('i.state = ?', $values['state']) ;
     // here, add where clause to look for import file only where the user have right on collection
-    $query->andWhereIn('collection_ref',array_keys(
-      Doctrine::getTable('Collections')->getAllAvailableCollectionsFor($this->options['user']))
-    );
+    if($values['collection_ref'] == 0) 
+    {
+        $query->andWhereIn('collection_ref',array_keys(
+          Doctrine::getTable('Collections')->getAllAvailableCollectionsFor($this->options['user']))
+        );
+    }    
 
 	return $query;
   }

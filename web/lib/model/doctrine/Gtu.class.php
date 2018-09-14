@@ -107,9 +107,16 @@ class Gtu extends BaseGtu
 			<div  style="width:500px;height:400px;" id="map_'.$this->getId().'" class="map_'.$this->getId().'"></div>
 				<div id="mouse-position_'.$this->getId().'"></div>
 			</div>
+			<!--jmherpers 2018 09 07-->
+			<select id="layer-select">
+			   <option value="Aerial">Aerial</option>
+			   <option value="AerialWithLabels" selected>Aerial with labels</option>
+			   <option value="Road">Road (static)</option>
+			   <option value="RoadOnDemand">Road (dynamic)</option>
+			</select>
 			 <script type="text/javascript">
 				var map;
-				var bingBackground;
+				//var bingBackground;
 				var view;
 				var mousePositionControl;
 				var scaleLineControl;
@@ -121,10 +128,10 @@ class Gtu extends BaseGtu
 					undefinedHTML: "&nbsp;"
 				});
 				scaleLineControl = new ol.control.ScaleLine();
-				bingBackground= new ol.layer.Tile({
+				/*bingBackground= new ol.layer.Tile({
 					preload: Infinity,
 					source: new ol.source.BingMaps({key:"Ap9VNKmWsntrnteCapydhid0fZxzbV_9pBTjok2rQZS4pi15zfBbIkJkvrZSuVnJ",  imagerySet:"AerialWithLabels" })
-				});
+				});*/
 				view= new ol.View({
 					center: [-4,15],
 					zoom: 5
@@ -161,8 +168,33 @@ class Gtu extends BaseGtu
 					style: style
 				});
 						   
+				//JMHerpers 2018 09 07 add other background maps
+				var styles = [
+					"Road",
+					"RoadOnDemand",
+					"Aerial",
+					"AerialWithLabels"
+				  ];
+				var layers = [];
+				var i, ii;
+				for (i = 0, ii = styles.length; i < ii; ++i) {
+					layers.push(new ol.layer.Tile({
+					  visible: false,
+					  preload: Infinity,
+					  source: new ol.source.BingMaps({
+						key: "Ap9VNKmWsntrnteCapydhid0fZxzbV_9pBTjok2rQZS4pi15zfBbIkJkvrZSuVnJ",
+						imagerySet: styles[i]
+						// use maxZoom 19 to see stretched tiles instead of the BingMaps
+						// "no photos at this zoom level" tiles
+						// maxZoom: 19
+					  })
+					}));
+				}
+	  
+				layers [styles.length] = vectorLayer;
+		
 				map=new ol.Map({
-					layers:[bingBackground, vectorLayer],
+					layers: layers,     //[bingBackground,vectorLayer],
 					target: "map_'.$this->getId().'",
 					view: view,
 					controls: ol.control.defaults({
@@ -173,6 +205,18 @@ class Gtu extends BaseGtu
 				var extent = vectorLayer.getSource().getExtent();
 				map.getView().fit(extent);
 				map.getView().setZoom(11);
+								
+				//JMHerpers 2018 09 07 change map background
+				var select = document.getElementById("layer-select");
+				function onChange() {
+					var style = select.value;
+					for (var i = 0, ii = layers.length; i < ii; ++i) {
+					  layers[i].setVisible(styles[i] === style);
+					}
+				}
+				select.addEventListener("change", onChange);
+				onChange();
+				////////////
 			</script>';
 		}
     return '';

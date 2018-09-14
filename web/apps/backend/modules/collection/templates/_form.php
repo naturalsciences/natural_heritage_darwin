@@ -89,6 +89,14 @@ $(document).ready(function ()
           <?php echo $form['parent_ref'] ?>
         </td>
       </tr>
+      <!--ftheeten 2018 08 08-->
+       <tr>
+        <th><?php echo $form['allow_duplicates']->renderLabel() ?></th>
+        <td>
+          <?php echo $form['allow_duplicates']->renderError() ?>
+          <?php echo $form['allow_duplicates'] ?>
+        </td>
+      </tr>
       <tr>
         <td colspan="2">
         <table class="encoding collections_rights" id="user_right">

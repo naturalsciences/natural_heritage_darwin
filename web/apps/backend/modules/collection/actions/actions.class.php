@@ -538,5 +538,19 @@ class collectionActions extends DarwinActions
 	   
    }
    
+   //ftheeten 2018 08 08
+   public function executeDescCollectionJSON(sfWebRequest $request)
+   {
+        $conn= Doctrine_Manager::connection();
+        $sql = "SELECT * from collections WHERE id=:id LIMIT 1;";
+		
+        $q = $conn->prepare($sql);
+		$q->execute(array(':id'=> $request->getParameter("id") ));
+        $result = $q->fetchAll(PDO::FETCH_ASSOC);
+        $this->getResponse()->setContentType('application/json');
+		return  $this->renderText(json_encode($result));
+        
+   }
+   
    
 }

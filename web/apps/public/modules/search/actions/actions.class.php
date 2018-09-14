@@ -512,4 +512,14 @@ class searchActions extends DarwinActions
 	    $this->getResponse()->setCookie('institution_ref_session',$collection->getInstitutionRef());
 	   
    }
+   
+   //ftheeten 2018 09 14
+     public function executeConvert4326WKT(sfWebRequest $request)
+	  {
+		$results = Doctrine::getTable('Gtu')->get4326WKT($request->getParameter('wkt'), $request->getParameter('srid'));
+
+		$this->getResponse()->setContentType('application/json');
+		 return  $this->renderText(json_encode($results,JSON_UNESCAPED_SLASHES));
+	  
+	  }
 }

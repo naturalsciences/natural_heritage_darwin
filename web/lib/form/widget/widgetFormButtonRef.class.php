@@ -115,7 +115,7 @@ $("#'.$this->generateId($name).'_button a.but_text").click(button_ref_modal);';
       }
       
       //ftheeten 2018 02 08
-	  if(strtolower($options["model"])=="institutions")
+	   if(strtolower($options["model"])=="institutions"&&(strpos("/new",$_SERVER['REQUEST_URI'])||strpos("/edit",$_SERVER['REQUEST_URI'])))
 	  {
 		
         if(array_key_exists('institution_ref_session',$_COOKIE ))

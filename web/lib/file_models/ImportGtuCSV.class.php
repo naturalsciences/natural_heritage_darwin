@@ -108,6 +108,10 @@ class ImportGtuCSV
         
         $tags[17]="locality_text";
         $tags[18]="ecology_text";
+        $tags[19]="habitat_text";
+         $tags[20]="ecology";
+        $tags[21]="habitat";
+
 
 		$fields[0]="station_type";
 		$fields[1]="sampling_code";
@@ -122,7 +126,7 @@ class ImportGtuCSV
 		$fields[10]="expeditions";
 		$fields[11]="expedition";			
 		$fields[12]="iso3166";
-		$fields[13]="iso3166_2";
+		$fields[13]="iso3166_subdvision";
 		$fields[14]="countries";
 		$fields[15]="country";
 		
@@ -164,7 +168,7 @@ class ImportGtuCSV
 		$fields[48]="sampling_fixation";
 		$fields[49]="station_notes";
 		$fields[50]="sampling_notes"; 
-
+        $fields[51]="bounding_box"; 
 		
 		
         #this would be in the template but in property table in SQL
@@ -393,7 +397,9 @@ class ImportGtuCSV
 			}
 			if($has_people)
 			{
-				$obj->setCollectors('{'.implode(",",array_map(array($this, "prepareSQLArrayString"),$collectors)).'}');	
+				$colls=implode(",",array_map(array($this, "prepareSQLArrayString"),$collectors));
+				$obj->setCollectors('{'.$colls.'}');
+				
 			}
 			if($obj!==null)
 			{
@@ -420,13 +426,13 @@ class ImportGtuCSV
 				{
 					$obj->setCountries('{'.implode(",",array_map(array($this, "prepareSQLArrayString"),$countries)).'}');	
 				}
-				$val=$this->getValueIfFieldExists("iso3166_2", $p_row);
+				$val=$this->getValueIfFieldExists("iso3166", $p_row);
 				if($val)
 				{
 					//print($val."\r\n");
 					$obj->setIso3166($val);				
 				}
-				$val=$this->getValueIfFieldExists("iso3166_3", $p_row);
+				$val=$this->getValueIfFieldExists("iso3166_subdivision", $p_row);
 				if($val)
 				{
 					//print($val."\r\n");
@@ -686,6 +692,13 @@ class ImportGtuCSV
 					//print($val."\r\n");
 					$obj->setSamplingFixation($val);				
 				}
+                
+                $val=$this->getValueIfFieldExists("bounding_box", $p_row);
+				if($val)
+				{
+					//print($val."\r\n");
+					$obj->setCoordinatesWkt("POLYGON((".$val."))");				
+				}
 				if($obj!==null)
 				{
 					$obj->setImportRef($this->import_id);
@@ -696,6 +709,12 @@ class ImportGtuCSV
 					try
                     { 
                         $obj->save() ; 
+						//collectors
+						if(count(collectors)>0)
+						{
+							$colls2=implode(";",array_map('trim',$collectors));				
+							$this->handlePeople("collector",$colls2, $obj->getId());
+						}
                         
                     }
                     catch(Doctrine_Exception $ne)
@@ -793,6 +812,19 @@ class ImportGtuCSV
         }
   }	
   
+  private function handlePeople($type,$names, $staging_id)
+  {
+    foreach(explode(";",$names) as $name)
+    {
+      $people = new StagingPeople() ;
+      $people->setPeopleType($type) ;
+      $people->setFormatedName($name) ;
+      $people->setReferencedRelation("staging_gtu") ;
+	  $people->setRecordId($staging_id);
+	  $people->save();
+    }
+  }
+  
    protected function addTags($p_id, $p_obj, $p_row)
   {
  
@@ -821,7 +853,7 @@ class ImportGtuCSV
                   $tag_obj->setGroupName("hydrographic") ;
                   //$tag_obj->setSubGroupName($name_field) ;
                 }
-                else if(in_array(strtolower($name_field),array("ecology", "natural_site", "ecology_text")))
+                else if(in_array(strtolower($name_field),array("ecology", "natural_site", "ecology_text", "habitat", "habitat_text")))
                 {
                     $tag_obj->setGroupName("habitat");
                     //$tag_obj->setSubGroupName(str_replace($name_field,'_text','')) ;

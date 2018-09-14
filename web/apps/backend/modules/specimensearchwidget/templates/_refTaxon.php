@@ -126,6 +126,15 @@ $(document).ready(function () {
     
     //init select level on species
     //$('.taxon_level_ref>option:eq(48)').attr('selected', true);
+    
+        //ftheeten 2018 08 03
+   /* $('#specimen_search_filters_taxon_item_ref_name').click(
+        function ()
+        {
+            $(this).parent(".complete_ref").find(".but_more").click();
+           // alert($(this).closest(".but_more").attr("title"));
+        }
+    );*/
 
 });
 </script>

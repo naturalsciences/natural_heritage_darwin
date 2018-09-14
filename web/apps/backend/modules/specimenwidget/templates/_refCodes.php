@@ -85,9 +85,26 @@
 </table>
 <script  type="text/javascript">
 $(document).ready(function () {
-
+    
     $('#add_code').click(function()
     {
+        //ftheeten 2018 08 08
+        var duplicateAllowed="false";
+        if(typeof $("#specimen_collection_ref").val() !=="undefined")
+        {
+            //alert("go");
+            jQuery.getJSON( "<?php print(url_for("collection/descCollectionJSON")); ?>", {id:$("#specimen_collection_ref").val()})
+            .done(function(result)
+            {
+                var allow_duplicates=result[0].allow_duplicates;
+                
+                if(allow_duplicates)
+                {
+                    $("#specimen_unicity_check").prop("checked",false);
+                }
+            }
+            );
+        }
         hideForRefresh('#refCodes');
         parent_el = $(this).closest('table.property_values');
         url = $(this).attr('href')+ (0+$(parent_el).find('tbody').length);

@@ -16,7 +16,8 @@
             <div class='blue_link' id='get_specimen_number'><a><?php echo __('Get Specimen number');?></a></div>
             <div class='blue_link' id='get_station_number'><a><?php echo __('Get stations number');?></a></div></td>
         </tr>
-<?php endif;?>          
+<?php endif;?>   
+        <!--ftheeten 2018 08 05-->               
         <tr>
           <th><?php echo $form['code']->renderLabel() ?></th>
          
@@ -53,13 +54,19 @@
             <?php echo image_tag('add_blue.png');?> <a href="<?php echo url_for('gtu/andSearch');?>" class="and_tag"><?php echo __('And'); ?></a>
           </td>
         </tr>
+        <tr>
+		  <th><?php echo $form['collection_ref']->renderLabel() ?></th>
+        </tr>
+        <tr>
+        <td><?php echo $form['collection_ref']->render() ?> All :<input type="checkbox" id="all_collections" class="all_collections" checked></td>
+        </tr>
       </tbody>
 
       </table>
 
       <fieldset id="lat_long_set">
         <legend><?php echo __('Show Result as map');?> <input type="checkbox" id="show_as_map" autocomplete="off"></legend>
-          <table>
+        <table>
             <tr>
               <td>
               </td>
@@ -78,25 +85,26 @@
             <tr>
               <th class="right_aligned"><?php echo __('And');?></th>
               <td><?php echo $form['lat_to'];?></td>
-              <td><?php echo $form['lon_to'];?><?php echo image_tag('remove.png', 'alt=Delete class=clear_prop'); ?></td>
+              <td><?php echo $form['lon_to'];?><?php echo image_tag('remove.png', 'alt=Delete class=clear_prop'); ?>
+			  </td>
             </tr>
-          </table>
-          <div id="map_search_form" style="display:none">
+        </table>
+		  
+        <div id="map_search_form" style="display:none">
             <?php echo __('Show accuracy of each point');?> <input type="checkbox" id="show_accuracy" /><br /><br />
-            <div style="height:400px;width:100%" id="smap"></div>
-
- <div class="pager paging_info hidden">
-   <?php echo image_tag('info2.png');?>
-    <span class="inner_text"></span>
-  </div>
-
-         </div>
+            <div style="height:400px;width:600px" id="smap"></div>
+			<div class="pager paging_info hidden">
+				<?php echo image_tag('info2.png');?>
+				<span class="inner_text"></span>
+			</div>
+		</div>
     </fieldset>
     <?php echo $form->renderHiddenFields();?>
     <div class="edit">
       <input class="search_submit" type="submit" name="search" value="<?php echo __('Search'); ?>" />
     </div>
-<div class="clear"></div>
+	<div class="clear"></div>
+	
     <script  type="text/javascript">
     //ftheeten 2018 04 10
     var urlParam= function(name){
@@ -111,42 +119,50 @@
     
     initSearchMap();
 
-	
-	
-	
     $(document).ready(function () {
-	
-	
-
-      $('.catalogue_gtu').choose_form({});
-
-      $(".new_link").click( function() {
-        url = $(this).find('a').attr('href'),
-        data= $('.search_form').serialize(),
-        reg=new RegExp("(<?php echo $form->getName() ; ?>)", "g");   
-        open(url+'?'+data.replace(reg,'gtu'));
-        return false;  
-      });
-
-
-      var num_fld = 1;
-      $('.and_tag').click(function()
-      {
-        hideForRefresh('#gtu_filter');
-        $.ajax({
-            type: "GET",
-            url: $(this).attr('href') + '/num/' + (num_fld++) ,
-            success: function(html)
+		$("#all_collections").change(
+            function()
             {
-              $('table.search > tbody .and_row').before(html);
-              showAfterRefresh('#gtu_filter');
+                if(this.checked){
+                    oldCollId=$(".collection_ref").val();
+                    $(".collection_ref").prop('disabled', true);
+                    $(".collection_ref").val("/");
+                }
+                else{
+                    $(".collection_ref").prop('disabled', false);
+                    $(".collection_ref").val(oldCollId);
+                }
             }
-        });
-        return false;
+		);
+       // onload
+        $('#all_collections').prop('checked', true);
+        $(".collection_ref").prop('disabled', true);
+        $(".collection_ref").val("/");
 
-      });
-	  
+		$('.catalogue_gtu').choose_form({});
 
+		$(".new_link").click( function() {
+			url = $(this).find('a').attr('href'),
+			data= $('.search_form').serialize(),
+			reg=new RegExp("(<?php echo $form->getName() ; ?>)", "g");   
+			open(url+'?'+data.replace(reg,'gtu'));
+			return false;  
+		});
+
+		var num_fld = 1;
+		$('.and_tag').click(function(){
+			hideForRefresh('#gtu_filter');
+			$.ajax({
+				type: "GET",
+				url: $(this).attr('href') + '/num/' + (num_fld++) ,
+				success: function(html)
+				{
+				  $('table.search > tbody .and_row').before(html);
+				  showAfterRefresh('#gtu_filter');
+				}
+			});
+			return false;
+		});
         
        //ftheeten 2016 06 28
         $('#get_ig').click( function()
@@ -205,15 +221,11 @@
         });
         
        //ftheeten 2018 04 10
-          var ig_num=urlParam('ig_num');
-          if(!!ig_num)
-          {
-            
-                $("#gtu_filters_ig_number").val(decodeURIComponent(ig_num));
-                $( ".search_form" ).submit();
-          }    
-        
-        
+        var ig_num=urlParam('ig_num');
+        if(!!ig_num){
+			$("#gtu_filters_ig_number").val(decodeURIComponent(ig_num));
+			$( ".search_form" ).submit();
+        }            
     });
     </script>
     <div class="search_results">

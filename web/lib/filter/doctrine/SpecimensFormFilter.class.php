@@ -67,7 +67,8 @@ $this->widgetSchema['taxon_relation'] = new sfWidgetFormChoice(array('choices'=>
       'nullable' => true
     ));
 
-    $this->validatorSchema['taxon_item_ref'] = new sfValidatorInteger(array('required'=>false));
+    //$this->validatorSchema['taxon_item_ref'] = new sfValidatorInteger(array('required'=>false));
+    $this->validatorSchema['taxon_item_ref'] = new sfValidatorString(array('required'=>false));
     //$this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($rel)));
 //ftheeten 2016 03 24
 $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($rel), 'multiple'=>true));
@@ -2116,6 +2117,12 @@ gtu_location[1]::varchar as longitude,
 
     //$this->addCatalogueRelationColumnQuery($query, $values['taxon_item_ref'], $values['taxon_relation'],'taxonomy','taxon');
     //ftheeten 2016 03 24
+    /*$arrayTaxaRef=explode(';',$values['taxon_item_ref']);
+    foreach($arrayTaxaRef as $tmp_ref)
+    {
+        $this->addCatalogueRelationColumnQueryArrayRelations($query, $tmp_ref, $values['taxon_relation'],'taxonomy','taxon');
+    }*/
+    
     $this->addCatalogueRelationColumnQueryArrayRelations($query, $values['taxon_item_ref'], $values['taxon_relation'],'taxonomy','taxon');
 
     $this->addCatalogueRelationColumnQuery($query, $values['chrono_item_ref'], $values['chrono_relation'],'chronostratigraphy','chrono');

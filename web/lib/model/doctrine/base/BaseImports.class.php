@@ -34,6 +34,7 @@
  * @property boolean $gtu_tags_in_merge
  * @property boolean $sensitive_information_withheld
  * @property string $source_database
+ * @property string $history_taxonomy
  * @property Collections $Collections
  * @property Users $Users
  * @property Doctrine_Collection $Staging
@@ -69,6 +70,7 @@
  * @method boolean             getGtuTagsInMerge()                 Returns the current record's "gtu_tags_in_merge" value
  * @method boolean             getSensitiveInformationWithheld()   Returns the current record's "sensitive_information_withheld" value
  * @method string              getSourceDatabase()                 Returns the current record's "source_database" value
+ * @method string              getHistoryTaxonomy()                Returns the current record's "history_taxonomy" value
  * @method Collections         getCollections()                    Returns the current record's "Collections" value
  * @method Users               getUsers()                          Returns the current record's "Users" value
  * @method Doctrine_Collection getStaging()                        Returns the current record's "Staging" collection
@@ -103,6 +105,7 @@
  * @method Imports             setGtuTagsInMerge()                 Sets the current record's "gtu_tags_in_merge" value
  * @method Imports             setSensitiveInformationWithheld()   Sets the current record's "sensitive_information_withheld" value
  * @method Imports             setSourceDatabase()                 Sets the current record's "source_database" value
+ * @method Imports             setHistoryTaxonomy()                Sets the current record's "history_taxonomy" value
  * @method Imports             setCollections()                    Sets the current record's "Collections" value
  * @method Imports             setUsers()                          Sets the current record's "Users" value
  * @method Imports             setStaging()                        Sets the current record's "Staging" collection
@@ -225,6 +228,9 @@ abstract class BaseImports extends DarwinModel
              'default' => false,
              ));
         $this->hasColumn('source_database', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('history_taxonomy', 'string', null, array(
              'type' => 'string',
              ));
     }

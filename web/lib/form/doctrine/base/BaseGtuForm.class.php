@@ -49,6 +49,13 @@ abstract class BaseGtuForm extends BaseFormDoctrine
       'depth_min'               => new sfWidgetFormInputText(),
       'depth_max'               => new sfWidgetFormInputText(),
       'depth_accuracy'          => new sfWidgetFormInputText(),
+      'geom_type'               => new sfWidgetFormTextarea(),
+      'collection_ref'          => new sfWidgetFormInputText(),
+      'import_ref'              => new sfWidgetFormInputText(),
+      'collector_refs'          => new sfWidgetFormTextarea(),
+      'expedition_refs'         => new sfWidgetFormTextarea(),
+      'the_geom'                => new sfWidgetFormInputText(),
+      'epsg'                    => new sfWidgetFormInputText(),
     ));
 
     $this->setValidators(array(
@@ -86,6 +93,13 @@ abstract class BaseGtuForm extends BaseFormDoctrine
       'depth_min'               => new sfValidatorNumber(array('required' => false)),
       'depth_max'               => new sfValidatorNumber(array('required' => false)),
       'depth_accuracy'          => new sfValidatorNumber(array('required' => false)),
+      'geom_type'               => new sfValidatorString(array('required' => false)),
+      'collection_ref'          => new sfValidatorInteger(array('required' => false)),
+      'import_ref'              => new sfValidatorInteger(array('required' => false)),
+      'collector_refs'          => new sfValidatorString(array('required' => false)),
+      'expedition_refs'         => new sfValidatorString(array('required' => false)),
+      'the_geom'                => new sfValidatorPass(array('required' => false)),
+      'epsg'                    => new sfValidatorInteger(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('gtu[%s]');

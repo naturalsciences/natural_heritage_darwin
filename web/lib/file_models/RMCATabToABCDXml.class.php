@@ -258,21 +258,36 @@ class RMCATabToABCDXml
         $higher_taxa = $this->testAndAppendTag($taxon_ident, null, "HigherTaxa", null, null, true);
         
         $name_atomized_zoolog= $this->testAndAppendTag($scientific_name, null, "NameAtomised/Zoological", null, null, true);
-
-        if (array_key_exists(strtolower("Subspecies"), $this->headers_inverted)) {
-            $this->testAndAppendTag($name_atomized_zoolog, "Subspecies", "SubspeciesEpithet", $p_valueArray);
-        }  
-
-        if (array_key_exists(strtolower("Species"), $this->headers_inverted)) {
-            $this->testAndAppendTag($name_atomized_zoolog, "Species", "SpeciesEpithet", $p_valueArray);
-        }      
-        
-        if (array_key_exists(strtolower("Genus"), $this->headers_inverted)) {
-            $this->testAndAppendTag($name_atomized_zoolog, "Genus", "GenusOrMonomial", $p_valueArray);
+ 
+       // always declare higer rank before lower one (for auto-genration of full taxonomic name)
+	   if (array_key_exists(strtolower("Phylum"), $this->headers_inverted)) {
+            if (strlen(trim($p_valueArray[$this->headers_inverted[strtolower("phylum")]]))>0)
+            {
+                $higher_taxon = $this->testAndAppendTag($higher_taxa, null, "HigherTaxon", null, null, true);
+                $this->testAndAppendTag($higher_taxon, null, "HigherTaxonRank", null, "phylum");
+                $this->testAndAppendTag($higher_taxon, "Phylum", "HigherTaxonName", $p_valueArray);
+            }
         }
-      
-        
-        if (array_key_exists(strtolower("Family"), $this->headers_inverted)) {
+		
+	    if (array_key_exists(strtolower("Class"), $this->headers_inverted)) {
+            if (strlen(trim($p_valueArray[$this->headers_inverted[strtolower("Class")]]))>0)
+            {
+                $higher_taxon = $this->testAndAppendTag($higher_taxa, null, "HigherTaxon", null, null, true);
+                $this->testAndAppendTag($higher_taxon, null, "HigherTaxonRank", null, "classis");
+                $this->testAndAppendTag($higher_taxon, "Class", "HigherTaxonName", $p_valueArray);
+            }
+        }
+		
+		if (array_key_exists(strtolower("Order"), $this->headers_inverted)) {
+            if (strlen(trim($p_valueArray[$this->headers_inverted[strtolower("Order")]]))>0)
+            {
+                $higher_taxon = $this->testAndAppendTag($higher_taxa, null, "HigherTaxon", null, null, true);
+                $this->testAndAppendTag($higher_taxon, null, "HigherTaxonRank", null, "ordo");
+                $this->testAndAppendTag($higher_taxon, "Order", "HigherTaxonName", $p_valueArray);
+            }
+        }
+		
+	    if (array_key_exists(strtolower("Family"), $this->headers_inverted)) {
             if (strlen(trim($p_valueArray[$this->headers_inverted[strtolower("Family")]]))>0)
             {
                 $higher_taxon = $this->testAndAppendTag($higher_taxa, null, "HigherTaxon", null, null, true);
@@ -281,30 +296,18 @@ class RMCATabToABCDXml
             }
         }
         
-        if (array_key_exists(strtolower("Order"), $this->headers_inverted)) {
-            if (strlen(trim($p_valueArray[$this->headers_inverted[strtolower("Order")]]))>0)
-            {
-                $higher_taxon = $this->testAndAppendTag($higher_taxa, null, "HigherTaxon", null, null, true);
-                $this->testAndAppendTag($higher_taxon, null, "HigherTaxonRank", null, "ordo");
-                $this->testAndAppendTag($higher_taxon, "Order", "HigherTaxonName", $p_valueArray);
-            }
+        if (array_key_exists(strtolower("Genus"), $this->headers_inverted)) {
+            $this->testAndAppendTag($name_atomized_zoolog, "Genus", "GenusOrMonomial", $p_valueArray);
         }
-        if (array_key_exists(strtolower("Class"), $this->headers_inverted)) {
-            if (strlen(trim($p_valueArray[$this->headers_inverted[strtolower("Class")]]))>0)
-            {
-                $higher_taxon = $this->testAndAppendTag($higher_taxa, null, "HigherTaxon", null, null, true);
-                $this->testAndAppendTag($higher_taxon, null, "HigherTaxonRank", null, "classis");
-                $this->testAndAppendTag($higher_taxon, "Class", "HigherTaxonName", $p_valueArray);
-            }
-        }
-        if (array_key_exists(strtolower("Phylum"), $this->headers_inverted)) {
-            if (strlen(trim($p_valueArray[$this->headers_inverted[strtolower("phylum")]]))>0)
-            {
-                $higher_taxon = $this->testAndAppendTag($higher_taxa, null, "HigherTaxon", null, null, true);
-                $this->testAndAppendTag($higher_taxon, null, "HigherTaxonRank", null, "phylum");
-                $this->testAndAppendTag($higher_taxon, "Phylum", "HigherTaxonName", $p_valueArray);
-            }
-        }
+      
+		if (array_key_exists(strtolower("Species"), $this->headers_inverted)) {
+            $this->testAndAppendTag($name_atomized_zoolog, "Species", "SpeciesEpithet", $p_valueArray);
+        }  
+		
+        if (array_key_exists(strtolower("Subspecies"), $this->headers_inverted)) {
+            $this->testAndAppendTag($name_atomized_zoolog, "Subspecies", "SubspeciesEpithet", $p_valueArray);
+        }  
+         
         
         $this->testAndAppendTag($ident, "IdentifiedBy", "Identifiers/Identifier/PersonName/FullName", $p_valueArray);
         
@@ -342,18 +345,29 @@ class RMCATabToABCDXml
                 if (is_numeric($p_valueArray[$this->headers_inverted[strtolower($prefix."Year")]])) 
                 {
                     $dateTmp=$p_valueArray[$this->headers_inverted[strtolower($prefix."Year")]];               
-                    //month
+                     //month
                     if(array_key_exists(strtolower($prefix."Month"), $this->headers_inverted)) 
                     {
-                        if (is_numeric($p_valueArray[$this->headers_inverted[strtolower($prefix."Month")]])) 
+						$monthdate = $p_valueArray[$this->headers_inverted[strtolower($prefix."Month")]];
+						if (is_numeric($monthdate)) 
                         {
-                            $dateTmp=$dateTmp."-".$p_valueArray[$this->headers_inverted[strtolower($prefix."Month")]];
+							if((int)$monthdate < 10&&strlen((string)$monthdate)==1){
+								$dateTmp=$dateTmp."-"."0".$monthdate;
+							}else{
+								$dateTmp=$dateTmp."-".$monthdate;
+							}
+						
                             //day
                             if(array_key_exists(strtolower($prefix."Day"), $this->headers_inverted)) 
                             {
-                                if (is_numeric($p_valueArray[$this->headers_inverted[strtolower($prefix."Day")]])) 
+								$daydate = $p_valueArray[$this->headers_inverted[strtolower($prefix."Day")]];
+                                if (is_numeric($daydate)) 
                                 {
-                                    $dateTmp=$dateTmp."-".$p_valueArray[$this->headers_inverted[strtolower($prefix."Day")]];
+                                    if($daydate <10&&strlen((string)$daydate==1)){
+										$dateTmp=$dateTmp."-"."0".$daydate;
+									}else{
+										$dateTmp=$dateTmp."-".$daydate ;
+									}
                                 }
                             }
                         }
@@ -1012,7 +1026,7 @@ class RMCATabToABCDXml
         $this->addStorage($unit, $p_row);
         $this->addNotes($unit, $p_row);
         
-        //print($dom->saveXML($root, LIBXML_NOEMPTYTAG ));
+        print($dom->saveXML($root, LIBXML_NOEMPTYTAG ));
        
         return $dom->saveXML($root, LIBXML_NOEMPTYTAG );
     }
