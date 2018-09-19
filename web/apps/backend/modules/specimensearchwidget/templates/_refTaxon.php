@@ -28,6 +28,11 @@
       <td><?php echo $form['taxon_relation'];?></td>
       <td><?php echo $form['taxon_item_ref'];?></td>
     </tr>
+    <tr><td></td></tr>
+    <tr>
+        <td><?php echo __("Taxonomic group : ");?></td>
+        <td><?php echo $form['taxonomy_metadata_ref'];?></td>
+    </tr>
     </tbody>
 </table>
 

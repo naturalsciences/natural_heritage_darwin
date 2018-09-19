@@ -40,6 +40,7 @@ function addIdentifierValue(people_ref,ref_table)
   return false;
 }
 </script>
+<div id="identification_placeholder" style="visibility: hidden"></div>
 <table class="property_values" id="identifications">
   <thead style="<?php echo ($form['Identifications']->count() || $form['newIdentification']->count())?'':'display: none;';?>" class="spec_ident_head">
     <tr>
@@ -117,4 +118,32 @@ $(document).ready(function () {
          }
        });
 });
+
+    //ftheeten 2018 09 18
+    function onElementInserted(containerSelector, elementSelector, callback) {
+
+            var onMutationsObserved = function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.addedNodes.length) {
+                        var elements = $(mutation.addedNodes).find(elementSelector);
+                        for (var i = 0, len = elements.length; i < len; i++) {
+                            callback(elements[i]);
+                        }
+                    }
+                });
+            };
+
+            var target = $(containerSelector)[0];
+            var config = { childList: true, subtree: true };
+            var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+            var observer = new MutationObserver(onMutationsObserved);    
+            observer.observe(target, config);
+
+        }
+
+        onElementInserted('body', '.identification_subject', function(element)
+        {
+            $(element).val($("#specimen_taxon_ref_name").val());
+        }
+     );
 </script>

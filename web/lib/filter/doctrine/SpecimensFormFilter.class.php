@@ -815,6 +815,14 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
         ), array( 'style' => "display: inline-block;text-align:center"));
     //ftheeten 2017 04 27
 	$this->validatorSchema['loan_is_closed'] = new sfValidatorPass();
+    
+    	 //2018 09 19
+     
+	$this->widgetSchema['taxonomy_metadata_ref'] = new sfWidgetFormChoice(array(
+      'choices' => TaxonomyMetadataTable::getAllTaxonomicMetadata( 'id ASC',true)  //array_merge( array(''=>'All'),TaxonomyMetadataTable::getAllTaxonomicMetadata("id ASC"))
+    ));
+	 $this->widgetSchema['taxonomy_metadata_ref']->setAttributes(array('class'=>'col_check_metadata_ref col_check_metadata_callback'));
+	$this->validatorSchema['taxonomy_metadata_ref'] = new sfValidatorInteger(array('required'=>false));
   }
 
   public function addGtuTagValue($num)
@@ -1820,6 +1828,17 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
     //Do Nothing here, the job is done in the doBuildQuery with check collection rights
     return $query;
   }
+  
+    
+  //ftheeten 2018 09 19
+   public function addTaxonomicMetadataRef($query, $val) 
+   {
+    if(is_numeric($val))
+    {
+         $query->andWhere("EXISTS (select t.id from taxonomy t where t.metadata_ref = $val AND t.id = s.taxon_ref)") ;
+    }
+    return $query ;
+  }
 
   public function addPropertiesQuery($query, $type , $applies_to, $value_from, $value_to, $unit) {
     $sql_part = array();
@@ -2099,6 +2118,9 @@ gtu_location[1]::varchar as longitude,
     $this->addNamingColumnQuery($query, 'lithostratigraphy', 'litho_name_indexed', $values['litho_name'],'s','litho_name_indexed');
     $this->addNamingColumnQuery($query, 'lithology', 'lithology_name_indexed', $values['lithology_name'],'s','lithology_name_indexed');
     $this->addNamingColumnQuery($query, 'mineralogy', 'mineral_name_indexed', $values['mineral_name'],'s','mineral_name_indexed');
+    
+    //ftheeten 2018 09 19
+    $this->addTaxonomicMetadataRef($query, $values["taxonomy_metadata_ref"]);
 
     $this->addPropertiesQuery($query, $values['property_type'] , $values['property_applies_to'], $values['property_value_from'], $values['property_value_to'], $values['property_units']);
 

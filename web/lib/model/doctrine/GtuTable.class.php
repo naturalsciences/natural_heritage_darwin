@@ -20,6 +20,7 @@ class GtuTable extends DarwinTable
 	
   }*/
   
+  //ftheeten 2018 09 10
   public static function getPostGISProj4($p_srid)
   {
     $conn_MGR = Doctrine_Manager::connection();
@@ -41,6 +42,8 @@ class GtuTable extends DarwinTable
          return "";
   }
   
+  
+  //ftheeten 2018 09 17
   public function get4326WKT($p_wkt, $p_srid)
   {
      $conn_MGR = Doctrine_Manager::connection();
@@ -52,6 +55,30 @@ class GtuTable extends DarwinTable
         $stmt=$conn->prepare($query);
         $stmt->bindValue(":wkt", $p_wkt); 
         $stmt->bindValue(":srid", $p_srid);     
+        $stmt->execute();
+        $rs=$stmt->fetchAll(PDO::FETCH_ASSOC);
+       
+         if(count($rs)>0)
+         {
+         
+              return $rs[0]["wkt"];
+         }
+         return "";
+  }
+  
+   //ftheeten 2018 09 17
+  public function convertWKT($p_wkt, $p_source_srid, $p_target_srid)
+  {
+     $conn_MGR = Doctrine_Manager::connection();
+        $conn = $conn_MGR->getDbh();
+               
+        $rows=array();
+        
+        $query="SELECT ST_asText(ST_TRANSFORM(ST_GEOMFROMTEXT(:wkt,:sridsource),:sridtarget)) as wkt;";
+        $stmt=$conn->prepare($query);
+        $stmt->bindValue(":wkt", $p_wkt); 
+        $stmt->bindValue(":sridsource", $p_source_srid); 
+        $stmt->bindValue(":sridtarget", $p_target_srid);  		
         $stmt->execute();
         $rs=$stmt->fetchAll(PDO::FETCH_ASSOC);
        

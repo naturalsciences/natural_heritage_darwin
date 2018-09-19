@@ -516,8 +516,24 @@ class searchActions extends DarwinActions
    //ftheeten 2018 09 14
      public function executeConvert4326WKT(sfWebRequest $request)
 	  {
-		$results = Doctrine::getTable('Gtu')->get4326WKT($request->getParameter('wkt'), $request->getParameter('srid'));
-
+	      $results=Array();
+		if($request->hasParameter('wkt')&&$request->hasParameter('srid'))
+		{
+			$results = Doctrine::getTable('Gtu')->get4326WKT($request->getParameter('wkt'), $request->getParameter('srid'));
+		}
+		$this->getResponse()->setContentType('application/json');
+		 return  $this->renderText(json_encode($results,JSON_UNESCAPED_SLASHES));
+	  
+	  }
+	  
+	     //ftheeten 2018 09 14
+		public function executeConvertWKT(sfWebRequest $request)
+	  {
+		  $results=Array();
+		if($request->hasParameter('wkt')&&$request->hasParameter('srid_source')&&$request->hasParameter('srid_target'))
+		{
+			$results = Doctrine::getTable('Gtu')->convertWKT($request->getParameter('wkt'), $request->getParameter('srid_source'),  $request->getParameter('srid_target'));
+		}
 		$this->getResponse()->setContentType('application/json');
 		 return  $this->renderText(json_encode($results,JSON_UNESCAPED_SLASHES));
 	  

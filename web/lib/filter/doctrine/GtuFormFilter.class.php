@@ -188,6 +188,7 @@ class GtuFormFilter extends BaseGtuFormFilter
 		$wkt = "POLYGON((".$values['lon_from']." ".$values['lat_from'].",".$values['lon_to']." ".$values['lat_from'].",".$values['lon_to']." ".$values['lat_to'].",".$values['lon_from']." ".$values['lat_to'].",".$values['lon_from']." ".$values['lat_from']."))";
 
 		$query->andWhere("ST_Intersects( ST_GeomFromText(?,4326), the_geom)",$wkt);
+		//$query->andWhere("ST_Intersects( ST_GeomFromText(?,4326), ST_GeomFromText(wkt_str,4326))",$wkt);
 		$query->andWhere('location is not null');
     }
     return $query;

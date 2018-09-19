@@ -87,7 +87,7 @@ class GtuForm extends BaseGtuForm
 	
 	
 		//this group ftheeten 2016 02 05
-    $this->widgetSchema['coordinates_source']= new sfWidgetFormChoice(array('choices'=>array('DD'=> 'Decimal', 'DMS'=>'Degrees Minutes Seconds', 'UTM'=>'UTM', 'ISSUE'=>'Issue (to check)')));
+    $this->widgetSchema['coordinates_source']= new sfWidgetFormChoice(array('choices'=>array('DD'=> 'Decimal', 'DMS'=>'Degrees Minutes Seconds', 'UTM'=>'Meters(UTM)', 'ISSUE'=>'Issue (to check)')));
 	$this->widgetSchema['coordinates_source']->setAttributes(array('class'=>'coordinates_source'));
 	$this->widgetSchema['coordinates_source']->setDefault(array(0));
 	//$this->validatorSchema['coordinates_source'] = new sfValidatorPass();
@@ -127,7 +127,7 @@ class GtuForm extends BaseGtuForm
 	//$this->widgetSchema['longitude_utm']=new sfWidgetFormInputText();
 	$this->widgetSchema['longitude_utm']->setAttributes(array('class'=>'UTMLong UTM2DDGeneralOnLeave'));
 	//$this->validatorSchema['longitude_utm'] = new sfValidatorPass();
-	
+	/*
 	$this->widgetSchema['utm_zone']=new sfWidgetFormChoice(array('choices'=>array(
 	'10N'=> 'UTM WGS84 zone 10N', 
 	'11N'=> 'UTM WGS84 zone 11N',
@@ -257,7 +257,7 @@ class GtuForm extends BaseGtuForm
 	'60S'=> 'UTM WGS84 zone 60S'
 	
 	)));
-    
+    */
     //ftheeten 2016 07 05
     $this->widgetSchema['ecology']=new sfWidgetFormTextarea();
 	$this->validatorSchema['ecology'] = new sfValidatorPass();

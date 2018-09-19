@@ -136,8 +136,7 @@ foreach($form['newVal'] as $group)
 					<?php echo $form['longitude_dms_seconds'];?>
 					<?php echo $form['longitude_dms_direction'];?>
 					<?php echo $form['latitude_utm'];?>
-					<?php echo $form['longitude_utm'];?>
-					<?php echo $form['utm_zone'];?>
+					<?php echo $form['longitude_utm'];?>				
 					<?php echo $form['latitude'];?>
 					<?php echo $form['longitude'];?>
 					<?php echo $form['geom_type'];?>
@@ -162,7 +161,7 @@ foreach($form['newVal'] as $group)
 						<td>
 							 <form class="form-inline">
 								 <select class="typegeom" id="type">
-									<option value="none"></option>
+									<!--<option value="none"></option>-->
 									<option value="point">Point</option>
 									<option value="linestring">Linestring</option>
 									<option value="polygon">Polygon</option>
@@ -236,7 +235,7 @@ foreach($form['newVal'] as $group)
 											<th>X (meters):</th>
 											<th>&nbsp;Y (meters):</th>
 											<th>Zone:</th>
-											<!--<th><?php echo $form['utm_zone']->renderLabel(); ?><?php echo $form['utm_zone']->renderError() ?></th>-->
+											
 										</tr>
 										<tr>
 											<td>
@@ -251,7 +250,7 @@ foreach($form['newVal'] as $group)
 													<option value="S">S</option>
 													<option value="N">N</option>
 												</select>
-												<!--<?php echo $form['utm_zone'];?>-->
+												
 											</td>
 										</tr>
 									</table>
@@ -289,6 +288,11 @@ foreach($form['newVal'] as $group)
 							<?php echo $form['wkt_str'];?>
 						</td>
 					</tr>
+					<!--<tr >
+						<td class="wkt"></td>
+						<th><div class="wkt">SRID (4326)</div></th>
+						<td><input name="wkt_4326_drawn" id="wkt_4326_drawn" class="wkt"></td>
+					</tr>-->
 					<tr style="display:none;" class="WKT_show">
 						<td></td>
 						<th>
@@ -307,7 +311,11 @@ foreach($form['newVal'] as $group)
 							<br/>EPSG : 
 						</th>
 						<td>
-							<?php echo $form['epsg'];?>
+							<div style="display: None">
+								<?php echo $form['epsg'];?>
+							</div>
+							<label class="epsgRO"></label>
+							
 						</td>
 					</tr>
 					<tr>
@@ -428,6 +436,7 @@ foreach($form['newVal'] as $group)
 	var typegeom;
     
     var main_layer_global;
+	const typeSelect =  document.getElementById('type');
 	
 	//ftheeten 2018 03 15
 	<?php if($form->getObject()->isNew()): ?>
@@ -440,6 +449,7 @@ foreach($form['newVal'] as $group)
 	//ftheeten 2016 02 05
 	$( "form" ).submit(function( event ) {
 	  GenWKT_and_draw(1);
+	  Fill_original_values();
 	  window.opener.$("#gtu_filters_code").val($("#gtu_code").val());
 	 });
 	
@@ -499,19 +509,20 @@ foreach($form['newVal'] as $group)
 			//var wkt_epsg="EPSG:"+$(".epsg").val().substring(0,$(".epsg").val().indexOf('-'));	
 			var wkt_epsg="EPSG:"+ $(".epsg").val();
 
-            
-
 			var wkt_str=$('.wkt').val(); //$("#gtu_wkt_str").val();
 			if(wkt_str.length>0 && wkt_epsg.length>0)
 			{
-                    $.get( 'http://'+window.location.hostname+"/public.php/search/Convert4326WKT", { wkt: wkt_str, srid:$(".epsg").val()} )
-                      .done(function( wkt_4326 ) {                        
-                        draw_wkt(wkt_4326, "EPSG:4326");
-                      });
+                   /* $.get( 'http://'+window.location.hostname+"/public.php/search/Convert4326WKT", { wkt: wkt_str, srid:$(".epsg").val()} )
+                      .done(
+						function( wkt_4326 ) 
+						{           
+							alert(wkt_4326);
+							draw_wkt(wkt_4326, "EPSG:4326");
+						}
+					  );*/
                   
                 
-                //alert( window.location.hostname+"/public.php/search/Convert4326WKT");
-				//draw_wkt(wkt_str, wkt_epsg);
+				draw_wkt(wkt_str, "EPSG:4326");
 			}
 	}
     
@@ -548,7 +559,6 @@ foreach($form['newVal'] as $group)
 			   generic_feature = new ol.Feature({geometry: tmp_geom});
 			   break;
 			 default :
-			 alert("default");
 				generic_feature=feature;
 				tmp_geom=generic_feature.getGeometry();				
 				break;
@@ -622,8 +632,6 @@ foreach($form['newVal'] as $group)
 		}
 	}
 	
-	const typeSelect =  document.getElementById('type');
-
 	typeSelect.onchange = function() {
 		$('#list_of_coordDMS').html("");
 		$('#list_of_coordDD').html("");
@@ -644,9 +652,26 @@ foreach($form['newVal'] as $group)
 			default:
 				$('.points_for_geometry').html('');
 		}
-		$('.nbrpoints').focusout(function() {
+		$('.nbrpoints').change(function() {
 			draw_points_input_fields($('.nbrpoints').val());
 		});
+		
+		$('.latiDD_0').val(0);
+		$('.longiDD_0').val(0);
+		$('.lati_deg_0').val(0);
+		$('.lati_min_0').val(0);
+		$('.lati_sec_0').val(0);
+		$( '.latns_0'+' option:selected' ).text("S");
+		$('.longi_deg_0').val(0);
+		$('.longi_min_0').val(0);
+		$('.longi_sec_0').val(0);
+		$( '.longew_0'+' option:selected' ).text("S");
+		$('.longiUTM_0').val(0);
+		$('.latiUTM_0').val(0);
+		$('.zoneUTM_0').val(0);
+		$('.dirUTM_0').val("S");
+		$('.wkt').val("");
+		
 		//IMPORTANT DO NOT MOVE THIS OR LAYERS ARE NOT DELETED
 		map.removeInteraction(draw);
 		addInteraction();
@@ -733,17 +758,78 @@ foreach($form['newVal'] as $group)
 		}
 	}
 	
+	//JMHerpers 2018 09 18
+	function Fill_original_values(){
+		var originalcoords = "";
+		if (source_selected == "DMS"){
+			if (valueType != 'polygon2') {
+				for (i=0;i<nbrpoints;i++){
+					originalcoords = originalcoords 
+						+ parseFloat($('.lati_deg_'+i).val()) +"°"+parseFloat($('.lati_min_'+i).val())+"'"+parseFloat($('.lati_sec_'+i).val())+"\""+$( '.latns_'+i+' option:selected' ).text()+" "
+						+ parseFloat($('.longi_deg_'+i).val()) +"°"+parseFloat($('.longi_min_'+i).val())+"'"+parseFloat($('.longi_sec_'+i).val())+"\""+$( '.longew_'+i+' option:selected' ).text()
+						+",";
+				}
+			}else{
+				originalcoords = originalcoords 
+					+ parseFloat($('.lati_deg_0').val()) +"°"+parseFloat($('.lati_min_0').val())+"'"+parseFloat($('.lati_sec_0').val())+"\""+$( '.latns_0'+' option:selected' ).text()+" "
+					+ parseFloat($('.longi_deg_0').val()) +"°"+parseFloat($('.longi_min_0').val())+"'"+parseFloat($('.longi_sec_0').val())+"\""+$( '.longew_0'+' option:selected' ).text()+","
+					
+					+ parseFloat($('.lati_deg_0').val()) +"°"+parseFloat($('.lati_min_0').val())+"'"+parseFloat($('.lati_sec_0').val())+"\""+$( '.latns_0'+' option:selected' ).text()+" "
+					+ parseFloat($('.longi_deg_1').val()) +"°"+parseFloat($('.longi_min_1').val())+"'"+parseFloat($('.longi_sec_1').val())+"\""+$( '.longew_1'+' option:selected' ).text()+","
+					
+					+ parseFloat($('.lati_deg_1').val()) +"°"+parseFloat($('.lati_min_1').val())+"'"+parseFloat($('.lati_sec_1').val())+"\""+$( '.latns_1'+' option:selected' ).text()+" "
+					+ parseFloat($('.longi_deg_1').val()) +"°"+parseFloat($('.longi_min_1').val())+"'"+parseFloat($('.longi_sec_1').val())+"\""+$( '.longew_1'+' option:selected' ).text()+","
+					
+					+ parseFloat($('.lati_deg_1').val()) +"°"+parseFloat($('.lati_min_1').val())+"'"+parseFloat($('.lati_sec_1').val())+"\""+$( '.latns_1'+' option:selected' ).text()+" "
+					+ parseFloat($('.longi_deg_0').val()) +"°"+parseFloat($('.longi_min_0').val())+"'"+parseFloat($('.longi_sec_0').val())+"\""+$( '.longew_0'+' option:selected' ).text()+",";
+			}
+		}
+		if (source_selected == "DD"){
+			if (valueType != 'polygon2') {
+				for (i=0;i<nbrpoints;i++){
+					originalcoords  = originalcoords + $('.longiDD_'+i).val() + " " + $('.latiDD_'+i).val()+ ",";
+				}
+			}else{
+				latDeci0= $('.latiDD_0').val();
+				longDeci0= $('.longiDD_0').val();
+				latDeci2= $('.latiDD_1').val();
+				longDeci2= $('.longiDD_1').val();
+				latDeci1= latDeci0;
+				longDeci1= longDeci2;
+				latDeci3= latDeci2;
+				longDeci3= longDeci0;
+				originalcoords  = originalcoords + longDeci0 + " " + latDeci0 + ","+ longDeci1 + " " + latDeci1 + ","+ longDeci2 + " " + latDeci2 + ","+ longDeci3 + " " + latDeci3 + ",";
+			}
+		}
+		if (source_selected == "UTM"){
+			if (valueType != 'polygon2') {
+				for (i=0;i<nbrpoints;i++){
+					originalcoords  = originalcoords + $('.longiUTM_'+i).val() + " " + $('.latiUTM_'+i).val()+ " " +$('.zoneUTM_'+i).val()+ " " +$('.dirUTM_'+i).val()+ ",";
+				}
+			}else{
+				originalcoords  = originalcoords + 	$('.longiUTM_0').val() + " " + $('.latiUTM_0').val()+ " " +$('.zoneUTM_0').val()+ " " +$('.dirUTM_0').val() + ","+ 
+													$('.longiUTM_1').val() + " " + $('.latiUTM_0').val()+ " " +$('.zoneUTM_1').val()+ " " +$('.dirUTM_0').val() + ","+ 
+													$('.longiUTM_1').val() + " " + $('.latiUTM_1').val()+ " " +$('.zoneUTM_1').val()+ " " +$('.dirUTM_1').val() + ","+ 
+													$('.longiUTM_0').val() + " " + $('.latiUTM_1').val()+ " " +$('.zoneUTM_0').val()+ " " +$('.dirUTM_1').val() + ",";
+			}
+		}
+		//alert("originalcoords1  " + originalcoords);
+		$('.origcoord').val(originalcoords.substring(0, originalcoords.length-1));
+		
+		//alert("originalcoords2  " + $('.origcoord').val());
+	}
+	
 	//JMHerpers 2018 07 06
 	function generate_wkt_vector(){
 		var errorval = false;
 		//var typegeom;
-		var originalcoords = "";
+		//var originalcoords = "";
 		var latDeci0= 0;
 		var longDeci0= 0;
 		if (valueType == 'none' | valueType == 'point') {
 			typegeom = "point";
 			nbrpoints = 1;
-			$('.typegeom').val("point").change();
+			//$('.typegeom').val("point").change();
 		}else if (valueType == 'polygon2') {
 			typegeom = "polygon";
 			nbrpoints = $('.nbrpoints').val();
@@ -753,6 +839,8 @@ foreach($form['newVal'] as $group)
 		}
 
 		if (source_selected == "DMS"){
+			$('.epsg').val(4326);
+			$('.epsgRO').html(4326);
 			for (i=0;i<nbrpoints;i++){
 				if(((!$.isNumeric($('.lati_deg_'+i).val()) | !$.isNumeric($('.lati_min_'+i).val()) | !$.isNumeric($('.lati_sec_'+i).val()) | 
 				   !$.isNumeric($('.longi_deg_'+i).val()) | !$.isNumeric($('.longi_min_'+i).val()) | !$.isNumeric($('.longi_sec_'+i).val()) ) &
@@ -813,10 +901,10 @@ foreach($form['newVal'] as $group)
 						longDeci0= longSign0  * (parseFloat($('.longi_deg_0').val()) + ( parseFloat($('.longi_min_0').val())/60) + ( parseFloat($('.longi_sec_0').val())/3600));
 						wktfromdata = wktfromdata +longDeci + " "  +  latDeci + ",";
 						
-						originalcoords = originalcoords 
+						/*originalcoords = originalcoords 
 						+ parseFloat($('.lati_deg_'+i).val()) +"°"+parseFloat($('.lati_min_'+i).val())+"'"+parseFloat($('.lati_sec_'+i).val())+"\""+$( '.latns_'+i+' option:selected' ).text()+" "
 						+ parseFloat($('.longi_deg_'+i).val()) +"°"+parseFloat($('.longi_min_'+i).val())+"'"+parseFloat($('.longi_sec_'+i).val())+"\""+$( '.longew_'+i+' option:selected' ).text()
-						+",";
+						+",";*/
 					}
 				}else{
 					if($( '.latns_0'+' option:selected' ).text() == "S"){
@@ -851,7 +939,7 @@ foreach($form['newVal'] as $group)
 					longDeci3= longDeci0;
 					wktfromdata = wktfromdata + longDeci0 + " " + latDeci0 + ","+ longDeci1 + " " + latDeci1 + ","+ longDeci2 + " " + latDeci2 + ","+ longDeci3 + " " + latDeci3 + ",";
 					
-					originalcoords = originalcoords 
+					/*originalcoords = originalcoords 
 						+ parseFloat($('.lati_deg_0').val()) +"°"+parseFloat($('.lati_min_0').val())+"'"+parseFloat($('.lati_sec_0').val())+"\""+$( '.latns_0'+' option:selected' ).text()+" "
 						+ parseFloat($('.longi_deg_0').val()) +"°"+parseFloat($('.longi_min_0').val())+"'"+parseFloat($('.longi_sec_0').val())+"\""+$( '.longew_0'+' option:selected' ).text()+","
 						
@@ -862,7 +950,7 @@ foreach($form['newVal'] as $group)
 						+ parseFloat($('.longi_deg_1').val()) +"°"+parseFloat($('.longi_min_1').val())+"'"+parseFloat($('.longi_sec_1').val())+"\""+$( '.longew_1'+' option:selected' ).text()+","
 						
 						+ parseFloat($('.lati_deg_1').val()) +"°"+parseFloat($('.lati_min_1').val())+"'"+parseFloat($('.lati_sec_1').val())+"\""+$( '.latns_1'+' option:selected' ).text()+" "
-						+ parseFloat($('.longi_deg_0').val()) +"°"+parseFloat($('.longi_min_0').val())+"'"+parseFloat($('.longi_sec_0').val())+"\""+$( '.longew_0'+' option:selected' ).text()+",";
+						+ parseFloat($('.longi_deg_0').val()) +"°"+parseFloat($('.longi_min_0').val())+"'"+parseFloat($('.longi_sec_0').val())+"\""+$( '.longew_0'+' option:selected' ).text()+",";*/
 				}
 
 				$(".convertDMS2DDLat").val(latDeci0);
@@ -871,8 +959,8 @@ foreach($form['newVal'] as $group)
 				$(".DMSLongSign").val(longSign0);
 				$(".geom_type").val(typegeom);
 				
-				$('.origcoord').val(originalcoords.substring(0, originalcoords.length-1));
-				$('.origcoordRO').html(originalcoords.substring(0, originalcoords.length-1));
+			//	$('.origcoord').val(originalcoords.substring(0, originalcoords.length-1));
+			//	$('.origcoordRO').html(originalcoords.substring(0, originalcoords.length-1));
 				
 				if(typegeom == "polygon"){
 					wktfromdata = wktfromdata + longDeci0 + " " + latDeci0 + "))";
@@ -880,12 +968,11 @@ foreach($form['newVal'] as $group)
 				
 				wktfromdata = wktfromdata.substring(0, wktfromdata.length-1) + ")";
 				$(".wkt").val(wktfromdata);
-                //alert("CTR1");
-				//centerMap(longDeci0, latDeci0);
-
 			}
 		}
 		if (source_selected == "DD"){
+			$('.epsg').val(4326);
+			$('.epsgRO').html(4326);
 			for (i=0;i<nbrpoints;i++){
 				if(((!$.isNumeric($('.latiDD_'+i).val()) | !$.isNumeric($('.longiDD_'+i).val()) ) &
 				    ( $('.latiDD_'+i).val().length + $('.longiDD_'+i).val().length != 0 )
@@ -913,7 +1000,7 @@ foreach($form['newVal'] as $group)
 						latDeci= $('.latiDD_'+i).val();
 						longDeci= $('.longiDD_'+i).val();
 						wktfromdata = wktfromdata + longDeci + " " + latDeci + ",";
-						originalcoords  = originalcoords + $('.longiDD_'+i).val() + " " + $('.latiDD_'+i).val()+ ",";
+						//originalcoords  = originalcoords + $('.longiDD_'+i).val() + " " + $('.latiDD_'+i).val()+ ",";
 					}
 					$(".convertDMS2DDLat").val($('.latiDD_0').val());
 					$(".convertDMS2DDLong").val($('.longiDD_0').val());
@@ -927,7 +1014,7 @@ foreach($form['newVal'] as $group)
 					latDeci3= latDeci2;
 					longDeci3= longDeci0;
 					wktfromdata = wktfromdata + longDeci0 + " " + latDeci0 + ","+ longDeci1 + " " + latDeci1 + ","+ longDeci2 + " " + latDeci2 + ","+ longDeci3 + " " + latDeci3 + ",";
-					originalcoords  = originalcoords + longDeci0 + " " + latDeci0 + ","+ longDeci1 + " " + latDeci1 + ","+ longDeci2 + " " + latDeci2 + ","+ longDeci3 + " " + latDeci3 + ",";
+					//originalcoords  = originalcoords + longDeci0 + " " + latDeci0 + ","+ longDeci1 + " " + latDeci1 + ","+ longDeci2 + " " + latDeci2 + ","+ longDeci3 + " " + latDeci3 + ",";
 					
 					$(".convertDMS2DDLat").val(latDeci0);
 					$(".convertDMS2DDLong").val(longDeci0);
@@ -939,16 +1026,22 @@ foreach($form['newVal'] as $group)
 			
 				wktfromdata = wktfromdata.substring(0, wktfromdata.length-1) + ")";
 				
-				$('.origcoord').val(originalcoords.substring(0, originalcoords.length-1));
-				$('.origcoordRO').html(originalcoords.substring(0, originalcoords.length-1));
+			//	$('.origcoord').val(originalcoords.substring(0, originalcoords.length-1));
+			//	$('.origcoordRO').html(originalcoords.substring(0, originalcoords.length-1));
 				
 				$(".wkt").val(wktfromdata);
-                //alert("CENTER2");
-				//centerMap($('.longiDD_0').val(), $('.latiDD_0').val());
-
 			}
 		}
 		if (source_selected == "UTM"){
+			var dir = 0;
+			if($('.dirUTM_0').val() == "N"){
+				dir = 326;
+			}else{
+				dir = 327;
+			}
+			$('.epsg').val(dir+$('.zoneUTM_0').val());
+			$('.epsgRO').html(dir+$('.zoneUTM_0').val());
+
 			for (i=0;i<nbrpoints;i++){
 				if(((!$.isNumeric($('.latiUTM_'+i).val()) | !$.isNumeric($('.longiUTM_'+i).val()) ) &
 				    ( $('.latiUTM_'+i).val().length + $('.longiUTM_'+i).val().length != 0 )
@@ -980,7 +1073,7 @@ foreach($form['newVal'] as $group)
 						longUTM = coordUTM[0].toFixed(4);
 
 						wktfromdata = wktfromdata + longUTM + " " + latUTM + ",";
-						originalcoords  = originalcoords + longUTM + " " + latUTM+ ",";
+				//		originalcoords  = originalcoords + $('.longiUTM_'+i).val() + " " + $('.latiUTM_'+i).val()+ " " +$('.zoneUTM_'+i).val()+ " " +$('.dirUTM_'+i).val()+ ",";
 
 						if (i==0){
 							$(".convertDMS2DDLat").val(latUTM);
@@ -1003,7 +1096,10 @@ foreach($form['newVal'] as $group)
 					latUTM3= latUTM2;
 					longUTM3= longUTM0;
 					wktfromdata = wktfromdata + longUTM0 + " " + latUTM0 + ","+ longUTM1 + " " + latUTM1 + ","+ longUTM2 + " " + latUTM2 + ","+ longUTM3 + " " + latUTM3 + ",";
-					originalcoords  = originalcoords + longUTM0 + " " + latUTM0 + ","+ longUTM1 + " " + latUTM1 + ","+ longUTM2 + " " + latUTM2 + ","+ longUTM3 + " " + latUTM3 + ",";
+				/*	originalcoords  = originalcoords + 	$('.longiUTM_0').val() + " " + $('.latiUTM_0').val()+ " " +$('.zoneUTM_0').val()+ " " +$('.dirUTM_0').val() + ","+ 
+														$('.longiUTM_1').val() + " " + $('.latiUTM_0').val()+ " " +$('.zoneUTM_1').val()+ " " +$('.dirUTM_0').val() + ","+ 
+														$('.longiUTM_1').val() + " " + $('.latiUTM_1').val()+ " " +$('.zoneUTM_1').val()+ " " +$('.dirUTM_1').val() + ","+ 
+														$('.longiUTM_0').val() + " " + $('.latiUTM_1').val()+ " " +$('.zoneUTM_0').val()+ " " +$('.dirUTM_1').val() + ",";*/
 					
 					$(".convertDMS2DDLat").val(latUTM0);
 					$(".convertDMS2DDLong").val(longUTM0);
@@ -1015,11 +1111,11 @@ foreach($form['newVal'] as $group)
 			
 				wktfromdata = wktfromdata.substring(0, wktfromdata.length-1) + ")";
 				
-				$('.origcoord').val(originalcoords.substring(0, originalcoords.length-1));
-				$('.origcoordRO').html(originalcoords.substring(0, originalcoords.length-1));
+			//	$('.origcoord').val(originalcoords.substring(0, originalcoords.length-1));
+			//	$('.origcoordRO').html(originalcoords.substring(0, originalcoords.length-1));
 				
 				$(".wkt").val(wktfromdata);
-                //alert("CENTER3");
+
 				//centerMap($('.convertDMS2DDLong').val(), $('.convertDMS2DDLat').val());
 				//update_point_on_map($(".convertDMS2DDLat").val(),$(".convertDMS2DDLong").val(), null);
 			}
@@ -1183,7 +1279,7 @@ foreach($form['newVal'] as $group)
 	
 	function fill_points_lines_from_wkt(origin){
 		
-		var originalcoords = "";
+		//var originalcoords = "";
 		var wktval = $('.wkt').val();
 		var wktval2 = wktval.substring(wktval.indexOf("(")+1, wktval.length-1);
 		var arraypoints = wktval2.split(","); 
@@ -1207,86 +1303,160 @@ foreach($form['newVal'] as $group)
 		//if(origin==0){
 			draw_points_input_fields(nbrpointsfromwkt);
 		//}
-		
-		for (i=0;i<nbrpointsfromwkt;i++){
-			var lat = arraypoints[i].substring(arraypoints[i].indexOf(" ")+1,arraypoints[i].length);
-			var lng = arraypoints[i].substring(0,arraypoints[i].indexOf(" "));
-			
-			if(i==0){
-				$(".convertDMS2DDLat").val(lat);
-				$(".convertDMS2DDLong").val(lng);
-				$(".geom_type").val(valueType);
-                //alert("CENTER4");
-				//centerMap(lng, lat);
-			}
-			
-			if(i==0 & valueType == "polygon"){
-				lng = lng.substring(1, lng.length); 
-			}
-			
-			//DMS---------------------
-			$(".latns_"+i +" option[value='N']").attr("selected", true);
-			if(lat < 0){
-				$(".latns_"+i +" option[value='S']").attr("selected", true);
-			}/*	if(i==0){
-					latsign = -1;
-				}
-			}else{
+		if(origin != 0){		
+			for (i=0;i<nbrpointsfromwkt;i++){
+				var lat = arraypoints[i].substring(arraypoints[i].indexOf(" ")+1,arraypoints[i].length);
+				var lng = arraypoints[i].substring(0,arraypoints[i].indexOf(" "));
+				
 				if(i==0){
-					latsign = 1;
+					$(".convertDMS2DDLat").val(lat);
+					$(".convertDMS2DDLong").val(lng);
+					$(".geom_type").val(valueType);
+					//alert("CENTER4");
+					//centerMap(lng, lat);
 				}
-			}*/
-			$(".longew_"+i +" option[value='E']").attr("selected", true);
-			if(lng < 0){
-				$(".longew_"+i +" option[value='W']").attr("selected", true);
-			}/*	if(i==0){
-					longsign = -1;
+				
+				if(i==0 & valueType == "polygon"){
+					lng = lng.substring(1, lng.length); 
 				}
-			}else{
-				if(i==0){
-					longsign = 1;
-				}
-			}*/
+				
+				//DMS---------------------
+				$(".latns_"+i +" option[value='N']").attr("selected", true);
+				if(lat < 0){
+					$(".latns_"+i +" option[value='S']").attr("selected", true);
+				}/*	if(i==0){
+						latsign = -1;
+					}
+				}else{
+					if(i==0){
+						latsign = 1;
+					}
+				}*/
+				$(".longew_"+i +" option[value='E']").attr("selected", true);
+				if(lng < 0){
+					$(".longew_"+i +" option[value='W']").attr("selected", true);
+				}/*	if(i==0){
+						longsign = -1;
+					}
+				}else{
+					if(i==0){
+						longsign = 1;
+					}
+				}*/
 
-			$('.longi_deg_'+i).val(Math.floor(Math.abs(lng)));
-			$('.lati_deg_'+i).val(Math.floor(Math.abs(lat)));
-			var decimalLongitude=Math.abs(lng)-Math.floor(Math.abs(lng));
-			var decimalLongitudeResultMinute=Math.floor(decimalLongitude*60);
-			$('.longi_min_'+i).val(decimalLongitudeResultMinute);
-			var decimalLatitude=Math.abs(lat)-Math.floor(Math.abs(lat));
-			var decimalLatitudeResultMinute=Math.floor(decimalLatitude*60);
-			$('.lati_min_'+i).val(decimalLatitudeResultMinute);
-			var decimalsLongitudeForSeconds=Math.abs(lng)-Math.floor(Math.abs(lng))-(decimalLongitudeResultMinute/60);
-			$('.longi_sec_'+i).val(decimalsLongitudeForSeconds*3600);
-			var decimalsLatitudeForSeconds=Math.abs(lat)-Math.floor(Math.abs(lat))-(decimalLatitudeResultMinute/60);
-			$('.lati_sec_'+i).val(decimalsLatitudeForSeconds*3600);
-			
-			//DD----------------------				
-			$('.latiDD_'+i).val(lat);
-			$('.longiDD_'+i).val(lng);
-			
-			//UTM---------------------
-			var result = Wgs2Utm(lng,lat);
-			//ZoneNumber = Math.floor((parseInt(lng) + 180)/6) + 1;
+				$('.longi_deg_'+i).val(Math.floor(Math.abs(lng)));
+				$('.lati_deg_'+i).val(Math.floor(Math.abs(lat)));
+				var decimalLongitude=Math.abs(lng)-Math.floor(Math.abs(lng));
+				var decimalLongitudeResultMinute=Math.floor(decimalLongitude*60);
+				$('.longi_min_'+i).val(decimalLongitudeResultMinute);
+				var decimalLatitude=Math.abs(lat)-Math.floor(Math.abs(lat));
+				var decimalLatitudeResultMinute=Math.floor(decimalLatitude*60);
+				$('.lati_min_'+i).val(decimalLatitudeResultMinute);
+				var decimalsLongitudeForSeconds=Math.abs(lng)-Math.floor(Math.abs(lng))-(decimalLongitudeResultMinute/60);
+				$('.longi_sec_'+i).val(decimalsLongitudeForSeconds*3600);
+				var decimalsLatitudeForSeconds=Math.abs(lat)-Math.floor(Math.abs(lat))-(decimalLatitudeResultMinute/60);
+				$('.lati_sec_'+i).val(decimalsLatitudeForSeconds*3600);
+				
+				//DD----------------------				
+				$('.latiDD_'+i).val(lat);
+				$('.longiDD_'+i).val(lng);
+				
+				//UTM---------------------
+				var result = Wgs2Utm(lng,lat);
+				//ZoneNumber = Math.floor((parseInt(lng) + 180)/6) + 1;
 
-			$('.latiUTM_'+i).val(result[1]);
-			$('.longiUTM_'+i).val(result[0]);
-			$('.zoneUTM_'+i).val(result[2]);
-			if(lat < 0){
-				$(".dirUTM_"+i +" option[value='S']").attr("selected", true);
+				$('.latiUTM_'+i).val(result[1]);
+				$('.longiUTM_'+i).val(result[0]);
+				$('.zoneUTM_'+i).val(result[2]);
+				if(lat < 0){
+					$(".dirUTM_"+i +" option[value='S']").attr("selected", true);
+				}
+				else{
+					$(".dirUTM_"+i +" option[value='N']").attr("selected", true);
+				}
+				
 			}
-			else{
-				$(".dirUTM_"+i +" option[value='N']").attr("selected", true);
-			}
-			
 		}
-
+		
 		if(origin != 2){
 		//	$('.origcoord').val(originalcoords.substring(0, originalcoords.length-1));
 			$('.origcoordRO').html($('.origcoord').val());
+			$('.epsgRO').html($('.epsg').val());
 		}
+		
+		
 	};
 	
+	function fill_points_lines_from_original_values(){
+		//var wktval = $('.wkt').val();
+		//var wktval2 = wktval.substring(wktval.indexOf("(")+1, wktval.length-1);
+		//var arraypoints = wktval2.split(","); 
+				
+		//
+		//
+		
+		
+		/*if (valueType == "polygon"){
+			nbrpointsfromwkt = arraypoints.length-1;
+		}else{
+			nbrpointsfromwkt = arraypoints.length;
+		}*/
+
+		
+		
+		
+		if ($('.origcoord').val().length > 0){
+			var coords = $('.origcoord').val().split(","); 
+			$('.points_for_geometry').html('<form class="form_points">of <input class="nbrpoints" type="integer" name="points" maxlength="2" size="3"> points</form>');
+			
+			var nbrpointsfromorig = coords.length;
+			draw_points_input_fields(nbrpointsfromorig);
+			valueType = $('.wkt').val().substring(0,$('.wkt').val().indexOf("(")).toLowerCase();
+			$('.typegeom').val(valueType);
+			$('.nbrpoints').val(nbrpointsfromorig);
+//alert("nbrpointsfromorig="+nbrpointsfromorig);
+			for (i=0;i<nbrpointsfromorig;i++){
+				singlecoord = coords[i].split(" ")
+				if (source_selected == "DD"){
+					//14.1294 -3.3919,    14.931 -2.931,15.7775 -3.907,    14.810833 -4.4880
+					$(".longiDD_"+i).val(singlecoord[0]);
+					$(".latiDD_"+i).val(singlecoord[1]);
+				}
+				if (source_selected == "DMS"){
+					//51°4'2"N      3°4'31.0000000000008"E,    51°3'12"N 4°6'0"E,    51°3'5"N 2°8'0"E
+					$(".latns_"+i +" option[value='N']").attr("selected", true);
+					if(singlecoord[0].substring(singlecoord[0].length - 1,singlecoord[0].length) == "S"){
+						$(".latns_"+i +" option[value='S']").attr("selected", true);
+					}
+					$(".longew_"+i +" option[value='E']").attr("selected", true);
+					if(singlecoord[1].substring(singlecoord[1].length - 1,singlecoord[1].length) == "W"){
+						$(".longew_"+i +" option[value='W']").attr("selected", true);
+					}
+
+					$('.longi_deg_'+i).val(singlecoord[1].substring(0,singlecoord[1].indexOf("°")));
+					$('.lati_deg_'+i).val(singlecoord[0].substring(0,singlecoord[0].indexOf("°")));
+					$('.longi_min_'+i).val(singlecoord[1].substring(singlecoord[1].indexOf("°")+1,singlecoord[1].indexOf("'")));
+					$('.lati_min_'+i).val(singlecoord[0].substring(singlecoord[0].indexOf("°")+1,singlecoord[0].indexOf("'")));
+					$('.longi_sec_'+i).val(singlecoord[1].substring(singlecoord[1].indexOf("'")+1,singlecoord[1].indexOf('"')));
+					$('.lati_sec_'+i).val(singlecoord[0].substring(singlecoord[0].indexOf("'")+1,singlecoord[0].indexOf('"')));
+				}
+				if (source_selected == "UTM"){
+					//110000 9520000 33 S,120000 9530000 33 S,115000 9540000 33 S
+					$(".dirUTM_"+i +" option[value='N']").attr("selected", true);
+					if(singlecoord[3] == "S"){
+						$(".dirUTM_"+i +" option[value='S']").attr("selected", true);
+					}
+
+					$('.longiUTM_'+i).val(singlecoord[0]);
+					$('.latiUTM_'+i).val(singlecoord[1]);
+					$('.zoneUTM_'+i).val(singlecoord[2]);
+				}
+			}
+			$('.origcoordRO').html($('.origcoord').val());
+			$('.epsgRO').html($('.epsg').val());
+		}
+	}
+		
 	function Wgs2Utm( lan1,fi) {
 		var a=6378137.000;
 		var b=6356752.314;
@@ -1358,8 +1528,6 @@ foreach($form['newVal'] as $group)
 		return results;
 	}
 
-
-	
 	////////////////document ready
 	$(document).ready(function () {	
 	
@@ -1372,18 +1540,19 @@ foreach($form['newVal'] as $group)
 		if($('.wkt').val().length != 0){
 				
 			GenWKT_and_draw(origin);
-			fill_points_lines_from_wkt(origin);
+			//fill_points_lines_from_wkt(origin);
+			fill_points_lines_from_original_values();
 			//generate_wkt_vector();
 		}else{
 			testlength = $(".DMSLatDeg").val() + $(".convertDMS2DDLat").val() + $(".UTMLat").val();
 			if(testlength.length != 0){
-				var originalcoords = "";
+				//var originalcoords = "";
 				var wktfromlatlong = "";
 				var latsign = "S";
 				var longsign = "W";
 				var DMSLatSec = 0;
 				var DMSLongSec = 0;
-				if(source_selected=="DD"){
+				/*if(source_selected=="DD"){
 					$('.latiDD_0').val($(".convertDMS2DDLat").val());
 					$('.longiDD_0').val($(".convertDMS2DDLong").val());
 				}
@@ -1411,7 +1580,7 @@ foreach($form['newVal'] as $group)
 					$(".longew_0 option[value='"+longsign+"']").attr("selected", true);
 				}
 				else if(source_selected=="UTM"){
-				}
+				}*/
 				typegeom = "point";
 				nbrpoints = 1;
 				GenWKT_and_draw(1);
@@ -1748,21 +1917,33 @@ foreach($form['newVal'] as $group)
 			showDMS='display: None';
 			showDD='display: table-cell';
 			showUTM='display: None';
+			$('.epsg').val(4326);
+			$('.epsgRO').html(4326);
 		}
-		else if(source_selected=="DMS")
-		{
-				   
+		else if(source_selected=="DMS"){
 			showDMS='display: table-cell';
 			showDD='display: None';
 			showUTM='display: None';
+			$('.epsg').val(4326);
+			$('.epsgRO').html(4326);
 		}
-		else if(source_selected=="UTM")
-		{
-				   
+		else if(source_selected=="UTM"){
 			showDMS='display: None';
 			showDD='display: None';
 			showUTM='display: table-cell';
-			
+			if($('.zoneUTM_0').val() != 0){
+				var dir = 0;
+				if($('.dirUTM_0').val() == "N"){
+					dir = 326;
+				}else{
+					dir = 327;
+				}
+				$('.epsg').val(dir+$('.zoneUTM_0').val());
+				$('.epsgRO').html(dir+$('.zoneUTM_0').val());
+			}else{
+				$('.epsg').val(0);
+				$('.epsgRO').html(0);
+			}
 		}
 		$('.GroupDMS').attr('style',showDMS );
 		$('.GroupDD').attr('style', showDD);
