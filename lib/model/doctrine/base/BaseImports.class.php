@@ -22,56 +22,68 @@
  * @property integer $creation_date_mask
  * @property boolean $working
  * @property string $mime_type
+ * @property boolean $gtu_include_date
+ * @property boolean $gtu_tags_in_merge
+ * @property boolean $sensitive_information_withheld
+ * @property string $source_database
  * @property Collections $Collections
  * @property Users $Users
  * @property Doctrine_Collection $Staging
  * @property Doctrine_Collection $StagingCatalogue
  * @property Doctrine_Collection $StagingGtu
  * 
- * @method integer             getId()                      Returns the current record's "id" value
- * @method string              getFilename()                Returns the current record's "filename" value
- * @method integer             getUserRef()                 Returns the current record's "user_ref" value
- * @method string              getFormat()                  Returns the current record's "format" value
- * @method integer             getCollectionRef()           Returns the current record's "collection_ref" value
- * @method string              getState()                   Returns the current record's "state" value
- * @method string              getCreatedAt()               Returns the current record's "created_at" value
- * @method string              getUpdatedAt()               Returns the current record's "updated_at" value
- * @method integer             getInitialCount()            Returns the current record's "initial_count" value
- * @method boolean             getIsFinished()              Returns the current record's "is_finished" value
- * @method string              getErrorsInImport()          Returns the current record's "errors_in_import" value
- * @method string              getTemplateVersion()         Returns the current record's "template_version" value
- * @method boolean             getExcludeInvalidEntries()   Returns the current record's "exclude_invalid_entries" value
- * @method string              getCreationDate()            Returns the current record's "creation_date" value
- * @method integer             getCreationDateMask()        Returns the current record's "creation_date_mask" value
- * @method boolean             getWorking()                 Returns the current record's "working" value
- * @method string              getMimeType()                Returns the current record's "mime_type" value
- * @method Collections         getCollections()             Returns the current record's "Collections" value
- * @method Users               getUsers()                   Returns the current record's "Users" value
- * @method Doctrine_Collection getStaging()                 Returns the current record's "Staging" collection
- * @method Doctrine_Collection getStagingCatalogue()        Returns the current record's "StagingCatalogue" collection
- * @method Doctrine_Collection getStagingGtu()              Returns the current record's "StagingGtu" collection
- * @method Imports             setId()                      Sets the current record's "id" value
- * @method Imports             setFilename()                Sets the current record's "filename" value
- * @method Imports             setUserRef()                 Sets the current record's "user_ref" value
- * @method Imports             setFormat()                  Sets the current record's "format" value
- * @method Imports             setCollectionRef()           Sets the current record's "collection_ref" value
- * @method Imports             setState()                   Sets the current record's "state" value
- * @method Imports             setCreatedAt()               Sets the current record's "created_at" value
- * @method Imports             setUpdatedAt()               Sets the current record's "updated_at" value
- * @method Imports             setInitialCount()            Sets the current record's "initial_count" value
- * @method Imports             setIsFinished()              Sets the current record's "is_finished" value
- * @method Imports             setErrorsInImport()          Sets the current record's "errors_in_import" value
- * @method Imports             setTemplateVersion()         Sets the current record's "template_version" value
- * @method Imports             setExcludeInvalidEntries()   Sets the current record's "exclude_invalid_entries" value
- * @method Imports             setCreationDate()            Sets the current record's "creation_date" value
- * @method Imports             setCreationDateMask()        Sets the current record's "creation_date_mask" value
- * @method Imports             setWorking()                 Sets the current record's "working" value
- * @method Imports             setMimeType()                Sets the current record's "mime_type" value
- * @method Imports             setCollections()             Sets the current record's "Collections" value
- * @method Imports             setUsers()                   Sets the current record's "Users" value
- * @method Imports             setStaging()                 Sets the current record's "Staging" collection
- * @method Imports             setStagingCatalogue()        Sets the current record's "StagingCatalogue" collection
- * @method Imports             setStagingGtu()              Sets the current record's "StagingGtu" collection
+ * @method integer             getId()                             Returns the current record's "id" value
+ * @method string              getFilename()                       Returns the current record's "filename" value
+ * @method integer             getUserRef()                        Returns the current record's "user_ref" value
+ * @method string              getFormat()                         Returns the current record's "format" value
+ * @method integer             getCollectionRef()                  Returns the current record's "collection_ref" value
+ * @method string              getState()                          Returns the current record's "state" value
+ * @method string              getCreatedAt()                      Returns the current record's "created_at" value
+ * @method string              getUpdatedAt()                      Returns the current record's "updated_at" value
+ * @method integer             getInitialCount()                   Returns the current record's "initial_count" value
+ * @method boolean             getIsFinished()                     Returns the current record's "is_finished" value
+ * @method string              getErrorsInImport()                 Returns the current record's "errors_in_import" value
+ * @method string              getTemplateVersion()                Returns the current record's "template_version" value
+ * @method boolean             getExcludeInvalidEntries()          Returns the current record's "exclude_invalid_entries" value
+ * @method string              getCreationDate()                   Returns the current record's "creation_date" value
+ * @method integer             getCreationDateMask()               Returns the current record's "creation_date_mask" value
+ * @method boolean             getWorking()                        Returns the current record's "working" value
+ * @method string              getMimeType()                       Returns the current record's "mime_type" value
+ * @method boolean             getGtuIncludeDate()                 Returns the current record's "gtu_include_date" value
+ * @method boolean             getGtuTagsInMerge()                 Returns the current record's "gtu_tags_in_merge" value
+ * @method boolean             getSensitiveInformationWithheld()   Returns the current record's "sensitive_information_withheld" value
+ * @method string              getSourceDatabase()                 Returns the current record's "source_database" value
+ * @method Collections         getCollections()                    Returns the current record's "Collections" value
+ * @method Users               getUsers()                          Returns the current record's "Users" value
+ * @method Doctrine_Collection getStaging()                        Returns the current record's "Staging" collection
+ * @method Doctrine_Collection getStagingCatalogue()               Returns the current record's "StagingCatalogue" collection
+ * @method Doctrine_Collection getStagingGtu()                     Returns the current record's "StagingGtu" collection
+ * @method Imports             setId()                             Sets the current record's "id" value
+ * @method Imports             setFilename()                       Sets the current record's "filename" value
+ * @method Imports             setUserRef()                        Sets the current record's "user_ref" value
+ * @method Imports             setFormat()                         Sets the current record's "format" value
+ * @method Imports             setCollectionRef()                  Sets the current record's "collection_ref" value
+ * @method Imports             setState()                          Sets the current record's "state" value
+ * @method Imports             setCreatedAt()                      Sets the current record's "created_at" value
+ * @method Imports             setUpdatedAt()                      Sets the current record's "updated_at" value
+ * @method Imports             setInitialCount()                   Sets the current record's "initial_count" value
+ * @method Imports             setIsFinished()                     Sets the current record's "is_finished" value
+ * @method Imports             setErrorsInImport()                 Sets the current record's "errors_in_import" value
+ * @method Imports             setTemplateVersion()                Sets the current record's "template_version" value
+ * @method Imports             setExcludeInvalidEntries()          Sets the current record's "exclude_invalid_entries" value
+ * @method Imports             setCreationDate()                   Sets the current record's "creation_date" value
+ * @method Imports             setCreationDateMask()               Sets the current record's "creation_date_mask" value
+ * @method Imports             setWorking()                        Sets the current record's "working" value
+ * @method Imports             setMimeType()                       Sets the current record's "mime_type" value
+ * @method Imports             setGtuIncludeDate()                 Sets the current record's "gtu_include_date" value
+ * @method Imports             setGtuTagsInMerge()                 Sets the current record's "gtu_tags_in_merge" value
+ * @method Imports             setSensitiveInformationWithheld()   Sets the current record's "sensitive_information_withheld" value
+ * @method Imports             setSourceDatabase()                 Sets the current record's "source_database" value
+ * @method Imports             setCollections()                    Sets the current record's "Collections" value
+ * @method Imports             setUsers()                          Sets the current record's "Users" value
+ * @method Imports             setStaging()                        Sets the current record's "Staging" collection
+ * @method Imports             setStagingCatalogue()               Sets the current record's "StagingCatalogue" collection
+ * @method Imports             setStagingGtu()                     Sets the current record's "StagingGtu" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -148,6 +160,21 @@ abstract class BaseImports extends DarwinModel
              'type' => 'boolean',
              ));
         $this->hasColumn('mime_type', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('gtu_include_date', 'boolean', null, array(
+             'type' => 'boolean',
+             'default' => false,
+             ));
+        $this->hasColumn('gtu_tags_in_merge', 'boolean', null, array(
+             'type' => 'boolean',
+             'default' => false,
+             ));
+        $this->hasColumn('sensitive_information_withheld', 'boolean', null, array(
+             'type' => 'boolean',
+             'default' => false,
+             ));
+        $this->hasColumn('source_database', 'string', null, array(
              'type' => 'string',
              ));
     }

@@ -695,6 +695,15 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     // For compat only with old saved search
     // might be removed with a migration
     $this->validatorSchema['what_searched'] = new sfValidatorPass();
+    
+    
+	 //2018 09 19chnage sort order on name
+     
+	$this->widgetSchema['taxonomy_metadata_ref'] = new sfWidgetFormChoice(array(
+      'choices' => TaxonomyMetadataTable::getAllTaxonomicMetadata( 'id ASC',true)  //array_merge( array(''=>'All'),TaxonomyMetadataTable::getAllTaxonomicMetadata("id ASC"))
+    ));
+	 $this->widgetSchema['taxonomy_metadata_ref']->setAttributes(array('class'=>'col_check_metadata_ref col_check_metadata_callback'));
+	$this->validatorSchema['taxonomy_metadata_ref'] = new sfValidatorInteger(array('required'=>false));
   }
 
   public function addGtuTagValue($num)
@@ -1069,6 +1078,16 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     //Do Nothing here, the job is done in the doBuildQuery with check collection rights
     return $query;
   }
+  
+  //ftheeten 2018 09 19
+   public function addTaxonomicMetadataRef($query, $val) 
+   {
+    if(is_numeric($val))
+    {
+         $query->andWhere("EXISTS (select t.id from taxonomy t where t.metadata_ref = $val AND t.id = s.taxon_ref)") ;
+    }
+    return $query ;
+  }
 
   public function addPropertiesQuery($query, $type , $applies_to, $value_from, $value_to, $unit) {
     $sql_part = array();
@@ -1277,6 +1296,9 @@ $query = DQ::create()
     $this->addNamingColumnQuery($query, 'lithology', 'lithology_name_indexed', $values['lithology_name'],'s','lithology_name_indexed');
     $this->addNamingColumnQuery($query, 'mineralogy', 'mineral_name_indexed', $values['mineral_name'],'s','mineral_name_indexed');
 
+    //ftheeten 2018 09 19
+    $this->addTaxonomicMetadataRef($query, $values["taxonomy_metadata_ref"]);
+    
     $this->addPropertiesQuery($query, $values['property_type'] , $values['property_applies_to'], $values['property_value_from'], $values['property_value_to'], $values['property_units']);
 
     $this->addCommentsQuery($query, $values['comment_notion_concerned'] , $values['comment']);

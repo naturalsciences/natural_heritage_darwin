@@ -6,6 +6,8 @@
 
 <?php echo $form['taxon_ref']->renderError() ?>
 <?php echo $form['taxon_ref']->render() ?>
+<!--ftheeten 2018 09 18-->
+<input id="create_identification" type="button" value="Create identification"></input>
 
 <script  type="text/javascript">
   function loadCurrent() {
@@ -27,6 +29,27 @@
     $('#specimen_taxon_ref').val($('#taxon_orig span').attr('r_id'));
     $('#taxon_orig').addClass('hidden');
   }
+  );
+  
+  //ftheeten 2018 09 18--
+  $("#create_identification").click(
+    function()
+    {
+            if($("#specimen_taxon_ref_name").val().trim().length>0)
+            {
+                $("#add_identification").click();
+           
+                document.getElementById('identification_placeholder').scrollIntoView();
+                window.scrollBy(0, -110); 
+             }
+             else
+             {
+                alert("Please attribute a scientific name");
+             }
+          
+    }
+    
+
   );
 
 </script>

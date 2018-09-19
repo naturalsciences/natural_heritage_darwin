@@ -35,6 +35,7 @@ abstract class BaseCollectionsForm extends BaseFormDoctrine
       'code_specimen_duplicate'             => new sfWidgetFormInputCheckbox(),
       'is_public'                           => new sfWidgetFormInputCheckbox(),
       'code_mask'                           => new sfWidgetFormTextarea(),
+      'allow_duplicates'                    => new sfWidgetFormInputCheckbox(),
     ));
 
     $this->setValidators(array(
@@ -58,6 +59,7 @@ abstract class BaseCollectionsForm extends BaseFormDoctrine
       'code_specimen_duplicate'             => new sfValidatorBoolean(array('required' => false)),
       'is_public'                           => new sfValidatorBoolean(array('required' => false)),
       'code_mask'                           => new sfValidatorString(array('required' => false)),
+      'allow_duplicates'                    => new sfValidatorBoolean(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('collections[%s]');
