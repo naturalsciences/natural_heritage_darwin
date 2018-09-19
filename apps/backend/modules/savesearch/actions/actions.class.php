@@ -270,12 +270,9 @@ return sfView::NONE;
             $nbpages=ceil($this->total_size/$this->size);
             
 
-             $dataset=Doctrine::getTable('MySavedSearches')->getSavedSearcheData($this->user_id, $this->query_id);
+             $dataset=Doctrine::getTable('MySavedSearches')->getSavedSearchData($this->user_id, $this->query_id);
                         
-             $returned=Array();
-             //$first=$dataset[0];
-             //$returned[]=implode("\t",array_keys($first));
-             //$dataset=trim(preg_replace('/\s\s+/', ' ', " ", $dataset));
+             $returned=Array();             
              $i=0;
              $returned[]=implode("\t",array_keys($dataset[0]));
              foreach($dataset as $row)
@@ -297,6 +294,56 @@ return sfView::NONE;
    
             $this->getResponse()->setHttpHeader('Content-type','text/tab-separated-values');
             $this->getResponse()->setHttpHeader('Content-disposition','attachment; filename="darwin_export_specimen.txt"');
+            $this->getResponse()->setHttpHeader('Pragma', 'no-cache');
+            $this->getResponse()->setHttpHeader('Expires', '0');
+            
+            $this->getResponse()->sendHttpHeaders(); //edited to add the missed sendHttpHeaders
+            //$this->getResponse()->setContent($returned);
+            $this->getResponse()->sendContent();           
+            print(implode("\r\n",$returned));
+            return sfView::NONE;   
+	   }
+  }
+  
+  //ftheeten 2018 07 03
+  public function executeExcelTaxonomy(sfWebRequest $request)
+  {
+	  if($request->getParameter('query_id') != ''&&$request->getParameter('user_id') != '')
+	  {
+			$this->query_id=$request->getParameter('query_id');
+			$this->user_id=$request->getParameter('user_id');
+			//$this->total_size= Doctrine_Core::getTable("MySavedSearches")->countRecursiveSQLRecords($this->user_id, $this->query_id);
+			$this->size=20000;
+            $this->max_page =3;
+			$saved_search = Doctrine::getTable('MySavedSearches')->getSavedSearchByKey($this->query_id, $this->user_id);
+			$this->name = $saved_search->getName();
+            $nbpages=ceil($this->total_size/$this->size);
+            
+
+             $dataset=Doctrine::getTable('MySavedSearches')->getSavedSearchDataTaxonomy($this->user_id, $this->query_id);
+                        
+             $returned=Array();             
+             $i=0;
+             $returned[]=implode("\t",array_keys($dataset[0]));
+             foreach($dataset as $row)
+             {
+                            
+                $tmp=implode("\t",
+                    array_map(
+                            function ($text)
+                            {
+                                return trim(preg_replace('/(\r\n|\t|\n)/', ' ', $text));
+                            } , 
+                            $row)
+                           );
+                  $returned[]=$tmp;
+                  $i++;
+                 }
+    
+                    
+   
+            $this->getResponse()->setHttpHeader('Content-type','text/tab-separated-values');
+            $this->getResponse()->setHttpHeader('Content-disposition','attachment; filename="darwin_export_taxonomy.txt"');
             $this->getResponse()->setHttpHeader('Pragma', 'no-cache');
             $this->getResponse()->setHttpHeader('Expires', '0');
             

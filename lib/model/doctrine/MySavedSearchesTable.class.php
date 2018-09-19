@@ -115,7 +115,7 @@ class MySavedSearchesTable extends DarwinTable
 	  return $q->fetch()[0];
   }
   
-  public function getSavedSearcheData($user_id, $query_id)
+  public function getSavedSearchData($user_id, $query_id)
   {
                         $sql="SELECT
 
@@ -350,6 +350,22 @@ class MySavedSearchesTable extends DarwinTable
                         return $dataset;
   
   }
+  
+   public function getSavedSearchDataTaxonomy($user_id, $query_id)
+  {
+                        $sql="SELECt * FROM fct_rmca_dynamic_saved_search_taxonomy(:ID_Q,:ID_USER);";
+                        
+                        $conn = Doctrine_Manager::connection();
+                        $q = $conn->prepare($sql);
+                        $q->bindParam(":ID_Q", $query_id, PDO::PARAM_INT);
+                        $q->bindParam(":ID_USER", $user_id, PDO::PARAM_INT);
+                        $q->execute();
+    
+                        $dataset=$q->fetchAll(PDO::FETCH_ASSOC);
+                        return $dataset;
+  
+  }
+  
   
   
 }

@@ -25,6 +25,7 @@
  * @property boolean $code_specimen_duplicate
  * @property boolean $is_public
  * @property string $code_mask
+ * @property boolean $allow_duplicates
  * @property People $Institution
  * @property Users $Manager
  * @property Users $Staff
@@ -55,6 +56,7 @@
  * @method boolean             getCodeSpecimenDuplicate()               Returns the current record's "code_specimen_duplicate" value
  * @method boolean             getIsPublic()                            Returns the current record's "is_public" value
  * @method string              getCodeMask()                            Returns the current record's "code_mask" value
+ * @method boolean             getAllowDuplicates()                     Returns the current record's "allow_duplicates" value
  * @method People              getInstitution()                         Returns the current record's "Institution" value
  * @method Users               getManager()                             Returns the current record's "Manager" value
  * @method Users               getStaff()                               Returns the current record's "Staff" value
@@ -84,6 +86,7 @@
  * @method Collections         setCodeSpecimenDuplicate()               Sets the current record's "code_specimen_duplicate" value
  * @method Collections         setIsPublic()                            Sets the current record's "is_public" value
  * @method Collections         setCodeMask()                            Sets the current record's "code_mask" value
+ * @method Collections         setAllowDuplicates()                     Sets the current record's "allow_duplicates" value
  * @method Collections         setInstitution()                         Sets the current record's "Institution" value
  * @method Collections         setManager()                             Sets the current record's "Manager" value
  * @method Collections         setStaff()                               Sets the current record's "Staff" value
@@ -189,6 +192,11 @@ abstract class BaseCollections extends DarwinModel
              ));
         $this->hasColumn('code_mask', 'string', null, array(
              'type' => 'string',
+             ));
+        $this->hasColumn('allow_duplicates', 'boolean', null, array(
+             'type' => 'boolean',
+             'notnull' => true,
+             'default' => false,
              ));
     }
 

@@ -95,7 +95,7 @@ class TaxonomyFormFilter extends BaseTaxonomyFormFilter
 	 //2017 07 23 + 2018 03 06 chnage sort order on name
      
 	$this->widgetSchema['metadata_ref'] = new sfWidgetFormChoice(array(
-      'choices' => TaxonomyMetadataTable::getAllTaxonomicMetadata( 'taxonomy_name ASC',true)  //array_merge( array(''=>'All'),TaxonomyMetadataTable::getAllTaxonomicMetadata("id ASC"))
+      'choices' => TaxonomyMetadataTable::getAllTaxonomicMetadata( 'id ASC',true)  //array_merge( array(''=>'All'),TaxonomyMetadataTable::getAllTaxonomicMetadata("id ASC"))
     ));
 	 $this->widgetSchema['metadata_ref']->setAttributes(array('class'=>'col_check_metadata_ref col_check_metadata_callback'));
 	$this->validatorSchema['metadata_ref'] = new sfValidatorInteger(array('required'=>false));

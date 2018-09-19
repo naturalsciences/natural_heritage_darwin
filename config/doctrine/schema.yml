@@ -395,6 +395,8 @@ Collections:
         code_specimen_duplicate: { type: boolean, notnull: true, default: false}
         is_public: { type:boolean, notnull:true,default:true}
         code_mask: { type: string}
+        #ftheeten 2018 08 08
+        allow_duplicates: { type:boolean, notnull:true,default:false}
     relations:
         Institution:
             class: People
@@ -1051,6 +1053,14 @@ Imports:
         working : {type:boolean}
         #ftheeten 2017 09 13
         mime_type: {type: string}
+        #ftheeten 2018 07 15
+        gtu_include_date: {type: boolean, default: false }
+        #ftheeten 2018 07 15
+        gtu_tags_in_merge: {type: boolean, default: false }
+        #ftheeten 2018 07 15
+        sensitive_information_withheld: {type: boolean, default: false }
+        #ftheeten 2018 07 26
+        source_database: {type: string}
     relations:
         Collections:
             local: collection_ref

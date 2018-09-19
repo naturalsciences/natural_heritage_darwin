@@ -44,7 +44,7 @@
             <option value=<?php echo(url_for("savesearch/excelSpecimens")."/user_id/".sfContext::getInstance()->getUser()->getId()."/query_id/".$search->getId())?>>
             Excel (specimens)
             </option> 
-            <option value=<?php echo("http://hippomenes.naturalsciences.be:8088/pentaho/api/repos/%3Apublic%3ADarwin2%3AReports_excel%3Areport_excel_taxonomy.prpt/report?ID_USER=".sfContext::getInstance()->getUser()->getId()."&ID_Q=".$search->getId()."&userid=report&password=report&output-target=table%2Fexcel%3Bpage-mode%3Dflow&accepted-page=-1&showParameters=true&renderMode=REPORT&htmlProportionalWidth=false")?>>
+            <option value=<?php echo(url_for("savesearch/excelTaxonomy")."/user_id/".sfContext::getInstance()->getUser()->getId()."/query_id/".$search->getId())?>>
             Excel (taxonomy)
             </option>                
             </select>
