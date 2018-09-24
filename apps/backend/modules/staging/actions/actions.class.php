@@ -14,11 +14,28 @@ class stagingActions extends DarwinActions
   {
     $this->forward404Unless($request->hasParameter('import'));
     $this->import = Doctrine::getTable('Imports')->find($request->getParameter('import'));
-
+    //ftheeten 2018 09 24
+     $format_import = $this->import->getFormat();
+    
     if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$this->import->getCollectionRef()))
        $this->forwardToSecureAction();
     $this->import = Doctrine::getTable('Imports')->markOk($this->import->getId());
-    return $this->redirect('import/index');
+    
+   
+   
+    if($format_import=="locality")
+    {
+        return $this->redirect('import/indexLocalities');
+    }
+    elseif($format_import=="taxon")
+    {
+        return $this->redirect('import/indexTaxon');
+    } 
+    else
+    {
+        return $this->redirect('import/index');
+    }
+    //return $this->redirect('import/index');
   }
 
   /*
