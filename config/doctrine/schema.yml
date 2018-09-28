@@ -1061,6 +1061,12 @@ Imports:
         sensitive_information_withheld: {type: boolean, default: false }
         #ftheeten 2018 07 26
         source_database: {type: string}
+        #ftheeten 2017 09 13
+        taxonomy_kingdom: {type: string}
+        #ftheeten 2017 08 02
+        specimen_taxonomy_ref:  {type:integer}
+        #ftheeten 2018 09 02
+        history_taxonomy: {type: string}
     relations:
         Collections:
             local: collection_ref
@@ -1171,6 +1177,8 @@ Staging:
         status: {type: string}
         complete: {type: boolean}
         surnumerary: {type: boolean}
+        #ftheeten 2017 08 02
+        specimen_taxonomy_ref:  {type:integer}
     relations:
         Import:
             local: import_ref
@@ -1595,6 +1603,7 @@ StagingGtu:
     columns:
         id: { type: integer, primary: true, autoincrement: true }
         import_ref:  { type: integer, notnull: true}
+        pos_in_file: {type: integer}
         status: {type: string}
         date_included: {type: boolean, default: false }
         tags_merged: {type: boolean, default: false }

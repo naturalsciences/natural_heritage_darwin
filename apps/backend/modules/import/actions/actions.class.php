@@ -252,8 +252,16 @@ class importActions extends DarwinActions
         {
           $ids[] = $v->getId();
         }
-        $imp_lines = Doctrine::getTable('Imports')->getNumberOfLines($ids) ;
-        foreach($imp_lines as $k=>$v)
+        //ftheeten 2018 09 25
+		if($this->format == 'locality')
+		{
+			$imp_lines = Doctrine::getTable('Imports')->getNumberOfLinesGtu($ids) ;
+		}
+		else
+		{
+			$imp_lines = Doctrine::getTable('Imports')->getNumberOfLines($ids) ;
+        }
+		foreach($imp_lines as $k=>$v)
         {
           foreach($this->imports as $import)
           {

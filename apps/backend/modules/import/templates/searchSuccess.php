@@ -72,8 +72,11 @@
               </td>
               <?php else : ?>
               <td>
-                <?php if ($import->isEditableState()) : ?>
+			   <!--ftheeten 2018 09 25 update for locality-->
+                <?php if ($import->isEditableState()&&$format != 'locality') : ?>
                   <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit import'))),'staging/index?import='.$import->getId());?>
+				<?php elseif ($format == 'locality'&& $import->getState() != 'finished') : ?>
+				<?php echo link_to(image_tag('edit.png',array('title'=>__('Edit import'))),'import/viewUnimported?id='.$import->getId()); ?>
                 <?php endif ; ?>
               </td>
               <td>
@@ -90,11 +93,8 @@
               </td>
               <td>
                 <?php echo link_to(image_tag('remove.png', array("title" => __("Delete"))), 'import/delete?id='.$import->getId(),'class=remove_import');?>
-              </td>
-             <?php else : ?>
-             <td colspan="2">-</td>
+              </td>             
              <?php endif ; ?>
-              <?php if($format == 'locality'&& $import->getState() != 'finished') : ?><td><?php echo link_to("View unimported",'import/viewUnimported?id='.$import->getId()); ?></td><?php endif ; ?>
             </tr>
           <?php endforeach;?>
         </tbody>

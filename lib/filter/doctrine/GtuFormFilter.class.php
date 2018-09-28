@@ -96,6 +96,10 @@ class GtuFormFilter extends BaseGtuFormFilter
     $this->widgetSchema['expedition']->setAttributes(array('class'=>'autocomplete_for_expeditions'));
     $this->validatorSchema['expedition'] = new sfValidatorString(array('required' => false, 'trim' => true));
     
+     //ftheeten 2018 03 23
+    $this->widgetSchema['ig_number'] = new sfWidgetFormInputText();
+    $this->validatorSchema['ig_number'] = new sfValidatorString(array('required' => false, 'trim' => true));
+    
     $subForm = new sfForm();
     $this->embedForm('Tags',$subForm);
   }
@@ -173,6 +177,17 @@ class GtuFormFilter extends BaseGtuFormFilter
     return $query;
   }
 
+  
+      //ftheeten 2018 03 23
+   public function addIGNumberColumnQuery($query, $values, $val)
+  {
+    if( $val != '' )
+    {     
+      $query->andWhere('id IN (SELECT s.gtu_ref FROM specimens s WHERE ig_num= ?)', $val);
+    }
+    return $query;
+  }
+  
   public function bind(array $taintedValues = null, array $taintedFiles = null)
   {
     if(isset($taintedValues['Tags']))

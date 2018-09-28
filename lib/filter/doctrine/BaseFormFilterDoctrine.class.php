@@ -470,10 +470,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
 
         		$synonyms = Doctrine::getTable('ClassificationSynonymies')->findSynonymsIds($table, $item_ref);
 
-        		//if(empty($synonyms))
-          		//$query->andWhere('0=1'); //False
-        		//$query->andWhereIn($field_prefix."_ref",$synonyms)
-          		//->andWhere($field_prefix."_ref != ?",$item_ref); // remove himself
+        		
 				if(empty($synonyms))
 				{
 					$queryTmp.=" 0=1 ";

@@ -17,6 +17,14 @@ class StagingFormFilter extends BaseStagingFormFilter
     $this->widgetSchema['only_errors']  = new sfWidgetFormInputCheckbox();
     $this->validatorSchema['only_errors'] = new sfValidatorBoolean(array('required' => false));
     $this->setDefault('only_errors', 1);
+    
+    	//ftheeten 2018 09 02
+	$this->widgetSchema['taxonomic_metadata_ref'] = new sfWidgetFormChoice(array(
+      'choices' => TaxonomyMetadataTable::getAllTaxonomicMetadata( 'taxonomy_name ASC',true)  //array_merge( array(''=>'All'),TaxonomyMetadataTable::getAllTaxonomicMetadata("id ASC"))
+    ));
+	 $this->widgetSchema['taxonomic_metadata_ref']->setAttributes(array('class'=>'taxonomy_metadata_ref'));
+	$this->validatorSchema['taxonomic_metadata_ref'] = new sfValidatorInteger(array('required'=>false));
+
 
     $stype = array(
       'zoology'=> 'Zoology',

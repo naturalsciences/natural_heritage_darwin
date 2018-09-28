@@ -20,6 +20,7 @@ class ImportGtuCSV
     private $nbProperties=30;
 	private $set=false;
     protected $conn;
+	protected $true_count=0;
 	
     // entry point in Symfony	
 	public function parseFile($file,$id)
@@ -42,7 +43,7 @@ class ImportGtuCSV
 			$options["tab_file"] = $file;
 		
 			$this->identifyHeader($fp);
-			$i=1;
+			//$i=1;
             //print("GO");
             $this->conn = Doctrine_Manager::connection();
             $this->conn->beginTransaction();
@@ -65,7 +66,9 @@ class ImportGtuCSV
                 {
                     //print("try commit");
                     $this->conn->commit();
+					
                 }
+				
             }
             catch(Exception $e)
             {
@@ -213,7 +216,7 @@ class ImportGtuCSV
         
         foreach($this->headers as $key=>$value)
         {
-           $value= strtolower($value);
+           $value= strtolower(trim($value));
            $this->headers_inverted[$value]= $key;
            
            //comments
@@ -303,6 +306,8 @@ class ImportGtuCSV
 		//}
 		if($this->set)
 		{
+			$this->true_count++;
+			$obj->setPosInFile($this->true_count);
 			$val=$this->getValueIfFieldExists("station_type", $p_row);
 			if($val)
 			{

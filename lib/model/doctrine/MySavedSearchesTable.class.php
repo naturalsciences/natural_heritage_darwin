@@ -275,7 +275,7 @@ class MySavedSearchesTable extends DarwinTable
                             LEFT JOIN gtu 
                                 ON s.gtu_ref =gtu.id
                             LEFT JOIN properties AS locp 
-                                ON locp.referenced_relation='gtu' AND s.id=locp.record_id
+                                ON locp.referenced_relation='gtu' AND gtu.id=locp.record_id
                             LEFT JOIN catalogue_people cp2
                                 ON cp2.referenced_relation='specimens' AND cp2.people_type='collector' AND s.id=cp2.record_id 
                             LEFT JOIN people recol

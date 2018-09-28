@@ -1,4 +1,8 @@
 <?php
+//ftheeten 2018 09 04
+require_once("Encoding.php");
+use \ForceUTF8\Encoding;
+
 class ImportCatalogueXml implements ImportModelsInterface
 {
   private $parent, $referenced_relation, $errors_reported, $staging_catalogue, $version;

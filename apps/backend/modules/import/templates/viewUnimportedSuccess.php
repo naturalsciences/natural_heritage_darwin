@@ -13,8 +13,10 @@ th, td {
 
 <table >
  <tr>   
-        <th>id</th>
-        <th>id db</th>       
+        <th>id_file</th>
+		<th>id_staging_gtu_db</th>  
+		<th>imported</th>
+		<th>status</th>     
         <th>gtu_ref</th>
         <th>station_type</th>
         <th>sampling_code</th>
@@ -75,8 +77,10 @@ th, td {
 
  <?php $i=0; foreach($items as $item):?>
     <tr>
-        <td><?php print(++$i);?></td>
-        <td><?php print($item['id']);?></td>        
+        <td><?php print($item['pos_in_file']);?></td>
+        <td><?php print($item['id']);?></td> 
+		<td><?php print($item['imported']);?></td>
+		<td><?php print($item['status']);?></td>		
         <td><?php print($item['gtu_ref']);?></td>
         <td><?php print($item['station_type']);?></td>
         <td><?php print($item['sampling_code']);?></td>
@@ -136,5 +140,6 @@ th, td {
       </tr>  
  <?php endforeach;?>
 </table>
+<a href="../../indexLocalities">Back to import list</a>
 </div>
 </div>

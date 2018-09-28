@@ -7,6 +7,7 @@
  * 
  * @property integer $id
  * @property integer $import_ref
+ * @property integer $pos_in_file
  * @property string $status
  * @property boolean $date_included
  * @property boolean $tags_merged
@@ -70,6 +71,7 @@
  * 
  * @method integer             getId()                             Returns the current record's "id" value
  * @method integer             getImportRef()                      Returns the current record's "import_ref" value
+ * @method integer             getPosInFile()                      Returns the current record's "pos_in_file" value
  * @method string              getStatus()                         Returns the current record's "status" value
  * @method boolean             getDateIncluded()                   Returns the current record's "date_included" value
  * @method boolean             getTagsMerged()                     Returns the current record's "tags_merged" value
@@ -132,6 +134,7 @@
  * @method Doctrine_Collection getStagingGtuTagGroups()            Returns the current record's "StagingGtuTagGroups" collection
  * @method StagingGtu          setId()                             Sets the current record's "id" value
  * @method StagingGtu          setImportRef()                      Sets the current record's "import_ref" value
+ * @method StagingGtu          setPosInFile()                      Sets the current record's "pos_in_file" value
  * @method StagingGtu          setStatus()                         Sets the current record's "status" value
  * @method StagingGtu          setDateIncluded()                   Sets the current record's "date_included" value
  * @method StagingGtu          setTagsMerged()                     Sets the current record's "tags_merged" value
@@ -211,6 +214,9 @@ abstract class BaseStagingGtu extends DarwinModel
         $this->hasColumn('import_ref', 'integer', null, array(
              'type' => 'integer',
              'notnull' => true,
+             ));
+        $this->hasColumn('pos_in_file', 'integer', null, array(
+             'type' => 'integer',
              ));
         $this->hasColumn('status', 'string', null, array(
              'type' => 'string',

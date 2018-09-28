@@ -38,9 +38,11 @@
         </tr>
         <!--ftheeten 2018 08 08-->
         <tr>
+            <th><?php echo $form['ig_number']->renderLabel() ?></th>
 		  <th><?php echo $form['expedition']->renderLabel() ?></th>
         </tr>
         <tr>
+        <td><?php echo $form['ig_number']->render() ?></td>
         <td><?php echo $form['expedition']->render() ?></td>
         </tr>
         <!--ftheeten 2018 08 08-->
@@ -55,8 +57,20 @@
       </table>
 
       <fieldset id="lat_long_set">
-        <legend><?php echo __('Show Result as map');?> <input type="checkbox" id="show_as_map" autocomplete="off"></legend>
-          <table>
+        <legend><?php echo __('Show Result as map');?>
+        <!--ftheeten 2018 09 28-->
+        <?php if(strpos($_SERVER["REQUEST_URI"], "with_js")):?>
+               <input type="checkbox" id="show_as_map" autocomplete="off">
+        <?php else:?>
+            <input type="checkbox" id="show_as_map" autocomplete="off" checked>
+         <?php endif;?>
+        </legend>
+        <!--ftheeten 2018 09 28-->
+        <?php if(strpos($_SERVER["REQUEST_URI"], "with_js")):?>        
+            <table >
+          <?php else:?>
+            <table style="display:none">
+          <?php endif;?>
             <tr>
               <td>
               </td>
@@ -78,7 +92,12 @@
               <td><?php echo $form['lon_to'];?><?php echo image_tag('remove.png', 'alt=Delete class=clear_prop'); ?></td>
             </tr>
           </table>
-          <div id="map_search_form" style="display:none">
+           <!--ftheeten 2018 09 28-->
+            <?php if(strpos($_SERVER["REQUEST_URI"], "with_js")):?>
+                <div id="map_search_form" style="display:none">
+            <?php else:?>
+                <div id="map_search_form" >
+            <?php endif;?>
             <?php echo __('Show accuracy of each point');?> <input type="checkbox" id="show_accuracy" /><br /><br />
             <div style="height:400px;width:100%" id="smap"></div>
 
@@ -147,6 +166,9 @@
             return false;
 
           });
+		  
+		  //ftheeten 2018 09 25
+
         });
         
           //ftheeten 2018 03 08

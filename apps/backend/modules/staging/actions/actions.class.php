@@ -9,6 +9,56 @@ class stagingActions extends DarwinActions
       $this->forwardToSecureAction();
     }
   }
+  
+  
+   public function executeRecheck(sfWebRequest $request)
+  {
+    $this->forward404Unless($request->hasParameter('import'));
+    $this->import = Doctrine::getTable('Imports')->find($request->getParameter('import'));
+    //ftheeten 2018 09 24
+     $format_import = $this->import->getFormat();
+    //ftheeten 2018 09 02
+	if($request->hasParameter('taxonomy_ref'))
+	{
+		if($request->getParameter('taxonomy_ref'))
+		{
+			$taxonomy_ref=$request->getParameter('taxonomy_ref');
+			$this->import->setSpecimenTaxonomyRef($taxonomy_ref);
+			$this->import->save();
+            
+           
+		}
+	}
+    
+    //end ftheeten
+    
+    if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$this->import->getCollectionRef()))
+       $this->forwardToSecureAction();
+    
+   //ftheeten 2018 09 02
+   $cmd='darwin:check-import --id='.$tmp_id." --full-check";
+   $currentDir=getcwd();
+    chdir(sfconfig::get('sf_root_dir'));    
+    //print('nohup php symfony '.$cmd.'  >/dev/null &' );
+    exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+    chdir($currentDir);              
+   //end ftheeten
+   
+    if($format_import=="locality")
+    {
+        return $this->redirect('import/indexLocalities');
+    }
+    elseif($format_import=="taxon")
+    {
+        return $this->redirect('import/indexTaxon');
+    } 
+    else
+    {
+        return $this->redirect('import/index');
+    }
+    //return $this->redirect('import/index');
+  }
+
 
   public function executeMarkok(sfWebRequest $request)
   {
@@ -16,12 +66,33 @@ class stagingActions extends DarwinActions
     $this->import = Doctrine::getTable('Imports')->find($request->getParameter('import'));
     //ftheeten 2018 09 24
      $format_import = $this->import->getFormat();
+    //ftheeten 2018 09 02
+	if($request->hasParameter('taxonomy_ref'))
+	{
+		if($request->getParameter('taxonomy_ref'))
+		{
+			$taxonomy_ref=$request->getParameter('taxonomy_ref');
+			$this->import->setSpecimenTaxonomyRef($taxonomy_ref);
+			$this->import->save();
+            
+           
+		}
+	}
+    
+    //end ftheeten
     
     if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$this->import->getCollectionRef()))
        $this->forwardToSecureAction();
     $this->import = Doctrine::getTable('Imports')->markOk($this->import->getId());
     
-   
+   //ftheeten 2018 09 02
+   $cmd='darwin:check-import --do-import --id='.$tmp_id." --full-check";
+   $currentDir=getcwd();
+    chdir(sfconfig::get('sf_root_dir'));    
+    //print('nohup php symfony '.$cmd.'  >/dev/null &' );
+    exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+    chdir($currentDir);              
+   //end ftheeten
    
     if($format_import=="locality")
     {
@@ -54,6 +125,29 @@ class stagingActions extends DarwinActions
 
   }
   */
+  
+    //ftheeten 2018 09 24
+    public function executeCreatePeoples(sfWebRequest $request)
+  {
+    $this->forward404Unless($request->hasParameter('import'));
+    $this->import = Doctrine::getTable('Imports')->find($request->getParameter('import'));
+
+    if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$this->import->getCollectionRef()))
+    {
+       $this->forwardToSecureAction();
+    }
+    else
+    {       
+		$cmd='darwin:create-people --id='. $this->import->getId();
+		$currentDir=getcwd();
+		chdir(sfconfig::get('sf_root_dir'));    
+		exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+		chdir($currentDir);      
+    }
+    return $this->redirect('import/index');
+
+  }
+  
   public function executeDelete(sfWebRequest $request)
   {
     $this->forward404Unless($request->hasParameter('id'));

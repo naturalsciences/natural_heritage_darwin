@@ -49,6 +49,16 @@ $(document).ready(function ()
         </td>
       </tr>
       <?php endif ?>
+      <!--ftheeten 2018 09 24-->
+      <?php if($type == 'abcd') : ?>
+          <tr>
+            <th><?php echo $form['specimen_taxonomy_ref']->renderLabel() ?> :</th>
+            <td>
+              <?php echo $form['specimen_taxonomy_ref']->renderError() ?>
+              <?php echo $form['specimen_taxonomy_ref'] ?>
+            </td>
+          </tr>
+      <?php endif ?>
       <?php if($type == 'taxon') : ?>
       <tr>
         <th><?php echo $form['exclude_invalid_entries']->renderLabel() ?> :</th>
@@ -57,7 +67,25 @@ $(document).ready(function ()
           <?php echo $form['exclude_invalid_entries'] ?>
         </td>
       </tr>
+      <!--ftheeten 2017 07 06-->
+      <tr>
+        <th><?php echo $form['specimen_taxonomy_ref']->renderLabel() ?> :</th>
+        <td>
+          <?php echo $form['specimen_taxonomy_ref']->renderError() ?>
+          <?php echo $form['specimen_taxonomy_ref'] ?>
+        </td>         
+      </tr>
       <?php endif ?>
+     <!--ftheeten 2018 09 24-->
+      <?php if($type == 'taxon'||$type=="abcd") : ?>
+	  <tr>
+      <th><?php echo $form['taxonomy_kingdom']->renderLabel() ?> :</th>
+        <td>
+          <?php echo $form['taxonomy_kingdom']->renderError() ?>
+          <?php echo $form['taxonomy_kingdom'] ?>
+        </td>
+      </tr>
+	  <?php endif ?>
     </tbody>
       <tfoot>
         <tr>

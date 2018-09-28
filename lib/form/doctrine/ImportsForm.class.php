@@ -27,6 +27,20 @@ class ImportsForm extends BaseImportsForm
           'expanded'=>true,
         )
       );
+      
+      //ftheeten 2017 08 02
+      $this->widgetSchema['specimen_taxonomy_ref'] =new sfWidgetFormChoice(array(
+      //'choices' => array_merge( array(''=>'All'), TaxonomyMetadataTable::getAllTaxonomicMetadata())
+      'choices' =>  TaxonomyMetadataTable::getAllTaxonomicMetadata('id ASC', true)
+        ));
+      $this->validatorSchema['specimen_taxonomy_ref'] = new sfValidatorInteger(array('required'=>false));
+      
+       //ftheeeten 2018 06 06
+      $this->widgetSchema['taxonomy_kingdom'] =new sfWidgetFormChoice(array(
+      
+      'choices' =>  TaxonomyTable::getTaxaByLevel("2")
+        ));
+      $this->validatorSchema['taxonomy_kingdom'] = new sfValidatorInteger(array('required'=>false));
     }
 	elseif($this->options['format'] == 'locality')
 	{
@@ -69,10 +83,24 @@ class ImportsForm extends BaseImportsForm
           'class'=>'inline',
         )
       );
+             //ftheeten 2017 08 02
+      $this->widgetSchema['specimen_taxonomy_ref'] =new sfWidgetFormChoice(array(
+      //'choices' => array_merge( array(''=>'All'), TaxonomyMetadataTable::getAllTaxonomicMetadata())
+      'choices' =>  TaxonomyMetadataTable::getAllTaxonomicMetadata('id ASC', true)
+        ));
+      $this->validatorSchema['specimen_taxonomy_ref'] = new sfValidatorInteger(array('required'=>false));
+      $this->widgetSchema['taxonomy_kingdom'] =new sfWidgetFormChoice(array(      
+      'choices' =>  TaxonomyTable::getTaxaByLevel("2")
+        ));
+      $this->validatorSchema['taxonomy_kingdom'] = new sfValidatorInteger(array('required'=>false));
+      
       $category = imports::getFormats();
-      //ftheeten 2018 08 07
-      print("LULU");
-      if($this->options['format'] == 'locality')
+      //ftheeten 2018 08 07    
+     
+    
+    }
+    
+    if($this->options['format'] == 'locality')
       {
          $this->validatorSchema['collection_ref'] = new sfValidatorInteger(array('required'=>false));
       }
@@ -80,9 +108,6 @@ class ImportsForm extends BaseImportsForm
       {
         $this->validatorSchema['collection_ref'] = new sfValidatorInteger(array('required'=>true));
       } 
-     
-    
-    }
 	//ftheeten 2018 07 23810
     $this->widgetSchema['source_database'] =  new sfWidgetFormInputText(); 
     $this->validatorSchema['source_database'] =  new sfValidatorString() ;

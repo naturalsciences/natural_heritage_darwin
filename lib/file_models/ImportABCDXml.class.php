@@ -1,4 +1,7 @@
 <?php
+require_once("Encoding.php");
+use \ForceUTF8\Encoding;
+
 class ImportABCDXml implements ImportModelsInterface
 {
   private $cdata, $tag, $staging, $object, $people_name,$import_id, $path="", $name, $errors_reported='',$preparation_type='', $preparation_mat='';
@@ -6,7 +9,39 @@ class ImportABCDXml implements ImportModelsInterface
   private $object_to_save = array(), $staging_tags = array() , $data, $inside_data;
   private $version_defined = false;
   private $version_error_msg = "You use an unrecognized template version, please use it at your own risks or update the version of your template.;";
-
+  //jm herpers 2017 11 09 (auto increment in batches)
+  private $main_code_found=false;
+  private $collection_of_import;
+  private $collection_has_autoincrement=false;
+  private $code_last_value;
+  private $code_prefix;
+  private $code_prefix_separator;
+  private $code_suffix;
+  private $code_suffix_separator;
+  
+    //jmherpers and ftheeten 2017 11 09
+  //know if collection is autoincremented
+  private function getCollectionOfImport()
+  {
+  	 $collection_ref=Doctrine::getTable('Imports')->find($this->import_id)->getCollectionRef();
+	 return Doctrine::getTable('Collections')->find($collection_ref);
+  }
+  
+  
+  //ftheeten 2018 09 24
+  protected function csvLineIsNotEmpty($p_row)
+  {
+    $returned=FALSE;
+    foreach($p_row as $field=>$value)
+    {
+        if(strlen(trim((string)$value))>0)
+        {
+            return TRUE;
+        }
+    }
+    return $returned;
+  }
+  
   /**
   * @function parseFile() read a 'to_be_loaded' xml file and import it, if possible in staging table
   * @var $file : the xml file to parse
@@ -15,25 +50,84 @@ class ImportABCDXml implements ImportModelsInterface
   public function parseFile($file,$id)
   {
     $this->import_id = $id ;
-    $xml_parser = xml_parser_create();
-    xml_set_object($xml_parser, $this) ;
-    xml_parser_set_option($xml_parser, XML_OPTION_CASE_FOLDING, false);
-    xml_set_element_handler($xml_parser, "startElement", "endElement");
-    xml_set_character_data_handler($xml_parser, "characterData");
-    if (!($fp = fopen($file, "r"))) {
-        return("could not open XML input");
+    //ftheeten 2017 08 03 added specimen_taxonomy_ref (for parallel taxonomies)
+    $this->specimen_taxonomy_ref = Doctrine::getTable('Imports')->find($this->import_id)->getSpecimenTaxonomyRef();
+    /**ftheeten + jm herpers 2018 09 24*/
+    $this->specimen_taxonomy_ref = Doctrine::getTable('Imports')->find($this->import_id)->getSpecimenTaxonomyRef();   
+    $mime_type=Doctrine::getTable('Imports')->find($this->import_id)->getMimeType();
+    $this->collection_of_import=$this->getCollectionOfImport();
+	$this->collection_has_autoincrement=$this->collection_of_import->getCodeAutoIncrement();
+    if($this->collection_has_autoincrement)
+	{
+        $this->code_last_value=$this->collection_of_import->getCodeLastValue();
+        $this->code_prefix=$this->collection_of_import->getCodePrefix();
+		$this->code_prefix_separator=$this->collection_of_import->getCodePrefixSeparator();
+		$this->code_suffix_separator=$this->collection_of_import->getCodeSuffixSeparator();
+		$this->code_suffix=$this->collection_of_import->getCodeSuffix();        
     }
-    while ($this->data = fread($fp, 4096)) {
-        if (!xml_parse($xml_parser, $this->data, feof($fp))) {
-            return (sprintf("XML error: %s at line %d",
-                        xml_error_string(xml_get_error_code($xml_parser)),
-                        xml_get_current_line_number($xml_parser)));
+    //ftheeten 2018 09 24
+    if($mime_type==="text/plain")
+    {
+            if (!($fp = fopen($file, "r"))) 
+            {
+                return("could not open input file");
+            }
+            $tabParser=new RMCATabToABCDXml();
+            $options["tab_file"] = $file;
+            $tabParser->configure($options);
+            $tabParser->identifyHeader($fp);
+            $i=1;
+            while (($row = fgetcsv($fp, 0, "\t")) !== FALSE)
+            {
+                if (array(null) !== $row) 
+                {
+                    if($this->csvLineIsNotEmpty($row))
+                    {
+                    
+                        $row=  Encoding::toUTF8($row);
+                        $xml_parser = xml_parser_create();
+                        xml_set_object($xml_parser, $this) ;
+                        xml_parser_set_option($xml_parser, XML_OPTION_CASE_FOLDING, false);
+                        xml_set_element_handler($xml_parser, "startElement", "endElement");
+                        xml_set_character_data_handler($xml_parser, "characterData");
+                        $xml_conv= $tabParser->parseLineAndGetString($row);
+                        //print($xml_conv);
+                        if (!xml_parse($xml_parser, $xml_conv, feof($fp))) 
+                        {
+                            return (sprintf("XML error: %s at line %d for record $i",
+                                        xml_error_string(xml_get_error_code($xml_parser)),
+                                        xml_get_current_line_number($xml_parser)));
+                        }
+                        $i++;
+                        xml_parser_free($xml_parser);
+                    }
+                }           
+          }
+          return $this->errors_reported ;
+    }
+    else //old xml parser
+    {
+        $xml_parser = xml_parser_create();
+        xml_set_object($xml_parser, $this) ;
+        xml_parser_set_option($xml_parser, XML_OPTION_CASE_FOLDING, false);
+        xml_set_element_handler($xml_parser, "startElement", "endElement");
+        xml_set_character_data_handler($xml_parser, "characterData");
+        if (!($fp = fopen($file, "r"))) {
+            return("could not open XML input");
         }
+        while ($this->data = fread($fp, 4096)) {
+            if (!xml_parse($xml_parser, $this->data, feof($fp))) {
+                return (sprintf("XML error: %s at line %d",
+                            xml_error_string(xml_get_error_code($xml_parser)),
+                            xml_get_current_line_number($xml_parser)));
+            }
+        }
+        xml_parser_free($xml_parser);
+        if(! $this->version_defined)
+          $this->errors_reported = $this->version_error_msg.$this->errors_reported;
+        return $this->errors_reported ;
+  
     }
-    xml_parser_free($xml_parser);
-    if(! $this->version_defined)
-      $this->errors_reported = $this->version_error_msg.$this->errors_reported;
-    return $this->errors_reported ;
   }
 
  /**
@@ -72,7 +166,10 @@ class ImportABCDXml implements ImportModelsInterface
       case "RockUnit" : $this->object = new ParsingCatalogue('lithology') ; break;
       case "Sequence" : $this->object = new ParsingMaintenance('Sequencing') ; break;
       case "SpecimenUnit" : $this->object = new ParsingTag("unit") ; break;
-      case "Unit" : $this->staging = new Staging(); $this->name = ""; $this->staging->setId($this->getStagingId()); $this->object = null; break;
+      case "Unit" : $this->staging = new Staging(); $this->name = ""; $this->staging->setId($this->getStagingId()); $this->object = null; 
+                //ftheeten + jm herpers 2017 11 09 (auto increment in batches)
+				$this->main_code_found=false;
+            break;
       case "UnitAssociation" : $this->object = new stagingRelationship() ; break;
     }
   }
@@ -325,13 +422,38 @@ class ImportABCDXml implements ImportModelsInterface
     return (substr($part,strrpos($part,'/')+1,strlen($part))) ;
   }
 
-  private function addCode($category="main")
+  /*private function addCode($category="main")
   {
     $code = new Codes() ;
     $code->setCodeCategory(strtolower($category)) ;
     $code->setCode($this->cdata) ;
     if(substr($code->getCode(),0,4) != 'hash') $this->staging->addRelated($code) ;
+    //ftheeten 2018 09 24
+    if($category=="main")
+    {
+            $this->main_code_found=true;
+    }
+  }*/
+  
+    private function addCode($category="main")
+  {
+	 //jm herpers 2017 11 09 (auto increment in batches)
+   
+	if(strlen(trim($this->cdata))>0)
+    {
+        if($category=="main")
+        {
+            $this->main_code_found=true;
+        }
+        $code = new Codes() ;
+        $code->setCodeCategory(strtolower($category)) ;
+        $code->setCode($this->cdata) ;
+        if(substr($code->getCode(),0,4) != 'hash') $this->staging->addRelated($code) ;		
+	}
+    
+    
   }
+  
 
   private function addComment($is_staging = false, $notion =  'general')
   {
@@ -472,7 +594,9 @@ class ImportABCDXml implements ImportModelsInterface
   private function saveUnit()
   {
     $ok = true ;
-    $this->staging->fromArray(array("import_ref" => $this->import_id));
+    //$this->staging->fromArray(array("import_ref" => $this->import_id));
+    //ftheeten 2017 08 03
+    $this->staging->fromArray(array("import_ref" => $this->import_id, "specimen_taxonomy_ref"=> $this->specimen_taxonomy_ref));
     try
     {
       $result = $this->staging->save() ;

@@ -20,6 +20,7 @@ EOF;
 
   protected function execute($arguments = array(), $options = array())
   {
+  print("DEBUG\n");
      // initialize the database connection
     $result = null ;
     $databaseManager = new sfDatabaseManager($this->configuration);
@@ -38,6 +39,7 @@ EOF;
 		  $file = sfConfig::get('sf_upload_dir').'/uploaded_'.sha1($q->getFilename().$q->getCreatedAt()).".".(explode(".",$q->getFilename())[1]) ;
         if(file_exists($file))
         {
+        print("GO");
           try{
             switch ($q->getFormat())
             {
