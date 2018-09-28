@@ -112,6 +112,7 @@ abstract class BaseStagingFormFilter extends BaseFormFilterDoctrine
       'status'                    => new sfWidgetFormFilterInput(),
       'complete'                  => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
       'surnumerary'               => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
+      'specimen_taxonomy_ref'     => new sfWidgetFormFilterInput(),
     ));
 
     $this->setValidators(array(
@@ -214,6 +215,7 @@ abstract class BaseStagingFormFilter extends BaseFormFilterDoctrine
       'status'                    => new sfValidatorPass(array('required' => false)),
       'complete'                  => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
       'surnumerary'               => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
+      'specimen_taxonomy_ref'     => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
     ));
 
     $this->widgetSchema->setNameFormat('staging_filters[%s]');
@@ -333,6 +335,7 @@ abstract class BaseStagingFormFilter extends BaseFormFilterDoctrine
       'status'                    => 'Text',
       'complete'                  => 'Boolean',
       'surnumerary'               => 'Boolean',
+      'specimen_taxonomy_ref'     => 'Number',
     );
   }
 }

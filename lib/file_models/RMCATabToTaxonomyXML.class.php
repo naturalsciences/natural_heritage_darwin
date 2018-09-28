@@ -84,7 +84,7 @@ class RMCATabToTaxonomyXml
         
         foreach($this->headers as $key=>$value)
         {
-           $this->headers_inverted[strtolower($value)]= $key;
+           $this->headers_inverted[strtolower(trim($value))]= $key;
         }      
        
        // $this->headers_inverted = array_change_key_case(array_flip($this->headers), CASE_LOWER);

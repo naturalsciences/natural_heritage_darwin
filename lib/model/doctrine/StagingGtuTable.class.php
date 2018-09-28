@@ -15,7 +15,8 @@ class StagingGtuTable extends DarwinTable
                ->select()
                ->from('StagingGtu')
                ->where('import_ref= ?', $import_ref)
-               ->andWhere('imported= false')                
+               ->andWhere('imported= false')
+				->orderBy('id')			   
                ->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
 
     return $response;     

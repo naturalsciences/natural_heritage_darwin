@@ -459,7 +459,9 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       'multiple' => true,
       'expanded' => true,
       'add_empty' => false,
-    ));
+    ),
+    //ftheeten 2018 09 27
+    array('class' => 'search_type_class'));
     $this->validatorSchema['type'] = new sfValidatorPass();
 
     $this->widgetSchema['sex'] = new sfWidgetFormDarwinDoctrineChoice(array(

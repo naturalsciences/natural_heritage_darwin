@@ -9,6 +9,8 @@
     <h1 id="title"><?php echo __('Specimens Search');?></h1>
     <?php echo form_tag('specimensearch/search'.( isset($is_choose) ? '?is_choose='.$is_choose : '') , array('class'=>'specimensearch_form','id'=>'specimen_filter'));?>
       <div class="encod_screen" id="intro">
+        <!--ftheeten 2018 09 28-->
+        <?php include_partial('widgets/float_button_search'); ?>
         <?php include_partial('widgets/screen', array(
           'widgets' => $widgets,
           'category' => 'specimensearchwidget',
@@ -29,6 +31,7 @@
     </form>
   </div>
 </div>
+
 <script type="text/javascript">
 $(document).ready(function () {
   check_screen_size() ;

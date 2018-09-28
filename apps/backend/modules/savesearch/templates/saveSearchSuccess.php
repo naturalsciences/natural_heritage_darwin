@@ -49,9 +49,9 @@
     </tbody>
   </table>
   <br />
-  <h2><?php echo __("Visibility of fields in results :") ; ?></h2>
+  <h2 style="display:none"><?php echo __("Visibility of fields in results :") ; ?></h2>
     <?php echo $form['visible_fields_in_result']->renderError(); ?>
-  <table class="fields">
+  <table class="fields" style="display:none">
     <thead>
       <tr>
         <th><?php echo __('Fields') ; ?></th>

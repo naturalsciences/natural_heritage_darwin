@@ -17,6 +17,7 @@ abstract class BaseStagingGtuForm extends BaseFormDoctrine
     $this->setWidgets(array(
       'id'                             => new sfWidgetFormInputHidden(),
       'import_ref'                     => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Import'), 'add_empty' => false)),
+      'pos_in_file'                    => new sfWidgetFormInputText(),
       'status'                         => new sfWidgetFormTextarea(),
       'date_included'                  => new sfWidgetFormInputCheckbox(),
       'tags_merged'                    => new sfWidgetFormInputCheckbox(),
@@ -80,6 +81,7 @@ abstract class BaseStagingGtuForm extends BaseFormDoctrine
     $this->setValidators(array(
       'id'                             => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
       'import_ref'                     => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Import'))),
+      'pos_in_file'                    => new sfValidatorInteger(array('required' => false)),
       'status'                         => new sfValidatorString(array('required' => false)),
       'date_included'                  => new sfValidatorBoolean(array('required' => false)),
       'tags_merged'                    => new sfValidatorBoolean(array('required' => false)),

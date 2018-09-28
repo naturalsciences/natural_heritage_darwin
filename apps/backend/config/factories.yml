@@ -25,7 +25,7 @@ prod:
       transport:
         class: Swift_SmtpTransport
         param:
-          host:       bernie
+          host:       smtp.naturalsciences.be
           port:       25
           encryption: ~
           username:   ~

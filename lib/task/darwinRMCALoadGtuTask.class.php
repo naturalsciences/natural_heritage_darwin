@@ -35,15 +35,29 @@ EOF;
 				$import_obj->save();
 				
    
-				
+				$sql_count = "UPDATE imports SET initial_count=(SELECT COUNT(*) FROM staging_gtu WHERE import_ref=".$id_import.") WHERE id=".$id_import.";";
+				$ctn_init = $conn->exec($sql_count);
 				$conn->beginTransaction();
 				$sql = "SELECT * FROM rmca_import_gtu_create_missing_people_in_staging(".$id_import.");SELECT * FROM rmca_import_gtu_in_darwin_fast(".$id_import.");";
 				$ctn = $conn->exec($sql);
 				$conn->commit();
 				
-				$import_obj = Doctrine::getTable('Imports')->find($id_import);
-				$import_obj->setState("pending");
-				$import_obj->save();
+                $staging_gtu_sql="SELECT count(*) FROM staging_gtu WHERe import_ref=:id_import AND imported=false;";
+                $q = $conn->prepare($staging_gtu_sql);
+                $q->execute(array(':id_import' => $id_import));
+                $staging_gtu_count=$q->fetchAll();
+                $staging_gtu_count=$staging_gtu_count[0][0];
+                print("test");
+                print($staging_gtu_count);
+                if($staging_gtu_count==0)
+                {
+                    $import_obj->setState("finished");
+				}
+                else
+                {
+                    $import_obj->setState("pending");
+                }
+                $import_obj->save();
 		  }
 		  catch(Exception $e)
           {         

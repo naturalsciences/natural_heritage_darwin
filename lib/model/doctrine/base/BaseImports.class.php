@@ -26,6 +26,9 @@
  * @property boolean $gtu_tags_in_merge
  * @property boolean $sensitive_information_withheld
  * @property string $source_database
+ * @property string $taxonomy_kingdom
+ * @property integer $specimen_taxonomy_ref
+ * @property string $history_taxonomy
  * @property Collections $Collections
  * @property Users $Users
  * @property Doctrine_Collection $Staging
@@ -53,6 +56,9 @@
  * @method boolean             getGtuTagsInMerge()                 Returns the current record's "gtu_tags_in_merge" value
  * @method boolean             getSensitiveInformationWithheld()   Returns the current record's "sensitive_information_withheld" value
  * @method string              getSourceDatabase()                 Returns the current record's "source_database" value
+ * @method string              getTaxonomyKingdom()                Returns the current record's "taxonomy_kingdom" value
+ * @method integer             getSpecimenTaxonomyRef()            Returns the current record's "specimen_taxonomy_ref" value
+ * @method string              getHistoryTaxonomy()                Returns the current record's "history_taxonomy" value
  * @method Collections         getCollections()                    Returns the current record's "Collections" value
  * @method Users               getUsers()                          Returns the current record's "Users" value
  * @method Doctrine_Collection getStaging()                        Returns the current record's "Staging" collection
@@ -79,6 +85,9 @@
  * @method Imports             setGtuTagsInMerge()                 Sets the current record's "gtu_tags_in_merge" value
  * @method Imports             setSensitiveInformationWithheld()   Sets the current record's "sensitive_information_withheld" value
  * @method Imports             setSourceDatabase()                 Sets the current record's "source_database" value
+ * @method Imports             setTaxonomyKingdom()                Sets the current record's "taxonomy_kingdom" value
+ * @method Imports             setSpecimenTaxonomyRef()            Sets the current record's "specimen_taxonomy_ref" value
+ * @method Imports             setHistoryTaxonomy()                Sets the current record's "history_taxonomy" value
  * @method Imports             setCollections()                    Sets the current record's "Collections" value
  * @method Imports             setUsers()                          Sets the current record's "Users" value
  * @method Imports             setStaging()                        Sets the current record's "Staging" collection
@@ -175,6 +184,15 @@ abstract class BaseImports extends DarwinModel
              'default' => false,
              ));
         $this->hasColumn('source_database', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('taxonomy_kingdom', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('specimen_taxonomy_ref', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('history_taxonomy', 'string', null, array(
              'type' => 'string',
              ));
     }

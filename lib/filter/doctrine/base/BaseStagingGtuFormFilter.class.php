@@ -14,6 +14,7 @@ abstract class BaseStagingGtuFormFilter extends BaseFormFilterDoctrine
   {
     $this->setWidgets(array(
       'import_ref'                     => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Import'), 'add_empty' => true)),
+      'pos_in_file'                    => new sfWidgetFormFilterInput(),
       'status'                         => new sfWidgetFormFilterInput(),
       'date_included'                  => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
       'tags_merged'                    => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
@@ -76,6 +77,7 @@ abstract class BaseStagingGtuFormFilter extends BaseFormFilterDoctrine
 
     $this->setValidators(array(
       'import_ref'                     => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Import'), 'column' => 'id')),
+      'pos_in_file'                    => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'status'                         => new sfValidatorPass(array('required' => false)),
       'date_included'                  => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
       'tags_merged'                    => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
@@ -155,6 +157,7 @@ abstract class BaseStagingGtuFormFilter extends BaseFormFilterDoctrine
     return array(
       'id'                             => 'Number',
       'import_ref'                     => 'ForeignKey',
+      'pos_in_file'                    => 'Number',
       'status'                         => 'Text',
       'date_included'                  => 'Boolean',
       'tags_merged'                    => 'Boolean',
