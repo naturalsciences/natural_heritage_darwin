@@ -23,7 +23,7 @@ $(document).ready(
             {
                if($("#check_all_types").is(":checked"))
                {
-                  $(".search_type_class[value!='specimen']").prop('checked', true);
+                  $(".search_type_class[value!='specimen'][value!='']").prop('checked', true);
                }
                else
                {

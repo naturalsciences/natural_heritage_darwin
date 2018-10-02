@@ -49,7 +49,7 @@
     </tbody>
   </table>
   <br />
-  <h2 style="display:none"><?php echo __("Visibility of fields in results :") ; ?></h2>
+  <h2 style="display:none"  ><?php echo __("Visibility of fields in results :") ; ?></h2>
     <?php echo $form['visible_fields_in_result']->renderError(); ?>
   <table class="fields" style="display:none">
     <thead>
