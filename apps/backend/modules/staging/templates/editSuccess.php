@@ -117,5 +117,15 @@ $(document).ready(function () {
     }
     $('.tree').slideUp();
   });
+  
+  //ftheeten 2018 10 01
+  <?php if(is_numeric($form->getObject()->getSpecimenTaxonomyRef())):?>
+  onElementInserted('body', '.col_check_metadata_ref', function(element)
+        {
+            //document.getElementById('searchCatalogue_metadata_ref').value;            
+            $(".col_check_metadata_ref option[value='<?php print($form->getObject()->getSpecimenTaxonomyRef());?>']").prop('selected', true);
+            
+        });
+   <?php endif;?>
 });
 </script>

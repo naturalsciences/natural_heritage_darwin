@@ -140,14 +140,101 @@ $(document).ready(function () {
 
  //ftheeten 2018 03 14
  <?php if($form->getObject()->isNew()===true): ?>
-
-    if ( $( ".col_check_metadata_ref" ).length ) { 
-    
-        $(".col_check_metadata_ref option:eq(0)").attr("selected", "selected");
+console.log("new");
+       var name_was_empty=false;
+    <?php if(array_key_exists(urlencode('taxonomy'), $_REQUEST)):?>
+        <?php if(array_key_exists(urlencode('metadata_ref'), $_REQUEST['taxonomy'])):?>
+            if ( $( ".col_check_metadata_ref" ).length ) { 
+            
+                $(".col_check_metadata_ref option:eq('<?php print($_REQUEST['taxonomy']['metadata_ref']);?>')").attr("selected", "selected");
      
-    } 
+            }
+            else
+            {
+               $(".col_check_metadata_ref option:eq(1)").attr("selected", "selected");
+            }
+         <?php endif;?>
+    <?else:?>
+       if ( $( ".col_check_metadata_ref" ).length ) { 
+                $(".col_check_metadata_ref option:eq(1)").attr("selected", "selected");
+     
+            } 
+    <?php endif;?>
     
-    $(".catalogue_level").val("48");
+    <?php if(array_key_exists(urlencode('taxonomy'), $_REQUEST)):?>
+        <?php if(array_key_exists(urlencode('name'), $_REQUEST['taxonomy'])):?>
+            var nameTmp="<?php print($_REQUEST['taxonomy']['name']);?>";
+            var arrayTmp=nameTmp.split(" ");
+            if(arrayTmp.length==1)
+            {
+                 $(".catalogue_level").val("41");
+            }
+            else
+            {
+                $(".catalogue_level").val("48");
+            }
+        <?php endif;?>
+    <?php else:?>
+        $(".catalogue_level").val("48");
+     <?php endif;?>
+    
+    function hasUpperCase(str) 
+    {
+        return str.toLowerCase() != str;
+    }
+
+    var  initializeParent=function()
+    {
+           if($("#taxonomy_parent_ref_name").val().trim().length==0)
+           {
+                var taxa=$("#taxonomy_name").val().split(" ");                
+                var taxaTmp=Array();
+                var i=0;             
+                for(i=0;i<taxa.length;i++)
+                {
+                    
+                    if(i==0||!hasUpperCase(taxa[i]))
+                    {                           
+                        taxaTmp.push(taxa[i]);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                
+                taxa=taxaTmp;
+                taxa.pop();
+                $("#taxonomy_parent_ref_name").val(taxa.join(" "));
+                
+                name_was_empty=true;
+           }
+    }
+    
+    openParent =function()
+    {
+        $(".but_more").click();
+    }    
+    
+
+    
+     $("a[title='Choose Parent']").mouseover(
+        function(e )
+        {
+                initializeParent();        
+        }
+     );
+     
+     $("a[title='Choose Parent']").mouseleave(
+        function(e )
+        {
+               if(name_was_empty==true)
+               {
+                    $("#taxonomy_parent_ref_name").val(" ");
+                    name_was_empty=false;
+               }               
+        }
+     ); 
  <?php endif?>	
 });
 </script>
