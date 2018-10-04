@@ -139,7 +139,7 @@ $(document).ready(function () {
    ); 
 
  //ftheeten 2018 03 14
- <?php if($form->getObject()->isNew()===true): ?>
+ <?php if($form->getObject()->isNew()===true&&!strpos($_SERVER['REQUEST_URI'],'duplicate_id')): ?>
 console.log("new");
        var name_was_empty=false;
     <?php if(array_key_exists(urlencode('taxonomy'), $_REQUEST)):?>
