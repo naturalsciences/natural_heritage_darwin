@@ -36,6 +36,7 @@
  * @property string $gtu_from_date
  * @property integer $gtu_to_date_mask
  * @property string $gtu_to_date
+ * @property string $gtu_others_tag_value
  * @property string $gtu_tag_values_indexed
  * @property string $gtu_country_tag_indexed
  * @property string $gtu_country_tag_value
@@ -169,6 +170,7 @@
  * @method string              getGtuFromDate()             Returns the current record's "gtu_from_date" value
  * @method integer             getGtuToDateMask()           Returns the current record's "gtu_to_date_mask" value
  * @method string              getGtuToDate()               Returns the current record's "gtu_to_date" value
+ * @method string              getGtuOthersTagValue()       Returns the current record's "gtu_others_tag_value" value
  * @method string              getGtuTagValuesIndexed()     Returns the current record's "gtu_tag_values_indexed" value
  * @method string              getGtuCountryTagIndexed()    Returns the current record's "gtu_country_tag_indexed" value
  * @method string              getGtuCountryTagValue()      Returns the current record's "gtu_country_tag_value" value
@@ -301,6 +303,7 @@
  * @method Specimens           setGtuFromDate()             Sets the current record's "gtu_from_date" value
  * @method Specimens           setGtuToDateMask()           Sets the current record's "gtu_to_date_mask" value
  * @method Specimens           setGtuToDate()               Sets the current record's "gtu_to_date" value
+ * @method Specimens           setGtuOthersTagValue()       Sets the current record's "gtu_others_tag_value" value
  * @method Specimens           setGtuTagValuesIndexed()     Sets the current record's "gtu_tag_values_indexed" value
  * @method Specimens           setGtuCountryTagIndexed()    Sets the current record's "gtu_country_tag_indexed" value
  * @method Specimens           setGtuCountryTagValue()      Sets the current record's "gtu_country_tag_value" value
@@ -514,6 +517,9 @@ abstract class BaseSpecimens extends DarwinModel
              'type' => 'integer',
              ));
         $this->hasColumn('gtu_to_date', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('gtu_others_tag_value', 'string', null, array(
              'type' => 'string',
              ));
         $this->hasColumn('gtu_tag_values_indexed', 'string', null, array(

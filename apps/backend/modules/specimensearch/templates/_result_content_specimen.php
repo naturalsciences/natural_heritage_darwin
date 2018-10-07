@@ -90,9 +90,27 @@
         <?php endif;?>
 
           <div class="general_gtu">
-          <?php if($specimen->getGtuCountryTagValue() != ""): ?>
-            <strong><?php echo __('Country');?> :</strong>
-            <?php echo $specimen->getCountryTags(ESC_RAW);?>
+		   <?php if($specimen->getGtuCountryTagValue() != ""): ?>
+            <strong><?php 
+            //ftheeten 2018 10 04
+            echo __('Country');?> :</strong>
+           <?php echo $specimen->getGtuCountryTagValue(ESC_RAW);?>
+		   </br>
+          <?php endif ; ?>
+          <?php if($specimen->getAllGtuTags() != ""): ?>
+            <strong><?php 
+            //ftheeten 2018 10 04
+            echo __('Localities');?> :</strong>
+           <?php echo $specimen->getAllGtuTags(ESC_RAW);?>
+		   </br>
+		   <?php endif ; ?>
+		   <?php if($specimen->getGtuLocation() != ""): ?>
+		   </br>
+            <strong><?php 
+            //ftheeten 2018 10 04
+            echo __('Coordinates');?> :</strong>
+           <?php echo "<br/>Long :". str_replace(",", " Lat. :",preg_replace('(\(|\))','',(string)$specimen->getGtuLocation()));?>
+		   </br>
           <?php endif ; ?>
           </div>
           <div id="gtu_<?php echo $specimen->getId();?>_details" style="display:none;"></div>

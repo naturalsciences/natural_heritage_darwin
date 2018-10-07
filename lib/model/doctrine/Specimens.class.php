@@ -131,6 +131,25 @@ class Specimens extends BaseSpecimens
 
     return $str;
   }
+  
+  //ftheeten 2018 10 05
+   public function getAllGtuTags()
+  {
+    $tags = explode(';',$this->getGtuCountryTagValue(''));
+    foreach(explode(";",$this->getGtuOthersTagValue()) as $value)
+    {
+        $tags[]=$value;
+    }
+    $nbr = count($tags);
+    if(! $nbr) return "-";
+    $str = '<ul class="name_tags_view">';
+    foreach($tags as $value)
+      if (strlen($value))
+        $str .= '<li>' . trim($value).'</li>';
+    $str .= '</ul>';
+
+    return $str;
+  }
 
   public function getTypeFormated()
   {

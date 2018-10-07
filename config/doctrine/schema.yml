@@ -715,6 +715,9 @@ Specimens:
         gtu_from_date: { type: string}
         gtu_to_date_mask: { type: integer }
         gtu_to_date: { type: string}
+        
+        #ftheeten 2018 10 05
+        gtu_others_tag_value: { type: string}
         gtu_tag_values_indexed: { type: string}
         gtu_country_tag_indexed: { type: string}
         gtu_country_tag_value: { type: string}

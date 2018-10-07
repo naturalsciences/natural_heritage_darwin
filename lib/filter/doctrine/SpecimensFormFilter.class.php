@@ -659,6 +659,11 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->validatorSchema['lat_to'] = new sfValidatorNumber(array('required'=>false,'min' => '-180', 'max'=>'180'));
     $this->validatorSchema['lon_to'] = new sfValidatorNumber(array('required'=>false,'min' => '-360', 'max'=>'360'));
 	
+    //ftheeten 2018 10 05
+    $this->widgetSchema['wkt_search'] = new sfWidgetFormInputText();
+    $this->widgetSchema['wkt_search']->setAttributes(array('class'=>'wkt_search'));
+    $this->validatorSchema['wkt_search'] = new sfValidatorString(array('required' => false, 'trim' => true));
+    
 	//ftheeten 2018 06 20
 	$this->widgetSchema['code_main'] = new sfWidgetFormInput();
     $this->validatorSchema['code_main'] = new sfValidatorString(array('required' => false));
@@ -778,6 +783,15 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
         $query->whereParenWrap();
       }
       $query->andWhere('gtu_location is not null');
+    }
+    
+     //2018 10 05
+    if( isset($values['wkt_search']))
+    {
+        if(strlen(trim($values['wkt_search'])))
+        {
+            $query->andWhere("ST_INTERSECTS(ST_SETSRID(ST_Point(gtu_location[1], gtu_location[0]),4326), ST_GEOMFROMTEXT('".$values['wkt_search']."',4326))");
+        }
     }
     return $query;
   }
