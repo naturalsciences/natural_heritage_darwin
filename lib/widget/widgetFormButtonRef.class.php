@@ -108,7 +108,7 @@ $("#'.$this->generateId($name).'_button a.but_text").click(button_ref_modal);';
       $this->addOption('edit_route_params', array());
       
       	   //ftheeten 2018 02 08
-	  if(strtolower($options["model"])=="collections")
+	  if(strtolower($options["model"])=="collections"&&(strpos($_SERVER['REQUEST_URI'],'specimen')))
 	  {
 		
         if(array_key_exists('collection_ref_session',$_COOKIE ))
@@ -130,7 +130,7 @@ $("#'.$this->generateId($name).'_button a.but_text").click(button_ref_modal);';
 		}
       }
      
-	  if(strtolower($options["model"])=="institutions"&&(strpos("/new",$_SERVER['REQUEST_URI'])||strpos("/edit",$_SERVER['REQUEST_URI'])))
+	  if(strtolower($options["model"])=="institutions"&&(strpos($_SERVER['REQUEST_URI'], "/new")||strpos($_SERVER['REQUEST_URI'],'edit')))
 	  {
 		
         if(array_key_exists('institution_ref_session',$_COOKIE ))

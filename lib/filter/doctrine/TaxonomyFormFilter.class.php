@@ -68,10 +68,10 @@ class TaxonomyFormFilter extends BaseTaxonomyFormFilter
     $this->widgetSchema['collection_ref']->addOption('public_only',false);
     
     //ftheeten 2018 03 13
-     if(array_key_exists('collection_ref_session',$_COOKIE ))
+     /*if(array_key_exists('collection_ref_session',$_COOKIE ))
      {
         $this->widgetSchema['collection_ref']->addOption('default',$_COOKIE['collection_ref_session']);
-     }
+     }*/
      $this->validatorSchema['collection_ref'] = new sfValidatorInteger(array('required'=>false));
      
       //ftheeten 2017 06 30
@@ -87,10 +87,10 @@ class TaxonomyFormFilter extends BaseTaxonomyFormFilter
 	 
      
       //ftheeten 2018 03 13
-     if(array_key_exists('collection_ref_session',$_COOKIE ))
+     /*if(array_key_exists('collection_ref_session',$_COOKIE ))
      {
         $this->widgetSchema['collection_ref_for_modal']->addOption('default',$_COOKIE['collection_ref_session']);
-     }
+     }*/
      
 	 //2017 07 23 + 2018 03 06 chnage sort order on name
      
