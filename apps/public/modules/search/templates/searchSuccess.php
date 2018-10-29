@@ -31,7 +31,9 @@
                                       'field_to_show' => $field_to_show,
                                       'pagerLayout' => $pagerLayout,
                                       'common_names' => $common_names,
-                                      'columns' => $columns
+                                      'columns' => $columns,
+                                      //ftheeten 2018 10 29
+                                      'codes'=> $codes,
                                      )
                                ); ?>
         </div>

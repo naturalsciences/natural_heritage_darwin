@@ -183,7 +183,17 @@ class PublicSearchFormFilter extends BaseSpecimensFormFilter
         'expanded' => true,
         'add_empty' => false,
     ));
+    
+  
     $this->validatorSchema['stage'] = new sfValidatorPass();
+    
+      //ftheeten 2018 10 29
+    $this->widgetSchema['codes'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
+    $this->validatorSchema['codes'] = new sfValidatorPass();
+     $this->widgetSchema['ig_num'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
+    $this->validatorSchema['ig_num'] = new sfValidatorPass();
+    $this->widgetSchema['_csrf_token'] = new sfWidgetFormInputHidden();
+    $this->validatorSchema['_csrf_token'] = new sfValidatorPass();
 
 
 
@@ -299,5 +309,50 @@ class PublicSearchFormFilter extends BaseSpecimensFormFilter
   public function getWithOrderCriteria()
   {
     return $this->getQuery()->orderby($this->getValue('order_by') . ' ' . $this->getValue('order_dir').'');
+  }
+  
+  //ftheeten 2018 10 29
+  public function addCodesColumnQuery($query, $field, $val)
+  {
+    $sql=Array();
+    $sql_params = array();
+    foreach(explode(";",$val) as $code)
+    {
+
+        if(trim($code)  != '') {          
+          $sql[] = "EXISTS(select 1 from codes where referenced_relation='specimens' and record_id = s.id AND full_code_indexed ilike '%' || fulltoindex(?) || '%' )";
+          $sql_params[] = $code;
+          $has_query = true;
+        }
+        
+    }
+    if($has_query)
+    {
+          $query->addWhere("(".implode(" OR ", $sql).")", $sql_params);
+    }
+    return $query ;
+  }
+  
+  //ftheeten 2018 10 29
+  public function addIgNumColumnQuery($query, $field, $val)
+  {    
+    
+    $sql=Array();
+    $sql_params = array();
+    foreach(explode(";",$val) as $code)
+    {
+
+        if(trim($code)  != '') {          
+          $sql[] = "ig_num_indexed like fullToIndex(?) ";
+          $sql_params[] = $code;
+          $has_query = true;
+        }
+        
+    }
+    if($has_query)
+    {
+          $query->addWhere("(".implode(" OR ", $sql).")", $sql_params);
+    }
+    return $query ;
   }
 }

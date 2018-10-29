@@ -99,6 +99,7 @@
 <script type="text/javascript">
 
 $(document).ready(function () {
+
   <?php if($form->hasErrors())
       echo "$('tr#parent_ref .button').show();";
   ?>
@@ -106,7 +107,6 @@ $(document).ready(function () {
   <?php if($form['level_ref']->getValue())
       echo "$('#taxonomy_level_ref').trigger('change');" ;
   ?>
-
   $('#taxonomy_name').autocomplete({
       minLength: 3,
       source: function( request, response ) {
@@ -137,30 +137,35 @@ $(document).ready(function () {
            
         }
    ); 
-
+ //this zone
  //ftheeten 2018 03 14
  <?php if($form->getObject()->isNew()===true&&!strpos($_SERVER['REQUEST_URI'],'duplicate_id')): ?>
-console.log("new");
        var name_was_empty=false;
-    <?php if(array_key_exists(urlencode('taxonomy'), $_REQUEST)):?>
+     
+    <?php if(array_key_exists(urlencode('taxonomy'), $_REQUEST)):?>    
         <?php if(array_key_exists(urlencode('metadata_ref'), $_REQUEST['taxonomy'])):?>
-            if ( $( ".col_check_metadata_ref" ).length ) { 
-            
+         
+            var  taxo="<?php print($_REQUEST['taxonomy']['metadata_ref']);?>";
+            if ( $( ".col_check_metadata_ref" ).length && taxo.length>0 ) { 
+           
                 $(".col_check_metadata_ref option:eq('<?php print($_REQUEST['taxonomy']['metadata_ref']);?>')").attr("selected", "selected");
      
             }
             else
             {
+          
                $(".col_check_metadata_ref option:eq(1)").attr("selected", "selected");
             }
+          <?php else:?>
+           $(".col_check_metadata_ref option:eq(1)").attr("selected", "selected");
          <?php endif;?>
-    <?else:?>
+    <?php else:?> 
        if ( $( ".col_check_metadata_ref" ).length ) { 
                 $(".col_check_metadata_ref option:eq(1)").attr("selected", "selected");
      
-            } 
+            }
     <?php endif;?>
-    
+   
     <?php if(array_key_exists(urlencode('taxonomy'), $_REQUEST)):?>
         <?php if(array_key_exists(urlencode('name'), $_REQUEST['taxonomy'])):?>
             var nameTmp="<?php print($_REQUEST['taxonomy']['name']);?>";
@@ -234,7 +239,9 @@ console.log("new");
                     name_was_empty=false;
                }               
         }
-     ); 
+     );     
+     
  <?php endif?>	
 });
 </script>
+

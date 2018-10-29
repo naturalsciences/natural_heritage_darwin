@@ -209,4 +209,36 @@ WHERE taxonomy_level_ref= min_taxonomy_level_ref";
 		}
 		return $returned;
   }
+  
+  //ftheeten 2018 10 12                  
+  public function completeTaxonomyDisambiguateMetadata($user, $needle, $exact, $limit = 30)
+  {
+        $conn = Doctrine_Manager::connection();
+        if($exact)
+        {
+            $sql = "SELECT  taxonomy.id as value, CASE WHEN count(taxonomy.id) OVER (partition BY name) =1 THEN name
+                ELSE
+                name||' (taxonomy: '||fct_rmca_sort_taxon_path_alphabetically_not_indexed(path)||')'
+                END as label
+                  FROM taxonomy 
+                   WHERE name=:term ORDER BY name LIMIT :limit;
+                ";
+        
+        }
+        else
+        {
+            $sql = "SELECT  taxonomy.id as value, CASE WHEN count(taxonomy.id) OVER (partition BY name) =1 THEN name
+                ELSE
+                name||' (taxonomy: '||fct_rmca_sort_taxon_path_alphabetically_not_indexed(path)||')'
+                END as label
+                  FROM taxonomy 
+                   WHERE name_indexed like concat(fulltoindex(:term),'%') ORDER BY name LIMIT :limit;
+                ";
+        }       
+        $q = $conn->prepare($sql);
+		$q->execute(array(':term' => $needle, ':limit'=> $limit));
+        $results = $q->fetchAll(PDO::FETCH_ASSOC);        
+		
+		return  $results;
+  }
 }

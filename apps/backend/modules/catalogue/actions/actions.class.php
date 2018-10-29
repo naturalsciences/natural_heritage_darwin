@@ -290,6 +290,14 @@ class catalogueActions extends DarwinActions
     $this->getResponse()->setContentType('application/json');
     return $this->renderText(json_encode($result));
   }
+  
+    //ftheeten 2018 10 12
+  public function executeCompleteNameTaxonomyWithRef(sfWebRequest $request) {
+  
+    $result = Doctrine::getTable("Taxonomy")->completeTaxonomyDisambiguateMetadata($this->getUser(), $request->getParameter('term'), $request->getParameter('exact'),30);
+    $this->getResponse()->setContentType('application/json');
+    return $this->renderText(json_encode($result));
+  }
 
   public function executeBiblio(sfWebRequest $request)
   {
