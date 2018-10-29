@@ -79,10 +79,14 @@ class searchActions extends DarwinActions
 
       // If pager not yet executed, this means the query has to be executed for data loading
       if (! $this->pagerLayout->getPager()->getExecuted())
+      {
         $this->search = $this->pagerLayout->execute();
+      }
       $this->field_to_show = $this->getVisibleColumns($this->form);
       $this->defineFields();
       $ids = $this->FecthIdForCommonNames() ;
+      //ftheeten 2018 10 29
+      $this->fetchCodes();
       $this->common_names = Doctrine::getTable('VernacularNames')->findAllCommonNames($ids) ;
       if(!count($this->common_names))
         $this->common_names = array('taxonomy'=> array(), 'chronostratigraphy' => array(), 'lithostratigraphy' => array(),
@@ -266,12 +270,21 @@ class searchActions extends DarwinActions
   protected function defineFields()
   {
     $this->columns = array(
+    
       'category' => array(
         'category',
         $this->getI18N()->__('Category'),),
       'collection' => array(
         'collection_name',
         $this->getI18N()->__('Collection'),),
+        //ftheeten 2018 10 29
+     'codes' => array(
+        'codes',
+        $this->getI18N()->__('Codes'),),
+         //ftheeten 2018 10 29
+     'ig_num' => array(
+        'ig_num',
+        $this->getI18N()->__('I.G. num'),),
       'taxon' => array(
         'taxon_name_indexed',
         $this->getI18N()->__('Taxon'),),
@@ -338,6 +351,26 @@ class searchActions extends DarwinActions
     );
   }
 
+   //ftheeten 2018 10 29
+   protected function fetchCodes()
+  {
+    // Fill in the specimens list that will be given for codes and loans retrieving
+    $spec_list = array();
+    foreach($this->search as $key=>$specimen){
+      $spec_list[] = $specimen->getId() ;
+    }
+
+    // codes retrieve and fill of a $this->codes variable (available in the specimen search result template)
+    $codes_collection = Doctrine::getTable('Codes')->getCodesRelatedMultiple('specimens',$spec_list) ;
+    $this->codes = array();
+    foreach($codes_collection as $code) {
+      if(! isset($this->codes[$code->getRecordId()]))
+        $this->codes[$code->getRecordId()] = array();
+      $this->codes[$code->getRecordId()][] = $code;
+    }
+    
+  }
+  
   private function FecthIdForCommonNames()
   {
     $tab = array('taxonomy'=> array(), 'chronostratigraphy' => array(), 'lithostratigraphy' => array(), 'lithology' => array(),'mineralogy' => array()) ;

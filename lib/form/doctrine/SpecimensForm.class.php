@@ -77,7 +77,7 @@ class SpecimensForm extends BaseSpecimensForm
        'box_title' => $this->getI18N()->__('Choose Taxon'),
        'nullable' => true,
        'button_class'=>'',
-       'complete_url' => 'catalogue/completeName?table=taxonomy',
+       'complete_url' => 'catalogue/completeNameTaxonomyWithRef',
     ));
 
     /* Chronostratigraphy Reference */
