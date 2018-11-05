@@ -6,9 +6,9 @@ $(document).ready(function () {
   $("#save_search").click(function(event){
     event.preventDefault();
     column_str = '';
-    if( $('ul.column_menu .col_switcher :checked').length) {
+    if( $('ul.column_menu .col_switcher :checked').length) {		
       column_str = getSearchColumnVisibilty();
-    } else {
+    } else {				
       column_str = $('#specimen_search_filters_col_fields').val();
     }
     var last_position = $(window).scrollTop();

@@ -202,21 +202,49 @@ class RMCATabToABCDXml
                     } else {
                         if (isset($p_static_value)) {
                             if(isset($p_namespace))
-                            {
-                                $new_tag = $this->m_dom->createElementNS($p_namespace, $xml_paths[$i], $p_static_value);
+                            {   
+                                if(strlen(trim($p_static_value))>0)
+                                {
+                                    $new_tag = $this->m_dom->createElementNS($p_namespace, $xml_paths[$i], $p_static_value);
+                                }
+                                else
+                                {
+                                    $new_tag = $this->m_dom->createElementNS($p_namespace, $xml_paths[$i]);
+                                }
                             }
                             else
                             {
-                                $new_tag = $this->m_dom->createElement($xml_paths[$i], $p_static_value);
+                                if(strlen(trim($p_static_value))>0)
+                                {
+                                    $new_tag = $this->m_dom->createElement($xml_paths[$i], $p_static_value);
+                                }
+                                else
+                                {
+                                     $new_tag = $this->m_dom->createElement($xml_paths[$i]);
+                                }
                             }
                         } else {
                             if(isset($p_namespace))
-                            {								
-                                $new_tag = $this->m_dom->createElementNS($p_namespace, $xml_paths[$i], htmlspecialchars($p_value_array[$this->headers_inverted[strtolower($name_tag_csv)]]));
+                            {
+                                if(strlen(trim(htmlspecialchars($p_value_array[$this->headers_inverted[strtolower($name_tag_csv)]])))>0)
+                                {                            
+                                    $new_tag = $this->m_dom->createElementNS($p_namespace, $xml_paths[$i], htmlspecialchars($p_value_array[$this->headers_inverted[strtolower($name_tag_csv)]]));
+                                }
+                                else
+                                {
+                                    $new_tag = $this->m_dom->createElementNS($p_namespace, $xml_paths[$i]);
+                                }
                             }
                             else
-                            {								 
-                                 $new_tag = $this->m_dom->createElement($xml_paths[$i], htmlspecialchars($p_value_array[$this->headers_inverted[strtolower($name_tag_csv)]]));
+                            {
+                                if(strlen(trim(htmlspecialchars($p_value_array[$this->headers_inverted[strtolower($name_tag_csv)]])))>0)
+                                {
+                                    $new_tag = $this->m_dom->createElement($xml_paths[$i], htmlspecialchars($p_value_array[$this->headers_inverted[strtolower($name_tag_csv)]]));
+                                }
+                                else
+                                {
+                                    $new_tag = $this->m_dom->createElement($xml_paths[$i]);
+                                }
                             }
                         }
                     }
@@ -328,13 +356,16 @@ class RMCATabToABCDXml
     
     public function addAssociations($p_parentElement, $p_valueArray)
     {
-        if(strlen($p_value_array[$this->headers_inverted[strtolower("associatedUnitID")]])>0 || strlen($p_value_array[$this->headers_inverted[strtolower("AssociationType")]])>0)
-        {
-            $unit_association = $this->testAndAppendTag($p_parentElement, null, "Associations/UnitAssociation", null, null, true);
-            $this->testAndAppendTag($unit_association, "associatedUnitInstitution", "AssociatedUnitSourceInstitutionCode", $p_valueArray);
-            $this->testAndAppendTag($unit_association, "associatedUnitCollection", "AssociatedUnitSourceName", $p_valueArray);
-            $this->testAndAppendTag($unit_association, "associatedUnitID", "AssociatedUnitID", $p_valueArray);
-            $this->testAndAppendTag($unit_association, "associationType", "AssociationType", $p_valueArray);
+        if (array_key_exists(strtolower("associatedUnitID"), $this->headers_inverted)||array_key_exists(strtolower("AssociationType"), $this->headers_inverted)) 
+         {
+            if(strlen($p_value_array[$this->headers_inverted[strtolower("associatedUnitID")]])>0 || strlen($p_value_array[$this->headers_inverted[strtolower("AssociationType")]])>0)
+            {
+                $unit_association = $this->testAndAppendTag($p_parentElement, null, "Associations/UnitAssociation", null, null, true);
+                $this->testAndAppendTag($unit_association, "associatedUnitInstitution", "AssociatedUnitSourceInstitutionCode", $p_valueArray);
+                $this->testAndAppendTag($unit_association, "associatedUnitCollection", "AssociatedUnitSourceName", $p_valueArray);
+                $this->testAndAppendTag($unit_association, "associatedUnitID", "AssociatedUnitID", $p_valueArray);
+                $this->testAndAppendTag($unit_association, "associationType", "AssociationType", $p_valueArray);
+            }
         }
     }
     
@@ -411,6 +442,41 @@ class RMCATabToABCDXml
     }
     
     //ftheeten 2018 04 12
+    /*public function addCollectionDates($p_parentElement, $p_valueArray, $dom)
+    {
+        $dateTmpBegin=$this->generateDateGeneric("collectionStart", $p_valueArray);
+        $dateTmpEnd=$this->generateDateGeneric("collectionEnd", $p_valueArray,$dateTmpBegin);
+        $hourTmpBegin=$this->generateDateGeneric("collectionStartTime", $p_valueArray);        
+        $hourTmpEnd=$this->generateDateGeneric("collectionEndTime", $p_valueArray);
+        
+        if(strlen(trim($dateTmpBegin))>0||strlen(trim($dateTmpEnd))>0||strlen(trim($hourTmpBegin))>0||strlen(trim($hourTmpEnd))>0)
+        {
+            $dateTimeNode = $dom->createElement("DateTime");
+            $p_parentElement->appendChild($dateTimeNode);
+            //date begin
+           if(strlen(trim($dateTmpBegin))>0)
+           {
+                $this->testAndAppendTag($dateTimeNode, null, "ISODateTimeBegin", null, $dateTmpBegin); 
+           }
+            //date end
+           if(strlen(trim($dateTmpEnd))>0)
+           {           
+                $this->testAndAppendTag($dateTimeNode, null, "ISODateTimeEnd", null, $dateTmpEnd);        
+            //hour begin
+           }
+           if(strlen(trim($hourTmpBegin))>0)
+           {
+                $this->testAndAppendTag($dateTimeNode, null, "TimeOfDayBegin", null, $hourTmpBegin);
+            }
+            //hour end
+           if(strlen(trim($hourTmpEnd))>0)
+           {
+                $this->testAndAppendTag($dateTimeNode, null, "TimeOfDayEnd", null, $hourTmpEnd);
+           }
+       } 
+        
+    }*/
+        //ftheeten 2018 04 12
     public function addCollectionDates($p_parentElement, $p_valueArray, $dom)
     {
         $dateTimeNode = $dom->createElement("DateTime");
@@ -430,6 +496,7 @@ class RMCATabToABCDXml
         
         
     }
+    
     
     public function convertDMSToDecimal($coordDMS)
     {
@@ -939,9 +1006,16 @@ class RMCATabToABCDXml
 		}
         $this->addStorage($unit, $p_row);
         $this->addNotes($unit, $p_row);
+      
+      //ftheeten 2018 10 31
+       $xpath = new DOMXPath($dom);
+
+        foreach( $xpath->query('//*[not(node())]') as $node ) {
+            $node->parentNode->removeChild($node);
+        }
         
-        print($dom->saveXML($root, LIBXML_NOEMPTYTAG ));
-       
+          
+        //print($dom->saveXML($root, LIBXML_NOEMPTYTAG ));
         return $dom->saveXML($root, LIBXML_NOEMPTYTAG );
     }
     

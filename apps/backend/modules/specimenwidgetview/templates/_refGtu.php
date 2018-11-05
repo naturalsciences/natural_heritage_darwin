@@ -10,6 +10,7 @@
         <?php echo $spec->getStationVisible()?__("Yes"):__("No") ; ?>
       </td>
     </tr>
+    <?php /*ftheeten 2018 10 31*/ if(is_object($gtu)):?>
     <?php if(isset($gtu) && ($spec->getStationVisible() || (!$spec->getStationVisible() && $sf_user->isAtLeast(Users::ENCODER)))) : ?>
     <tr>
       <th><label><?php echo __('Sampling location code');?></label></th>
@@ -235,5 +236,6 @@ var mousePositionControl;
 	init_map();
 	
 	<?php endif;?>
+    <?php endif;?>
   </script>
 </table>
