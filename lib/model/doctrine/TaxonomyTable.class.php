@@ -216,7 +216,7 @@ WHERE taxonomy_level_ref= min_taxonomy_level_ref";
         $conn = Doctrine_Manager::connection();
         if($exact)
         {
-            $sql = "SELECT  taxonomy.id as value, CASE WHEN count(taxonomy.id) OVER (partition BY name) =1 THEN name
+            $sql = "SELECT  taxonomy.id as value, CASE WHEN count(taxonomy.id) OVER (partition BY (fct_rmca_taxonomy_split_name_author(name, level_ref))[1]) =1 THEN name
                 ELSE
                 name||' (taxonomy: '||fct_rmca_sort_taxon_path_alphabetically_not_indexed(path)||')'
                 END as label
@@ -227,7 +227,7 @@ WHERE taxonomy_level_ref= min_taxonomy_level_ref";
         }
         else
         {
-            $sql = "SELECT  taxonomy.id as value, CASE WHEN count(taxonomy.id) OVER (partition BY name) =1 THEN name
+            $sql = "SELECT  taxonomy.id as value, CASE WHEN count(taxonomy.id) OVER (partition BY (fct_rmca_taxonomy_split_name_author(name, level_ref))[1]) =1 THEN name
                 ELSE
                 name||' (taxonomy: '||fct_rmca_sort_taxon_path_alphabetically_not_indexed(path)||')'
                 END as label

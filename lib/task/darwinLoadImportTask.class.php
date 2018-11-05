@@ -20,15 +20,15 @@ EOF;
 
   protected function execute($arguments = array(), $options = array())
   {
-  print("DEBUG\n");
+
      // initialize the database connection
     $result = null ;
     $databaseManager = new sfDatabaseManager($this->configuration);
     $environment = $this->configuration instanceof sfApplicationConfiguration ? $this->configuration->getEnvironment() : $options['env'];
     $connection = $databaseManager->getDatabase($options['connection'])->getConnection();
     $conn = Doctrine_Manager::connection();
-    $conn->beginTransaction();
-    while($id = $conn->fetchOne('SELECT get_import_row()'))
+    $conn->beginTransaction();    
+    while($id= $conn->fetchOne('SELECT get_import_row()'))
     {
         $q = Doctrine_Query::create()
           ->from('imports p')
