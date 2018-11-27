@@ -241,4 +241,57 @@ WHERE taxonomy_level_ref= min_taxonomy_level_ref";
 		
 		return  $results;
   }
+  
+    //ftheeten 2018 11 27                 
+  public function completeTaxonomyMetadataWithRef($user, $needle, $exact, $taxon_ref, $limit = 30)
+  {
+        $conn = Doctrine_Manager::connection();
+        if(is_numeric($taxon_ref))
+        {
+           if($exact)
+            {
+               
+
+                $sql = "SELECT  string_agg(taxonomy.id::varchar, ';') as value, name as label
+                      FROM taxonomy 
+                       WHERE name=:term AND metadata_ref= :taxon_ref GROUP BY name ORDER BY name LIMIT :limit;
+                    ";
+            
+            }
+            else
+            {
+                $sql = "SELECT  string_agg(taxonomy.id::varchar, ';') as value, name as label
+                      FROM taxonomy 
+                       WHERE name_indexed like concat(fulltoindex(:term),'%') AND metadata_ref= :taxon_ref GROUP BY name ORDER BY name LIMIT :limit;
+                    ";
+            }       
+            $q = $conn->prepare($sql);
+            $q->execute(array(':term' => $needle, ':taxon_ref' => $taxon_ref, ':limit'=> $limit));
+        }
+        else
+        {
+             if($exact)
+            {
+               
+
+                $sql = "SELECT  string_agg(taxonomy.id::varchar, ';') as value, name as label
+                      FROM taxonomy 
+                       WHERE name=:term  GROUP BY name ORDER BY name LIMIT :limit;
+                    ";
+            
+            }
+            else
+            {
+                $sql = "SELECT  string_agg(taxonomy.id::varchar, ';') as value, name as label
+                      FROM taxonomy 
+                       WHERE name_indexed like concat(fulltoindex(:term),'%')  GROUP BY name ORDER BY name LIMIT :limit;
+                    ";
+            }       
+            $q = $conn->prepare($sql);
+            $q->execute(array(':term' => $needle, ':limit'=> $limit));
+        }
+        $results = $q->fetchAll(PDO::FETCH_ASSOC);        
+		
+		return  $results;
+  }
 }

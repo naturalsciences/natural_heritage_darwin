@@ -416,6 +416,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
   }
 
   //ftheeten 2016 03 24
+  /*
   public function addCatalogueRelationColumnQueryArrayRelations($query, $item_ref, $relations, $table, $field_prefix)
   {
 
@@ -507,6 +508,113 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
 	$query->andWhere($queryTmp);
     }
     return $query ;
+  }*/
+  
+   public function addCatalogueRelationColumnQueryArrayRelations($query, $item_refs, $relations, $table, $field_prefix)
+  {
+    if(strlen( $item_refs)>0)
+    {
+        $queryTmpGlobal=Array();
+        foreach(explode(";",$item_refs) as $item_ref)
+        {  
+        
+            
+            if($item_ref != 0)
+            {
+                $queryTmp="";
+                $i=0;
+                
+                foreach($relations as $relation)
+                {
+                    
+                    $arrayParams=Array();
+                        if($relation == 'equal')
+                        {
+                        if($i>0)
+                            {
+                                $queryTmp.= " OR ";
+                            }
+                            //$query->andWhere($field_prefix."_ref = ?", $item_ref);
+                        $queryTmp.=$field_prefix."_ref = ".$item_ref ;
+
+                        }
+                        if($relation == 'child')
+                        {
+                        if($i>0)
+                            {
+                                $queryTmp.= " OR ";
+                            }
+                            $item  = Doctrine::getTable($table)->find($item_ref);
+                            //$query->andWhere($field_prefix."_path like ?", $item->getPath().''.$item->getId().'/%');
+                        $queryTmp.=$field_prefix."_path like '".$item->getPath().''.$item->getId().'/%'."'" ;
+
+                        }
+                        if($relation == 'direct_child')
+                        {
+                        if($i>0)
+                            {
+                                $queryTmp.= " OR ";
+                            }
+                            //$query->andWhere($field_prefix."_parent_ref = ?",$item_ref);
+                        $queryTmp.=$field_prefix."_parent_ref = ".$item_ref;
+                        }
+                        if($relation =='synonym')
+                        {
+                            
+                            if($i>0)
+                            {
+                                $queryTmp.= " OR ";
+
+
+                            }
+                            $queryTmp.= " ( ";
+
+                            $synonyms = Doctrine::getTable('ClassificationSynonymies')->findSynonymsIds($table, $item_ref);
+
+                            //if(empty($synonyms))
+                            //$query->andWhere('0=1'); //False
+                            //$query->andWhereIn($field_prefix."_ref",$synonyms)
+                            //->andWhere($field_prefix."_ref != ?",$item_ref); // remove himself
+                            if(empty($synonyms))
+                            {
+                                $queryTmp.=" 0=1 ";
+                            }
+                            else
+                            {
+                                $queryTmp.=$field_prefix."_ref IN (".implode(",", $synonyms ).")";
+                                $queryTmp.=" AND ".$field_prefix."_ref != ".$item_ref;
+                                //ftheeten 2018 09 03
+                                if(in_array("child",$relations))
+                                {
+                                    //$queryTmp.=" OR 24=24 ";
+                                    foreach($synonyms as $syno_object)
+                                    {
+                                        $queryTmp.=" OR ".$field_prefix."_path like '%/".$syno_object."/%'" ;
+                                    }
+                                }
+                                elseif(in_array("direct_child",$relations))
+                                {
+                                    foreach($synonyms as $syno_object)
+                                    {
+                                        $queryTmp.=" OR ".$field_prefix."_parent_ref = ".$syno_object ;
+                                    }
+                                }
+                                
+                                
+                            }
+                            $queryTmp.= " ) ";
+
+                        }
+                   
+                    $i++;
+                }
+                 $queryTmpGlobal[]="(".$queryTmp." ) ";
+            }
+        }
+        $query->andWhere(implode(" OR ", $queryTmpGlobal));
+    }
+   
+    return $query ;
   }
 
   
@@ -541,4 +649,27 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
       }
       return $results;
   }
+  
+      //ftheeten 2018 11 22
+    protected static function fulltoindex_sql($pattern, $keep_space=FALSE)
+    {
+        $conn = Doctrine_Manager::connection();
+        if($keep_space)
+        {
+             $sql="SELECT fulltoindex(:word, FALSE);";
+        }
+        else
+        {
+            $sql="SELECT fulltoindex(:word, TRUE);";
+        }
+        $q = $conn->prepare($sql);
+        $q->execute(array(':word'=> $pattern ));
+        $rs=$q->fetchAll(PDO::FETCH_NUM);
+        if(count($rs)>0)
+         {
+               print_r($rs);
+              return $rs[0][0];
+         }
+         return $pattern;
+    }
 }
