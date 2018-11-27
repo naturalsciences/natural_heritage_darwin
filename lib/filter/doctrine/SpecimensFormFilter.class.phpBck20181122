@@ -387,7 +387,31 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->widgetSchema['with_multimedia'] = new sfWidgetFormInputCheckbox();
 
     $this->validatorSchema['with_multimedia'] = new sfValidatorPass();
-        //ftheeten 2018 11 22
+    //people widget
+    $this->widgetSchema['people_ref'] = new widgetFormButtonRef(array(
+      'model' => 'People',
+      'link_url' => 'people/searchBoth',
+      'box_title' => $this->getI18N()->__('Choose people role'),
+      'nullable' => true,
+      'button_class'=>'',
+      ),
+      array('class'=>'inline',)
+    );
+
+    $fields_to_search = array(
+      'spec_coll_ids' => $this->getI18N()->__('Collector'),
+      'spec_don_sel_ids' => $this->getI18N()->__('Donator or seller'),
+      'ident_ids' => $this->getI18N()->__('Identifier')
+    );
+
+    $this->widgetSchema['role_ref'] = new sfWidgetFormChoice(
+      array('choices'=> $fields_to_search,
+            'multiple' => true,
+            'expanded' => true,
+      ));
+    $this->validatorSchema['people_ref'] = new sfValidatorInteger(array('required' => false)) ;
+    $this->validatorSchema['role_ref'] = new sfValidatorChoice(array('choices'=>array_keys($fields_to_search), 'required'=>false)) ;
+    $this->validatorSchema['role_ref'] = new sfValidatorPass() ;
 
 
 
@@ -679,7 +703,6 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     // might be removed with a migration
     $this->validatorSchema['what_searched'] = new sfValidatorPass();
     
-   
     
 	 //2018 09 19chnage sort order on name
      
@@ -688,32 +711,6 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     ));
 	 $this->widgetSchema['taxonomy_metadata_ref']->setAttributes(array('class'=>'col_check_metadata_ref col_check_metadata_callback'));
 	$this->validatorSchema['taxonomy_metadata_ref'] = new sfValidatorInteger(array('required'=>false));
-    
-     //2018 11 22
-	$this->widgetSchema['people_boolean'] = new sfWidgetFormChoice(array('choices' => array('OR' => 'OR', 'AND' => 'AND')));
-	$this->validatorSchema['people_boolean'] = new sfValidatorPass();
-	$subForm = new sfForm();
-    $this->embedForm('Peoples',$subForm);
-    
-    //ftheeten 2018 11 22
-	//$this->widgetSchema['codes_list'] = new sfWidgetFormInputHidden();//array('choices'=>array()));
-	$this->widgetSchema['codes_list'] = new sfWidgetFormInputHidden();
-    $this->widgetSchema['codes_list']->setAttributes(Array("class"=>"select2_code_values"));
-    $this->validatorSchema['codes_list'] = new sfValidatorString(array('required' => false));
-    $this->widgetSchema['exact_codes_list']=new sfWidgetFormInputCheckbox();   
-    $this->widgetSchema['exact_codes_list']->setLabel("Fuzzy matching");
-    $this->validatorSchema['exact_codes_list'] = new sfValidatorPass();
-    $this->is_fuzzy_codes_list=false;
-    $this->codeListCalled=false;
-    
-    //ftheeten 2018 11 26
-	$this->widgetSchema['taxa_list'] = new sfWidgetFormInputHidden();
-    $this->widgetSchema['taxa_list']->setAttributes(Array("class"=>"select2_taxa_values"));
-    $this->validatorSchema['taxa_list'] = new sfValidatorString(array('required' => false));
-    $this->widgetSchema['taxa_list_placeholder'] = new sfWidgetFormInputHidden();
-    $this->widgetSchema['taxa_list_placeholder']->setAttributes(Array("class"=>"select2_taxa_list_placeholder"));
-    $this->validatorSchema['taxa_list_placeholder'] = new sfValidatorString(array('required' => false));
-    
   }
 
   public function addGtuTagValue($num)
@@ -723,15 +720,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       $this->embedForm('Tags', $this->embeddedForms['Tags']);
   }
 
-  //ftheeten 2018 11 22
-  public function addPeopleValue($num)
-  {
-	 
-      $form = new PeopleLineForm(null,array('num'=>$num));
-      $this->embeddedForms['Peoples']->embedForm($num, $form);
-      $this->embedForm('Peoples', $this->embeddedForms['Peoples']);
-  }
-  
+
   public function addCodeValue($num)
   {
       $form = new CodeLineForm();
@@ -754,37 +743,6 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     return $query ;
   }
 
-     //ftheeten 2018 11 22
-  public function addCodesListColumnQuery($query, $fields, $val)
-  {
-        
-                   
-            if(strlen(trim($val))>0)
-            {
-                $sql_params=Array();
-                $sql_parts=Array();
-                $tmpCodes= preg_split( "/(;|\|)/", $val );
-              
-                foreach($tmpCodes as $to_search)
-                {
-                    if($this->is_fuzzy_codes_list)
-                    {
-                        $to_search="%".BaseSpecimensFormFilter::fulltoindex_sql($to_search)."%";
-                        $sql_parts[]= "EXISTS(select 1 from codes where referenced_relation='specimens' and record_id = s.id AND full_code_indexed LIKE ? ) ";
-                    }
-                    else
-                    {
-                        $sql_parts[]= "EXISTS(select 1 from codes where referenced_relation='specimens' and record_id = s.id AND LOWER(TRIM(COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,''))) ilike  LOWER(?) ) ";
-                    }
-                    $sql_params[] =trim($to_search);
-                }
-                $sql=implode(" OR ", $sql_parts);
-                $query->andWhere("(" .$sql.")", $sql_params);
-            }
-        
-        return $query ;
-  }
-  
   public function addLatLonColumnQuery($query, $values)
   {
     if( $values['lat_from'] != '' && $values['lon_from'] != '' && $values['lon_to'] != ''  && $values['lat_to'] != '' )
@@ -1037,46 +995,6 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     return $query ;
   }
 
-  //ftheeten 2018 11 22
-    public function addPeoplesColumnQuery($query, $field, $val)
-  {
-
-    
-	$queriesPeople=Array();
-	$array_peoples=array();
-    foreach($val as $i=>$people)
-    {
-		$query_people="";
-	  if(empty($people)) continue;
-	   if ($people['people_ref'] != '')
-		{
-
-			
-			$query_people=$this->addPeopleSearchColumnQuerySQL( $people['people_ref'], $people['role_ref'], $i);
-			$queriesPeople[]=$query_people;
-			
-		}
-		if ($people['people_fuzzy'] != '') 
-		{
-
-			$iParams=0;
-			$query_people=$this->addPeopleSearchColumnQueryFuzzySQL( $people['people_fuzzy'], $people['role_ref'], $i, $iParams);
-			$queriesPeople[]=$query_people;
-			for($iP=0; $iP<$iParams;$iP++)
-			{
-				$array_peoples[]=$people['people_fuzzy'];
-			}
-		}
-		
-		
-    }
-	if(count($queriesPeople)>0)
-	{
-		$query->andWhere("(".implode(" ".$this->people_boolean. " ", $queriesPeople).")",$array_peoples);
-    }
-    return $query ;
-  }
-  
   public function addCodesColumnQuery($query, $field, $val)
   {
 
@@ -1136,9 +1054,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     }
     return $query ;
   }
-  
- //ftheeten 2018 11 22
- /* 
+
   public function addPeopleSearchColumnQuery(Doctrine_Query $query, $people_id, $field_to_use)
   {
     $build_query = '';
@@ -1164,221 +1080,6 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $build_query = substr($build_query,0,strlen($build_query) -3) ;
     $query->andWhere($build_query) ;
     return $query ;
-  }*/
-  
-   public function addPeopleSearchColumnQuery(Doctrine_Query $query, $people_id, $field_to_use, $alias_id=NULL, $boolean="AND")
-  {
-	$alias1="cp";
-
-	if($alias_id)
-	{
-		$alias1=$alias1.$alias_id;
-
-	}
-    $build_query = '';
-    if(! is_array($field_to_use) || count($field_to_use) < 1)
-      $field_to_use = array('ident_ids','spec_coll_ids','spec_don_sel_ids') ;
-
-	$nb2=0;  
-    foreach($field_to_use as $field)
-    {
-       $alias1=$alias1.$nb2;
-
-	  if($field == 'ident_ids')
-      {
-		$build_query .= "s.spec_ident_ids @> ARRAY[$people_id]::int[] OR " ;
-      }
-      elseif($field == 'spec_coll_ids')
-      {
-         $build_query .= "(s.spec_coll_ids @> ARRAY[$people_id]::int[] OR (s.expedition_ref IN (SELECT $alias1.record_id FROM CataloguePeople $alias1 WHERE $alias1.referenced_relation= 'expeditions' AND $alias1.people_ref= $people_id) )) OR " ;
-
-      }
-      else
-      {
-        $build_query .= "s.spec_don_sel_ids @> ARRAY[$people_id]::int[] OR " ;
-      }
-	  $nb2++;
-    }
-    // I remove the last 'OR ' at the end of the string
-    $build_query = substr($build_query,0,strlen($build_query) -3) ;
-	if($boolean=="AND")
-	{
-		$query->andWhere($build_query) ;
-	}
-	elseif($boolean=="OR")
-	{
-		if($alias_id>1)
-		{
-		 $query->orWhere($build_query) ;
-		}
-		else
-		{
-		 $query->andWhere($build_query) ;
-		}
-	}
-	
-
-    return $query ;
-  }
-  
-    public function addPeopleSearchColumnQuerySQL($people_id, $field_to_use, $alias_id=NULL)
-  {
-	$alias1="cp";
-
-
-	if($alias_id)
-	{
-		$alias1=$alias1.$alias_id;
-
-	}
-    $build_query = '';
-    if(! is_array($field_to_use) || count($field_to_use) < 1)
-      $field_to_use = array('ident_ids','spec_coll_ids','spec_don_sel_ids') ;
-
-	$nb2=0;  
-    foreach($field_to_use as $field)
-    {
-       $alias1=$alias1.$nb2;
-
-	  if($field == 'ident_ids')
-      {
-		$build_query .= "s.spec_ident_ids @> ARRAY[$people_id]::int[] OR " ;
-      }
-      elseif($field == 'spec_coll_ids')
-      {
-         $build_query .= "(s.spec_coll_ids @> ARRAY[$people_id]::int[] OR (s.expedition_ref IN (SELECT $alias1.record_id FROM CataloguePeople $alias1 WHERE $alias1.referenced_relation= 'expeditions' AND $alias1.people_ref= $people_id) )) OR " ;
-
-      }
-      else
-      {
-        $build_query .= "s.spec_don_sel_ids @> ARRAY[$people_id]::int[] OR " ;
-      }
-  
-	  $nb2++;
-    }
-    // I remove the last 'OR ' at the end of the string
-    $build_query = substr($build_query,0,strlen($build_query) -3) ;
-	return $build_query;
-  }
-
-  
-   public function addPeopleSearchColumnQueryFuzzy(Doctrine_Query $query, $people_name, $field_to_use, $alias_id=NULL, $boolean="AND")
-  {
-    $alias1="ppa";
-	$alias2="ppb";
-	$alias3="cp";
-	$alias4="ppc";
-	$alias5="ppd";
-	$idxAlias1=1;
-	if($alias_id)
-	{
-			$idxAlias1=	$idxAlias1+$alias_id;
-		
-	}
-	$alias1=$alias1.$idxAlias1;
-	$idxAlias1++;
-	$alias2=$alias2.$idxAlias1;
-	$idxAlias1++;
-	$alias3=$alias3.$idxAlias1;
-	$idxAlias1++;
-	$alias4=$alias4.$idxAlias1;
-	$idxAlias1++;
-	$alias5=$alias5.$idxAlias1;
-    $build_query = '';
-    if(! is_array($field_to_use) || count($field_to_use) < 1)
-      $field_to_use = array('ident_ids','spec_coll_ids','spec_don_sel_ids') ;
-	 $sql_params = array();
-    foreach($field_to_use as $field)
-    {
-      if($field == 'ident_ids')
-      {
-        $build_query .= "s.spec_ident_ids && (SELECT array_agg($alias1.id) FROM people $alias1 WHERE fulltoindex(formated_name_indexed) ILIKE  '%'||fulltoindex(?)||'%' ) OR " ;
-		$sql_params[]=$people_name;
-      }
-      elseif($field == 'spec_coll_ids')
-      {
-        $build_query .= "(s.spec_coll_ids && (SELECT array_agg($alias2.id) FROM people $alias2 WHERE fulltoindex(formated_name_indexed)ILIKE '%'||fulltoindex(?)||'%' ) OR s.expedition_ref IN (SELECT $alias3.record_id FROM CataloguePeople $alias3 WHERE $alias3.referenced_relation= 'expeditions' AND $alias3.people_ref IN (SELECT $alias4.id FROM people $alias4 WHERE fulltoindex(formated_name_indexed) ILIKE '%'||fulltoindex(?)||'%')) ) OR " ;
-		$sql_params[]=$people_name;
-		$sql_params[]=$people_name;
-      }
-      else
-      {
-        $build_query .= "s.spec_don_sel_ids && (SELECT array_agg($alias5.id) FROM people $alias5 WHERE fulltoindex(formated_name_indexed) ILIKE '%'||fulltoindex(?)||'%' ) OR " ;
-		$sql_params[]=$people_name;
-      }
-    }
-    // I remove the last 'OR ' at the end of the string
-    $build_query = substr($build_query,0,strlen($build_query) -3) ;
-    if($boolean=="AND")
-	{
-		$query->andWhere($build_query, $sql_params) ;
-	}
-	elseif($boolean=="OR")
-	{
-		if($alias_id>1)
-		{
-		 $query->orWhere($build_query, $sql_params) ;
-		}
-		else
-		{
-		 $query->andWhere($build_query, $sql_params) ;
-		}
-	}
-    return $query ;
-  }
-  
-  
-  public function addPeopleSearchColumnQueryFuzzySQL( $people_name, $field_to_use, $alias_id=NULL, &$count_names)
-  {
-    $alias1="ppa";
-	$alias2="ppb";
-	$alias3="cp";
-	$alias4="ppc";
-	$alias5="ppd";
-	$idxAlias1=1;
-	$count_names=0;
-	if($alias_id)
-	{
-			$idxAlias1=	$idxAlias1+$alias_id;
-		
-	}
-	$alias1=$alias1.$idxAlias1;
-	$idxAlias1++;
-	$alias2=$alias2.$idxAlias1;
-	$idxAlias1++;
-	$alias3=$alias3.$idxAlias1;
-	$idxAlias1++;
-	$alias4=$alias4.$idxAlias1;
-	$idxAlias1++;
-	$alias5=$alias5.$idxAlias1;
-    $build_query = '';
-    if(! is_array($field_to_use) || count($field_to_use) < 1)
-      $field_to_use = array('ident_ids','spec_coll_ids','spec_don_sel_ids') ;
-	 //$sql_params = array();
-    foreach($field_to_use as $field)
-    {
-      if($field == 'ident_ids')
-      {
-        $build_query .= "s.spec_ident_ids && (SELECT array_agg($alias1.id) FROM people $alias1 WHERE fulltoindex(formated_name_indexed) ILIKE  '%'||fulltoindex(?)||'%' ) OR " ;
-		$count_names++;
-      }
-      elseif($field == 'spec_coll_ids')
-      {
-        $build_query .= "(s.spec_coll_ids && (SELECT array_agg($alias2.id) FROM people $alias2 WHERE fulltoindex(formated_name_indexed)ILIKE '%'||fulltoindex(?)||'%' ) OR s.expedition_ref IN (SELECT $alias3.record_id FROM CataloguePeople $alias3 WHERE $alias3.referenced_relation= 'expeditions' AND $alias3.people_ref IN (SELECT $alias4.id FROM people $alias4 WHERE fulltoindex(formated_name_indexed) ILIKE '%'||fulltoindex(?)||'%')) ) OR " ;
-
-		$count_names++;
-		$count_names++;
-      }
-      else
-      {
-        $build_query .= "s.spec_don_sel_ids && (SELECT array_agg($alias5.id) FROM people $alias5 WHERE fulltoindex(formated_name_indexed) ILIKE '%'||fulltoindex(?)||'%' ) OR " ;
-		$count_names++;
-      }
-    }
-    // I remove the last 'OR ' at the end of the string
-    $build_query = substr($build_query,0,strlen($build_query) -3) ;
-    
-    return $build_query ;
   }
 
   public function addObjectNameColumnQuery($query, $field, $val) {
@@ -1529,79 +1230,6 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       $this->embedForm('Tags',$subForm);
       $taintedValues['Tags'] = array();
     }
-    
-    	//ftheeten 2015 10 22
-	$this->people_boolean='AND';
-	 if(isset($taintedValues['Peoples'])&& is_array($taintedValues['Peoples']) && isset($taintedValues['people_boolean'])) 
-	 {
-		if($taintedValues['people_boolean']=='OR')
-		{
-			$this->people_boolean='OR';
-		}
-	}
-	
-    //ftheeten 2018 11 22
-    if(isset($taintedValues['exact_codes_list']))
-    {
-        if($taintedValues['exact_codes_list'])
-        {
-            $this->is_fuzzy_codes_list=true;
-        }
-    }
-
-	
-	if(isset($taintedValues['Peoples'])&& is_array($taintedValues['Peoples']))
-	{
-
-		 foreach($taintedValues['Peoples'] as $key=>$newVal) 
-		 {
-
-			if (!isset($this['Peoples'][$key]))
-			{
-
-				$this->addPeopleValue($key);
-			}
-		 }
-	}
-	else 
-	{
-      $this->offsetUnset('Peoples') ;
-      $subForm = new sfForm();
-      $this->embedForm('Peoples',$subForm);
-      $taintedValues['Peoples'] = array();
-    }
-
-	//ftheeten 2018 11 22 handle several peoples in filter
-	$this->people_boolean='AND';
-	 if(isset($taintedValues['Peoples'])&& is_array($taintedValues['Peoples']) && isset($taintedValues['people_boolean'])) 
-	 {
-		if($taintedValues['people_boolean']=='OR')
-		{
-			$this->people_boolean='OR';
-		}
-	}
-	
-	if(isset($taintedValues['Peoples'])&& is_array($taintedValues['Peoples']))
-	{
-
-		 foreach($taintedValues['Peoples'] as $key=>$newVal) 
-		 {
-
-			if (!isset($this['Peoples'][$key]))
-			{
-
-				$this->addPeopleValue($key);
-			}
-		 }
-	}
-	else 
-	{
-      $this->offsetUnset('Peoples') ;
-      $subForm = new sfForm();
-      $this->embedForm('Peoples',$subForm);
-      $taintedValues['Peoples'] = array();
-    }
-	
     parent::bind($taintedValues, $taintedFiles);
   }
 
@@ -1626,12 +1254,9 @@ $query = DQ::create()
 
         gtu_location[0] as latitude,
         gtu_location[1] as longitude,
-        (collection_ref in ('.implode(',',$this->encoding_collection).')) as has_encoding_rights
-        ,(SELECT STRING_AGG(TRIM(COALESCE(s2.value_defined,\'\')||\' \'||COALESCE(fct_mask_date(s2.notion_date,s2.notion_date_mask),\'\')), \'|\' ORDER BY s2.notion_date DESC ) AS taxonomic_identification  FROM SpecimenIdentifications s2 WHERE s2.record_id=s.id ) as taxonomic_identification
-        '
+        (collection_ref in ('.implode(',',$this->encoding_collection).')) as has_encoding_rights'
       )
-      ->from('Specimens s')      
-     ;
+      ->from('Specimens s');
       
     if($values['with_multimedia'])
       $query->where("EXISTS (select m.id from multimedia m where m.referenced_relation = 'specimens' AND m.record_id = s.id)") ;
@@ -1671,7 +1296,7 @@ $query = DQ::create()
       if($values['count_operator'] == 'l') $query->andwhere('specimen_count_max <= ?',$values['count']) ;
       if($values['count_operator'] == 'g') $query->andwhere('specimen_count_min >= ?',$values['count']) ;
     }
-    //if ($values['people_ref'] != '') $this->addPeopleSearchColumnQuery($query, $values['people_ref'], $values['role_ref']);
+    if ($values['people_ref'] != '') $this->addPeopleSearchColumnQuery($query, $values['people_ref'], $values['role_ref']);
     if ($values['acquisition_category'] != '' ) $query->andWhere('acquisition_category = ?',$values['acquisition_category']);
     if ($values['taxon_level_ref'] != '') $query->andWhere('taxon_level_ref = ?', intval($values['taxon_level_ref']));
     if ($values['chrono_level_ref'] != '') $query->andWhere('chrono_level_ref = ?', intval($values['chrono_level_ref']));
@@ -1701,7 +1326,7 @@ $query = DQ::create()
 
     //$this->addCatalogueRelationColumnQuery($query, $values['taxon_item_ref'], $values['taxon_relation'],'taxonomy','taxon');
     //ftheeten 2016 03 24
-    $this->addCatalogueRelationColumnQueryArrayRelations($query, $values['taxa_list'], $values['taxon_relation'],'taxonomy','taxon');
+    $this->addCatalogueRelationColumnQueryArrayRelations($query, $values['taxon_item_ref'], $values['taxon_relation'],'taxonomy','taxon');
     $this->addCatalogueRelationColumnQuery($query, $values['chrono_item_ref'], $values['chrono_relation'],'chronostratigraphy','chrono', $values['chrono_child_syn_included']);
     $this->addCatalogueRelationColumnQuery($query, $values['litho_item_ref'], $values['litho_relation'],'lithostratigraphy','litho', $values['litho_child_syn_included']);
     $this->addCatalogueRelationColumnQuery($query, $values['lithology_item_ref'], $values['lithology_relation'],'lithology','lithology', $values['lithology_child_syn_included']);
@@ -1719,8 +1344,6 @@ $query = DQ::create()
     $javascripts[]='/js/map.js';
     $javascripts[]='/leaflet/leaflet.markercluster-src.js';
   	$javascripts[]= '/Leaflet.draw/dist/leaflet.draw.js';
-      //ftheeten 2018 11 22
-    $javascripts[]= "/select2-4.0.5/dist/js/select2.full.min.js";
 	
     return $javascripts;
   }
@@ -1729,9 +1352,7 @@ $query = DQ::create()
     $items=parent::getStylesheets();
     $items['/leaflet/leaflet.css']='all';
     $items['/leaflet/MarkerCluster.css']='all';
-	$items['/Leaflet.draw/dist/leaflet.draw.css']='all';
-    //ftheeten 2018 11 22
-    $items["/select2-4.0.5/dist/css/select2.min.css"]=  'all';
+	  $items['/Leaflet.draw/dist/leaflet.draw.css']='all';
     return $items;
   }
 }

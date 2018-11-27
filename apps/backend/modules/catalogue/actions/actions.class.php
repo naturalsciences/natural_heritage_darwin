@@ -293,8 +293,17 @@ class catalogueActions extends DarwinActions
   
     //ftheeten 2018 10 12
   public function executeCompleteNameTaxonomyWithRef(sfWebRequest $request) {
-  
-    $result = Doctrine::getTable("Taxonomy")->completeTaxonomyDisambiguateMetadata($this->getUser(), $request->getParameter('term'), $request->getParameter('exact'),30);
+    $has_ref=FALSE;
+    /*if($request->getParameter('taxon_ref', -1)>=0&&is_numeric($request->getParameter('taxon_ref', -1)))
+    {
+             $result = Doctrine::getTable("Taxonomy")->completeTaxonomyMetadataWithRef($this->getUser(), $request->getParameter('term'), $request->getParameter('exact'),$request->getParameter('taxon_ref'),30);
+    }
+    else
+    {
+             $result = Doctrine::getTable("Taxonomy")
+                          ->completeAsArray($this->getUser(), $request->getParameter('term'), $request->getParameter('exact'), 30, $request->getParameter('field_level_id', ''))
+    }*/
+    $result = Doctrine::getTable("Taxonomy")->completeTaxonomyMetadataWithRef($this->getUser(), $request->getParameter('term'), $request->getParameter('exact'),$request->getParameter('taxon_ref'),30);
     $this->getResponse()->setContentType('application/json');
     return $this->renderText(json_encode($result));
   }

@@ -305,3 +305,20 @@ $.fn.customRadioCheck = function() {
             observer.observe(target, config);
 
         }
+        
+        
+    //ftheetebn 2018 11 26
+    var select2SetOption=function(selector, valueToCopy, textToCopy)
+    {
+          var newOption = new Option( textToCopy, valueToCopy, true, true);
+          $(selector).append(newOption).trigger('change');
+          $(selector).trigger({
+                                    type: 'select2:select',
+                                    params: {
+                                    data: {id:valueToCopy, text:textToCopy}
+                                    }
+                                    });
+          var data = $(selector).select2('data');
+                               
+         $(selector).select2("data", data, true);
+    }

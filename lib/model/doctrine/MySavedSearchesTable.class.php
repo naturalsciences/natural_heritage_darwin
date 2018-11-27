@@ -133,10 +133,13 @@ class MySavedSearchesTable extends DarwinTable
                         specimen_count_min,
                         specimen_count_max,
                         string_agg(DISTINCT identifiers,'; ' ) as identifiers,
+                        string_agg(DISTINCT abbreviated_identifiers,'; ' ) as abbreviated_identifiers,
                         string_agg(DISTINCT identification_year::varchar,'; ') as identification_year, 
                         --lat , long 2018 11 05
                         longitude_deci as longitude,
                         latitude_deci as latitude,
+                        longitude_text,
+                        latitude_text,
                         gtu_country_tag_value,
                         municipality,
                         region_district,
@@ -152,9 +155,11 @@ class MySavedSearchesTable extends DarwinTable
                         collecting_month_to,
                         collecting_day_to,
                         string_agg(DISTINCT properties_locality, '; ' ) as  properties_locality,
-                        collectors,
+                        string_agg(DISTINCT collectors, '; ' ) as collectors,
+                        string_agg(DISTINCT abbreviated_collectors, '; ' ) as  abbreviated_collectors,
                         expedition_name,
-                        donators,
+                         string_agg(DISTINCT donators, '; ' ) as donators,
+                        string_agg(DISTINCT abbreviated_donators, '; ' ) as  abbreviated_donators,
                         --2018 05 11
                         acquisition_category,
                         acquisition_date,
@@ -166,6 +171,7 @@ class MySavedSearchesTable extends DarwinTable
                         complete,
                         object_name,
 			specimen_status,
+			container_storage,
 			string_agg(method, '; ') as method,
 			string_agg(tool, '; ') as tool,
 			
@@ -198,6 +204,14 @@ class MySavedSearchesTable extends DarwinTable
                             specimen_count_min,
                             specimen_count_max,
                             array_to_string(array_agg(DISTINCT ident.formated_name),'; ') as identifiers,
+
+			  /*2018 11 21 */
+			  CASE WHEN ident.given_name IS NULL THEN
+				ident.family_name
+			    ELSE
+				TRIM(ident.family_name)||' '||TRIM(fct_rmca_abbreviate_names(ident.given_name))
+			END AS abbreviated_identifiers,
+			
                             date_part('year', i.notion_date) as identification_year, 
                             gtu_country_tag_value,
                             array_to_string(array_agg(DISTINCT municipality.tag), '; ') as municipality,
@@ -209,7 +223,16 @@ class MySavedSearchesTable extends DarwinTable
                             --coordinates_source,
                             gtu_location[0] as latitude_deci ,
                             gtu_location[1] as longitude_deci,
-
+rmca_dms_to_text(coordinates_source, latitude_dms_degree,
+latitude_dms_minutes,
+latitude_dms_seconds,
+latitude_dms_direction, latitude, 'lat'::varchar) as
+latitude_text,
+rmca_dms_to_text(coordinates_source, longitude_dms_degree,
+longitude_dms_minutes,
+longitude_dms_seconds,
+longitude_dms_direction, longitude, 'lon'::varchar) as
+longitude_text,
                             gtu_elevation,
                             CASE
                                 WHEN 	s.gtu_from_date_mask>=32 
@@ -243,8 +266,21 @@ class MySavedSearchesTable extends DarwinTable
                             END as collecting_day_to,
                             array_to_string(array_agg(DISTINCT locp.property_type||': '||locp.lower_value), '; ') as properties_locality,
                             array_to_string(array_agg(DISTINCT recol.formated_name),'; ') as collectors,
+			/*2018 11 21 */
+			  CASE WHEN recol.given_name IS NULL THEN
+				recol.family_name
+			    ELSE
+				TRIM(recol.family_name)||' '||TRIM(fct_rmca_abbreviate_names(recol.given_name))
+			END AS abbreviated_collectors,
+                            
                             expedition_name,
                             array_to_string(array_agg(DISTINCT donator.formated_name),'; ') as donators,
+                            		  /*2018 11 21 */
+			  CASE WHEN donator.given_name IS NULL THEN
+				donator.family_name
+			    ELSE
+				TRIM(donator.family_name)||' '||TRIM(fct_rmca_abbreviate_names(donator.given_name))
+			END AS abbreviated_donators,
                             --2018 11 05
                             acquisition_category,
                             fct_mask_date(acquisition_date, acquisition_date_mask) as acquisition_date,
@@ -259,10 +295,11 @@ class MySavedSearchesTable extends DarwinTable
 				col_tool.tool,
 
                             specimen_status,
+							container_storage,
                             
-                            array_to_string(array_agg(DISTINCT comm.notion_concerned||': '||comm.comment), '; ') as comment,
+                            array_to_string(array_agg(DISTINCT comm.notion_concerned||': '||comm.comment), '| ') as comment,
                              array_to_string(array_agg(
-                                DISTINCT p.property_type||': '::varchar||p.lower_value||COALESCE('-'::varchar||p.upper_value,'')||COALESCE(' '::varchar||p.property_unit,'')),'; ')
+                                DISTINCT p.property_type||': '::varchar||p.lower_value||COALESCE('-'::varchar||p.upper_value,'')||COALESCE(' '::varchar||p.property_unit,'')),'| ')
                              as properties_all,
                              specimen_creation_date
 
@@ -327,11 +364,17 @@ class MySavedSearchesTable extends DarwinTable
                                 (SELECT fct_rmca_dynamic_saved_search(
                                
                                      :ID_Q, :ID_USER
+                                   
                                 )) 
 
-                            GROUP BY s.id, c.code_prefix, c.code_prefix_separator, c.code, c.code_suffix, c.code_suffix_separator, i.id , col_tool.tool, col_meth.method
-                            
-                             
+                            GROUP BY s.id, c.code_prefix, c.code_prefix_separator, c.code, c.code_suffix, c.code_suffix_separator, i.id , col_tool.tool, col_meth.method,
+                            --2018 11 21
+                            ident.given_name, ident.family_name
+                           ,recol.given_name, recol.family_name
+                           ,donator.given_name, donator.family_name ,
+                           coordinates_source, 
+                           latitude_dms_degree, latitude_dms_minutes, latitude_dms_seconds, latitude_dms_direction, latitude,
+                           longitude_dms_degree, longitude_dms_minutes, longitude_dms_seconds, longitude_dms_direction, longitude  
                             ) a
 
 
@@ -360,9 +403,9 @@ class MySavedSearchesTable extends DarwinTable
                         collecting_year_to,
                         collecting_month_to,
                         collecting_day_to,
-                        collectors,
+                        --collectors,
                         expedition_name,
-                        donators,
+                        --donators,
                         specimen_creation_date,
                         --2018 11 05
                         acquisition_category,
@@ -375,9 +418,11 @@ class MySavedSearchesTable extends DarwinTable
                         complete,
                         object_name,
                         specimen_status,
+						container_storage,
                         longitude_deci ,
-                        latitude_deci
-
+                        latitude_deci,
+			latitude_text,
+			longitude_text
 
                         ORDER BY code
                          LIMIT 50000;";

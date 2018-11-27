@@ -3,6 +3,11 @@
     <?php echo $specimen->getTypeGroup();?>
   <?php endif ; ?>
 </td>
+<td class="col_taxonomic_identification">
+    <ul class='name_tags_view'><?php foreach(explode("|", $specimen->getTaxonomicIdentification()) as $ident):?>
+        <li><?php print($ident);?></li>
+    <?php endforeach;?></ul>    
+</td>
 <td class="col_sex"><?php echo ucfirst(($specimen->getSex()=='undefined')?'':$specimen->getSex());?></td> 
 <td class="col_state"><?php echo ucfirst(($specimen->getState()=='not applicable')?'':$specimen->getState());?></td> 
 <td class="col_stage"><?php echo ucfirst(($specimen->getStage()=='undefined')?'':$specimen->getStage());?></td> 

@@ -28,7 +28,12 @@ class specimensearchActions extends DarwinActions
       Doctrine::getTable('Specimens')->getRequiredWidget($criterias['specimen_search_filters'], $this->getUser()->getId(), 'specimensearch_widget');
       $this->form->bind($criterias['specimen_search_filters']) ;
     }
-    else $this->form->addGtuTagValue(0);
+    else
+    {//ftheeten 2018 11 22 added brackets and people
+        $this->form->addGtuTagValue(0);
+         //ftheeten 2018 11 22
+		$this->form->addPeopleValue(0);
+    }
     //loadwidget at the end because we possibliy need to update some widget visibility before showing it
     $this->loadWidgets();
   }
@@ -270,7 +275,10 @@ class specimensearchActions extends DarwinActions
     $flds = array('category','collection','taxon','type','gtu','codes','chrono','ig','acquisition_category',
               'litho','lithologic','mineral','expedition','type', 'individual_type','sex','state','stage','social_status','rock_form','individual_count',
               'part', 'object_name', 'part_status', 'building', 'floor', 'room', 'row', 'col' ,'shelf', 'container', 'container_type',  'container_storage', 'sub_container',
-              'sub_container_type' , 'sub_container_storage', 'specimen_count','part_codes', 'loans');
+              'sub_container_type' , 'sub_container_storage', 'specimen_count','part_codes', 'loans',
+              /*MA FT 2018 11 27*/
+              'taxonomic_identification'
+              );
 
 
     $flds = array_fill_keys($flds, 'uncheck');
@@ -361,6 +369,10 @@ class specimensearchActions extends DarwinActions
       'individual_type' => array(
         'type_group',
         $this->getI18N()->__('Type'),),
+      /*MA FT 2018 11 27 */  
+       'taxonomic_identification' => array(
+        'taxonomic_identification',
+        $this->getI18N()->__('Taxonomic identification'),),
       'sex' => array(
         'sex',
         $this->getI18N()->__('Sex'),),
@@ -394,6 +406,18 @@ class specimensearchActions extends DarwinActions
         ));
     } else {
       $this->columns = array_merge($this->columns, array(
+             //ftheeten 2018 11 22
+            'col_peoples' => array(
+            'col_peoples',
+            $this->getI18N()->__('Collectors'),),
+            'ident_peoples' => array(
+            'ident_peoples',
+            $this->getI18N()->__('Identifiers'),),
+            'don_peoples' => array(
+            'don_peoples',
+            $this->getI18N()->__('Donators'),),
+            //
+      
         'part' => array(
           'specimen_part',
           $this->getI18N()->__('Part'),),
@@ -476,5 +500,15 @@ class specimensearchActions extends DarwinActions
         }
     }
     return;
+  }
+  
+  //ftheeten 2018 11 22
+   public function executeAddPeople(sfWebRequest $request)
+  {
+    $number = intval($request->getParameter('num'));
+
+    $form = new SpecimensFormFilter(null,array('user' => $this->getUser()));
+    $form->addPeopleValue($number);
+    return $this->renderPartial('addPeople',array('form' => $form['Peoples'][$number], 'row_line'=>$number));
   }
 }

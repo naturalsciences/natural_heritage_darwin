@@ -162,6 +162,8 @@ function constructReportBaseUrl($name, $lang, $format){
             $this->message = $message;
         }
     }
+    
+
 
 ?>
 
