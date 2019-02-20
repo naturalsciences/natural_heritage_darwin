@@ -257,7 +257,6 @@ abstract class sfFormFilterDoctrine extends sfFormFilter
 
   protected function addDateQuery(Doctrine_Query $query, $field, $values)
   {
-   
     $fieldName = $this->getFieldName($field);
 
     if (isset($values['is_empty']) && $values['is_empty'])

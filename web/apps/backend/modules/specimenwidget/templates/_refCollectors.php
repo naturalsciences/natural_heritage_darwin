@@ -53,6 +53,11 @@ function addCollector(people_ref, people_name)
       $('#spec_ident_collector tbody').append(html);
       $.fn.catalogue_people.reorder($('#spec_ident_collector'));
       showAfterRefresh($('.ui-tooltip-content .page')) ; 
+	  
+	  //ftheeten 2016 02 24
+	  position_to_Scroll=$('#refCollectors').offset().top;
+	 $('body').trigger('close_modal');
+	  $('body').parent().scrollTop(position_to_Scroll);
     }
   });
   return true;

@@ -12,11 +12,11 @@ expanding the assets ever since.
 </p>
 <br />
 <p>
-The darwin website (darwin.naturalsciences.be) is the main gate to glimpse the extent and diversity of the collections. Today, the darwin database manages information on about 2.637.600 specimens (540.000 records) stored in the institute’s depositories. This number rises on a daily basis thanks to the continued efforts of patrimonium directorate, the curators and their adjuncts that are responsible for maintaining the stored specimens and information. Our online database provides information about the collections of the Vertebrates, Invertebrates, Entomology, Paleontology, Geology and Mineralogy.
+The darwin website is the main gate to glimpse the extent and diversity of the collections. Today, the darwin database manages information on about 350.000 specimens stored in the institute’s depositories. This number rises on a daily basis thanks to the continued efforts of curators and their adjuncts that are responsible for maintaining the stored specimens and information. Our online database provides information about the collections of the Vertebrates, Invertebrates and Entomology. The application will soon be expanded with paleontological data. 
 </p>
 <br />
 <p>
-Information on the Anthropological collection is maintained on a parallel system: mars (Multimedia Archaeological Research System). This data can be consulted following: <a href="http://www.naturalsciences.be/mars" target="_pop">www.naturalsciences.be/mars</a>. The Department of Geology and the Department of Marine Ecosystems provide information on different systems. More information on these departments can be found on <a href="https://www.naturalsciences.be/en/science/do/25/scientific-research/research-programmes/94" target="_pop">www.naturalsciences.be/en/science/do/25/scientific-research/research-programmes/94</a> And <a href="http://odnature.naturalsciences.be/home/" target="_pop">odnature.naturalsciences.be/home/</a>
+Information on the Anthropological collection is maintained on a parallel system: mars (Multimedia Archaeological Research System). This data can be consulted following: http://www.naturalsciences.be/mars. The Department of Geology and the Department of Marine Ecosystems provide information on different systems. More information on these departments can be found on <a href="http://www.sciencesnaturelles.be/institute/structure/geology/gsb_website" target="_pop">www.sciencesnaturelles.be/institute/structure/geology/gsb_website</a> And <a href="http://www.mumm.ac.be" target="_pop">www.mumm.ac.be</a>
 </p>
 <br />
 <p>

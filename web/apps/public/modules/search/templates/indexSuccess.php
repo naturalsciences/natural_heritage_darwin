@@ -141,28 +141,7 @@
         </td>          
       </tr>
     </tbody>
-  </table>
-  <h2 class="title"><?php echo __("Specimen criteria") ?></h2>
- <div class="borded">
-    <?php echo $form->renderHiddenFields(); ?>
-    <table id="classifications">
-      <thead>
-        <tr>
-          <th><?php echo __("Codes") ?></th>        
-          <th><?php echo __("I.G. unit") ?></th>          
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><?php echo $form['codes'];?></td>
-          <td><?php echo $form['ig_num'];?>
-          <td><div class="tag_info"><span class="tag_info"><?php echo __('Please use ";" as tag separator.');?></td></span></div>
-          </td>          
-        </tr>
-      </tbody>
-    </table>
-    <br />
-  </div>  
+  </table>  
   <div style="text-align:right">
     <?php echo link_to(__('Clear'),'@search');?>
     <input type="submit" name="submit" id="submit" value="<?php echo __('Search'); ?>" class="search_submit">

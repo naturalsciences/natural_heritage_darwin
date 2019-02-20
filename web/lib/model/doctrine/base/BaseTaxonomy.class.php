@@ -13,15 +13,12 @@
  * @property string $path
  * @property integer $parent_ref
  * @property boolean $extinct
- * @property boolean $is_reference_taxonomy
- * @property integer $metadata_ref
  * @property boolean $sensitive_info_withheld
  * @property Taxonomy $Parent
  * @property CatalogueLevels $Level
  * @property Doctrine_Collection $Taxonomy
  * @property Doctrine_Collection $Specimens
  * @property Doctrine_Collection $SpecimensRelationships
- * @property Doctrine_Collection $SpecimensMaincodes
  * 
  * @method integer             getId()                      Returns the current record's "id" value
  * @method string              getName()                    Returns the current record's "name" value
@@ -31,15 +28,12 @@
  * @method string              getPath()                    Returns the current record's "path" value
  * @method integer             getParentRef()               Returns the current record's "parent_ref" value
  * @method boolean             getExtinct()                 Returns the current record's "extinct" value
- * @method boolean             getIsReferenceTaxonomy()     Returns the current record's "is_reference_taxonomy" value
- * @method integer             getMetadataRef()             Returns the current record's "metadata_ref" value
  * @method boolean             getSensitiveInfoWithheld()   Returns the current record's "sensitive_info_withheld" value
  * @method Taxonomy            getParent()                  Returns the current record's "Parent" value
  * @method CatalogueLevels     getLevel()                   Returns the current record's "Level" value
  * @method Doctrine_Collection getTaxonomy()                Returns the current record's "Taxonomy" collection
  * @method Doctrine_Collection getSpecimens()               Returns the current record's "Specimens" collection
  * @method Doctrine_Collection getSpecimensRelationships()  Returns the current record's "SpecimensRelationships" collection
- * @method Doctrine_Collection getSpecimensMaincodes()      Returns the current record's "SpecimensMaincodes" collection
  * @method Taxonomy            setId()                      Sets the current record's "id" value
  * @method Taxonomy            setName()                    Sets the current record's "name" value
  * @method Taxonomy            setNameIndexed()             Sets the current record's "name_indexed" value
@@ -48,15 +42,12 @@
  * @method Taxonomy            setPath()                    Sets the current record's "path" value
  * @method Taxonomy            setParentRef()               Sets the current record's "parent_ref" value
  * @method Taxonomy            setExtinct()                 Sets the current record's "extinct" value
- * @method Taxonomy            setIsReferenceTaxonomy()     Sets the current record's "is_reference_taxonomy" value
- * @method Taxonomy            setMetadataRef()             Sets the current record's "metadata_ref" value
  * @method Taxonomy            setSensitiveInfoWithheld()   Sets the current record's "sensitive_info_withheld" value
  * @method Taxonomy            setParent()                  Sets the current record's "Parent" value
  * @method Taxonomy            setLevel()                   Sets the current record's "Level" value
  * @method Taxonomy            setTaxonomy()                Sets the current record's "Taxonomy" collection
  * @method Taxonomy            setSpecimens()               Sets the current record's "Specimens" collection
  * @method Taxonomy            setSpecimensRelationships()  Sets the current record's "SpecimensRelationships" collection
- * @method Taxonomy            setSpecimensMaincodes()      Sets the current record's "SpecimensMaincodes" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -102,14 +93,6 @@ abstract class BaseTaxonomy extends DarwinModel
              'notnull' => true,
              'default' => false,
              ));
-        $this->hasColumn('is_reference_taxonomy', 'boolean', null, array(
-             'type' => 'boolean',
-             'notnull' => true,
-             'default' => false,
-             ));
-        $this->hasColumn('metadata_ref', 'integer', null, array(
-             'type' => 'integer',
-             ));
         $this->hasColumn('sensitive_info_withheld', 'boolean', null, array(
              'type' => 'boolean',
              ));
@@ -135,10 +118,6 @@ abstract class BaseTaxonomy extends DarwinModel
              'foreign' => 'taxon_ref'));
 
         $this->hasMany('SpecimensRelationships', array(
-             'local' => 'id',
-             'foreign' => 'taxon_ref'));
-
-        $this->hasMany('SpecimensMaincodes', array(
              'local' => 'id',
              'foreign' => 'taxon_ref'));
     }

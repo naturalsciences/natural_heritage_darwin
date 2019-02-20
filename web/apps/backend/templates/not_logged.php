@@ -1,26 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $sf_user->getCulture() ?>" lang="<?php echo $sf_user->getCulture() ?>">
-  <?php
-    $flagMenu="on";
-    
-    
-    if(array_key_exists("menu", $_REQUEST))
-    {       
-        if($_REQUEST['menu']=="off")
-        {
-            $flagMenu="off";
-        }
-    }
-    elseif(array_key_exists("menu", $_SESSION))
-    {       
-        if($_SESSION['menu']=="off")
-        {
-            $flagMenu="off";
-        }
-        
-    }
-    
-?>
   <head>
     <?php include_http_metas() ?>
     <?php include_metas() ?>
@@ -37,7 +16,6 @@
           <?php echo $sf_content ?>
         </td>
       </tr>
-      <?php if($flagMenu!="off"):?>
       <tr>
         <td class="menu_bottom">
           <div class="page">
@@ -54,7 +32,6 @@
           </div>
         </td>     
       </tr>
-      <?php endif;?>
     </table>
     <script type="text/javascript">
     $(document).ready(function () {

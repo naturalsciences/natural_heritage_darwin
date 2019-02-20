@@ -67,12 +67,6 @@
   </table>
   <br/>
 </div>
-<!--ftheeten 2018 09 02-->
-<div>
-	Taxonomic reference : <?php echo $form["taxonomic_metadata_ref"];?>
-	
-</div>
-<!---->
 
 <script language="javascript">
 $(document).ready(function () {
@@ -93,31 +87,17 @@ $(document).ready(function () {
       });
    }
   });
-  
-    //ftheeten 2018 09 02
-  $(".taxonomy_metadata_ref").val("<?php print($import->getSpecimenTaxonomyRef());?>");
-  
-   $(".taxonomy_metadata_ref").change(
-		function()
-		{
-			var url_link=$(".ok_link").attr("href");
-			url_link=url_link+"/taxonomy_ref/"+$(this).val();
-			$(".ok_link").attr("href", url_link);
-            
-            var url_link=$(".check_link").attr("href");
-			url_link=url_link+"/taxonomy_ref/"+$(this).val();
-			$(".check_link").attr("href", url_link);
-		}
-   );
 });
 </script>
 <?php endif;?>
   <div class="blue_link float_left"><?php echo link_to(__('Back to Import'), 'import/index');?></div>
-  <!--ftheeten 2017 08 30-->
-   <div class="blue_link float_left"><?php echo link_to(__('Try to create missing peoples'), 'staging/createPeoples?import='.$import->getId() );?></div>
-  <div class="blue_link float_left"><?php echo link_to(__('Recheck'), 'staging/recheck?import='.$import->getId().'&full_check=true', array("class"=> "check_link"));?></div>
-  <div class="blue_link float_left"><?php echo link_to(__('Import "Ok" lines'), 'staging/markok?import='.$import->getId() , array("class"=> "ok_link"));?></div>&#x09;
-
+  <!--ftheetn 2016 12 07-->
+  <!--<div class="blue_link float_left">
+  <?php //echo link_to(__('Import "Ok" lines'), 'staging/markok?import='.$import->getId() );
+  ?></div>&#x09;-->
+<?php if(count($search)!==0 && $search_type=='zoology'):?>
+  <div class="blue_link float_left"><?php echo link_to(__('Try to create missing taxons'), 'staging/createTaxon?import='.$import->getId() );?></div>
+<?php endif;?>
 <?php //Else not valid form
   else:?>
   <?php echo $form['only_errors']->renderError() ?>

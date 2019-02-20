@@ -1,8 +1,7 @@
 <table class="property_values extlinks"  id="spec_ident_extlink">
     <thead style="<?php echo ($form['ExtLinks']->count() || $form['newExtLinks']->count())?'':'display: none;';?>" class="spec_ident_extlinks_head">
     <tr>   
-      <th><?php echo __('Url');?></th>
-      <th><?php echo __('Comment');?></th>
+        <th colspan="3"></th>
       <th><?php echo $form['ExtLinks_holder'];?></th>
     </tr>
   </thead>

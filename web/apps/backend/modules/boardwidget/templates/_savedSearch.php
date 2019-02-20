@@ -18,6 +18,23 @@
         <td class="row_delete">
          <?php echo link_to(image_tag('remove.png'), 'savesearch/deleteSavedSearch?table=my_saved_searches&id='.$search->getId(), array('class'=>'del_butt'));?>
         </td>
+         <!--ftheeten 2016 06 14-->
+         
+        <?php if($sf_user->isAtLeast(Users::ENCODER)):?>
+         <td class="rurl_container">
+            <select class="url_report">
+            <option value=<?php echo("http://172.16.11.138:8080/pentaho/api/repos/%3Apublic%3ADarwin2%3AReports_excel%3Areport_excel.prpt/report?ID_USER=".sfContext::getInstance()->getUser()->getId()."&ID_Q=".$search->getId()."&userid=report&password=report&output-target=table%2Fexcel%3Bpage-mode%3Dflow&accepted-page=-1&showParameters=true&renderMode=REPORT&htmlProportionalWidth=false")?>>
+            Excel
+            </option>
+            <option value=<?php echo("http://172.16.11.138:8080/pentaho/api/repos/%3Apublic%3ADarwin2%3AReports_rtf%3Areport_inverts_rtf.prpt/report?ID_USER=".sfContext::getInstance()->getUser()->getId()."&ID_Q=".$search->getId()."&userid=report&password=report&output-target=table%2Frtf%3Bpage-mode%3Dflow&accepted-page=-1&showParameters=true&renderMode=REPORT&htmlProportionalWidth=false")?>>
+            RTF publications Invertebrates
+            </option>
+            </select>
+         </td>
+         <td>
+            <input id="report_link" class="save_search report_link" value="Get report" type="button">
+         </td>
+       <?php endif;?>     
     </tr>
     <?php endforeach;?>
     </table>
@@ -55,6 +72,13 @@ $(document).ready(function () {
       });
     }
   });
+  
+   $(".report_link").click(function(event){
+    
+    var url_report = $(this).closest('tr').children("td.rurl_container").find(".url_report").val();
+    window.open(url_report, '_blank');
+ });
+  
 });
 </script>
 <div class="actions">

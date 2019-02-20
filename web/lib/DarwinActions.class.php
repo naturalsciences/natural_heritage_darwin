@@ -1,6 +1,4 @@
 <?php
-  error_reporting(E_ERROR | E_PARSE);
-  
 class DarwinActions extends sfActions
 {
 
@@ -84,11 +82,9 @@ class DarwinActions extends sfActions
   protected function loadWidgets($id = null,$collection = null)
   {
     $this->__set('widgetCategory',$this->widgetCategory);
-    if($id === null) {
-      $id = $this->getUser()->getId();
-    }
+    if($id == null) $id = $this->getUser()->getId();
     $this->widgets = Doctrine::getTable('MyWidgets')
-      ->setUserRef($id)
+      ->setUserRef($this->getUser()->getId())
       ->setDbUserType($this->getUser()->getDbUserType())
       ->getWidgets($this->widgetCategory, $collection);
     $this->widget_list = Doctrine::getTable('MyWidgets')->sortWidgets($this->widgets, $this->getI18N());
@@ -114,7 +110,7 @@ class DarwinActions extends sfActions
     $this->getResponse()->setStatusCode(403);
     throw new sfStopException();
   }
-
+  
   protected function getRecordIfDuplicate($id , $obj, $is_spec = false)
   {
     if ($id)
@@ -150,203 +146,13 @@ class DarwinActions extends sfActions
         break ;
        case 'Specimens' :
         $obj->setAcquisitionDate(new FuzzyDateTime($check->getAcquisitionDate(),$check->getAcquisitionDateMask()) );
+        //ftheeten 2016 07 07
+        $obj->setGtuFromDate(new FuzzyDateTime($check->getGtuFromDate(),$check->getGtuFromDateMask()) );
+        $obj->setGtuToDate(new FuzzyDateTime($check->getGtuToDate(),$check->getGtuToDateMask()) );
         break ;
        default: break ;
       }
     }
     return $obj ;
-  }
-  
-  protected function executeDisplay_statistics_specimens_main(sfWebRequest $request)
-  {
-    $idCollection="/";
-    $year="";
-    $creation_date_min="";
-    $creation_date_max="";
-    $ig_num="";
-    $includeSubcollection=false;
-    $detailSubCollections=false;
-    if($request->hasParameter("collectionid"))
-    {
-        $idCollection=$request->getParameter("collectionid");
-    }
-    
-    if($request->hasParameter("ig_num"))
-    {
-        $ig_num=$request->getParameter("ig_num");
-    }
-    
-    if($request->hasParameter("year"))
-    {
-        $year=$request->getParameter("year");
-    }
-    
-    if($request->hasParameter("creation_date_min"))
-    {
-          $creation_date_min=$request->getParameter("creation_date_min");
-       
-    }
-    
-    if($request->hasParameter("creation_date_max"))
-    {
-        $creation_date_max=$request->getParameter("creation_date_max");
-    }
-    
-    if($request->hasParameter("withdetails"))
-    {
-        if(strtolower($request->getParameter("withdetails")=="on")||strtolower($request->getParameter("withdetails")=="true"))
-        {
-            $detailSubCollections=true;
-        }
-    }
-    
-    if($request->hasParameter("withsubcollections"))
-    {
-        if(strtolower($request->getParameter("withsubcollections"))=="on"||strtolower($request->getParameter("withsubcollections"))=="true")
-        {
-            $includeSubcollection=true;
-        }
-    }
-    
-    $items=Doctrine::getTable('Collections')->countSpecimens($idCollection, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections) ;
-    if(count($items)>1)
-    {
-        
-        $sum=Array();
-        
-        $sum_records=0;
-        $sum_batch_low=0;
-        $sum_batch_high =0;
-        $keyField="";
-        $flagFindKeyfield=false;
-        foreach($items as $item)
-        {            
-            if($flagFindKeyfield===false)
-            {  
-                foreach($item as $field=> $value)
-                {
-                    $keyField=$field;
-                    $flagFindKeyfield=true;
-                    break;
-                }
-            }
-            
-            $sum_records+=$item["nb_database_records"];
-            $sum_batch_low+=$item["nb_physical_specimens_low"];
-            $sum_batch_high+=$item["nb_physical_specimens_high"];
-            $key++;
-        }
-        $sum[$keyField]="TOTAL";
-        $sum["nb_database_records"]=$sum_records;
-        $sum["nb_physical_specimens_low"]=$sum_batch_low;
-        $sum["nb_physical_specimens_high"]=$sum_batch_high;
-        $items[]=$sum;
-        
-    }
-    
-    return $items;
-    
-  }
-  
-  //ftheeten 2018 04 30
-   protected function execute_statistics_generic(sfWebRequest $request, $table_name)
-  {
-    $idCollection="/";
-    $year="";
-    $creation_date_min="";
-    $creation_date_max="";
-    $ig_num="";
-    $includeSubcollection=false;
-    $detailSubCollections=false;
-    if($request->hasParameter("collectionid"))
-    {
-        $idCollection=$request->getParameter("collectionid");
-    }
-    
-    if($request->hasParameter("ig_num"))
-    {
-        $ig_num=$request->getParameter("ig_num");
-    }
-    
-    if($request->hasParameter("year"))
-    {
-        $year=$request->getParameter("year");
-    }
-    
-    if($request->hasParameter("creation_date_min"))
-    {
-          $creation_date_min=$request->getParameter("creation_date_min");
-       
-    }
-    
-    if($request->hasParameter("creation_date_max"))
-    {
-        $creation_date_max=$request->getParameter("creation_date_max");
-    }
-    
-    if($request->hasParameter("withdetails"))
-    {
-        if(strtolower($request->getParameter("withdetails")=="on")||strtolower($request->getParameter("withdetails")=="true"))
-        {
-            $detailSubCollections=true;
-        }
-    }
-    
-    if($request->hasParameter("withsubcollections"))
-    {
-        if(strtolower($request->getParameter("withsubcollections"))=="on"||strtolower($request->getParameter("withsubcollections"))=="true")
-        {
-            $includeSubcollection=true;
-        }
-    }
-    if($table_name=="types")
-    {
-        $items=Doctrine::getTable('Collections')->countTypeSpecimens($idCollection, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections) ;
-    }
-    elseif($table_name=="taxa")
-    {
-        $items=Doctrine::getTable('Collections')->countTaxaInSpecimen($idCollection, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections) ;
-    }
-    if(count($items)>1)
-    {
-        
-        $sum=Array();
-        
-        $sum_records=0;
-        $sum_batch_low=0;
-        $sum_batch_high =0;
-        $keyField="";
-        $flagFindKeyfield=false;
-        foreach($items as $item)
-        {
-            if($flagFindKeyfield===false)
-            {  
-                foreach($item as $field=> $value)
-                {
-                    $keyField=$field;
-                    $flagFindKeyfield=true;
-                    break;
-                }
-            }
-            $sum_records+=$item["nb_database_records"];
-            if($table_name=="types")
-            {
-                $sum_batch_low+=$item["nb_physical_specimens_low"];
-                $sum_batch_high+=$item["nb_physical_specimens_high"];
-            }
-        }
-        $sum[$keyField]="TOTAL";
-        $sum["nb_database_records"]=$sum_records;
-        if($table_name=="types")
-        {
-            $sum["nb_physical_specimens_low"]=$sum_batch_low;
-            $sum["nb_physical_specimens_high"]=$sum_batch_high;
-        }
-        $items[]=$sum;
-        
-    }
-    
-    return $items;
-    
   }
 }

@@ -3,3 +3,7 @@ indexSuccess:
  
 searchSuccess:
   stylesheets: [specimensearch.css]
+
+printSuccess:
+  stylesheets: [-main.css, -main.css:{ media: print } ,-reset.css, -reset.css:{ media: print } ,  print_rmca_screen.css, print_rmca.css: { media: print }]
+  

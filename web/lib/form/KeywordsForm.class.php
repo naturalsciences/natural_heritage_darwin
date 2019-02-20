@@ -21,6 +21,7 @@ class KeywordsForm extends sfForm
     {
       $form = new ClassificationKeywordsForm($childObject);
       $subForm->embedForm($index, $form);
+     // $subForm->getWidgetSchema()->setLabel($index, (string) $childObject);
     }
     $this->embedForm('ClassificationKeywords', $subForm);
 

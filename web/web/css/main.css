@@ -240,7 +240,7 @@ img.clear_prop, img.tree_cmd {
   cursor:pointer;
 }
 
-.but_text, .but_text_multiple
+.but_text
 {
   background-color:#A9ABAA;
   float:left;
@@ -255,7 +255,7 @@ img.clear_prop, img.tree_cmd {
   font-weight: normal;
 }
 
-a.but_text, a.but_more, a.but_text_multiple
+a.but_text, a.but_more
 {
   text-decoration:none;
   color:black;
@@ -299,9 +299,6 @@ form th, form tr > td
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   vertical-align: middle;
-  /*madam 2019 01 28*/
-  table-layout:fixed;
-  width: 100%;
 }
 
 .search h3, .tree
@@ -585,11 +582,6 @@ input[type="text"].xlarge_size
   margin-left:0.05em;
 }
 
-div.results_container.but_ref_multiple {
-  float: right;
-  width: 99%;
-}
-
 .invalid
 {
   color:#C11C1C;
@@ -660,14 +652,15 @@ a.bt_close
 {
   text-align: left;
 }
-.datesNum em, #properties table em, .table_view table em, .catalogue_table em, .catalogue_table_view em
+.datesNum em, #properties table em
 {
   color:#C1C1C1;
   font-style:normal;
 }
+
 .check_right
 {
- float:right !important ;
+ float:right
 }
 .edit
 {
@@ -698,7 +691,8 @@ a.bt_close
   text-align:center;
 }
 
-.result_choose, .result_choose_coll_rights, .result_choose_collector, .result_choose_identifier
+/*** ftheeten 2016 06 07 added result_chose_all ***/
+.result_choose, .result_choose_coll_rights, .result_choose_collector, .result_choose_identifier, .result_choose_all
 {
   background-color:#5BAABD;
   color:white;
@@ -1114,7 +1108,6 @@ border-bottom: none ;
   width: 100px;
   margin-left:0.5em;
   margin-right:0.5em;
-  vertical-align: middle;
 }
 
 .property_values thead th
@@ -1961,7 +1954,7 @@ li.tag_size_5 { font-size: 20px; }
   display: table;
 }
 
-a.sub_group
+a.sub_group,  a.button_rmca
 {
 
   padding: 2px;
@@ -2878,16 +2871,15 @@ body .ui-tooltip, body .qtip
 .ui-autocomplete-loading { background: white url('/images/loader.gif') right center no-repeat; }
 
 .ui-autocomplete {
-		max-height: 150px;
+		max-height: 200px;
+		overflow-y: scroll;
 		/* prevent horizontal scrollbar */
 		overflow-x: hidden;
-    /* add vertical scrollbar */
-		overflow-y: scroll;
+		overflow:scroll;
 		/* add padding to account for vertical scrollbar */
 		padding-right: 20px;
-    position: absolute; 
-    cursor: default; 
-}
+	}
+.ui-autocomplete { position: absolute; cursor: default; }
 
 input.complete_missing {
   border: 1px solid red;
@@ -3234,7 +3226,7 @@ tr.spec_ident_collectors_data
   padding-bottom: 4px;
 }
 
-#float_button .submit_image
+ #float_button .submit_image
 {
   border-bottom: 1px solid #525A20;
   cursor: pointer;
@@ -3244,27 +3236,4 @@ tr.spec_ident_collectors_data
 #float_button .submit_image:hover, #float_button > a:hover
 {
   border-bottom: 1px solid white;
-}
-
-.main_codes_display {
-  margin: 0 0 4px 0;
-  letter-spacing: 0.05em;
-  list-style: none;
-}
-
-div#mask_display {
-  width:97%;
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-div.mask_display {
-  font-weight:bold;
-  text-align:center;
-  vertical-align:middle;
-  padding-bottom:10px;
-}
-
-fieldset.opened.view_mode, fieldset.opened.view_mode > legend.view_mode {
-  border: 1px solid #5BAABD;
 }

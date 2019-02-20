@@ -31,20 +31,6 @@
         </script>
       <?php endif ; ?>
     </td>
-    <!--ftheeten 2018 10 28-->
-    <td class="col_codes">
-         <?php if(isset($codes[$specimen->getId()])):?>
-           <?php $cpt = 0 ; foreach($codes[$specimen->getId()] as $key=>$code):?>            
-                <?php if($code->getCodeCategory() == 'main') : ?>
-                    <?php echo $code->getFullCode(); ?>
-                <?php endif;?>
-           <?php endforeach; ?>
-        <?php endif;?>
-    </td>
-     <!--ftheeten 2018 10 28-->
-    <td class="col_ig_num">
-         <?php echo($specimen->getIgNum()); ?>
-    </td>
     <td class="col_taxon">
       <?php if($specimen->getTaxonRef() > 0) : ?>
         <span class="line">

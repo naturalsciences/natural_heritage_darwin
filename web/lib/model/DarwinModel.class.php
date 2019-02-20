@@ -28,3 +28,4 @@ class DarwinModel extends sfDoctrineRecord
     return $this->array_errors ;
   }
 }
+?>

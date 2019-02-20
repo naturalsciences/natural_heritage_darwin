@@ -12,14 +12,11 @@ class GtuForm extends BaseGtuForm
   public function configure()
   {
     $this->useFields(array('code', 'gtu_from_date', 'gtu_to_date', 'latitude', 'longitude',
-      'lat_long_accuracy', 'elevation', 'elevation_accuracy',
-        //ftheeten 2018 08 08
-      'coordinates_source',
-	  'latitude_dms_degree', 'latitude_dms_minutes', 'latitude_dms_seconds','longitude_dms_degree', 'longitude_dms_minutes', 
-	  'longitude_dms_seconds', 'latitude_utm', 'longitude_utm', 'utm_zone', 'latitude_dms_direction', 'longitude_dms_direction'));
+      'lat_long_accuracy', 'elevation', 'elevation_accuracy', 'coordinates_source',
+	  'latitude_dms_degree', 'latitude_dms_minutes', 'latitude_dms_seconds','longitude_dms_degree', 'longitude_dms_minutes', 'longitude_dms_seconds', 'latitude_utm', 'longitude_utm', 'utm_zone', 'latitude_dms_direction', 'longitude_dms_direction', 'elevation_unit' ));
 
     $this->widgetSchema['code'] = new sfWidgetFormInput();
-    $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')), intval(sfConfig::get('dw_yearRangeMin')));
+    $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
     $dateText = array('year'=>'yyyy', 'month'=>'mm', 'day'=>'dd');
     $minDate = new FuzzyDateTime(strval(min($yearsKeyVal).'/01/01'));
@@ -72,31 +69,32 @@ class GtuForm extends BaseGtuForm
       ),
       array('invalid' => 'Date provided is not valid',)
     );
-    
-    	//this group ftheeten 2016 02 05
-    $this->widgetSchema['coordinates_source']= new sfWidgetFormChoice(array('choices'=>array('DD'=> 'Decimal', 'DMS'=>'Degrees Minutes Seconds', 'UTM'=>'UTM', 'ISSUE'=>'Issue (to check)')));
-	$this->widgetSchema['coordinates_source']->setAttributes(array('class'=>'coordinates_source'));
+	
+	
+		//this group ftheeten 2016 02 05
+	$this->widgetSchema['coordinates_source']= new sfWidgetFormChoice(array('choices'=>array('DD'=> 'Decimal', 'DMS'=>'Degrees Minutes Seconds', 'UTM'=>'UTM')));
+		$this->widgetSchema['coordinates_source']->setAttributes(array('class'=>'coordinates_source'));
 	$this->widgetSchema['coordinates_source']->setDefault(array(0));
 	//$this->validatorSchema['coordinates_source'] = new sfValidatorPass();
 	$this->widgetSchema['latitude']->setAttributes(array('class'=>'convertDMS2DDLat convertDD2DMSGeneral'));
 	$this->widgetSchema['longitude']->setAttributes(array('class'=>'convertDMS2DDLong convertDD2DMSGeneral'));
 	//$this->widgetSchema['latitude_dms_degree']=new sfWidgetFormInputText();
-	$this->widgetSchema['latitude_dms_degree']->setAttributes(array('class'=>'DMSLatDeg convertDMS2DDGeneralOnLeave vsmall_size '));
+	$this->widgetSchema['latitude_dms_degree']->setAttributes(array('class'=>'DMSLatDeg convertDMS2DDGeneralOnLeave small_size'));
 	//$this->validatorSchema['latitude_dms_degree'] = new sfValidatorPass();
 	//$this->widgetSchema['longitude_dms_degree']=new sfWidgetFormInputText();
-	$this->widgetSchema['longitude_dms_degree']->setAttributes(array('class'=>'DMSLongDeg convertDMS2DDGeneralOnLeave vsmall_size'));
+	$this->widgetSchema['longitude_dms_degree']->setAttributes(array('class'=>'DMSLongDeg convertDMS2DDGeneralOnLeave small_size'));
 	//$this->validatorSchema['longitude_dms_degree'] = new sfValidatorPass();
 	//$this->widgetSchema['latitude_dms_minutes']=new sfWidgetFormInputText();
-	$this->widgetSchema['latitude_dms_minutes']->setAttributes(array('class'=>'DMSLatMin convertDMS2DDGeneralOnLeave vsmall_size'));
+	$this->widgetSchema['latitude_dms_minutes']->setAttributes(array('class'=>'DMSLatMin convertDMS2DDGeneralOnLeave'));
 	//$this->validatorSchema['latitude_dms_minutes'] = new sfValidatorPass();
 	//$this->widgetSchema['longitude_dms_minutes']=new sfWidgetFormInputText();
-	$this->widgetSchema['longitude_dms_minutes']->setAttributes(array('class'=>'DMSLongMin convertDMS2DDGeneralOnLeave vsmall_size'));
+	$this->widgetSchema['longitude_dms_minutes']->setAttributes(array('class'=>'DMSLongMin convertDMS2DDGeneralOnLeave'));
 	//$this->validatorSchema['longitude_dms_minutes'] = new sfValidatorPass();
 	//$this->widgetSchema['latitude_dms_seconds']=new sfWidgetFormInputText();
-	$this->widgetSchema['latitude_dms_seconds']->setAttributes(array('class'=>'DMSLatSec convertDMS2DDGeneralOnLeave lsmall_size'));
+	$this->widgetSchema['latitude_dms_seconds']->setAttributes(array('class'=>'DMSLatSec convertDMS2DDGeneralOnLeave'));
 	//$this->validatorSchema['latitude_dms_seconds'] =new sfValidatorPass();
 	//$this->widgetSchema['longitude_dms_seconds']=new sfWidgetFormInputText();
-	$this->widgetSchema['longitude_dms_seconds']->setAttributes(array('class'=>'DMSLongSec convertDMS2DDGeneralOnLeave lsmall_size'));
+	$this->widgetSchema['longitude_dms_seconds']->setAttributes(array('class'=>'DMSLongSec convertDMS2DDGeneralOnLeave'));
 	//$this->validatorSchema['longitude_dms_seconds'] = new sfValidatorPass();
 	$this->widgetSchema['latitude_dms_direction'] = new sfWidgetFormChoice(array('choices' => array('1' => 'North', '-1' => 'South')));
 	$this->widgetSchema['latitude_dms_direction']->setAttributes(array('class'=>'DMSLatSign convertDMS2DDGeneralOnChange'));
@@ -245,14 +243,25 @@ class GtuForm extends BaseGtuForm
 	
 	)));
     
-    $this->widgetSchema['utm_zone']->setAttributes(array('class'=>'UTM2DDGeneralOnLeave UTMZone'));
+    //ftheeten 2016 07 05
+    $this->widgetSchema['ecology']=new sfWidgetFormTextarea();
+	$this->validatorSchema['ecology'] = new sfValidatorPass();
+    
+    //new sfWidgetFormInputText();
+	$this->widgetSchema['utm_zone']->setAttributes(array('class'=>'UTM2DDGeneralOnLeave UTMZone'));
+	//$this->validatorSchema['utm_zone'] = new sfValidatorPass();
+	//end group
 
     $this->widgetSchema['lat_long_accuracy']->setLabel('Accuracy');
     $this->widgetSchema['elevation_accuracy']->setLabel('Accuracy');
+    //$this->widgetSchema['elevation_unit'] = new sfWidgetFormInputText(array(),array('style'=>'width:10px'));
+    $this->widgetSchema['elevation_unit'] = new  sfWidgetFormChoice(array('choices' => array('' =>'', 'm' => 'm', 'ft'=>'ft')));
+    $this->widgetSchema['elevation_unit']->setLabel('Elevation Unit');
+    //$this->validatorSchema['elevation_unit'] = new sfValidatorString();
     $this->validatorSchema['latitude'] = new sfValidatorNumber(array('required'=>false,'trim' => true, 'min' => '-90', 'max'=>'90'));
     $this->validatorSchema['longitude'] = new sfValidatorNumber(array('required'=>false,'trim' => true, 'min' => '-180', 'max'=>'180'));
     $this->validatorSchema['lat_long_accuracy'] = new sfValidatorNumber(array('required'=>false,'trim' => true, 'min' => '0.0000001'));
-    $this->validatorSchema['elevation_accuracy'] = new sfValidatorNumber(array('required'=>false, 'trim' => true, 'min' => '0.0000001'));
+    $this->validatorSchema['elevation_accuracy'] = new sfValidatorNumber(array('required'=>false, 'trim' => true, 'min' => '0'));
     $this->validatorSchema->setPostValidator(
       new sfValidatorAnd(array(
         new sfValidatorSchemaCompare(
@@ -262,22 +271,33 @@ class GtuForm extends BaseGtuForm
           array('throw_global_error' => true),
           array('invalid'=>'The "begin" date cannot be above the "end" date.')
         ),
-        new sfValidatorCallback(array('callback'=> array($this, 'checkLatLong'))),
-        new sfValidatorCallback(array('callback'=> array($this, 'checkElevation'))),
+        //new sfValidatorCallback(array('callback'=> array($this, 'checkLatLong'))),
+        //new sfValidatorCallback(array('callback'=> array($this, 'checkElevation'))),
+        new sfValidatorCallback(array('callback'=> array($this, 'checkElevationUnit')))
       )
     ));
-    
-    //ftheeten 2018 11 29
-	//MUST NOT HAVE THE SAME NAME AS THE TABLE OTHERWISE EXTRA RECORDS ADDED
-    $this->widgetSchema['GtuTemporalInformationForm_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
-    $this->validatorSchema['GtuTemporalInformationForm_holder'] = new sfValidatorPass();
-
 
 
     $subForm = new sfForm();
     $this->embedForm('newVal',$subForm);
     $this->embedRelation('TagGroups');
   }
+
+
+  //pvignaux 2016/03/04
+  public function checkElevationUnit($validator, $values)
+  {
+
+    if($values['elevation'] != '' && $values['elevation_unit'] == '')
+    {
+   
+ $error = new sfValidatorError($validator, 'You must enter an unit for the elevation.' );
+      throw new sfvalidatorErrorSchema($validator, array('elevation_unit' => $error));
+
+    }
+    return $values;
+  }
+
 
   public function checkElevation($validator, $values)
   {
@@ -300,11 +320,12 @@ class GtuForm extends BaseGtuForm
         if($values['latitude'] == '') $field = 'latitude';
         throw new sfvalidatorErrorSchema($validator, array($field => $error));
       }
-      if($values['lat_long_accuracy'] == '')
+	  //ftheeten 2016 02 05
+      /*if($values['lat_long_accuracy'] == '')
       {
         $error = new sfValidatorError($validator, 'You must enter an accuracy for your position');
         throw new sfvalidatorErrorSchema($validator, array('lat_long_accuracy' => $error));
-      }
+      }*/
     }
     return $values;
   }
@@ -326,18 +347,6 @@ class GtuForm extends BaseGtuForm
       $this->embedForm('newVal', $this->embeddedForms['newVal']);
    }
 
-  //ftheeten 2018 12 01 
- /* public function reembedTemporalInformation($ti, $ti_number)
-  {
-    $this->getEmbeddedForm('TemporalInformation')->embedForm($ti_number, $ti);
-    $this->embedForm('TemporalInformation', $this->embeddedForms['Identifications']);
-  }
- //ftheeten 2018 12 01 
-  public function reembedNewTemporalInformation($ti, $ti_number)
-  {
-    $this->getEmbeddedForm('newTemporalInformation')->embedForm($ti_number, $ti);
-    $this->embedForm('newTemporalInformation', $this->embeddedForms['newIdentification']);
-  }*/
     public function bind(array $taintedValues = null, array $taintedFiles = null)
     {
       if(isset($taintedValues['newVal']))
@@ -350,62 +359,6 @@ class GtuForm extends BaseGtuForm
           }
         }
       }
-	  
-
-      
-      //ftheeten 2018 11 29
-	   $this->bindEmbed('GtuTemporalInformationForm', 'addTemporalInformation' , $taintedValues);
-	  //$value = $this->getValue('newTemporalInformation');
-	  //if(is_object($this->embeddedForms['newTemporalInformation']))
-      //{
-		  //foreach($this->embeddedForms['newTemporalInformation']->getEmbeddedForms() as $name => $form)
-		  //{
-			//if((int)($value[$name]['from_date_mask'])==0)
-			//{
-			  //unset($this->embeddedForms['newTemporalInformation'][$name]);
-			   //$form->getObject()->delete();
-			//}
-			
-		  //}
-	  //}
-	   //$value = $this->getValue('TemporalInformation');
-	  //foreach($this->embeddedForms['TemporalInformation']->getEmbeddedForms() as $name => $form)
-      //{
-			
-        //if((int)($value[$name]['from_date_mask'])==0)
-		//{
-          //unset($this->embeddedForms['TemporalInformation'][$name]);
-		  // $form->getObject()->delete();
-        //}
-		
-      //}
-     
-	  //unset($taintedValues['newTemporalInformation']);
-	    /*if(!isset($taintedValues['TemporalInformation_holder']))
-		{
-		  $this->offsetUnset('TemporalInformation');
-		  unset($taintedValues['TemporalInformation']);
-		  $this->offsetUnset('TemporalInformation');
-		  unset($taintedValues['TemporalInformation']);
-		}
-		else
-		{
-		  $this->loadEmbedTemporalInformation();
-		  if(isset($taintedValues['newTemporalInformation']))
-		  {
-			foreach($taintedValues['newTemporalInformation'] as $key=>$newVal)
-			{
-				if((int)$newVal['from_date_mask']!=0||(int)$newVal['to_date_mask']!=0)
-				{
-				  if (!isset($this['newTemporalInformation'][$key]))
-				  {
-					//Call the add function of the embeddedForm
-					$this->addTemporalInformation($key, $newVal, $key);
-				  }
-				}	
-			}
-		  }
-		}*/
       parent::bind($taintedValues, $taintedFiles);
     }
 
@@ -433,118 +386,16 @@ class GtuForm extends BaseGtuForm
             unset($this->embeddedForms['TagGroups'][$name]);
           }
         }
-		/*
-		if($this->getValue("newGtuTemporalInformationForm"))
-		{
-			$value = $this->getValue('newGtuTemporalInformationForm');
-			  foreach($this->embeddedForms['newGtuTemporalInformationForm']->getEmbeddedForms() as $name => $form)
-			  {
-				if (((int)$value[$name]['from_date_mask']==0&&(int)$value[$name]['to_date_mask']==0))
-				{
-				  unset($this->embeddedForms['newGtuTemporalInformationForm'][$name]);
-				}
-				else
-				{
-				  $form->getObject()->setGtuRef($this->getObject()->getId());
-				  $form->getObject()->save();
-				}
-				unset($this->embeddedForms['newGtuTemporalInformationForm'][$name]);
-			  }
-		}
-      
-	  
-		if($this->getValue("GtuTemporalInformationForm"))
-		{
-			$value = $this->getValue('TemporalInformation');
-			  foreach($this->embeddedForms['GtuTemporalInformationForm']->getEmbeddedForms() as $name => $form)
-			  {
-				if (((int)$value[$name]['from_date_mask']==0&&(int)$value[$name]['to_date_mask']==0))
-				{
-				  unset($this->embeddedForms['GtuTemporalInformationForm'][$name]);
-				}
-				else
-				{
-				  $form->getObject()->setGtuRef($this->getObject()->getId());
-				  $form->getObject()->save();
-				}
-			  }
-		}*/
       }
-      //ftheeten 2018 11 29
-      $this->saveEmbed('GtuTemporalInformationForm', 'from_date' ,$forms, array('gtu_ref' => $this->getObject()->getId()));
       return parent::saveEmbeddedForms($con, $forms);
     }
-    
-  //ftheeten 2018 11 29
-  public function addTemporalInformation($num, $values, $order_by=0)
-  {
-    $options = array("gtu_ref"=>$this->getObject()->getId());
-    $options = array_merge($values, $options);
-    $this->attachEmbedRecord('GtuTemporalInformationForm', new TemporalInformationSubForm(DarwinTable::newObjectFromArray('TemporalInformation',$options)), $num);
-  }
-  
-  //ftheeten 2018 11 29
-  public function getEmbedRecords($emFieldName, $record_id = false)
-  {
-
-     if($record_id === false)
-     {
-        $record_id = $this->getObject()->getId();
-     }
-	 
-     if( $emFieldName =='GtuTemporalInformationForm' )
-     {
-      $res= Doctrine::getTable('TemporalInformation')->findByGtuRef($record_id);
-      return $res;
-    }
-  }
-  
-    //ftheeten 2018 11 29
-  
-  public function getEmbedRelationForm($emFieldName, $values)
-  {   
-    if( $emFieldName =='GtuTemporalInformationForm' )
-    {
-      return new TemporalInformationSubForm($values);
-    }
-  }
-  
-   //ftheeten 2018 11 29
-   public function loadEmbedTemporalInformation()
-  {
-    /* Identifications sub form */
-    if($this->isBound()) return;
-    $subForm = new sfForm();
-    $this->embedForm('GtuTemporalInformationForm',$subForm);
-    if($this->getObject()->getId() !='')
-    {
-      foreach(Doctrine::getTable('TemporalInformation')->findByGtuRef($this->getObject()->getId()) as $key=>$vals)
-      {
-        $form = new TemporalInformationSubForm($vals);
-        $this->embeddedForms['GtuTemporalInformationForm']->embedForm($key, $form);
-      }
-      //Re-embedding the container
-      $this->embedForm('GtuTemporalInformationForm', $this->embeddedForms['GtuTemporalInformationForm']);
-    }
-    $subForm = new sfForm();
-    $this->embedForm('newGtuTemporalInformationForm',$subForm);
-  }
-
-  
-    //ftheeten 2018 11 29
-    
-  /* public function saveEmbeddedForms($con = null, $forms = null)
-  {
-     //$this->saveEmbed('TemporalInformation', 'from_date' ,$forms, array('gtu_ref' => $this->getObject()->getId()));
-    return parent::saveEmbeddedForms($con, $forms);
-  }*/
 
   public function getJavaScripts()
   {
     $javascripts=parent::getJavascripts();
     $javascripts[]='/leaflet/leaflet.js';
     $javascripts[]='/js/map.js';
-    //ftheeten 2016 02 05
+	//ftheeten 2016 02 05
     $javascripts[]='/proj4js-2.3.12/proj4js-2.3.12/dist/proj4-src.js';
     return $javascripts;
   }

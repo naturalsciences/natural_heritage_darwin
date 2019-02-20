@@ -12,6 +12,7 @@
  * @property string $group_name
  * @property boolean $is_basionym
  * @property integer $order_by
+ * @property integer $synonym_record_id
  * 
  * @method integer                  getId()                  Returns the current record's "id" value
  * @method string                   getReferencedRelation()  Returns the current record's "referenced_relation" value
@@ -20,6 +21,7 @@
  * @method string                   getGroupName()           Returns the current record's "group_name" value
  * @method boolean                  getIsBasionym()          Returns the current record's "is_basionym" value
  * @method integer                  getOrderBy()             Returns the current record's "order_by" value
+ * @method integer                  getSynonymRecordId()     Returns the current record's "synonym_record_id" value
  * @method ClassificationSynonymies setId()                  Sets the current record's "id" value
  * @method ClassificationSynonymies setReferencedRelation()  Sets the current record's "referenced_relation" value
  * @method ClassificationSynonymies setRecordId()            Sets the current record's "record_id" value
@@ -27,6 +29,7 @@
  * @method ClassificationSynonymies setGroupName()           Sets the current record's "group_name" value
  * @method ClassificationSynonymies setIsBasionym()          Sets the current record's "is_basionym" value
  * @method ClassificationSynonymies setOrderBy()             Sets the current record's "order_by" value
+ * @method ClassificationSynonymies setSynonymRecordId()     Sets the current record's "synonym_record_id" value
  * 
  * @package    darwin
  * @subpackage model
@@ -67,6 +70,9 @@ abstract class BaseClassificationSynonymies extends DarwinModel
              'type' => 'integer',
              'notnull' => true,
              'default' => 0,
+             ));
+        $this->hasColumn('synonym_record_id', 'integer', null, array(
+             'type' => 'integer',
              ));
     }
 

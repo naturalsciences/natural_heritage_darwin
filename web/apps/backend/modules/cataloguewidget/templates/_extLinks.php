@@ -5,6 +5,7 @@
       <th></th>
       <th><?php echo __('Link');?></th>
       <th><?php echo __('Comment');?></th>
+      <th><?php echo __('Category');?></th>
       <th></th>
     </tr>
   </thead>
@@ -23,6 +24,9 @@
     </td>
     <td>
       <div title="<?php echo $link->getComment();?>"><?php echo truncate_text($link->getComment(), 50);?></div>
+    </td>
+    <td>
+      <div title="<?php echo $link->getCategory();?>"><?php echo $link->getCategory();?></div>
     </td>
     <td class="widget_row_delete">   
       <a class="widget_row_delete" href="<?php echo url_for('catalogue/deleteRelated?table=ext_links&id='.$link->getId());?>" title="<?php echo __('Delete Link') ?>"><?php echo image_tag('remove.png'); ?>

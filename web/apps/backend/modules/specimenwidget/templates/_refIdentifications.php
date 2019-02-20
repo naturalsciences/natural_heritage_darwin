@@ -40,7 +40,6 @@ function addIdentifierValue(people_ref,ref_table)
   return false;
 }
 </script>
-<div id="identification_placeholder" style="visibility: hidden"></div>
 <table class="property_values" id="identifications">
   <thead style="<?php echo ($form['Identifications']->count() || $form['newIdentification']->count())?'':'display: none;';?>" class="spec_ident_head">
     <tr>
@@ -89,8 +88,23 @@ $(document).ready(function () {
             $(parent_el).append(html);
             $(parent_el).find('thead.spec_ident_head:hidden').show();
             showAfterRefresh('#refIdentifications');
+                    //ftheeten 2016 11 29
+                <?php if(sfContext::getInstance()->getActionName()=="new"||sfContext::getInstance()->getActionName()=="edit"):?>
+               
+                        $('.to_date').each(function ()
+                        {
+                            if(/specimen_(new){0,1}Identification(s){0,1}_[0-9]+_notion_date_year/.test($(this).attr('id')))
+                            {
+                                $.reverse_year_in_select("#"+$(this).attr('id'));
+                            }
+                        });
+                   
+                 
+              <?php endif;?>
           }
         });
+        
+
         return false;
     });    
 
@@ -105,17 +119,5 @@ $(document).ready(function () {
            reOrderIdent();
          }
        });
-       
-
-
-    });
-    
-    //ftheeten 2018 09 18
-
-
-        onElementInserted('body', '.identification_subject', function(element)
-        {
-            $(element).val($("#specimen_taxon_ref_name").val());
-        }
-        );
+});
 </script>

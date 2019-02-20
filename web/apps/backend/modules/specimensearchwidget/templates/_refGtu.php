@@ -1,6 +1,12 @@
   <div class="container">
     <table id="gtu_search">
       <thead>
+	  <!--added ftheeten RMCA 2015 01 07-->
+    <tr>
+      <td colspan="4">
+		Boolean Selector:<?php echo $form['gtu_boolean'];?></td>
+     </td>
+	</tr>
         <tr>
           <th colspan="4"><?php echo $form['gtu_code']->renderLabel() ?></th>
         </tr>
@@ -10,17 +16,7 @@
           <td colspan="4"><?php echo $form['gtu_code']->render() ?></td>
         </tr>
         <tr>
-          <th><?php echo $form['gtu_from_date']->renderLabel(); ?></th>
-          <th><?php echo $form['gtu_to_date']->renderLabel(); ?></th>
-          <th colspan="2"></th>
-        </tr>
-        <tr>
-          <td><?php echo $form['gtu_from_date']->render() ?></td>
-          <td><?php echo $form['gtu_to_date']->render() ?></td>
-          <td colspan="2"></td>
-        </tr>
-        <tr>
-          <th colspan="3"><?php echo $form['tags']->renderLabel() ?></th>
+          <th colspan="2"><?php echo $form['tags']->renderLabel() ?></th>
           <th colspan="2"></th>
         </tr>
         <?php foreach($form['Tags'] as $i=>$form_value):?>

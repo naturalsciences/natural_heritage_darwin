@@ -19,6 +19,17 @@ class LoansFormFilter extends BaseLoansFormFilter
     $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
     $dateUpperBound = new FuzzyDateTime(sfConfig::get('dw_dateUpperBound'));
 
+    //ftheeten 2016 11 23
+     $this->widgetSchema['collection_ref'] = new widgetFormCompleteButtonRef(array(
+      'model' => 'Collections',
+      'link_url' => 'collection/choose',
+      'method' => 'getName',
+      'box_title' => $this->getI18N()->__('Choose Collection'),
+      'button_class'=>'',
+      'complete_url' => 'catalogue/completeName?table=collections',
+    ));   
+    $this->validatorSchema['collection_ref'] = new sfValidatorPass();
+    
     $this->widgetSchema['status'] = new sfWidgetFormChoice(array(
         'choices' => Doctrine::getTable('LoanStatus')->getDistinctStatus()
     ));
@@ -95,13 +106,6 @@ class LoansFormFilter extends BaseLoansFormFilter
       'only_darwin' => 'Contains Darwin items',
       'people_ref' => 'Person involved',
     ));
-
-    $this->widgetSchema['table'] = new sfWidgetFormInputHidden();
-    $this->widgetSchema['level'] = new sfWidgetFormInputHidden();
-    $this->widgetSchema['caller_id'] = new sfWidgetFormInputHidden();
-    $this->validatorSchema['table'] = new sfValidatorString(array('required' => false));
-    $this->validatorSchema['level'] = new sfValidatorString(array('required' => false));
-    $this->validatorSchema['caller_id'] = new sfValidatorString(array('required' => false));
   }
 
 
@@ -155,6 +159,17 @@ class LoansFormFilter extends BaseLoansFormFilter
     $alias = $query->getRootAlias() ;
     $query->andWhere("EXISTS (select lr.id from LoanRights lr where $alias.id = lr.loan_ref and user_ref = ?)", $user->getId());
   }
+  
+  //ftheeten 2016 11 13
+  
+  public function addCollectionRefColumnQuery($query, $field, $val)
+  {
+    if($val != '') {
+      $alias = $query->getRootAlias() ;
+      $query->andWhere("collection_ref = ?", $val);
+    }
+    return $query;
+  }
 
   public function doBuildQuery(array $values)
   {
@@ -165,5 +180,8 @@ class LoansFormFilter extends BaseLoansFormFilter
     $this->filterByRight($query, $this->options['user']);
     return $query;
   }
+  
+ 
+
 
 }

@@ -61,29 +61,17 @@ class propertyActions extends DarwinActions
       elseif($this->getUser()->isA(Users::REGISTERED_USER)) 
         $this->forwardToSecureAction();
     }  
-	if($request->hasParameter('id'))
+    if($request->hasParameter('id'))
     {  
-      //ftheeten 2019 01 18
-      if((!is_numeric($request->getParameter('id'))|| (string)$request->getParameter('id') =="-1")&& $request->hasParameter("timestamp"))
+      $r = Doctrine::getTable( DarwinTable::getModelForTable($request->getParameter('table')) )->find($request->getParameter('id'));
+      $this->forward404Unless($r,'No such item');     
+      if(!$this->getUser()->isA(Users::ADMIN))   
       {
-        $request->setParameter('id', -1);
-        $this->timestamp = $request->getParameter("timestamp");
-      }
-      else
-      {      
-		  if((int)$request->getParameter('id')!=-1)
-		  {
-			  $r = Doctrine::getTable( DarwinTable::getModelForTable($request->getParameter('table')) )->find($request->getParameter('id'));
-			  $this->forward404Unless($r,'No such item');     
-			  if(!$this->getUser()->isA(Users::ADMIN))   
-			  {
-				if( $request->getParameter('table') == 'specimens' )
-				{
-				  if(! Doctrine::getTable('Specimens')->hasRights('spec_ref', $request->getParameter('id'), $this->getUser()->getId()))
-					$this->forwardToSecureAction();    
-				}
-			  }
-		  }
+        if( $request->getParameter('table') == 'specimens' )
+        {
+          if(! Doctrine::getTable('Specimens')->hasRights('spec_ref', $request->getParameter('id'), $this->getUser()->getId()))
+            $this->forwardToSecureAction();    
+        }
       }
     }
     $this->property = null;
@@ -116,22 +104,6 @@ class propertyActions extends DarwinActions
 	    {
 	      try{
 	        $this->form->save();
-            //ftheeten 2019 01 18
-            if($this->form->getObject()->getRecordId()==-1)
-            {
-               
-                if(!isset($_SESSION["TEMP_DARWIN_PROPERTY_".$this->timestamp]))
-                {                  
-                    $temp_array=array();
-                }
-                else
-                {
-                    $temp_array=$_SESSION["TEMP_DARWIN_PROPERTY_".$this->timestamp];
-                }
-                
-               $temp_array[]=$this->form->getObject()->getId();
-                $_SESSION["TEMP_DARWIN_PROPERTY_".$this->timestamp]=$temp_array;
-            }
 	        return $this->renderText('ok');
 	      }
 	      catch(Exception $ne)

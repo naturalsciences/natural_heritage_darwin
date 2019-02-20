@@ -8,11 +8,7 @@ class Codes extends BaseCodes
   private static $category = array('main'=> 'Main',
                  'secondary' => 'Second.',
                  'temporary' => 'Temp.',
-                 'inventory'=> 'Invent.',
-                 'barcode' => 'Barcode',
-                 'additional id' => 'Additional',
-                 'code' => 'Storage',
-                 'genbank number' => 'GenBank Nb.'
+                 'inventory'=> 'Invent.'
                 );
 
   public static function getCategories()

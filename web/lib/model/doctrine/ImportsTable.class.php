@@ -43,19 +43,6 @@ class ImportsTable extends Doctrine_Table
                                   GROUP BY import_ref");
     return $result;
   }
-  
-  //ftheeten 2018 09 25
-    public function getNumberOfLinesGtu($record_ids)
-  {
-    if(! count($record_ids)) return array();
-    $conn = Doctrine_Manager::connection();
-    $ids_list_as_string = implode(',',$record_ids);
-    $result = $conn->fetchAssoc("SELECT import_ref as id, COUNT(*) as cnt
-                                  FROM staging_gtu r
-                                  WHERE import_ref = ANY('{ $ids_list_as_string }'::int[]) AND imported=FALSE
-                                  GROUP BY import_ref");
-    return $result;
-  }
 
   /**
    * Clear a given import

@@ -44,20 +44,13 @@
       </td>
     </tr>
     <tr>
-      <th><?php echo $form['code_auto_increment_for_insert_only']->renderLabel();?></th>
-      <td>
-        <?php echo $form['code_auto_increment_for_insert_only']->renderError(); ?>
-        <?php echo $form['code_auto_increment_for_insert_only'];?>
-      </td>
-    </tr>
-    <tr>
       <th><?php echo $form['code_specimen_duplicate']->renderLabel();?></th>
       <td>
         <?php echo $form['code_specimen_duplicate']->renderError(); ?>
         <?php echo $form['code_specimen_duplicate'];?>
       </td>
     </tr>
-    <tr>
+	<tr>
       <th><?php echo $form['code_mask']->renderLabel();?></th>
       <td>
         <?php echo $form['code_mask']->renderError(); ?>

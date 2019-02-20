@@ -3,6 +3,7 @@
 <?php use_stylesheet('widgets.css') ?>
 <?php use_javascript('widgets.js') ?>
 <?php use_javascript('button_ref.js') ?>
+<?php use_javascript('../barcode/jquery-barcode.js') ?>
 <div class="page">
   <h3 class="spec">
   <span class="title"><?php echo __('View Specimen');?></span>

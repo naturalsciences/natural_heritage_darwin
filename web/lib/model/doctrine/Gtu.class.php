@@ -72,7 +72,7 @@ class Gtu extends BaseGtu
     foreach($this->TagGroups as $group)
     {
       if(!$countriesOnly || ($countriesOnly && $group->getSubGroupName()=='country')) {
-        $str .= '<li><label>'.$group->getSubGroupName().'<span class="gtu_group"> - '.TagGroups::getGroup($group->getGroupName()).'</span></label><ul class="name_tags'.(($view !== null)?"_view":"").'">';
+        $str .= '<li><label>'.$group->getSubGroupName().'<span class="gtu_group"> - '.TagGroups::getGroup($group->getGroupName()).'</span></label><ul class="name_tags'.($view!=null?"_view":"").'">';
         $tags = explode(";",$group->getTagValue());
         foreach($tags as $value)
           if (strlen($value))
@@ -89,7 +89,7 @@ class Gtu extends BaseGtu
   public function getMap()
   {
     if( $this->getLatitude() != '' && $this->getLongitude()!= '')
-      return '<img class="gtu_img_loc" src="http://staticmap.openstreetmap.de/staticmap.php?&size=480x240&center='.$this->getLatitude().','.$this->getLongitude().'&zoom=5&markers='.$this->getLatitude().','.$this->getLongitude().',red-pushpin" alt="Sampling location" />';
+      return '<img class="gtu_img_loc" src="http://staticmap.openstreetmap.de/staticmap.php?&size=480x240&center='.$this->getLatitude().','.$this->getLongitude().'&zoom=6&markers='.$this->getLatitude().','.$this->getLongitude().',red-pushpin" alt="Sampling location" />';
     return '';
   }
   public function getTagsWithCode($view = null)
@@ -100,6 +100,8 @@ class Gtu extends BaseGtu
     $str .=  '<b class="code">'.$this->getCode().'</b>';
     $str .=  '<b class="lat">'.$this->getLatitude().'</b>';
     $str .=  '<b class="lon">'.$this->getLongitude().'</b>';
+    $str .=  '<b class="date_from">'.$this->getGtuFromDateMasked().'</b>';
+    $str .=  '<b class="date_to">'.$this->getGtuToDateMasked().'</b>';
 
     return $str;
   }
@@ -118,64 +120,4 @@ class Gtu extends BaseGtu
          ->where('tg.gtu_ref = ? and tg.sub_group_name_indexed = ?', array($this->_get('id'), 'country'));
     return (count($q->execute()));
   }
-  
-
-  
-  //ftheeten 2018 12 12
-  public function getRelatedTemporalInformationMasked()
-  { return("GTU");
-	  $returned=Array();
-	  foreach(Doctrine::getTable('TemporalInformation')->findByGtuRef($this->getId()) as $key=>$item)
-      {
-		    if((int)$item->getFromDateMask()>0||(int)$item->getToDateMask()>0)
-			{
-				$tmp=Array();
-                //$tmp['id']=$item->getId();
-                $tmp['from_raw']=$item->getFromDate();
-				$tmp['to_raw']=$item->getToDate();
-				$tmp["from"]=$item->getFromDateString();//getFromDateMasked(ESC_RAW);
-				$tmp["to"]=$item->getToDateString(); //getToDateMasked(ESC_RAW);
-                $tmp["from_masked"]=$item->getFromDateMasked(ESC_RAW);
-                $tmp["to_masked"]=$item->getToDateMasked(ESC_RAW);
-                $tmp["from_mask"]=(int)$item->getFromDateMask();
-                $tmp["to_mask"]=(int)$item->getToDateMask();
-                
-                $tmp['from_year']=$item->getFromDate()['year'];
-                $tmp['from_month']=$item->getFromDate()['month'];
-                $tmp['from_day']=$item->getFromDate()['day'];
-                $tmp['from_hour']=$item->getFromDate()['hour'];
-                $tmp['from_minute']=$item->getFromDate()['minute'];
-                $tmp['from_second']=$item->getFromDate()['second'];
-                $tmp['to_year']=$item->getToDate()['year'];
-                $tmp['to_month']=$item->getToDate()['month'];
-                $tmp['to_day']=$item->getToDate()['day'];
-                $tmp['to_hour']=$item->getToDate()['hour'];
-                $tmp['to_minute']=$item->getToDate()['minute'];
-                $tmp['to_second']=$item->getToDate()['second'];
-                
-
-				$returned[]=$tmp;
-			}
-	  }
-      usort($returned, function($a, $b) {
-        return ($a['from_masked'].$a['to_masked']) - ($b['from_masked'].$b['to_masked']);
-        });
-	  $returned= array_unique($returned, SORT_REGULAR);
-	  
-	  
-	  return $returned;
-  }
-  
-  
-  
-  //ftheeten 2018 12 12
-  /*public function getComments()
-  {
-    return $this->getDoctrineGtuComments()->getComments();    
-  }*/
-  
- /* public function getArrayFromDate()
-  {
-    return "";
-  }*/
 }

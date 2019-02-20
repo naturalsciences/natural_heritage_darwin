@@ -13,14 +13,6 @@
  * @property string $gtu_to_date
  * @property float $latitude
  * @property float $longitude
- * @property string $location
- * @property float $lat_long_accuracy
- * @property float $elevation
- * @property float $elevation_accuracy
- * @property integer $import_ref
- * @property string $collector_refs
- * @property string $expedition_refs
- * @property integer $collection_ref
  * @property string $coordinates_source
  * @property integer $latitude_dms_degree
  * @property float $latitude_dms_minutes
@@ -33,12 +25,14 @@
  * @property float $latitude_utm
  * @property float $longitude_utm
  * @property varchar $utm_zone
- * @property TemporalInformation $TemporalInformation
- * @property DoctrineGtuComments $DoctrineGtuComments
+ * @property string $location
+ * @property float $lat_long_accuracy
+ * @property float $elevation
+ * @property float $elevation_accuracy
+ * @property string $elevation_unit
  * @property Doctrine_Collection $TagGroups
  * @property Doctrine_Collection $Tags
  * @property Doctrine_Collection $Specimens
- * @property Doctrine_Collection $SpecimensMaincodes
  * 
  * @method integer             getId()                      Returns the current record's "id" value
  * @method string              getCode()                    Returns the current record's "code" value
@@ -48,14 +42,6 @@
  * @method string              getGtuToDate()               Returns the current record's "gtu_to_date" value
  * @method float               getLatitude()                Returns the current record's "latitude" value
  * @method float               getLongitude()               Returns the current record's "longitude" value
- * @method string              getLocation()                Returns the current record's "location" value
- * @method float               getLatLongAccuracy()         Returns the current record's "lat_long_accuracy" value
- * @method float               getElevation()               Returns the current record's "elevation" value
- * @method float               getElevationAccuracy()       Returns the current record's "elevation_accuracy" value
- * @method integer             getImportRef()               Returns the current record's "import_ref" value
- * @method string              getCollectorRefs()           Returns the current record's "collector_refs" value
- * @method string              getExpeditionRefs()          Returns the current record's "expedition_refs" value
- * @method integer             getCollectionRef()           Returns the current record's "collection_ref" value
  * @method string              getCoordinatesSource()       Returns the current record's "coordinates_source" value
  * @method integer             getLatitudeDmsDegree()       Returns the current record's "latitude_dms_degree" value
  * @method float               getLatitudeDmsMinutes()      Returns the current record's "latitude_dms_minutes" value
@@ -68,12 +54,14 @@
  * @method float               getLatitudeUtm()             Returns the current record's "latitude_utm" value
  * @method float               getLongitudeUtm()            Returns the current record's "longitude_utm" value
  * @method varchar             getUtmZone()                 Returns the current record's "utm_zone" value
- * @method TemporalInformation getTemporalInformation()     Returns the current record's "TemporalInformation" value
- * @method DoctrineGtuComments getDoctrineGtuComments()     Returns the current record's "DoctrineGtuComments" value
+ * @method string              getLocation()                Returns the current record's "location" value
+ * @method float               getLatLongAccuracy()         Returns the current record's "lat_long_accuracy" value
+ * @method float               getElevation()               Returns the current record's "elevation" value
+ * @method float               getElevationAccuracy()       Returns the current record's "elevation_accuracy" value
+ * @method string              getElevationUnit()           Returns the current record's "elevation_unit" value
  * @method Doctrine_Collection getTagGroups()               Returns the current record's "TagGroups" collection
  * @method Doctrine_Collection getTags()                    Returns the current record's "Tags" collection
  * @method Doctrine_Collection getSpecimens()               Returns the current record's "Specimens" collection
- * @method Doctrine_Collection getSpecimensMaincodes()      Returns the current record's "SpecimensMaincodes" collection
  * @method Gtu                 setId()                      Sets the current record's "id" value
  * @method Gtu                 setCode()                    Sets the current record's "code" value
  * @method Gtu                 setGtuFromDateMask()         Sets the current record's "gtu_from_date_mask" value
@@ -82,14 +70,6 @@
  * @method Gtu                 setGtuToDate()               Sets the current record's "gtu_to_date" value
  * @method Gtu                 setLatitude()                Sets the current record's "latitude" value
  * @method Gtu                 setLongitude()               Sets the current record's "longitude" value
- * @method Gtu                 setLocation()                Sets the current record's "location" value
- * @method Gtu                 setLatLongAccuracy()         Sets the current record's "lat_long_accuracy" value
- * @method Gtu                 setElevation()               Sets the current record's "elevation" value
- * @method Gtu                 setElevationAccuracy()       Sets the current record's "elevation_accuracy" value
- * @method Gtu                 setImportRef()               Sets the current record's "import_ref" value
- * @method Gtu                 setCollectorRefs()           Sets the current record's "collector_refs" value
- * @method Gtu                 setExpeditionRefs()          Sets the current record's "expedition_refs" value
- * @method Gtu                 setCollectionRef()           Sets the current record's "collection_ref" value
  * @method Gtu                 setCoordinatesSource()       Sets the current record's "coordinates_source" value
  * @method Gtu                 setLatitudeDmsDegree()       Sets the current record's "latitude_dms_degree" value
  * @method Gtu                 setLatitudeDmsMinutes()      Sets the current record's "latitude_dms_minutes" value
@@ -102,12 +82,14 @@
  * @method Gtu                 setLatitudeUtm()             Sets the current record's "latitude_utm" value
  * @method Gtu                 setLongitudeUtm()            Sets the current record's "longitude_utm" value
  * @method Gtu                 setUtmZone()                 Sets the current record's "utm_zone" value
- * @method Gtu                 setTemporalInformation()     Sets the current record's "TemporalInformation" value
- * @method Gtu                 setDoctrineGtuComments()     Sets the current record's "DoctrineGtuComments" value
+ * @method Gtu                 setLocation()                Sets the current record's "location" value
+ * @method Gtu                 setLatLongAccuracy()         Sets the current record's "lat_long_accuracy" value
+ * @method Gtu                 setElevation()               Sets the current record's "elevation" value
+ * @method Gtu                 setElevationAccuracy()       Sets the current record's "elevation_accuracy" value
+ * @method Gtu                 setElevationUnit()           Sets the current record's "elevation_unit" value
  * @method Gtu                 setTagGroups()               Sets the current record's "TagGroups" collection
  * @method Gtu                 setTags()                    Sets the current record's "Tags" collection
  * @method Gtu                 setSpecimens()               Sets the current record's "Specimens" collection
- * @method Gtu                 setSpecimensMaincodes()      Sets the current record's "SpecimensMaincodes" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -154,30 +136,6 @@ abstract class BaseGtu extends DarwinModel
         $this->hasColumn('longitude', 'float', null, array(
              'type' => 'float',
              ));
-        $this->hasColumn('location', 'string', null, array(
-             'type' => 'string',
-             ));
-        $this->hasColumn('lat_long_accuracy', 'float', null, array(
-             'type' => 'float',
-             ));
-        $this->hasColumn('elevation', 'float', null, array(
-             'type' => 'float',
-             ));
-        $this->hasColumn('elevation_accuracy', 'float', null, array(
-             'type' => 'float',
-             ));
-        $this->hasColumn('import_ref', 'integer', null, array(
-             'type' => 'integer',
-             ));
-        $this->hasColumn('collector_refs', 'string', null, array(
-             'type' => 'string',
-             ));
-        $this->hasColumn('expedition_refs', 'string', null, array(
-             'type' => 'string',
-             ));
-        $this->hasColumn('collection_ref', 'integer', null, array(
-             'type' => 'integer',
-             ));
         $this->hasColumn('coordinates_source', 'string', null, array(
              'type' => 'string',
              ));
@@ -214,19 +172,26 @@ abstract class BaseGtu extends DarwinModel
         $this->hasColumn('utm_zone', 'varchar', null, array(
              'type' => 'varchar',
              ));
+        $this->hasColumn('location', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('lat_long_accuracy', 'float', null, array(
+             'type' => 'float',
+             ));
+        $this->hasColumn('elevation', 'float', null, array(
+             'type' => 'float',
+             ));
+        $this->hasColumn('elevation_accuracy', 'float', null, array(
+             'type' => 'float',
+             ));
+        $this->hasColumn('elevation_unit', 'string', null, array(
+             'type' => 'string',
+             ));
     }
 
     public function setUp()
     {
         parent::setUp();
-        $this->hasOne('TemporalInformation', array(
-             'local' => 'id',
-             'foreign' => 'gtu_ref'));
-
-        $this->hasOne('DoctrineGtuComments', array(
-             'local' => 'id',
-             'foreign' => 'record_id'));
-
         $this->hasMany('TagGroups', array(
              'local' => 'id',
              'foreign' => 'gtu_ref'));
@@ -236,10 +201,6 @@ abstract class BaseGtu extends DarwinModel
              'foreign' => 'gtu_ref'));
 
         $this->hasMany('Specimens', array(
-             'local' => 'id',
-             'foreign' => 'gtu_ref'));
-
-        $this->hasMany('SpecimensMaincodes', array(
              'local' => 'id',
              'foreign' => 'gtu_ref'));
     }

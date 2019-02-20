@@ -23,16 +23,15 @@ class BaseMassActionForm extends sfFormSymfony
         'lithostratigraphy_ref' => self::getI18N()->__('Change Lithostratigraphy'),
         'mineralogy_ref' => self::getI18N()->__('Change Mineralogy'),
         'station_visible' => self::getI18N()->__('Change Station visibility'),
-        'gtu_ref' => self::getI18N()->__('Change Sampling Location'),
         'ig_ref' => self::getI18N()->__('Change I.G. Num'),
-        'expedition_ref' => self::getI18N()->__('Change Expedition'),
         'acquisition_category' => self::getI18N()->__('Change Acquisition Category'),
         'acquisition_date' => self::getI18N()->__('Change Acquisition Date'),
-        'gtu_ref' => self::getI18N()->__('Change Sampling Location'),
+
         'type' => self::getI18N()->__('Change Individual Type'),
         'social_status' => self::getI18N()->__('Change Individual Social Status'),
         'sex' => self::getI18N()->__('Change Individual Sex'),
         'stage' => self::getI18N()->__('Change Individual Stage'),
+
         'maintenance' => self::getI18N()->__('Add Maintenance'),
         'building' => self::getI18N()->__('Change Building'),
         'floor' => self::getI18N()->__('Change Floor'),
@@ -42,9 +41,6 @@ class BaseMassActionForm extends sfFormSymfony
         'shelf' => self::getI18N()->__('Change Shelf'),
         'container' => self::getI18N()->__('Change Container'),
         'sub_container' => self::getI18N()->__('Change Sub Container'),
-        'ext_links' => self::getI18N()->__('Add an external link'),
-        'specimen_status' => self::getI18N()->__('Change Status (lost, damaged,...)'),
-        'related_files'  => self::getI18N()->__('Change Related Files visibility/publish state'),
     );
     return $result;
   }
@@ -62,12 +58,6 @@ class BaseMassActionForm extends sfFormSymfony
 
     elseif($action == 'ig_ref')
       return 'MaIgRefForm';
-
-    elseif($action == 'expedition_ref')
-      return 'MaExpeditionRefForm';
-
-    elseif($action == 'gtu_ref')
-        return 'MaGtuRefForm';
 
     elseif($action == 'chronostratigraphy_ref')
       return 'MaChronostratigraphyRefForm';
@@ -112,12 +102,8 @@ class BaseMassActionForm extends sfFormSymfony
       return 'MaContainerForm';
     elseif($action == 'sub_container')
       return 'MaSubContainerForm';
-    elseif($action == 'ext_links')
-      return 'MaExtLinksForm';
-    elseif($action == 'specimen_status')
-      return 'MaSpStatusForm';
-    elseif($action == 'related_files')
-      return 'MaRelFilesForm';
+
+
     else
       return 'sfForm';
   }
@@ -129,25 +115,55 @@ class BaseMassActionForm extends sfFormSymfony
       $actions_values = $this->getValue('MassActionForm');
 
       $query = Doctrine_Query::create()->update('Specimens s');
-      if($is_admin === false)
+      //ftheeten 2017 07 27
+      $query_storage=Doctrine_Query::create()->update('StorageParts p');
+      if($is_admin == false)
+      {
         $query->andWhere('s.id in (select fct_filter_encodable_row(?,?,?))', array(implode(',',$this->getValue('item_list')),'spec_ref', $user_id));
+        //ftheeten 2017 07 27
+        $query_storage->andWhere('p.specimen_ref in (select fct_filter_encodable_row(?,?,?))', array(implode(',',$this->getValue('item_list')),'spec_ref', $user_id));
+      }
       else
+      {
         $query->andWhere('s.id in ('. implode(',',$this->getValue('item_list')) .')');
-
-      $group_action = 0;
+        $query_storage->andWhere('p.specimen_ref in ('. implode(',',$this->getValue('item_list')) .')');
+      }
+      $group_action_specimen = 0;
+      $group_action_storage = 0;
       foreach($this->embeddedForms['MassActionForm'] as $key=> $form)
       {
-        if (method_exists($this->getEmbeddedForm('MassActionForm')->getEmbeddedForm($key), 'doGroupedAction')) {
-          $this->getEmbeddedForm('MassActionForm')->getEmbeddedForm($key)->doGroupedAction($query, $actions_values[$key], $this->getValue('item_list'));
-          $group_action++;
+        if (method_exists($this->getEmbeddedForm('MassActionForm')->getEmbeddedForm($key), 'doGroupedAction')) 
+        {
+           //ftheeten 2017 07 27
+           $tableTmp=Array();
+           $tableTmp['s']='Specimens';
+           if (method_exists($this->getEmbeddedForm('MassActionForm')->getEmbeddedForm($key), 'getTable'))
+           {
+                $tableTmp=$this->getEmbeddedForm('MassActionForm')->getEmbeddedForm($key)->getTable();
+           }
+          if(array_key_exists("s", $tableTmp))
+          {
+              $this->getEmbeddedForm('MassActionForm')->getEmbeddedForm($key)->doGroupedAction($query, $actions_values[$key], $this->getValue('item_list'));
+              $group_action_specimen++;
+           }
+           //ftheeten 2017 07 27
+           elseif(array_key_exists("p", $tableTmp))
+           {
+                $this->getEmbeddedForm('MassActionForm')->getEmbeddedForm($key)->doGroupedAction($query_storage, $actions_values[$key], $this->getValue('item_list'));
+              $group_action_storage++;
+           }
         }
 
-        if (method_exists($this->getEmbeddedForm('MassActionForm')->getEmbeddedForm($key), 'doMassAction')) {
+        if (method_exists($this->getEmbeddedForm('MassActionForm')->getEmbeddedForm($key), 'doMassAction')) 
+        {
           $this->getEmbeddedForm('MassActionForm')->getEmbeddedForm($key)->doMassAction($user_id, $this->getValue('item_list'), $actions_values[$key]);
         }
       }
-      if($group_action)
+      //ftheeten 2017 07 27
+      if($group_action_specimen)
         $query->execute();
+     if($group_action_storage)
+        $query_storage->execute();
     }
   }
 
@@ -164,16 +180,6 @@ class BaseMassActionForm extends sfFormSymfony
 
   public function bind(array $taintedValues = null, array $taintedFiles = null)
   {
-    if(
-      isset($taintedValues['field_action'])
-      && is_array(($taintedValues['field_action']))
-      && count($taintedValues['field_action']) != 0
-      && in_array('related_files', $taintedValues['field_action'])
-      && !isset($taintedValues['MassActionForm']['related_files'])
-    ) {
-      $taintedValues['MassActionForm']['related_files']['visible'] = "";
-      $taintedValues['MassActionForm']['related_files']['publishable'] = "";
-    }
     if(isset($taintedValues['field_action']) && is_array(($taintedValues['field_action'])) && count($taintedValues['field_action']) != 0
       && isset($taintedValues['MassActionForm']) && is_array(($taintedValues['MassActionForm'])) && count($taintedValues['MassActionForm']) != 0 )
     {

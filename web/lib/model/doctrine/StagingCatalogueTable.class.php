@@ -16,30 +16,4 @@ class StagingCatalogueTable extends Doctrine_Table
     {
         return Doctrine_Core::getTable('StagingCatalogue');
     }
-    
-    //ftheeten 2019 02 14
-    public function getByImportRef($import_ref)
-    {
-         $q = Doctrine_Query::create()
-            ->From('StagingCatalogue s')
-            ->where('s.import_ref = ?', $import_ref)
-            ->orderBy("id ASC");
-        $items = $q->execute();
-        return $items;
-    }
-	
-	public function countExceptionMessages($import_ref)
-	{
-		$conn_MGR = Doctrine_Manager::connection();
-		$conn = $conn_MGR->getDbh();
-			
-			
-		$params[':import_ref'] = $import_ref;
-		$sql =" SELECT count(*) as count, import_exception FROM staging_catalogue WHERE import_ref=:import_ref GROUP BY import_exception ORDER BY import_exception;";
-		$statement = $conn->prepare($sql);
-		$statement->execute($params);
-		$results = $statement->fetchAll(PDO::FETCH_ASSOC);
-		return $results;
-	}
-    
 }

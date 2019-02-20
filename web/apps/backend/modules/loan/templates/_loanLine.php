@@ -13,9 +13,8 @@
   <td>
     <?php echo include_component('specimenwidgetview', 'refMainCodes', array('eid'=>$form['specimen_ref']->getValue()));?>
   </td>
-  <td>
-    <?php echo $form['ig_ref']->renderError();?>
-    <?php echo $form['ig_ref'];?>
+  <td style="font-size:11px">
+    <?php echo include_component('specimenwidgetview', 'refTaxon', array('eid'=>$form['specimen_ref']->getValue()));?>
   </td>
   <td rowspan="2">
     <?php echo $form['details']->renderError();?>
@@ -130,11 +129,11 @@
 
   </td>
 </tr>
-<tr class="main_but_line_<?php echo $form->getparent()->getName().'_'.$form->getName();?>">
+<tr style="font-size:11px" class="main_but_line_<?php echo $form->getparent()->getName().'_'.$form->getName();?>">
   <td></td>
   <td></td>
   <td></td>
-  <td colspan="2">
+  <td colspan="2" >
     <a class="maint_butt<?php if($lineObj->isNew()) echo 'disabled';?>" href="#">
       <?php echo image_tag( ($lineObj->isNew() ? 'grey' : 'individual' ).'_expand.png');?> <?php echo __('Maintenances');?>
     </a>

@@ -128,11 +128,6 @@ class Multimedia extends BaseMultimedia
     return true;
   }
 
-  public static function getMimeTypeFor($key)
-  {
-    return self::$allowed_mime_type[$key] ;
-  }
-
   public static function CheckMimeType($mime_type)
   {
     return(in_array($mime_type,self::$allowed_mime_type)?true:false);
@@ -145,10 +140,7 @@ class Multimedia extends BaseMultimedia
 
   public function getSize()
   {
-    if(file_exists($this->getFullURI())) {
-      return filesize($this->getFullURI());
-    }
-    return 0;
+    return filesize($this->getFullURI());
   }
 
   public function hasPreview()
@@ -157,15 +149,14 @@ class Multimedia extends BaseMultimedia
   }
 
   public static function canBePreviewed($mime) {
-    //if(in_array($mime ,array('image/png', 'image/jpeg', 'application/pdf') ) )
-    if(in_array($mime ,array('image/png', 'image/jpeg') ) )
+    if(in_array($mime ,array('image/png', 'image/jpeg', 'application/pdf') ) )
       return true;
     return false;
   }
 
   public function getPreview($new_w = 200, $new_h = 200)
   {
-    if($this->hasPreview() && file_exists($this->getFullURI()))
+    if($this->hasPreview())
     {
       $image = new Imagick($this->getFullURI());
       if($this->getMimeType() == 'application/pdf') {
@@ -212,13 +203,13 @@ class Multimedia extends BaseMultimedia
             $pdf->decodePDF();
             $content = $pdf->output();
           }
-        } catch ( Exception $e ) { }
+        } catch ( Exception $e ) {}
         if($content != '')
-          $this->setExtractedInfo(utf8_encode($content));
+          $this->setExtractedInfo($content);
       }
       if($this->getMimeType() == 'text/plain'){
         $content = file_get_contents($this->getFullURI());
-        $this->setExtractedInfo(utf8_encode($content));
+        $this->setExtractedInfo($content);
       }
     }
     parent::save($conn);

@@ -43,13 +43,16 @@
                                      'loan/delete?id='.$form->getObject()->getId(),
                                      array('method' => 'delete', 'confirm' => __('Are you sure?'))) ?>
             &nbsp;<?php echo link_to(__('Print loan'),
-              'report/getReport?'.http_build_query(array(
+            /*  'report/getReport?'.http_build_query(array(
                                                      'name'=>'loans_form_complete',
                                                      'default_vals'=>array(
                                                        'loan_id'=>$form->getObject()->getId()
                                                      )
-                                                   )),
-              array('class'=>'print_item', 'id' => 'print_item_'.$form->getObject()->getId())
+                                                   ))
+                                                   */
+              "http://172.16.11.138:8080/pentaho/api/repos/%3Apublic%3ADarwin2%3AReports_loans%3Aloans_prod.prpt/report?LOAN_ID=".$form->getObject()->getId()."&userid=report&password=report&output-target=pageable%2Fpdf&accepted-page=-1&showParameters=true&renderMode=REPORT&htmlProportionalWidth=true"
+                                                   ,
+              array("target"=> "_blank")
             );?>
           <?php endif?>        
           &nbsp;<a href="<?php echo url_for('loan/index') ?>"><?php echo __('Cancel');?></a>

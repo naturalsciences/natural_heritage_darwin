@@ -329,16 +329,16 @@ sps23:
    title_perso: People role
    all_public: true
 
-sps24:
-   col_num: 2
-   category: specimensearch_widget
-   group_name: part
-   mandatory: false
-   order_by: 12
-   opened: true
-   visible: false
-   title_perso: Part
-   all_public: true
+#sps24:
+#   col_num: 2
+#   category: specimensearch_widget
+#   group_name: part
+#   mandatory: false
+#   order_by: 12
+#   opened: true
+#   visible: false
+#   title_perso: Part
+#   all_public: true
 
 sps25:
    col_num: 2
@@ -362,18 +362,66 @@ sps26:
    title_perso: Comments
    all_public: true
 
+#ftheeten 2016 06 22   
 sps27:
    col_num: 2
    category: specimensearch_widget
-   group_name: statusAndCount
+   group_name: specimenCount
    mandatory: false
    order_by: 15
-   opened: true
-   visible: true
-   title_perso: Specimen Status / Count
+   opened: false
+   visible: false
+   title_perso: Specimen count
    all_public: true
-   
 
+#ftheeten 2016 07 05   
+sps27:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: ecology
+   mandatory: false
+   order_by: 15
+   opened: false
+   visible: false
+   title_perso: Ecology
+   all_public: true
+
+#ftheeten 2016 07 07   
+sps28:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: gtuDate
+   mandatory: false
+   order_by: 15
+   opened: false
+   visible: false
+   title_perso: Gathering date
+   all_public: true 
+
+#ftheeten 20170502  
+sps29:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: loans
+   mandatory: false
+   order_by: 15
+   opened: false
+   visible: false
+   title_perso: Loans
+   all_public: true
+
+#ftheeten 20170502  
+sps30:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: storageParts
+   mandatory: false
+   order_by: 15
+   opened: false
+   visible: false
+   title_perso: Storage parts
+   all_public: true        
+   
 sw1:
    col_num: 1
    category: specimen_widget
@@ -683,12 +731,44 @@ sw33:
    visible: false
    title_perso: Historic
    all_public: true
-
    
+#ftheeten 2016 06 29
+sw34:
+   col_num: 1
+   category: specimen_widget
+   group_name: ecology
+   mandatory: false
+   order_by: 2
+   opened: true
+   visible: true
+   title_perso: Ecology
+   all_public: true
 
+#ftheeten 2016 07 07
+sw35:
+   col_num: 1
+   category: specimen_widget
+   group_name: gtuDate
+   mandatory: false
+   order_by: 2
+   opened: true
+   visible: true
+   title_perso: Gathering date
+   all_public: true
    
+#ftheeten 2016 08 22
+sw36:
+   col_num: 1
+   category: specimen_widget
+   group_name: storageParts
+   mandatory: false
+   order_by: 2
+   opened: true
+   visible: true
+   title_perso: Storage parts
+   all_public: true
 
-   
+
 
 tw1:
    col_num: 1
@@ -1591,17 +1671,6 @@ litw8:
    title_perso: Maintenances
    all_public: true
 
-litw9:
-   col_num: 1
-   category: loanitem_widget
-   group_name: refCodes
-   order_by: 5
-   opened: true
-   visible: true
-   is_available: true
-   title_perso: Codes
-   all_public: true
-
 m1:
    col_num: 1
    category: maintenances_widget
@@ -1666,17 +1735,6 @@ ig3:
    opened: true
    visible: true
    title_perso: External Links
-   all_public: true
-
-ig4:
-   col_num: 1
-   category: catalogue_igs_widget
-   group_name: relatedFiles
-   mandatory: false
-   order_by: 3
-   opened: true
-   visible: true
-   title_perso: Related Files
    all_public: true
 
 ex1:

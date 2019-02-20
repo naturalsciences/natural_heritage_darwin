@@ -24,7 +24,6 @@
  * @property Doctrine_Collection $Mineralogy
  * @property Doctrine_Collection $Specimens
  * @property Doctrine_Collection $SpecimensRelationships
- * @property Doctrine_Collection $SpecimensMaincodes
  * 
  * @method integer             getId()                     Returns the current record's "id" value
  * @method string              getName()                   Returns the current record's "name" value
@@ -45,7 +44,6 @@
  * @method Doctrine_Collection getMineralogy()             Returns the current record's "Mineralogy" collection
  * @method Doctrine_Collection getSpecimens()              Returns the current record's "Specimens" collection
  * @method Doctrine_Collection getSpecimensRelationships() Returns the current record's "SpecimensRelationships" collection
- * @method Doctrine_Collection getSpecimensMaincodes()     Returns the current record's "SpecimensMaincodes" collection
  * @method Mineralogy          setId()                     Sets the current record's "id" value
  * @method Mineralogy          setName()                   Sets the current record's "name" value
  * @method Mineralogy          setNameIndexed()            Sets the current record's "name_indexed" value
@@ -65,7 +63,6 @@
  * @method Mineralogy          setMineralogy()             Sets the current record's "Mineralogy" collection
  * @method Mineralogy          setSpecimens()              Sets the current record's "Specimens" collection
  * @method Mineralogy          setSpecimensRelationships() Sets the current record's "SpecimensRelationships" collection
- * @method Mineralogy          setSpecimensMaincodes()     Sets the current record's "SpecimensMaincodes" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -154,10 +151,6 @@ abstract class BaseMineralogy extends DarwinModel
              'foreign' => 'mineral_ref'));
 
         $this->hasMany('SpecimensRelationships', array(
-             'local' => 'id',
-             'foreign' => 'mineral_ref'));
-
-        $this->hasMany('SpecimensMaincodes', array(
              'local' => 'id',
              'foreign' => 'mineral_ref'));
     }

@@ -25,6 +25,10 @@ class Collections extends BaseCollections
       return  $this->CollectionsRights[0]->getDbUserType();
     return 0;
   }
+
+
+
+
   
   protected $children = array();
   protected $parent_node = null;
@@ -70,7 +74,7 @@ class Collections extends BaseCollections
         if($t->getId() == $i_path[$i])
           return $t;
       }
-      if($t->parent_node === null) return  $t;
+      if($t->parent_node == null) return  $t;
 
       $t = $t->getParentNode();
     } while(true);

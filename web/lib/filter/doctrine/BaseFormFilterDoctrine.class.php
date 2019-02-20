@@ -16,7 +16,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
 
   public function addPagerItems()
   {
-    $recPerPages = array("1"=>"1", "2"=>"2", "5"=>"5", "10"=>"10","20"=>"20", "25"=>"25", "50"=>"50", "75"=>"75", "100"=>"100", "800"=>"800");
+    $recPerPages = array("1"=>"1", "2"=>"2", "5"=>"5", "10"=>"10","20"=>"20", "25"=>"25", "50"=>"50", "75"=>"75", "100"=>"100");
 
     $this->widgetSchema['rec_per_page'] = new sfWidgetFormChoice(array('choices' => $recPerPages), array('class'=>'rec_per_page'));
     $user = sfContext::getInstance()->getUser();
@@ -49,8 +49,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
 
   protected function getDateItemOptions()
   {
-    //ftheeten 2019 01 07 reverse range
-    $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')), intval(sfConfig::get('dw_yearRangeMin')));
+    $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
     $dateText = array('year'=>'yyyy', 'month'=>'mm', 'day'=>'dd');
     return array(
@@ -151,6 +150,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
       if(trim($query_part) == '')
       continue;
 
+//       $query_part = preg_replace('/[^A-Za-z0-9\-_]/', ' ', $query_part);
       $query_part = preg_replace('/[\(&\;\,\|\↑\€\←\↓\œ\→\?\.\\\'\"\)\$]/u', ' ', $query_part);
 
       if($i == 0)
@@ -228,15 +228,14 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
         }
         else
         {
-          $query->andWhere("( " . $dateFields[0] . " Between ? AND ? OR ".$dateFields[1] ." Between ? AND ? )", 
-            array($val_from->format('d/m/Y'),$val_to->format('d/m/Y'),$val_from->format('d/m/Y'),$val_to->format('d/m/Y')));
+          $query->andWhere(" " . $dateFields[0] . " >= ? ", $val_from->format('d/m/Y'))
+                ->andWhere(" " . $dateFields[1] . " <= ? ", $val_to->format('d/m/Y'));
         }
       }
       elseif ($val_from->getMask() > 0)
       {
         $sql = " (" . $dateFields[0] . " >= ? AND " . $dateFields[0] . "_mask > 0) ";
-        $dateFieldsCount = count($dateFields);
-        for ($i = 1; $i <= $dateFieldsCount; $i++)
+        for ($i = 1; $i <= count($dateFields); $i++)
         {
           $vals[] = $val_from->format('d/m/Y');
         }
@@ -248,8 +247,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
       elseif ($val_to->getMask() > 0)
       {
         $sql = " (" . $dateFields[0] . " <= ? AND " . $dateFields[0] . "_mask > 0) ";
-        $dateFieldsCount = count($dateFields);
-        for ($i = 1; $i <= $dateFieldsCount; $i++)
+        for ($i = 1; $i <= count($dateFields); $i++)
         {
           $vals[] = $val_to->format('d/m/Y');
         }
@@ -333,6 +331,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
   }
 
 
+  
   public function addRelationItemColumnQuery($query, $values)
   {
     $relation = $values['relation'];
@@ -359,50 +358,26 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
     }
     return $query ;
   }
+  
 
-  public function addCatalogueRelationColumnQuery($query, $item_ref, $relation, $table, $field_prefix, $parent_syn_included = false)
+
+  
+  public function addCatalogueRelationColumnQuery($query, $item_ref, $relation, $table, $field_prefix)
   {
     if($item_ref != 0)
     {
-
-      // Put the item_ref passed into an array
-      $items = array($item_ref);
-      // Initialize the where clause string and array of parameters for the
-      // relation 'child'
-      $whereClause = '';
-      $whereClauseParams = array();
-
-      // If we've got to include also the synonyms of the item_ref passed...
-      if (($relation == 'child' || $relation == 'direct_child') && $parent_syn_included === true ) {
-        // Get the list of synonyms ids
-        $synonyms = Doctrine::getTable('ClassificationSynonymies')->findSynonymsIds($table, $item_ref);
-        // If there are synonyms...
-        if (count($synonyms) != 0) {
-          // merge the result with the initialized array
-          $items = array_unique(array_merge($items, $synonyms));
-        }
-      }
-
       if($relation == 'equal')
       {
         $query->andWhere($field_prefix."_ref = ?", $item_ref);
       }
       elseif($relation == 'child')
       {
-        $list_of_items = implode(',',$items);
-        $item  = Doctrine::getTable($table)->findBySql("id = ANY('{ $list_of_items }' :: int[])");
-        foreach ($item as $element) {
-          $whereClause .= "OR ${field_prefix}_path like ? ";
-          $whereClauseParams[] = $element->getPath().$element->getId().'/%';
-        }
-        if ( $whereClause != '') {
-          $whereClause = ltrim($whereClause, 'OR');
-          $query->andWhere($whereClause, $whereClauseParams);
-        }
+        $item  = Doctrine::getTable($table)->find($item_ref);
+        $query->andWhere($field_prefix."_path like ?", $item->getPath().''.$item->getId().'/%');
       }
       elseif($relation == 'direct_child')
       {
-        $query->andWhereIn($field_prefix."_parent_ref",$items);
+        $query->andWhere($field_prefix."_parent_ref = ?",$item_ref);
       }
       elseif($relation =='synonym')
       {
@@ -415,9 +390,8 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
     }
     return $query ;
   }
-
-  //ftheeten 2016 03 24
-  /*
+  
+//ftheeten 2016 03 24
   public function addCatalogueRelationColumnQueryArrayRelations($query, $item_ref, $relations, $table, $field_prefix)
   {
 
@@ -472,7 +446,10 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
 
         		$synonyms = Doctrine::getTable('ClassificationSynonymies')->findSynonymsIds($table, $item_ref);
 
-        		
+        		//if(empty($synonyms))
+          		//$query->andWhere('0=1'); //False
+        		//$query->andWhereIn($field_prefix."_ref",$synonyms)
+          		//->andWhere($field_prefix."_ref != ?",$item_ref); // remove himself
 				if(empty($synonyms))
 				{
 					$queryTmp.=" 0=1 ";
@@ -481,24 +458,6 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
 				{
 					$queryTmp.=$field_prefix."_ref IN (".implode(",", $synonyms ).")";
 					$queryTmp.=" AND ".$field_prefix."_ref != ".$item_ref;
-                    //ftheeten 2018 09 03
-                    if(in_array("child",$relations))
-                    {
-                        //$queryTmp.=" OR 24=24 ";
-                        foreach($synonyms as $syno_object)
-                        {
-                            $queryTmp.=" OR ".$field_prefix."_path like '%/".$syno_object."/%'" ;
-                        }
-                    }
-                    elseif(in_array("direct_child",$relations))
-                    {
-                        foreach($synonyms as $syno_object)
-                        {
-                            $queryTmp.=" OR ".$field_prefix."_parent_ref = ".$syno_object ;
-                        }
-                    }
-                    
-                    
 				}
 				$queryTmp.= " ) ";
 
@@ -509,116 +468,9 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
 	$query->andWhere($queryTmp);
     }
     return $query ;
-  }*/
-  
-   public function addCatalogueRelationColumnQueryArrayRelations($query, $item_refs, $relations, $table, $field_prefix)
-  {
-    if(strlen( $item_refs)>0)
-    {
-        $queryTmpGlobal=Array();
-        foreach(explode(";",$item_refs) as $item_ref)
-        {  
-        
-            
-            if($item_ref != 0)
-            {
-                $queryTmp="";
-                $i=0;
-                
-                foreach($relations as $relation)
-                {
-                    
-                    $arrayParams=Array();
-                        if($relation == 'equal')
-                        {
-                        if($i>0)
-                            {
-                                $queryTmp.= " OR ";
-                            }
-                            //$query->andWhere($field_prefix."_ref = ?", $item_ref);
-                        $queryTmp.=$field_prefix."_ref = ".$item_ref ;
-
-                        }
-                        if($relation == 'child')
-                        {
-                        if($i>0)
-                            {
-                                $queryTmp.= " OR ";
-                            }
-                            $item  = Doctrine::getTable($table)->find($item_ref);
-                            //$query->andWhere($field_prefix."_path like ?", $item->getPath().''.$item->getId().'/%');
-                        $queryTmp.=$field_prefix."_path like '".$item->getPath().''.$item->getId().'/%'."'" ;
-
-                        }
-                        if($relation == 'direct_child')
-                        {
-                        if($i>0)
-                            {
-                                $queryTmp.= " OR ";
-                            }
-                            //$query->andWhere($field_prefix."_parent_ref = ?",$item_ref);
-                        $queryTmp.=$field_prefix."_parent_ref = ".$item_ref;
-                        }
-                        if($relation =='synonym')
-                        {
-                            
-                            if($i>0)
-                            {
-                                $queryTmp.= " OR ";
-
-
-                            }
-                            $queryTmp.= " ( ";
-
-                            $synonyms = Doctrine::getTable('ClassificationSynonymies')->findSynonymsIds($table, $item_ref);
-
-                            //if(empty($synonyms))
-                            //$query->andWhere('0=1'); //False
-                            //$query->andWhereIn($field_prefix."_ref",$synonyms)
-                            //->andWhere($field_prefix."_ref != ?",$item_ref); // remove himself
-                            if(empty($synonyms))
-                            {
-                                $queryTmp.=" 0=1 ";
-                            }
-                            else
-                            {
-                                $queryTmp.=$field_prefix."_ref IN (".implode(",", $synonyms ).")";
-                                $queryTmp.=" AND ".$field_prefix."_ref != ".$item_ref;
-                                //ftheeten 2018 09 03
-                                if(in_array("child",$relations))
-                                {
-                                    //$queryTmp.=" OR 24=24 ";
-                                    foreach($synonyms as $syno_object)
-                                    {
-                                        $queryTmp.=" OR ".$field_prefix."_path like '%/".$syno_object."/%'" ;
-                                    }
-                                }
-                                elseif(in_array("direct_child",$relations))
-                                {
-                                    foreach($synonyms as $syno_object)
-                                    {
-                                        $queryTmp.=" OR ".$field_prefix."_parent_ref = ".$syno_object ;
-                                    }
-                                }
-                                
-                                
-                            }
-                            $queryTmp.= " ) ";
-
-                        }
-                   
-                    $i++;
-                }
-                 $queryTmpGlobal[]="(".$queryTmp." ) ";
-            }
-        }
-        $query->andWhere(implode(" OR ", $queryTmpGlobal));
-    }
-   
-    return $query ;
   }
 
-  
+
   public static function getCollectionWithRights($user, $with_writing=false)
   {
       if($user->isA(Users::ADMIN))
@@ -650,27 +502,4 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
       }
       return $results;
   }
-  
-      //ftheeten 2018 11 22
-    protected static function fulltoindex_sql($pattern, $keep_space=FALSE)
-    {
-        $conn = Doctrine_Manager::connection();
-        if($keep_space)
-        {
-             $sql="SELECT fulltoindex(:word, FALSE);";
-        }
-        else
-        {
-            $sql="SELECT fulltoindex(:word, TRUE);";
-        }
-        $q = $conn->prepare($sql);
-        $q->execute(array(':word'=> $pattern ));
-        $rs=$q->fetchAll(PDO::FETCH_NUM);
-        if(count($rs)>0)
-         {
-               print_r($rs);
-              return $rs[0][0];
-         }
-         return $pattern;
-    }
 }

@@ -26,6 +26,11 @@
             </th>
             <th><?php echo __('Comment') ; ?></th>
             <th>&nbsp;</th>
+            <!--ftheeten 2016 10 28 -->
+             <?php if($sf_user->isAtLeast(Users::ENCODER)):?>
+                <th>Report</th>
+                <th>&nbsp;</th>
+            <?php endif;?>
           </tr>
         </thead>
         <tbody>
@@ -45,11 +50,34 @@
                   <div class="result_choose"><?php echo __('Choose');?></div>
                 <?php endif;?>
               </td>
+              <!--ftheeten 2016 10 28 -->
+              <?php if($sf_user->isAtLeast(Users::ENCODER)):?>
+              <td class="rurl_container">
+                    <select class="url_report">
+                        <option value=<?php echo("http://172.16.11.138:8080/pentaho/api/repos/%3Apublic%3ADarwin2%3Areports_ig%3Arapport_ig_ichtyo.prpt/report?REPORT_KEY=".$igs->getId()."&userid=report&password=report&output-target=pageable%2Fpdf&accepted-page=-1&showParameters=true&renderMode=REPORT&htmlProportionalWidth=false")?>>PDF</option>
+                    </select>
+              </td>
+               <td>
+                    <input id="report_link" class="save_search report_link" value="Get report" type="button">
+                </td>
+               <?php endif;?>
             </tr>
           <?php endforeach;?>
         </tbody>
       </table>
     </div>
+    <script type="text/javascript">
+        //ftheeten 2016 10 28
+        $(document).ready(function () {  
+             //ftheeten 2016 10 2016
+             $(".report_link").click(function(event){
+                
+                var url_report = $(this).closest('tr').children("td.rurl_container").find(".url_report").val();
+                window.open(url_report, '_blank');
+             });
+        
+        });
+    </script>
     <?php include_partial('global/pager', array('pagerLayout' => $pagerLayout)); ?>
   <?php else:?>
     <?php echo __('No I.G. Matching');?>

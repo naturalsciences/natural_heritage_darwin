@@ -78,8 +78,7 @@ class ClassificationSynonymiesTable extends DarwinTable
       return array();
 
     $q = Doctrine_Query::create()
-      ->select('s.group_name, s.id, s.record_id, s.group_id, s.is_basionym, s.order_by, t.name, t.id ' .
-        ($table_name=='taxonomy' ? ', t.extinct' : '') )
+      ->select('s.group_name, s.id, s.record_id, s.group_id, s.is_basionym, s.order_by, s.synonym_record_id, t.name, t.id ' .($table_name=='taxonomy' ? ', t.extinct' : ''))
       ->from('ClassificationSynonymies s, '.DarwinTable::getModelForTable($table_name). ' t')
       ->where('s.referenced_relation = ?',$table_name) //Not really necessay but....
       ->andWhere('s.record_id=t.id')
@@ -93,10 +92,10 @@ class ClassificationSynonymiesTable extends DarwinTable
     {
       $catalogue = DarwinTable::getModelForTable($table_name);
       $cRecord = new $catalogue();
-      $cRecord->setName($item[6]);
-      $cRecord->setId($item[7]);
+      $cRecord->setName($item[7]);
+      $cRecord->setId($item[8]);
       if($table_name=='taxonomy')
-        $cRecord->setExtinct($item[8]);
+        $cRecord->setExtinct($item[9]);
 
       //group_name 
       if(! isset($results[$item[0]]) )
@@ -107,7 +106,9 @@ class ClassificationSynonymiesTable extends DarwinTable
         'group_id' => $item[3],
         'is_basionym' => $item[4],
         'order_by' => $item[5],
+        
         'ref_item' => $cRecord,
+        'synonym_record_id' => $item[6],
       );
     }
     return $results;
@@ -178,7 +179,7 @@ class ClassificationSynonymiesTable extends DarwinTable
       ->set('order_by',"fct_array_find(?, id::text) ",implode(",",$id_list))
       ->whereIn('id', $id_list);
 
-    $q->execute();
+    $updated = $q->execute();
   }
   
   /**
@@ -230,7 +231,9 @@ class ClassificationSynonymiesTable extends DarwinTable
       $c1->setReferencedRelation($table);
       $c1->setGroupName($group_name);
       $c1->setRecordId($record_id_2);
-
+      //ftheeten 2017 02 08
+      $c1->setSynonymRecordId($record_id_1);
+      
       if($ref_group_id_1 == 0 && $ref_group_id_2 == 0) //If there is no group
       {
         $c1->setGroupId( $this->findNextGroupId());
@@ -272,7 +275,7 @@ class ClassificationSynonymiesTable extends DarwinTable
       ->update('ClassificationSynonymies s')
       ->set('s.group_id', '?', $group1)
       ->where('s.group_id = ?', $group2);
-    $q->execute();
+    $updated = $q->execute();
     //Check if 2 basionym
     $q = Doctrine_Query::create()
       ->select("COUNT(s.id) num_ids")
@@ -306,6 +309,19 @@ class ClassificationSynonymiesTable extends DarwinTable
     $classif = $q->fetchOne();
     if($classif)
       return $classif->getRecordId();
+    else return 0;
+  }
+  
+  //ftheeten 2017 02 08
+  public function findDirectlyLinkedName($group_id, $record_id)
+  {
+    $q = Doctrine_Query::create()
+      ->from('ClassificationSynonymies s')
+      ->andWhere('s.group_id = ?', $group_id)
+      ->andWhere('s.record_id = ?',$record_id);
+    $classif = $q->fetchOne();
+    if($classif)
+      return $classif->getSynonymRecordId();
     else return 0;
   }
 }

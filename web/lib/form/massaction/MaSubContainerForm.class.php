@@ -14,8 +14,16 @@ class MaSubContainerForm extends BaseForm
   public function doGroupedAction($query,$values, $items)
   {
     $new_taxon = $values['sub_container'];
-    $query->set('s.sub_container', '?', $new_taxon);
+    $query->set('p.sub_container', '?', $new_taxon);
     return $query;
   }
+  
+  //ftheeten 2017 07 27
+    public function getTable()
+    {
+        $returned=Array();
+        $returned['p']='StorageParts';
+        return $returned;
+    }  
 
 }

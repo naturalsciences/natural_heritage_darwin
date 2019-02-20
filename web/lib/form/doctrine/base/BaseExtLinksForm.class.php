@@ -19,9 +19,13 @@ abstract class BaseExtLinksForm extends BaseFormDoctrine
       'referenced_relation' => new sfWidgetFormTextarea(),
       'record_id'           => new sfWidgetFormInputText(),
       'url'                 => new sfWidgetFormTextarea(),
-      'type'                => new sfWidgetFormTextarea(),
       'comment'             => new sfWidgetFormTextarea(),
       'comment_indexed'     => new sfWidgetFormTextarea(),
+      'category'            => new sfWidgetFormTextarea(),
+      'contributor'         => new sfWidgetFormTextarea(),
+      'disclaimer'          => new sfWidgetFormTextarea(),
+      'license'             => new sfWidgetFormTextarea(),
+      'display_order'       => new sfWidgetFormInputText(),
     ));
 
     $this->setValidators(array(
@@ -29,9 +33,13 @@ abstract class BaseExtLinksForm extends BaseFormDoctrine
       'referenced_relation' => new sfValidatorString(),
       'record_id'           => new sfValidatorInteger(),
       'url'                 => new sfValidatorString(),
-      'type'                => new sfValidatorString(array('required' => false)),
-      'comment'             => new sfValidatorString(),
+      'comment'             => new sfValidatorString(array('required' => false)),
       'comment_indexed'     => new sfValidatorString(array('required' => false)),
+      'category'            => new sfValidatorString(array('required' => false)),
+      'contributor'         => new sfValidatorString(array('required' => false)),
+      'disclaimer'          => new sfValidatorString(array('required' => false)),
+      'license'             => new sfValidatorString(array('required' => false)),
+      'display_order'       => new sfValidatorInteger(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('ext_links[%s]');

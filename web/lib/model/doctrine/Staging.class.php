@@ -132,15 +132,7 @@ class Staging extends BaseStaging
     }
     elseif($field == "gtu")
     {
-      if($this['gtu_ref'] == '') 
-		  return $tb_completed ;
-      else
-        return $tb_ok;
-    }
-    elseif($field == "expedition")
-    {
-      if($this['expedition_ref'] == '') 
-		  return $tb_completed ;
+      if($this['gtu_ref'] == '') return null ;
       else
         return $tb_ok;
     }
@@ -196,7 +188,7 @@ class Staging extends BaseStaging
   }
   public function setStatus($value)
   {
-    $status = '' ;    
+    $status = '' ;
     foreach($value as $field => $error)
     {
       if($error != 'done') $status .= '"'.$field.'"=>"'.$error.'",' ;
@@ -245,7 +237,6 @@ class Staging extends BaseStaging
     if($field == 'litho') return('litho_ref') ;
     if($field == 'mineral') return('mineral_ref') ;
     if($field == 'lithology') return('lithology_ref') ;
-    if($field == 'expedition') return('expedition_ref') ;
     if($field == 'igs') return('ig_ref') ;
     if($field == 'people') return('people') ;
     if($field == 'identifiers') return('identifiers') ;
@@ -253,9 +244,6 @@ class Staging extends BaseStaging
     if($field == 'institution_relationship') return('relation_institution_ref') ;
     if($field == 'duplicate') return('spec_ref') ;
     if($field == 'operator') return('operator') ;
-	#ftheeten 2019 01 29
-	if($field == 'gtu') return('gtu_ref') ;
-	
     return($field) ;
   }
 }

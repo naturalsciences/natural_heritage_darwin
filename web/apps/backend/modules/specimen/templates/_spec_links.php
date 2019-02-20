@@ -1,25 +1,63 @@
   <tbody  class="spec_ident_extlinks_data" id="spec_ident_extlinks_data_<?php echo $rownum;?>">
-   <tr class="spec_ident_extlinks_data">
+   <tr class="spec_ident_extlinks_head">
+        <th><?php echo __('Url');?></th>
+        <th><?php echo __('Comment');?></th>
+       
+   </tr>
+   <tr class="spec_ident_extlinks_data">   
       <td class="top_aligned">
           <?php echo $form['url']->renderError(); ?>
           <?php echo $form['url'];?>
       </td>
-      <td  rowspan="2">
+      <td>
         <?php echo $form['comment']->renderError(); ?>
         <?php echo $form['comment'];?>
       </td>
+  </tr>
+  <tr class="spec_ident_extlinks_head">
+        <th><?php echo __('Category');?></th>
+        <th><?php echo __('Contributor');?></th>
+   </tr>
+    <tr class="spec_ident_extlinks_data">
+      <td>
+        <?php echo $form['category']->renderError(); ?>
+        <?php echo $form['category'];?>
+      </td>    
+      <td class="top_aligned">
+          <?php echo $form['contributor']->renderError(); ?>
+          <?php echo $form['contributor'];?>
+      </td>
+  </tr>
+  <tr class="spec_ident_extlinks_head">
+        <th><?php echo __('Disclaimer');?></th>
+        <th><?php echo __('License');?></th>
+   </tr>
+    <tr class="spec_ident_extlinks_data">
+     <td>
+        <?php echo $form['disclaimer']->renderError(); ?>
+        <?php echo $form['disclaimer'];?>
+      </td>
+      <td>
+        <?php echo $form['license']->renderError(); ?>
+        <?php echo $form['license'];?>
+      </td>
+  </tr>
+   <tr class="spec_ident_extlinks_head">
+        <th><?php echo __('Display order');?></th>
+       
+   </tr>
+  <tr class="spec_ident_extlinks_data">
+     <td>
+        <?php echo $form['display_order']->renderError(); ?>
+        <?php echo $form['display_order'];?>
+      </td>
+     
+  </tr>
       <td class="widget_row_delete">
         <?php echo image_tag('remove.png', 'alt=Delete class=clear_code id=clear_extlinks_'.$rownum); ?>
         <?php echo $form->renderHiddenFields() ?>
       </td>    
     </tr>
-    <tr>
-      <td>
-        <strong><?php echo $form['type']->renderLabel(); ?></stong>
-        <?php echo $form['type']->renderError(); ?>
-        <?php echo $form['type'];?>      
-      </td>
-   </tr>
    <tr>
      <td colspan="3"><hr /></td>
    </tr>

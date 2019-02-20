@@ -18,36 +18,33 @@
  * @property CatalogueLevels $Level
  * @property Doctrine_Collection $Lithology
  * @property Doctrine_Collection $Specimens
- * @property Doctrine_Collection $SpecimensMaincodes
  * 
- * @method integer             getId()                 Returns the current record's "id" value
- * @method string              getName()               Returns the current record's "name" value
- * @method string              getNameIndexed()        Returns the current record's "name_indexed" value
- * @method integer             getLevelRef()           Returns the current record's "level_ref" value
- * @method string              getStatus()             Returns the current record's "status" value
- * @method boolean             getLocalNaming()        Returns the current record's "local_naming" value
- * @method string              getColor()              Returns the current record's "color" value
- * @method string              getPath()               Returns the current record's "path" value
- * @method integer             getParentRef()          Returns the current record's "parent_ref" value
- * @method Lithology           getParent()             Returns the current record's "Parent" value
- * @method CatalogueLevels     getLevel()              Returns the current record's "Level" value
- * @method Doctrine_Collection getLithology()          Returns the current record's "Lithology" collection
- * @method Doctrine_Collection getSpecimens()          Returns the current record's "Specimens" collection
- * @method Doctrine_Collection getSpecimensMaincodes() Returns the current record's "SpecimensMaincodes" collection
- * @method Lithology           setId()                 Sets the current record's "id" value
- * @method Lithology           setName()               Sets the current record's "name" value
- * @method Lithology           setNameIndexed()        Sets the current record's "name_indexed" value
- * @method Lithology           setLevelRef()           Sets the current record's "level_ref" value
- * @method Lithology           setStatus()             Sets the current record's "status" value
- * @method Lithology           setLocalNaming()        Sets the current record's "local_naming" value
- * @method Lithology           setColor()              Sets the current record's "color" value
- * @method Lithology           setPath()               Sets the current record's "path" value
- * @method Lithology           setParentRef()          Sets the current record's "parent_ref" value
- * @method Lithology           setParent()             Sets the current record's "Parent" value
- * @method Lithology           setLevel()              Sets the current record's "Level" value
- * @method Lithology           setLithology()          Sets the current record's "Lithology" collection
- * @method Lithology           setSpecimens()          Sets the current record's "Specimens" collection
- * @method Lithology           setSpecimensMaincodes() Sets the current record's "SpecimensMaincodes" collection
+ * @method integer             getId()           Returns the current record's "id" value
+ * @method string              getName()         Returns the current record's "name" value
+ * @method string              getNameIndexed()  Returns the current record's "name_indexed" value
+ * @method integer             getLevelRef()     Returns the current record's "level_ref" value
+ * @method string              getStatus()       Returns the current record's "status" value
+ * @method boolean             getLocalNaming()  Returns the current record's "local_naming" value
+ * @method string              getColor()        Returns the current record's "color" value
+ * @method string              getPath()         Returns the current record's "path" value
+ * @method integer             getParentRef()    Returns the current record's "parent_ref" value
+ * @method Lithology           getParent()       Returns the current record's "Parent" value
+ * @method CatalogueLevels     getLevel()        Returns the current record's "Level" value
+ * @method Doctrine_Collection getLithology()    Returns the current record's "Lithology" collection
+ * @method Doctrine_Collection getSpecimens()    Returns the current record's "Specimens" collection
+ * @method Lithology           setId()           Sets the current record's "id" value
+ * @method Lithology           setName()         Sets the current record's "name" value
+ * @method Lithology           setNameIndexed()  Sets the current record's "name_indexed" value
+ * @method Lithology           setLevelRef()     Sets the current record's "level_ref" value
+ * @method Lithology           setStatus()       Sets the current record's "status" value
+ * @method Lithology           setLocalNaming()  Sets the current record's "local_naming" value
+ * @method Lithology           setColor()        Sets the current record's "color" value
+ * @method Lithology           setPath()         Sets the current record's "path" value
+ * @method Lithology           setParentRef()    Sets the current record's "parent_ref" value
+ * @method Lithology           setParent()       Sets the current record's "Parent" value
+ * @method Lithology           setLevel()        Sets the current record's "Level" value
+ * @method Lithology           setLithology()    Sets the current record's "Lithology" collection
+ * @method Lithology           setSpecimens()    Sets the current record's "Specimens" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -114,10 +111,6 @@ abstract class BaseLithology extends DarwinModel
              'foreign' => 'parent_ref'));
 
         $this->hasMany('Specimens', array(
-             'local' => 'id',
-             'foreign' => 'lithology_ref'));
-
-        $this->hasMany('SpecimensMaincodes', array(
              'local' => 'id',
              'foreign' => 'lithology_ref'));
     }

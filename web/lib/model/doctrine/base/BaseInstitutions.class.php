@@ -15,7 +15,6 @@
  * @property Doctrine_Collection $PeopleRelationships
  * @property Doctrine_Collection $Specimens
  * @property Doctrine_Collection $SpecimensRelationships
- * @property Doctrine_Collection $SpecimensMaincodes
  * 
  * @method integer             getId()                     Returns the current record's "id" value
  * @method boolean             getIsPhysical()             Returns the current record's "is_physical" value
@@ -27,7 +26,6 @@
  * @method Doctrine_Collection getPeopleRelationships()    Returns the current record's "PeopleRelationships" collection
  * @method Doctrine_Collection getSpecimens()              Returns the current record's "Specimens" collection
  * @method Doctrine_Collection getSpecimensRelationships() Returns the current record's "SpecimensRelationships" collection
- * @method Doctrine_Collection getSpecimensMaincodes()     Returns the current record's "SpecimensMaincodes" collection
  * @method Institutions        setId()                     Sets the current record's "id" value
  * @method Institutions        setIsPhysical()             Sets the current record's "is_physical" value
  * @method Institutions        setSubType()                Sets the current record's "sub_type" value
@@ -38,7 +36,6 @@
  * @method Institutions        setPeopleRelationships()    Sets the current record's "PeopleRelationships" collection
  * @method Institutions        setSpecimens()              Sets the current record's "Specimens" collection
  * @method Institutions        setSpecimensRelationships() Sets the current record's "SpecimensRelationships" collection
- * @method Institutions        setSpecimensMaincodes()     Sets the current record's "SpecimensMaincodes" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -89,10 +86,6 @@ abstract class BaseInstitutions extends DarwinModel
              'foreign' => 'institution_ref'));
 
         $this->hasMany('SpecimensRelationships', array(
-             'local' => 'id',
-             'foreign' => 'institution_ref'));
-
-        $this->hasMany('SpecimensMaincodes', array(
              'local' => 'id',
              'foreign' => 'institution_ref'));
     }

@@ -1,62 +1,36 @@
 all:
-   .general:
-       salt: mySecret$alt
-       yearRangeMin: 1700
-       yearRangeMax: <?php echo date('Y')+2 ."\n"; ?>
-       dateUpperBound: '2038/12/31'
-       dateLowerBound: '0001/01/01'
-       yearUpperBound: '2038'
-       recPerPage: 10
-       pagerSlidingSize: 5
-       catalogueRecLimit: 200
-       queryTimeout: 600000
-       contactMail: darwin-ict@naturalsciences.be
-       defaultInstitutionRef: 49103
-       tagsDisplayLimit: 10
-       tagsLowerLimit: 4
-       tempFilePath: '/tmp/temp_file'
-       disableXSDValidation: false
-       domain_disable_menu: http://collections.naturalsciences.be/darwin/
+  .general:
+    salt: salt
+    yearRangeMin: 1700
+    yearRangeMax:  <?php echo date('Y')+2 ."\n"; ?>
+    dateUpperBound: '2038/12/31'
+    dateLowerBound: '0001/01/01'
+    yearUpperBound: '2038'
+    recPerPage: 10
+    pagerSlidingSize: 15
+    catalogueRecLimit: 500
+    queryTimeout: 30000
+    defaultInstitutionRef: 1
 
+  mailer:
+    sender: your_send_email@example.com
 
-   tracking:
-       enabled: true
-   mailer:
-       sender: darwin-ict@naturalsciences.be
+  recaptcha:
+    public_key: "6Lf_ZL0SAAAAAN5AS3Wiiiu3VOs6CmpW3VMgZauH"
+    private_key: "6Lf_ZL0SAAAAAEP1fcqjynm6NH3wbj1hc1It8iCH"
+    proxy_host: YourProxyHostIPIfOne
+    proxy_port: 3128
 
-   report_server: 'http://jasperadmin:jasperadmin@hippomenes:8080/jasperserver'
+  tracking:
+    enabled: true
 
-   analytics:
-       enabled: true
-       code: UA-25371885-5
-   recaptcha:
-       public_key: "6Le-P1gUAAAAAFskoU9q9lK1oMMUlAnU5n9dvgKo"
-       private_key: "6Le-P1gUAAAAANoyBu1hwmNHU_Z0nu7nQPXV9Cty"
-       proxy_host: 193.190.234.40
-       proxy_port: 3128
+  analytics:
+    enabled: false
+    code: UA-XXXXX-X
 
-   reports:
-       names_and_options:
-           default:
-               server: 'main'
-               language_added_to_name: false
-           loans_form_complete:
-               path: 'loans'
-           annual_stat_collection:
-               language_added_to_name: true
-       servers:
-           main:
-               server: 'hippomenes'
-               username: jasperadmin
-               password: jasperadmin
-               protocol: 'http'
-               port: '8080'
-               base_path: '/jasperserver/rest_v2/reports/darwin'
-
-#   preview_max_size: 0.005
-   preview_max_size: 10
-
-#   broadcast:
-#       enabled: true
-#       message: Due to power cut, DaRWIN will not be accessible on monday the 6th of february between 06 am UTC+1 and 1 pm UTC+1.
-#       submessage: We apologize for this inconvenience.
+  preview_max_size: 10
+#Uncomment this if you want to set a Broadcast message like demo or maintenance
+#    broadcast:
+#        enabled: true
+#        message: This is a demo application. Data is restored nightly !
+#        submessage: login with user/user or encoder/encoder or admin/admin

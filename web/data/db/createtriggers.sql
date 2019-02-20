@@ -103,6 +103,10 @@ CREATE TRIGGER trg_clr_referenceRecord_gtu AFTER DELETE OR UPDATE
 	ON gtu FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
+CREATE TRIGGER trg_clr_identifiers_in_flat BEFORE DELETE
+	ON identifications FOR EACH ROW
+	EXECUTE PROCEDURE fct_clear_identifiers_in_flat();
+
 CREATE TRIGGER trg_clr_referenceRecord_identifications AFTER DELETE OR UPDATE
 	ON identifications FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
@@ -143,7 +147,11 @@ CREATE TRIGGER trg_clr_referenceRecord_bibliography AFTER DELETE OR UPDATE
         ON bibliography FOR EACH ROW
         EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_collectionmaintenance AFTER DELETE OR UPDATE
+/*CREATE TRIGGER trg_clr_referenceRecord_userscollrightsasked AFTER DELETE OR UPDATE
+	ON users_coll_rights_asked FOR EACH ROW
+	EXECUTE PROCEDURE fct_clear_referencedRecord();
+*/
+CREATE TRIGGER trg_clr_referenceRecord_mysavedsearches AFTER DELETE OR UPDATE
 	ON collection_maintenance FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
@@ -185,12 +193,6 @@ CREATE TRIGGER trg_clr_referenceRecord_loan_items AFTER DELETE OR UPDATE
 
 
 /****************************/
-
-CREATE TRIGGER trg_clr_identifiers_in_flat BEFORE DELETE
-    ON identifications FOR EACH ROW
-    EXECUTE PROCEDURE fct_clear_identifiers_in_flat();
-
-/***************************/
 
 CREATE TRIGGER trg_cpy_updateCollectionRights AFTER INSERT OR UPDATE
 	ON collections FOR EACH ROW
@@ -396,17 +398,8 @@ CREATE TRIGGER trg_trk_log_table_codes AFTER INSERT OR UPDATE OR DELETE
         ON codes FOR EACH ROW
         EXECUTE PROCEDURE fct_trk_log_table();
     
-CREATE TRIGGER trg_insert_auto_code AFTER INSERT OR UPDATE OR DELETE
-        ON codes FOR EACH ROW
-        EXECUTE PROCEDURE check_auto_increment_code_in_spec() ;
-
-CREATE TRIGGER trg_update_collections_code_last_val AFTER UPDATE OF collection_ref 
-        ON specimens FOR EACH ROW
-        EXECUTE PROCEDURE update_collections_code_last_val();
-
-CREATE TRIGGER trg_update_collections_code_last_val_after_spec_del AFTER DELETE 
-        ON specimens FOR EACH ROW
-        EXECUTE PROCEDURE update_collections_code_last_val_after_spec_del();
+CREATE TRIGGER trg_insert_auto_code BEFORE INSERT ON codes FOR EACH ROW
+EXECUTE PROCEDURE check_auto_increment_code_in_spec() ;
 
 
 CREATE TRIGGER trg_trk_log_table_insurances AFTER INSERT OR UPDATE OR DELETE
@@ -440,31 +433,6 @@ CREATE TRIGGER trg_trk_log_table_lithology AFTER INSERT OR UPDATE OR DELETE
 CREATE TRIGGER trg_trk_log_table_people AFTER INSERT OR UPDATE OR DELETE
         ON people FOR EACH ROW
         EXECUTE PROCEDURE fct_trk_log_table();
-
-CREATE TRIGGER trg_trk_log_table_loans
-AFTER INSERT OR UPDATE OR DELETE
-ON loans
-FOR EACH ROW
-EXECUTE PROCEDURE fct_trk_log_table();
-
-CREATE TRIGGER trg_trk_log_table_loan_items
-AFTER INSERT OR UPDATE OR DELETE
-ON loan_items
-FOR EACH ROW
-EXECUTE PROCEDURE fct_trk_log_table();
-
-CREATE TRIGGER trg_trk_log_table_loan_status
-AFTER INSERT OR UPDATE OR DELETE
-ON loan_status
-FOR EACH ROW
-EXECUTE PROCEDURE fct_trk_log_table();
-
-CREATE TRIGGER trg_trk_log_table_loan_rights
-AFTER INSERT OR UPDATE OR DELETE
-ON loan_rights
-FOR EACH ROW
-EXECUTE PROCEDURE fct_trk_log_table();
-
 
 /*
 ** Trigger aimed at calculating unified values
@@ -786,15 +754,3 @@ CREATE TRIGGER trg_clr_referenceRecord_staging_info AFTER DELETE OR UPDATE
 CREATE TRIGGER trg_upd_institution_staging_relationship AFTER UPDATE
   ON staging_relationship  FOR EACH ROW
   EXECUTE PROCEDURE fct_upd_institution_staging_relationship();
-
-CREATE TRIGGER trg_update_import AFTER UPDATE ON imports FOR EACH ROW EXECUTE PROCEDURE fct_update_import();
-
-/******** Imports Triggers ********/
-/********* Catalogue Imports Triggers *********/
-CREATE TRIGGER trg_catalogue_import_keywords_update AFTER INSERT OR UPDATE OR DELETE
-  ON staging_catalogue FOR EACH ROW
-  EXECUTE PROCEDURE fct_catalogue_import_keywords_update();
-
-CREATE TRIGGER trg_catalogue_import_keywords_update AFTER INSERT OR UPDATE OR DELETE
-ON staging FOR EACH ROW
-EXECUTE PROCEDURE fct_catalogue_import_keywords_update();

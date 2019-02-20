@@ -115,7 +115,12 @@ abstract class BaseStagingForm extends BaseFormDoctrine
       'status'                    => new sfWidgetFormTextarea(),
       'complete'                  => new sfWidgetFormInputCheckbox(),
       'surnumerary'               => new sfWidgetFormInputCheckbox(),
-      'specimen_taxonomy_ref'     => new sfWidgetFormInputText(),
+      'part_count_males_min'      => new sfWidgetFormInputText(),
+      'part_count_males_max'      => new sfWidgetFormInputText(),
+      'part_count_females_min'    => new sfWidgetFormInputText(),
+      'part_count_females_max'    => new sfWidgetFormInputText(),
+      'part_count_juveniles_min'  => new sfWidgetFormInputText(),
+      'part_count_juveniles_max'  => new sfWidgetFormInputText(),
     ));
 
     $this->setValidators(array(
@@ -219,7 +224,12 @@ abstract class BaseStagingForm extends BaseFormDoctrine
       'status'                    => new sfValidatorString(array('required' => false)),
       'complete'                  => new sfValidatorBoolean(array('required' => false)),
       'surnumerary'               => new sfValidatorBoolean(array('required' => false)),
-      'specimen_taxonomy_ref'     => new sfValidatorInteger(array('required' => false)),
+      'part_count_males_min'      => new sfValidatorInteger(array('required' => false)),
+      'part_count_males_max'      => new sfValidatorInteger(array('required' => false)),
+      'part_count_females_min'    => new sfValidatorInteger(array('required' => false)),
+      'part_count_females_max'    => new sfValidatorInteger(array('required' => false)),
+      'part_count_juveniles_min'  => new sfValidatorInteger(array('required' => false)),
+      'part_count_juveniles_max'  => new sfValidatorInteger(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('staging[%s]');

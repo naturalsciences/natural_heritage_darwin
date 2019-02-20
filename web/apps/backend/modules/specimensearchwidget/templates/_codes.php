@@ -1,5 +1,22 @@
 <table id="code_search" class="full_size">
   <thead>
+	<!--added ftheeten RMCA 2015 01 07-->
+    <tr>
+      <td colspan="6" style="text-align:center">
+		Valid label:<br/><div style="display: inline-block;text-align:center"><?php echo $form['valid_label'];?></div></td>
+     </td>
+	</tr>
+    <tr>
+      <td colspan="6">
+		Boolean Selector:<?php echo $form['code_boolean'];?></td>
+     </td>
+	</tr>
+	<tr>
+	   <td colspan="6">
+		<div style="font-weight:bold; text-align:center; vertical-align:middle; padding-bottom:10px;">Exact match:<?php echo $form['code_exact_match'];?></div>
+		</td>
+	</tr>
+     <tr>
     <tr>
       <th><?php echo __('Category');?></th>
       <th colspan="2"></th>
@@ -16,22 +33,11 @@
         <td colspan="2"></td>
         <td colspan="5"><?php echo image_tag('add_blue.png'). link_to(__('Add code'),'specimensearch/addCode', array('class'=>'add_search_code'));?></td>
       </tr>
-     <!--ftheeten 2018 11 22--->
-        <tr>
-            <td><?php echo $form['codes_list']->renderLabel();?> : </td><td><select name="select2_codes" id="select2_codes" multiple="multiple"></select><?php echo $form['codes_list'];?></td>        
-        </tr>
-        <tr>
-            <td style="font-style: italic;"><?php echo $form['exact_codes_list']->renderLabel();?> :</td>
-            <td><?php echo $form['exact_codes_list'];?></td>        
-        </tr>
-      <!---->
   </tbody>
 </table>
-
- 
 <script  type="text/javascript">
 
-
+var autocomplete_rmca_array=Array();
 
 function checkBetween()
 {
@@ -87,122 +93,37 @@ $(document).ready(function () {
   });
   checkBetween();
   
-    //ftheeten 2015 06 08
+  
+  //ftheeten 2015 06 08
   //autocomplete for codes number
   
-  function initCollectionCheck()
- {
+  $('.col_check').change(
+		function(i)
+		{
 				autocomplete_rmca_array=$('.col_check:checked').map(function(){
 				return $(this).val();
 				}).get();
 			
- }
-  
-  $('.col_check').change(
-        function()
-        {
-            initCollectionCheck();
-        }
+		}
   );
-  
-  var getCodeUrl=function()
-       {
-            return "<?php echo(url_for('catalogue/codesAutocomplete?'));?>";
-       };
-       
-       $('#select2_codes').select2({
-				width: "100%",
-                minimumInputLength : 1,
-				tags: true,
-				tokenSeparators: ['|'],
-				  ajax: {
-				    //url: getCodeUrl(),
-                    transport: function (params, success, failure) {                        
-                       
-                        if(params.data.term.length>=3)
-                        {
-                            var $request= $.ajax(
-                                 {
-                                  dataType: "json",
-                                  url:  getCodeUrl(),
-                                  data: {
-                                        term : params.data.term,
-                                        collections: autocomplete_rmca_array.join()
-                                  }
-                                }
-                            );
-                        }
-                        else
-                        {
-                             var $request= $.ajax(
-                                 {
-                                  dataType: "json",
-                                  url:  getCodeUrl(),                                  
-                                }
-                            );
-                        }
+	 var url="<?php echo(url_for('catalogue/codesAutocomplete?'));?>";
 
-                        $request.then(success);
-                        $request.fail(failure);
-
-                        return $request;
-                      },
-                      
-					processResults: function(data) {
-				       var myResults = [];
-                        $.each(data, function (index, item) {
-                            myResults.push({
-                                'id': item.value,
-                                'text': item.value
-                            });
-                        });
-                        return {
-                            results: myResults
-                        };
-					}
-				  }
-				});
-       
-       
-       
-      $("form").submit(function (e) {
-                var criteria=new Array();
-                $.each(
-                    $('#select2_codes').select2("data"),
-                    function(index, data)
-                    {
-                       
-                        criteria.push(data.text);
-                    }
-                );               
-                $(".select2_code_values").val(criteria.join("|"));
-                
-            });
-            
-      //back 
-        <?php if( array_key_exists("specimen_search_filters", $_POST)):?>
-            <?php $tmpPOST=$_POST["specimen_search_filters"]; ?>
-             <?php if( array_key_exists("codes_list", $tmpPOST)):?>               
-                <?php $listValues=explode("|",$tmpPOST['codes_list']);?>
-                    <?php foreach( $listValues as $val):?>
-                        var valueToCopy="<?php print($val); ?>";
-                        if(valueToCopy.trim().length>0)
-                        {
-                            select2SetOption('#select2_codes', valueToCopy, valueToCopy);
-
-                        }
-                <?php endforeach;?>
-             <?php endif;?>
-             <?php if( array_key_exists("exact_codes_list", $tmpPOST)):?>
-                <?php if(strtolower($tmpPOST["exact_codes_list"])=="on"):?>
-                    $("#specimen_search_filters_exact_codes_list").prop("checked",true);
-                <?php else:?>
-                    $("#specimen_search_filters_exact_codes_list").prop("checked",false);
-                <?php endif;?>
-            <?php endif;?>             
-        <?php endif;?>
-        
-        initCollectionCheck();
+	  $('.autocomplete_for_code').autocomplete({
+		source: function (request, response) {
+			$.getJSON(url, {
+						term : request.term,
+						collections: autocomplete_rmca_array.join()
+					} , 
+					function (data) 
+						{
+					response($.map(data, function (value, key) {
+					return value;
+                    }));
+			});
+		},
+		minLength: 2,
+		delay: 100
+	});
 
 });
 </script>

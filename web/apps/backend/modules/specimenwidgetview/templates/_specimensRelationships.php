@@ -14,21 +14,21 @@
   <?php foreach($spec_related as $val):?>
   <tr>
     <td><?php echo $val->getRelationshipType() ; ?></td>
-        <!--ftheeten 2018 02 13 : add getTaxonName and reorganize layout-->
+    <td>
       <?php if ($val->getUnitType()=="mineral") : ?>
-	  <td>
         <a href="<?php echo url_for('mineral/view?id='.$val->getMineralRef()) ; ?>"><?php echo $val->Mineralogy->getName() ; ?></a>
-      </td>
-	  <?php elseif($val->getUnitType()=="taxonomy") : ?>
-       <td> <a href="<?php echo url_for('taxonomy/view?id='.$val->getTaxonRef()) ; ?>"><?php echo $val->Taxonomy->getName(); ?></a></td>
+      <?php elseif($val->getUnitType()=="taxonomy") : ?>
+        <a href="<?php echo url_for('taxonomy/view?id='.$val->getTaxonRef()) ; ?>"><?php echo $val->Taxonomy->getName(); ?></a>
       <?php elseif($val->getUnitType()=="specimens") : ?>
-       <td><a href="<?php echo url_for('specimen/view?id='.$val->getSpecimenRelatedRef()) ; ?>"><?php echo __('Specimen'); ?> : <?php echo $val->SpecimenRelated->getName(); ?></a>
-	   <br> <?php echo $val->SpecimenRelated->getTaxonName(); ?>
-	   </td>			
+        <a href="<?php echo url_for('specimen/view?id='.$val->getSpecimenRelatedRef()) ; ?>"><?php echo __('Specimen'); ?> : <?php echo $val->SpecimenRelated->getName(); ?></a> 
+			<!--ftheeten 2015 09 10-->
+				<?php echo ucfirst($val->SpecimenRelated->getLabelCreatedOn())?'Date created: '.$val->SpecimenRelated->getLabelCreatedOn():'';?>
+				<?php echo ucfirst($val->SpecimenRelated->getValidLabel()===FALSE)?'Valid label: false':'Valid label: true';?>
+			<!--ftheeten 2015 09 10-->	
       <?php elseif($val->getUnitType()=="external") : ?>
-        <td> <?php echo $val->getSourceName();?> ID: <?php echo $val->getSourceId();?></td>
+        <?php echo $val->getSourceName();?> ID: <?php echo $val->getSourceId();?>
       <?php endif ; ?>
-    
+    </td>
     <td>
       <?php if ($val->getUnitType()=="mineral") : ?>
         <?php echo $val->getQuantity();?><?php echo $val->getUnit();?>
@@ -41,7 +41,6 @@
 </table>
 
 <!--  Insert Inverse relationship-->
-<?php if($spec_related_inverse->count()>0): ?>
 <br><b>Inverse relationships:</b><br/><br/>
 <table class="catalogue_table_view">
   <thead style="<?php echo ($spec_related_inverse->count()?'':'display: none;');?>">
@@ -58,27 +57,17 @@
   <?php foreach($spec_related_inverse as $val):?>
   <tr>
     <td><?php echo $val->getRelationshipType() ; ?></td>
-<!--ftheeten 2018 02 13 : add getTaxonName and reorganize layout-->
+    <td>
       <?php if($val->getUnitType()=="specimens") : ?>
-        <td>
-			<a href="<?php echo url_for('specimen/view?id='.$val->getSpecimenRef()) ; ?>"><?php echo __('Specimen'); ?> : <?php echo $val->Specimen->getName(); ?></a>
-			</br>
-			<?php echo $val->Specimen->getTaxonName(); ?>
-		</td>
+        <a href="<?php echo url_for('specimen/view?id='.$val->getSpecimenRef()) ; ?>"><?php echo __('Specimen'); ?> : <?php echo $val->Specimen->getName(); ?></a>
 		<!--ftheeten 2015 09 10-->
-		<td>
 				<?php echo ucfirst($val->Specimen->getLabelCreatedOn())?'Date created: '.$val->Specimen->getLabelCreatedOn():'';?>
-	    </td>
-		<td>
-					<!--JMHerpers 2018 02 14 : more readable valid sentence-->
-				<?php echo ucfirst($val->Specimen->getValidLabel()===FALSE)?'Not valid':'Valid';?>
+				<?php echo ucfirst($val->Specimen->getValidLabel()===FALSE)?'Valid label: false':'Valid label: true';?>
 			<!--ftheeten 2015 09 10-->	
-		</td>
       <?php endif ; ?>
-    
+    </td>
     <td>
     </td>
   </tr>
   <?php endforeach;?>
 </table>
- <?php endif;?>

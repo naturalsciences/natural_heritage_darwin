@@ -20,8 +20,6 @@ abstract class BaseTaxonomyFormFilter extends BaseFormFilterDoctrine
       'path'                    => new sfWidgetFormFilterInput(),
       'parent_ref'              => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'add_empty' => true)),
       'extinct'                 => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
-      'is_reference_taxonomy'   => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
-      'metadata_ref'            => new sfWidgetFormFilterInput(),
       'sensitive_info_withheld' => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
     ));
 
@@ -33,8 +31,6 @@ abstract class BaseTaxonomyFormFilter extends BaseFormFilterDoctrine
       'path'                    => new sfValidatorPass(array('required' => false)),
       'parent_ref'              => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Parent'), 'column' => 'id')),
       'extinct'                 => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
-      'is_reference_taxonomy'   => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
-      'metadata_ref'            => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'sensitive_info_withheld' => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
     ));
 
@@ -63,8 +59,6 @@ abstract class BaseTaxonomyFormFilter extends BaseFormFilterDoctrine
       'path'                    => 'Text',
       'parent_ref'              => 'ForeignKey',
       'extinct'                 => 'Boolean',
-      'is_reference_taxonomy'   => 'Boolean',
-      'metadata_ref'            => 'Number',
       'sensitive_info_withheld' => 'Boolean',
     );
   }

@@ -26,8 +26,8 @@ class PropertiesForm extends BasePropertiesForm
       'is_quantitative',
     ));
 
-    $yearsKeyVal = range(1400, intval(sfConfig::get('dw_yearRangeMax')));
-    $years = array_reverse(array_combine($yearsKeyVal, $yearsKeyVal),true);
+    $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')));
+    $years = array_combine($yearsKeyVal, $yearsKeyVal);
     $minDate = new FuzzyDateTime(strval(min($yearsKeyVal)).'/1/1 0:0:0');
     $maxDate = new FuzzyDateTime(strval(max($yearsKeyVal)).'/12/31 23:59:59');
     $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));

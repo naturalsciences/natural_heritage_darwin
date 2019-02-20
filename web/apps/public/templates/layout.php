@@ -5,9 +5,6 @@
     <?php include_metas() ?>
     <?php include_javascripts() ?>
     <?php include_stylesheets() ?>
-    <!--ftheeten 2018 05 09-->
-    <script src='https://www.google.com/recaptcha/api.js'></script>
-    <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval' http://www.google.com https://www.gstatic.com  https://www.google-analytics.com http://fonts.gstatic.com">
     <title><?php include_slot('title') ?></title>
     <!--[if IE]>
     <?php echo stylesheet_tag('ie.css') ?>
@@ -15,76 +12,6 @@
     <link rel="shortcut icon" href="/favicon.ico" />
   </head>
   <body>
-    <script>
-     //ftheeten 2018 05 30
-        function disableFrameMenu() {
-        var isInIframe = (parent !== window),
-            parentUrl = null;
-
-            if (isInIframe) {
-            
-                parentUrl = document.referrer;
-                if(parentUrl.indexOf('<?php print(sfConfig::get('dw_domain_disable_menu'));?>') ===-1)
-                {
-                    $.ajax({
-                      url: "http://<?php print(parse_url(sfContext::getInstance()->getRequest()->getUri(),PHP_URL_HOST ));?>/search/disableMenu?menu=on",              
-                    }).done(function() {
-                      
-                    });
-                }
-                
-            }
-            else
-            {
-                console.log("try");
-                 console.log("http://<?php print(parse_url(sfContext::getInstance()->getRequest()->getUri(),PHP_URL_HOST ));?>/search/disableMenu?menu=on");
-                 $.ajax({
-                      url: "http://<?php print(parse_url(sfContext::getInstance()->getRequest()->getUri(),PHP_URL_HOST ));?>/search/disableMenu?menu=on",              
-                    }).done(function() {
-                      
-                    });
-            }
-
-        
-        }
-        (function($){ //create closure so we can safely use $ as alias for jQuery
-
-          $(document).ready(function(){
-
-            //ftheeten 2018 05 30
-            disableFrameMenu();
-            
-            
-          });
-
-        })(jQuery);
-        
-        //ftheeten 2018 05 30
-        
-        
-    </script>
-
-    <?php
-        $flagMenu="on";
-        
-        
-        if(array_key_exists("menu", $_REQUEST))
-        {       
-            if($_REQUEST['menu']=="off")
-            {
-                $flagMenu="off";
-            }
-        }
-        elseif(array_key_exists("menu", $_SESSION))
-        {       
-            if($_SESSION['menu']=="off")
-            {
-                $flagMenu="off";
-            }
-            
-        }
-        $_SESSION['menu']= $flagMenu;  
-    ?>
     <table class="all_content">
       <tr>
         <?php include_partial('global/head_menu') ?>
@@ -94,13 +21,6 @@
           <?php echo $sf_content ?>
         </td>
       </tr>
-      <?php if($flagMenu!="off" ):?>
-        <?php 
-        if(array_key_exists("menu", $_SESSION))
-        {
-            unset($_SESSION['menu']);
-        }
-        ?>
       <tr>
         <td class="menu_bottom">
           <div class="page">
@@ -117,7 +37,6 @@
           </div>
         </td>     
       </tr>
-       <?php endif;?>
     </table>
     <?php if(sfConfig::get('dw_broadcast_enabled', false)):?>
       <div id="broadcast_bottom_padding"></div>

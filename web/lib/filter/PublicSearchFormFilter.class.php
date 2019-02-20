@@ -12,27 +12,6 @@ class PublicSearchFormFilter extends BaseSpecimensFormFilter
 {
   public function configure()
   {
-  
-    //ftheeten 2018 05 29
-    $this->tmpRequest=array_merge($_GET,$_POST);
-    if(count($this->tmpRequest)>0)
-    {
-   
-        $disable=true;
-        foreach($this->tmpRequest as $key=>$value)
-        {
-            if($key!="specimen_search_filters"&&$key!="include_sub_collections")
-            {
-                $disable=false;
-                break;
-            }
-            
-        }
-        if($disable)
-        {
-         $this->disableLocalCSRFProtection();
-        }         
-    }
     $this->useFields(array(
         'taxon_name', 'taxon_level_ref', 'litho_name', 'litho_level_ref', 'chrono_name', 'chrono_level_ref',
         'lithology_name', 'lithology_level_ref', 'mineral_name', 'mineral_level_ref'));
@@ -91,6 +70,7 @@ class PublicSearchFormFilter extends BaseSpecimensFormFilter
                                   );
     $this->widgetSchema['col_fields'] = new sfWidgetFormInputHidden();
     $this->widgetSchema['search_type'] = new sfWidgetFormInputHidden();
+//     $this->setDefault('col_fields','collection|gtu|sex|stage|type');
     $this->widgetSchema['collection_ref'] = new sfWidgetCollectionList(array('choices' => array()));
     $this->widgetSchema['collection_ref']->addOption('public_only',true);
     $this->validatorSchema['collection_ref'] = new sfValidatorPass(); //Avoid duplicate the query
@@ -98,12 +78,6 @@ class PublicSearchFormFilter extends BaseSpecimensFormFilter
     $this->validatorSchema['col_fields'] = new sfValidatorString(array('required' => false,
                                                                  'trim' => true
                                                                 ));
-                                                                
-                                                                    //ftheeten 2018 05 29
-	$this->widgetSchema['include_sub_collections'] = new sfWidgetFormInputCheckbox();
-  	////ftheeten 2018 05 29
-	$this->validatorSchema['include_sub_collections'] = new sfValidatorPass();
-                                                                
     $this->validatorSchema['search_type'] = new sfValidatorString(array('required' => false));
      $this->validatorSchema['gtu_code'] = new sfValidatorString(array('required' => false,
                                                                  'trim' => true
@@ -183,17 +157,7 @@ class PublicSearchFormFilter extends BaseSpecimensFormFilter
         'expanded' => true,
         'add_empty' => false,
     ));
-    
-  
     $this->validatorSchema['stage'] = new sfValidatorPass();
-    
-      //ftheeten 2018 10 29
-    $this->widgetSchema['codes'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
-    $this->validatorSchema['codes'] = new sfValidatorPass();
-     $this->widgetSchema['ig_num'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
-    $this->validatorSchema['ig_num'] = new sfValidatorPass();
-    $this->widgetSchema['_csrf_token'] = new sfWidgetFormInputHidden();
-    $this->validatorSchema['_csrf_token'] = new sfValidatorPass();
 
 
 
@@ -246,22 +210,13 @@ class PublicSearchFormFilter extends BaseSpecimensFormFilter
   }
 
   public function addCollectionRefColumnQuery($query, $field, $val)
-  { 
-        if (count($val) > 0)
-        {
-            //ftheeten 2018 05 29
-            if((boolean)$this->values['include_sub_collections']===true)
-            {
-                $query->andWhere("collection_path||collection_ref::varchar||'/' SIMILAR TO ?", "%/(".implode('|',$val).")/%") ;               
-            }
-            else
-            {
-                $query->andWhereIn('collection_ref',$val) ;               
-            }
-        }
+  {
+    if (count($val) > 0)
+    {
+      $query->andWhereIn('collection_ref',$val) ;
+    }
     return $query;
   }
-  
   public function addCommonNamesColumnQuery($query,$relation, $field, $val)
   {
     $query->andWhere($field.' IN ('.$this->ListIdByWord($relation,$val).')');
@@ -282,7 +237,9 @@ class PublicSearchFormFilter extends BaseSpecimensFormFilter
   public function doBuildQuery(array $values)
   {
     $query = Doctrine_Query::create()
-      ->from('Specimens s');
+        //ftheeten 2016 10 13
+        //->from('Specimens s');
+        ->from('SpecimensStoragePartsView s');
     $this->options['query'] = $query;
     $query = parent::doBuildQuery($values);
     if ($values['taxon_level_ref'] != '') $query->andWhere('taxon_level_ref = ?', intval($values['taxon_level_ref']));
@@ -309,50 +266,5 @@ class PublicSearchFormFilter extends BaseSpecimensFormFilter
   public function getWithOrderCriteria()
   {
     return $this->getQuery()->orderby($this->getValue('order_by') . ' ' . $this->getValue('order_dir').'');
-  }
-  
-  //ftheeten 2018 10 29
-  public function addCodesColumnQuery($query, $field, $val)
-  {
-    $sql=Array();
-    $sql_params = array();
-    foreach(explode(";",$val) as $code)
-    {
-
-        if(trim($code)  != '') {          
-          $sql[] = "EXISTS(select 1 from codes where referenced_relation='specimens' and record_id = s.id AND full_code_indexed ilike '%' || fulltoindex(?) || '%' )";
-          $sql_params[] = $code;
-          $has_query = true;
-        }
-        
-    }
-    if($has_query)
-    {
-          $query->addWhere("(".implode(" OR ", $sql).")", $sql_params);
-    }
-    return $query ;
-  }
-  
-  //ftheeten 2018 10 29
-  public function addIgNumColumnQuery($query, $field, $val)
-  {    
-    
-    $sql=Array();
-    $sql_params = array();
-    foreach(explode(";",$val) as $code)
-    {
-
-        if(trim($code)  != '') {          
-          $sql[] = "ig_num_indexed like fullToIndex(?) ";
-          $sql_params[] = $code;
-          $has_query = true;
-        }
-        
-    }
-    if($has_query)
-    {
-          $query->addWhere("(".implode(" OR ", $sql).")", $sql_params);
-    }
-    return $query ;
   }
 }

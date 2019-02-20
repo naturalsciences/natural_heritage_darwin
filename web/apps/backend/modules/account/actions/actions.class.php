@@ -83,17 +83,6 @@ class accountActions extends DarwinActions
     else
       $this->redirect($referer);
   }
-  
-  //ftheeten 2018 04 26
-   public function executeForcelogout(sfWebRequest $request)
-  {
-    $referer = $this->getRequest()->getReferer();
-    $this->getUser()->getAttributeHolder()->clear();
-    $this->getUser()->clearCredentials();
-    $this->getUser()->setAuthenticated(false);
-    //$this->renderText("<html><body></body></html>");
-    return sfView::NONE;
-  }
 
   public function executeLostPwd(sfWebRequest $request)
   {

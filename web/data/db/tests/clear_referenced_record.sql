@@ -52,7 +52,7 @@ SELECT lives_ok('update comments set comment=''WOOOt'' where record_id =12');
 
 --2 comments
 SELECT is( 1 , (SELECT count(*)::int from comments where record_id = 12),'taxo comment is added');
-SELECT lives_ok('update taxonomy set id = 13 where id = 12');
+SELECT lives_ok('update taxonomy set id = 13 where id =12');
 SELECT is( 0 , (SELECT count(*)::int from comments where record_id = 12),'taxo comment was migrated 1');
 SELECT is( 1 , (SELECT count(*)::int from comments where record_id = 13),'taxo comment was migrated 2');
 

@@ -192,9 +192,9 @@ class PeopleForm extends BasePeopleForm
     );
 
     $this->Postvalidators[] = new sfValidatorSchemaCompare(
-      'activity_date_from',
+      'birth_date',
       '<=',
-      'activity_date_to',
+      'end_date',
       array('throw_global_error' => true),
       array('invalid'=>'The begin activity date cannot be above the end activity date.')
     );

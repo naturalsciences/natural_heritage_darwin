@@ -56,17 +56,8 @@
 <script>
   $('a.link_catalogue').click(function() {
     if($('#property_template').val() != "")
-    {  
-        //ftheeten 2019 02 08    
-        if($("#specimen_timestamp").val().length)
-        {
-             $(this).attr('href',"<?php print(url_for('property/add?table='.$table)); ?>"+"/id/-1"+"/model/"+$('#property_template').val()+"/timestamp/"+$("#specimen_timestamp").val()) ;
-        }
-        else
-        {
-              $(this).attr('href',$(this).attr('href')+"/model/"+$('#property_template').val()) ;
-        }
-
+    {
+      $(this).attr('href',$(this).attr('href')+"/model/"+$('#property_template').val()) ;
     }
   });
 </script>
