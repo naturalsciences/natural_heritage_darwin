@@ -12,9 +12,7 @@
  * @property string $from_date
  * @property string $to_date
  * @property string $extended_to_date
- * @property integer $collection_ref
  * @property Doctrine_Collection $CataloguePeople
- * @property Collections $Collections
  * @property Doctrine_Collection $LoanItems
  * @property Doctrine_Collection $LoanRights
  * @property Doctrine_Collection $LoanStatus
@@ -26,9 +24,7 @@
  * @method string              getFromDate()         Returns the current record's "from_date" value
  * @method string              getToDate()           Returns the current record's "to_date" value
  * @method string              getExtendedToDate()   Returns the current record's "extended_to_date" value
- * @method integer             getCollectionRef()    Returns the current record's "collection_ref" value
  * @method Doctrine_Collection getCataloguePeople()  Returns the current record's "CataloguePeople" collection
- * @method Collections         getCollections()      Returns the current record's "Collections" value
  * @method Doctrine_Collection getLoanItems()        Returns the current record's "LoanItems" collection
  * @method Doctrine_Collection getLoanRights()       Returns the current record's "LoanRights" collection
  * @method Doctrine_Collection getLoanStatus()       Returns the current record's "LoanStatus" collection
@@ -39,9 +35,7 @@
  * @method Loans               setFromDate()         Sets the current record's "from_date" value
  * @method Loans               setToDate()           Sets the current record's "to_date" value
  * @method Loans               setExtendedToDate()   Sets the current record's "extended_to_date" value
- * @method Loans               setCollectionRef()    Sets the current record's "collection_ref" value
  * @method Loans               setCataloguePeople()  Sets the current record's "CataloguePeople" collection
- * @method Loans               setCollections()      Sets the current record's "Collections" value
  * @method Loans               setLoanItems()        Sets the current record's "LoanItems" collection
  * @method Loans               setLoanRights()       Sets the current record's "LoanRights" collection
  * @method Loans               setLoanStatus()       Sets the current record's "LoanStatus" collection
@@ -83,9 +77,6 @@ abstract class BaseLoans extends DarwinModel
         $this->hasColumn('extended_to_date', 'string', null, array(
              'type' => 'string',
              ));
-        $this->hasColumn('collection_ref', 'integer', null, array(
-             'type' => 'integer',
-             ));
     }
 
     public function setUp()
@@ -94,10 +85,6 @@ abstract class BaseLoans extends DarwinModel
         $this->hasMany('LoanActors as CataloguePeople', array(
              'local' => 'id',
              'foreign' => 'record_id'));
-
-        $this->hasOne('Collections', array(
-             'local' => 'collection_ref',
-             'foreign' => 'id'));
 
         $this->hasMany('LoanItems', array(
              'local' => 'id',

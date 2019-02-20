@@ -13,18 +13,21 @@ class specimenwidgetComponents extends sfComponents
 
   protected function defineForm()
   {
-    if(!$this->getUser()->isAtLeast(Users::ENCODER)) die("<div class='warn_message'>".__("you can't do that !!")."</div>") ;
+    if(!$this->getUser()->isAtLeast(Users::ENCODER))  {
+      print("<div class='warn_message'>".__("You don't have rights to edit these informations !")."</div>");
+    }
     if(! isset($this->form) )
     {
-      if(isset($this->eid) && $this->eid != null)
+      if(isset($this->eid) && $this->eid !== null)
       {
         $spec = Doctrine::getTable('Specimens')->find($this->eid);
         $this->form = new SpecimensForm($spec);
         $this->spec_id = $this->eid;
         if(!$this->getUser()->isA(Users::ADMIN))
         {
-          if(! Doctrine::getTable('Specimens')->hasRights('spec_ref', $this->eid, $this->getUser()->getId()))
-            die("<div class='warn_message'>".__("you can't do that !!")."</div>") ;
+          if(! Doctrine::getTable('Specimens')->hasRights('spec_ref', $this->eid, $this->getUser()->getId())) {
+            print("<div class='warn_message'>".__("You don't have rights to edit these informations !")."</div>");
+          }
         }
       }
       else
@@ -45,6 +48,9 @@ class specimenwidgetComponents extends sfComponents
     if(! isset($this->module) )
     {
       $this->module = 'specimen';
+    }
+    if(! isset($this->addCodeUrl)) {
+      $this->addCodeUrl = $this->module.'/addCode';
     }
   }
 
@@ -117,7 +123,6 @@ class specimenwidgetComponents extends sfComponents
 
   public function executeRefCodes()
   {
-    
     $this->defineForm();
     if(!isset($this->form['newCodes']))
       $this->form->loadEmbed('Codes');
@@ -177,9 +182,6 @@ class specimenwidgetComponents extends sfComponents
     $this->defineForm();
     if(!isset($this->form['newSpecimensRelationships']))
       $this->form->loadEmbed('SpecimensRelationships');
-
-//     if($this->spec_id != 0)
-//       $this->spec_related_inverse = Doctrine::getTable("SpecimensRelationships")->findByRelatedSpecimenRef($this->spec_id);
   }
 
   public function executeInformativeWorkflow()
@@ -289,28 +291,10 @@ class specimenwidgetComponents extends sfComponents
     }
   }
   
-  //ftheeten 2016 06 29
-  public function executeEcology()
-  {
-       $this->defineForm();
-      if(!isset($this->form['newEcology']))
-         $this->form->loadEmbed('Ecology');
-  }
-  
-  //ftheeten 2016 07 07
+    
+  //ftheeten 2018 11 30
   public function executeGtuDate()
   {
     $this->defineForm();
-  }
-  
-    //ftheeten 2016 08 11
-  public function executeStorageParts()
-  {
-       $this->defineForm();
-      if(!isset($this->form['newStorageParts']))
-      {
-         $this->form->loadEmbed('StorageParts');
-      }
-      $this->form->forceContainerChoices();
   }
 }

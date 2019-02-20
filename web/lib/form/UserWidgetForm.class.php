@@ -15,7 +15,9 @@ class UserWidgetForm extends sfForm
     $subForm = new sfForm();
     foreach ($this->options['collection'] as $index=>$record)
     {
-      if($this->options['level'] == Users::REGISTERED_USER && $record->getCollections() == ',' && $record->getAllPublic() == false ) ;
+      if($this->options['level'] == Users::REGISTERED_USER &&
+         $record->getCollections() == ',' &&
+         $record->getAllPublic() === false ) ;
       else
       {
         $form = new MyWidgetsForm($record,array('level' => $this->options['level']));

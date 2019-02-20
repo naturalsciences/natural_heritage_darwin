@@ -9,18 +9,110 @@ class stagingActions extends DarwinActions
       $this->forwardToSecureAction();
     }
   }
+  
+  
+   public function executeRecheck(sfWebRequest $request)
+  {
+    $this->forward404Unless($request->hasParameter('import'));
+    $this->import = Doctrine::getTable('Imports')->find($request->getParameter('import'));
+    //ftheeten 2018 09 24
+     $format_import = $this->import->getFormat();
+    //ftheeten 2018 09 02
+	if($request->hasParameter('taxonomy_ref'))
+	{
+		if($request->getParameter('taxonomy_ref'))
+		{
+			$taxonomy_ref=$request->getParameter('taxonomy_ref');
+			$this->import->setSpecimenTaxonomyRef($taxonomy_ref);
+			$this->import->save();
+            
+           
+		}
+	}
+    
+    //end ftheeten
+    
+    if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$this->import->getCollectionRef()))
+       $this->forwardToSecureAction();
+    
+   //ftheeten 2018 09 02
+   $cmd='darwin:check-import --id='.$tmp_id." --full-check";
+   $currentDir=getcwd();
+    chdir(sfconfig::get('sf_root_dir'));    
+    //print('nohup php symfony '.$cmd.'  >/dev/null &' );
+    exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+    chdir($currentDir);              
+   //end ftheeten
+   
+    if($format_import=="locality")
+    {
+        return $this->redirect('import/indexLocalities');
+    }
+    elseif($format_import=="taxon")
+    {
+        return $this->redirect('import/indexTaxon');
+    } 
+    else
+    {
+        return $this->redirect('import/index');
+    }
+    //return $this->redirect('import/index');
+  }
+
 
   public function executeMarkok(sfWebRequest $request)
   {
     $this->forward404Unless($request->hasParameter('import'));
     $this->import = Doctrine::getTable('Imports')->find($request->getParameter('import'));
-
+    //ftheeten 2018 09 24
+     $format_import = $this->import->getFormat();
+    //ftheeten 2018 09 02
+	if($request->hasParameter('taxonomy_ref'))
+	{
+		if($request->getParameter('taxonomy_ref'))
+		{
+			$taxonomy_ref=$request->getParameter('taxonomy_ref');
+			$this->import->setSpecimenTaxonomyRef($taxonomy_ref);
+			$this->import->save();
+            
+           
+		}
+	}
+    
+    //end ftheeten
+    
     if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$this->import->getCollectionRef()))
        $this->forwardToSecureAction();
     $this->import = Doctrine::getTable('Imports')->markOk($this->import->getId());
-    return $this->redirect('import/index');
+    
+   //ftheeten 2018 09 02
+   $cmd='darwin:check-import --do-import --id='.$tmp_id." --full-check";
+   $currentDir=getcwd();
+    chdir(sfconfig::get('sf_root_dir'));    
+    //print('nohup php symfony '.$cmd.'  >/dev/null &' );
+    exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+    chdir($currentDir);              
+   //end ftheeten
+   
+    if($format_import=="locality")
+    {
+        return $this->redirect('import/indexLocalities');
+    }
+    elseif($format_import=="taxon")
+    {
+        return $this->redirect('import/indexTaxon');
+    } 
+    else
+    {
+        return $this->redirect('import/index');
+    }
+    //return $this->redirect('import/index');
   }
 
+  /*
+   * not used anymore, so temporarily commented until a solution is found to bring
+   * back the feature of taxonomic hierarchy auto-creation
+   *
   public function executeCreateTaxon(sfWebRequest $request)
   {
     $this->forward404Unless($request->hasParameter('import'));
@@ -28,11 +120,34 @@ class stagingActions extends DarwinActions
 
     if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$this->import->getCollectionRef()))
        $this->forwardToSecureAction();
-    $this->import = Doctrine::getTable('Staging')->markTaxon($this->import->getId());
+    //$this->import = Doctrine::getTable('Staging')->markTaxon($this->import->getId());
     return $this->redirect('import/index');
 
   }
+  */
+  
+    //ftheeten 2018 09 24
+    public function executeCreatePeoples(sfWebRequest $request)
+  {
+    $this->forward404Unless($request->hasParameter('import'));
+    $this->import = Doctrine::getTable('Imports')->find($request->getParameter('import'));
 
+    if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$this->import->getCollectionRef()))
+    {
+       $this->forwardToSecureAction();
+    }
+    else
+    {       
+		$cmd='darwin:create-people --id='. $this->import->getId();
+		$currentDir=getcwd();
+		chdir(sfconfig::get('sf_root_dir'));    
+		exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+		chdir($currentDir);      
+    }
+    return $this->redirect('import/index');
+
+  }
+  
   public function executeDelete(sfWebRequest $request)
   {
     $this->forward404Unless($request->hasParameter('id'));
@@ -61,7 +176,6 @@ class stagingActions extends DarwinActions
 
     $this->form = new StagingFormFilter(null, array('import' =>$this->import));
     $filters = $request->getParameter('staging_filters');
-    //if(!isset($filters['slevel'])) $filters['slevel'] = 'specimen';
 
     $this->form->bind($filters);
     if($this->form->isValid())
@@ -74,7 +188,7 @@ class stagingActions extends DarwinActions
       $params = $request->isMethod('post') ? $request->getPostParameters() : $request->getGetParameters();
 
       $this->s_url = 'staging/search'.'?import='.$request->getParameter('import');
-      $this->o_url = '';//'&orderby='.$this->orderBy.'&orderdir='.$this->orderDir;
+      $this->o_url = '';
 
       $this->pagerLayout = new PagerLayoutWithArrows(
           new DarwinPager(
@@ -138,7 +252,6 @@ class stagingActions extends DarwinActions
 
   public function executeEdit(sfWebRequest $request)
   {
-//     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     $staging = Doctrine::getTable('Staging')->findOneById($request->getParameter('id'));
     $this->import = Doctrine::getTable('Imports')->find($staging->getImportRef());
 
@@ -203,7 +316,6 @@ class stagingActions extends DarwinActions
 
   public function executeUpdate(sfWebRequest $request)
   {
-/*    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction(); */
     $staging = Doctrine::getTable('Staging')->findOneById($request->getParameter('id'));
 
     $this->import = Doctrine::getTable('Imports')->find($staging->getImportRef());

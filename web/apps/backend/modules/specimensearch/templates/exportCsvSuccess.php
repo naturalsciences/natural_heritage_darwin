@@ -49,9 +49,10 @@
 <?php if($field_to_show['sub_container']=='check'):?>Sub Container<?php echo $sep;endif;?>
 <?php if($field_to_show['sub_container_type']=='check'):?>Sub Container Type<?php echo $sep;endif;?>
 <?php if($field_to_show['sub_container_storage']=='check'):?>Sub Container Storage<?php echo $sep;endif;?>
+<?php if(true):?>Specimen view id<?php echo $sep;endif;?>
+
 <?php endif;?>
 <?php foreach($specimensearch as $specimen):?>
-
 <?php if($field_to_show['category']=='check'): echo $specimen ->getCategory(ESC_RAW).$sep;endif;?>
 <?php if($field_to_show['collection']=='check'): echo $specimen ->getCollectionRef(ESC_RAW).$sep;endif;?>
 <?php if($field_to_show['collection']=='check'): echo $specimen ->getCollectionName(ESC_RAW).$sep;endif;?>
@@ -99,13 +100,15 @@
 <?php if($field_to_show['floor']=='check'): echo $specimen ->getFloor(ESC_RAW).$sep;endif;?>
 <?php if($field_to_show['room']=='check'): echo $specimen ->getRoom(ESC_RAW).$sep;endif;?>
 <?php if($field_to_show['row']=='check'): echo $specimen ->getRow(ESC_RAW).$sep;endif;?>
-<?php if($field_to_show['shelf']=='check'): echo $specimen ->getShelf(ESC_RAW).$sep;endif;?>
 <?php if($field_to_show['col']=='check'): echo $specimen ->getCol(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['shelf']=='check'): echo $specimen ->getShelf(ESC_RAW).$sep;endif;?>
 <?php if($field_to_show['container']=='check'): echo $specimen ->getContainer(ESC_RAW).$sep;endif;?>
 <?php if($field_to_show['container_type']=='check'): echo $specimen ->getContainerType(ESC_RAW).$sep;endif;?>
 <?php if($field_to_show['container_storage']=='check'): echo $specimen ->getContainerStorage(ESC_RAW).$sep;endif;?>
 <?php if($field_to_show['sub_container']=='check'): echo $specimen ->getSubContainer(ESC_RAW).$sep;endif;?>
 <?php if($field_to_show['sub_container_type']=='check'): echo $specimen ->getSubContainerType(ESC_RAW).$sep;endif;?>
 <?php if($field_to_show['sub_container_storage']=='check'): echo $specimen ->getSubContainerStorage(ESC_RAW).$sep;endif;?>
+<?php echo $specimen->getId(ESC_RAW).$sep;?>
 <?php endif;?>
+
 <?php endforeach;?>

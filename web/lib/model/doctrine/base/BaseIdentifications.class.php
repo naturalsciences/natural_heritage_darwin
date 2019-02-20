@@ -89,6 +89,13 @@ abstract class BaseIdentifications extends DarwinModel
              'notnull' => true,
              'default' => 1,
              ));
+
+        $this->setSubClasses(array(
+             'TaxonomicIdentifications' => 
+             array(
+              'referenced_relation' => 'specimens',
+             ),
+             ));
     }
 
     public function setUp()

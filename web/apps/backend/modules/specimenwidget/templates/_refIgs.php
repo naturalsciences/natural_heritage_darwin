@@ -17,3 +17,6 @@ $('#specimen_ig_ref_check').change(function(){
   }
 }) ;
 </script>
+<?php if ($form->getObject()->getIgNum()) : ?>
+  <?php echo link_to(' ', 'igs/view?id='.$form->getObject()->getIgRef(), array('class' => 'but_more','title'=>__('View I.G.'),'target'=>'_blank' )) ; ?>
+<?php endif; ?>

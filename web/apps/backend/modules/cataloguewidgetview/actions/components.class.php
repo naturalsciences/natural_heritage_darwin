@@ -24,21 +24,6 @@ class cataloguewidgetViewComponents extends sfComponents
   public function executeExtLinks()
   {
     $this->links =  Doctrine::getTable('ExtLinks')->findForTable($this->table, $this->eid);
-     //ftheeten 2017 01 10
-    $this->correspondingViewerLink=Array();
-    foreach($this->links as $link)
-    {
-        if($link->getCategory()=="image_link")
-        {
-             if(is_int($link->getDisplayOrder()))
-             {
-                if( filter_var($link->getUrl(), FILTER_VALIDATE_URL))
-                {
-                    $this->correspondingViewerLink[$link->getDisplayOrder()]=$link->getId();
-                }
-             }
-        }
-    }
   }
   
   public function executeInsurances()

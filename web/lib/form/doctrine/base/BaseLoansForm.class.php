@@ -22,7 +22,6 @@ abstract class BaseLoansForm extends BaseFormDoctrine
       'from_date'        => new sfWidgetFormTextarea(),
       'to_date'          => new sfWidgetFormTextarea(),
       'extended_to_date' => new sfWidgetFormTextarea(),
-      'collection_ref'   => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Collections'), 'add_empty' => true)),
     ));
 
     $this->setValidators(array(
@@ -33,7 +32,6 @@ abstract class BaseLoansForm extends BaseFormDoctrine
       'from_date'        => new sfValidatorString(array('required' => false)),
       'to_date'          => new sfValidatorString(array('required' => false)),
       'extended_to_date' => new sfValidatorString(array('required' => false)),
-      'collection_ref'   => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Collections'), 'required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('loans[%s]');

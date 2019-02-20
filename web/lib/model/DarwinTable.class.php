@@ -256,6 +256,27 @@ class DarwinTable extends Doctrine_Table
   }
 
   /**
+  * Get list of possible upper levels
+  * @param $conn Doctrine Connection
+  * @param $level the level used to get the possible upper ones
+  * @return Array of results
+  */
+  private function getPossibleUpperLevels($level){
+    $puls = array();
+    if($level) {
+      $pul = Doctrine_Query::create()
+        ->select('level_upper_ref')
+        ->from('PossibleUpperLevels pul');
+        $pul->andWhere('pul.level_ref = ?', $level);
+      $pul_results = $pul->execute();
+      foreach ($pul_results as $element){
+        $puls[] = $element->getLevelUpperRef();
+      }
+    }
+    return $puls;
+  }
+
+  /**
   * Find item for autocompletion
   * @param $user The User object for right management
   * @param $needle the string entered by the user for search
@@ -264,8 +285,7 @@ class DarwinTable extends Doctrine_Table
   * @param $level the level used to get the possible upper ones
   * @return Array of results
   */
-  //ftheeten added default to level 2016 11 04
-  public function completeAsArray($user, $needle, $exact, $limit = 30, $level='')
+  public function completeAsArray($user, $needle, $exact, $limit = 30, $level)
   {
 
     $conn_MGR = Doctrine_Manager::connection();
@@ -296,25 +316,33 @@ class DarwinTable extends Doctrine_Table
   }
 
 
+
   /**
   * Find item for autocompletion
   * @param $user The User object for right management
   * @param $needle the string entered by the user for search
   * @param $exact bool are we searching the exact term or more or less fuzzy
+  * @param $limit int limit the number of results
+  * @param $level the level used to get the possible upper ones
   * @return Array of results
   */
-  public function completeWithLevelAsArray($user, $needle, $exact, $limit = 30)
+  public function completeWithLevelAsArray($user, $needle, $exact, $limit = 30, $level)
   {
     $conn_MGR = Doctrine_Manager::connection();
       $q = Doctrine_Query::create()
       ->from($this->getTableName(). ' i')
       ->innerJoin('i.Level l')
-      ->orderBy('l.level_order ASC, name ASC')
+      ->orderBy('l.level_order DESC, name ASC')
       ->limit($limit);
     if($exact)
       $q->andWhere("name = ?",$needle);
     else
       $q->andWhere("name_indexed like concat(fulltoindex(".$conn_MGR->quote($needle, 'string')."),'%') ");
+    if ($level && $level != '') {
+      $puls = $this->getPossibleUpperLevels($level);
+        if(count($puls))
+          $q->andWhereIn('l.id', $puls);
+    }
     $q_results = $q->execute();
     $result = array();
     foreach($q_results as $item) {
@@ -353,7 +381,6 @@ class DarwinTable extends Doctrine_Table
     return $object;
   }
 
-
   public function getLevelParents($table, $parents)
     {
       $catalogue_level =array();
@@ -367,7 +394,7 @@ class DarwinTable extends Doctrine_Table
         $q = Doctrine_Query::create()
           ->from($table.' t')
           ->innerjoin('t.Level l')
-          ->where('t.name_indexed ilike fulltoindex(?) || \'%\' ', $parents[$catalogue->getLevelSysName()])
+          ->where('t.name_indexed ilike fulltoindex(?)', $parents[$catalogue->getLevelSysName()])
           ->andWhere('l.level_sys_name = ?', $catalogue->getLevelSysName());
         $elem = $q->fetchOne();
         $catalogue_level[$catalogue->getLevelName()] = array(
@@ -377,5 +404,22 @@ class DarwinTable extends Doctrine_Table
           'class' => $elem ? $elem->getId(): '') ;
       }
       return($catalogue_level) ;
+  }
+
+  public function getCatalogueUnits($ids) {
+    $results = array();
+    if(is_array($ids) && count($ids)) {
+      $table = $this->getTableName();
+      $q = Doctrine_Query::create()
+        ->select('i.id, i.name, l.level_name')
+        ->from($table. ' i')
+        ->innerJoin('i.Level l')
+        ->whereIn('i.id',$ids);
+      $q_results = $q->execute();
+      foreach($q_results as $result) {
+        $results[] = array("id"=>$result->getId(), "name"=>$result->getName(), "level_name"=>$result->getLevel()->getLevelName());
+      }
+    }
+    return $results;
   }
 }

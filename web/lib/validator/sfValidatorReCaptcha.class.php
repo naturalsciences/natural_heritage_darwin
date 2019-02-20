@@ -51,17 +51,20 @@ class sfValidatorReCaptcha extends sfValidatorBase
    */
   protected function configure($options = array(), $messages = array())
   {
-    $this->addRequiredOption('private_key');
+  
+    $this->addOption('private_key');
 
     $this->addOption('remote_addr');
-    $this->addOption('server_host', 'api-verify.recaptcha.net');
+    $this->addOption('server_host', 'www.google.com/recaptcha/api');
     $this->addOption('server_port', 80);
-    $this->addOption('server_path', '/verify');
+    $this->addOption('server_path', '/siteverify');
     $this->addOption('server_timeout', 10);
     $this->addOption('proxy_host', '');
     $this->addOption('proxy_port', 80);
     $this->addMessage('captcha', 'The captcha is not valid (%error%).');
     $this->addMessage('server_problem', 'Unable to check the captcha from the server (%error%).');
+    
+    //$this->setOption('required', false);
   }
 
   /**
@@ -75,82 +78,21 @@ class sfValidatorReCaptcha extends sfValidatorBase
    */
   protected function doClean($value)
   {
-    $challenge = isset($value['recaptcha_challenge_field']) ? $value['recaptcha_challenge_field'] : null;
-    $response = isset($value['recaptcha_response_field']) ? $value['recaptcha_response_field'] : null;
-    if (empty($challenge) || empty($response))
-    {
-      throw new sfValidatorError($this, 'captcha', array('error' => 'invalid captcha'));
-    }
 
-    if (true !== ($answer = $this->check(array(
-      'privatekey' => $this->getOption('private_key'),
-      'remoteip'   => $this->getOption('remote_addr') ? $this->getOption('remote_addr') : $_SERVER['REMOTE_ADDR'],
-      'challenge'  => $challenge,
-      'response'   => $response,
-    ))))
-    {
-      throw new sfValidatorError($this, 'captcha', array('error' => $answer));
-    }
-
-    return null;
+        $captcha=$_REQUEST['g-recaptcha-response'];
+        $response=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".$this->getOption('private_key')."&response=".$captcha."&remoteip=".$_SERVER['REMOTE_ADDR']);
+        $g_response = json_decode($response);
+        if($g_response->success===true) {
+            return true;
+         }
+         else
+         {
+            throw new sfValidatorError($this, 'server_problem', array('error' => "Check captcha"));
+         }
+         
+         return false;
+   
   }
 
-  /**
-   * Returns true if the captcha is valid.
-   *
-   * @param  array   An array of request parameters
-   *
-   * @return Boolean true if the captcha is valid, false otherwise
-   */
-  protected function check($parameters)
-  {
-    $server_host = $this->getOption('server_host');
-    $server_port = $this->getOption('server_port');
-    if ($this->getOption('proxy_host') != '')
-    {
-      $server_host = $this->getOption('proxy_host');
-      $server_port = $this->getOption('proxy_port');
-    }
-    if (false === ($fs = @fsockopen($server_host, $server_port, $errno, $errstr, $this->getOption('server_timeout'))))
-    {
-      throw new sfValidatorError($this, 'server_problem', array('error' => $errstr));
-    }
-
-    $query = http_build_query($parameters, null, '&');
-    if ($this->getOption('proxy_host') == '')
-    {
-      fwrite($fs, sprintf(
-                    "POST %s HTTP/1.0\r\n".
-                    "Host: %s\r\n".
-                    "Content-Type: application/x-www-form-urlencoded\r\n".
-                    "Content-Length: %d\r\n".
-                    "User-Agent: reCAPTCHA/PHP/symfony\r\n".
-                    "\r\n%s",
-                    $this->getOption('server_path'), $this->getOption('server_host'), strlen($query), $query
-                  )
-            );
-    }
-    else
-    {
-      fwrite($fs, sprintf(
-                    "POST http://%s%s HTTP/1.0\r\n".
-                    "Host: %s\r\n".
-                    "Content-Type: application/x-www-form-urlencoded\r\n".
-                    "Content-Length: %d\r\n".
-                    "User-Agent: reCAPTCHA/PHP/symfony\r\n".
-                    "\r\n%s",
-                  $this->getOption('server_host'), $this->getOption('server_path'), $this->getOption('server_host'), strlen($query), $query)
-      );
-    }
-    $response = '';
-    while (!feof($fs))
-    {
-      $response .= fgets($fs, 1160);
-    }
-    fclose($fs);
-    $response = explode("\r\n\r\n", $response, 2);
-    $answers = explode("\n", $response[1]);
-
-    return 'true' == trim($answers[0]) ? true : $answers[1];
-  }
+ 
 }

@@ -11,19 +11,22 @@
  * @property Doctrine_Collection $Specimens
  * @property Doctrine_Collection $SpecimensMethods
  * @property Doctrine_Collection $StagingMethods
+ * @property Doctrine_Collection $SpecimensMaincodes
  * 
- * @method integer             getId()               Returns the current record's "id" value
- * @method string              getMethod()           Returns the current record's "method" value
- * @method string              getMethodIndexed()    Returns the current record's "method_indexed" value
- * @method Doctrine_Collection getSpecimens()        Returns the current record's "Specimens" collection
- * @method Doctrine_Collection getSpecimensMethods() Returns the current record's "SpecimensMethods" collection
- * @method Doctrine_Collection getStagingMethods()   Returns the current record's "StagingMethods" collection
- * @method CollectingMethods   setId()               Sets the current record's "id" value
- * @method CollectingMethods   setMethod()           Sets the current record's "method" value
- * @method CollectingMethods   setMethodIndexed()    Sets the current record's "method_indexed" value
- * @method CollectingMethods   setSpecimens()        Sets the current record's "Specimens" collection
- * @method CollectingMethods   setSpecimensMethods() Sets the current record's "SpecimensMethods" collection
- * @method CollectingMethods   setStagingMethods()   Sets the current record's "StagingMethods" collection
+ * @method integer             getId()                 Returns the current record's "id" value
+ * @method string              getMethod()             Returns the current record's "method" value
+ * @method string              getMethodIndexed()      Returns the current record's "method_indexed" value
+ * @method Doctrine_Collection getSpecimens()          Returns the current record's "Specimens" collection
+ * @method Doctrine_Collection getSpecimensMethods()   Returns the current record's "SpecimensMethods" collection
+ * @method Doctrine_Collection getStagingMethods()     Returns the current record's "StagingMethods" collection
+ * @method Doctrine_Collection getSpecimensMaincodes() Returns the current record's "SpecimensMaincodes" collection
+ * @method CollectingMethods   setId()                 Sets the current record's "id" value
+ * @method CollectingMethods   setMethod()             Sets the current record's "method" value
+ * @method CollectingMethods   setMethodIndexed()      Sets the current record's "method_indexed" value
+ * @method CollectingMethods   setSpecimens()          Sets the current record's "Specimens" collection
+ * @method CollectingMethods   setSpecimensMethods()   Sets the current record's "SpecimensMethods" collection
+ * @method CollectingMethods   setStagingMethods()     Sets the current record's "StagingMethods" collection
+ * @method CollectingMethods   setSpecimensMaincodes() Sets the current record's "SpecimensMaincodes" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -64,5 +67,10 @@ abstract class BaseCollectingMethods extends DarwinModel
         $this->hasMany('StagingMethods', array(
              'local' => 'id',
              'foreign' => 'collecting_method_ref'));
+
+        $this->hasMany('SpecimensMaincodes', array(
+             'refClass' => 'SpecimensMethods',
+             'local' => 'collecting_method_ref',
+             'foreign' => 'specimen_ref'));
     }
 }

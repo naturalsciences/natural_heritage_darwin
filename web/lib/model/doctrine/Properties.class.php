@@ -147,6 +147,18 @@ class Properties extends BaseProperties
     return $date->getDateTimeMaskedAsArray();
   }
   
+    //ftheeten 2019 01 30
+    public function getDateToRaw()
+  {    
+    return $this->_get('date_to');
+  }
+  
+  public function getDateFromRaw()
+  {    
+    return $this->_get('date_from');
+  }
+  
+  
   public function setPropertyTemplate($template)
   {
     $file=sfConfig::get('sf_data_dir').'/feed/properties_template.yml' ;

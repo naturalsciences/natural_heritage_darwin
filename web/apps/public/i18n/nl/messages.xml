@@ -278,7 +278,7 @@
       </trans-unit>
           <trans-unit id="1239">
         <source>Go to Backend</source>
-        <target>Naar de Backoffice applicatie</target>
+        <target>Naar Backoffice</target>
         
       </trans-unit>
           <trans-unit id="1240">
@@ -358,7 +358,7 @@
       </trans-unit>
           <trans-unit id="1255">
         <source>Individual Count</source>
-        <target>Aantal individuen</target>
+        <target>Aantal artikelen</target>
         
       </trans-unit>
           <trans-unit id="1256">
@@ -943,6 +943,21 @@
         <source>Recommended browser for DaRWIN :</source>
         
       </trans-unit>
+
+      <trans-unit id="1721">
+        <source>Associated comment</source>
+        <target>Geassocieerd commentaren</target>
+      </trans-unit>
+
+      <trans-unit id="1722">
+        <source>Object name</source>
+        <target>Naam van het object</target>
+      </trans-unit>
+      <trans-unit id="1723">
+        <source>DaRWIN search</source>
+        <target>DaRWIN opzoeking</target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>

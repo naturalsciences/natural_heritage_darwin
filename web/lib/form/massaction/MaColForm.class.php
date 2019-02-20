@@ -22,16 +22,8 @@ class MaColForm extends BaseForm
   public function doGroupedAction($query,$values, $items)
   {
     $new_taxon = $values['col'];
-    $query->set('p.col', '?', $new_taxon);
+    $query->set('s.col', '?', $new_taxon);
     return $query;
   }
-  
-//ftheeten 2017 07 27
-    public function getTable()
-    {
-        $returned=Array();
-        $returned['p']='StorageParts';
-        return $returned;
-    }    
 
 }

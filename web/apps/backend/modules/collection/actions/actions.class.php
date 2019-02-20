@@ -1,5 +1,5 @@
 <?php
-  error_reporting(E_ERROR | E_PARSE);
+
 /**
  * collection actions.
  *
@@ -69,6 +69,7 @@ class collectionActions extends DarwinActions
       $item->setCodeSuffix(Doctrine::getTable('Collections')->getDefaultValueOf('code_suffix'));
       $item->setCodeSuffixSeparator(Doctrine::getTable('Collections')->getDefaultValueOf('code_suffix_separator'));
       $item->setCodeAutoIncrement(Doctrine::getTable('Collections')->getDefaultValueOf('code_auto_increment'));
+      $item->setCodeAutoIncrement(Doctrine::getTable('Collections')->getDefaultValueOf('code_auto_increment_for_insert_only'));
       $item->save();
       return $this->renderText('ok');
     }
@@ -103,15 +104,11 @@ class collectionActions extends DarwinActions
     if(! $this->getUser()->isAtLeast(Users::ENCODER) ) $this->forwardToSecureAction();
 
     $this->institutions = Doctrine::getTable('Collections')->fetchByInstitutionList($this->getUser(),null,false,true);
-    //ftheeten 2017 03 30
-    //$this->statistics=$this->getCollectionStatistics();
   }
 
   public function executeIndex(sfWebRequest $request)
   {
     $this->institutions = Doctrine::getTable('Collections')->fetchByInstitutionList($this->getUser());
-    //ftheeten 2017 03 30
-    //$this->statistics=$this->getCollectionStatistics();
   }
 
   public function executeNew(sfWebRequest $request)
@@ -137,7 +134,11 @@ class collectionActions extends DarwinActions
 
     $this->forward404Unless($request->isMethod('post'));
     $options = $request->getParameter('collections');
-    $this->form = new CollectionsForm(null,array('new_with_error' => true, 'institution' => $options['institution_ref']));
+    $form_options = array('new_with_error' => true);
+    if ( $options['institution_ref'] != '' && $options['institution_ref'] !== null ) {
+      $form_options['institution'] = $options['institution_ref'];
+    }
+    $this->form = new CollectionsForm(null, $form_options);
 
     $this->processForm($request, $this->form);
 
@@ -289,157 +290,105 @@ class collectionActions extends DarwinActions
     }
   }
   
-  //ftheeten 2017 03 30
-  public function getCollectionStatistics($key)
-  {
- 
-   $conn = Doctrine_Manager::connection();
-    
-        $sql = "SELECT collection_ref, counter_category, items, count_items FROM fct_rmca_statistics_collection_count(:collection_key);";
-        $q = $conn->prepare($sql);
-         $q->execute(array(':collection_key' => $key));
-		
-   
-   
-        $statistics = $q->fetchAll();
-        $statistics=$this->produceStatistics($statistics);
-      
-        /*foreach($statistics as $key=>$subArray)
-        {
-            if(is_numeric($key))
-            {
-                 $statistics=$this->statisticsAddParent($statistics,$key);
-            }
-        }*/
-      
-        $this->recur_ksort($statistics);
-         //  print_r($statistics);
-       return $statistics;
-  }
-  
-    
-  public function produceStatistics($statistics_fetched)
-  {
-        $i=0;
-        $returned=array();
-        
-        foreach($statistics_fetched as $statistic)
-		{
-			$collection_ref=$statistic['collection_ref'];
-            
-            $counter_category=$statistic['counter_category'];
-            $items=$statistic['items'];
-            $count_items=$statistic['count_items'];
-            $returned[$counter_category][ $items]=$count_items;
-            if($counter_category=="type_count")
-            {
-                if(strpos( $items, "/")===FALSE)
-                {
-                    if(array_key_exists($items,$returned[$counter_category."_corrected"] )===FALSE)
-                    {
-                         $returned[$counter_category."_corrected"][ $items]=$count_items;
-                    }
-                    else
-                    {                        
-                         $returned[$counter_category."_corrected"][ $items]=$returned[$counter_category."_corrected"][ $items]+$count_items;
-                    }
-                   
-                }
-                else
-                {
-                    $tmpCriterias=explode("/",$items);
-                   
-                    foreach($tmpCriterias as $itemTmp)
-                    {
-                         $itemTmp=trim($itemTmp);
-                        
-                         if(array_key_exists($itemTmp,$returned[$counter_category."_corrected"] )===FALSE)
-                        {
-                             $returned[$counter_category."_corrected"][ $itemTmp]=$count_items;
-                        }
-                        else
-                        {                        
-                             $returned[$counter_category."_corrected"][ $itemTmp]=$returned[$counter_category."_corrected"][ $itemTmp]+$count_items;
-                        }
-                        
-                        
-                    }
-                    
-                }
-            }
-            
-           
-			
-            $i++;
-		}
-         $counter=0;
-        foreach($returned['type_count'] as $type=>$valueTmp)
-		{
-            
-                
-                   
-                    
-                    $counter=$counter+$valueTmp;
-                   
-                
-                
-           
-        }
-       $returned['sum_specimens']=$counter;
-      
-       return $returned;
-     
-  }
-  
-  // Note this method returns a boolean and not the array
-   public  function recur_ksort(&$array) 
+      //ftheeten 2018 04 24
+   public function executeStatistics(sfWebRequest $request)
    {
-    foreach ($array as &$value) {
-      if (is_array($value)) $this->recur_ksort($value);
-    }
-   return ksort($array);
-    }
-   
-
-   public function executeCollectionStatistics(sfWebRequest $request)
-  {
-    $collection = false;
-    if($request->hasParameter('id') && $request->getParameter('id'))
-    {
-      $collection=$this->getCollectionStatistics($request->getParameter('id'));
-    }
-
-    $this->forward404Unless($collection);
-    $str="";
-     $str .= 'Type count:';
-    $str .= "<table style='border: 1px solid black;'>";
-    $str .= '<tr >';
-         $str .= '<th>All specimens</th>';
-         $str .= '<td>'.$collection['sum_specimens'].'</td>';
-         $str .= '</tr>';
-    foreach($collection['type_count_corrected'] as $key=>$val)
-    {
-         $str .= '<tr style="border: 1px solid black;">';
-         $str .= '<th style="border: 1px solid black;">'.$key.'</th>';
-         $str .= '<td style="border: 1px solid black;">'.$val.'</td>';
-         $str .= '</tr>';
-    }
-    $str .= '</table>';
-    if(count($collection['image_count'])>0)
-     {
-         $str .= '<br/>Images count:';
-        $str .= "<table style='border: 1px solid black;'>";
-        foreach($collection['image_count'] as $key=>$val)
+        $id=-1;
+        if($request->hasParameter('id'))
         {
-             $str .= '<tr style="border: 1px solid black;" >';
-             $str .= '<th style="border: 1px solid black;">'.$key.'</th>';
-             $str .= '<td style="border: 1px solid black;">'.$val.'</td>';
-             $str .= '</tr>';
+            $id= $request->getParameter('id');
         }
-        $str .= '</table>';
-    }
-    return $this->renderText($str);
+        elseif($request->hasParameter('code'))
+        {
+            $coll_obj= Doctrine_Core::getTable("Collections")->findOneByCode($request->getParameter('code'));
+            if(is_object($coll_obj))
+            {
+                 $id= $coll_obj->getId();
+            }
+            
+        }
+        $this->form = new CollectionsStatisticsFormFilter(array("id"=>$id));
+        
+        return sfView::SUCCESS;
+   }
    
-  }   
+   
+
+  
+  public function executeDisplay_statistics_specimens(sfWebRequest $request)
+  {
+    $this->getResponse()->setHttpHeader('Content-type','application/json');
+    $this->setLayout('json');
+    return $this->renderText(json_encode($this->executeDisplay_statistics_specimens_main($request)));
+  }
+  
+
+  
+  public function executeDisplay_statistics_types(sfWebRequest $request)
+  {
+        $this->getResponse()->setHttpHeader('Content-type','application/json');
+        $this->setLayout('json');
+        return   $this->renderText(json_encode($this->execute_statistics_generic($request, "types")));
+  }
+  
+  public function executeDisplay_statistics_taxa(sfWebRequest $request)
+  {
+        $this->getResponse()->setHttpHeader('Content-type','application/json');
+        $this->setLayout('json');
+        return   $this->renderText(json_encode($this->execute_statistics_generic($request, "taxa")));
+  }
+  
+  public function executeDisplay_all_statistics_csv(sfWebRequest $request)
+  {
+    $returned=Array();
+    
+    
+    $returned[]="Specimen count";
+    $tmp=$this->executeDisplay_statistics_specimens_main($request);
+    foreach($tmp as $row)
+    {
+        $returned[]=implode("\t", $row);
+    }
+    $returned[]="";
+    $returned[]="Type specimen count";
+    $tmp=$this->execute_statistics_generic($request, "types");
+    foreach($tmp as $row)
+    {
+        $returned[]=implode("\t", $row);
+    }
+    $returned[]="";
+    $returned[]="Taxa in specimen count";
+    $tmp=$this->execute_statistics_generic($request, "taxa");
+    foreach($tmp as $row)
+    {
+        $returned[]=implode("\t", $row);
+    }
+    $returned[]="";
+    
+    $this->getResponse()->setHttpHeader('Content-type','text/tab-separated-values');
+    $this->getResponse()->setHttpHeader('Content-disposition','attachment; filename="darwin_statistics.txt"');
+    $this->getResponse()->setHttpHeader('Pragma', 'no-cache');
+    $this->getResponse()->setHttpHeader('Expires', '0');
+    
+    $this->getResponse()->sendHttpHeaders(); //edited to add the missed sendHttpHeaders
+    //$this->getResponse()->setContent($returned);
+    $this->getResponse()->sendContent();           
+    print(implode("\r\n",$returned));
+    return sfView::NONE;           
+  }
+  
+     //ftheeten 2018 08 08
+   public function executeDescCollectionJSON(sfWebRequest $request)
+   {
+        $conn= Doctrine_Manager::connection();
+        $sql = "SELECT * from collections WHERE id=:id LIMIT 1;";
+		
+        $q = $conn->prepare($sql);
+		$q->execute(array(':id'=> $request->getParameter("id") ));
+        $result = $q->fetchAll(PDO::FETCH_ASSOC);
+        $this->getResponse()->setContentType('application/json');
+		return  $this->renderText(json_encode($result));
+        
+  }
    
 }

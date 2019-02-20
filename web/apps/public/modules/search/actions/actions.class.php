@@ -79,10 +79,14 @@ class searchActions extends DarwinActions
 
       // If pager not yet executed, this means the query has to be executed for data loading
       if (! $this->pagerLayout->getPager()->getExecuted())
+      {
         $this->search = $this->pagerLayout->execute();
+      }
       $this->field_to_show = $this->getVisibleColumns($this->form);
       $this->defineFields();
       $ids = $this->FecthIdForCommonNames() ;
+      //ftheeten 2018 10 29
+      $this->fetchCodes();
       $this->common_names = Doctrine::getTable('VernacularNames')->findAllCommonNames($ids) ;
       if(!count($this->common_names))
         $this->common_names = array('taxonomy'=> array(), 'chronostratigraphy' => array(), 'lithostratigraphy' => array(),
@@ -105,6 +109,12 @@ class searchActions extends DarwinActions
 
   public function executeView(sfWebRequest $request)
   {
+    $this->full = false ;
+    if($request->hasParameter('full')) 
+    {
+        $this->full = true ;
+        $this->setLayout('refined');
+    }
     $ajax = false ;
     if($request->isXmlHttpRequest())
     {
@@ -119,9 +129,8 @@ class searchActions extends DarwinActions
     else $id = $request->getParameter('id') ;
 
     $this->forward404Unless(ctype_digit($request->getParameter('id')));
-    //ftheeten 2016 10 13
-    //$this->specimen = Doctrine::getTable('Specimens')->find((int) $request->getParameter('id'));
-    $this->specimen = Doctrine::getTable('SpecimensStoragePartsView')->find((int) $request->getParameter('id'));    
+    $this->specimen = Doctrine::getTable('Specimens')->find((int) $request->getParameter('id'));
+    $this->comments = Doctrine::getTable('Comments')->getRelatedComment('specimens', (int) $request->getParameter('id'));
     $this->forward404Unless($this->specimen);
     if(!$this->specimen->getCollectionIsPublic()) $this->forwardToSecureAction();
 
@@ -165,7 +174,9 @@ class searchActions extends DarwinActions
     $this->form = new SuggestionForm(null,array('ref_id' => $id, 'ajax' => $ajax)) ;
     if($request->isXmlHttpRequest())
     {
-      $this->form->bind($suggestion, array('captcha' => $captcha)) ;
+      //$this->form->bind($suggestion, array('captcha' => $captcha)) ;
+      //ftheeten 2018 05 09
+      $this->form->bind($suggestion) ;
       if ($this->form->isBound() && $this->form->isValid())
       {
         $comment = $suggestion['comment'];
@@ -186,6 +197,32 @@ class searchActions extends DarwinActions
     }
   }
 
+  public function executeGetTaxon (sfWebRequest $request)
+  {
+  
+	$taxa = Doctrine::getTable('Taxonomy')->getOneTaxon($request->getParameter('taxon-name'));
+	$taxaCount = count($taxa);
+    if ($taxaCount==1) {
+	  return $this->renderText($taxa[0]['name']." (".$taxa[0]['Level']['level_name'].")");
+	}
+	elseif($taxaCount>1) {
+	   return $this->renderText('multiple match');
+	}
+	return $this->renderText('taxon not found');
+  
+  }
+
+  /**
+   * @param \sfWebRequest $request
+   */
+  public function executeFamilycontent(sfWebRequest $request) {
+    $this->forward404Unless($request->getParameter('id', 0)!==0);
+    $familyContent = Doctrine::getTable('Specimens')->getFamilyContent($request->getParameter('id'));
+    $family = Doctrine::getTable('Taxonomy')->find($request->getParameter('id'));
+    return $this->renderPartial('familycontent',array('familycontent'=>$familyContent, 'family'=>$family));
+  }
+
+  
   /**
   * Compute different sources to get the columns that must be showed
   * 1) from form request 2) from session 3) from default value
@@ -233,12 +270,21 @@ class searchActions extends DarwinActions
   protected function defineFields()
   {
     $this->columns = array(
+    
       'category' => array(
         'category',
         $this->getI18N()->__('Category'),),
       'collection' => array(
         'collection_name',
         $this->getI18N()->__('Collection'),),
+        //ftheeten 2018 10 29
+     'codes' => array(
+        'codes',
+        $this->getI18N()->__('Codes'),),
+         //ftheeten 2018 10 29
+     'ig_num' => array(
+        'ig_num',
+        $this->getI18N()->__('I.G. num'),),
       'taxon' => array(
         'taxon_name_indexed',
         $this->getI18N()->__('Taxon'),),
@@ -305,6 +351,26 @@ class searchActions extends DarwinActions
     );
   }
 
+   //ftheeten 2018 10 29
+   protected function fetchCodes()
+  {
+    // Fill in the specimens list that will be given for codes and loans retrieving
+    $spec_list = array();
+    foreach($this->search as $key=>$specimen){
+      $spec_list[] = $specimen->getId() ;
+    }
+
+    // codes retrieve and fill of a $this->codes variable (available in the specimen search result template)
+    $codes_collection = Doctrine::getTable('Codes')->getCodesRelatedMultiple('specimens',$spec_list) ;
+    $this->codes = array();
+    foreach($codes_collection as $code) {
+      if(! isset($this->codes[$code->getRecordId()]))
+        $this->codes[$code->getRecordId()] = array();
+      $this->codes[$code->getRecordId()][] = $code;
+    }
+    
+  }
+  
   private function FecthIdForCommonNames()
   {
     $tab = array('taxonomy'=> array(), 'chronostratigraphy' => array(), 'lithostratigraphy' => array(), 'lithology' => array(),'mineralogy' => array()) ;
@@ -329,4 +395,124 @@ class searchActions extends DarwinActions
     }
     return $tab ;
   }
+  
+  //ftheeten 2018 05 30
+  public function executeDisableMenu(sfWebRequest $request)
+  {
+    $flagMenu="on";
+    if($request->hasParameter('menu')) 
+    {
+       if(strtolower($request->getParameter('menu'))=="off")
+       {
+           $flagMenu="off";
+       }
+    }
+    $_SESSION['menu']= $flagMenu; 
+    return sfView::NONE;    
+
+  }
+  
+    //ftheeten 2018 06 28
+  public function executeCollection(sfWebRequest $request)
+  {
+      $id=-1;
+        if($request->hasParameter('id'))
+        {
+            $id= $request->getParameter('id');
+        }
+        elseif($request->hasParameter('code'))
+        {
+            $coll_obj= Doctrine_Core::getTable("Collections")->findOneByCode($request->getParameter('code'));
+            if(is_object($coll_obj))
+            {
+                 $id= $coll_obj->getId();
+            }
+            
+        }
+        $this->form = new CollectionsStatisticsFormFilter(array("id"=>$id));
+        
+        return sfView::SUCCESS;
+  }
+  
+   public function executeDisplay_statistics_specimens(sfWebRequest $request)
+  {
+    $this->getResponse()->setHttpHeader('Content-type','application/json');
+    $this->setLayout('json');
+    return $this->renderText(json_encode($this->executeDisplay_statistics_specimens_main($request)));
+  }
+  
+
+  
+  public function executeDisplay_statistics_types(sfWebRequest $request)
+  {
+        $this->getResponse()->setHttpHeader('Content-type','application/json');
+        $this->setLayout('json');
+        return   $this->renderText(json_encode($this->execute_statistics_generic($request, "types")));
+  }
+  
+  public function executeDisplay_statistics_taxa(sfWebRequest $request)
+  {
+        $this->getResponse()->setHttpHeader('Content-type','application/json');
+        $this->setLayout('json');
+        return   $this->renderText(json_encode($this->execute_statistics_generic($request, "taxa")));
+  }
+  
+  public function executeDisplay_all_statistics_csv(sfWebRequest $request)
+  {
+    $returned=Array();
+    
+    
+    $returned[]="Specimen count";
+    $tmp=$this->executeDisplay_statistics_specimens_main($request);
+    foreach($tmp as $row)
+    {
+        $returned[]=implode("\t", $row);
+    }
+    $returned[]="";
+    $returned[]="Type specimen count";
+    $tmp=$this->execute_statistics_generic($request, "types");
+    foreach($tmp as $row)
+    {
+        $returned[]=implode("\t", $row);
+    }
+    $returned[]="";
+    $returned[]="Taxa in specimen count";
+    $tmp=$this->execute_statistics_generic($request, "taxa");
+    foreach($tmp as $row)
+    {
+        $returned[]=implode("\t", $row);
+    }
+    $returned[]="";
+    
+    $this->getResponse()->setHttpHeader('Content-type','text/tab-separated-values');
+    $this->getResponse()->setHttpHeader('Content-disposition','attachment; filename="darwin_statistics.txt"');
+    $this->getResponse()->setHttpHeader('Pragma', 'no-cache');
+    $this->getResponse()->setHttpHeader('Expires', '0');
+    
+    $this->getResponse()->sendHttpHeaders(); //edited to add the missed sendHttpHeaders
+    //$this->getResponse()->setContent($returned);
+    $this->getResponse()->sendContent();           
+    print(implode("\r\n",$returned));
+    return sfView::NONE;           
+  }
+  
+    //ftheeten 2018 07 17
+     public function executeCheckTaxonHierarchy(sfWebRequest $request)
+	  {
+	  
+		$isCanonical=false;
+		if($request->getParameter('canonical'))
+		{
+			if(strtolower($request->getParameter('canonical'))=="true"||strtolower($request->getParameter('canonical'))=="yes"||strtolower($request->getParameter('canonical'))=="on")
+			{
+				$isCanonical=true;
+			}
+		}
+		$results = Doctrine::getTable('Taxonomy')->checkTaxonExisting($request->getParameter('taxon-name'), $isCanonical);
+
+		$this->getResponse()->setContentType('application/json');
+		 return  $this->renderText(json_encode($results,JSON_UNESCAPED_SLASHES));
+	  
+	  }
+  
 }

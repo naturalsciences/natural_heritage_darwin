@@ -1,4 +1,6 @@
-<?php if($form['notion_concerned']->getValue()!=""):?>
+<?php if($form['notion_concerned']->getValue()!=""||
+//ftheeten 2018 09 06
+sfContext::getInstance()->getActionName()=="addIdentification"||sfContext::getInstance()->getActionName()=="edit"):?>
 <tbody class="spec_ident_data" id="spec_ident_data_<?php echo $row_num;?>">
   <?php if($form->hasError()): ?>
   <tr>
@@ -100,17 +102,14 @@
           $('table#identifications #spec_ident_identifiers_<?php echo $row_num;?> thead').show();
           $('table#identifications #spec_ident_identifiers_<?php echo $row_num;?>').addClass('green_border');
 	  showAfterRefresh($('.ui-tooltip-content .page')) ; 
-	  
-	  //ftheeten 2016 02 24
+        }
+      });
+      
+      //ftheeten 2016 02 24
 
 	  position_to_Scroll=$('#refIdentifications').offset().top;
 	 $('body').trigger('close_modal');
 	  $('body').parent().scrollTop(position_to_Scroll);
-
-        }
-		
-      });
-	  
       return true;
     }
 
@@ -119,21 +118,7 @@
       handle: '.spec_ident_identifiers_handle',
       update_row_fct: addIdentifierForIdentification<?php echo $row_num;?>
       });
-      
-      
-      <?php if(sfContext::getInstance()->getActionName()=="new"||sfContext::getInstance()->getActionName()=="edit"):?>
-        //ftheeten 2016 11 29
-        
-             $('.to_date').each(function ()
-                        {
-                            if(/specimen_(new){0,1}Identification(s){0,1}_[0-9]+_notion_date_year/.test($(this).attr('id')))
-                            {
-                                $.reverse_year_in_select("#"+$(this).attr('id'));
-                            }
-                        }
-                    );
-         
-      <?php endif;?>
+
 
 });
 </script></td>

@@ -28,7 +28,7 @@ prod:
       transport:
         class: Swift_SmtpTransport
         param:
-          host:       bernie
+          host:       smtp.naturalsciences.be
           port:       25
           encryption: ~
           username:   ~
@@ -89,4 +89,4 @@ all:
   user:
     class: myUser
     param:
-      timeout: 3600
+      timeout: 14400 

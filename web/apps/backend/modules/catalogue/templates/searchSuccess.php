@@ -40,6 +40,11 @@
             <?php if($orderBy=='level_ref') echo $orderSign ?>
           </a>
         </th>
+         <!--ftheeten 2018 07 19-->
+        <?php if($items[0]['taxonomy_metadata_name']&&$items[0]['metadata_ref']): ?>
+            <th> <?php echo __('Taxonomy name');?></th>
+            <th><?php echo __('Reference taxon');?></th>
+        <?php endif;?>
         <?php if(isset($items[0]['lower_bound']) && isset($items[0]['upper_bound'])): ?>
           <th class="datesNum">
             <a class="sort" href="<?php echo url_for($s_url.'&orderby=lower_bound'.( ($orderBy=='lower_bound' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
@@ -87,8 +92,17 @@
               </div>
             </td>
             <td>
-              <span><?php echo $item->getLevel();?></span>
+              <span class="level_name"><?php echo $item->getLevel();?></span>
             </td>
+             <!--ftheeten 2018 07 19-->
+            <?php if($item['taxonomy_metadata_name']&&$item['metadata_ref']): ?>
+             <td>
+              <span><?php echo $item->getTaxonomyMetadataName();?></span>
+            </td>
+            <td>
+              <span><?php echo $item->getTaxonomyMetadataReferenceStatus() == "1" ? "true":"false" ;?></span>
+            </td>
+            <?php endif;?>
             <?php if(isset($item['lower_bound']) && isset($item['upper_bound'])): ?>
               <td class="datesNum">
                 <span><?php echo $item->getLowerBound();?></span>
@@ -123,7 +137,24 @@
     $(document).ready(function () {
       $('a.search_related').click(function(event)
       {
-        $(this).closest('form')[0].reset();
+     
+        //ftheeten 2018 09 10
+        //$(this).closest('form')[0].reset();
+        
+        //ftheeten 2018 09 10
+        var tmpForm=$(this).closest('form')[0];
+        for(var i=0; i < tmpForm.elements.length; i++){
+                var e = tmpForm.elements[i];        
+             
+                if(e.type=="text")
+                {
+                    $(e).val("")
+                }
+                else if(e.type.includes("select")&&e.id!="searchCatalogue_rec_per_page")
+                {                    
+                    e.selectedIndex = 0;                    
+                }
+        }
         event.preventDefault();
         row = $(this).closest('tr');
         iname = row.find('.item_name');
@@ -142,7 +173,7 @@
             item_row.find('.tree').html(html).slideDown();
           });
         }
-        $('.tree').slideUp();
+        item_row.find('.tree').slideUp();
       });
 
     });

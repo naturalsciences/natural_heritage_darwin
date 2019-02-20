@@ -5,6 +5,8 @@ dbname="darwin2"
 dbport="5432"
 hostname="127.0.0.1"
 schema="darwin2"
+testschema="unittest"
+testuser="unittest"
 unifiedpasswd=""
 darwin_version=`ls changes/*.sql | sort -nr | head -n1 | sed 's/-.*//' | xargs  basename`
 
@@ -44,6 +46,9 @@ usage(){
 
   command_name "install-db"
   command_desc "install the darwin db into the \$db_user schema : create types, tables, functions and indexes"
+
+  command_name "install-test"
+  command_desc "install the darwin db into the 'unittest' schema"
 
   command_name "test"
   command_desc "Unit test the database installation in a schema 'unittest'"
@@ -86,6 +91,12 @@ usage(){
   option_desc "-s schema (Default: $schema)"
   command_desc "schema used in the database"
 
+  option_desc "-t schema (Default: $testschema)"
+  command_desc "schema used in the database for unit testing"
+
+  option_desc "-u user (Default: $testsuser)"
+  command_desc "user used in the database for unit testing"
+
   option_desc "-V db version (Default: $pg_version)"
   command_desc "Version of the postgresql database"
 
@@ -97,7 +108,7 @@ usage(){
 }
 
 [[ $# -eq 0 ]] && usage
-while getopts ":O:h:p:d:V:s:" opt ; do
+while getopts ":O:h:p:d:V:s:t:u:" opt ; do
   case $opt in
     h)
       if [[ $OPTARG = -* ]]; then
@@ -130,6 +141,22 @@ while getopts ":O:h:p:d:V:s:" opt ; do
         continue
       fi
       schema=$OPTARG
+    ;;
+    t)
+      if [[ $OPTARG = -* ]]; then
+        warn_msg "invalid argument for option -t, -t ignored"
+        ((OPTIND--))
+        continue
+      fi
+      testschema=$OPTARG
+    ;;
+    u)
+      if [[ $OPTARG = -* ]]; then
+        warn_msg "invalid argument for option -u, -u ignored"
+        ((OPTIND--))
+        continue
+      fi
+      testuser=$OPTARG
     ;;
     d)
       if [[ $OPTARG = -* ]]; then
@@ -208,8 +235,10 @@ function install_role() {
 }
 
 psql="/usr/bin/psql -q -h $hostname -U darwin2 -d $dbname -p $dbport"
-basepsql="sudo -u postgres psql -p $dbport -v dbname=$dbname"
+tpsql="/usr/bin/psql -q -h $hostname -U $testuser -d $dbname -p $dbport"
+basepsql="sudo -u postgres psql -p $dbport -v dbname=$dbname -v schema=$schema"
 admpsql="$basepsql -q -d $dbname"
+pg_prove="/usr/bin/pg_prove -h $hostname -U unittest -d $dbname -p $dbport"
 case "$@" in
   "test-adm")
     echo "Trying to Connect to DB"
@@ -219,25 +248,31 @@ case "$@" in
     $basepsql -c "create database $dbname ENCODING 'UNICODE';"
     install_role
     $admpsql -c "create schema $schema authorization darwin2;"
-    $admpsql  -c "ALTER USER darwin2 SET search_path TO $dbname, public;"
+    $admpsql  -c "ALTER USER darwin2 SET search_path TO $schema, public;"
     install_lib
     install_db
   ;;
   "install-db")
     install_db
   ;;
+  "install-test")
+    add_user "$testuser"
+    $admpsql -c "create schema $testschema authorization $testuser;"
+    $admpsql  -c "ALTER USER $testuser SET search_path TO $testschema, public;"
+    $admpsql  -c "CREATE EXTENSION pgtap;"
+  ;;
   "test-psql")
     for sqlfiles in $(ls tests/*.sql)
     do
-      $psql -f $sqlfiles
+      $tpsql -f $sqlfiles
     done
   ;;
   "test")
-    pg_prove -h $hostname -U darwin2 -d $dbname -p $dbport $(ls tests/*.sql)
+    $pg_prove $(ls tests/*.sql)
   ;;
   "create-schema")
     $admpsql -c "create schema $schema authorization darwin2;"
-    $admpsql  -c "ALTER USER darwin2 SET search_path TO $dbname, public;"
+    $admpsql  -c "ALTER USER darwin2 SET search_path TO $schema, public;"
   ;;
   "create-db")
     $basepsql -c "create database $dbname ENCODING 'UNICODE';"

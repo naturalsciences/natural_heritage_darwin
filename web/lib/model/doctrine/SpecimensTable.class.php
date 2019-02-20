@@ -6,17 +6,18 @@ class SpecimensTable extends DarwinTable
 {
   static public $acquisition_category = array(
       'undefined' => 'Undefined',
+      'collect' => 'Collect',
       'donation' => 'Donation',
+      'excavation' => 'Excavation',
       'exchange' => 'Exchange',
+      'exploration' => 'Exploration',
+      'gift' => 'Gift',
       'internal work' => 'Internal work',
+      'seizure' => 'Judicial seizure',
       'loan' => 'Loan',
       'mission' => 'Mission',
       'purchase' => 'Purchase',
-      'seizure' => 'Judicial seizure',
       'trip' => 'Trip',
-      'excavation' => 'Excavation',
-      'exploration' => 'Exploration',
-      'collect' => 'Collect',
       );
 
   protected static $widget_array = array(
@@ -58,9 +59,10 @@ class SpecimensTable extends DarwinTable
       ->andwhere('s.ig_ref is not distinct from ?', $object->getIgRef())
       ->andwhere('s.acquisition_category = ?', $object->getAcquisitionCategory())
       ->andwhere('s.acquisition_date = ?', $object->getRawAcquisitionDate())
-      //ftheeten 2016 07 07
+       //ftheeten 2018 30 11
        ->andwhere('s.gtu_from_date = ?', $object->getRawGtuFromDate())
-       ->andwhere('s.gtu_to_date = ?', $object->getRawGtuToDate());
+       ->andwhere('s.gtu_to_date = ?', $object->getRawGtuToDate())
+      ;
     return $q->fetchOne();
   }
 
@@ -231,23 +233,6 @@ class SpecimensTable extends DarwinTable
       $items = $this->createUniqFlatDistinct('specimens', 'type', 'type', true);
       return $items;
     }
-    
-        //ftheeten 2017 09 21
-    public function getDistinctTypesNoCombinations()
-    {
-      $items = $this->createUniqFlatDistinct('specimens', 'type', 'type', true);
-      $items2=Array();
-      foreach($items as $key=>$value)
-      {
-        $items3=explode("/", $key);
-        foreach($items3 as $value2)
-        {
-            $items2[trim($value2)]=trim($value2);
-        }
-      }
-      ksort($items2, SORT_LOCALE_STRING);
-      return $items2;
-    }
 
     /**
     * Get distinct Type groups
@@ -286,6 +271,16 @@ class SpecimensTable extends DarwinTable
     public function getDistinctStates()
     {
       $states = $this->createUniqFlatDistinct('specimens', 'state', 'state',true);
+      return $states;
+    }
+
+    /**
+    * Get distinct Specimen_status
+    * @return Doctrine_collection with distinct "specimen_status" as column
+    */
+    public function getDistinctSpecimenStatus()
+    {
+      $states = $this->createUniqFlatDistinct('specimens', 'specimen_status', 'specimen_status',true);
       return $states;
     }
 
@@ -397,7 +392,8 @@ class SpecimensTable extends DarwinTable
         ->orderBy("dict_value ASC");
       $res = $q->execute();
       $this->flat_results = array();
-      foreach($res as $result) {
+      foreach($res as $result) 
+      {
         if(! isset($this->flat_results[$result->getDictField()]))
           $this->flat_results[$result->getDictField()] = array();
         $this->flat_results[$result->getDictField()][$result->getDictValue()] = $result->getDictValue();
@@ -408,16 +404,35 @@ class SpecimensTable extends DarwinTable
     return array();
   }
 
-  public function findConservatories($user , $item, $cirterias) {
-    $sql = "SELECT COALESCE(".$item."::text,'') as item,  count(*) as ctn FROM Specimens s
-      WHERE  collection_ref in (select fct_search_authorized_view_collections(".$user->getId().'))';
-    $sql_params = array();
-    foreach($cirterias as $k => $v) {
-      $sql .= " AND COALESCE(".$k.", '') = ?";
+  /**
+   * For a given sort of "storage" ($item: building, floor, room, row, shelf, container, sub_container),
+   * for a list of collections availabe for the user passed as parameter and
+   * for a list of filtering applied (a selection of a given building for instance,...),
+   * return the list of entries found (type of storage asked - $item)
+   * @param object $user User object
+   * @param string $item Type of storage to be retrieved
+   * @param array $criterias An array of filtering criterias to be applied
+   * @return array A recordset of the list of type of storage given available, with, for each of them,
+   *               the count of specimens concerned
+   */
+  public function findConservatories($user , $item, $criterias) {
+
+    $sql = "SELECT COALESCE( $item ::text,'') as item,
+                   COUNT(*) as ctn
+            FROM Specimens s
+            WHERE  collection_ref IN (
+                                        SELECT fct_search_authorized_view_collections( ? )
+                                     )
+           ";
+    $sql_params = array($user->getId());
+    foreach($criterias as $k => $v) {
+      $sql .= " AND COALESCE( $k , '') = ? ";
       $sql_params[] = $v;
     }
-    $sql .= " GROUP BY item order by item asc";
-
+    $sql .= "
+              GROUP BY item
+              ORDER BY item ASC
+            ";
     $conn_MGR = Doctrine_Manager::connection();
     $conn = $conn_MGR->getDbh();
     $statement = $conn->prepare($sql);
@@ -426,4 +441,34 @@ class SpecimensTable extends DarwinTable
 
     return $res;
   }
+
+  /**
+   * @param integer $id Id of family to use as top family
+   * @return array A recordset of the list of specimens that are of the family
+   *               provided
+   */
+  public function getFamilyContent($id) {
+    $sql="
+            select collection_name, id, taxon_name
+            from specimens
+            where taxon_ref in
+            (
+              select id
+              from taxonomy
+              where id = ?
+                 or path like '%/'||?::text||'/%'
+            )
+            and collection_ref not in (176,316)
+            order by collection_name, taxon_name, id
+         ";
+    $sql_params = array($id,$id);
+    $conn_MGR = Doctrine_Manager::connection();
+    $conn = $conn_MGR->getDbh();
+    $statement = $conn->prepare($sql);
+    $statement->execute($sql_params);
+    $res = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    return $res;
+  }
+
 }

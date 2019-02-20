@@ -1,7 +1,7 @@
 <div class="page">
 
 <?php if(count($items) !=0 ):?>
-<div><a class="result_choose_all"><?php echo __('Choose all');?></a></div>
+
   <table class="part_pinned_choose results">
   <?php use_helper('Text');?>
   <?php foreach($items as $i => $item):?>
@@ -56,17 +56,6 @@
             $('.results tbody tr').die('click');
             $('body').trigger('close_modal');
           }
-      });
-      //ftheeten 2016 06 07
-      //attention: need to specify synchrnous ajax queries in "addPined" (overveiwSuccss.php)
-       $('.result_choose_all').bind('click', function () {
-        
-         $('.result_choose').each(
-            function(index)
-            {
-               $( this ).click();
-            }
-         );
       });
     });
     </script>

@@ -89,29 +89,38 @@ $(document).ready(function ()
           <?php echo $form['parent_ref'] ?>
         </td>
       </tr>
+      <!--ftheeten 2018 08 08-->
+       <tr>
+        <th><?php echo $form['allow_duplicates']->renderLabel() ?></th>
+        <td>
+          <?php echo $form['allow_duplicates']->renderError() ?>
+          <?php echo $form['allow_duplicates'] ?>
+        </td>
+      </tr>
       <tr>
         <td colspan="2">
-        <table class="encoding collections_rights" id="user_right">
-          <thead>
-            <tr>
-              <th><label><?php echo __("Users") ; ?></label></th>
-              <th colspan="4"><label><?php echo __("Rights") ; ?></label></th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php foreach($form['CollectionsRights'] as $form_value):?>
-              <?php include_partial('coll_rights', array('form' => $form_value, 'ref_id' => ($form->getObject()->isNew() ? '':$form->getObject()->getId())));?>
-            <?php endforeach;?>
-            <?php foreach($form['newVal'] as $form_value):?>
-              <?php include_partial('coll_rights', array('form' => $form_value, 'ref_id' => ''));?>
-            <?php endforeach;?>
-          </tbody>
-        </table>
+          <table class="encoding collections_rights" id="user_right">
+            <thead>
+              <tr>
+                <th><label><?php echo __("Users") ; ?></label></th>
+                <th colspan="4"><label><?php echo __("Rights") ; ?></label></th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php foreach($form['CollectionsRights'] as $form_value):?>
+                <?php include_partial('coll_rights', array('form' => $form_value, 'ref_id' => ($form->getObject()->isNew() ? '':$form->getObject()->getId())));?>
+              <?php endforeach;?>
+              <?php foreach($form['newVal'] as $form_value):?>
+                <?php include_partial('coll_rights', array('form' => $form_value, 'ref_id' => ''));?>
+              <?php endforeach;?>
+            </tbody>
+          </table>
 
-        <div class='add_value' id="user_right">
-                <a href="<?php echo url_for('collection/addValue'. ($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/num/" class="hidden"></a>
-                <a class='coll_right' href="<?php echo url_for('user/choose');?>" name="<?php echo __('Choose a User');?>"><?php echo __('Add User');?></a>
-              </div>
+          <div class='add_value' id="user_right">
+            <a href="<?php echo url_for('collection/addValue'. ($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/num/" class="hidden"></a>
+            <a class='coll_right' href="<?php echo url_for('user/choose');?>" name="<?php echo __('Choose a User');?>"><?php echo __('Add User');?></a>
+          </div>
+
       	</td>
       </tr>
     </tbody>

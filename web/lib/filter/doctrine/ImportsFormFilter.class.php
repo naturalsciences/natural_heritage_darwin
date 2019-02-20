@@ -72,4 +72,3 @@ class ImportsFormFilter extends BaseImportsFormFilter
     return $query ;
   }
 }
-

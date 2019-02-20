@@ -83,20 +83,18 @@ class LoansTable extends DarwinTable
     $q = Doctrine_Query::create()
       ->from('Loans l')
       ->innerJoin('l.LoanStatus')
-//       ->andWhere("EXISTS (SELECT ls.id FROM LoanStatus ls WHERE loan_ref = l.id AND ls.status IN ('running', 'extended') AND is_last = TRUE )")
       ->andWhere('EXISTS (SELECT li.id FROM LoanItems li WHERE li.loan_ref = l.id AND li.specimen_ref = ? )', $id);
     return $q->execute();
   }
 
-  /*
+  /**
    * Used for autocompletion in widgetFormSelectComplete
    * @param $user object The user that serves at filtering the list of loans we can get access to
    * @param $needle string The string already entered
    * @param $exact boolean Indicates if an exact match has to be performed
    * @param $limit integer The limit number of records to be retrieved
    */
-    //ftheeten added default to level 2016 11 04
-  public function completeAsArray($user, $needle, $exact, $limit = 30, $level='')
+  public function completeAsArray($user, $needle, $exact, $limit = 30, $level)
   {
     $conn_MGR = Doctrine_Manager::connection();
     $q = Doctrine_Query::create()
@@ -121,7 +119,7 @@ class LoansTable extends DarwinTable
     return $result;
   }
 
-  /*
+  /**
    * Used for duplication of loans / replace the classic approach used so far
    * @param $loan_id integer The id of the loan we wish to duplicate
    * @return integer id of new loan created
@@ -139,7 +137,7 @@ class LoansTable extends DarwinTable
     return $id;
   }
 
-  /*
+  /**
    * List of printable loans out of a list of loans
    * A printable loan is defined by having at least one contact point on the receiver side
    * and by having at least one item
@@ -167,6 +165,63 @@ class LoansTable extends DarwinTable
       $response[] = $loans['id'];
     }
     return $response;
+  }
+
+  /**
+   * Get the list of related loans for given specimen(s) id(s)
+   * @param myUser $user object The user that serves at filtering the list of loans we can get access to
+   * @param null $specId Specimen(s) Id(s)
+   * @return \Doctrine_Collection
+   */
+  public function getLoansRelated($user, $specId = null)
+  {
+    return $this->getLoansRelatedArray($user, $specId);
+  }
+
+  /**
+   * Get all loans related to an Array of id
+   * @param myUser $user object The user that serves at filtering the list of loans we can get access to
+   * @param array $specIds Array of id of related record
+   * @return Doctrine_Collection Collection of loans
+   */
+  public function getLoansRelatedArray($user, $specIds = array())
+  {
+    $specimenIds = '';
+    if(is_array($specIds)) {
+      if(empty($specIds) || count($specIds) === 0) return array();
+      $specimenIds = implode(',', $specIds);
+    }
+    else {
+      $specimenIds = $specIds;
+    }
+    $conn_MGR = Doctrine_Manager::connection();
+    $conn = $conn_MGR->getDbh();
+    $sql = '';
+    $sqlSelect = "select li.specimen_ref as specimen_id,
+                           count(distinct li.loan_ref) as loans_count,
+                           array_to_string(array_agg(li.loan_ref), CHR(10)) as loans_ref,
+                           array_to_string(array_agg((select name from loans where id = li.loan_ref)), CHR(10)) as loans_name,
+                           array_to_string(array_agg((select case when status = 'closed' then '(C)' when status = 'rejected' then '(!)' else '(O)' end as status from loan_status as ls where ls.loan_ref = li.loan_ref and ls.is_last = true limit 1)), CHR(10)) as loans_status,
+                           array_to_string(array_agg((select status from loan_status as ls where ls.loan_ref = li.loan_ref and ls.is_last = true limit 1)), CHR(10)) as loans_status_tooltip,
+                           array_to_string(array_agg((select case when status = 'closed' then 'loan_closed' when status = 'rejected' then 'loan_rejected' else 'loan_opened' end as status from loan_status as ls where ls.loan_ref = li.loan_ref and ls.is_last = true limit 1)), CHR(10)) as loans_status_class ";
+    $sqlFrom = " from loan_items as li ";
+    $sqlWhere = " where li.specimen_ref  = any('{ $specimenIds }'::int[])";
+    $sqlGroupAndOrderBy = " group by li.specimen_ref
+                            order by li.specimen_ref";
+    $params = array();
+    if ($user->isA(Users::ADMIN)) {
+      $sqlSelect .= " , array_to_string(array_agg((select 1)), CHR(10)) as loans_right ";
+    }
+    else {
+      $sqlSelect .= " , array_to_string(array_agg((select count(id) from loan_rights as lr where lr.loan_ref = li.loan_ref and lr.user_ref = :user_id)), CHR(10)) as loans_right ";
+      $params[':user_id'] = $user->getId();
+    }
+
+    $sql .= $sqlSelect.$sqlFrom.$sqlWhere.$sqlGroupAndOrderBy;
+    $statement = $conn->prepare($sql);
+    $statement->execute($params);
+    $results = $statement->fetchAll(PDO::FETCH_ASSOC);
+    return $results;
   }
 
 }

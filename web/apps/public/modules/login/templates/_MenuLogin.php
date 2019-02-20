@@ -15,7 +15,7 @@
                   </td>
                   <td class="menu_button"><?php echo link_to(__('Register'),'register/index') ;?></td>
                 <?php else:?>
-                  <td class="menu_button"><?php echo link_to(__('Go to Backend'),$sf_context->getConfiguration()->generateBackendUrl('homepage', array(), $sf_request)) ;?></td>
+                  <td class="menu_button"><a href="backend.php">Go to backend</a></td>
                   <td class="menu_button"><?php echo link_to(__('Logout'),'register/logout') ;?></td>
                 <?php endif;?>
               </tr>

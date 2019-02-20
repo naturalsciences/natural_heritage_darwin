@@ -13,6 +13,11 @@ class helpActions extends DarwinActions
 
   public function executeIndex(sfWebRequest $request)
   {
+    $this->help_language = 'en';
+    $user = Doctrine_Core::getTable("Users")->find($this->getUser()->getId());
+    if ( $user ) {
+      $this->help_language = $user->getSelectedLang();
+    }
   }
 
   public function executeContact(sfWebRequest $request)

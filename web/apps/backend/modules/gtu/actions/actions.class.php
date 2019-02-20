@@ -48,7 +48,6 @@ class gtuActions extends DarwinActions
 
       if ($this->form->isValid())
       {
-        //@TODO: We need to refactor and avoid doing too much queries when format is xml
         $query = $this->form->getQuery();
         if($request->getParameter('format') == 'json' || $request->getParameter('format') == 'text')
         {
@@ -143,11 +142,12 @@ class gtuActions extends DarwinActions
 
   public function executeCreate(sfWebRequest $request)
   {
-    $this->forward404Unless($request->isMethod(sfRequest::POST));
+	  //print("create");
+      $this->forward404Unless($request->isMethod(sfRequest::POST));
 
-    $this->form = new GtuForm();
+     $this->form = new GtuForm();
 
-    $this->processForm($request, $this->form, 'create');
+      $this->processForm($request, $this->form, 'create');
 
     $this->setTemplate('new');
   }
@@ -159,15 +159,14 @@ class gtuActions extends DarwinActions
 
     $this->form = new GtuForm($gtu);
     $this->loadWidgets();
+    //ftheeten 2018 11 29
+     $this->form->loadEmbedTemporalInformation();//loadEmbed('TemporalInformation');
   }
 
-   //ftheeten 2015 10 16
-   public function executeView(sfWebRequest $request)
+  public function executeView(sfWebRequest $request)
   {
-    $this->forward404Unless($gtu = Doctrine::getTable('Gtu')->find($request->getParameter('id')), sprintf('Object gtu does not exist (%s).', $request->getParameter('id')));
-    $this->no_right_col = Doctrine::getTable('Gtu')->testNoRightsCollections('gtu_ref',$request->getParameter('id'), $this->getUser()->getId());
-
-    $this->form = new GtuForm($gtu);
+    $this->forward404Unless($this->gtu = Doctrine::getTable('Gtu')->find($request->getParameter('id')), sprintf('Object gtu does not exist (%s).', $request->getParameter('id')));
+    $this->form = new GtuForm($this->gtu);
     $this->loadWidgets();
   }
   
@@ -278,25 +277,13 @@ class gtuActions extends DarwinActions
     $str = '<ul  class="search_tags">';
     foreach($gtu->TagGroups as $group)
     {
-      //rmca 2016 05 12: added class gtu_supp to allow expanding all
-      $str .= '<li class="gtu_supp"><label>'.$group->getSubGroupName().'<span class="gtu_group"> - '.TagGroups::getGroup($group->getGroupName()).'</span></label>';
-      if($request->hasParameter('view'))
-      { 
-	$str .= '<ul class="name_tags_view">' ;
-      }
-      else 
-      {
-       $str .= '<ul class="name_tags">' ;
-      
-      }
+      $str .= '<li><label>'.$group->getSubGroupName().'<span class="gtu_group"> - '.TagGroups::getGroup($group->getGroupName()).'</span></label>';
+      if($request->hasParameter('view')) $str .= '<ul class="name_tags_view">' ;
+      else $str .= '<ul class="name_tags">' ;
       $tags = explode(";",$group->getTagValue());
       foreach($tags as $value)
-      {
         if (strlen($value))
-        {
           $str .=  '<li>' . trim($value).'</li>';
-        }
-      }
       $str .= '</ul><div class="clear" />';
     }
     if($gtu->getLocation()){
@@ -305,17 +292,30 @@ class gtuActions extends DarwinActions
     if ($gtu->getElevation()){
       $str .= '<li><label>Alt.: </label>'.$gtu->getElevation().' +- '.$gtu->getElevationAccuracy().' m</li>';
     }
-	//ftheeten 2015 03 10
-	 if ($spec->getGtuFromDateMasked() && $spec->getGtuFromDateMask())
-        {
-      		$str .= '<li><label>Date from.: </label>'.$spec->getGtuFromDateMasked().'</li>';
-    	}
-	//ftheeten 2015 03 10
-	 if ($spec->getGtuToDateMasked() && $spec->getGtuToDateMask())
-	 {
-             $str .= '<li><label>Date to.: </label>'.$spec->getGtuToDateMasked().'</li>';
-    	 }
     $str .= '</ul><div class="clear" />';
     return $this->renderText($str);
+  }
+  
+  //ftheeten 2018 11 29
+    protected function getGtuForm(sfWebRequest $request, $fwd404=false, $parameter='id', $options=array())
+  {
+    $spec = null;
+
+    if ($fwd404)
+      $this->forward404Unless($spec = Doctrine::getTable('Gtu')->find($request->getParameter($parameter,0)));
+    elseif($request->hasParameter($parameter) && $request->getParameter($parameter))
+      $spec = Doctrine::getTable('Gtu')->find($request->getParameter($parameter));
+
+    $form = new GtuForm($spec, $options);
+    return $form;
+  }
+  //ftheeten 2018 11 29
+   public function executeAddTemporalInformation(sfWebRequest $request)
+  {
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
+    $number = intval($request->getParameter('num'));
+    $form = $this->getGtuForm($request);
+    $form->addTemporalInformation($number, array());
+    return $this->renderPartial('gtu_temporal_information',array('form' => $form['newGtuTemporalInformationForm'][$number], 'rownum'=>$number));
   }
 }

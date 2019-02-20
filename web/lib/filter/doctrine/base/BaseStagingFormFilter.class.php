@@ -112,12 +112,7 @@ abstract class BaseStagingFormFilter extends BaseFormFilterDoctrine
       'status'                    => new sfWidgetFormFilterInput(),
       'complete'                  => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
       'surnumerary'               => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
-      'part_count_males_min'      => new sfWidgetFormFilterInput(),
-      'part_count_males_max'      => new sfWidgetFormFilterInput(),
-      'part_count_females_min'    => new sfWidgetFormFilterInput(),
-      'part_count_females_max'    => new sfWidgetFormFilterInput(),
-      'part_count_juveniles_min'  => new sfWidgetFormFilterInput(),
-      'part_count_juveniles_max'  => new sfWidgetFormFilterInput(),
+      'specimen_taxonomy_ref'     => new sfWidgetFormFilterInput(),
     ));
 
     $this->setValidators(array(
@@ -220,12 +215,7 @@ abstract class BaseStagingFormFilter extends BaseFormFilterDoctrine
       'status'                    => new sfValidatorPass(array('required' => false)),
       'complete'                  => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
       'surnumerary'               => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
-      'part_count_males_min'      => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
-      'part_count_males_max'      => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
-      'part_count_females_min'    => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
-      'part_count_females_max'    => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
-      'part_count_juveniles_min'  => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
-      'part_count_juveniles_max'  => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
+      'specimen_taxonomy_ref'     => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
     ));
 
     $this->widgetSchema->setNameFormat('staging_filters[%s]');
@@ -345,12 +335,7 @@ abstract class BaseStagingFormFilter extends BaseFormFilterDoctrine
       'status'                    => 'Text',
       'complete'                  => 'Boolean',
       'surnumerary'               => 'Boolean',
-      'part_count_males_min'      => 'Number',
-      'part_count_males_max'      => 'Number',
-      'part_count_females_min'    => 'Number',
-      'part_count_females_max'    => 'Number',
-      'part_count_juveniles_min'  => 'Number',
-      'part_count_juveniles_max'  => 'Number',
+      'specimen_taxonomy_ref'     => 'Number',
     );
   }
 }

@@ -31,7 +31,6 @@
  * @property Doctrine_Collection $PeopleAddresses
  * @property Doctrine_Collection $Collections
  * @property Doctrine_Collection $CollectionMaintenance
- * @property Doctrine_Collection $StorageParts
  * @property Doctrine_Collection $Insurances
  * @property Doctrine_Collection $StagingPeople
  * 
@@ -61,7 +60,6 @@
  * @method Doctrine_Collection getPeopleAddresses()         Returns the current record's "PeopleAddresses" collection
  * @method Doctrine_Collection getCollections()             Returns the current record's "Collections" collection
  * @method Doctrine_Collection getCollectionMaintenance()   Returns the current record's "CollectionMaintenance" collection
- * @method Doctrine_Collection getStorageParts()            Returns the current record's "StorageParts" collection
  * @method Doctrine_Collection getInsurances()              Returns the current record's "Insurances" collection
  * @method Doctrine_Collection getStagingPeople()           Returns the current record's "StagingPeople" collection
  * @method People              setId()                      Sets the current record's "id" value
@@ -90,7 +88,6 @@
  * @method People              setPeopleAddresses()         Sets the current record's "PeopleAddresses" collection
  * @method People              setCollections()             Sets the current record's "Collections" collection
  * @method People              setCollectionMaintenance()   Sets the current record's "CollectionMaintenance" collection
- * @method People              setStorageParts()            Sets the current record's "StorageParts" collection
  * @method People              setInsurances()              Sets the current record's "Insurances" collection
  * @method People              setStagingPeople()           Sets the current record's "StagingPeople" collection
  * 
@@ -219,10 +216,6 @@ abstract class BasePeople extends DarwinModel
         $this->hasMany('CollectionMaintenance', array(
              'local' => 'id',
              'foreign' => 'people_ref'));
-
-        $this->hasMany('StorageParts', array(
-             'local' => 'id',
-             'foreign' => 'institution_ref'));
 
         $this->hasMany('Insurances', array(
              'local' => 'id',

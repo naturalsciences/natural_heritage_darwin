@@ -32,8 +32,6 @@ class extLinksActions extends DarwinActions
      $this->links->setRecordId($request->getParameter('id'));
      $this->links->setReferencedRelation($request->getParameter('table'));
     }
-    
-   
      
     $this->form = new ExtLinksForm($this->links,array('table' => $request->getParameter('table')));
     
@@ -55,27 +53,4 @@ class extLinksActions extends DarwinActions
       }
     }
   }
-  
-  //ftheeten 2017 01 09
-  public function executeSnapchatSnippet(sfWebRequest $request)
-  {
-      $id=$request->getParameter('id');
-        $this->link = Doctrine::getTable('ExtLinks')->find($id);
-   
-        $this->form = new ExtLinksForm($this->link);       
-        
-  }
-  
-    //ftheeten 2017 01 09
-  public function executeExtViewer(sfWebRequest $request)
-  {
-      $id=$request->getParameter('id');
-        $this->link = Doctrine::getTable('ExtLinks')->find($id);
-   
-        $this->form = new ExtLinksForm($this->link);       
-        
-  }
-  
-  
-  
 }

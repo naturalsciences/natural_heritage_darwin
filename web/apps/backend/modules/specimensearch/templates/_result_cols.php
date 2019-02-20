@@ -15,7 +15,7 @@ $(document).ready(function () {
 <div class="widget_collection_global search_columns">
   <div class="widget_collection_container">
     <ul class="column_menu">
-      <?php foreach($arrayDisplay as $col_name => $col):?>
+      <?php foreach($columns as $col_name => $col):?>
         <li>
 <!-- <?php echo $field_to_show[$col_name]; ?>
 <span class="check_mark">&#10003;</span>

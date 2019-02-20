@@ -32,7 +32,24 @@ class cataloguewidgetComponents extends sfComponents
 
   public function executeProperties()
   {
-    $this->properties = Doctrine::getTable('Properties')->findForTable($this->table, $this->eid);
+    //ftheeten 2019 01 18
+    $tmp_array=null; 
+    //if(isset($this->form) )
+    //{
+            if(array_key_exists("timestamp", $_REQUEST)&&!is_numeric($this->eid))
+            {
+                $tmp_array=$_SESSION["TEMP_DARWIN_PROPERTY_".$_REQUEST["timestamp"]];
+            }
+    //}
+    if(is_array($tmp_array))
+    {
+         $this->properties = Doctrine::getTable('Properties')->findForTable($this->table, $this->eid, $tmp_array);
+    }
+    else
+    {
+        $this->properties = Doctrine::getTable('Properties')->findForTable($this->table, $this->eid);
+    }
+    //$this->properties = Doctrine::getTable('Properties')->findForTable($this->table, $this->eid);
   }
 
   public function executeVernacularNames()

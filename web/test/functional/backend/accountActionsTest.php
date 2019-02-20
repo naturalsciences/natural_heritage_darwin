@@ -76,5 +76,4 @@ $browser->
 
   with('user')->begin()->
     isAuthenticated(false)->
-  end()
-;
+  end();

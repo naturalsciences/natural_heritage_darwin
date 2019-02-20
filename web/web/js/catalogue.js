@@ -109,13 +109,12 @@
             $(base.options['link_catalogue']).live('click', base.catalogueLinkEdit);
             $(base.options['delete_link']).live('click', base.deleteItem);
             // Put your initialization code here
-            //ftheeten 2017 01 10 (to not display wodhet in edit mode after edition)
+             //ftheeten 2017 01 10 (to not display widget in edit mode after edition)
               $(base.options['link_catalogue_view']).live('click', base.catalogueLinkView);
         };
 
         base.catalogueLinkEdit = function(event)
         {
-    
           event.preventDefault();
           //ftheeten 2016 11 29
           //var last_position = $('body').scrollTop() ;
@@ -172,7 +171,7 @@
             style: 'ui-tooltip-light ui-tooltip-rounded '+style
           },event);
         };
-
+        
         //ftheeten 2017 01 10 (widget do not displays in EDIT mode after modal)
         base.catalogueLinkView = function(event)
         {
@@ -233,7 +232,7 @@
           },event);
         };
 
-        
+
         base.deleteItem = function(event)
         {
           event.preventDefault();
@@ -268,9 +267,7 @@
 
     $.catalogue.defaultOptions = {
       link_catalogue: "a.link_catalogue",
-      delete_link: "a.widget_row_delete",
-      //ftheeten 2017 01 10 
-      link_catalogue_view: "a.link_catalogue_view",
+      delete_link: "a.widget_row_delete"
     };
 
     $.fn.catalogue = function(options){

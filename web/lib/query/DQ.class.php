@@ -25,11 +25,17 @@ class DQ extends Doctrine_Query
    */
   public function whereParenWrap() {
     $where = $this->_dqlParts['where'];
-    if (count($where) > 0) {
+    $where_count = count($where);
+    if ($where_count == 1) {
       array_unshift($where, '(');
       array_push($where, ')');
-      $this->_dqlParts['where'] = $where;
     }
+    elseif ($where_count > 1) {
+      $where_first_part = array_slice($where, 0, $where_count-1,true);
+      $where_last_part = array(end($where));
+      $where = array_merge($where_first_part,array('('),$where_last_part,array(')'));
+    }
+    $this->_dqlParts['where'] = $where;
 
     return $this;
   }            
@@ -38,7 +44,7 @@ class DQ extends Doctrine_Query
    * Create and andWhere if the where parameter is not empty
    *
    * @param string $where where string
-   * @param parameters $params
+   * @param mixed[] $params parameters
    *
    * @return DQ this object
    */
@@ -52,7 +58,7 @@ class DQ extends Doctrine_Query
    * Create and orWhere if the where parameter is not empty
    *
    * @param string $where where string
-   * @param parameters $params
+   * @param mixed[] $params parameters
    *
    * @return DQ this object
    */

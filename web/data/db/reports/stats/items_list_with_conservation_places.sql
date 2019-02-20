@@ -11,4 +11,4 @@
        df.part as Item,
        df.room || '-' || df.row || '-' || df.shelf || '-' || df.container as Bewaarplaats
 from darwin_flat as df
-where df.collection_ref in (41, 101)
+where df.collection_ref in (41, 101);

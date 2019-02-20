@@ -359,7 +359,7 @@
       </trans-unit>
           <trans-unit id="1255">
         <source>Individual Count</source>
-        <target>Nombre d'individus</target>
+        <target>Nombre d'objets</target>
         
       </trans-unit>
           <trans-unit id="1256">
@@ -664,7 +664,7 @@
       </trans-unit>
           <trans-unit id="1325">
         <source>Login</source>
-        <target>Identifiant</target>
+        <target>Connection</target>
         
       </trans-unit>
           <trans-unit id="1326">
@@ -946,6 +946,20 @@
         <source>Recommended browser for DaRWIN :</source>
         <target>Navigateurs recommandés pour DaRWIN :</target>
         
+      </trans-unit>
+
+      <trans-unit id="1721">
+        <source>Associated comment</source>
+        <target>Commentaires associés</target>
+      </trans-unit>
+
+      <trans-unit id="1722">
+        <source>Object name</source>
+        <target>Nom de l'objet</target>
+      </trans-unit>
+      <trans-unit id="1723">
+        <source>DaRWIN search</source>
+        <target>Recherche DaRWIN</target>
       </trans-unit>
     </body>
   </file>

@@ -1,7 +1,7 @@
 <div class="panel">
   <?php echo form_tag('savesearch/saveSearch'.($form->getObject()->isNew() ? '' : '?id='.$form->getObject()->getId()), array('class'=>'search_form','id'=>'save_search'));?>
   <?php echo $form->renderHiddenFields(); ?>
-  <?php echo $form->renderGlobalErrors(); ?>
+  <?php echo $form->renderGlobalErrors(); ?>  
   <table class="form_table">
     <tbody>
     <tr>
@@ -49,9 +49,9 @@
     </tbody>
   </table>
   <br />
-  <h2><?php echo __("Visibility of fields in results :") ; ?></h2>
+  <h2 style="display:none"  ><?php echo __("Visibility of fields in results :") ; ?></h2>
     <?php echo $form['visible_fields_in_result']->renderError(); ?>
-  <table class="fields">
+  <table class="fields" style="display:none">
     <thead>
       <tr>
         <th><?php echo __('Fields') ; ?></th>

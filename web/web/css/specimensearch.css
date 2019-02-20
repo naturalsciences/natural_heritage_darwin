@@ -203,10 +203,36 @@ img#favorite_on, img#favorite_off
 
 .show
 {
-  display:show;
+  display:block;
 }
 
 img.tree_cmd_td
 {
   cursor:pointer;
+}
+
+.col_loans a, .col_loans span.loan_naming {
+  display: inline-block;
+  max-width: 50%;
+}
+.col_loans span.counting {
+  font-weight:bold;
+}
+.col_loans span#loan_status {
+  cursor:help;
+  vertical-align: top;
+}
+.col_loans .loan_opened {
+  color:green;
+}
+.col_loans .loan_closed {
+  color:red;
+}
+.col_loans .loan_rejected {
+  color:purple;
+}
+.ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }

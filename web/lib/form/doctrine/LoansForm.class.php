@@ -22,8 +22,6 @@ class LoansForm extends BaseLoansForm
     $dateText = array('year'=>'yyyy', 'month'=>'mm', 'day'=>'dd');
 
     $this->widgetSchema['name'] = new sfWidgetFormInput();
-    //rmca 2016 06 16
-    $this->widgetSchema['name']->setAttribute('class', 'loan_class');
     $this->widgetSchema['from_date'] = new widgetFormJQueryFuzzyDate(
       array(
         'culture'=> $this->getCurrentCulture(), 
@@ -32,9 +30,6 @@ class LoansForm extends BaseLoansForm
         'years' => $years,
         'with_time' => false,
         'empty_values' => $dateText,
-	//rmca 2016 12 01
- 	'default' => date("m/d/Y"), 
-
 
       ),
       array('class' => 'from_date')
@@ -124,25 +119,6 @@ class LoansForm extends BaseLoansForm
 
     $this->validatorSchema['Insurances_holder'] = new sfValidatorPass();
     $this->widgetSchema['Insurances_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
-
-	//testft opv 2016 06 14
-   	/* Collection Reference */
-    	$this->widgetSchema['collection_ref'] = new widgetFormCompleteButtonRef(
-		array(
-      			'model' => 'Collections',
-      		'link_url' => 'collection/choose',
-      		'method' => 'getName',
-      		'box_title' => $this->getI18N()->__('Choose Collection'),
-      		'button_class'=>'',
-      		'complete_url' => 'catalogue/completeName?table=collections',
-    		),
-		array(
-			'class'=>'rmca_coll_4_loan',
-
-		));
-	$this->validatorSchema['collection_ref'] = new sfValidatorInteger(array('required'=>true));
-
-
   }
   
   public function addUsers($num, $user_ref, $order_by=0)
@@ -160,7 +136,7 @@ class LoansForm extends BaseLoansForm
   public function loadEmbedUsers()
   {
     if($this->isBound()) return;
-    /* Comments sub form */
+    /* Users sub form */
     $subForm = new sfForm();
     $this->embedForm('Users',$subForm);    
     if($this->getObject()->getId() !='')
@@ -194,7 +170,7 @@ class LoansForm extends BaseLoansForm
   public function loadEmbedActorsSender()
   {
     if($this->isBound()) return;
-    /* Comments sub form */
+    /* Actors sub form */
     $subForm = new sfForm();
     $this->embedForm('ActorsSender',$subForm);    
     if($this->getObject()->getId() !='')
@@ -228,7 +204,7 @@ class LoansForm extends BaseLoansForm
   public function loadEmbedActorsReceiver()
   {
     if($this->isBound()) return;
-    /* Comments sub form */
+    /* Actors sub form */
     $subForm = new sfForm();
     $this->embedForm('ActorsReceiver',$subForm);    
     if($this->getObject()->getId() !='')
@@ -263,6 +239,7 @@ class LoansForm extends BaseLoansForm
   public function addComments($num, $values, $order_by=0)
   {
     $options = array('referenced_relation' => 'loans', 'record_id' => $this->getObject()->getId());
+    $options = array_merge($values, $options);
     $this->attachEmbedRecord('Comments', new CommentsSubForm(DarwinTable::newObjectFromArray('Comments',$options)), $num);
   }
 

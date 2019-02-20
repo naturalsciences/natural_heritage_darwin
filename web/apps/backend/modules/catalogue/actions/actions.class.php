@@ -230,7 +230,6 @@ class catalogueActions extends DarwinActions
         }
       }
     }
-
   }
 
   public function executeAddKeyword(sfWebRequest $request)
@@ -266,55 +265,46 @@ class catalogueActions extends DarwinActions
     return $this->renderText(json_encode(array('name'=>$item->getName(), 'id'=>$item->getId() )));
   }
 
-  //ftheeten 2017 06 26
   public function executeCompleteName(sfWebRequest $request) {
     $tbl = $request->getParameter('table');
-    $catalogues = array('taxonomy','mineralogy','chronostratigraphy','lithostratigraphy','lithology','people', 'institutions', 'users' ,'expeditions', 'collections');
+    $catalogues = array('taxonomy','mineralogy','chronostratigraphy','lithostratigraphy','lithology','people','institutions','users','expeditions','collections','loans');
     $result = array();
 
     if(in_array($tbl,$catalogues)) {
-      
-        //ftheeten 2017 06 26
-        if($tbl=="taxonomy" && $request->getParameter('collections') && $request->getParameter('level'))
-        {
-            $result =Doctrine::getTable("taxonomy")->getTaxonByNameAndCollectionAndLevel($request->getParameter('term'), $request->getParameter('level'), $request->getParameter('collections'));
-        }
-        //ftheeten 2017 06 26
-        elseif($tbl=="taxonomy" && $request->getParameter('collections') && !$request->getParameter('level'))
-        {
-            $result =Doctrine::getTable("taxonomy")->getTaxonByNameAndCollection($request->getParameter('term') , $request->getParameter('collections'));
-        }
-        //ftheeten 2017 06 26
-        elseif($tbl=="taxonomy" && $request->getParameter('level') && ! $request->getParameter('collections'))
-        {
-              $result =Doctrine::getTable("taxonomy")->getTaxonByNameAndLevel($request->getParameter('term') , $request->getParameter('level'));
-        }
-        else
-        {
-          $model = DarwinTable::getModelForTable($tbl);
-          if(! $request->getParameter('level', false))
-          {
-            $result = Doctrine::getTable($model)->completeAsArray($this->getUser(), $request->getParameter('term'), $request->getParameter('exact'));
-          }
-          else
-          {
-            $result = Doctrine::getTable($model)->completeWithLevelAsArray($this->getUser(), $request->getParameter('term'), $request->getParameter('exact'));
-           }
-        }
-    }else{
+      $model = DarwinTable::getModelForTable($tbl);
+      if(! $request->getParameter('level', false)) {
+        $result = Doctrine::getTable($model)
+                          ->completeAsArray($this->getUser(), $request->getParameter('term'), $request->getParameter('exact'), 30, $request->getParameter('field_level_id', ''))
+        ;
+      }
+      else {
+        $result = Doctrine::getTable($model)
+                          ->completeWithLevelAsArray($this->getUser(), $request->getParameter('term'), $request->getParameter('exact'), 30, $request->getParameter('field_level_id', ''))
+        ;
+      }
+    }
+    else {
       $this->forward404('Unsuported table for completion : '.$tbl);
     }
-    //ftheeten 2016 09 26
-    if(count($result)==0)
-    {
-        $tmp=array();
-        $tmp["value"]="";
-        $tmp["label"]="";
-        $tmp["name_indexed"]="";
-        $result[]=$tmp;
-    }
+
     $this->getResponse()->setContentType('application/json');
-    
+    return $this->renderText(json_encode($result));
+  }
+  
+    //ftheeten 2018 10 12
+  public function executeCompleteNameTaxonomyWithRef(sfWebRequest $request) {
+    $has_ref=FALSE;
+    /*if($request->getParameter('taxon_ref', -1)>=0&&is_numeric($request->getParameter('taxon_ref', -1)))
+    {
+             $result = Doctrine::getTable("Taxonomy")->completeTaxonomyMetadataWithRef($this->getUser(), $request->getParameter('term'), $request->getParameter('exact'),$request->getParameter('taxon_ref'),30);
+    }
+    else
+    {
+             $result = Doctrine::getTable("Taxonomy")
+                          ->completeAsArray($this->getUser(), $request->getParameter('term'), $request->getParameter('exact'), 30, $request->getParameter('field_level_id', ''))
+    }*/
+    $result = Doctrine::getTable("Taxonomy")->completeTaxonomyMetadataWithRef($this->getUser(), $request->getParameter('term'), $request->getParameter('exact'),$request->getParameter('taxon_ref'),30);
+    $this->getResponse()->setContentType('application/json');
     return $this->renderText(json_encode($result));
   }
 
@@ -356,8 +346,56 @@ class catalogueActions extends DarwinActions
     }
     $this->searchForm = new BibliographyFormFilter();
   }
+
+
+  /**
+   * Renders table row for the table located underneath the button ref multiple button
+   * @param \sfWebRequest $request The HTTP request passed (GET or POST)
+   * @return sfView::NONE
+   */
+  public function executeRenderTableRowForButtonRefMultiple(sfWebRequest $request) {
+
+    if(!$this->getUser()->isAtLeast(Users::ENCODER)) $this->forwardToSecureAction();
+
+    $this->forward404Unless(
+      $request->hasParameter('row_data') &&
+      $request->hasParameter('field_id') &&
+      is_array($request->getParameter('row_data')) &&
+      count($request->getParameter('row_data')) > 0
+    );
+
+    $row_data = $request->getParameter('row_data');
+
+    $catalogue_parameter = $request->getParameter('catalogue', '');
+    if($request->getParameter('from_db', '') == '1' && !empty($catalogue_parameter)) {
+      $ids_to_retrieve = array();
+      foreach ($row_data as $row_key=>$row_val) {
+        $this->forward404Unless(
+                                isset($row_val["id"]) &&
+                                is_numeric($row_val["id"])
+        );
+        $ids_to_retrieve[]=$row_val["id"];
+      }
+
+      $row_data = Doctrine::getTable(DarwinTable::getModelForTable($request->getParameter('catalogue')))->getCatalogueUnits($ids_to_retrieve);
+
+      return $this->getPartial('catalogue/button_ref_multiple_table_row',
+                               array(
+                                 'field_id' => $request->getParameter('field_id'),
+                                 'row_data'=>$row_data
+                               )
+      );
+    }
+
+    return $this->renderPartial('catalogue/button_ref_multiple_table_row',
+                                array(
+                                  'field_id' => $request->getParameter('field_id'),
+                                  'row_data'=>$row_data
+                                )
+    );
+  }
   
-  
+    
     //ftheeten 2015 06 08 autocomplete for codes
   public function executeCodesAutocomplete(sfWebRequest $request)
   {
@@ -365,10 +403,19 @@ class catalogueActions extends DarwinActions
 	if($request->getParameter('term'))
 	{
 		 $conn = Doctrine_Manager::connection();
+         /*if(is_numeric($request->getParameter('term')))
+         {
+            $pattern="CONCAT('[^\d]', (SELECT * FROM fulltoindex(:term)), '.*')";
+         }
+         else
+         {
+            $pattern="CONCAT((SELECT * FROM fulltoindex(:term)), '.*')";
+         }*/
+		  $pattern="CONCAT((SELECT * FROM fulltoindex(:term)), '.*')";
 		 if($request->getParameter('collections'))
 		 {
 			$sql = "SELECT DISTINCT COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'') as value, full_code_indexed as value_indexed FROM codes WHERE code_category='main' AND referenced_relation='specimens' AND
-			full_code_indexed LIKE CONCAT('%', (SELECT * FROM fulltoindex(:term)), '%') AND 
+			full_code_indexed ~ $pattern AND 
 			record_id IN (SELECT id FROM specimens WHERE collection_ref IN (".$request->getParameter('collections').") )
 			ORDER by full_code_indexed LIMIT 30;";
 		 }
@@ -376,7 +423,7 @@ class catalogueActions extends DarwinActions
 		 {
 			$sql = "SELECT DISTINCT COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'') as value, full_code_indexed as value_indexed FROM codes WHERE code_category='main' AND
 			referenced_relation='specimens' AND 
-			full_code_indexed LIKE CONCAT('%', (SELECT * FROM fulltoindex(:term)), '%')  ORDER by full_code_indexed LIMIT 30;";
+			full_code_indexed ~  $pattern   ORDER by full_code_indexed LIMIT 30;";
 		}
 		$q = $conn->prepare($sql);
 		$q->execute(array(':term' => $request->getParameter('term')));
@@ -395,155 +442,40 @@ class catalogueActions extends DarwinActions
 		return  $this->renderText(json_encode($results));
   }
   
-    //ftheeten 2016 11 25 autocomplete for codes
-  public function executeCodesTaxonAutocompleteForLoans(sfWebRequest $request)
+      //ftheeten 2015 06 08 autocomplete for codes
+  public function executeExpeditionsAutocomplete(sfWebRequest $request)
   {
 	$results=Array();
 	if($request->getParameter('term'))
 	{
 		 $conn = Doctrine_Manager::connection();
-		 if($request->getParameter('collections'))
-		 {
-			$sql = "SELECT DISTINCT specimens.id, COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'')||COALESCE(' - '||taxon_name,'') as value
-            , full_code_indexed||COALESCE(taxon_name_indexed,'')  as value_indexed FROM specimens INNER JOIN
-            codes  
-            ON
-            code_category='main' AND referenced_relation='specimens' 
-            AND
-            specimens.id=codes.record_id
-            WHERE
-			full_code_indexed LIKE CONCAT('%', (SELECT * FROM fulltoindex(:term)), '%') AND 
-			record_id IN (SELECT id FROM specimens WHERE collection_path||'/'||collection_ref::varchar||'/' LIKE '%/".$request->getParameter('collections')."%/' ) 
-			ORDER by full_code_indexed||COALESCE(taxon_name_indexed,'') LIMIT 30;";
-		 }
-		 else
-		 {
-			$sql = "SELECT DISTINCT specimens.id, COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'')||COALESCE(' - '||taxon_name,'') as value
-            , full_code_indexed||COALESCE(taxon_name_indexed,'')  as value_indexed FROM specimens INNER JOIN
-            codes  
-            ON
-            code_category='main' AND referenced_relation='specimens' 
-            AND
-            specimens.id=codes.record_id
-            WHERE
-			full_code_indexed LIKE CONCAT('%', (SELECT * FROM fulltoindex(:term)), '%') 
-			ORDER by full_code_indexed LIMIT 30;";
-		}
+         if(is_numeric($request->getParameter('term')))
+         {
+            $pattern="CONCAT('[^\d]', (SELECT * FROM fulltoindex(:term)), '.*')";
+         }
+         else
+         {
+            $pattern="CONCAT((SELECT * FROM fulltoindex(:term)), '.*')";
+         }
+		
+		$sql = "SELECT DISTINCT id as key,  name as value, name_indexed as value_indexed FROM expeditions WHERE 
+			name_indexed ~ $pattern  LIMIT 30;";		 
+		 
 		$q = $conn->prepare($sql);
 		$q->execute(array(':term' => $request->getParameter('term')));
-		$codes = $q->fetchAll();
+		$expeditions = $q->fetchAll();
 
 		$i=0;
-		foreach($codes as $code)
+		foreach($expeditions as $record)
 		{
-            $results[$i]['id'] = $code[0];
-			$results[$i]['value'] = $code[1];
-			$results[$i]['value_indexed'] = $code[2];
+            $results[$i]['value'] = $record[0];
+			$results[$i]['value'] = $record[1];
+			$results[$i]['value_indexed'] = $record[2];
 			$i++;
 		}
-	}
+      }
 	
-		$this->getResponse()->setContentType('application/json');
-		return  $this->renderText(json_encode($results));
-  }
-
-  //rmca 2016 06 16 increment number for loans
-  public function executeCodeForLoan(sfWebRequest $request)
-  {
-        $results=Array();
-	if($request->getParameter('coll_nr'))
-	{
-		 $conn = Doctrine_Manager::connection();
-		 $sql="SELECT code, loan_last_value FROM collections WHERE id=:coll;";
-		 $q = $conn->prepare($sql);
-		 $q->execute(array(':coll' => $request->getParameter('coll_nr')));
-		 $collections = $q->fetchAll();
-		
-		 $i=0;
-		 if(count($collections)>0)
-		 {
-			$results[0]['code_coll']= $collections[0][0];
-			$results[0]['code_val']= $collections[0][1];
-		 }
-
-	}
 	$this->getResponse()->setContentType('application/json');
-        return  $this->renderText(json_encode($results));
-
-
-
+	return  $this->renderText(json_encode($results));
   }
-  
-  //rmca 2016 11 23 increment number for loans
-  public function executeNameForLoan(sfWebRequest $request)
-  {
-        $results=Array();
-	if($request->getParameter('coll_nr'))
-	{
-		 $conn = Doctrine_Manager::connection();
-		 $sql="SELECT name FROM loans WHERE collection_ref=:coll ORDER BY id DESC LIMIT 1;";
-		 $q = $conn->prepare($sql);
-		 $q->execute(array(':coll' => $request->getParameter('coll_nr')));
-		 $collections = $q->fetchAll();
-		
-		 $i=0;
-		 if(count($collections)>0)
-		 {
-			$results[0]['name_loan']= $collections[0][0];
-			
-		 }
-
-	}
-	$this->getResponse()->setContentType('application/json');
-        return  $this->renderText(json_encode($results));
-
-
-
-  }
-  
-      //ftheeten 2017 01 12 autocomplete for storage
-  public function executeStorageAutocomplete(sfWebRequest $request)
-  {
-	$results=Array();
-	if($request->getParameter('term')&&$request->getParameter('entry'))
-	{
-		 $conn = Doctrine_Manager::connection();
-		 if($request->getParameter('collections'))
-		 {
-			$sql = "SELECT DISTINCT dict_value, fulltoindex(dict_value) FROM flat_dict
-            INNER JOIN 
-            (SELECT distinct ".$request->getParameter('entry')."  FROM specimens_storage_parts_view WHERE collection_path||collection_ref::varchar||'/' LIKE '%/".$request->getParameter('collections')."/%' )
-            b ON  dict_value =".$request->getParameter('entry')."
-
-            WHERE referenced_relation='storage_parts' AND 
-            dict_field='".$request->getParameter('entry')."' AND
-			fulltoindex(dict_value) LIKE CONCAT('%', (SELECT * FROM fulltoindex(:term)), '%')
-            LIMIT 30;";
-		 }
-		 else
-		 {
-			$sql = "SELECT DISTINCT dict_value, fulltoindex(dict_value) FROM flat_dict
-            WHERE referenced_relation='storage_parts' AND 
-            dict_field='".$request->getParameter('entry')."' AND
-			fulltoindex(dict_value) LIKE CONCAT('%', (SELECT * FROM fulltoindex(:term)), '%')
-            ORDER by dict_value LIMIT 30;";
-		}
-		$q = $conn->prepare($sql);
-		$q->execute(array(':term' => $request->getParameter('term')));
-		$codes = $q->fetchAll();
-
-		$i=0;
-		foreach($codes as $code)
-		{
-			$results[$i]['value'] = $code[0];
-			$results[$i]['value_indexed'] = $code[1];
-			$i++;
-		}
-	}
-	
-		$this->getResponse()->setContentType('application/json');
-		return  $this->renderText(json_encode($results));
-  }
-
-
 }

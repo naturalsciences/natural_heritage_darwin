@@ -156,33 +156,14 @@ class specimensearchwidgetComponents extends sfComponents
   {
     $this->defineForm();
   }
-  
-  //ftheeten 2016 06 22
-   public function executeSpecimenCount()
+  public function executeStatusAndCount()
   {
-    $this->defineForm();
+    $this->defineForm() ;
   }
   
-    //ftheeten 2016 07 05 
-   public function executeEcology()
-  {
-    $this->defineForm();
-  }
-  
-      //ftheeten 2016 07 08 
+    
+   //ftheeten 2018 11 30
    public function executeGtuDate()
-  {
-    $this->defineForm();
-  }
-  
-      //ftheeten 2016 07 05 
-   public function executeStorageParts()
-  {
-    $this->defineForm();
-  }
-  
-        //ftheeten 2017 04 27
-   public function executeLoans()
   {
     $this->defineForm();
   }

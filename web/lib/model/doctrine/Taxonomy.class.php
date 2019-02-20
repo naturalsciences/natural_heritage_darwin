@@ -27,138 +27,18 @@ class Taxonomy extends BaseTaxonomy
     return $this->_get('name');
   }
   
-  
-  //added by ftheeten 2014 07 03
-  public function  getParentByLevelRef($p_idLevel)
-  {
-	$tmpId=$this->getLevelRef();
-	$taxonTmp=$this;
-	if($tmpId>=$p_idLevel)
-	{
-		while($tmpId > $p_idLevel)
-		{
-			$taxonTmp=$taxonTmp->getParent();
-			$tmpId=$taxonTmp->getLevelRef();
-			
-		}
-	}
-	else
-	{
-		$taxonTmp=NULL;
-	}
-		
-	return $taxonTmp;
-  }
-  
-
-  
-  public function getNameWithoutAuthor()
-  {
-		$returned=NULL;
-		$tmpIdLevel=$this->getLevelRef();
-		$arrayGood=Array();
-		$arrayWords=preg_split("/[\s]+/", $this->name);
-		if(count($arrayWords)>0)
-		{
-			//above species: take just first name
-			if($tmpIdLevel<48)
-			{
-				$arrayGood[]= $arrayWords[0];
-			}
-			//species
-			elseif($tmpIdLevel==48)
-			{
-				$i=0;
-				//while($i<=1 && $i<count($arrayWords))
-                while($i<count($arrayWords))
-				{
-					if($i<count($arrayWords)-1||
-                   !preg_match('/(.*[A-Z].*|\(.*|.*[[:digit:]]{4})/',trim($arrayWords[$i]))
-                    )
-                    {
-                        $arrayGood[]= $arrayWords[$i];
-					}
-                    $i++;
-				}
-			}
-			//below species
-			elseif($tmpIdLevel>48)
-			{
-				$i=0;
-				$i2=0;
-				$arrayNameElems=Array();
-				$arrayNameElems[]="var";
-				$arrayNameElems[]="var.";
-				$arrayNameElems[]="f.";
-				$arrayNameElems[]="ex.";
-				$iMax=3;
-				while($i<count($arrayWords)&&$i2<$iMax)
-				{
-					$arrayGood[]= $arrayWords[$i];
-					if(in_array($arrayWords[$i],$arrayNameElems)===FALSE)
-					{
-						$i2++;
-					}
-					$i++;
-				}
-			}
-		}
-		
-		
-		$returned=implode(" ", $arrayGood);
-		return $returned;
-		
-  }
-  
-   public function getAuthorYear()
-  {
-		$returned=NULL;
-        $returned=trim(str_replace($this->getNameWithoutAuthor(),'', $this->name));
-		/*$tmpIdLevel=$this->getLevelRef();
-		$arrayWords=preg_split("/[\s]+/", $this->name);
-		$arrayWords2=$arrayWords;
-			//above species: take  after first element
-			if($tmpIdLevel<48)
-			{
-				array_shift($arrayWords2);
-				return implode(" ",$arrayWords2 );
-			}
-			//species: take after second element
-			elseif($tmpIdLevel==48)
-			{
-				array_shift($arrayWords2);
-				array_shift($arrayWords2);
-				return implode(" ", $arrayWords2);
-			}
-			//below species
-			elseif($tmpIdLevel>48)
-			{
-				$i=0;
-				$i2=0;
-				$arrayNameElems=Array();
-				$arrayNameElems[]="var";
-				$arrayNameElems[]="var.";
-				$arrayNameElems[]="f.";
-				$arrayNameElems[]="ex.";
-				$iMax=3;
-				while($i<count($arrayWords)&&$i2<$iMax)
-				{
-					
-					if(in_array($arrayWords[$i],$arrayNameElems)===FALSE)
-					{
-						$i2++;
-					}
-					array_shift($arrayWords2);
-					$i++;
-				}
-				return implode(" ", $arrayWords2);
-			
-		}*/
-				
-		return $returned;
-	}
+  	//ftheeten 2017 08 07
+    public function getTaxonomyMetadataName()
+    {
+        return Doctrine::getTable('TaxonomyMetadata')->find($this->getMetadataRef())->getTaxonomyName();
+    }
+    
+     public function getTaxonomyMetadataReferenceStatus()
+    {
+        return Doctrine::getTable('TaxonomyMetadata')->find($this->getMetadataRef())->getIsReferenceTaxonomy();
+    }
 	 
-  
+	 
   
 }
 

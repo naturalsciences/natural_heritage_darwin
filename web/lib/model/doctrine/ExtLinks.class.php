@@ -12,4 +12,21 @@
  */
 class ExtLinks extends BaseExtLinks
 {
+  private static $link_types = array(
+    'ext' => 'External',
+    'vc' => 'Virtual Collection'
+    ) ;
+
+  static public function getLinkTypes()
+  {
+    return self::$link_types ;
+  }
+
+  public function setUrl($url) 
+  {
+    if(substr(strtolower($url),0,4) != 'http')
+      $url = 'http://'.$url ;
+    $this->_set('url',$url) ;
+  }
+
 }

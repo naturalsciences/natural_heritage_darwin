@@ -72,11 +72,17 @@ class CommentsTable extends DarwinTable
     ),
     'loans' => array(
       'usage' => 'Usage',
-      'state_observation' => 'State observation'
+      'state_observation' => 'State observation',
+      'reception_state_observation' => 'Reception state observation',
+      'return_state_observation' => 'Return state observation',
+      'description' => 'Description'
     ),
     'loan_items' => array(
       'usage' => 'Usage',
-      'state_observation' => 'State observation'
+      'state_observation' => 'State observation',
+      'reception_state_observation' => 'Reception state observation',
+      'return_state_observation' => 'Return state observation',
+      'description' => 'Description'
     ),
     'bibliography' => array(
       'general information' => 'general information',
@@ -127,23 +133,4 @@ class CommentsTable extends DarwinTable
     else
       return array();
   }
-  
-  //ftheeten 2016 06 29
-  public function findForTableByNotion($table_name, $record_id, $notion_concerned, $mode="equals")
-  {
-    $comparator='notion_concerned=?';
-    if($mode=="different_from")
-    {
-        $comparator='notion_concerned!=?';
-    }
-        $q = Doctrine_Query::create()
-          ->from('Comments c')
-          ->where($comparator, $notion_concerned);
-        $q = $this->addCatalogueReferences($q, $table_name, $record_id, 'c', true)
-          ->orderby('notion_concerned asc');
-    return $q->execute();
-  }
-  
-
-  
 }

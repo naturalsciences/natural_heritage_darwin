@@ -10,6 +10,7 @@
  */
 class GtuFormFilter extends BaseGtuFormFilter
 {
+  protected $idxSubQuery=1;
   public function configure()
   {
 
@@ -21,6 +22,8 @@ class GtuFormFilter extends BaseGtuFormFilter
     $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
     $dateUpperBound = new FuzzyDateTime(sfConfig::get('dw_dateUpperBound'));
     $this->widgetSchema['code'] = new sfWidgetFormInputText();
+	//ftheeten 2018 03 14 added "taxonomy name callback"
+    $this->widgetSchema['code']->setAttributes(array('class'=>'gtu_code_callback'));
     $this->widgetSchema['tags'] = new sfWidgetFormInputText();
     $this->widgetSchema['gtu_from_date'] = new widgetFormJQueryFuzzyDate(
       $this->getDateItemOptions(),
@@ -77,6 +80,28 @@ class GtuFormFilter extends BaseGtuFormFilter
       array('invalid'=>'The "begin" date cannot be above the "end" date.')
     ));
 
+	
+	//ftheeten 2018 08 05
+	 $this->widgetSchema['collection_ref'] = new widgetFormCompleteButtonRef(array(
+      'model' => 'Collections',
+      'link_url' => 'collection/choose',
+      'method' => 'getName',
+      'box_title' => $this->getI18N()->__('Choose Collection'),
+      'button_class'=>'',
+      'complete_url' => 'catalogue/completeName?table=collections',
+    ));
+    //ftheeten 2017 01 13
+    $this->widgetSchema['collection_ref']->setAttributes(array('class'=>'collection_ref'));
+    $this->validatorSchema['collection_ref'] = new sfValidatorPass(); //Avoid duplicate the query
+    //ftheeten 2008 08 09
+    $this->widgetSchema['expedition'] = new sfWidgetFormInputText();
+    $this->widgetSchema['expedition']->setAttributes(array('class'=>'autocomplete_for_expeditions'));
+    $this->validatorSchema['expedition'] = new sfValidatorString(array('required' => false, 'trim' => true));
+    
+     //ftheeten 2018 03 23
+    $this->widgetSchema['ig_number'] = new sfWidgetFormInputText();
+    $this->validatorSchema['ig_number'] = new sfValidatorString(array('required' => false, 'trim' => true));
+    
     $subForm = new sfForm();
     $this->embedForm('Tags',$subForm);
   }
@@ -84,59 +109,35 @@ class GtuFormFilter extends BaseGtuFormFilter
   public function addCodeColumnQuery($query, $field, $val)
   {
     if($val == '') return $query;
-    $query->andWhere("code ilike ? ", "%" . $val . "%");
+    //ftheeten 2019 01 24 case insensitive
+    $query->andWhere("LOWER(code) ilike ? ", "%" . strtolower($val) . "%");
   }
+
 
   public function addTagsColumnQuery($query, $field, $val)
   {
-    $alias = $query->getRootAlias();
+
     $conn_MGR = Doctrine_Manager::connection();
     $tagList = '';
 
-    /*foreach($val as $line)
+    foreach($val as $line)
     {
       $line_val = $line['tag'];
       if( $line_val != '')
       {
-        $tagList = $conn_MGR->quote($line_val, 'string');
-        $query->andWhere("tag_values_indexed && getTagsIndexedAsArray($tagList)");
+        //$tagList = $conn_MGR->quote($line_val, 'string');
+        $tagList =$line_val;
+        $sqlClause=Array();
+        foreach(explode(";", $tagList  ) as $tagvalue)
+        {
+            $tagvalue = $conn_MGR->quote($tagvalue, 'string');
+            $sqlClause[]="(tag_values_indexed::varchar ~ fulltoindex($tagvalue))";
+        }
+        $query->andWhere(implode(" OR ",$sqlClause ));
+        //$query->andWhere("tag_values_indexed && getTagsIndexedAsArray($tagList)");
       }
-    }*/
-	//ftheeten 2016 02 12 
-	$alias="tags";
-	$idxAlias=1;
-	   foreach($val as $line)
-    {
-	  $alias=$alias.$idxAlias;
-      $line_val = $line['tag'];
-      if( $line_val != '')
-      {
-        $tagList = $conn_MGR->quote($line_val, 'string');
-		 if($line['fuzzy_matching_tag']=="on")
-		{
-			$query->andWhere("id IN (SELECT $alias.gtu_ref FROM tags $alias WHERE ($alias.tag_indexed
-					LIKE
-					ANY(SELECT '%'||fulltoindex(regexp_split_to_table($tagList,','),TRUE)||'%'))
-					)
-					
-					
-					");
-					
-		}
-		else
-		{
-			$query->andWhere("tag_values_indexed && getTagsIndexedAsArray($tagList)");
-		}
-	  }
-	  $idxAlias++;
     }
-	
 
-/*    if(strlen($tagList))
-    {
-      $tagList = substr($tagList, 0, -1); //remove last ','
-      $query->andWhere("id in (select getGtusForTags(array[$tagList]))");
-    }*/
     return $query;
   }
 
@@ -145,21 +146,111 @@ class GtuFormFilter extends BaseGtuFormFilter
     if( $values['lat_from'] != '' && $values['lon_from'] != '' && $values['lon_to'] != ''  && $values['lat_to'] != '' )
     {
       $horizontal_box = "((".$values['lat_from'].",-180),(".$values['lat_to'].",180))";
-      $query->andWhere("box(? :: text) @> location",$horizontal_box);
+      $query->andWhere("box(? :: text) @> location::point",$horizontal_box);
 
       $vert_box = "((".$values['lat_from'].",".$values['lon_from']."),(".$values['lat_to'].",".$values['lon_to']."))";
       // Look for a wrapped box (ie. between RUSSIA and USA)
       if( (float)$values['lon_to'] < (float) $values['lon_from']) {
-        $query->andWhere(" NOT box(? :: text) @> location", $vert_box);
+        $query->andWhere(" NOT box(? :: text) @> location::point", $vert_box);
       } else {
         // Not wrapped, as in a normal world search
-        $query->andWhere("box(? :: text) @> location", $vert_box);
+        $query->andWhere("box(? :: text) @> location::point", $vert_box);
       }
       $query->andWhere('location is not null');
     }
     return $query;
   }
+  
+  //ftheeten 2018 08 08
+  public function addExpeditionColumnExplicit($query, $values)
+  {
+    if($values['expedition'] !='')
+    {
+        $query->andWhere("(
+        (expedition_refs &&   (SELECT array_agg(e".$this->idxSubQuery.".id) from Expeditions e".$this->idxSubQuery." WHERE e".$this->idxSubQuery.".name_indexed=fulltoindex(?)) 
+        )
+        OR 
+        (
+        id  IN (SELECT s.gtu_ref FROM Specimens s , Expeditions ex".$this->idxSubQuery."   WHERE s.expedition_ref=ex".$this->idxSubQuery.".id AND ex".$this->idxSubQuery.".name_indexed=fulltoindex(?) ) 
+        
+        )) ", Array( $values['expedition'], $values['expedition']));
+        $this->idxSubQuery++;
+    }
+    return $query;
+  }
+  
+  //ftheeten 2018 12 01
+    public function addDateFromToColumnQuery(Doctrine_Query $query, array $dateFields, $val_from, $val_to)
+  {
+    if (count($dateFields) > 0)
+    {
+      if($val_from->getMask() > 0 && $val_to->getMask() > 0)
+      {
+        if (count($dateFields) == 1)
+        {
+          $query->andWhere(" id in (SELECT t1.gtu_ref FROM TemporalInformation t1 WHERE t1.".$dateFields[0] . " Between ? and ? )",
+                           array($val_from->format('d/m/Y'),
+                                 $val_to->format('d/m/Y')
+                                )
+                          );
+        }
+        else
+        {
+          $query->andWhere("( id in (SELECT t2.gtu_ref FROM TemporalInformation t2 WHERE t2." . $dateFields[0] . " Between ? AND ? OR t2.".$dateFields[1] ." Between ? AND ? ))", 
+            array($val_from->format('d/m/Y'),$val_to->format('d/m/Y'),$val_from->format('d/m/Y'),$val_to->format('d/m/Y')));
+        }
+      }
+      elseif ($val_from->getMask() > 0)
+      {
+        $sql = " (id in (SELECT t3.gtu_ref FROM TemporalInformation t3 WHERE t3." . $dateFields[0] . " >= ? AND t3." . $dateFields[0] . "_mask > 0)) ";
+        $dateFieldsCount = count($dateFields);
+        for ($i = 1; $i <= $dateFieldsCount; $i++)
+        {
+          $vals[] = $val_from->format('d/m/Y');
+        }
+        if (count($dateFields) > 1) $sql .= " OR (id in (SELECT t4.gtu_ref FROM TemporalInformation t4 WHERE t4." . $dateFields[1] . " >= ? AND t4.". $dateFields[1] . "_mask > 0)) ";
+        $query->andWhere($sql,
+                         $vals
+                        );
+      }
+      elseif ($val_to->getMask() > 0)
+      {
+        $sql = " (id in (SELECT t5.gtu_ref FROM TemporalInformation t5 WHERE t5." . $dateFields[0] . " <= ? AND t5." . $dateFields[0] . "_mask > 0)) ";
+        $dateFieldsCount = count($dateFields);
+        for ($i = 1; $i <= $dateFieldsCount; $i++)
+        {
+          $vals[] = $val_to->format('d/m/Y');
+        }
+        if (count($dateFields) > 1) $sql .= " OR (id in (SELECT t6.gtu_ref FROM TemporalInformation t6 WHERE t6." . $dateFields[1] . " <= ? AND t6." . $dateFields[1] . "_mask > 0)) ";
+        $query->andWhere($sql,
+                         $vals
+                        );
+      }
+    }
+    return $query;
+  }
+  
+    //ftheeten 2018 08 05
+   public function addCollectionRefColumnQuery($query, $values, $val)
+  {
+    if( $val != '' )
+    {     
+      $query->andWhere(' collection_ref = ?  ', $val);
+    }
+    return $query;
+  }
 
+  
+      //ftheeten 2018 03 23
+   public function addIGNumberColumnQuery($query, $values, $val)
+  {
+    if( $val != '' )
+    {     
+      $query->andWhere('id IN (SELECT s.gtu_ref FROM specimens s WHERE ig_num= ?)', $val);
+    }
+    return $query;
+  }
+  
   public function bind(array $taintedValues = null, array $taintedFiles = null)
   {
     if(isset($taintedValues['Tags']))
@@ -182,15 +273,35 @@ class GtuFormFilter extends BaseGtuFormFilter
       $this->embedForm('Tags', $this->embeddedForms['Tags']);
   }
 
+
   public function doBuildQuery(array $values)
   {
-    $query = parent::doBuildQuery($values);
-
+    
+    /*$query = DQ::create()
+        ->select('g.*, t.from_date, t.from_date_mask, t.to_date, t.to_date_mask')
+      ->from('Gtu g')->leftJoin("g.DoctrineDistinctTemporalInformation t ON g.id=t.gtu_ref");
+    */
+    //$query=parent::doBuildQuery($values);
+    //$query->leftJoin("SubCommentsGtu");
+	/*$query = DQ::create()
+        ->select('g.*, c.comments as comments')
+      ->from('Gtu g')->leftJoin("g.DoctrineGtuComments c ON g.id=c.record_id");*/
+    //ftheeten 2018 08 09
+    /*$query = DQ::create()
+        ->select('g.*, d.*')
+      ->from('Gtu g')->leftJoin("g.TemporalInformation t")->leftJoin("g.DoctrineTemporalInformationGtuGroup d");;*/
+     $query = DQ::create()
+        ->select('d.*')
+      ->from('DoctrineTemporalInformationGtuGroup d');
+    $this->addCodeColumnQuery($query, $values,$values["code"]);
+    $this->addIgNumberColumnQuery($query, $values,$values["ig_number"]);     
+    $this->addTagsColumnQuery($query, $values,$values["Tags"]);
+    $this->addExpeditionColumnExplicit($query,$values);
+    $this->addCollectionRefColumnQuery($query, $values,$values["collection_ref"]);
     $this->addLatLonColumnQuery($query,$values);
+    
 
-    $alias = $query->getRootAlias();
-
-    $fields = array('gtu_from_date', 'gtu_to_date');
+    $fields = array('from_date', 'to_date');    
     $this->addDateFromToColumnQuery($query, $fields, $values['gtu_from_date'], $values['gtu_to_date']);
     $query->andWhere("id > 0 ");
     return $query;
@@ -201,7 +312,7 @@ class GtuFormFilter extends BaseGtuFormFilter
     $javascripts[]='/leaflet/leaflet.js';
     $javascripts[]='/leaflet/leaflet.markercluster-src.js';
     $javascripts[]='/js/map.js';
-	$javascripts[]= "/Leaflet.draw-master/dist/leaflet.draw.js";
+    $javascripts[]= '/Leaflet.draw/dist/leaflet.draw.js';
     return $javascripts;
   }
 
@@ -209,7 +320,7 @@ class GtuFormFilter extends BaseGtuFormFilter
     $items=parent::getStylesheets();
     $items['/leaflet/leaflet.css']='all';
     $items['leaflet/MarkerCluster.css']='all';
-	$items["/Leaflet.draw-master/dist/leaflet.draw.css"]=  'all';
+  	$items['/Leaflet.draw/dist/leaflet.draw.css']='all';
     return $items;
   }
 

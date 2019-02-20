@@ -27,6 +27,11 @@
                 <?php if($orderBy=='filename') echo $orderSign ?>
               </a>
             </th>
+			<?php if($format == 'taxon') : ?>
+				<th>
+					Taxonomical hierarchy
+				</th>
+			 <?php endif ?>
             <th>
               <a class="sort" href="<?php echo url_for($s_url.'&orderby=state'.( ($orderBy=='state' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
                 <?php echo __('Status');?>
@@ -49,6 +54,11 @@
               <td></td>
               <?php if($format != 'taxon') : ?><td><?php echo $import->Collections->getName();?></td><?php endif ; ?>
               <td><?php echo $import->getFilename();?></td>
+			  <?php if($format == 'taxon') : ?>
+				<td>
+					<?php echo __(Doctrine::getTable("TaxonomyMetadata")->find($import->getSpecimenTaxonomyRef()) ? Doctrine::getTable("TaxonomyMetadata")->find($import->getSpecimenTaxonomyRef())->getTaxonomyName() : "Not Found");?>
+				</td>
+			 <?php endif ?>
               <td><?php echo __($import->getStateName());?>
               </td>
               <td><?php echo $import->getLastModifiedDate(ESC_RAW);?></td>
@@ -63,14 +73,24 @@
                   <?php echo __('n/a');?>
                 <?php endif;?>
               </td>
+			  <!--ftheeten 2018 08 06-->
+             
+			   <?php if($format == 'locality'&& $import->getState() == 'loaded') : ?><td><?php echo link_to("Load GTU in DB",'import/loadGtuInStaging?id='.$import->getId()); ?></td><?php endif ; ?>
               <?php if ($import->getState() == 'error') : ?>
               <td colspan="2">
                   <?php echo link_to(image_tag('warning.png',array('title'=>__('View errors while importing'))),'import/viewError?id='.$import->getId());?>
               </td>
               <?php else : ?>
               <td>
-                <?php if ($import->isEditableState()) : ?>
+			   <!--ftheeten 2018 09 25 update for locality-->
+                <?php if ($import->isEditableState()&&$format != 'locality') : ?>
                   <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit import'))),'staging/index?import='.$import->getId());?>
+				<?php elseif ($format == 'locality'&& $import->getState() != 'finished') : ?>
+				<?php echo link_to(image_tag('edit.png',array('title'=>__('Edit import'))),'import/viewUnimported?id='.$import->getId()); ?>
+                <?php elseif ($format == 'taxon'&& ($import->getState() == 'finished')||$import->isEditableState()) : ?>
+                   <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit import'))),'import/viewUnimportedTaxa?id='.$import->getId()); ?>
+				<?php else: ?>
+				NOT EDITABLE
                 <?php endif ; ?>
               </td>
               <td>
@@ -87,9 +107,16 @@
               </td>
               <td>
                 <?php echo link_to(image_tag('remove.png', array("title" => __("Delete"))), 'import/delete?id='.$import->getId(),'class=remove_import');?>
-              </td>
-             <?php else : ?>
-             <td colspan="2">-</td>
+              </td>             
+             <?php endif ; ?>
+             <?php if($import->getState()==="to_be_loaded") : ?>
+                <td>
+                    <?php echo link_to("Load in staging",'import/loadstaging?id='.$import->getId()); ?>
+				</td>
+             <?php elseif($import->getState()==="loaded") : ?>
+					<td>
+						<?php echo link_to("Check import",'import/checkstaging?id='.$import->getId()); ?>
+					</td>   
              <?php endif ; ?>
             </tr>
           <?php endforeach;?>

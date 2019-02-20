@@ -18,17 +18,16 @@ Grâce aux chercheurs et à leur personnel, tant belges qu’étrangers, les don
 </p>
 <br />
 <p>
-Le site Darwin nous montre une facette importante des collections en terme de taille et de diversité.
-Aujourd'hui, notre base de données contient des informations sur plus de 350.000 spécimens stockés dans les conservatoires de l'Institut.
-Ce nombre augmente chaque jour grâce aux efforts des conservateurs et de leurs adjoints, qui sont responsables de la conservation des échantillons et des informations archivées.
-Notre base de données en ligne contient des informations sur les collections de vertébrés, invertébrés et insectes.
-L'application sera bientôt élargie aux données paléontologiques.
+L'application DaRWIN (darwin.naturalsciences.be) nous montre une facette importante des collections en terme de taille et de diversité.
+Aujourd'hui, notre base de données contient des informations sur plus de 2.637.600 specimens (540.000 enregistrements) stockés dans les conservatoires de l'Institut.
+Ce nombre augmente chaque jour grâce aux efforts de la direction du patrimoine, des conservateurs et de leurs adjoints, qui sont responsables de la conservation des échantillons et des informations archivées.
+Notre base de données en ligne contient des informations sur les collections de vertébrés, invertébrés, insectes, paléontologie, géoogie et minéralogie.
 </p>
 <br />
 <p>
-Les données de la collection anthropologique sont conservées dans un système parallèle: MARS (Multimedia Archaeological Research System)qui peut être accédée via le lien suivant: <a href="http://www.sciencesnaturelles.be/mars">http://www.sciencesnaturelles.be/mars</a>.
+Les données de la collection anthropologique sont conservées dans un système parallèle: MARS (Multimedia Archaeological Research System)qui peut être accédée via le lien suivant: <a href="http://www.sciencesnaturelles.be/mars">www.sciencesnaturelles.be/mars</a>.
 Le service géologique de Belgique et le Département de la Gestion des écosystèmes marins fournissent leurs données via d'autres systèmes.
-Plus d'information sur ces départements peu être obtenue en consultant leurs pages Web: <a href="http://www.sciencesnaturelles.be/institute/structure/geology/gsb_website" target="_pop">www.sciencesnaturelles.be/institute/structure/geology/gsb_website</a> et <a href="http://www.mumm.ac.be" target="_pop">www.mumm.ac.be</a>
+Plus d'information sur ces départements peu être obtenue en consultant leurs pages Web: <a href="https://www.naturalsciences.be/fr/science/do/25/scientific-research/research-programmes/94" target="_pop">www.naturalsciences.be/fr/science/do/25/scientific-research/research-programmes/94</a> et <a href="http://odnature.naturalsciences.be/home/" target="_pop">odnature.naturalsciences.be/home/</a>
 </p>
 <br />
 <p>

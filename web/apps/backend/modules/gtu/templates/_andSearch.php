@@ -4,8 +4,6 @@
     <div class="purposed_tags" id="purposed_tags_<?php echo $row_line;?>">
     </div>
   </td>
-  <!--ftheeten 2016 02 12-->
-  <td><b><?php echo $form['fuzzy_matching_tag']->renderLabel();?></b>:<?php echo $form['fuzzy_matching_tag'];?></td>
   <td class="widget_row_delete">
     <?php echo image_tag('remove.png', 'alt=Delete class=clear_prop id=clear_tag_'.$row_line); ?>
   </td>
@@ -45,12 +43,10 @@
   $('#purposed_tags_<?php echo $row_line ; ?> li').live('click',function()
   {
     input_el = $(this).closest('tr').find('input.tag_line_<?php echo $row_line ; ?>');
-    /*if(input_el.val().match("\;\s*$"))
+    if(input_el.val().match("\;\s*$"))
       input_el.val( input_el.val() + $(this).text() );
     else
-      input_el.val( input_el.val() + " ; " +$(this).text() );*/
-	//ftheeten 2016 03 11
-	input_el.val( $(this).text() );
+      input_el.val( input_el.val() + " ; " +$(this).text() );
     input_el.trigger('click');
   });  
 </script>

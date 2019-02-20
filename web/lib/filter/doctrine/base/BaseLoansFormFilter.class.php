@@ -19,7 +19,6 @@ abstract class BaseLoansFormFilter extends BaseFormFilterDoctrine
       'from_date'        => new sfWidgetFormFilterInput(),
       'to_date'          => new sfWidgetFormFilterInput(),
       'extended_to_date' => new sfWidgetFormFilterInput(),
-      'collection_ref'   => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Collections'), 'add_empty' => true)),
     ));
 
     $this->setValidators(array(
@@ -29,7 +28,6 @@ abstract class BaseLoansFormFilter extends BaseFormFilterDoctrine
       'from_date'        => new sfValidatorPass(array('required' => false)),
       'to_date'          => new sfValidatorPass(array('required' => false)),
       'extended_to_date' => new sfValidatorPass(array('required' => false)),
-      'collection_ref'   => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Collections'), 'column' => 'id')),
     ));
 
     $this->widgetSchema->setNameFormat('loans_filters[%s]');
@@ -56,7 +54,6 @@ abstract class BaseLoansFormFilter extends BaseFormFilterDoctrine
       'from_date'        => 'Text',
       'to_date'          => 'Text',
       'extended_to_date' => 'Text',
-      'collection_ref'   => 'ForeignKey',
     );
   }
 }
