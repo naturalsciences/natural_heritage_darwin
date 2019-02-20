@@ -18,13 +18,6 @@
         </tr>
         
       </tbody>
-      <script type="text/javascript">
-		//ftheeten 2016 11 23   
-                
-                $.reverse_year_in_select("#specimen_search_filters_gtu_from_date_year");
-                $.reverse_year_in_select("#specimen_search_filters_gtu_to_date_year");
-            
-        </script>
     </table>
     
   </div>

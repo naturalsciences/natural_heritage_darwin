@@ -29,7 +29,7 @@ class VernacularNamesTable extends DarwinTable
 
   public function findAllCommonNames($listId = null)
   {
-    if($listId == null) return array() ;
+    if($listId === null) return array() ;
      $q = Doctrine_Query::create()
            ->from('VernacularNames v')
       ->orderBy('v.record_id');

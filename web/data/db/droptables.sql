@@ -72,6 +72,7 @@ DROP TABLE  IF EXISTS staging_people CASCADE;
 DROP TABLE  IF EXISTS staging_info CASCADE;
 DROP TABLE  IF EXISTS staging_relationship CASCADE;
 DROP TABLE  IF EXISTS staging_collecting_methods CASCADE;
+DROP TABLE  IF EXISTS staging_catalogue CASCADE;
 DROP TABLE  IF EXISTS loans CASCADE;
 DROP TABLE  IF EXISTS loan_items CASCADE;
 DROP TABLE  IF EXISTS loan_rights CASCADE;

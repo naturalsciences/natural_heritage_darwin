@@ -1,14 +1,12 @@
 <table class="catalogue_table_view taxon_view">
   <tr>
     <td>
-    <?php if ($spec) : ?>
       <?php if ($spec->getTaxonName() != "") : ?>
         <?php echo link_to(__($spec->getTaxonName(ESC_RAW)), 'taxonomy/view?id='.$spec->getTaxonRef(), array('id' => $spec->getTaxonRef())) ?>
         <?php echo image_tag('info.png',"title=info class=info");?>
         <div class="tree">
         </div>
       <?php endif ; ?>
-     <?php endif ; ?>
     </td>
   </tr>
 </table>

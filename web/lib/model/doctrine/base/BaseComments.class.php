@@ -65,10 +65,6 @@ abstract class BaseComments extends DarwinModel
              array(
               'referenced_relation' => 'specimens',
              ),
-             'Ecology' => 
-             array(
-              'notion_concerned' => 'ecology',
-             ),
              ));
     }
 

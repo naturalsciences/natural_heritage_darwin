@@ -31,9 +31,7 @@
                 echo link_to($form['people_ref']->renderLabel(),
                              (($is_physical)?'people':'institution').'/edit',
                              array(
-                               'query_string' => 'id='.$form['people_ref']->getValue(),
-                               //ftheeten 2016 11 23
-                               'target' => '_blank'
+                               'query_string' => 'id='.$form['people_ref']->getValue()
                              )
         );?></td>
       <?php echo $form['people_sub_type']->render() ; ?>

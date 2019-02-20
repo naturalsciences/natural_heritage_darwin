@@ -122,7 +122,7 @@ class registerActions extends DarwinActions
       {
         $login_params['l_err'] = '1';
       }
-      $this->redirect($this->getContext()->getConfiguration()->generateBackendUrl('homepage', $login_params, $request));
+      //$this->redirect($this->getContext()->getConfiguration()->generateBackendUrl('homepage', $login_params, $request));
     }
     $this->redirect($referer);
   }

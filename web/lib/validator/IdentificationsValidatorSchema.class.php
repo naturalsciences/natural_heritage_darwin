@@ -13,8 +13,7 @@ class IdentificationsValidatorSchema extends sfValidatorSchema
 
     if (!$value['value_defined'] && $value['notion_concerned'])
     {
-      	//p vignaux 2016 03 03 (desactiver la validation sur le sujet de l identification
-	//$errorSchemaLocal->addError(new sfValidatorError($this, 'value_defined'));
+      $errorSchemaLocal->addError(new sfValidatorError($this, 'value_defined'));
     }
     elseif (!$value['value_defined'] && !$value['notion_concerned'])
     {

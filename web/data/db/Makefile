@@ -4,10 +4,13 @@ PORT = 5432
 DB_USER = darwin2
 DB_WEB_USER = cebmpad
 DB_READ_USER = d2viewer
+DB_TEST_USER = unittest
+DB_TEST_SCHEMA = unittest
 DB_NAME = darwin2
 TEST_CMD = pg_prove
 PSQL = /usr/bin/psql
 PARAM_PSQL = $(PSQL) -q -h $(HOST) -U $(DB_USER) -d $(DB_NAME) -p $(PORT)
+TEST_PSQL = $(PSQL) -q -h $(HOST) -U $(DB_TEST_USER) -d $(DB_NAME) -p $(PORT)
 PRIV_PSQL = $(PSQL) -q -v dbname=$(DB_NAME) -p $(PORT)
 PRIV_PSQL_DB = $(PRIV_PSQL) -d $(DB_NAME)
 PG_VER = 9.1
@@ -33,11 +36,17 @@ help-target:
 	@echo "install-db"
 	@echo "   install the darwin db into the $db_user schema : create types, tables, functions and indexes"
 	@echo ""
+	@echo "install-test"
+	@echo "   install structure for unit testing"
+	@echo ""
 	@echo "test"
 	@echo "   Unit test the database installation in a schema 'unittest'"
 	@echo ""
 	@echo "create-schema"
 	@echo "   Create the schema for the install of the db "
+	@echo ""
+	@echo "create-test-schema"
+	@echo "   Create the schema for the unit testing "
 	@echo ""
 	@echo "create-db"
 	@echo "   create an new postgresql db and the tablespace associated for darwin"
@@ -47,6 +56,9 @@ help-target:
 	@echo ""
 	@echo "create-user"
 	@echo "   create a default user to access only the darwin schema and db"
+	@echo ""
+	@echo "create-test-user"
+	@echo "   create a default user for unit testing (user unittest)"
 	@echo ""
 	@echo "upgrade"
 	@echo "   tries to update the current db to the new version"
@@ -74,6 +86,12 @@ help-param:
 	@echo "DB_READ_USER (Default: d2viewer)"
 	@echo "   username for a read only connection to the database"
 	@echo ""
+	@echo "DB_TEST_USER (Default: unittest)"
+	@echo "   username for the connection to the unitest testing schema"
+	@echo ""
+	@echo "DB_TEST_SCHEMA (Default: unittest)"
+	@echo "   testing schema name for the unitest user"
+	@echo ""
 	@echo "DB_NAME (Default: darwin2)"
 	@echo "   database name to be created or to be used (depends of the target)"
 	@echo ""
@@ -88,11 +106,11 @@ help-param:
 
 test:
 ifeq ($(TEST_CMD),pg_prove)
-	$(PG_PROVE) -h $(HOST) -U $(DB_USER) $(TESTS)
+	$(PG_PROVE) -h $(HOST) -d $(DB_NAME) -U $(DB_TEST_USER) $(TESTS)
 else ifeq ($(TEST_CMD),psql)
 	for file in $(TESTS) ; \
 	do \
-		$(PSQL) -h $(HOST) -U $(DB_USER) -f $$file ; \
+		$(PSQL) -h $(HOST) -d $(DB_NAME) -U $(DB_TEST_USER) -f $$file ; \
 	done
 endif
 
@@ -108,6 +126,8 @@ install-db:
 
 install-all: create-db create-user create-schema install-lib install-db
 
+install-test: create-test-user create-test-schema
+
 uninstall-db:
 	$(PARAM_PSQL) -f droptriggers.sql
 	$(PARAM_PSQL) -f dropfunctions.sql
@@ -117,6 +137,11 @@ uninstall-db:
 create-schema:
 	$(PRIV_PSQL_DB) -c "create schema $(DB_NAME) authorization $(DB_USER);"
 	$(PRIV_PSQL_DB) -c "ALTER USER $(DB_USER) SET search_path TO $(DB_NAME), public;"
+
+create-test-schema:
+	$(PRIV_PSQL_DB) -c "create schema $(DB_TEST_SCHEMA) authorization $(DB_TEST_USER);"
+	$(PRIV_PSQL_DB) -c "ALTER USER $(DB_TEST_USER) SET search_path TO $(DB_TEST_SCHEMA), public;"
+	$(PRIV_PSQL_DB) -c "create extension pgtap;"
 
 grant-d2-to-web:
 	$(PRIV_PSQL_DB) -f grant_d2_to_web_user.sql
@@ -137,6 +162,9 @@ endif
 
 create-user-web:
 	-createuser -l -i -S -R -D -P -E $(DB_WEB_USER)
+
+create-test-user:
+	-createuser -l -i -S -R -D -P -E $(DB_TEST_USER)
 
 create-user:
 ifeq ($(PASSWD),'')

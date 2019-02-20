@@ -14,7 +14,6 @@ class DarwinPager extends Doctrine_Pager
      */
     public function execute($params = array(), $hydrationMode = null)
     {
-
         if ( !$this->getExecuted()) {
             $this->_initialize($params);
         }

@@ -22,7 +22,6 @@ abstract class BaseClassificationSynonymiesForm extends BaseFormDoctrine
       'group_name'          => new sfWidgetFormTextarea(),
       'is_basionym'         => new sfWidgetFormInputCheckbox(),
       'order_by'            => new sfWidgetFormInputText(),
-      'synonym_record_id'   => new sfWidgetFormInputText(),
     ));
 
     $this->setValidators(array(
@@ -33,7 +32,6 @@ abstract class BaseClassificationSynonymiesForm extends BaseFormDoctrine
       'group_name'          => new sfValidatorString(),
       'is_basionym'         => new sfValidatorBoolean(array('required' => false)),
       'order_by'            => new sfValidatorInteger(array('required' => false)),
-      'synonym_record_id'   => new sfValidatorInteger(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('classification_synonymies[%s]');

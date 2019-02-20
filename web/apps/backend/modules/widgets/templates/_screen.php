@@ -8,7 +8,7 @@ if(!isset($columns)) $columns = 1;
   <?php foreach($widgets as $id => $widget):?>
     <?php if(!$widget->getVisible()) continue;?>
 
-    <?php if($columns != 1 && $changed_col == false && $widget->getColNum() == 2):?>
+    <?php if($columns != 1 && $changed_col === false && $widget->getColNum() == 2):?>
 	<?php $changed_col = true;?>
 	</ul>
 	<div class="board_spacer">&nbsp;</div>
@@ -25,7 +25,7 @@ if(!isset($columns)) $columns = 1;
     <?php $has_one_visible=true;?>
   <?php endforeach;?>
 
-  <?php if($columns != 1 && $changed_col==false):?>
+  <?php if($columns != 1 && $changed_col === false):?>
       </ul>
       <div class="board_spacer">&nbsp;</div>
       <ul class="board_col<?php if($encod) echo ' encod_screen';?>">

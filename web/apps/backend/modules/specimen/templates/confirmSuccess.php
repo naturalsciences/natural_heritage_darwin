@@ -5,7 +5,11 @@
       $('.check_right > input[type=submit]').click(function () {
           element_name = '';
           if ($(this).attr('name') == 'yes')
+          {
+           //ftheeten 2018 08 09
+           $(this).parents('form:first').attr('target', '_blank');
             element_name = '/all_duplicate/1';
+          }
           //$('.edition input[type=button]').unbind('click');
           $('body').trigger('close_modal');
       });

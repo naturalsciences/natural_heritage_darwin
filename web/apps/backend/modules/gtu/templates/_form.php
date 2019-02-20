@@ -25,21 +25,15 @@ $(document).ready(function ()
           <?php echo $form['code']->renderError() ?>
           <?php echo $form['code'] ?>
         </td>
-		<!--rmca 2016 06 21-->
-		<td>
-			 <a  class="take_specimen_code button_rmca" >Take specimen code</a>
-		</td>
-        <td>
-			 <a  class="take_gtu_code button_rmca" >Take location code</a>
-		</td>
-        <td>
-			 <a  class="take_ig_code button_rmca" >Take IG code</a>
-		</td>
       </tr>
-     
     </tbody>
 </table>
-
+<br/>
+<table>    
+    <tr>
+       <?php include_partial('gtuwidget/refTemporalInformation', array('form' => $form)) ?>
+    </tr>
+</table>
 <?php
 $tag_grouped = array();
 $avail_groups = TagGroups::getGroups(); 
@@ -89,97 +83,99 @@ foreach($form['newVal'] as $group)
   <fieldset id="location">
     <legend><?php echo __('Localisation');?></legend>
     <div id="reverse_tags" style="display: none;"><ul></ul><br class="clear" /></div>
-	<div>
+    <div>
 		<!--DMS/DD selector  ftheeten 2015 05 05-->
 		<b><?php echo $form['coordinates_source']->renderLabel() ;?><?php echo $form['coordinates_source']->renderError() ?></b><br/><?php echo $form['coordinates_source'];?>
 		
 	</div>
     <table>
-     <tr>
+		<tr>
 			<td colspan="4">
-
 				<div class="GroupDMS" style="display: None">
-
-			
-			<table >
-				<!--DMS columns ftheeten 2015 05 05-->
-				<tr >
-					<th ><?php echo $form['latitude_dms_degree']->renderLabel() ;?><?php echo $form['latitude_dms_degree']->renderError() ?></th>
-					<th ><?php echo $form['latitude_dms_minutes']->renderLabel(); ?><?php echo $form['latitude_dms_minutes']->renderError() ?></th>
-					<th ><?php echo $form['latitude_dms_seconds']->renderLabel(); ?><?php echo $form['latitude_dms_seconds']->renderError() ?></th>
-					<th ><?php echo $form['latitude_dms_direction']->renderLabel(); ?><?php echo $form['latitude_dms_direction']->renderError() ?></th>
-				</tr>
-				<tr >
-					<td ><?php echo $form['latitude_dms_degree'];?></td>
-					<td ><?php echo $form['latitude_dms_minutes'];?></td>
-					<td ><?php echo $form['latitude_dms_seconds'];?></td>
-					<td ><?php echo $form['latitude_dms_direction'];?></td>
-				</tr>
-				<tr >
-					<th ><?php echo $form['longitude_dms_degree']->renderLabel() ;?><?php echo $form['longitude_dms_degree']->renderError() ?></th>
-					<th ><?php echo $form['longitude_dms_minutes']->renderLabel(); ?><?php echo $form['longitude_dms_minutes']->renderError() ?></th>
-					<th class="GroupDMS"><?php echo $form['longitude_dms_seconds']->renderLabel(); ?><?php echo $form['longitude_dms_seconds']->renderError() ?></th>
-					<th class="GroupDMS"><?php echo $form['longitude_dms_direction']->renderLabel(); ?><?php echo $form['longitude_dms_direction']->renderError() ?></th>
-				</tr>
-				<tr >
-					<td><?php echo $form['longitude_dms_degree'];?></td>
-					<td ><?php echo $form['longitude_dms_minutes'];?></td>
-					<td ><?php echo $form['longitude_dms_seconds'];?></td>
-					<td><?php echo $form['longitude_dms_direction'];?></td>
-				</tr>
-			
-			</table>
-			</div>
+					<table >
+						<!--DMS columns ftheeten 2015 05 05-->
+						<!--<tr >
+							<th ><?php echo $form['latitude_dms_degree']->renderLabel() ;?><?php echo $form['latitude_dms_degree']->renderError() ?></th>
+							<th ><?php echo $form['latitude_dms_minutes']->renderLabel(); ?><?php echo $form['latitude_dms_minutes']->renderError() ?></th>
+							<th ><?php echo $form['latitude_dms_seconds']->renderLabel(); ?><?php echo $form['latitude_dms_seconds']->renderError() ?></th>
+							<th ><?php echo $form['latitude_dms_direction']->renderLabel(); ?><?php echo $form['latitude_dms_direction']->renderError() ?></th>
+						</tr>-->
+						<tr >
+							<th ><?php echo 'Latitude';?></th>
+							<th />
+							<th />
+							<th />
+						</tr>
+						<tr >
+							<td ><?php echo 'Degrees: '.$form['latitude_dms_degree'];?></td>
+							<td ><?php echo 'Minutes: '.$form['latitude_dms_minutes'];?></td>
+							<td ><?php echo 'Seconds: '.$form['latitude_dms_seconds'];?></td>
+							<td ><?php echo 'Direction: '.$form['latitude_dms_direction'];?></td>
+						</tr>
+						<!--<tr >
+							<th ><?php echo $form['longitude_dms_degree']->renderLabel() ;?><?php echo $form['longitude_dms_degree']->renderError() ?></th>
+							<th ><?php echo $form['longitude_dms_minutes']->renderLabel(); ?><?php echo $form['longitude_dms_minutes']->renderError() ?></th>
+							<th class="GroupDMS"><?php echo $form['longitude_dms_seconds']->renderLabel(); ?><?php echo $form['longitude_dms_seconds']->renderError() ?></th>
+							<th class="GroupDMS"><?php echo $form['longitude_dms_direction']->renderLabel(); ?><?php echo $form['longitude_dms_direction']->renderError() ?></th>
+						</tr>-->
+						<tr >
+							<th ><?php echo 'Longitude';?></th>
+							<th />
+							<th />
+							<th />
+						</tr>
+						<tr >
+							<td><?php echo 'Degrees: '.$form['longitude_dms_degree'];?></td>
+							<td><?php echo 'Minutes: '.$form['longitude_dms_minutes'];?></td>
+							<td><?php echo 'Seconds: '.$form['longitude_dms_seconds'];?></td>
+							<td><?php echo 'Direction: '.$form['longitude_dms_direction'];?></td>
+						</tr>
+					</table>
+				</div>
 			</td>
 		</tr>
-		 <tr>
+		<tr>
 			<td colspan="4">
-			
 				<div class="GroupUTM" style="display: None">
-
-			<table>
-				<!--DMS columns ftheeten 2015 05 05-->
-				<tr>
-					<th><?php echo $form['latitude_utm']->renderLabel() ;?><?php echo $form['latitude_utm']->renderError() ?></th>
-					<th><?php echo $form['longitude_utm']->renderLabel(); ?><?php echo $form['longitude_utm']->renderError() ?></th>
-					<th><?php echo $form['utm_zone']->renderLabel(); ?><?php echo $form['utm_zone']->renderError() ?></th>
-					
-				</tr>
-				<tr>
-					<td><?php echo $form['latitude_utm'];?></td>
-					<td><?php echo $form['longitude_utm'];?></td>
-					<td><?php echo $form['utm_zone'];?></td>
-					
-				</tr>
-				
-			
-			</table>
-			</div>
+					<table>
+						<!--DMS columns ftheeten 2015 05 05-->
+						<tr>
+							<th><?php echo $form['latitude_utm']->renderLabel() ;?><?php echo $form['latitude_utm']->renderError() ?></th>
+							<th><?php echo $form['longitude_utm']->renderLabel(); ?><?php echo $form['longitude_utm']->renderError() ?></th>
+							<th><?php echo $form['utm_zone']->renderLabel(); ?><?php echo $form['utm_zone']->renderError() ?></th>
+						</tr>
+						<tr>
+							<td><?php echo $form['latitude_utm'];?></td>
+							<td><?php echo $form['longitude_utm'];?></td>
+							<td><?php echo $form['utm_zone'];?></td>
+							
+						</tr>
+					</table>
+				</div>
 			</td>
 		</tr>
 		<tr>
 			<th class="GroupDD" style="display: None"><?php echo $form['latitude']->renderLabel() ;?><?php echo $form['latitude']->renderError() ?></th>
 			<th class="GroupDD" style="display: None"><?php echo $form['longitude']->renderLabel(); ?><?php echo $form['longitude']->renderError() ?></th>
-        <th><?php echo $form['lat_long_accuracy']->renderLabel() ;?><?php echo $form['lat_long_accuracy']->renderError() ?></th>
-        <th></th>
-      </tr>
-		 <tr>
-				<td class="GroupDD" style="display: None"><?php echo $form['latitude'];?></td>
-				<td class="GroupDD" style="display: None"><?php echo $form['longitude'];?></td>
+			<th><?php echo $form['lat_long_accuracy']->renderLabel() ;?><?php echo $form['lat_long_accuracy']->renderError() ?></th>
+			<th></th>
+		</tr>
+		<tr>
+			<td class="GroupDD" style="display: None"><?php echo $form['latitude'];?></td>
+			<td class="GroupDD" style="display: None"><?php echo $form['longitude'];?></td>
 			<td><?php echo $form['lat_long_accuracy'];?></td>
-			<td><strong><?php echo __('m');?></strong> <?php echo image_tag('remove.png', 'alt=Delete class=clear_prop'); ?></td>
-		 </tr>
-	      <tr>
+			<td><strong><?php echo __('m');?></strong><!-- <?php echo image_tag('remove.png', 'alt=Delete class=clear_prop'); ?>--></td>
+			<td></td>
+		</tr>
+      <tr>        
         <th><?php echo $form['elevation']->renderLabel(); ?><?php echo $form['elevation']->renderError() ?></th>
-        <th><?php echo $form['elevation_unit']->renderLabel(); ?><?php echo $form['elevation_unit']->renderError() ?></th>
         <th><?php echo $form['elevation_accuracy']->renderLabel() ;?><?php echo $form['elevation_accuracy']->renderError() ?></th>
         <th></th>
       </tr>
-      <tr>
+      <tr>        
         <td><?php echo $form['elevation'];?></td>
-        <td><?php echo $form['elevation_unit'];?></td>
         <td><?php echo $form['elevation_accuracy'];?></td>
-        <td></td>
+        <td><strong><?php echo __('m');?></strong> <?php echo image_tag('remove.png', 'alt=Delete class=clear_prop'); ?></td>
       </tr>
       <tr>
         <td colspan="3"><div style="width:100%; height:400px;" id="map"></div></td>
@@ -189,7 +185,7 @@ foreach($form['newVal'] as $group)
 $(document).ready(function () {
 
   initEditMap("map");
-
+  
   <?php if($form->getObject()->getLongitude() != ''):?>
     map.setView([<?php echo $form->getObject()->getLatitude();?>,<?php echo $form->getObject()->getLongitude();?>], 12);
   <?php else:?>
@@ -227,22 +223,14 @@ $(document).ready(function () {
 
 
 <script  type="text/javascript">
-//ftheeten 2016 02 05
-var showDMSCoordinates;
-var coordViewMode=true;
-
-//ftheeten 2016 02 05
-$( "form" ).submit(function( event ) {
-  window.opener.$("#gtu_filters_code").val($("#gtu_code").val());
-  });
- 
-
+    
 
 $(document).ready(function () {
-//ftheeten 2016 02 05
+
+    //ftheeten 2016 02 05
 
 	showDMSCoordinates=false;
-
+    
     $('.tag_parts_screen .clear_prop').live('click', function()
     {
       parent_el = $(this).closest('li');
@@ -254,7 +242,8 @@ $(document).ready(function () {
       {
 	      sub_groups.closest('fieldset').hide();
       	disableUsedGroups();
-      }
+      }	
+         
     });
 
    
@@ -262,18 +251,11 @@ $(document).ready(function () {
     disableUsedGroups();
     $('.purposed_tags li').live('click', function()
     {
-
       input_el = $(this).parent().closest('li').find('input[id$="_tag_value"]');
-      /*if(input_el.val().match("\;\s*$"))
-	  {
+      if(input_el.val().match("\;\s*$"))
         input_el.val( input_el.val() + $(this).text() );
-      }
-	  else
-	  {
+      else
         input_el.val( input_el.val() + " ; " +$(this).text() );
-	  }*/
-	  //ftheeten 2016 03 11
-	  input_el.val( $(this).text() );
       input_el.trigger('click');
     });
 
@@ -315,8 +297,9 @@ $(document).ready(function () {
       addSubGroup( $(this).closest('fieldset').attr('alt'));
     });
     
-    //ftheeten 2016 09 15
+        //ftheeten 2016 09 15
     checkCoordSourceState();
+	
 
 });
 
@@ -350,7 +333,6 @@ function addSubGroup(selected_group, default_type, value)
 
 function addTagToGroup(group, sub_group, tag)
 {
-    console.log('brol '+group + '-'+sub_group);
 
   if($('fieldset[alt="'+group+'"] .complete_widget input, fieldset[alt="'+group+'"] .complete_widget option:selected').filter(function()
     { return $(this).is(':visible') && $(this).val() == sub_group; }).length == 0)
@@ -379,6 +361,7 @@ function disableUsedGroups()
 
 function addGroup(g_val, sub_group, value)
 {
+
   if(g_val != '')
   {
     hideForRefresh('#gtu_group_screen');
@@ -394,7 +377,6 @@ function addGroup(g_val, sub_group, value)
           fld = '<fieldset alt="'+ g_val +'"><legend>' + g_name + '</legend><ul></ul><a class="sub_group"><?php echo __('Add Sub Group');?></a></fieldset>';
           $('.tag_parts_screen').append(fld);    
         }
-        //@TODO: What if not in select?
         html.find('select').val(sub_group);
         fld_set = $('fieldset[alt="'+g_val+'"]');
 
@@ -414,52 +396,122 @@ function addGroup(g_val, sub_group, value)
 }
 
 
+//add predfined tag groups
+//ftheeten 2018 08 08
 
-//ftheeten 2015 06 02
-/*$(".butShowDMS").change(
+//THIS part to prefil tags
+<?php if($form->getObject()->isNew()&&strpos( $_SERVER['REQUEST_URI'],"new")&&strpos( $_SERVER['REQUEST_URI'],"duplicate_id")===FALSE): ?>		
 
-	function()
-	{
-		var selected=$( ".butShowDMS" ).val();
-		
-		var showDMS='display: table-cell';
-		var showDD='display: None';
-		var showUTM='display: None';
+          //ftheeten 2018 08 08
+     var admLoaded=false;     
+     var countryLoaded=false; 
+     var provinceLoadedAdm=false; 
+     var provinceLoaded=false; 
+       
+     var hydrographicLoaded=false;
+     var seaLoadedAdm=false; 
+     var seaLoaded=false;
 
-		if(selected=="DD")
-		{
-			showDMS='display: None';
-			showDD='display: table-cell';
-			showUTM='display: None';
-			
-		}
-		else if(selected=="DMS")
-		{
-			showDMS='display: table-cell';
-			showDD='display: None';
-			showUTM='display: None';
-		}
-		else if(selected=="UTM")
-		{
-			showDMS='display: None';
-			showDD='display: None';
-			showUTM='display: table-cell';
-			
-		}
-		$('.GroupDMS').attr('style',showDMS );
-		$('.GroupDD').attr('style', showDD);
-		$('.GroupUTM').attr('style', showUTM);
-		
-		
-		//$('.coordinates_source option[value='+selected+']').attr('selected','selected');
-	}
+     var populatedLoaded=false;
+     var populatedPlaceLoadedAdm=false; 
+     var populatedPlaceLoaded=false;
 
-);*/
+     var tagGroupFillListener=function()
+     {
+         if($('#gtu_newVal_0_sub_group_name').length)
+       {
+           if(!countryLoaded)
+           {
+               
+                $('#gtu_newVal_0_sub_group_name').val('country');
+                countryLoaded=true;
+           }
+           if(!provinceLoaded)
+           {
+                if(!provinceLoadedAdm)
+                {
+                    provinceLoadedAdm=true;
+                    addGroup("administrative area");
+                }
+                if($('#gtu_newVal_1_sub_group_name').length)
+                {                    
+                    $('#gtu_newVal_1_sub_group_name').val('province');
+                    provinceLoaded=true;
+                    //launch hydrographic after all administrative displayed, otherwise HTML confused in HTML ids    
+                   if(!hydrographicLoaded)
+                   {                 
+                        addGroup("hydrographic");
+                        hydrographicLoaded=true;
+                   }
+                }
+                
+               
+           }
+           
+           if(!seaLoaded)
+           {
+                if(!seaLoadedAdm)
+                {
+                    seaLoadedAdm=true;                   
+                }
+                if($('#gtu_newVal_2_sub_group_name').length)
+                {                    
+                    $('#gtu_newVal_2_sub_group_name').val('sea');
+                    seaLoaded=true;
+                    //launch populated after all hydrographic displayed, otherwise HTML confused in HTML ids    
+                   if(!populatedLoaded)
+                   {                 
+                        addGroup("populated");
+                        populatedLoaded=true;
+                   }
+                }
+                
+           }
+           
+           if(!populatedPlaceLoaded)
+           {
+                if(!populatedPlaceLoadedAdm)
+                {
+                    populatedPlaceLoadedAdm=true;                   
+                }
+                if($('#gtu_newVal_3_sub_group_name').length)
+                {                    
+                    $('#gtu_newVal_3_sub_group_name').val('populated place');
+                    populatedPlaceLoaded=true;
+                     //next tag group to be prefilled HERE
+                }
+                
+           }
+           
+           
+       }
+     }    
+     
+     $(document).ajaxComplete(function(){
+        tagGroupFillListener();
+    }); 
+    
+    var addPredefinedTagGroups=function()
+    {
+       if(!admLoaded)
+       {
+      
+        addGroup("administrative area");
+        admLoaded=true;
+       }
+       
+       
+    }
+    
+    addPredefinedTagGroups();
+<?php endif;?>    
 
+/////THIS part for DMS
 
 //ftheeten 2016 09 05
 function checkCoordSourceState()
 {
+
     var selected=$( ".coordinates_source" ).val();
 		
 		var showDMS='display: table-cell';
@@ -708,26 +760,13 @@ function detectBothValCoordExisting()
 	return booleanAlreadyExisting;
 }
 
-/*function changeCoordinateSource(value)
-{
 
-		$(".coordinates_source option").filter(function()
-			{
-				return value;
-			}
-		 ).attr('selected',false);
-		  $(".coordinates_source option").filter(function()
-			{
-				return 1-value;
-			}
-		 ).attr('selected',true);
-}
-*/
 //ftheeten 2016 02 05
 //UTM
 $(".UTM2DDGeneralOnLeave").change(
 	function(event)
 	{
+
 		convertUTM();
 
 	}
@@ -829,4 +868,7 @@ function initUTM(name, zone, direction )
             var latlng = L.latLng(lati, longi);
             drawPoint(latlng, accu );
         }
+		
+
+	
 </script>

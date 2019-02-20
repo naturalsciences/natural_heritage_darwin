@@ -78,6 +78,7 @@ EOF;
       // Begin here the transactional process
       $conn->beginTransaction();
       try {
+      print("in taxonomy");
         $conn->execute("select fct_importer_catalogue(?,'taxonomy',?)",
                        array(
                          $catalogue->getId(),
@@ -90,8 +91,8 @@ EOF;
       }
       catch (\Exception $e) {
         $conn->rollback();
-        $sql_prepared = $conn->prepare("UPDATE imports set errors_in_import = ?, state='error' WHERE id = ?");
-        $sql_prepared->execute(array(ltrim($conn->errorInfo()[2], 'ERROR: '), $catalogue->getId()));
+        //$sql_prepared = $conn->prepare("UPDATE imports set errors_in_import = ?, state='error' WHERE id = ?");
+        //$sql_prepared->execute(array(ltrim($conn->errorInfo()[2], 'ERROR: '), $catalogue->getId()));
       }
       $this->logSection('Processing', sprintf('Check %d : End processing Catalogue import %d (start: %s - end: %s)',$randnum, $catalogue->getId(),$date_start,date('G:i:s')));
     }
@@ -101,6 +102,7 @@ EOF;
       // Begin here the transactional process for the check-import
       $conn->beginTransaction();
       $this->logSection('checking', sprintf('Check %d : (%s) Start checking staging',$randnum,date('G:i:s')));
+	  print("CHECK");
       // now let's check all checkable staging - the checkability is coming from list of id in imports array
       $conn->exec("SELECT fct_imp_checker_manager(s.*)
                     FROM staging s, imports i

@@ -59,25 +59,27 @@
           ?>
             <?php if (count($catalogues) > 0) : ?><ul class="taxon_parent"><?php echo __("import_taxon_parent_info") ; ?><?php endif; ?>
             <?php foreach($catalogues as $level => $catalogue) : ?>
-              <li>
-                <div class="<?php echo $catalogue['class'] != ''? 'line_ok':'line_not_ok'; ?>"></div>
-                <?php $lvl_name = $key.'_level_name';
+              <?php $lvl_name = $key.'_level_name';
                       $lvl_name = $$lvl_name;
                       if($key == 'taxon') $link_url = 'taxonomy';
                       if($key == 'mineral') $link_url = 'mineralogy';
                       if($key == 'litho') $link_url = 'lithostratigraphy';
                       if($key == 'lithology') $link_url = 'lithology';
                       if($key == 'chrono') $link_url = 'chronostratigraphy';
-                ?>
+              ?>
+              <li class="rid_<?php echo $catalogue['class'] != ''?$catalogue['class']:'' ; ?>" data-catalogue="<?php echo $link_url ; ?>">                
+                <div class="<?php echo $catalogue['class'] != ''? 'line_ok':'line_not_ok'; ?>"></div>
+                <?php if ($catalogue['class'] != '') echo image_tag('info.png',"title=info class=info") ;?>
                 <?php if($catalogue['level_sys_name'] == $lvl_name) echo '<strong>';?>
                 <?php if($catalogue['class'] == ''):?>
-                  <a target="_blank" href="<?php echo url_for($link_url.'/new').'?'.$link_url.'[name]='.$catalogue['name'].'&'.$link_url.'[level_ref]='.$catalogue['level_ref'] ; ?>">
+                  <a target="_blank" href="<?php echo url_for($link_url.'/new').'?'.$link_url.'[name]='.urlencode($catalogue['name']).'&'.$link_url.'[level_ref]='.$catalogue['level_ref'] ; ?>">
                     <?php echo $catalogue['name']." (".$level.")";?>
                   </a>
                 <?php else:?>
                   <?php echo link_to($catalogue['name']." (".$level.")", $link_url.'/view?id='.$catalogue['class']) ; ?>
-                <?php endif;?>
+                <?php endif;?>                
                 <?php if($catalogue['level_sys_name'] == $lvl_name) echo '</strong>';?>
+                <div class="tree"></div>
               </li>
             <?php endforeach ; ?>
             </ul>
@@ -102,5 +104,28 @@ $(document).ready(function () {
   {
     $(this).parent().find('input').val(0);
   });
+
+  $('.taxon_parent li .info').click(function()
+  {    
+    item_row=$(this).closest('li');
+    catalogue='<?php echo url_for('catalogue/tree');?>'+'/table/'+item_row.attr('data-catalogue') ;
+    if(item_row.find('.tree').is(":hidden"))
+    {
+      $.get(catalogue+'/id/'+getIdInClasses(item_row),function (html){
+        item_row.find('.tree').html(html).slideDown();
+      });
+    }
+    $('.tree').slideUp();
+  });
+  
+  //ftheeten 2018 10 01
+  <?php if(is_numeric($form->getObject()->getSpecimenTaxonomyRef())):?>
+  onElementInserted('body', '.col_check_metadata_ref', function(element)
+        {
+            //document.getElementById('searchCatalogue_metadata_ref').value;            
+            $(".col_check_metadata_ref option[value='<?php print($form->getObject()->getSpecimenTaxonomyRef());?>']").prop('selected', true);
+            
+        });
+   <?php endif;?>
 });
 </script>

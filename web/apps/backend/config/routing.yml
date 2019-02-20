@@ -10,22 +10,3 @@ default_index:
 
 default:
   url:   /:module/:action/*
-  
-printtemplate:
-  url: /printtemplate.:sf_format/:id
-  param: { module: specimensearch, action: printtemplate, sf_format: xml }
-  requirements:
-    sf_format: (?:xml)
-
-searchspecimenws:
-  #url: /searchspecimenws.:sf_format/:sessionidws/:pagesize/:page
-  url: /specimensearchws.:sf_format/*
-  param: { module: specimensearch, action: specimensearchws, sf_format: xml }
-  requirements:
-     sf_format: (?:xml)
-
-viewspecimenws:
-  url: /specimenviewws.:sf_format/:id
-  param: { module: specimen, action: viewws, sf_format: xml }
-  requirements:
-     sf_format: (?:xml)

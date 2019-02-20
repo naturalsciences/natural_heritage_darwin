@@ -11,28 +11,49 @@
  * @property integer $level_ref
  * @property integer $parent_ref
  * @property integer $catalogue_ref
+ * @property boolean $is_reference_taxonomy
+ * @property string $source_taxonomy
+ * @property integer $name_cluster
+ * @property boolean $imported
+ * @property string $import_exception
+ * @property string $staging_hierarchy
+ * @property string $darwin_hierarchy
  * @property StagingCatalogue $Parent
  * @property Imports $Import
  * @property Doctrine_Collection $StagingCatalogue
  * 
- * @method integer             getId()               Returns the current record's "id" value
- * @method integer             getImportRef()        Returns the current record's "import_ref" value
- * @method string              getName()             Returns the current record's "name" value
- * @method integer             getLevelRef()         Returns the current record's "level_ref" value
- * @method integer             getParentRef()        Returns the current record's "parent_ref" value
- * @method integer             getCatalogueRef()     Returns the current record's "catalogue_ref" value
- * @method StagingCatalogue    getParent()           Returns the current record's "Parent" value
- * @method Imports             getImport()           Returns the current record's "Import" value
- * @method Doctrine_Collection getStagingCatalogue() Returns the current record's "StagingCatalogue" collection
- * @method StagingCatalogue    setId()               Sets the current record's "id" value
- * @method StagingCatalogue    setImportRef()        Sets the current record's "import_ref" value
- * @method StagingCatalogue    setName()             Sets the current record's "name" value
- * @method StagingCatalogue    setLevelRef()         Sets the current record's "level_ref" value
- * @method StagingCatalogue    setParentRef()        Sets the current record's "parent_ref" value
- * @method StagingCatalogue    setCatalogueRef()     Sets the current record's "catalogue_ref" value
- * @method StagingCatalogue    setParent()           Sets the current record's "Parent" value
- * @method StagingCatalogue    setImport()           Sets the current record's "Import" value
- * @method StagingCatalogue    setStagingCatalogue() Sets the current record's "StagingCatalogue" collection
+ * @method integer             getId()                    Returns the current record's "id" value
+ * @method integer             getImportRef()             Returns the current record's "import_ref" value
+ * @method string              getName()                  Returns the current record's "name" value
+ * @method integer             getLevelRef()              Returns the current record's "level_ref" value
+ * @method integer             getParentRef()             Returns the current record's "parent_ref" value
+ * @method integer             getCatalogueRef()          Returns the current record's "catalogue_ref" value
+ * @method boolean             getIsReferenceTaxonomy()   Returns the current record's "is_reference_taxonomy" value
+ * @method string              getSourceTaxonomy()        Returns the current record's "source_taxonomy" value
+ * @method integer             getNameCluster()           Returns the current record's "name_cluster" value
+ * @method boolean             getImported()              Returns the current record's "imported" value
+ * @method string              getImportException()       Returns the current record's "import_exception" value
+ * @method string              getStagingHierarchy()      Returns the current record's "staging_hierarchy" value
+ * @method string              getDarwinHierarchy()       Returns the current record's "darwin_hierarchy" value
+ * @method StagingCatalogue    getParent()                Returns the current record's "Parent" value
+ * @method Imports             getImport()                Returns the current record's "Import" value
+ * @method Doctrine_Collection getStagingCatalogue()      Returns the current record's "StagingCatalogue" collection
+ * @method StagingCatalogue    setId()                    Sets the current record's "id" value
+ * @method StagingCatalogue    setImportRef()             Sets the current record's "import_ref" value
+ * @method StagingCatalogue    setName()                  Sets the current record's "name" value
+ * @method StagingCatalogue    setLevelRef()              Sets the current record's "level_ref" value
+ * @method StagingCatalogue    setParentRef()             Sets the current record's "parent_ref" value
+ * @method StagingCatalogue    setCatalogueRef()          Sets the current record's "catalogue_ref" value
+ * @method StagingCatalogue    setIsReferenceTaxonomy()   Sets the current record's "is_reference_taxonomy" value
+ * @method StagingCatalogue    setSourceTaxonomy()        Sets the current record's "source_taxonomy" value
+ * @method StagingCatalogue    setNameCluster()           Sets the current record's "name_cluster" value
+ * @method StagingCatalogue    setImported()              Sets the current record's "imported" value
+ * @method StagingCatalogue    setImportException()       Sets the current record's "import_exception" value
+ * @method StagingCatalogue    setStagingHierarchy()      Sets the current record's "staging_hierarchy" value
+ * @method StagingCatalogue    setDarwinHierarchy()       Sets the current record's "darwin_hierarchy" value
+ * @method StagingCatalogue    setParent()                Sets the current record's "Parent" value
+ * @method StagingCatalogue    setImport()                Sets the current record's "Import" value
+ * @method StagingCatalogue    setStagingCatalogue()      Sets the current record's "StagingCatalogue" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -66,6 +87,32 @@ abstract class BaseStagingCatalogue extends DarwinModel
              ));
         $this->hasColumn('catalogue_ref', 'integer', null, array(
              'type' => 'integer',
+             ));
+        $this->hasColumn('is_reference_taxonomy', 'boolean', null, array(
+             'type' => 'boolean',
+             'notnull' => true,
+             'default' => true,
+             ));
+        $this->hasColumn('source_taxonomy', 'string', null, array(
+             'type' => 'string',
+             'notnull' => false,
+             ));
+        $this->hasColumn('name_cluster', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('imported', 'boolean', null, array(
+             'type' => 'boolean',
+             'notnull' => true,
+             'default' => false,
+             ));
+        $this->hasColumn('import_exception', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('staging_hierarchy', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('darwin_hierarchy', 'string', null, array(
+             'type' => 'string',
              ));
     }
 

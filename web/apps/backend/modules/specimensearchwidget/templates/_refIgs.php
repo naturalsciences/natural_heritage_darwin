@@ -13,12 +13,5 @@
       <td><?php echo $form['ig_to_date']->render() ?></td>
     </tr>
   </tbody>
-   <script type="text/javascript">
-		//ftheeten 2016 11 23   
-                
-                $.reverse_year_in_select("#specimen_search_filters_ig_from_date_year");
-                $.reverse_year_in_select("#specimen_search_filters_ig_to_date_year");
-            
-        </script>
 </table>
  

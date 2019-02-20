@@ -13,15 +13,17 @@ abstract class BaseCollectingToolsFormFilter extends BaseFormFilterDoctrine
   public function setup()
   {
     $this->setWidgets(array(
-      'tool'           => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'tool_indexed'   => new sfWidgetFormFilterInput(),
-      'specimens_list' => new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => 'Specimens')),
+      'tool'                     => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'tool_indexed'             => new sfWidgetFormFilterInput(),
+      'specimens_list'           => new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => 'Specimens')),
+      'specimens_maincodes_list' => new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => 'SpecimensMaincodes')),
     ));
 
     $this->setValidators(array(
-      'tool'           => new sfValidatorPass(array('required' => false)),
-      'tool_indexed'   => new sfValidatorPass(array('required' => false)),
-      'specimens_list' => new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'Specimens', 'required' => false)),
+      'tool'                     => new sfValidatorPass(array('required' => false)),
+      'tool_indexed'             => new sfValidatorPass(array('required' => false)),
+      'specimens_list'           => new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'Specimens', 'required' => false)),
+      'specimens_maincodes_list' => new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'SpecimensMaincodes', 'required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('collecting_tools_filters[%s]');
@@ -51,6 +53,24 @@ abstract class BaseCollectingToolsFormFilter extends BaseFormFilterDoctrine
     ;
   }
 
+  public function addSpecimensMaincodesListColumnQuery(Doctrine_Query $query, $field, $values)
+  {
+    if (!is_array($values))
+    {
+      $values = array($values);
+    }
+
+    if (!count($values))
+    {
+      return;
+    }
+
+    $query
+      ->leftJoin($query->getRootAlias().'.SpecimensTools SpecimensTools')
+      ->andWhereIn('SpecimensTools.specimen_ref', $values)
+    ;
+  }
+
   public function getModelName()
   {
     return 'CollectingTools';
@@ -59,10 +79,11 @@ abstract class BaseCollectingToolsFormFilter extends BaseFormFilterDoctrine
   public function getFields()
   {
     return array(
-      'id'             => 'Number',
-      'tool'           => 'Text',
-      'tool_indexed'   => 'Text',
-      'specimens_list' => 'ManyKey',
+      'id'                       => 'Number',
+      'tool'                     => 'Text',
+      'tool_indexed'             => 'Text',
+      'specimens_list'           => 'ManyKey',
+      'specimens_maincodes_list' => 'ManyKey',
     );
   }
 }

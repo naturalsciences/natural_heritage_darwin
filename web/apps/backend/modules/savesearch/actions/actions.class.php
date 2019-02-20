@@ -1,5 +1,5 @@
 <?php
-
+error_reporting(E_ERROR | E_PARSE);
 /**
  * savesearch actions.
  *
@@ -159,7 +159,7 @@ class savesearchActions extends sfActions
         try{
           $this->form->save();
           $search = $this->form->getObject();
-          if($search->getIsOnlyId()==true)
+          if( $search->getIsOnlyId() === true )
             $this->getUser()->clearPinned($this->form->getValue('subject'));
 
           return $this->renderText('ok,' . $search->getId());
@@ -206,7 +206,152 @@ class savesearchActions extends sfActions
     if($request->getParameter('specimen') != '')
       $this->is_only_spec = true;
     $this->searches = Doctrine::getTable('MySavedSearches')
-        ->addIsSearch($q, ! $this->is_only_spec)
+        ->addIsSearch($q, ! $this->is_only_spec) 
+        //ftheeten 2018 02 16
+		 ->orderBy('modification_date_time DESC')
         ->execute();
+  }
+  
+    //ftheeten 2018 04 24
+  public function executeGeojson(sfWebRequest $request)  
+  {
+        error_reporting(E_ERROR | E_PARSE);
+        $returned=json_encode(Array());
+        if($request->getParameter('query_id') != ''&&$request->getParameter('user_id') != '')
+        {
+          
+             $query_id=$request->getParameter('query_id');
+             $user_id=$request->getParameter('user_id');
+             $sql = "SELECT fct_rmca_dynamic_saved_search_geojson as geojson FROM fct_rmca_dynamic_saved_search_geojson(:query, :user);";
+              $saved_search = Doctrine::getTable('MySavedSearches')->getSavedSearchByKey($query_id, $user_id);
+              $conn = Doctrine_Manager::connection();
+             $q = $conn->prepare($sql);
+             
+              $q->bindParam(":query", $query_id);
+              $q->bindParam(":user", $user_id);
+              $q->execute();
+              $item=$q->fetch(PDO::FETCH_ASSOC);
+             
+              $returned= $item["geojson"];
+              
+           }
+           $response = $this->getResponse();
+           
+           $response->clearHttpheaders();
+           $response->setHttpHeader('Content-Description','File Transfer');
+           $response->setHttpHeader('Cache-Control', 'public, must-revalidate, max-age=0');
+           $response->setHttpHeader('Pragma: public',true);
+           $response->setHttpHeader('Content-Transfer-Encoding', 'binary'); 
+          
+           $response->setHttpHeader('Content-Type','application/json'); // e.g. application/pdf, image/png etc.
+           $response->setHttpHeader('Content-Disposition','attachment; filename='.str_replace(" ", "_",$saved_search->getName()).'.geojson'); //some filename
+           $response->sendHttpHeaders(); //edited to add the missed sendHttpHeaders
+           $response->setContent($returned);
+
+           $response->sendContent();
+           
+           print($returned);
+
+return sfView::NONE;           
+  }
+  
+  //ftheeten 2018 07 03
+  public function executeExcelSpecimens(sfWebRequest $request)
+  {
+	  if($request->getParameter('query_id') != ''&&$request->getParameter('user_id') != '')
+	  {
+			$this->query_id=$request->getParameter('query_id');
+			$this->user_id=$request->getParameter('user_id');
+			//$this->total_size= Doctrine_Core::getTable("MySavedSearches")->countRecursiveSQLRecords($this->user_id, $this->query_id);
+			$this->size=20000;
+            $this->max_page =3;
+			$saved_search = Doctrine::getTable('MySavedSearches')->getSavedSearchByKey($this->query_id, $this->user_id);
+			$this->name = $saved_search->getName();
+            $nbpages=ceil($this->total_size/$this->size);
+            
+
+             $dataset=Doctrine::getTable('MySavedSearches')->getSavedSearchData($this->user_id, $this->query_id);
+                        
+             $returned=Array();             
+             $i=0;
+             $returned[]=implode("\t",array_keys($dataset[0]));
+             foreach($dataset as $row)
+             {
+                            
+                $tmp=implode("\t",
+                    array_map(
+                            function ($text)
+                            {
+                                return trim(preg_replace('/(\r\n|\t|\n)/', ' ', $text));
+                            } , 
+                            $row)
+                           );
+                  $returned[]=$tmp;
+                  $i++;
+                 }
+    
+                    
+   
+            $this->getResponse()->setHttpHeader('Content-type','text/tab-separated-values');
+            $this->getResponse()->setHttpHeader('Content-disposition','attachment; filename="darwin_export_specimen.txt"');
+            $this->getResponse()->setHttpHeader('Pragma', 'no-cache');
+            $this->getResponse()->setHttpHeader('Expires', '0');
+            
+            $this->getResponse()->sendHttpHeaders(); //edited to add the missed sendHttpHeaders
+            //$this->getResponse()->setContent($returned);
+            $this->getResponse()->sendContent();           
+            print(implode("\r\n",$returned));
+            return sfView::NONE;   
+	   }
+  }
+  
+  //ftheeten 2018 07 03
+  public function executeExcelTaxonomy(sfWebRequest $request)
+  {
+	  if($request->getParameter('query_id') != ''&&$request->getParameter('user_id') != '')
+	  {
+			$this->query_id=$request->getParameter('query_id');
+			$this->user_id=$request->getParameter('user_id');
+			//$this->total_size= Doctrine_Core::getTable("MySavedSearches")->countRecursiveSQLRecords($this->user_id, $this->query_id);
+			$this->size=20000;
+            $this->max_page =3;
+			$saved_search = Doctrine::getTable('MySavedSearches')->getSavedSearchByKey($this->query_id, $this->user_id);
+			$this->name = $saved_search->getName();
+            $nbpages=ceil($this->total_size/$this->size);
+            
+
+             $dataset=Doctrine::getTable('MySavedSearches')->getSavedSearchDataTaxonomy($this->user_id, $this->query_id);
+                        
+             $returned=Array();             
+             $i=0;
+             $returned[]=implode("\t",array_keys($dataset[0]));
+             foreach($dataset as $row)
+             {
+                            
+                $tmp=implode("\t",
+                    array_map(
+                            function ($text)
+                            {
+                                return trim(preg_replace('/(\r\n|\t|\n)/', ' ', $text));
+                            } , 
+                            $row)
+                           );
+                  $returned[]=$tmp;
+                  $i++;
+                 }
+    
+                    
+   
+            $this->getResponse()->setHttpHeader('Content-type','text/tab-separated-values');
+            $this->getResponse()->setHttpHeader('Content-disposition','attachment; filename="darwin_export_taxonomy.txt"');
+            $this->getResponse()->setHttpHeader('Pragma', 'no-cache');
+            $this->getResponse()->setHttpHeader('Expires', '0');
+            
+            $this->getResponse()->sendHttpHeaders(); //edited to add the missed sendHttpHeaders
+            //$this->getResponse()->setContent($returned);
+            $this->getResponse()->sendContent();           
+            print(implode("\r\n",$returned));
+            return sfView::NONE;   
+	   }
   }
 }

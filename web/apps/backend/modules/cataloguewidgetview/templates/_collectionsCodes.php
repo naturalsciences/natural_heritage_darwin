@@ -6,8 +6,7 @@
       <th class="centered"><?php echo __('Code suffix sep.');?></th>
       <th><?php echo __('Code suffix');?></th>
       <th class="centered"><?php echo __('Auto incremented ?');?></th>
-      <th></th>
-      <th></th>
+      <th class="centered"><?php echo __('...for new spec. only ?');?></th>
     </tr>
   </thead>
   <tbody>
@@ -26,6 +25,9 @@
       </td>
       <td class="centered">
         <?php echo ($collCodes->getCodeAutoIncrement())?image_tag('checkbox_checked_green.png'):image_tag('checkbox_unchecked_green.png'); ?>
+      </td>
+      <td class="centered">
+        <?php echo ($collCodes->getCodeAutoIncrementForInsertOnly())?image_tag('checkbox_checked_green.png'):image_tag('checkbox_unchecked_green.png'); ?>
       </td>
     </tr>
   </tbody>

@@ -12,7 +12,7 @@ from
       from information_schema.domains 
       where domain_schema = :schemaname
       UNION
-      select DISTINCT 'ALTER FUNCTION ' || :schemaname || '.' || x.proname || ' (' || array_to_string(:scheman.array_agg(y.typname), ',') || ') OWNER TO ' || :ownername || ';' as sqlcmd, 
+      select DISTINCT 'ALTER FUNCTION ' || :schemaname || '.' || min(x.proname) || ' (' || array_to_string(array_agg(y.typname), ',') || ') OWNER TO ' || :ownername || ';' as sqlcmd,
             2 as orderby 
       from (select oid as prooid, proname, unnest(proargtypes) as datatype from pg_proc 
             where pronamespace = (select oid from pg_namespace where nspname = :schemaname)
@@ -21,7 +21,16 @@ from
           (select oid as typoid, case when typname = 'staging' then :schemaname || '.staging' else typname end from pg_type
           ) as y on x.datatype = y.typoid 
       where proname not in ('dummy_first')
-      group by x.prooid, x.proname
+      group by x.prooid
+      UNION
+      select DISTINCT 'ALTER FUNCTION ' || :schemaname || '.' || min(x.proname) || ' () OWNER TO ' || :ownername || ';' as sqlcmd,
+            2 as orderby 
+      from (select oid as prooid, proname from pg_proc 
+            where pronamespace = (select oid from pg_namespace where nspname = :schemaname)
+              and proargtypes = ''
+          ) as x 
+      where proname not in ('dummy_first')
+      group by x.prooid
       UNION 
       select 'ALTER TABLE ' || :schemaname || '.' || tablename || ' OWNER TO ' || :ownername || ';' as sqlcmd, 
              3 as orderby 

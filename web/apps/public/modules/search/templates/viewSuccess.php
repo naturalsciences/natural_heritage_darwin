@@ -1,8 +1,8 @@
 <?php slot('title', __('View Specimens') .  ( $specimen->getTaxonRef()  ? " : ".$specimen->getTaxonName() : ""));  ?>
 
-<div class="page viewer">
-  <h1><?php echo __("Specimen Record");?><?php echo (": p".$specimen->getId());?></h1>
-    <h2 class="title"><?php echo __("Collection") ?></h2>
+<div class="page viewer">  
+  <h1><?php echo __("Specimen Record");?><?php echo (": ".$specimen->getId());?></h1>
+  <h2 class="title"><?php echo __("Collection") ?></h2>
     <div class="borded right_padded">
       <table>
         <tbody>
@@ -252,7 +252,7 @@
     <div class="borded right_padded">
       <table class="caract_table">
         <tr>
-          <td><span class="pager_nav"><?php echo __("Number of items") ; ?> :</span></td>
+          <td><span class="pager_nav"><?php echo __("Individual Count") ; ?> :</span></td>
           <td><span>
             <?php if($specimen->getSpecimenCountMin() == $specimen->getSpecimenCountMax())
                 echo ($specimen->getSpecimenCountMin()==""?"-":$specimen->getSpecimenCountMin()) ;
@@ -347,12 +347,12 @@
                 </tbody>
               </table>
           </td>
-        </tr>
-
+        </tr>        
         <?php endif ; ?>
         <?php if($specimen->getObjectName()!=""):?>
+        <tr><td colspan="2"><h3></h3></td></tr>
         <tr>
-          <td><span class="pager_nav"><?php echo __("Name") ; ?> :</span></td>
+          <td><span class="pager_nav"><?php echo __("Object name") ; ?> :</span></td>
           <td>
             <span><?php echo $specimen->getObjectName(); ?></span>
           </td>
@@ -371,14 +371,29 @@
 
     </div>
 
+    <?php if(isset($comments) && count($comments)) : ?>
+    <h2 class="title"><?php echo __("Associated comment") ?></h2>
+    <div class="borded right_padded">
+      <table class="caract_table">
+        <?php foreach ($comments as $comment) : ?>
+        <tr>
+          <td><span class="pager_nav"><?php echo $comment->getNotionText() ; ?> :</span></td>
+          <td><?php echo $comment->getComment(); ?></td>
+        </tr>
+      <?php endforeach ; ?>
+      </table>
+    </div>
+    <?php endif ; ?>
+
     <h2 class="title"><?php echo __("You think there's a mistake ? please suggest us a correction") ?></h2>
     <div class="suggestion_zone">
       <?php include_partial('suggestion', array('form' => $form,'id'=> $specimen->getId())) ; ?>
     </div>
-
-  <div class="check_right">
+  <?php if(!$full) : ?>
+  <div class="check_right">    
     <input type="button" id="close_butt" value="<?php echo __('Close this record'); ?>">
   </div>
+  <?php endif ; ?>  
   <script type="text/javascript">
     $(document).ready(function() {
       $('#close_butt').click(function(){

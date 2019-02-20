@@ -9,7 +9,6 @@
           <tr>
             <th><?php echo __('Specimen') ;?></th>
             <th><?php echo __('Specimen Main code(s)') ;?></th>
-            <th><?php echo __('Scientific name') ;?></th>
             <th><?php echo __('I.g. Num');?></th>
             <th><?php echo __('Details') ;?></th>
             <th><?php echo __('Expedition') ;?></th>
@@ -27,8 +26,12 @@
               <td>
                 <?php echo include_component('specimenwidgetview', 'refMainCodes', array('eid'=>$item->getSpecimenRef()));?>
               </td>
-              <td>
-                <?php echo include_component('specimenwidgetview', 'refTaxon', array('eid'=>$item->getSpecimenRef()));?>
+              <td><?php
+                $ig_num = $item->Ig->getIgNum();
+                if ( !empty($ig_num) ) {
+                  echo link_to($ig_num, 'igs/view?id=' . $ig_num);
+                }
+                ?>
               </td>
               <td><?php echo $item->getDetails();?></td>
               <td> <?php $date = new DateTime($item->getFromDate());

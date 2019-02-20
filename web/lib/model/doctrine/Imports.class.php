@@ -88,4 +88,55 @@ class Imports extends BaseImports
     if($collection == 0) $collection = null ;
     $this->Collection = $collection;
   }
+  
+  //ftheeten 2017 07 26
+  
+    public function getCreationDateMasked ()
+  {
+    $dateTime = new FuzzyDateTime($this->_get('creation_date'), $this->_get('creation_date_mask'));
+    return $dateTime->getDateMasked();
+  }
+
+  public function getCreationDate()
+  {
+    $from_date = new FuzzyDateTime($this->_get('creation_date'), $this->_get('creation_date_mask'));
+    return $from_date->getDateTimeMaskedAsArray();
+  }
+  
+  
+  public function setCreationDate($fd)
+  {
+    if ($fd instanceof FuzzyDateTime)
+    {
+      if ($this->getCreationDate() != $fd->getDateTimeMaskedAsArray()) {
+        $this->_set('creation_date', $fd->format('Y/m/d'));
+        $this->_set('creation_date_mask', $fd->getMask());
+      }
+    }
+    else
+    {
+      $dateTime = new FuzzyDateTime($fd, 56, true); 
+      if ($this->getCreationDate() != $dateTime->getDateTimeMaskedAsArray()) {
+        $this->_set('creation_date', $dateTime->format('Y/m/d'));
+        $this->_set('creation_date_mask', $dateTime->getMask());
+      }
+    }
+  }
+  
+  public function getTaxonomicConflicts()
+  {
+    $returned=Array();
+    if($this->getFormat()=="taxon"&& $this->getErrorsInImport()=='taxonomic_conflict')
+    {
+        $conn = Doctrine_Manager::connection();
+        $sql = "SELECT * FROM fct_rmca_compare_taxonomy_staging_darwin(:id) ;";
+        $q = $conn->prepare($sql);
+		$q->execute(array(':id'=> $this->getId() ));
+        $res = $q->fetchAll(PDO::FETCH_ASSOC);
+
+        return $res;
+    }
+    return $returned;
+  
+  }
 }

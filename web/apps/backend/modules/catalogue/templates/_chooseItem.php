@@ -1,6 +1,6 @@
 <?php include_stylesheets_for_form($searchForm) ?>
 <?php include_javascripts_for_form($searchForm) ?>
-
+<?php if(isset($is_choose)) : ?><div class="warn_message"><?php echo __('catalogue_search_tips') ; ?></div><?php endif ; ?>
 <div class="catalogue_filter">
 <?php echo form_tag('catalogue/search'.( isset($is_choose) ? '?is_choose='.$is_choose : '') , array('class'=>'search_form','id'=>'catalogue_filter'));?>
 <div class="container">
@@ -36,6 +36,42 @@
             <td class="datesNum"><?php echo $searchForm['lower_bound'];?></td>
             <td class="datesNum"><?php echo $searchForm['upper_bound'];?></td>
           <?php endif;?>
+                    </tr>
+          <tr>
+          <!--ftheeten 2017 06 30-->
+           <?php if(isset($searchForm['collection_ref'])&&isset($searchForm['collection_ref_for_modal'])):?>
+		    <!--jmherpers 2018 03 14-->
+            <!--<th><?php echo $searchForm['collection_ref']->renderLabel();?></th>-->
+			<th>Collection</th>
+           <?php endif;?>
+		    <!--ftheeten 2017 06 30-->
+           <?php if(isset($searchForm['metadata_ref'])):?>
+           <!--jmherpers 2018 03 14-->
+            <!--<th><?php echo $searchForm['metadata_ref']->renderLabel();?></th>-->
+			<th>Taxonomy</th>
+         
+           <?php endif;?>
+           <?php if(isset($searchForm['ig_number'])):?>
+           <!--ftheeten 2018 03 23-->
+           <th><?php echo $searchForm['ig_number']->renderLabel();?></th>
+			
+         
+           <?php endif;?>
+           </tr>
+          <tr>
+           <!--ftheeten 2017 06 30-->
+           <?php if(isset($searchForm['collection_ref_for_modal'])):?>
+                  <td><?php echo $searchForm['collection_ref_for_modal'];?></td>
+          <?php endif;?> 
+		  <?php if(isset($searchForm['metadata_ref'])):?>
+            <td><?php echo $searchForm['metadata_ref'];?></td>
+          <?php endif;?>
+          <?php if(isset($searchForm['ig_number'])):?>
+            <td><?php echo $searchForm['ig_number'];?></td>
+          <?php endif;?>
+        </tr>
+
+        <tr>         
           <td><input class="search_submit" type="submit" name="search" value="<?php echo __('Search');?>" /></td>
         </tr>
         <tr class="hidden">
@@ -77,6 +113,10 @@ $(document).ready(function () {
    open(url+'?'+data.replace(reg,'<?php echo $searchForm['table']->getValue() ; ?>'));
     return false;  
   });
+  
+  //ftheeten 2018 09 07
+   $(".coll_for_taxonomy_ref").val("0");  
+
 });
 </script>
 </div>

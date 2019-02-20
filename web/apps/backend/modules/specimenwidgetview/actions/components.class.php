@@ -114,8 +114,6 @@ class specimenwidgetviewComponents extends sfComponents
 
   public function executeRefCodes()
   {
-    //ftheeten 2017 02 10
-    $this->specCode = Doctrine::getTable('Specimens')->find($this->eid);
     $this->Codes = Doctrine::getTable('Codes')->getCodesRelatedArray('specimens',$this->eid) ;
   }
 
@@ -190,22 +188,6 @@ class specimenwidgetviewComponents extends sfComponents
       $this->accuracy = "Exact" ;
     else
       $this->accuracy = "Imprecise" ;
-      
-    //ftheeten 2016 06 22
-    if ($this->spec->getSpecimenCountMalesMin() === $this->spec->getSpecimenCountMalesMax())
-      $this->accuracy_males = "Exact" ;
-    else
-      $this->accuracy_males = "Imprecise" ;
-    
-    if ($this->spec->getSpecimenCountFemalesMin() === $this->spec->getSpecimenCountFemalesMax())
-      $this->accuracy_females = "Exact" ;
-    else
-      $this->accuracy_females = "Imprecise" ;
-      
-    if ($this->spec->getSpecimenCountJuvenilesMin() === $this->spec->getSpecimenCountJuvenilesMax())
-      $this->accuracy_juveniles = "Exact" ;
-    else
-      $this->accuracy_juveniles = "Imprecise" ;
   }
 
   public function executeSpecPart()
@@ -245,25 +227,11 @@ class specimenwidgetviewComponents extends sfComponents
   {
     $this->defineObject();
   }
-  //ftheeten 2016 06 29
-  public function executeEcology()
-  {
-     $this->Ecology = Doctrine::getTable('Comments')->findForTableByNotion('specimens',$this->eid, "ecology") ;
-
-  }
   
-  //ftheeten 2016 07 07  public function executeContainer()
+    //ftheeten 2018 11 30
    public function executeGtuDate()
   {
     $this->defineObject();
   }
   
-  //ftheeten 2016 08 25
-  public function executeStorageParts()
-  {
-      $this->storageParts = Doctrine::getTable('StorageParts')->findBySpecimenRef($this->eid) ;
-    //$this->defineObject();
-  }
-  
-
 }

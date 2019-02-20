@@ -208,7 +208,7 @@ MySavedSearches:
         User: u1
         is_only_id: true
         name: Specimen 4
-        search_criterias: '<?php echo json_encode(array('specimen_search_filters'=>array('spec_ids'=>'4')));?>'
+        search_criterias: "<?php echo json_encode(array('specimen_search_filters'=>array('spec_ids'=>'4')));?>"
         favorite: true
         modification_date_time: "<?php echo date('Y-m-d H:i:s');?>"
         visible_fields_in_result: "gtu|expedition|count"

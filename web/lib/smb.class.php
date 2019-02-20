@@ -248,7 +248,6 @@ class smb {
           }
         } else {
           return false;
-//          trigger_error ("url_stat(): dir failed for path '{$pu['path']}'", E_USER_WARNING);
         }
         break;
       default: trigger_error ('error in URL', E_USER_ERROR);
@@ -481,5 +480,6 @@ class smb_stream_wrapper extends smb {
 # Register 'smb' protocol !
 ###################################################################
 
-stream_wrapper_register('smb', 'smb_stream_wrapper')
-  or die ('Failed to register protocol');
+if ( stream_wrapper_register('smb', 'smb_stream_wrapper') === false ) {
+  throw new Exception ('Failed to register protocol');
+}

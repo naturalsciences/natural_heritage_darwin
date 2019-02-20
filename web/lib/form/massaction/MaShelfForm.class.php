@@ -22,16 +22,8 @@ class MaShelfForm extends BaseForm
   public function doGroupedAction($query,$values, $items)
   {
     $new_taxon = $values['shelf'];
-    $query->set('p.shelf', '?', $new_taxon);
+    $query->set('s.shelf', '?', $new_taxon);
     return $query;
   }
-  
-  //ftheeten 2017 07 27
-    public function getTable()
-    {
-        $returned=Array();
-        $returned['p']='StorageParts';
-        return $returned;
-    }  
 
 }

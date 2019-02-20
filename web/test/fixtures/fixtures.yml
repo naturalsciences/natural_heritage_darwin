@@ -257,6 +257,7 @@ Collections:
         code_prefix_separator: "-"
         code_suffix: Neo
         code_suffix_separator: "-"
+        code_auto_increment: true
     c2:
         code: vert
         name: Vertebrates
@@ -383,7 +384,7 @@ Loans:
     l9:
        id: 9
        name: Sheep of goyet
-       description: This is a funny sheep to watch
+       description: This is a funny sheep to watch, "babe" => "agreed ?"
        from_date: '2007-05-22'
        to_date: '2011-11-11'
     l10:
@@ -1012,6 +1013,7 @@ StagingInfo:
 
 ExtLinks:
     extl1:
+      type: ext
       id: 1
       referenced_relation: staging_info
       record_id: 1

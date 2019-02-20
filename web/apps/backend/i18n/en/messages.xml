@@ -3,7 +3,7 @@
   <file source-language="en" target-language="" datatype="plaintext" original="en">
     <header/>
     <body>
-            <trans-unit id="1">
+      <trans-unit id="1">
         <source>[0]No Results Retrieved|[1]Your query retrieved 1 record|(1,+Inf]Your query retrieved %1% records out of %2%</source>
         <target>[0]No Results Retrieved|[1]Your query retrieved 1 record|(1,+Inf]Your query retrieved %1% records out of %2%</target>
       </trans-unit>
@@ -92,7 +92,7 @@
         <target>Specimens</target>
       </trans-unit>
       <trans-unit id="31">
-      <source>Pinned Specimens &lt;i&gt;(%d)&lt;/i&gt;</source>
+        <source>Pinned Specimens &lt;i&gt;(%d)&lt;/i&gt;</source>
         <target>Pinned Specimens &lt;i&gt;(%d)&lt;/i&gt;</target>
       </trans-unit>
       <trans-unit id="34">
@@ -389,7 +389,7 @@
       </trans-unit>
       <trans-unit id="119">
         <source>Last modification</source>
-        <target>Last modification</target>
+        <target>Last system check</target>
       </trans-unit>
       <trans-unit id="121">
         <source>Number of items</source>
@@ -625,7 +625,7 @@
       </trans-unit>
       <trans-unit id="179">
         <source>Part Status</source>
-        <target>Part Status</target>
+        <target>Specimen Status</target>
       </trans-unit>
       <trans-unit id="180">
         <source>Part Codes</source>
@@ -4352,8 +4352,8 @@
         <target>This application requires an authentication.</target>
       </trans-unit>
       <trans-unit id="1353">
-        <source>Since Darwin is an Open Source application entirely based on open source software, we would be glad if you want to contribute to the project.&lt;br/&gt; Suggestions, Patches, Bug Reports or Code Donations are welcome on our Request tracker : &lt;a href=&quot;http://projects.naturalsciences.be/projects/darwin&quot;&gt;http://projects.naturalsciences.be/projects/darwin&lt;/a&gt;</source>
-        <target>Since Darwin is an Open Source application entirely based on open source software, we would be glad if you want to contribute to the project.&lt;br/&gt; Suggestions, Patches, Bug Reports or Code Donations are welcome on our Request tracker : &lt;a href=&quot;http://projects.naturalsciences.be/projects/darwin&quot;&gt;http://projects.naturalsciences.be/projects/darwin&lt;/a&gt;</target>
+        <source>Since Darwin is an Open Source application entirely based on open source software, we would be glad if you want to contribute to the project.&lt;br/&gt; Suggestions, Patches, Bug Reports or Code Donations are welcome on our Request tracker : &lt;a href=&quot;https://github.com/naturalsciences/Darwin/&quot;&gt;https://github.com/naturalsciences/Darwin/&lt;/a&gt;</source>
+        <target>Since Darwin is an Open Source application entirely based on open source software, we would be glad if you want to contribute to the project.&lt;br/&gt; Suggestions, Patches, Bug Reports or Code Donations are welcome on our Request tracker : &lt;a href=&quot;https://github.com/naturalsciences/Darwin/&quot;&gt;https://github.com/naturalsciences/Darwin/&lt;/a&gt;</target>
       </trans-unit>
       <trans-unit id="1354">
         <source>This specimen already exists</source>
@@ -5585,12 +5585,11 @@
       </trans-unit>
       <trans-unit id="1744">
         <source>List of errors occured during import</source>
-        <target>List of errors occured during import</target>
+        <target>List of errors that occured during import</target>
       </trans-unit>
       <trans-unit id="1745">
-        <source>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt; These errors cannot be corrected, the best way to remove it is to delete your import,
-        correct your XML file and import it again. You can also continue your import but you won't have information above. What do you want to do ?</source>
-        <target>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt; These errors cannot be corrected, the best way to remove it is to delete your import, correct your XML file and import it again. You can also continue your import but you won't have information above. What do you want to do ?</target>
+        <source>warning_spec_msg</source>
+        <target>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt; These errors cannot be corrected, the best way to remove them, is to delete your import, correct your XML file and import it again.&lt;/br&gt;You can also continue your import but you won't have the information above.&lt;br /&gt;If the error mentioned is a version problem we warmly encourage you to contact your application administrator&lt;br /&gt;What would you like to do ?</target>
       </trans-unit>
       <trans-unit id="1746">
         <source>Continue import</source>
@@ -5958,8 +5957,163 @@ DaRWIN</target>
       <trans-unit id="1836">
         <source>This widget allows you to see if this specimen is currently on loan. If it is, you can see when it has been borrowed and when it due for return.</source>
         <target>This widget allows you to see if this specimen is currently on loan. If it is, you can see when it has been borrowed and when it due for return.</target>
+      </trans-unit>      
+      <trans-unit id="1837">
+        <source>catalogue_search_tips</source>
+        <target>Use the character ^ for a "Start with" search (eg: ^falco)</target>        
+      </trans-unit>
+      <trans-unit id="1838">
+        <source>Barcode</source>
+        <target>Barcode</target>
+      </trans-unit>
+      <trans-unit id="1839">
+        <source>Additional</source>
+        <target>Additional</target>
+      </trans-unit>
+      <trans-unit id="1840">
+        <source>Storage</source>
+        <target>Storage</target>
+      </trans-unit>
+      <trans-unit id="1841">
+        <source>Actif</source>
+        <target>Being processed</target>
+      </trans-unit>
+      <trans-unit id="1842">
+        <source>warning_catalogue_msg</source>
+        <target>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt; These errors cannot be corrected, the only way to remove them, is to delete your import, correct your XML file (or DaRWIN catalogue) and import it again.</target>        
+      </trans-unit>  
+      <trans-unit id="1843">
+        <source>statusAndCountHelp</source>
+        <target>Via this widget, you can either find specimens by searching their status (e.g. damaged), or you can search for their "batch" number (number of elements exactely or approximately encoded).</target>
+      </trans-unit>      
+      <trans-unit id="1844">
+        <source>Choose a report</source>
+        <target>Choose a report</target>
+      </trans-unit>
+      <trans-unit id="1845">
+        <source>Report you asked</source>
+        <target>Report you asked</target>
+      </trans-unit>
+      <trans-unit id="1846">
+        <source>report not available yet</source>
+        <target>report not available yet</target>
+      </trans-unit>
+      <trans-unit id="1847">
+        <source>Reports</source>
+        <target>Reports</target>
+      </trans-unit>
+      <trans-unit id="1848">
+        <source>Report</source>
+        <target>Report</target>
+      </trans-unit>
+      <trans-unit id="1849">
+        <source>test report warning</source>
+        <target>Warning ! this module is in testing phase, if you find an anomaly, do not hesitate to contact us</target>
+      </trans-unit>
+      <trans-unit id="1850">
+        <source>Choose New Expedition</source>
+        <target>Choose New Expedition</target>
+      </trans-unit>
+      <trans-unit id="1851">
+        <source>report too big</source>
+        <target>This report is too big</target>
+      </trans-unit>
+      <trans-unit id="1852">
+        <source>report too big info</source>
+        <target>Your report take too much time to be created. You should review your criterias</target>
+      </trans-unit>
+      <trans-unit id="1853">
+        <source>approval</source>
+        <target>Approval</target>
+      </trans-unit>
+      <trans-unit id="1854">
+        <source>organized_by</source>
+        <target>Organized by</target>
+      </trans-unit>
+      <trans-unit id="1855">
+        <source>preparation</source>
+        <target>Preparation</target>
+      </trans-unit>
+      <trans-unit id="1856">
+        <source>action</source>
+        <target>Action</target>
+      </trans-unit>
+      <trans-unit id="1857">
+        <source>observation</source>
+        <target>Observation</target>
+      </trans-unit>
+      <trans-unit id="1858">
+        <source>Return Type Material</source>
+        <target>Return Type Material</target>
+      </trans-unit>
+      <trans-unit id="1859">
+        <source>Received by</source>
+        <target>Received by</target>
+      </trans-unit>
+      <trans-unit id="1860">
+        <source>Checked by</source>
+        <target>Checked by</target>
+      </trans-unit>
+      <trans-unit id="1861">
+        <source>Return checked by</source>
+        <target>Return checked by</target>
+      </trans-unit>
+      <trans-unit id="1862">
+        <source>Return received by</source>
+        <target>Return received by</target>
+      </trans-unit>
+      <trans-unit id="1863">
+        <source>Your report has been saved and is available right above</source>
+        <target>Your report has been saved and is available right above</target>
+      </trans-unit>
+      <trans-unit id="1864">
+        <source>File has not been well written. Please contact your application administrator</source>
+        <target>File has not been well written. Please contact your application administrator</target>
+      </trans-unit>
+      <trans-unit id="1865">
+        <source>An error occured while trying to retrieve the file.\nError message: %1%</source>
+        <target>An error occured while trying to retrieve the file.\nError message: %1%</target>
+      </trans-unit>
+      <trans-unit id="1866">
+        <source>Loan target selected</source>
+        <target>Target</target>
+      </trans-unit>
+      <trans-unit id="1867">
+        <source>Loan target catalogues</source>
+        <target>Unit name from</target>
+      </trans-unit>
+      <trans-unit id="1868">
+        <source>Lang</source>
+        <target>Language</target>
+      </trans-unit>
+      <trans-unit id="1869">
+        <source>Please fill in the criterias to print your report</source>
+        <target>Please fill in the criterias to print your report</target>
+      </trans-unit>
+      <trans-unit id="1870">
+        <source>The duplication process failed at %time% - please contact your application administrator</source>
+        <target>The duplication process failed at %time% - please contact your application administrator</target>
+      </trans-unit>
+      <trans-unit id="1871">
+        <source>Expedition date</source>
+        <target>Expedition date</target>
+      </trans-unit>
+      <trans-unit id="1872">
+        <source>Return date</source>
+        <target>Return date</target>
+      </trans-unit>
+      <trans-unit id="1873">
+        <source>You don't have rights to edit these informations !</source>
+        <target>You don't have rights to edit these informations !</target>
+      </trans-unit>
+      <trans-unit id="1874">
+        <source>Specimen Main code(s)</source>
+        <target>Specimen Main code(s)</target>
+      </trans-unit>
+      <trans-unit id="1875">
+        <source>Darwin Part Main Code(s)</source>
+        <target>Darwin Part Main Code(s)</target>
       </trans-unit>
     </body>
   </file>
 </xliff>
-

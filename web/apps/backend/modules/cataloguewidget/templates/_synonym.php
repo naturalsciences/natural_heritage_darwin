@@ -10,8 +10,6 @@
     <?php foreach($synonyms as $group_name => $group):?>
     <tr>
       <td>
-        <?php //ftheeten 2017 02 08
-        $linkedName=Doctrine::getTable('ClassificationSynonymies')->findDirectlyLinkedName($group[0]['group_id'], $eid);?>        
         <?php $groups=Doctrine::getTable('ClassificationSynonymies')->findGroupnames() ; echo $groups[$group_name];?>
       </td>
       <td>
@@ -41,9 +39,6 @@
                   <a title="<?php echo __('Synonym');?>" href="<?php echo url_for($table.'/edit?id='.$synonym['record_id']) ?>">
                     <?php echo $synonym['ref_item']->getNameWithFormat(ESC_RAW);?>
                   </a>
-                  <?php if($synonym['record_id'] == $linkedName):?>
-                    <i> <?php echo __('Original synonym');?></i>
-                  <?php endif;?>
                 <?php endif;?>
                 <?php echo image_tag('info.png',"title=info class=info id=info_".$synonym['id']);?>
                 <div class="tree">

@@ -8,161 +8,204 @@
  * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: sfDoctrineFormFilterTemplate.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
- 
- class SpecimensFormFilter extends BaseSpecimensFormFilter
+class SpecimensFormFilter extends BaseSpecimensFormFilter
 {
   public function configure()
   {
     $this->with_group = false;
-    $this->useFields(array('gtu_code','gtu_from_date','gtu_to_date', 'taxon_level_ref', 'litho_name', 'litho_level_ref', 'litho_level_name', 'chrono_name', 'chrono_level_ref',
+    $this->useFields(array('gtu_ref','gtu_code','gtu_from_date','gtu_to_date', 'taxon_level_ref', 'litho_name', 'litho_level_ref', 'litho_level_name', 'chrono_name', 'chrono_level_ref',
         'chrono_level_name', 'lithology_name', 'lithology_level_ref', 'lithology_level_name', 'mineral_name', 'mineral_level_ref',
         'mineral_level_name','ig_num','acquisition_category','acquisition_date'));
 
     $this->addPagerItems();
 
+    //ftheeten 2019 01 24
+    $this->widgetSchema['gtu_ref'] = new sfWidgetFormInputText();
+    
     $this->widgetSchema['gtu_code'] = new sfWidgetFormInputText();
-    //$this->widgetSchema['expedition_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
-	//ftheeten 2015 10 22
-	    //expedition widget
-    $this->widgetSchema['expedition_ref'] = new widgetFormButtonRef(array(
-	  'label'=> $this->getI18N()->__('Choose Expedition'),
-      'model' => 'Expeditions',
-      'link_url' => 'expedition/choose',
-      'method' => 'getName',
-      'box_title' => $this->getI18N()->__('Choose Expedition'),
-      'nullable' => true,
-      'button_class'=>'',
-       ),
-      array('class'=>'inline',)
-    );
-	
-	
-    $this->widgetSchema['taxon_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
-    $this->widgetSchema['taxon_level_ref'] = new sfWidgetFormDarwinDoctrineChoice(array(
+    $this->widgetSchema['expedition_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
+    //ftheeten 2018 08 09
+     $this->widgetSchema['expedition_name']->setAttributes(array('class'=>'autocomplete_for_expeditions'));
+    $this->widgetSchema['taxon_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size taxon_name'));
+    $this->widgetSchema['taxon_level_ref'] = new sfWidgetFormDarwinDoctrineChoice(
+      array(
         'model' => 'CatalogueLevels',
         'table_method' => array('method'=>'getLevelsByTypes','parameters'=>array(array('table'=>'taxonomy'))),
         'add_empty' => $this->getI18N()->__('All')
+      ),
+      array(
+        'class'=>'taxon_name'
       )
-      ,
-      //ftheeten 2017 06 26
-      array('class'=>'taxon_level_ref')
-      );
+    );
     $rel = array('child'=>'Is a Child Of','direct_child'=>'Is a Direct Child','synonym'=> 'Is a Synonym Of', 'equal' => 'Is strictly equal to');
 
-    //$this->widgetSchema['taxon_relation'] = new sfWidgetFormChoice(array('choices'=> $rel,'expanded'=> true));
-//ftheeten 2016 03 24
-$this->widgetSchema['taxon_relation'] = new sfWidgetFormChoice(array('choices'=> $rel,'expanded'=> true, 'multiple'=>true));
+   
+    //ftheeten 2016 03 24
+    $this->widgetSchema['taxon_relation'] = new sfWidgetFormChoice(array('choices'=> $rel,'expanded'=> true, 'multiple'=>true));
 
     $this->widgetSchema['taxon_relation']->setDefault('child');
-    $this->widgetSchema['taxon_item_ref'] = new widgetFormCompleteButtonRef(array(
-      'model' => 'Taxonomy',
-      'method' => 'getName',
-      'link_url' => 'taxonomy/choose',
-      'box_title' => $this->getI18N()->__('Choose Taxon'),
-      'button_is_hidden' => true,
-      'complete_url' => 'catalogue/completeName?table=taxonomy&level=1',
-      'nullable' => true
-    ));
+    $this->widgetSchema['taxon_item_ref'] = new widgetFormCompleteButtonRef(
+      array(
+        'model' => 'Taxonomy',
+        'method' => 'getName',
+        'link_url' => 'taxonomy/choose',
+        'box_title' => $this->getI18N()->__('Choose Taxon'),
+        'button_is_hidden' => true,
+        'complete_url' => 'catalogue/completeName?table=taxonomy&level=1',
+        'nullable' => true,
+        'field_to_clean_class' => 'taxon_name'
+      ),
+      array('class'=>'taxon_autocomplete')
+    );
+    $this->widgetSchema['taxon_child_syn_included'] = new WidgetFormInputCheckboxDarwin();
+    $this->widgetSchema['taxon_child_syn_included']->setOption('label','Syn. included ?');
 
     $this->validatorSchema['taxon_item_ref'] = new sfValidatorInteger(array('required'=>false));
-    //$this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($rel)));
-//ftheeten 2016 03 24
-$this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($rel), 'multiple'=>true));
+    //ftheeten 2016 03 24
+    $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($rel), 'multiple'=>true));
+
+    $this->validatorSchema['taxon_child_syn_included'] = new sfValidatorBoolean();
 
     $this->widgetSchema['lithology_relation'] = new sfWidgetFormChoice(array('choices'=> $rel,'expanded'=> true));
-    $this->widgetSchema['lithology_item_ref'] = new widgetFormCompleteButtonRef(array(
-      'model' => 'Lithology',
-      'link_url' => 'lithology/choose',
-      'method' => 'getName',
-      'box_title' => $this->getI18N()->__('Choose Lithologic unit'),
-      'button_is_hidden' => true,
-      'complete_url' => 'catalogue/completeName?table=lithology',
-      'nullable' => true,
-      ));
+    $this->widgetSchema['lithology_relation']->setDefault('child');
+    $this->widgetSchema['lithology_item_ref'] = new widgetFormCompleteButtonRef(
+      array(
+        'model' => 'Lithology',
+        'link_url' => 'lithology/choose',
+        'method' => 'getName',
+        'box_title' => $this->getI18N()->__('Choose Lithologic unit'),
+        'button_is_hidden' => true,
+        'complete_url' => 'catalogue/completeName?table=lithology',
+        'nullable' => true,
+        'field_to_clean_class' => 'lithology_name'
+        ),
+      array('class'=>'lithology_autocomplete')
+    );
+    $this->widgetSchema['lithology_child_syn_included'] = new WidgetFormInputCheckboxDarwin();
+    $this->widgetSchema['lithology_child_syn_included']->setOption('label','Syn. included ?');
 
     $this->validatorSchema['lithology_item_ref'] = new sfValidatorInteger(array('required'=>false));
     $this->validatorSchema['lithology_relation'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($rel)));
-    $this->widgetSchema['lithology_relation']->setDefault('child');
+    $this->validatorSchema['lithology_child_syn_included'] = new sfValidatorBoolean();
 
 
-    $this->widgetSchema['lithology_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
-    $this->widgetSchema['lithology_level_ref'] = new sfWidgetFormDarwinDoctrineChoice(array(
-      'model' => 'CatalogueLevels',
-      'table_method' => array('method'=>'getLevelsByTypes','parameters'=>array(array('table'=>'lithology'))),
-      'add_empty' => $this->getI18N()->__('All')
-    ));
+    $this->widgetSchema['lithology_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size lithology_name'));
+    $this->widgetSchema['lithology_level_ref'] = new sfWidgetFormDarwinDoctrineChoice(
+      array(
+        'model' => 'CatalogueLevels',
+        'table_method' => array('method'=>'getLevelsByTypes','parameters'=>array(array('table'=>'lithology'))),
+        'add_empty' => $this->getI18N()->__('All')
+      ),
+      array(
+        'class'=>'lithology_name'
+      )
+    );
 
-    $this->widgetSchema['litho_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
-    $this->widgetSchema['litho_level_ref'] = new sfWidgetFormDarwinDoctrineChoice(array(
-      'model' => 'CatalogueLevels',
-      'table_method' => array('method'=>'getLevelsByTypes','parameters'=>array(array('table'=>'lithostratigraphy'))),
-      'add_empty' => $this->getI18N()->__('All')
-    ));
+    $this->widgetSchema['litho_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size litho_name'));
+    $this->widgetSchema['litho_level_ref'] = new sfWidgetFormDarwinDoctrineChoice(
+      array(
+        'model' => 'CatalogueLevels',
+        'table_method' => array('method'=>'getLevelsByTypes','parameters'=>array(array('table'=>'lithostratigraphy'))),
+        'add_empty' => $this->getI18N()->__('All')
+      ),
+      array(
+        'class'=>'litho_name'
+      )
+    );
 
     $this->widgetSchema['litho_relation'] = new sfWidgetFormChoice(array('choices'=> $rel,'expanded'=> true));
     $this->widgetSchema['litho_relation']->setDefault('child');
-    $this->widgetSchema['litho_item_ref'] = new widgetFormCompleteButtonRef(array(
-      'model' => 'Lithostratigraphy',
-      'link_url' => 'lithostratigraphy/choose',
-      'method' => 'getName',
-      'box_title' => $this->getI18N()->__('Choose Lithostratigraphic unit'),
-      'button_is_hidden' => true,
-      'complete_url' => 'catalogue/completeName?table=lithostratigraphy',
-      'nullable' => true,
-      ));
+    $this->widgetSchema['litho_item_ref'] = new widgetFormCompleteButtonRef(
+      array(
+        'model' => 'Lithostratigraphy',
+        'link_url' => 'lithostratigraphy/choose',
+        'method' => 'getName',
+        'box_title' => $this->getI18N()->__('Choose Lithostratigraphic unit'),
+        'button_is_hidden' => true,
+        'complete_url' => 'catalogue/completeName?table=lithostratigraphy',
+        'nullable' => true,
+        'field_to_clean_class' => 'litho_name'
+        ),
+      array('class'=>'litho_autocomplete')
+    );
+    $this->widgetSchema['litho_child_syn_included'] = new WidgetFormInputCheckboxDarwin();
+    $this->widgetSchema['litho_child_syn_included']->setOption('label','Syn. included ?');
 
     $this->validatorSchema['litho_item_ref'] = new sfValidatorInteger(array('required'=>false));
     $this->validatorSchema['litho_relation'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($rel)));
+    $this->validatorSchema['litho_child_syn_included'] = new sfValidatorBoolean();
 
-    $this->widgetSchema['chrono_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
-    $this->widgetSchema['chrono_level_ref'] = new sfWidgetFormDarwinDoctrineChoice(array(
-      'model' => 'CatalogueLevels',
-      'table_method' => array('method'=>'getLevelsByTypes','parameters'=>array(array('table'=>'chronostratigraphy'))),
-      'add_empty' => $this->getI18N()->__('All')
-    ));
+    $this->widgetSchema['chrono_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size chrono_name'));
+    $this->widgetSchema['chrono_level_ref'] = new sfWidgetFormDarwinDoctrineChoice(
+      array(
+        'model' => 'CatalogueLevels',
+        'table_method' => array('method'=>'getLevelsByTypes','parameters'=>array(array('table'=>'chronostratigraphy'))),
+        'add_empty' => $this->getI18N()->__('All')
+      ),
+      array(
+        'class'=>'chrono_name'
+      )
+    );
 
     $this->widgetSchema['chrono_relation'] = new sfWidgetFormChoice(array('choices'=> $rel,'expanded'=> true));
     $this->widgetSchema['chrono_relation']->setDefault('child');
 
-    $this->widgetSchema['chrono_item_ref'] = new widgetFormCompleteButtonRef(array(
-      'model' => 'Chronostratigraphy',
-      'link_url' => 'chronostratigraphy/choose',
-      'method' => 'getName',
-      'box_title' => $this->getI18N()->__('Choose Chronostratigraphic unit'),
-      'nullable' => true,
-      'button_is_hidden' => true,
-      'complete_url' => 'catalogue/completeName?table=chronostratigraphy',
-      'button_class'=>'',
-     ));
+    $this->widgetSchema['chrono_item_ref'] = new widgetFormCompleteButtonRef(
+      array(
+        'model' => 'Chronostratigraphy',
+        'link_url' => 'chronostratigraphy/choose',
+        'method' => 'getName',
+        'box_title' => $this->getI18N()->__('Choose Chronostratigraphic unit'),
+        'nullable' => true,
+        'button_is_hidden' => true,
+        'complete_url' => 'catalogue/completeName?table=chronostratigraphy',
+        'button_class'=>'',
+        'field_to_clean_class' => 'chrono_name'
+      ),
+      array('class'=>'chrono_autocomplete')
+    );
+    $this->widgetSchema['chrono_child_syn_included'] = new WidgetFormInputCheckboxDarwin();
+    $this->widgetSchema['chrono_child_syn_included']->setOption('label','Syn. included ?');
 
     $this->validatorSchema['chrono_item_ref'] = new sfValidatorInteger(array('required'=>false));
     $this->validatorSchema['chrono_relation'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($rel)));
+    $this->validatorSchema['chrono_child_syn_included'] = new sfValidatorBoolean();
 
+    $this->widgetSchema['mineral_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size mineral_name'));
+    $this->widgetSchema['mineral_level_ref'] = new sfWidgetFormDarwinDoctrineChoice(
+      array(
+        'model' => 'CatalogueLevels',
+        'table_method' => array('method'=>'getLevelsByTypes','parameters'=>array(array('table'=>'mineralogy'))),
+        'add_empty' => $this->getI18N()->__('All')
+      ),
+      array(
+        'class'=>'mineral_name'
+      )
+    );
 
-    $this->widgetSchema['mineral_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
-    $this->widgetSchema['mineral_level_ref'] = new sfWidgetFormDarwinDoctrineChoice(array(
-      'model' => 'CatalogueLevels',
-      'table_method' => array('method'=>'getLevelsByTypes','parameters'=>array(array('table'=>'mineralogy'))),
-      'add_empty' => $this->getI18N()->__('All')
-    ));
-
-    $this->widgetSchema['mineral_item_ref'] = new widgetFormCompleteButtonRef(array(
-      'model' => 'Mineralogy',
-      'link_url' => 'mineralogy/choose',
-      'method' => 'getName',
-      'box_title' => $this->getI18N()->__('Choose Mineralogic unit'),
-      'nullable' => true,
-      'button_is_hidden' => true,
-      'complete_url' => 'catalogue/completeName?table=mineralogy',
-      'button_class'=>'',
-      ));
+    $this->widgetSchema['mineral_item_ref'] = new widgetFormCompleteButtonRef(
+      array(
+        'model' => 'Mineralogy',
+        'link_url' => 'mineralogy/choose',
+        'method' => 'getName',
+        'box_title' => $this->getI18N()->__('Choose Mineralogic unit'),
+        'nullable' => true,
+        'button_is_hidden' => true,
+        'complete_url' => 'catalogue/completeName?table=mineralogy',
+        'button_class'=>'',
+        'field_to_clean_class' => 'mineral_name'
+        ),
+      array('class'=>'mineral_autocomplete')
+    );
+    $this->widgetSchema['mineral_child_syn_included'] = new WidgetFormInputCheckboxDarwin();
+    $this->widgetSchema['mineral_child_syn_included']->setOption('label','Syn. included ?');
 
     $this->widgetSchema['mineral_relation'] = new sfWidgetFormChoice(array('choices'=> $rel,'expanded'=> true));
     $this->widgetSchema['mineral_relation']->setDefault('child');
 
     $this->validatorSchema['mineral_item_ref'] = new sfValidatorInteger(array('required'=>false));
     $this->validatorSchema['mineral_relation'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($rel)));
-
+    $this->validatorSchema['mineral_child_syn_included'] = new sfValidatorBoolean();
 
     $minDate = new FuzzyDateTime(strval(min(range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')))).'/01/01'));
     $maxDate = new FuzzyDateTime(strval(max(range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')))).'/12/31'));
@@ -221,6 +264,12 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
       'required' => false,
       'trim' => true
     ));
+    
+    //ftheeten 2018 05 29
+	$this->widgetSchema['include_sub_collections'] = new sfWidgetFormInputCheckbox();
+  	////ftheeten 2018 05 29
+	$this->validatorSchema['include_sub_collections'] = new sfValidatorPass();
+	
 
     $this->validatorSchema['col_fields'] = new sfValidatorString(array(
       'required' => false,
@@ -231,11 +280,17 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
       'required' => false,
       'trim' => true
     ));
-
-    $this->validatorSchema['expedition_ref'] = new sfValidatorInteger(array(
-      'required' => false,
-    ));
 	
+	//madam 2019 01 28
+	$this->validatorSchema['gtu_ref'] = new sfValidatorString(array(
+      'required' => false,
+      'trim' => true
+    ));
+
+    $this->validatorSchema['expedition_name'] = new sfValidatorString(array(
+      'required' => false,
+      'trim' => true
+    ));
     $this->validatorSchema['taxon_name'] = new sfValidatorString(array(
       'required' => false,
       'trim' => true
@@ -341,38 +396,8 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
     $this->widgetSchema['with_multimedia'] = new sfWidgetFormInputCheckbox();
 
     $this->validatorSchema['with_multimedia'] = new sfValidatorPass();
-    //people widget
-    /*$this->widgetSchema['people_ref'] = new widgetFormButtonRef(array(
-      'model' => 'People',
-      'link_url' => 'people/searchBoth',
-      'box_title' => $this->getI18N()->__('Choose people role'),
-      'nullable' => true,
-      'button_class'=>'',
-      ),
-      array('class'=>'inline',)
-    );
+        //ftheeten 2018 11 22
 
-    $fields_to_search = array(
-      'spec_coll_ids' => $this->getI18N()->__('Collector'),
-      'spec_don_sel_ids' => $this->getI18N()->__('Donator or seller'),
-      'ident_ids' => $this->getI18N()->__('Identifier')
-    );
-
-    $this->widgetSchema['role_ref'] = new sfWidgetFormChoice(
-      array('choices'=> $fields_to_search,
-            'multiple' => true,
-            'expanded' => true,
-      ));*/
-  /*  $this->validatorSchema['people_ref'] = new sfValidatorInteger(array('required' => false)) ;
-    $this->validatorSchema['role_ref'] = new sfValidatorChoice(array('choices'=>array_keys($fields_to_search), 'required'=>false)) ;
-    $this->validatorSchema['role_ref'] = new sfValidatorPass() ;
-	
-	//ftheeten fuzzy matching on people 2015 10 21
-	$this->widgetSchema['people_fuzzy'] = new sfWidgetFormInputText();
-	$this->widgetSchema['people_fuzzy']->setAttributes(array("class"=> "class_fuzzy_people"));
-	$this->validatorSchema['people_fuzzy'] = new sfValidatorString(array('required' => false)) ;
-	$this->validatorSchema['people_fuzzy'] = new sfValidatorPass() ;
-*/
 
 
     /* Acquisition categories */
@@ -413,22 +438,15 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
   * Individuals Fields
   */
 
-    /* ftheeten 2015 01 06 for research by types
-	$this->widgetSchema['type'] = new sfWidgetFormDarwinDoctrineChoice(array(
+    $this->widgetSchema['type'] = new sfWidgetFormDarwinDoctrineChoice(array(
       'model' => 'Specimens',
       'table_method' => 'getDistinctTypeGroups',
       'multiple' => true,
       'expanded' => true,
       'add_empty' => false,
-    ));*/
-    //ftheeten 2017 09 21
-	$this->widgetSchema['type'] = new sfWidgetFormDarwinDoctrineChoice(array(
-      'model' => 'Specimens',
-      'table_method' => 'getDistinctTypesNoCombinations',
-      'multiple' => true,
-      'expanded' => true,
-      'add_empty' => false,
-    ));
+    ),
+    //ftheeten 2018 09 27
+    array('class' => 'search_type_class'));
     $this->validatorSchema['type'] = new sfValidatorPass();
 
     $this->widgetSchema['sex'] = new sfWidgetFormDarwinDoctrineChoice(array(
@@ -458,6 +476,15 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
     ));
     $this->validatorSchema['status'] = new sfValidatorPass();
 
+    $this->widgetSchema['specimen_status'] = new sfWidgetFormDarwinDoctrineChoice(array(
+      'model' => 'Specimens',
+      'table_method' => 'getDistinctSpecimenStatus',
+      'multiple' => false,
+      'expanded' => false,
+      'add_empty' => true,
+    ));
+    $this->validatorSchema['specimen_status'] = new sfValidatorPass();
+
     $this->widgetSchema['social'] = new sfWidgetFormDarwinDoctrineChoice(array(
       'model' => 'Specimens',
       'table_method' => 'getDistinctSocialStatuses',
@@ -476,6 +503,14 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
     ));
     $this->validatorSchema['rockform'] = new sfValidatorPass();
 
+    $this->widgetSchema['count'] = new sfWidgetFormInput();
+    $this->widgetSchema['count']->setAttributes(array('class'=>'vsmall_size'));
+    $this->validatorSchema['count'] = new sfValidatorString(array('required' => false));
+
+    $operators = array(''=>'','e'=>'=','l'=>'<=','g'=>'>=') ;
+    $this->widgetSchema['count_operator'] = new sfWidgetFormChoice(array('choices'=> $operators));
+    $this->validatorSchema['count_operator'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($operators)));
+    
     $this->widgetSchema['container'] = new sfWidgetFormInput();
     $this->validatorSchema['container'] = new sfValidatorString(array('required' => false));
 
@@ -483,97 +518,13 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
     $this->validatorSchema['sub_container'] = new sfValidatorString(array('required' => false));
 
 
-/*pvignaux20160606*/
-    $this->validatorSchema['container_storage'] = new sfValidatorString(array('required' => false));
-       $this->widgetSchema['container_storage'] = new sfWidgetFormDarwinDoctrineChoice(array(
-      'model' => 'StorageParts',
-'add_empty'=> true,
-        'table_method' => Array('method'=> 'createFlatDistinct', 'parameters'=>Array('storage_parts','container_storage', 'id'))
-    ));
+    $this->validatorSchema['part'] = new sfValidatorString(array('required' => false));
 
-/*pvignaux20160606*/
-    $this->validatorSchema['sub_container_storage'] = new sfValidatorString(array('required' => false));
-       $this->widgetSchema['sub_container_storage'] = new sfWidgetFormDarwinDoctrineChoice(array(
-      'model' => 'StorageParts',
-'add_empty'=> true,
-        'table_method' => Array('method'=> 'createFlatDistinct', 'parameters'=>Array('storage_parts','sub_container_storage', 'id'))
-    ));
-
-/*pvignaux20160606*/
-    $this->validatorSchema['container_type'] = new sfValidatorString(array('required' => false));
-       $this->widgetSchema['container_type'] = new sfWidgetFormDarwinDoctrineChoice(array(
-      'model' => 'StorageParts',
-'add_empty'=> true,
-        'table_method' => Array('method'=> 'createFlatDistinct', 'parameters'=>Array('storage_parts','container_type', 'id'))
-    ));
-
-/*pvignaux20160606*/
-    $this->validatorSchema['sub_container_type'] = new sfValidatorString(array('required' => false));
-       $this->widgetSchema['sub_container_type'] = new sfWidgetFormDarwinDoctrineChoice(array(
-      'model' => 'StorageParts',
-'add_empty'=> true,
-        'table_method' => Array('method'=> 'createFlatDistinct', 'parameters'=>Array('storage_parts','sub_container_type', 'id'))
-    ));
-
-/*ftheeten 2016 06 22*/
- $this->widgetSchema['specimen_count_min'] = new sfWidgetForminput();
- $this->widgetSchema['specimen_count_min']->setAttributes(array('class'=>'vvsmall_size'));
- $this->widgetSchema['specimen_count_min']->setLabel('Count (min)');
- $this->validatorSchema['specimen_count_min'] = new sfValidatorNumber(array('required'=>false,'min' => '0'));
- 
-  $this->widgetSchema['specimen_count_males_min'] = new sfWidgetForminput();
-   $this->widgetSchema['specimen_count_males_min']->setAttributes(array('class'=>'vvsmall_size'));
- $this->widgetSchema['specimen_count_males_min']->setLabel('Count males (min)');
- $this->validatorSchema['specimen_count_males_min'] = new sfValidatorNumber(array('required'=>false,'min' => '0'));
- 
-   $this->widgetSchema['specimen_count_females_min'] = new sfWidgetForminput();
-      $this->widgetSchema['specimen_count_females_min']->setAttributes(array('class'=>'vvsmall_size'));
- $this->widgetSchema['specimen_count_females_min']->setLabel('Count females (min)');
- $this->validatorSchema['specimen_count_females_min'] = new sfValidatorNumber(array('required'=>false,'min' => '0'));
-
-   $this->widgetSchema['specimen_count_juveniles_min'] = new sfWidgetForminput();
-      $this->widgetSchema['specimen_count_juveniles_min']->setAttributes(array('class'=>'vvsmall_size'));
- $this->widgetSchema['specimen_count_juveniles_min']->setLabel('Count juveniles (min)');
- $this->validatorSchema['specimen_count_juveniles_min'] = new sfValidatorNumber(array('required'=>false,'min' => '0'));
- 
-  $this->widgetSchema['specimen_count_max'] = new sfWidgetForminput();
- $this->widgetSchema['specimen_count_max']->setAttributes(array('class'=>'vvsmall_size'));
- $this->widgetSchema['specimen_count_max']->setLabel('Count (max)');
- $this->validatorSchema['specimen_count_max'] = new sfValidatorNumber(array('required'=>false,'min' => '0'));
- 
-  $this->widgetSchema['specimen_count_males_max'] = new sfWidgetForminput();
-   $this->widgetSchema['specimen_count_males_max']->setAttributes(array('class'=>'vvsmall_size'));
- $this->widgetSchema['specimen_count_males_max']->setLabel('Count males (max)');
- $this->validatorSchema['specimen_count_males_max'] = new sfValidatorNumber(array('required'=>false,'min' => '0'));
- 
-   $this->widgetSchema['specimen_count_females_max'] = new sfWidgetForminput();
-      $this->widgetSchema['specimen_count_females_max']->setAttributes(array('class'=>'vvsmall_size'));
- $this->widgetSchema['specimen_count_females_max']->setLabel('Count females (max)');
- $this->validatorSchema['specimen_count_females_max'] = new sfValidatorNumber(array('required'=>false,'min' => '0'));
- 
-    $this->widgetSchema['specimen_count_juveniles_max'] = new sfWidgetForminput();
-      $this->widgetSchema['specimen_count_juveniles_max']->setAttributes(array('class'=>'vvsmall_size'));
- $this->widgetSchema['specimen_count_juveniles_max']->setLabel('Count juveniles (max)');
- $this->validatorSchema['specimen_count_juveniles_max'] = new sfValidatorNumber(array('required'=>false,'min' => '0'));
- //end group count
-
- /*ftheeten 2016 07 05*/
-     $this->widgetSchema['ecology'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['ecology'] = new sfValidatorString(array('required' => false));
-    
-    /*$this->widgetSchema['specimen_part'] = new sfWidgetFormDarwinDoctrineChoice(array(
-      'model' => 'StorageParts',
+    $this->widgetSchema['part'] = new sfWidgetFormDarwinDoctrineChoice(array(
+      'model' => 'Specimens',
       'table_method' => 'getDistinctParts',
       'add_empty' => true,
-    ));*/
-    
-      $this->widgetSchema['specimen_part'] = new sfWidgetFormInput(array(),array('style'=> 'width:97%;'));
-	//ftheeten 2017 01 12
-    $this->widgetSchema['specimen_part']->setAttributes(array('class'=>' autocomplete_for_parts'));
- 
-    $this->validatorSchema['specimen_part'] = new sfValidatorString(array('required' => false));
-
-
+    ));
 
     $this->widgetSchema['object_name'] = new sfWidgetFormInput();
     $this->validatorSchema['object_name'] = new sfValidatorString(array('required' => false));
@@ -591,82 +542,47 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
 
     $this->validatorSchema['institution_ref'] = new sfValidatorInteger(array('required' => false));
 
-    //ftheeten 2016 09 28
-     /*$this->widgetSchema['specimen_status'] = new sfWidgetFormDarwinDoctrineChoice(array(
-      'model' => 'StorageParts',
-      'table_method' => 'getDistinctSpecimenStatuses',
-      'add_empty' => true,
-    ));*/
-     $this->widgetSchema['specimen_status'] = new sfWidgetFormInput(array(),array('style'=> 'width:97%;'));
-	//ftheeten 2017 01 12
-    $this->widgetSchema['specimen_status']->setAttributes(array('class'=>'class_rmca_input_mask autocomplete_for_status'));
-    
-     $this->validatorSchema['specimen_status'] = new sfValidatorString(array('required' => false));
-    
-    /*$this->widgetSchema['building'] = new sfWidgetFormDarwinDoctrineChoice(array(
-      'model' => 'StorageParts',
+    $this->widgetSchema['building'] = new sfWidgetFormDarwinDoctrineChoice(array(
+      'model' => 'Specimens',
       'table_method' => 'getDistinctBuildings',
       'add_empty' => true,
-    ));*/
-    
-     $this->widgetSchema['building'] = new sfWidgetFormInput(array(),array('style'=> 'width:97%;'));
-	//ftheeten 2017 01 12
-    $this->widgetSchema['building']->setAttributes(array('class'=>'class_rmca_input_mask autocomplete_for_building'));
-    
-    //$this->widgetSchema['building'] =new sfWidgetFormInput();
+    ));
 
     $this->validatorSchema['building'] = new sfValidatorString(array('required' => false));
 
-    /*$this->widgetSchema['floor'] = new sfWidgetFormDarwinDoctrineChoice(array(
+    $this->widgetSchema['floor'] = new sfWidgetFormDarwinDoctrineChoice(array(
       'model' => 'Specimens',
       'table_method' => 'getDistinctFloors',
       'add_empty' => true,
-    ));*/
-        $this->widgetSchema['floor'] = new sfWidgetFormInput(array(),array('style'=> 'width:97%;'));
-	//ftheeten 2017 01 12
-    $this->widgetSchema['floor']->setAttributes(array('class'=>'class_rmca_input_mask autocomplete_for_floor'));
+    ));
     $this->validatorSchema['floor'] = new sfValidatorString(array('required' => false));
 
-    /*$this->widgetSchema['row'] = new sfWidgetFormDarwinDoctrineChoice(array(
-      'model' => 'StorageParts',
+    $this->widgetSchema['row'] = new sfWidgetFormDarwinDoctrineChoice(array(
+      'model' => 'Specimens',
       'table_method' => 'getDistinctRows',
       'add_empty' => true,
-    ));*/
-      $this->widgetSchema['row'] = new sfWidgetFormInput(array(),array('style'=> 'width:97%;'));
-	//ftheeten 2017 01 12
-    $this->widgetSchema['row']->setAttributes(array('class'=>'class_rmca_input_mask autocomplete_for_building'));
+    ));
     $this->validatorSchema['row'] = new sfValidatorString(array('required' => false));
 
-   /* $this->widgetSchema['col'] = new sfWidgetFormDarwinDoctrineChoice(array(
-      'model' => 'StorageParts',
+    $this->widgetSchema['col'] = new sfWidgetFormDarwinDoctrineChoice(array(
+      'model' => 'Specimens',
       'table_method' => 'getDistinctCols',
       'add_empty' => true,
-    ));*/
-    
-    $this->widgetSchema['col'] = new sfWidgetFormInput(array(),array('style'=> 'width:97%;'));
-   //ftheeten 2017 01 12
-    $this->widgetSchema['col']->setAttributes(array('class'=>'class_rmca_input_mask autocomplete_for_col'));
+    ));
     $this->validatorSchema['col'] = new sfValidatorString(array('required' => false));
 
-    /*$this->widgetSchema['room'] = new sfWidgetFormDarwinDoctrineChoice(array(
-      'model' => 'StorageParts',
+    $this->widgetSchema['room'] = new sfWidgetFormDarwinDoctrineChoice(array(
+      'model' => 'Specimens',
       'table_method' => 'getDistinctRooms',
       'add_empty' => true,
-    ));*/
-     $this->widgetSchema['room'] = new sfWidgetFormInput(array(),array('style'=> 'width:97%;'));
-   //ftheeten 2017 01 12
-    $this->widgetSchema['room']->setAttributes(array('class'=>'class_rmca_input_mask autocomplete_for_room'));
+    ));
     $this->validatorSchema['room'] = new sfValidatorString(array('required' => false));
 
-    /*$this->widgetSchema['shelf'] = new sfWidgetFormDarwinDoctrineChoice(array(
-      'model' => 'StorageParts',
+    $this->widgetSchema['shelf'] = new sfWidgetFormDarwinDoctrineChoice(array(
+      'model' => 'Specimens',
       'table_method' => 'getDistinctShelfs',
       'add_empty' => true,
-    ));*/
-    
-      $this->widgetSchema['shelf'] = new sfWidgetFormInput(array(),array('style'=> 'width:97%;'));
-   //ftheeten 2017 01 12
-    $this->widgetSchema['shelf']->setAttributes(array('class'=>'class_rmca_input_mask autocomplete_for_shelf'));
+    ));
     $this->validatorSchema['shelf'] = new sfValidatorString(array('required' => false));
 
     $this->widgetSchema['property_type'] = new sfWidgetFormDarwinDoctrineChoice(array(
@@ -727,6 +643,15 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
     $this->validatorSchema['lon_from'] = new sfValidatorNumber(array('required'=>false,'min' => '-360', 'max'=>'360'));
     $this->validatorSchema['lat_to'] = new sfValidatorNumber(array('required'=>false,'min' => '-180', 'max'=>'180'));
     $this->validatorSchema['lon_to'] = new sfValidatorNumber(array('required'=>false,'min' => '-360', 'max'=>'360'));
+	
+    //ftheeten 2018 10 05
+    $this->widgetSchema['wkt_search'] = new sfWidgetFormInputText();
+    $this->widgetSchema['wkt_search']->setAttributes(array('class'=>'wkt_search'));
+    $this->validatorSchema['wkt_search'] = new sfValidatorString(array('required' => false, 'trim' => true));
+    
+	//ftheeten 2018 06 20
+	$this->widgetSchema['code_main'] = new sfWidgetFormInput();
+    $this->validatorSchema['code_main'] = new sfValidatorString(array('required' => false));
 
     sfWidgetFormSchema::setDefaultFormFormatterName('list');
     $this->widgetSchema->setNameFormat('specimen_search_filters[%s]');
@@ -758,59 +683,46 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
       'property_units' => 'Unit',
       'comment_notion_concerned' => 'Notion concerned',
     ));
-		//ftheeten 2016 02 12
-	$this->widgetSchema['gtu_boolean'] = new sfWidgetFormChoice(array('choices' => array('AND' => 'AND', 'OR' => 'OR', )));
-  	////ftheeten 2015 01 08
-	$this->validatorSchema['gtu_boolean'] = new sfValidatorPass();
-	
-	//ftheeten 2015 01 08
-	$this->widgetSchema['code_boolean'] = new sfWidgetFormChoice(array('choices' => array('OR' => 'OR', 'AND' => 'AND')));
-  	////ftheeten 2015 01 08
-	$this->validatorSchema['code_boolean'] = new sfValidatorPass();
-	
-	//ftheeten 2015 09 09
-	$this->widgetSchema['code_exact_match'] = new sfWidgetFormInputCheckbox();//array('default' => FALSE));
-  	////ftheeten 2015 09 09
-	$this->validatorSchema['code_exact_match'] = new sfValidatorPass();
-	
-	//ftheeten 2016 01 08
-	//$this->widgetSchema['gtu_exact_match'] = new sfWidgetFormInputCheckbox(array('default' => FALSE));
-  	////ftheeten 2016 01 08
-	//$this->validatorSchema['gtu_exact_match'] = new sfValidatorPass();
-	
 
     // For compat only with old saved search
-    // FIXME: might be removed with a migration
+    // might be removed with a migration
     $this->validatorSchema['what_searched'] = new sfValidatorPass();
-	
-    //ftheeten 2017 02 10
-    $this->widgetSchema['valid_label'] = new sfWidgetFormChoice(array(
-        'expanded' => true,
-        'choices'  => array(True => 'true', False => 'false', NULL=>'both'),
-       
-        ), array( 'style' => "display: inline-block;text-align:center"));
-    $this->validatorSchema['valid_label'] = new sfValidatorString(array('required' => false));
     
-	
-	//ftheeten 2015 10 23
+   
+    
+	 //2018 09 19chnage sort order on name
+     
+	$this->widgetSchema['taxonomy_metadata_ref'] = new sfWidgetFormChoice(array(
+      'choices' => TaxonomyMetadataTable::getAllTaxonomicMetadata( 'id ASC',true)  //array_merge( array(''=>'All'),TaxonomyMetadataTable::getAllTaxonomicMetadata("id ASC"))
+    ));
+	 $this->widgetSchema['taxonomy_metadata_ref']->setAttributes(array('class'=>'col_check_metadata_ref col_check_metadata_callback'));
+	$this->validatorSchema['taxonomy_metadata_ref'] = new sfValidatorInteger(array('required'=>false));
+    
+     //2018 11 22
 	$this->widgetSchema['people_boolean'] = new sfWidgetFormChoice(array('choices' => array('OR' => 'OR', 'AND' => 'AND')));
-  	////ftheeten 2015 10 23
 	$this->validatorSchema['people_boolean'] = new sfValidatorPass();
 	$subForm = new sfForm();
     $this->embedForm('Peoples',$subForm);
     
-    //ftheeten 2017 04 27
-    $this->widgetSchema['in_loan'] = new sfWidgetFormInputCheckbox();//array('default' => FALSE));
-    //ftheeten 2017 04 27
-	$this->validatorSchema['in_loan'] = new sfValidatorPass();
-    //ftheeten 2017 04 27
-    $this->widgetSchema['loan_is_closed'] = new sfWidgetFormChoice(array(
-        'expanded' => true,
-        'choices'  => array(True => 'true', False => 'false', NULL=>'both'),
-       
-        ), array( 'style' => "display: inline-block;text-align:center"));
-    //ftheeten 2017 04 27
-	$this->validatorSchema['loan_is_closed'] = new sfValidatorPass();
+    //ftheeten 2018 11 22
+	//$this->widgetSchema['codes_list'] = new sfWidgetFormInputHidden();//array('choices'=>array()));
+	$this->widgetSchema['codes_list'] = new sfWidgetFormInputHidden();
+    $this->widgetSchema['codes_list']->setAttributes(Array("class"=>"select2_code_values"));
+    $this->validatorSchema['codes_list'] = new sfValidatorString(array('required' => false));
+    $this->widgetSchema['exact_codes_list']=new sfWidgetFormInputCheckbox();   
+    $this->widgetSchema['exact_codes_list']->setLabel("Fuzzy matching");
+    $this->validatorSchema['exact_codes_list'] = new sfValidatorPass();
+    $this->is_fuzzy_codes_list=false;
+    $this->codeListCalled=false;
+    
+    //ftheeten 2018 11 26
+	$this->widgetSchema['taxa_list'] = new sfWidgetFormInputHidden();
+    $this->widgetSchema['taxa_list']->setAttributes(Array("class"=>"select2_taxa_values"));
+    $this->validatorSchema['taxa_list'] = new sfValidatorString(array('required' => false));
+    $this->widgetSchema['taxa_list_placeholder'] = new sfWidgetFormInputHidden();
+    $this->widgetSchema['taxa_list_placeholder']->setAttributes(Array("class"=>"select2_taxa_list_placeholder"));
+    $this->validatorSchema['taxa_list_placeholder'] = new sfValidatorString(array('required' => false));
+    
   }
 
   public function addGtuTagValue($num)
@@ -820,16 +732,15 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
       $this->embedForm('Tags', $this->embeddedForms['Tags']);
   }
 
-  
-    public function addPeopleValue($num)
+  //ftheeten 2018 11 22
+  public function addPeopleValue($num)
   {
 	 
       $form = new PeopleLineForm(null,array('num'=>$num));
       $this->embeddedForms['Peoples']->embedForm($num, $form);
       $this->embedForm('Peoples', $this->embeddedForms['Peoples']);
   }
-
-
+  
   public function addCodeValue($num)
   {
       $form = new CodeLineForm();
@@ -840,9 +751,8 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
   {
     if($notion != '' || $comment != '') {
       $query->innerJoin('s.SubComments c');
-      // $query->andWhere("c.referenced_relation = ? ",'specimens');
 
-      //$query->groupBy("s.id");
+      $query->groupBy("s.id");
 
       if($notion != '')
         $query->andWhere('notion_concerned = ?', $notion ) ;
@@ -852,53 +762,87 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
     }
     return $query ;
   }
+
+     //ftheeten 2018 11 22
+  public function addCodesListColumnQuery($query, $fields, $val)
+  {
+        
+                   
+            if(strlen(trim($val))>0)
+            {
+                $sql_params=Array();
+                $sql_parts=Array();
+                $tmpCodes= preg_split( "/(;|\|)/", $val );
+              
+                foreach($tmpCodes as $to_search)
+                {
+                    if($this->is_fuzzy_codes_list)
+                    {
+                        $to_search="%".BaseSpecimensFormFilter::fulltoindex_sql($to_search)."%";
+                        $sql_parts[]= "EXISTS(select 1 from codes where referenced_relation='specimens' and record_id = s.id AND full_code_indexed LIKE ? ) ";
+                    }
+                    else
+                    {
+                        $sql_parts[]= "EXISTS(select 1 from codes where referenced_relation='specimens' and record_id = s.id AND LOWER(TRIM(COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,''))) ilike  LOWER(?) ) ";
+                    }
+                    $sql_params[] =trim($to_search);
+                }
+                $sql=implode(" OR ", $sql_parts);
+                $query->andWhere("(" .$sql.")", $sql_params);
+            }
+        
+        return $query ;
+  }
   
-
-
   public function addLatLonColumnQuery($query, $values)
   {
     if( $values['lat_from'] != '' && $values['lon_from'] != '' && $values['lon_to'] != ''  && $values['lat_to'] != '' )
     {
-      /*$horizontal_box = "((".(float)$values['lat_from'].",-180),(".(float)$values['lat_to'].",180))";
+      $horizontal_box = "((".(float)$values['lat_from'].",-180),(".(float)$values['lat_to'].",180))";
       $vert_box = "((".(float)$values['lat_from'].",".(float)$values['lon_from']."),(".(float)$values['lat_to'].",".(float)$values['lon_to']."))";
-        */
-        //ftheeten 2017 05 30
-        
-        $horizontal_box = "((-180, ".(float)$values['lat_from']."),(180, ".(float)$values['lat_to']."))";
-      $vert_box = "((".(float)$values['lon_from'].",".(float)$values['lat_from']."),(".(float)$values['lon_to'].",".(float)$values['lat_to']."))";
+
       // Look for a wrapped box (ie. between RUSSIA and USA)
       if( (float)$values['lon_to'] < (float) $values['lon_from']) {
-        //ftheeten 2016 04 28
-        /*$query->andWhere("
-          ( station_visible = true AND box('$horizontal_box') @> gtu_location AND NOT box('$vert_box') @> gtu_location )
-        OR
-          ( station_visible = false AND collection_ref in (".implode(',',$this->encoding_collection).")
-            AND box('$horizontal_box') @> gtu_location AND NOT box('$vert_box') @> gtu_location
-          )"
-        );*/
+
         $query->andWhere("
-         
-          (  box('$horizontal_box') @> gtu_location AND NOT box('$vert_box') @> gtu_location
+          ( station_visible = true
+            AND box('$horizontal_box') @> gtu_location
+            AND NOT box('$vert_box') @> gtu_location
+          )
+          OR
+          ( station_visible = false
+            AND collection_ref IN (".implode(',',$this->encoding_collection).")
+            AND box('$horizontal_box') @> gtu_location
+            AND NOT box('$vert_box') @> gtu_location
           )"
         );
         $query->whereParenWrap();
 
       } else {
-        /*$query->andWhere("
-          ( station_visible = true AND box('$horizontal_box') @> gtu_location AND box('$vert_box') @> gtu_location )
-        OR
-          ( station_visible = false AND collection_ref in (".implode(',',$this->encoding_collection).")
-            AND box('$horizontal_box') @> gtu_location AND box('$vert_box') @> gtu_location
-          )
-        ");*/
         $query->andWhere("
-          
-          (  box('$horizontal_box') @> gtu_location AND box('$vert_box') @> gtu_location
+          ( station_visible = true
+            AND box('$horizontal_box') @> gtu_location
+            AND box('$vert_box') @> gtu_location
           )
-        ");
+          OR
+          ( station_visible = false
+            AND collection_ref IN (".implode(',',$this->encoding_collection).")
+            AND box('$horizontal_box') @> gtu_location
+            AND box('$vert_box') @> gtu_location
+          )"
+        );
         $query->whereParenWrap();
       }
       $query->andWhere('gtu_location is not null');
+    }
+    
+     //2018 10 05
+    if( isset($values['wkt_search']))
+    {
+        if(strlen(trim($values['wkt_search'])))
+        {
+            $query->andWhere("ST_INTERSECTS(ST_SETSRID(ST_Point(gtu_location[1], gtu_location[0]),4326), ST_GEOMFROMTEXT('".$values['wkt_search']."',4326))");
+        }
     }
     return $query;
   }
@@ -946,25 +890,13 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
     return $query ;
   }
 
-//ftheeten 2017 09 21
   public function addTypeColumnQuery($query, $field, $val)
   {
-
-       $functionmap_type_regex=function($value)
-       {   
-        return '.*/?'.$value.'/?.*';
-       };
-  
-        //$val = $this->checksToQuotedValues($val);
-    //ftheeten 2015 01 06
-	//$query->andWhere('s.type_search in ('.implode(',',$val).')');
-	//$query->andWhere('s.type in ('.implode(',',$val).')');
-    //ftheeten 2017 09 21
-    $criteria=array_map($functionmap_type_regex, $val);
-    $query->andWhere('s.type ~* \'('.implode('|',$criteria).')\'');
+    $val = $this->checksToQuotedValues($val);
+    $query->andWhere('s.type_group in ('.implode(',',$val).')');
     return $query ;
   }
-  
+
   public function addStageColumnQuery($query, $field, $val)
   {
     $val = $this->checksToQuotedValues($val);
@@ -993,12 +925,12 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
     return $query ;
   }
 
-  /*public function addInstitutionRefColumnQuery($query, $field, $val)
+  public function addInstitutionRefColumnQuery($query, $field, $val)
   {
     if($val == '' &&  ! ctype_digit($val)) return ;
-    $query->andWhere('p.institution_ref =  ?', $val);
+    $query->andWhere('s.institution_ref =  ?', $val);
     return $query ;
-  }*/
+  }
 
   public function addContainerColumnQuery($query, $field, $val)
   {
@@ -1010,7 +942,7 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
           $query_value[] = '%'.$value.'%';
       }
 
-      $query_array = array_fill(0,count($query_value),'container ilike ?');
+      $query_array = array_fill(0,count($query_value),'s.container ilike ?');
       $query->andWhere( implode(' or ',$query_array) ,$query_value);
     }
     return $query ;
@@ -1026,253 +958,51 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
           $query_value[] = '%'.strtolower($value).'%';
       }
 
-      $query_array = array_fill(0,count($query_value),'p.sub_container ilike ?');
+      $query_array = array_fill(0,count($query_value),'s.sub_container ilike ?');
       $query->andWhere( implode(' or ',$query_array) ,$query_value);
     }
     return $query ;
   }
 
-
-/*pvignaux20160606*/
- public function addContainerStorageColumnQuery($query, $field, $val)
-  {
-    if( $val != '' ) {
-      $conn_MGR = Doctrine_Manager::connection();
-      $val = $conn_MGR->quote($val, 'string');
-      $query->andWhere('container_storage  = '.$val);
-    }
-    return $query ;
-  }
-
-/*pvignaux20160606*/
- public function addSubContainerStorageColumnQuery($query, $field, $val)
-  {
-    if( $val != '' ) {
-      $conn_MGR = Doctrine_Manager::connection();
-      $val = $conn_MGR->quote($val, 'string');
-      $query->andWhere('sub_container_storage  = '.$val);
-    }
-    return $query ;
-  }
-
-/*pvignaux20160606*/
- public function addContainerTypeColumnQuery($query, $field, $val)
-  {
-    if( $val != '' ) {
-      $conn_MGR = Doctrine_Manager::connection();
-      $val = $conn_MGR->quote($val, 'string');
-      $query->andWhere('container_type  = '.$val);
-    }
-    return $query ;
-  }
-
-/*pvignaux20160606*/
- /*public function addSubContainerTypeColumnQuery($query, $field, $val)
-  {
-    if( $val != '' ) {
-      $conn_MGR = Doctrine_Manager::connection();
-      $val = $conn_MGR->quote($val, 'string');
-      $query->andWhere('p.sub_container_type  = '.$val);
-    }
-    return $query ;
-  }
-  */
- //ftheeten 2016 06 22
- public function addSpecimenCountMinColumnQuery($query, $field, $val)
- {
-    if( $val != '' ) {
-      $conn_MGR = Doctrine_Manager::connection();
-      $query->andWhere('s.specimen_count_min  >= '.$val);
-    }
-    return $query ;
-  }
-  
-   //ftheeten 2016 06 22
- public function addSpecimenCountMaxColumnQuery($query, $field, $val)
- {
-    if( $val != '' ) {
-      $conn_MGR = Doctrine_Manager::connection();
-      $query->andWhere('s.specimen_count_min  <= '.$val);
-    }
-    return $query ;
-  }
-  
-  //ftheeten 2016 06 22
- public function addSpecimenCountMalesMinColumnQuery($query, $field, $val)
- {
-    if( $val != '' ) {
-      $conn_MGR = Doctrine_Manager::connection();
-      $query->andWhere('s.specimen_count_males_min  >= '.$val);
-    }
-    return $query ;
-  }
-  
-   //ftheeten 2016 06 22
- public function addSpecimenCountMalesMaxColumnQuery($query, $field, $val)
- {
-    if( $val != '' ) {
-      $conn_MGR = Doctrine_Manager::connection();
-      $query->andWhere('s.specimen_count_males_max  <= '.$val);
-    }
-    return $query ;
-  }
-  
-    //ftheeten 2016 06 22
- public function addSpecimenCountFemalesMinColumnQuery($query, $field, $val)
- {
-    if( $val != '' ) {
-      $conn_MGR = Doctrine_Manager::connection();
-      $query->andWhere('s.specimen_count_females_min  >= '.$val);
-    }
-    return $query ;
-  }
-  
-   //ftheeten 2016 06 22
- public function addSpecimenCountFemalesMaxColumnQuery($query, $field, $val)
- {
-    if( $val != '' ) {
-      $conn_MGR = Doctrine_Manager::connection();
-      $query->andWhere('s.specimen_count_females_max  <= '.$val);
-    }
-    return $query ;
-  }
-  
-      //ftheeten 2016 06 22
- public function addSpecimenCountJuvenilesMinColumnQuery($query, $field, $val)
- {
-    if( $val != '' ) {
-      $conn_MGR = Doctrine_Manager::connection();
-      $query->andWhere('s.specimen_count_juveniles_min  >= '.$val);
-    }
-    return $query ;
-  }
-  
-   //ftheeten 2016 06 22
- public function addSpecimenCountJuvenilesMaxColumnQuery($query, $field, $val)
- {
-    if( $val != '' ) {
-      $conn_MGR = Doctrine_Manager::connection();
-      $query->andWhere('s.specimen_count_juveniles_max  <= '.$val);
-    }
-    return $query ;
-  }
-
-  //ftheeten 2016 09 06  
-  public function addEcologyQuery($query, $val)
-  {
-    if($val != '') {
-      $query->innerJoin('s.SubComments c');
-      $query->andWhere("c.referenced_relation = ? ",'specimens');
-
-      //$query->groupBy("s.id");
-  
-        $query->andWhere('notion_concerned = ?', "ecology" ) ;
-     
-        $query->andWhere('comment_indexed like concat(\'%\', fulltoindex(?), \'%\' )', $val);
-      $this->with_group = true;
-    }
-    return $query ;
-  }
-  
-    //ftheeten 2017 07 24
-  public function addInLoansQuery($query, $val)
-  {
-    if($val != '') {
-      $query->innerJoin('s.LoanItems l');
-      //$query->addWhere('in_loan=TRUE');
-    }
-    return $query ;
-  }
-  
-      //ftheeten 2017 07 24
-  public function addInClosedLoansQuery($query, $val)
-  {
-    if($val != '') {
-      $query->innerJoin('s.LoanItems l1');
-      //$query->andWhere('l.loan_ref NOT IN (SELECT l2.loan_ref FROM LoanStatus l2 WHERE l2.status =\'returned\')') ;
-        if($val==1)
-        {
-            //true
-            $query->andWhere('l1.loan_ref IN (SELECT l2.loan_ref FROM LoanStatus l2 WHERE l2.status =\'closed\')') ;
-        }
-        else
-        {
-           //false
-            $query->andWhere('l1.loan_ref NOT IN (SELECT l2.loan_ref FROM LoanStatus l2 WHERE l2.status =\'closed\')') ;
-        }
-    
-    }
-    return $query ;
-  }
-  
-  
-  //ftheeten 2017 02 13
-   public function addValidLabelQuery($query, $val)
- {
-    if( $val != '' ) {
-        if($val==1)
-        {
-            $val="TRUE";
-            $conn_MGR = Doctrine_Manager::connection();
-            $query->andWhere('s.valid_label  = '.$val);
-        }
-        else
-        {
-            $val="FALSE";
-            $conn_MGR = Doctrine_Manager::connection();
-            $query->andWhere('s.valid_label  = '.$val);
-        }
-          
-        }
-    return $query ;
-  }
-  
-  //ftheeten 2016 09 28 new search criteria
-  /*public function addSpecimenStatusColumnQuery($query, $field, $val)
-  {
-    $val = $this->checksToQuotedValues($val);
-    $query->andWhere('p.specimen_status in ('.implode(',',$val).')');
-    return $query ;
-  }
   public function addBuildingColumnQuery($query, $field, $val)
   {
     $val = $this->checksToQuotedValues($val);
-    $query->andWhere('p.building in ('.implode(',',$val).')');
+    $query->andWhere('s.building in ('.implode(',',$val).')');
     return $query ;
   }
 
   public function addFloorColumnQuery($query, $field, $val)
   {
     $val = $this->checksToQuotedValues($val);
-    $query->andWhere('p.floor in ('.implode(',',$val).')');
+    $query->andWhere('s.floor in ('.implode(',',$val).')');
     return $query ;
   }
 
   public function addRoomColumnQuery($query, $field, $val)
   {
     $val = $this->checksToQuotedValues($val);
-    $query->andWhere('p.room in ('.implode(',',$val).')');
+    $query->andWhere('s.room in ('.implode(',',$val).')');
     return $query ;
   }
 
   public function addRowColumnQuery($query, $field, $val)
   {
     $val = $this->checksToQuotedValues($val);
-    $query->andWhere('pp.row in ('.implode(',',$val).')');
+    $query->andWhere('s.row in ('.implode(',',$val).')');
     return $query ;
   }
 
   public function addColColumnQuery($query, $field, $val)
   {
     $val = $this->checksToQuotedValues($val);
-    $query->andWhere('p.col in ('.implode(',',$val).')');
+    $query->andWhere('s.col in ('.implode(',',$val).')');
     return $query ;
   }
 
   public function addShelfColumnQuery($query, $field, $val)
   {
     $val = $this->checksToQuotedValues($val);
-    $query->andWhere('p.shelf in ('.implode(',',$val).')');
+    $query->andWhere('s.shelf in ('.implode(',',$val).')');
     return $query ;
   }
 
@@ -1281,154 +1011,72 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
     if( $val != '' ) {
       $conn_MGR = Doctrine_Manager::connection();
       $val = $conn_MGR->quote($val, 'string');
-      $query->andWhere('p.specimen_part  = '.$val);
+      $query->andWhere('s.specimen_part  = '.$val);
     }
-    return $query ;
-  }*/
-
-  public function addTagsColumnQuery($query, $field, $val)
-  {
-    $alias = $query->getRootAlias();
-    $conn_MGR = Doctrine_Manager::connection();
-    $tagList = '';
-
-
-	//ftheeten 2016 01 08 (to enable fuzzy matching on tags)
-	$alias="gtu";
-	$idxAlias=1;
-	$sql="";
-	foreach($val as $line)
-    {
-	
-		  $line_val = $line['tag'];
-
-		  
-		     $alias=$alias.$idxAlias;
-			$idxAlias++;
-		  if($line_val != '')
-		  {
-		  $tagListSpace=$conn_MGR->quote(' '.$line_val.' ', 'string');
-		  $tagListLTRIM=$conn_MGR->quote($line_val.' ', 'string');
-		  $tagListRTRIM=$conn_MGR->quote(' '.$line_val, 'string');
-		  $tagList = $conn_MGR->quote($line_val, 'string');
-				//fuzzy
-			  if($line['fuzzy_matching_tag']=="on")
-			  {
-					
-					$sql="
-					(
-						gtu_ref in 
-							(SELECT $alias.gtu_ref FROM tags $alias WHERE 
-								/*
-								($alias.tag_indexed
-							LIKE
-							ANY(SELECT '%'||fulltoindex(regexp_split_to_table($tagListSpace,','),TRUE)||'%')
-								
-								OR
-								
-								$alias.tag_indexed
-								LIKE
-								ANY(SELECT fulltoindex(regexp_split_to_table($tagListLTRIM,','),TRUE)||'%')
-								
-								OR
-								
-								$alias.tag_indexed
-								LIKE
-								ANY(SELECT '%'||fulltoindex(regexp_split_to_table($tagListRTRIM,','),TRUE))
-								OR
-								
-								$alias.tag_indexed
-								LIKE
-								ANY(SELECT fulltoindex(regexp_split_to_table($tagList,','),TRUE))
-								
-							)
-								*/
-							
-								(
-								$alias.tag_indexed
-					
-								~(SELECT '((^|\s)'||fulltoindex($tagList, TRUE)||'($|\s))')
-							
-							)) 
-						
-                                                        
-						
-					
-					)
-					AND
-					(station_visible = true OR 
-					gtu_ref in 
-						(SELECT $alias.gtu_ref FROM tags $alias WHERE 
-								
-								($alias.tag_indexed
-									LIKE
-									ANY(SELECT '%'||fulltoindex(regexp_split_to_table($tagList,','),TRUE)||'%')
-								)
-								AND sub_group_type='Country'
-						 )
-					
-
-					OR
-					 collection_ref in (".implode(',',$this->encoding_collection)."
-								)
-					) ";
-					//$query->andWhere();
-					
-					
-					//$query->andWhere("TRUE");
-					
-					
-					
-			  }
-			   //exact match (old code)
-			  else
-			  {
-				$sql="
-				  (station_visible = true AND  gtu_tag_values_indexed && getTagsIndexedAsArray($tagList))
-				   OR
-				  (station_visible = false
-				   AND (
-						(
-						  collection_ref in (".implode(',',$this->encoding_collection).")
-						  AND gtu_tag_values_indexed && getTagsIndexedAsArray($tagList)
-						)
-						OR
-						(gtu_country_tag_indexed && getTagsIndexedAsArray($tagList))
-					  )
-				  )";
-				/*$query->andWhere("
-				  (station_visible = true AND  gtu_tag_values_indexed && getTagsIndexedAsArray($tagList))
-				   OR
-				  (station_visible = false
-				   AND (
-						(
-						  collection_ref in (".implode(',',$this->encoding_collection).")
-						  AND gtu_tag_values_indexed && getTagsIndexedAsArray($tagList)
-						)
-						OR
-						(gtu_country_tag_indexed && getTagsIndexedAsArray($tagList))
-					  )
-				  )");*/
-			  }
-	  }
-	  if(strlen($sql)>0)
-	  {
-		  if($this->gtu_boolean=="AND")
-		  {
-			$query->andWhere($sql);
-		  }
-		  elseif($this->gtu_boolean=="OR")
-		  {
-			$query->orWhere($sql);
-		  }
-	  }
-
-	}
-	$query->whereParenWrap();
     return $query ;
   }
 
-  //ftheeten 2015 10 22
+  public function addTagsColumnQuery($query, $field, $val)
+  {
+    $conn_MGR = Doctrine_Manager::connection();
+    $tagList = '';
+
+    foreach($val as $line)
+    {
+      $line_val = $line['tag'];
+      if( $line_val != '')
+      {
+        $tagList = $conn_MGR->quote($line_val, 'string');
+        $query->andWhere("
+              (station_visible = true AND  gtu_tag_values_indexed && getTagsIndexedAsArray($tagList))
+               OR
+              (station_visible = false
+               AND (
+                    (
+                      collection_ref in (".implode(',',$this->encoding_collection).")
+                      AND gtu_tag_values_indexed && getTagsIndexedAsArray($tagList)
+                    )
+                    OR
+                    (gtu_country_tag_indexed && getTagsIndexedAsArray($tagList))
+                  )
+              )");
+        $query->whereParenWrap();        
+        
+      }
+    }
+    return $query ;
+  }
+  
+
+  
+  /*public function addTagsColumnQuery($query, $field, $val)
+  {
+    
+    $conn_MGR = Doctrine_Manager::connection();
+    $tagList = '';
+
+    foreach($val as $line)
+    {
+      $line_val = $line['tag'];
+      if( $line_val != '')
+      {
+        $sqltmp=array();
+        foreach(explode(";",$line_val) as $str)
+        {
+            $str=$conn_MGR->quote($str, 'string');
+            $sqltmp[]="t.tag_indexed LIKE  '%'||fulltoindex($str)||'%' AND (station_visible = true OR (station_visible = false AND collection_ref in (".implode(',',$this->encoding_collection).") ) )";
+        }
+        if(count($sqltmp)>0)
+        {
+            $query->leftJoin('s.Tags t ON s.gtu_ref = t.gtu_ref');
+            $query->addWhere(implode(" OR ",$sqltmp ));
+        }
+      }
+     }
+  }
+  */
+
+  //ftheeten 2018 11 22
     public function addPeoplesColumnQuery($query, $field, $val)
   {
 
@@ -1468,15 +1116,9 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
     return $query ;
   }
   
-  
   public function addCodesColumnQuery($query, $field, $val)
   {
 
-    $str_params = '';
-    $str_params_part = '' ;
-    $params = array();
-    $params_part = array() ;
-    $cpt=0;
     foreach($val as $i => $code)
     {
       if(empty($code)) continue;
@@ -1490,39 +1132,29 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
         }
         if($code['code_part']  != '') {
           if($has_query) $sql .= ' AND ';
-          //$sql .= " full_code_indexed ilike '%' || fulltoindex(?) || '%' ";
-          //ftheeten 20140922
-		    //ftheeten 20150909 (if on exact match
-		  if($this->code_exact_match==FALSE)
-		  {
-			//ftheeten 20140922
-			$sql .= " full_code_indexed ilike (SELECT '%'||fulltoindex||'%' FROM fulltoindex(?))";
-		  }
-		  else if($this->code_exact_match==TRUE)
-		  {
-			$sql .= " full_code_indexed ilike (SELECT fulltoindex FROM fulltoindex(?))";
-		  }
-		  
-		  $sql_params[] = $code['code_part'];
+          $sql .= " full_code_indexed ilike '%' || fulltoindex(?) || '%' ";
+          $sql_params[] = $code['code_part'];
           $has_query = true;
         }
-        //if($has_query)
-        //  $query->addWhere("EXISTS(select 1 from codes where  referenced_relation='specimens' and record_id = s.id AND $sql)", $sql_params);
-		if($has_query)
-		{
-		//ftheeten 2015 01 08
-			if($this->code_boolean=='OR'&&$cpt>0)
-			{
-				$query->orWhere("EXISTS(select 1 from codes where  referenced_relation='specimens' and record_id = s.id AND $sql)", $sql_params);
-			}
-			else
-			{
-				$query->andWhere("EXISTS(select 1 from codes where  referenced_relation='specimens' and record_id = s.id AND $sql)", $sql_params);
-			}
-		}
-        $cpt++;
-	}
+        if($has_query)
+          $query->addWhere("EXISTS(select 1 from codes where referenced_relation='specimens' and record_id = s.id AND $sql)", $sql_params);
+    }
 
+    return $query ;
+  }
+  
+  //ftheeten 2019 24 01
+  public function addGtuRefColumnQuery($query, $field, $val)
+  {
+    if($val != '')
+    {
+      $query->andWhere("
+        (station_visible = true AND  gtu_ref = ? )
+        OR
+        (station_visible = false AND collection_ref in (".implode(',',$this->encoding_collection).")
+          AND gtu_ref= ? )", array($val,$val));
+      $query->whereParenWrap();
+    }
     return $query ;
   }
 
@@ -1539,8 +1171,6 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
     }
     return $query ;
   }
-  
-  
 
   public function addSpecIdsColumnQuery($query, $field, $val)
   {
@@ -1560,8 +1190,37 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
     }
     return $query ;
   }
+  
+ //ftheeten 2018 11 22
+ /* 
+  public function addPeopleSearchColumnQuery(Doctrine_Query $query, $people_id, $field_to_use)
+  {
+    $build_query = '';
+    if(! is_array($field_to_use) || count($field_to_use) < 1)
+      $field_to_use = array('ident_ids','spec_coll_ids','spec_don_sel_ids') ;
 
-  public function addPeopleSearchColumnQuery(Doctrine_Query $query, $people_id, $field_to_use, $alias_id=NULL, $boolean="AND")
+    foreach($field_to_use as $field)
+    {
+      if($field == 'ident_ids')
+      {
+        $build_query .= "s.spec_ident_ids @> ARRAY[$people_id]::int[] OR " ;
+      }
+      elseif($field == 'spec_coll_ids')
+      {
+        $build_query .= "s.spec_coll_ids @> ARRAY[$people_id]::int[] OR " ;
+      }
+      else
+      {
+        $build_query .= "s.spec_don_sel_ids @> ARRAY[$people_id]::int[] OR " ;
+      }
+    }
+    // I remove the last 'OR ' at the end of the string
+    $build_query = substr($build_query,0,strlen($build_query) -3) ;
+    $query->andWhere($build_query) ;
+    return $query ;
+  }*/
+  
+   public function addPeopleSearchColumnQuery(Doctrine_Query $query, $people_id, $field_to_use, $alias_id=NULL, $boolean="AND")
   {
 	$alias1="cp";
 
@@ -1775,7 +1434,7 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
     
     return $build_query ;
   }
-  
+
   public function addObjectNameColumnQuery($query, $field, $val) {
     $val = $this->checksToQuotedValues($val);
     $query_array = array_fill(0,count($val)," s.object_name_indexed like '%' || fulltoindex(?) || '%'");
@@ -1787,6 +1446,16 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
   {
     //Do Nothing here, the job is done in the doBuildQuery with check collection rights
     return $query;
+  }
+  
+  //ftheeten 2018 09 19
+   public function addTaxonomicMetadataRef($query, $val) 
+   {
+    if(is_numeric($val))
+    {
+         $query->andWhere("EXISTS (select t.id from taxonomy t where t.metadata_ref = $val AND t.id = s.taxon_ref)") ;
+    }
+    return $query ;
   }
 
   public function addPropertiesQuery($query, $type , $applies_to, $value_from, $value_to, $unit) {
@@ -1815,18 +1484,18 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
         $sql_params[] = $value_from;
         $sql_params[] = $value_from;
       //We don't know the filed unit
-      } elseif(Properties::searchRecognizedUnitsGroups($unit) === false) {
+      }
+      elseif(Properties::searchRecognizedUnitsGroups($unit) === false) {
         $sql_part[] = '  ( p.lower_value = ? OR  p.upper_value = ?) AND property_unit = ? ';
         $sql_params[] = $value_from;
         $sql_params[] = $value_from;
         $sql_params[] = $unit;
 
-      } else { // Recognized unit
+      }
+      else { // Recognized unit
         $sql_params[] = $value_from;
         $sql_params[] = $unit;
         $sql_params[] = $unit;
-
-        $unitGroupStr =  implode(',',array_fill(0,count($unitGroup),'?'));
         $sql_part[] = ' ( convert_to_unified ( ?,  ? ) BETWEEN p.lower_value_unified AND  p.upper_value_unified) AND is_property_unit_in_group(property_unit, ?)  ';
       }
     }
@@ -1839,7 +1508,8 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
         $sql_params[] = $value_to;
         $sql_params[] = $value_to;
       //We don't know the filed unit
-      } elseif(Properties::searchRecognizedUnitsGroups($unit) === false) {
+      }
+      elseif(Properties::searchRecognizedUnitsGroups($unit) === false) {
         $sql_part[] = ' ( ( p.lower_value = ? OR  p.upper_value = ?) OR ( p.lower_value = ? OR  p.upper_value = ?) )  AND property_unit = ? ';
         $sql_params[] = $value_from;
         $sql_params[] = $value_from;
@@ -1847,7 +1517,8 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
         $sql_params[] = $value_to;
         $sql_params[] = $unit;
 
-      } else { // Recognized unit
+      }
+      else { // Recognized unit
         $conn_MGR = Doctrine_Manager::connection();
         $lv = $conn_MGR->quote($value_from, 'string');
         $uv = $conn_MGR->quote($value_to, 'string');
@@ -1865,9 +1536,7 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
               p.upper_value_unified BETWEEN convert_to_unified($uv,$unit) AND 'Infinity'
         )";
         $query->andWhere("is_property_unit_in_group(property_unit,$unit)") ;
-        //OR ( convert_to_unified ( ?::text,  ?::text ) < p.lower_value_unified AND convert_to_unified ( ?::text,  ?::text ) > p.upper_value_unified)
       }
-
     }
     elseif($unit != '') {
       $sql_part[] = ' property_unit = ? ';
@@ -1876,8 +1545,7 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
 
     if(!empty($sql_part) ) {
       $query->innerJoin('s.SubProperties p');
-      $query->andWhere("p.referenced_relation = ? ",'specimens');
-      //$query->groupBy("s.id");
+      $query->groupBy("s.id");
 
       $query->andWhere(implode(' AND ', $sql_part), $sql_params ) ;
       $this->with_group = true;
@@ -1902,38 +1570,6 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
       $this->embedForm('Codes',$subForm);
       $taintedValues['Codes'] = array();
     }
-		//ftheeten 2015 01 08
-	$this->code_boolean='AND';
-	 if(isset($taintedValues['Codes'])&& is_array($taintedValues['Codes']) && isset($taintedValues['code_boolean'])) 
-	 {
-		if($taintedValues['code_boolean']=='OR')
-		{
-			$this->code_boolean='OR';
-		}
-	}
-	
-	
-	//ftheeten 2015 01 08
-	$this->gtu_boolean='AND';
-	 if( isset($taintedValues['gtu_boolean'])) 
-	 {
-		if($taintedValues['gtu_boolean']=='OR')
-		{
-			$this->gtu_boolean='OR';
-		}
-	}
-		
-	
-     //ftheeten 2015 09 09
-	$this->code_exact_match=FALSE;
-	if(isset($taintedValues['Codes'])&& is_array($taintedValues['Codes']) && isset($taintedValues['code_exact_match'])) 
-	{
-		if($taintedValues['code_exact_match']==TRUE)
-		{
-			$this->code_exact_match=TRUE;
-		}
-	}
-	
 
     if(isset($taintedValues['Tags'])&& is_array($taintedValues['Tags'])) {
       foreach($taintedValues['Tags'] as $key=>$newVal) {
@@ -1947,8 +1583,8 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
       $this->embedForm('Tags',$subForm);
       $taintedValues['Tags'] = array();
     }
-	
-	//ftheeten 2015 10 22
+    
+    	//ftheeten 2015 10 22
 	$this->people_boolean='AND';
 	 if(isset($taintedValues['Peoples'])&& is_array($taintedValues['Peoples']) && isset($taintedValues['people_boolean'])) 
 	 {
@@ -1958,6 +1594,14 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
 		}
 	}
 	
+    //ftheeten 2018 11 22
+    if(isset($taintedValues['exact_codes_list']))
+    {
+        if($taintedValues['exact_codes_list'])
+        {
+            $this->is_fuzzy_codes_list=true;
+        }
+    }
 
 	
 	if(isset($taintedValues['Peoples'])&& is_array($taintedValues['Peoples']))
@@ -1981,7 +1625,7 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
       $taintedValues['Peoples'] = array();
     }
 
-	//ftheeten 2015 10 22 handle several peoples in filter
+	//ftheeten 2018 11 22 handle several peoples in filter
 	$this->people_boolean='AND';
 	 if(isset($taintedValues['Peoples'])&& is_array($taintedValues['Peoples']) && isset($taintedValues['people_boolean'])) 
 	 {
@@ -2018,39 +1662,70 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
   public function doBuildQuery(array $values)
   {
     $this->encoding_collection = $this->getCollectionWithRights($this->options['user'],true);
-    $query = DQ::create()
+
+    /*$query = DQ::create()
       ->select('s.*,
-gtu_location[0]::varchar as latitude,
-gtu_location[1]::varchar as longitude,
-        (collection_ref in ('.implode(',',$this->encoding_collection).')) as has_encoding_rights'
+
+        gtu_location[0] as latitude,
+        gtu_location[1] as longitude,
+        (collection_ref in ('.implode(',',$this->encoding_collection).')) as has_encoding_rights, code_category, code_prefix as codeprefix, 
+       sc.code_prefix_separator as codeprefixseparator, sc.code as codecore, sc.code_suffix_separator as codesuffixseparator, sc.code_suffix as codesuffix'
       )
-      //->from('Specimens s');
-      ->from('SpecimensStoragePartsView s');
-     
+      ->from('Specimens s')
+	  ->leftJoin("s.SpecimensCodes sc on s.id=sc.record_id")->where("sc.code_category='main'");
+*/
+
+$query = DQ::create()
+      ->select('s.*,
+
+        gtu_location[0] as latitude,
+        gtu_location[1] as longitude,
+        (collection_ref in ('.implode(',',$this->encoding_collection).')) as has_encoding_rights
+        '
+      )
+      ->from('Specimens s');//->leftJoin("s.DoctrineTaxonomicIdentifications d")
+      
+     ;
+      
     if($values['with_multimedia'])
       $query->where("EXISTS (select m.id from multimedia m where m.referenced_relation = 'specimens' AND m.record_id = s.id)") ;
+
     $this->options['query'] = $query;
+
     $query = parent::doBuildQuery($values);
+
     $this->cols = $this->getCollectionWithRights($this->options['user']);
+
     if(!empty($values['collection_ref'])) {
+    
+      //ftheeten 2018 05 29
+      if((boolean)$values['include_sub_collections']===true)
+      {
+
+          foreach($values['collection_ref'] as $tmp_id)
+          {           
+            $sub_cols = Doctrine::getTable("Collections")->fetchByCollectionParent($this->options['user'] , $this->options['user']->getId(), $tmp_id);
+            foreach($sub_cols as $sub_col)
+            {
+           
+                if(!in_array($values['collection_ref'], $this->cols))
+                {
+                    $values['collection_ref'][]=$sub_col->getId();
+                }
+            }
+          }
+       }
       $this->cols = array_intersect($values['collection_ref'], $this->cols);
     }
-    //ftheeten 2017 05 30 (issue with subquery for pager)
-    //$query->andwhereIn('collection_ref ', $this->cols);
-    $query->andWhere('collection_ref IN ('.implode(',',$this->cols).')');
-    
-    //ftheeten 2016 06 08 t disable warning when saving saved search in the DB
-    if(isset($values['count_operator']))
+    $query->andwhereIn('collection_ref ', $this->cols);
+    if(!empty($values['specimen_status'])) $query->andwhere('specimen_status = ?',$values['specimen_status']) ; 
+    if ($values['count_operator'] != '' && $values['count'] != '')
     {
-        if ($values['count_operator'] != '' && $values['count'] != '')
-        {
-          if($values['count_operator'] == 'e') $query->andwhere('specimen_count_max = ?',$values['count']) ;
-          if($values['count_operator'] == 'l') $query->andwhere('specimen_count_max <= ?',$values['count']) ;
-          if($values['count_operator'] == 'g') $query->andwhere('specimen_count_min >= ?',$values['count']) ;
-        }
+      if($values['count_operator'] == 'e') $query->andwhere('specimen_count_max = ?',$values['count']) ;
+      if($values['count_operator'] == 'l') $query->andwhere('specimen_count_max <= ?',$values['count']) ;
+      if($values['count_operator'] == 'g') $query->andwhere('specimen_count_min >= ?',$values['count']) ;
     }
     //if ($values['people_ref'] != '') $this->addPeopleSearchColumnQuery($query, $values['people_ref'], $values['role_ref']);
-	//if ($values['people_fuzzy'] != '') $this->addPeopleSearchColumnQueryFuzzy($query, $values['people_fuzzy'], $values['role_ref']);
     if ($values['acquisition_category'] != '' ) $query->andWhere('acquisition_category = ?',$values['acquisition_category']);
     if ($values['taxon_level_ref'] != '') $query->andWhere('taxon_level_ref = ?', intval($values['taxon_level_ref']));
     if ($values['chrono_level_ref'] != '') $query->andWhere('chrono_level_ref = ?', intval($values['chrono_level_ref']));
@@ -2058,8 +1733,7 @@ gtu_location[1]::varchar as longitude,
     if ($values['lithology_level_ref'] != '') $query->andWhere('lithology_level_ref = ?', intval($values['lithology_level_ref']));
     if ($values['mineral_level_ref'] != '') $query->andWhere('mineral_level_ref = ?', intval($values['mineral_level_ref']));
     $this->addLatLonColumnQuery($query, $values);
-	if ($values['expedition_ref'] != '') $query->andWhere('expedition_ref = ?', intval($values['expedition_ref']));
-
+    $this->addNamingColumnQuery($query, 'expeditions', 'expedition_name_indexed', $values['expedition_name'],'s','expedition_name_indexed');
 
     $this->addNamingColumnQuery($query, 'taxonomy', 'taxon_name_indexed', $values['taxon_name'],'s','taxon_name_indexed');
     $this->addNamingColumnQuery($query, 'chronostratigraphy', 'chrono_name_indexed', $values['chrono_name'],'s','chrono_name_indexed');
@@ -2067,15 +1741,12 @@ gtu_location[1]::varchar as longitude,
     $this->addNamingColumnQuery($query, 'lithology', 'lithology_name_indexed', $values['lithology_name'],'s','lithology_name_indexed');
     $this->addNamingColumnQuery($query, 'mineralogy', 'mineral_name_indexed', $values['mineral_name'],'s','mineral_name_indexed');
 
+    //ftheeten 2018 09 19
+    $this->addTaxonomicMetadataRef($query, $values["taxonomy_metadata_ref"]);
+    
     $this->addPropertiesQuery($query, $values['property_type'] , $values['property_applies_to'], $values['property_value_from'], $values['property_value_to'], $values['property_units']);
 
     $this->addCommentsQuery($query, $values['comment_notion_concerned'] , $values['comment']);
-    //ftheeten 2016 07 06
-    $this->addEcologyQuery($query, $values['ecology']);
-    //ftheeten 2017 04 27
-    $this->addInLoansQuery($query, $values['in_loan']);
-    //ftheeten 2017 04 27
-    $this->addInClosedLoansQuery($query, $values['loan_is_closed']);
 
     $fields = array('gtu_from_date', 'gtu_to_date');
     $this->addDateFromToColumnQuery($query, $fields, $values['gtu_from_date'], $values['gtu_to_date']);
@@ -2084,59 +1755,27 @@ gtu_location[1]::varchar as longitude,
 
     //$this->addCatalogueRelationColumnQuery($query, $values['taxon_item_ref'], $values['taxon_relation'],'taxonomy','taxon');
     //ftheeten 2016 03 24
-    $this->addCatalogueRelationColumnQueryArrayRelations($query, $values['taxon_item_ref'], $values['taxon_relation'],'taxonomy','taxon');
-
-    $this->addCatalogueRelationColumnQuery($query, $values['chrono_item_ref'], $values['chrono_relation'],'chronostratigraphy','chrono');
-    $this->addCatalogueRelationColumnQuery($query, $values['litho_item_ref'], $values['litho_relation'],'lithostratigraphy','litho');
-    $this->addCatalogueRelationColumnQuery($query, $values['lithology_item_ref'], $values['lithology_relation'],'lithology','lithology');
-    $this->addCatalogueRelationColumnQuery($query, $values['mineral_item_ref'], $values['mineral_relation'],'mineralogy','mineral');
-    
-    
-    //THIS group of storage fields ftheeten 2016 09 27
-    if(!empty($values['specimen_status'])) $query->andwhere('specimen_status = ?',$values['specimen_status']) ; 
-    if(!empty($values['specimen_part'])) $query->andwhere('specimen_part = ?',$values['specimen_part']) ;
-    if(!empty($values['object_name'])) $query->andwhere("object_name_indexed like '%' || fulltoindex(?) || '%'",$values['object_name']) ;
-    
-    //ftheeten 2017 02 13
-    $this->addValidLabelQuery($query, $values['valid_label']);
-    
-    if(!empty($values['institution_ref']))
-    {
-        $valTmp=$values['institution_ref'];
-        if($valTmp == '' &&  ! ctype_digit($valTmp)) return ;
-            $query->andWhere('institution_ref =  ?', $valTmp);
-    }
-    $this->template_storage($query, 'building', 'building', $values);
-    $this->template_storage($query, 'floor', 'floor', $values);
-    $this->template_storage($query, 'room', 'room', $values);
-    $this->template_storage($query, 'row', 'row', $values);    
-    $this->template_storage($query, 'col', 'col', $values);        
-    $this->template_storage($query, 'shelf', 'shelf', $values);
-    //ftheeten 2016 06 222
+    $this->addCatalogueRelationColumnQueryArrayRelations($query, $values['taxa_list'], $values['taxon_relation'],'taxonomy','taxon');
+    $this->addCatalogueRelationColumnQuery($query, $values['chrono_item_ref'], $values['chrono_relation'],'chronostratigraphy','chrono', $values['chrono_child_syn_included']);
+    $this->addCatalogueRelationColumnQuery($query, $values['litho_item_ref'], $values['litho_relation'],'lithostratigraphy','litho', $values['litho_child_syn_included']);
+    $this->addCatalogueRelationColumnQuery($query, $values['lithology_item_ref'], $values['lithology_relation'],'lithology','lithology', $values['lithology_child_syn_included']);
+    $this->addCatalogueRelationColumnQuery($query, $values['mineral_item_ref'], $values['mineral_relation'],'mineralogy','mineral', $values['mineral_child_syn_included']);
 
     $query->limit($this->getCatalogueRecLimits());
 
     return $query;
   }
 
-   //ftheeten 2016 09 27
-   public function template_storage($query, $fieldSQL, $fieldPHP, $values)
-   {
-        if(!empty($values[$fieldPHP]))
-        {
-            $valTmp = $this->checksToQuotedValues($values[$fieldPHP]);
-            $query->andWhere("$fieldSQL in (".implode(',',$valTmp).")");
-        }
-        return $query;
-   }
-  
   public function getJavaScripts()
   {
     $javascripts=parent::getJavascripts();
     $javascripts[]='/leaflet/leaflet.js';
     $javascripts[]='/js/map.js';
     $javascripts[]='/leaflet/leaflet.markercluster-src.js';
-	$javascripts[]= "/Leaflet.draw-master/dist/leaflet.draw.js";
+  	$javascripts[]= '/Leaflet.draw/dist/leaflet.draw.js';
+      //ftheeten 2018 11 22
+    $javascripts[]= "/select2-4.0.5/dist/js/select2.full.min.js";
+	
     return $javascripts;
   }
 
@@ -2144,7 +1783,9 @@ gtu_location[1]::varchar as longitude,
     $items=parent::getStylesheets();
     $items['/leaflet/leaflet.css']='all';
     $items['/leaflet/MarkerCluster.css']='all';
-	$items["/Leaflet.draw-master/dist/leaflet.draw.css"]=  'all';
+	$items['/Leaflet.draw/dist/leaflet.draw.css']='all';
+    //ftheeten 2018 11 22
+    $items["/select2-4.0.5/dist/css/select2.min.css"]=  'all';
     return $items;
   }
 }

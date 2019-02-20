@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="taxonomy_listings" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1fc0f005-6606-40c1-95ef-49533cf9085b">
+	<property name="ireport.zoom" value="1.6105100000000014"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="ireport.jasperserver.reportUnit" value="/darwin/catalogues_zoology_listing"/>
+	<property name="ireport.jasperserver.url" value="http://hippomenes:8080/jasperserver/services/repository"/>
+	<parameter name="nbr_records" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
+	<parameter name="taxon_ids" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="unit_ids" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="catalogue_unit_ref" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select * from fct_listing_zoology(
+    $P{nbr_records}::integer,
+    $P!{catalogue_unit_ref}
+);]]>
+	</queryString>
+	<field name="referenced_by_at_least_one_specimen" class="java.lang.Integer"/>
+	<field name="domain" class="java.lang.String"/>
+	<field name="kingdom" class="java.lang.String"/>
+	<field name="super_phylum" class="java.lang.String"/>
+	<field name="phylum" class="java.lang.String"/>
+	<field name="sub_phylum" class="java.lang.String"/>
+	<field name="infra_phylum" class="java.lang.String"/>
+	<field name="super_class" class="java.lang.String"/>
+	<field name="class" class="java.lang.String"/>
+	<field name="sub_class" class="java.lang.String"/>
+	<field name="infra_class" class="java.lang.String"/>
+	<field name="super_division" class="java.lang.String"/>
+	<field name="division" class="java.lang.String"/>
+	<field name="sub_division" class="java.lang.String"/>
+	<field name="infra_division" class="java.lang.String"/>
+	<field name="super_legion" class="java.lang.String"/>
+	<field name="legion" class="java.lang.String"/>
+	<field name="sub_legion" class="java.lang.String"/>
+	<field name="infra_legion" class="java.lang.String"/>
+	<field name="super_cohort_zoology" class="java.lang.String"/>
+	<field name="cohort_zoology" class="java.lang.String"/>
+	<field name="sub_cohort_zoology" class="java.lang.String"/>
+	<field name="infra_cohort_zoology" class="java.lang.String"/>
+	<field name="super_order" class="java.lang.String"/>
+	<field name="order" class="java.lang.String"/>
+	<field name="sub_order" class="java.lang.String"/>
+	<field name="infra_order" class="java.lang.String"/>
+	<field name="section_zoology" class="java.lang.String"/>
+	<field name="sub_section_zoology" class="java.lang.String"/>
+	<field name="super_family" class="java.lang.String"/>
+	<field name="family" class="java.lang.String"/>
+	<field name="sub_family" class="java.lang.String"/>
+	<field name="infra_family" class="java.lang.String"/>
+	<field name="super_tribe" class="java.lang.String"/>
+	<field name="tribe" class="java.lang.String"/>
+	<field name="sub_tribe" class="java.lang.String"/>
+	<field name="infra_tribe" class="java.lang.String"/>
+	<field name="genus" class="java.lang.String"/>
+	<field name="sub_genus" class="java.lang.String"/>
+	<field name="serie" class="java.lang.String"/>
+	<field name="sub_serie" class="java.lang.String"/>
+	<field name="super_species" class="java.lang.String"/>
+	<field name="species" class="java.lang.String"/>
+	<field name="sub_species" class="java.lang.String"/>
+	<field name="variety" class="java.lang.String"/>
+	<field name="sub_variety" class="java.lang.String"/>
+	<field name="form" class="java.lang.String"/>
+	<field name="sub_form" class="java.lang.String"/>
+	<field name="abberans" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Prevent">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="0f72a3e8-269f-459b-9dbb-24797722fcc9" isPrintRepeatedValues="false" x="644" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Form']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="e761a01b-b5f9-4fdd-a782-f4e31fa4a6e3" isPrintRepeatedValues="false" x="238" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Sub Legion']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="88fa08fc-ad97-4db8-9e1f-4c2309501bff" isPrintRepeatedValues="false" x="392" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Sub Section (Zoology)']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="60e7e6bd-310a-4b69-b33c-832e99011618" isPrintRepeatedValues="false" x="280" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Cohort (Zoology)']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="a840a032-59e8-43e2-8fb0-2c3a6a050336" isPrintRepeatedValues="false" x="196" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Infra Division']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="7b717429-c694-4126-9e97-a13e4995b147" isPrintRepeatedValues="false" x="154" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Super Division']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="61e3e1fb-3bc2-477f-a034-0fa20a70c167" isPrintRepeatedValues="false" x="210" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Super Legion']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="e6a2d831-af30-40f7-ac38-92326e1d0bb1" isPrintRepeatedValues="false" x="378" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Section (Zoology)']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="7a93799f-a4a1-4268-aa0c-b4d111938259" isPrintRepeatedValues="false" x="350" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Sub Order']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="9e9132e8-615a-475d-a14e-5768f5af2819" isPrintRepeatedValues="false" x="448" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Infra Family']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="ddabcf4c-7257-4dea-a48c-d674071f3d69" isPrintRepeatedValues="false" x="504" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Infra Tribe']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="03b13c68-ff11-4f84-811d-65b89f2455bc" isPrintRepeatedValues="false" x="182" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Sub Division']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="388c3dfe-6772-4ed6-b4a4-5ce548d28497" isPrintRepeatedValues="false" x="126" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Sub Class']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="38dc4224-a1b3-4129-981e-85ab7c1b638d" isPrintRepeatedValues="false" x="588" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Species']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="74750cad-3d0f-4520-af3e-90f1f673981d" isPrintRepeatedValues="false" x="574" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Super Species']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="70ff8d27-34b3-4b32-905e-af4e6dd7124f" isPrintRepeatedValues="false" x="112" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Class']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="4e3e687b-4ed1-4f19-b8e4-21d35df8c420" isPrintRepeatedValues="false" x="56" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Phylum']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="7a485008-d204-4d7f-bdff-561304efa377" isPrintRepeatedValues="false" x="672" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Abberans']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="52144acf-c77c-4e84-9f19-cab69e00dcd5" isPrintRepeatedValues="false" x="294" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Sub Cohort (Zoology)']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="1e128981-d535-42f4-931f-7dbe7748f5c9" isPrintRepeatedValues="false" x="322" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Super Order']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="eb940179-9afc-40cc-9dd3-e105ac32718a" isPrintRepeatedValues="false" x="98" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Super Class']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="673874ec-b3d9-4a25-9fd1-a59dbe7a3b22" isPrintRepeatedValues="false" x="616" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Variety']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="470f867c-8215-4021-92b2-0058489c34fc" isPrintRepeatedValues="false" x="476" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Tribe']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="dd6a3436-a3ce-4863-b6ed-0f471e06986a" isPrintRepeatedValues="false" x="420" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Family']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="2a5081df-dfa2-407b-822b-3b4feece39d8" isPrintRepeatedValues="false" x="518" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Genus']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="86dc3ab9-2dd9-4d93-b198-b6ed0d343acd" isPrintRepeatedValues="false" x="28" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Kingdom']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="6fc5aae5-5b51-4547-9fc5-9705d8027c51" isPrintRepeatedValues="false" x="252" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Infra Legion']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="18acb9cd-df3c-4e93-8fdf-4a25e6510417" isPrintRepeatedValues="false" x="546" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Serie']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="c88377f9-a8ef-402a-a091-def9cd610b8b" isPrintRepeatedValues="false" x="266" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Super Cohort (Zoology)']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="fc7d28dd-8a01-4e68-8e68-eb9c2f9bb53c" isPrintRepeatedValues="false" x="70" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Sub Phylum']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="578fa004-54e4-49ea-8e30-943a508366eb" isPrintRepeatedValues="false" x="84" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Infra Phylum']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="4139c98e-ef06-4baa-8f7d-93610c03f5b9" isPrintRepeatedValues="false" x="0" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Used on specimens ?']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="7485987c-ebd0-43cb-93b3-cdf7839ad61c" isPrintRepeatedValues="false" x="490" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Sub Tribe']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="cfb89e4b-ab6b-4ef8-baac-562dbd85e849" isPrintRepeatedValues="false" x="224" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Legion']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="d5e7dc37-7d8f-4a3f-9801-6d4be25a6ba1" isPrintRepeatedValues="false" x="42" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Super Phylum']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="c02a820e-4f46-4a34-a59e-2421f0514091" isPrintRepeatedValues="false" x="560" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Sub Serie']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="f003d71b-fad0-4375-ae8c-d248a67b8014" isPrintRepeatedValues="false" x="308" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Infra Cohort (Zoology)']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="6726d8e1-0bc0-4622-9722-ca036b633d61" isPrintRepeatedValues="false" x="532" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Sub Genus']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="487f397f-4401-420a-886c-1887a11a3f75" isPrintRepeatedValues="false" x="658" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Sub Form']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="de74101b-a8e3-4ea8-9640-69bed71e4e47" isPrintRepeatedValues="false" x="14" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Domain']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="b30b9ea6-a25d-436d-8db4-89f3a8fd87b6" isPrintRepeatedValues="false" x="364" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Infra Order']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="ad895636-1a7b-4351-8683-8c08b1335ff1" isPrintRepeatedValues="false" x="630" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Sub Variety']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="81027266-ca2b-481c-a29c-a1aae8ddeec7" isPrintRepeatedValues="false" x="168" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Division']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="6d78d61f-b67b-4f46-a1bd-2ef40c95c192" isPrintRepeatedValues="false" x="336" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Order']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="18d9d110-8f18-43e3-a4a1-fbd45e0c43b9" isPrintRepeatedValues="false" x="406" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Super Family']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="803be59e-6bb5-4127-91cb-2b02aaf468c0" isPrintRepeatedValues="false" x="140" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Infra Class']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="17ac6737-e239-4796-bd97-ed59e6a1a3ef" isPrintRepeatedValues="false" x="602" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Sub Species']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="af9cef43-681b-47b6-8e8a-e1309e40c4d5" isPrintRepeatedValues="false" x="434" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Sub Family']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="c4c3a941-269d-4466-83e6-6a7b568de0fd" isPrintRepeatedValues="false" x="462" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Super Tribe']]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Prevent">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="4139c98e-ef06-4baa-8f7d-93610c03f5b9" x="0" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[( $F{referenced_by_at_least_one_specimen} == 0 ? 'Not used' : 'Used' )]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="de74101b-a8e3-4ea8-9640-69bed71e4e47" x="14" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{domain}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="86dc3ab9-2dd9-4d93-b198-b6ed0d343acd" x="28" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{kingdom}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="d5e7dc37-7d8f-4a3f-9801-6d4be25a6ba1" x="42" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{super_phylum}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="4e3e687b-4ed1-4f19-b8e4-21d35df8c420" x="56" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{phylum}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="fc7d28dd-8a01-4e68-8e68-eb9c2f9bb53c" x="70" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{sub_phylum}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="578fa004-54e4-49ea-8e30-943a508366eb" x="84" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{infra_phylum}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="eb940179-9afc-40cc-9dd3-e105ac32718a" x="98" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{super_class}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="70ff8d27-34b3-4b32-905e-af4e6dd7124f" x="112" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{class}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="388c3dfe-6772-4ed6-b4a4-5ce548d28497" x="126" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{sub_class}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="803be59e-6bb5-4127-91cb-2b02aaf468c0" x="140" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{infra_class}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="7b717429-c694-4126-9e97-a13e4995b147" x="154" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{super_division}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="81027266-ca2b-481c-a29c-a1aae8ddeec7" x="168" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{division}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="03b13c68-ff11-4f84-811d-65b89f2455bc" x="182" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{sub_division}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="a840a032-59e8-43e2-8fb0-2c3a6a050336" x="196" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{infra_division}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="61e3e1fb-3bc2-477f-a034-0fa20a70c167" x="210" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{super_legion}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="cfb89e4b-ab6b-4ef8-baac-562dbd85e849" x="224" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{legion}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="e761a01b-b5f9-4fdd-a782-f4e31fa4a6e3" x="238" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{sub_legion}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="6fc5aae5-5b51-4547-9fc5-9705d8027c51" x="252" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{infra_legion}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="c88377f9-a8ef-402a-a091-def9cd610b8b" x="266" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{super_cohort_zoology}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="60e7e6bd-310a-4b69-b33c-832e99011618" x="280" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{cohort_zoology}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="52144acf-c77c-4e84-9f19-cab69e00dcd5" x="294" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{sub_cohort_zoology}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="f003d71b-fad0-4375-ae8c-d248a67b8014" x="308" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{infra_cohort_zoology}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="1e128981-d535-42f4-931f-7dbe7748f5c9" x="322" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{super_order}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="6d78d61f-b67b-4f46-a1bd-2ef40c95c192" x="336" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{order}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="7a93799f-a4a1-4268-aa0c-b4d111938259" x="350" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{sub_order}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="b30b9ea6-a25d-436d-8db4-89f3a8fd87b6" x="364" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{infra_order}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="e6a2d831-af30-40f7-ac38-92326e1d0bb1" x="378" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{section_zoology}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="88fa08fc-ad97-4db8-9e1f-4c2309501bff" x="392" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{sub_section_zoology}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="18d9d110-8f18-43e3-a4a1-fbd45e0c43b9" x="406" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{super_family}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="dd6a3436-a3ce-4863-b6ed-0f471e06986a" x="420" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{family}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="af9cef43-681b-47b6-8e8a-e1309e40c4d5" x="434" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{sub_family}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="9e9132e8-615a-475d-a14e-5768f5af2819" x="448" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{infra_family}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="c4c3a941-269d-4466-83e6-6a7b568de0fd" x="462" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{super_tribe}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="470f867c-8215-4021-92b2-0058489c34fc" x="476" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{tribe}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="7485987c-ebd0-43cb-93b3-cdf7839ad61c" x="490" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{sub_tribe}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="ddabcf4c-7257-4dea-a48c-d674071f3d69" x="504" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{infra_tribe}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="2a5081df-dfa2-407b-822b-3b4feece39d8" x="518" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{genus}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="6726d8e1-0bc0-4622-9722-ca036b633d61" x="532" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{sub_genus}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="18acb9cd-df3c-4e93-8fdf-4a25e6510417" x="546" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{serie}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="c02a820e-4f46-4a34-a59e-2421f0514091" x="560" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{sub_serie}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="74750cad-3d0f-4520-af3e-90f1f673981d" x="574" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{super_species}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="38dc4224-a1b3-4129-981e-85ab7c1b638d" x="588" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{species}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="17ac6737-e239-4796-bd97-ed59e6a1a3ef" x="602" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{sub_species}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="673874ec-b3d9-4a25-9fd1-a59dbe7a3b22" x="616" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{variety}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="ad895636-1a7b-4351-8683-8c08b1335ff1" x="630" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{sub_variety}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="0f72a3e8-269f-459b-9dbb-24797722fcc9" x="644" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{form}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="487f397f-4401-420a-886c-1887a11a3f75" x="658" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{sub_form}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="7a485008-d204-4d7f-bdff-561304efa377" x="672" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{abberans}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

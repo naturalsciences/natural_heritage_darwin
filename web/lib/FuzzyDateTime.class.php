@@ -447,7 +447,7 @@ class FuzzyDateTime extends DateTime
    */
   public function getDateMasked($tag='em', $format=null)
   {
-    if ($format==null)
+    if ($format === null )
     {
       $format = $this->dateFormat;
       if ($this->getWithTime())

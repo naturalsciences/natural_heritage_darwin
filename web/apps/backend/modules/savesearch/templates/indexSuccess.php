@@ -41,16 +41,19 @@
          <?php if($sf_user->isAtLeast(Users::ENCODER)):?>
          <td class="rurl_container">
             <select class="url_report">
-            <option value=<?php echo("http://172.16.11.138:8080/pentaho/api/repos/%3Apublic%3ADarwin2%3AReports_excel%3Areport_excel.prpt/report?ID_USER=".sfContext::getInstance()->getUser()->getId()."&ID_Q=".$search->getId()."&userid=report&password=report&output-target=table%2Fexcel%3Bpage-mode%3Dflow&accepted-page=-1&showParameters=true&renderMode=REPORT&htmlProportionalWidth=false")?>>
-            Excel
-            </option>
-            <option value=<?php echo("http://172.16.11.138:8080/pentaho/api/repos/%3Apublic%3ADarwin2%3AReports_rtf%3Areport_inverts_rtf.prpt/report?ID_USER=".sfContext::getInstance()->getUser()->getId()."&ID_Q=".$search->getId()."&userid=report&password=report&output-target=table%2Frtf%3Bpage-mode%3Dflow&accepted-page=-1&showParameters=true&renderMode=REPORT&htmlProportionalWidth=false")?>>
-            RTF publications Invertebrates
-            </option>
+            <option value=<?php echo(url_for("savesearch/excelSpecimens")."/user_id/".sfContext::getInstance()->getUser()->getId()."/query_id/".$search->getId())?>>
+            Excel (specimens)
+            </option> 
+            <option value=<?php echo(url_for("savesearch/excelTaxonomy")."/user_id/".sfContext::getInstance()->getUser()->getId()."/query_id/".$search->getId())?>>
+            Excel (taxonomy)
+            </option>                
             </select>
          </td>
          <td>
             <input id="report_link" class="save_search report_link" value="Get report" type="button">
+         </td>
+         <td>
+            <a id="geojson_link" target="_blank" href="<?php print(url_for("savesearch/geojson"));?>?query_id=<?php print($search->getId());?>&user_id=<?php print(sfContext::getInstance()->getUser()->getId()); ?>">GIS Layer (.geojson)</a>
          </td>
          <?php endif;?>
     </tr>
@@ -146,11 +149,12 @@ $(document).ready(function () {
     return false;
  });
  
- //ftheeten 2016 10 2016
+  //ftheeten 2016 10 2016
  $(".report_link").click(function(event){
     
     var url_report = $(this).closest('tr').children("td.rurl_container").find(".url_report").val();
     window.open(url_report, '_blank');
  });
+
 });
 </script>

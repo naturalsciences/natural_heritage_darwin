@@ -146,11 +146,19 @@ function clearSelection(el)
 
 function result_choose ()
 {
-  el = $(this).closest('tr');
-  ref_element_id = getIdInClasses(el);
-  ref_element_name = el.find('span.item_name').text();
-  $('.result_choose').die('click');
-  $('body').trigger('close_modal');
+    el = $(this).closest('tr');
+    ref_element_id = getIdInClasses(el);
+    ref_element_name = el.find('span.item_name').text();
+    ref_level_name = el.find('span.level_name').text();
+    if(typeof fct_update=="function")
+    {
+        fct_update(ref_element_id, ref_element_name, ref_level_name);
+    }
+    else
+    {
+        $('.result_choose').die('click');
+        $('body').trigger('close_modal');
+    }
 }
 
 function objectsAreSame(x, y) {
@@ -274,3 +282,60 @@ $.fn.customRadioCheck = function() {
   });
 };
 }());
+
+
+    //ftheeten 2018 09 18
+    function onElementInserted(containerSelector, elementSelector, callback) {
+
+            var onMutationsObserved = function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.addedNodes.length) {
+                        var elements = $(mutation.addedNodes).find(elementSelector);
+                        for (var i = 0, len = elements.length; i < len; i++) {
+                            callback(elements[i]);
+                        }
+                    }
+                });
+            };
+
+            var target = $(containerSelector)[0];
+            var config = { childList: true, subtree: true };
+            var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+            var observer = new MutationObserver(onMutationsObserved);    
+            observer.observe(target, config);
+
+        }
+        
+        
+    //ftheeten 2018 11 26
+    var select2SetOption=function(selector, valueToCopy, textToCopy)
+    {
+          var newOption = new Option( textToCopy, valueToCopy, true, true);
+          $(selector).append(newOption).trigger('change');
+          $(selector).trigger({
+                                    type: 'select2:select',
+                                    params: {
+                                    data: {id:valueToCopy, text:textToCopy}
+                                    }
+                                    });
+          var data = $(selector).select2('data');
+                               
+         $(selector).select2("data", data, true);
+    }
+    
+    //ftheeten 2019 02 04
+    var getUrlParameter = function getUrlParameter(sParam) {
+            var sPageURL = window.location.search.substring(1),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+                }
+            }
+            return false;
+        };

@@ -30,7 +30,7 @@ class trackingFilter extends sfFilter
       if($user->isAuthenticated() && sfConfig::get('dw_tracking_enabled',null))
       {
         $conn = Doctrine_Manager::connection();
-        $conn->exec("select fct_set_user(".$user->getId().");");
+        $conn->exec("select fct_set_user( ? );", array($user->getId()));
       }
 
       if($user->isAuthenticated() && function_exists('apache_note')) {

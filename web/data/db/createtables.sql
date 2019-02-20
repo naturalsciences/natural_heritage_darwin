@@ -162,6 +162,7 @@ create table ext_links
         url varchar not null,
         comment text not null,
         comment_indexed text not null,
+        type text not null default 'ext',
         constraint pk_ext_links primary key (id),
         constraint unq_ext_links unique (referenced_relation, record_id, url)
        )
@@ -173,6 +174,7 @@ comment on column ext_links.record_id is 'Identifier of the record concerned';
 comment on column ext_links.url is 'External URL';
 comment on column ext_links.comment is 'Comment';
 comment on column ext_links.comment_indexed is 'indexed form of comment field';
+comment on column ext_links.type IS 'Sort of external link given';
 
 create table gtu
        (
@@ -617,12 +619,14 @@ create table collections
         parent_ref integer,
         path varchar not null,
         code_auto_increment boolean not null default false,
-        code_last_value integer not null default 0,
+        code_auto_increment_for_insert_only boolean not null default true,
+        code_last_value bigint not null default 0,
         code_prefix varchar,
         code_prefix_separator varchar,
         code_suffix varchar,
         code_suffix_separator varchar,
         code_specimen_duplicate boolean not null default false,
+        code_mask varchar,
         is_public boolean not null default true,
         constraint pk_collections primary key (id),
         constraint fk_collections_institutions foreign key (institution_ref) references people(id),
@@ -644,6 +648,7 @@ comment on column collections.path is 'Descriptive path for collection hierarchy
 comment on column collections.main_manager_ref is 'Reference of collection main manager - id field of users table';
 comment on column collections.staff_ref is 'Reference of staff member, scientist responsible - id field of users table';
 comment on column collections.code_auto_increment is 'Flag telling if the numerical part of a code has to be incremented or not';
+comment on column collections.code_auto_increment_for_insert_only is 'Flag telling if the autoincremented code insertion has to be done only after insertion of specimens or also after updates of specimens';
 comment on column collections.code_last_value is 'Value of the last numeric code given in this collection when auto increment is/was activated';
 comment on column collections.code_prefix is 'Default code prefix to be used for specimens encoded in this collection';
 comment on column collections.code_prefix_separator is 'Character chain used to separate code prefix from code core';
@@ -651,6 +656,7 @@ comment on column collections.code_suffix is 'Default code suffix to be used for
 comment on column collections.code_suffix_separator is 'Character chain used to separate code suffix from code core';
 comment on column collections.code_specimen_duplicate is 'Flag telling if the whole specimen code has to be copied when you do a duplicate';
 comment on column collections.is_public is 'Flag telling if the collection can be found in the public search';
+comment on column collections.code_mask is 'A mask that should be applied to help encode following a specific structured way';
 
 create table collections_rights
        (
@@ -1191,7 +1197,7 @@ create table codes
         full_code_indexed varchar not null,
         code_date timestamp not null default '0001-01-01 00:00:00',
         code_date_mask integer not null default 0,
-        code_num integer default 0,
+        code_num bigint default 0,
         constraint pk_codes primary key (id),
         constraint unq_codes unique (referenced_relation, record_id, full_code_indexed,code_category)
        )
@@ -1370,17 +1376,18 @@ create table imports
     id serial,
     user_ref integer not null,
     format varchar not null,
-    collection_ref integer not null,
+    collection_ref integer,
     filename varchar not null,
     state varchar not null default '',
     created_at timestamp not null default now(),
-    updated_at timestamp,
+    updated_at timestamp default now(),
     initial_count integer not null default 0,
     is_finished boolean  not null default false,
     errors_in_import text,
     template_version text,
+    exclude_invalid_entries boolean not null default false,
     constraint pk_import primary key (id) ,
-    constraint fk_imports_collections foreign key (collection_ref) references collections(id) on delete cascade,
+    constraint fk_imports_collections foreign key (collection_ref) references collections(id) on update no action on delete cascade,
     constraint fk_imports_users foreign key (user_ref) references users(id) on delete cascade
   );
 
@@ -1394,6 +1401,9 @@ comment on column imports.created_at is 'Creation of the file';
 comment on column imports.updated_at is 'When the data has been modified lately';
 comment on column imports.initial_count is 'Number of rows of staging when the import was created';
 comment on column imports.is_finished is 'Boolean to mark if the import is finished or still need some operations';
+comment on column imports.errors_in_import is 'Contains the error encountered while trying to import data from template';
+comment on column imports.template_version is 'Contains the template version (when applicable)';
+comment on column imports.exclude_invalid_entries is 'Tell if, for this import, match should exclude the invalid units';
 
 create table staging
   (
@@ -1658,7 +1668,7 @@ create table loan_items (
   details varchar default '',
   constraint pk_loan_items primary key (id),
   constraint fk_loan_items_ig foreign key (ig_ref) references igs(id),
-  constraint fk_loan_items_loan_ref foreign key (loan_ref) references loans(id),
+  constraint fk_loan_items_loan_ref foreign key (loan_ref) references loans(id) on delete CASCADE,
   constraint fk_loan_items_specimen_ref foreign key (specimen_ref) references specimens(id) on delete set null,
   constraint unq_loan_items unique(loan_ref, specimen_ref)
 );
@@ -1788,3 +1798,50 @@ create table db_version (
 );
 
 comment on table db_version is 'Table holding the database version and update date';
+
+create table staging_catalogue
+  (
+  id serial,
+  import_ref integer not null,
+  name varchar not null,
+  level_ref integer,
+  parent_ref integer,
+  catalogue_ref integer,
+  parent_updated boolean default false,
+  constraint pk_staging_catalogue primary key (id),
+  constraint fk_stg_catalogue_level_ref foreign key (level_ref) references catalogue_levels(id),
+  constraint fk_stg_catalogue_import_ref foreign key (import_ref) references imports(id) on delete cascade
+  );
+
+comment on table staging_catalogue is 'Stores the catalogues hierarchy to be imported';
+comment on column staging_catalogue.id is 'Unique identifier of a to be imported catalogue unit entry';
+comment on column staging_catalogue.import_ref is 'Reference of import concerned - from table imports';
+comment on column staging_catalogue.name is 'Name of unit to be imported/checked';
+comment on column staging_catalogue.level_ref is 'Level of unit to be imported/checked';
+comment on column staging_catalogue.parent_ref is 'ID of parent the unit is attached to. Right after the load of xml, it refers recursively to an entry in the same staging_catalogue table. During the import it is replaced by id of the parent from the concerned catalogue table.';
+comment on column staging_catalogue.catalogue_ref is 'ID of unit in concerned catalogue table - set during import process';
+comment on column staging_catalogue.parent_updated is 'During the catalogue import process, tells if the parent ref has already been updated with one catalogue entry or not';
+
+create table reports
+ (
+    id serial,
+    user_ref integer not null,
+    name varchar not null,
+    uri varchar,
+    lang char(2) not null,
+    format varchar not null default 'csv',
+    comment varchar,
+    parameters hstore,
+    CONSTRAINT pk_reports PRIMARY KEY (id),
+    CONSTRAINT fk_reports_users FOREIGN KEY (user_ref)
+    REFERENCES users (id) MATCH SIMPLE
+    ON UPDATE NO ACTION ON DELETE CASCADE
+  );
+comment on table reports is 'Table to handle users reports asking';
+comment on column reports.user_ref is 'The referenced user id';
+comment on column reports.name is 'The report name';
+comment on column reports.uri is 'The path where the report file is stored, if uri is not null then the report has already been launched';
+comment on column reports.lang is 'The lang asked for this report';
+comment on column reports.format is 'The file type of the report file, generaly csv or xls';
+comment on column reports.comment is 'A comment to add to the report, just in case.';
+comment on column reports.parameters is 'if the report requires some information (such as collection_ref), they are here';

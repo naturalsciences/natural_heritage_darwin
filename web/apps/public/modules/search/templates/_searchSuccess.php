@@ -14,7 +14,7 @@
             <th></th>
             <?php foreach($columns as $col_name => $col):?>
               <th class="col_<?php echo $col_name;?><?php echo ($col_name == 'specimen_count')?' right_aligned':'';?>">
-                <?php if($col[0] != false):?>
+                <?php if($col[0] !== false):?>
                   <a class="sort" href="#" alt="<?php echo $col[0];?>">
                     <?php echo $col[1];?>
                     <?php if($form->getValue('order_by') == $col[0]) echo $orderSign ?>
@@ -33,7 +33,7 @@
               <td style="vertical-align:middle;">
                   <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),'search/view?id='.$specimen->getId(),array('popup' => true));?>
               </td>
-              <?php include_partial('result_content_specimen', array('specimen' => $specimen, 'id' => $i++)); ?>
+              <?php include_partial('result_content_specimen', array('specimen' => $specimen, 'id' => $i++, /*ftheeten 2018 10 29*/ 'codes'=>$codes)); ?>
               <?php include_partial('tagCommonName',array('common_names'=>$common_names->getRawValue(), 'spec'=> $specimen)) ; ?>
             </tr> 
           </tbody>

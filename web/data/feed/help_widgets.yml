@@ -58,7 +58,7 @@ all:
       multimedia: If you're looking for only illustrated object (or object with files), check the box below
       comments: Via this widget you can perform a search in comments linked to specimens. You can also use the dedicated comment search.
       properties: Via this widget you can perform a search in properties linked to specimens. You can also use the dedicated propety search. Look for 1 specific value using the "from" field or a range using "from" and "to".
-      storageParts: Via this widget you can perform a search in the storage (fality) and institutions hosting the specimens.
+      statusAndCount: statusAndCountHelp
 
     specimenwidget:
       refChrono: This widget allows you to add the reference to a chonostratigraphic unit.
@@ -99,8 +99,6 @@ all:
       specPart: This mandatory widget specifies the type of object in more detail.
       localisation: This widget allows you to add information with regards to the placement in the depositories of the institute. You can specify the building, floor, room, row and/or shelf where the object(s) are stored.
       maintenance: This widget shows you types of actions or observations with regards to the object. This can e.g. show you the date on which a person added alcohol to the container that houses the object or it could be the date on which a person observed that an object seemed to be broken. Information in this widget can, however, only be inserted by using the mass update functionality!
-      #ftheeten 2016 06 30
-      ecology: widget for the ecological information (test)
 
     userswidget:
       address: This widget allows you to add one or more addresses, it can be home address, work or more. The locality and the country are required fields

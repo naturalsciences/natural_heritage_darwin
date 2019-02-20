@@ -11,10 +11,7 @@ class SpecimensForm extends BaseSpecimensForm
 {
   public function configure()
   {
-    //ftheeeten 201 06 22 added count males/females
-    $this->useFields(array(
-    //'category',
-    'collection_ref',
+    $this->useFields(array('category','collection_ref',
       'expedition_ref',
       'gtu_ref',
       'taxon_ref',
@@ -26,31 +23,22 @@ class SpecimensForm extends BaseSpecimensForm
       'acquisition_date',
       'station_visible',
       'ig_ref',
-
       'type', 'sex', 'state','stage','social_status','rock_form',
-            //'specimen_part', 
-      //'complete', //'institution_ref', 
-      //'building', 'floor', 'room',
-      //      'row', 'col', 'shelf', 'container', 'sub_container', 'container_type', 'sub_container_type',
-        //     'container_storage', 'sub_container_storage', 'surnumerary',
-        //  'specimen_status',
-      'specimen_count_min', 'specimen_count_max',//'object_name',
-      'specimen_count_males_min', 'specimen_count_males_max',
-      'specimen_count_females_min', 'specimen_count_females_max', 
-      'specimen_count_juveniles_min', 'specimen_count_juveniles_max',
-       'gtu_from_date', 'gtu_to_date'
+      'specimen_part', 'complete', 'institution_ref', 'building', 'floor', 'room',
+      'row', 'col', 'shelf', 'container', 'sub_container', 'container_type', 'sub_container_type',
+      'container_storage', 'sub_container_storage', 'surnumerary', 'specimen_status',
+      'specimen_count_min', 'specimen_count_max','object_name',
+      /*ftheeten 2018 11 30*/
+      'gtu_from_date', 'gtu_to_date'
     ));
-    
-    //ftheeten 2016 09 21
-    $this->arrayFormsStorage=Array();
 
-    $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')));
+    $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')), intval(sfConfig::get('dw_yearRangeMin')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
-    $dateText = array('year'=>'yyyy', 'month'=>'mm', 'day'=>'dd');
+    $dateText = array('year'=>'yyyy', 'month'=>'mm', 'day'=>'dd', 'hour'=>'hh', 'minute'=>'mm', 'second'=>'ss');
     $minDate = new FuzzyDateTime(strval(min($yearsKeyVal).'/01/01'));
     $maxDate = new FuzzyDateTime(strval(max($yearsKeyVal).'/12/31'));
     $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
-    //ftheeten 2016 07 07
+    //ftheeten 2018 11 30
     $dateUpperBound = new FuzzyDateTime(sfConfig::get('dw_dateUpperBound'));
     $maxDate->setStart(false);
 
@@ -58,13 +46,15 @@ class SpecimensForm extends BaseSpecimensForm
     $this->widgetSchema->setNameFormat('specimen[%s]');
     /* Fields */
 
-    //ftheeten 2016 09 21
-    /*$this->widgetSchema['category'] = new sfWidgetFormChoice(array(
+    $this->widgetSchema['category'] = new sfWidgetFormChoice(array(
       'choices' => Specimens::getCategories(),
     ));
 
     $this->validatorSchema['category'] = new sfValidatorChoice(array('choices'=>array_keys(Specimens::getCategories())));
-    */
+    
+    /*ftheeten 2019 01 30*/
+    $this->widgetSchema['timestamp'] = new sfWidgetFormInputText(array('default'=>time()));
+    $this->validatorSchema['timestamp'] = new sfValidatorPass();
 
     /* Collection Reference */
     $this->widgetSchema['collection_ref'] = new widgetFormCompleteButtonRef(array(
@@ -75,8 +65,6 @@ class SpecimensForm extends BaseSpecimensForm
       'button_class'=>'',
       'complete_url' => 'catalogue/completeName?table=collections',
     ));
-    //ftheeten 2017 01 13
-    $this->widgetSchema['collection_ref']->setAttributes(array('class'=>'col_check'));
 
     /* Expedition Reference */
     $this->widgetSchema['expedition_ref'] = new widgetFormCompleteButtonRef(array(
@@ -97,7 +85,7 @@ class SpecimensForm extends BaseSpecimensForm
        'box_title' => $this->getI18N()->__('Choose Taxon'),
        'nullable' => true,
        'button_class'=>'',
-       'complete_url' => 'catalogue/completeName?table=taxonomy',
+       'complete_url' => 'catalogue/completeNameTaxonomyWithRef',
     ));
 
     /* Chronostratigraphy Reference */
@@ -187,32 +175,6 @@ class SpecimensForm extends BaseSpecimensForm
       ),
       array('class' => 'to_date')
     );
-    
-     //ftheeten 2016 07 07 group date
-    
-    $this->widgetSchema['gtu_from_date'] = new widgetFormJQueryFuzzyDate(array(
-      'culture'=>$this->getCurrentCulture(),
-      'image'=>'/images/calendar.gif',
-      'format' => '%day%/%month%/%year%',
-      'years' => $years,
-      'empty_values' => $dateText,
-      'with_time' => true
-      ),
-      array('class' => 'from_date')
-    );
-
-    $this->widgetSchema['gtu_to_date'] = new widgetFormJQueryFuzzyDate(array(
-      'culture'=>$this->getCurrentCulture(),
-      'image'=>'/images/calendar.gif',
-      'format' => '%day%/%month%/%year%',
-      'years' => $years,
-      'empty_values' => $dateText,
-      'with_time' => true
-      ),
-      array('class' => 'to_date')
-    );
-    
-    //end group date
 
     $this->widgetSchema['relationship'] = new sfWidgetFormInputHidden(array('default'=>1));
     $this->widgetSchema['ident'] = new sfWidgetFormInputHidden(array('default'=>1));
@@ -267,8 +229,6 @@ class SpecimensForm extends BaseSpecimensForm
       'change_label' => 'Pick a social status in the list',
       'add_label' => 'Add an other social status',
     ));
-    
-    /*
     $this->widgetSchema['rock_form'] = new widgetFormSelectComplete(array(
       'model' => 'Specimens',
       'table_method' => 'getDistinctRockForms',
@@ -409,7 +369,7 @@ class SpecimensForm extends BaseSpecimensForm
       'change_label' => 'Pick a sub container storage in the list',
       'add_label' => 'Add another sub container storage',
     ));
-    */
+
     $this->widgetSchema['accuracy'] = new sfWidgetFormChoice(array(
         'choices'  => array($this->getI18N()->__('exact'), $this->getI18N()->__('imprecise')),
         'expanded' => true,
@@ -417,50 +377,34 @@ class SpecimensForm extends BaseSpecimensForm
 
     $this->setDefault('accuracy', 1);
     $this->validatorSchema['accuracy'] = new sfValidatorPass();
-   
- //ftheeten 2016 06 22
-    $this->widgetSchema['accuracy_males'] = new sfWidgetFormChoice(array(
-        'choices'  => array($this->getI18N()->__('exact'), $this->getI18N()->__('imprecise')),
-        'expanded' => true,
-    ));
 
-    $this->setDefault('accuracy_males', 1);
-    $this->validatorSchema['accuracy_males'] = new sfValidatorPass(); 
-    
-    
-    $this->widgetSchema['accuracy_females'] = new sfWidgetFormChoice(array(
-        'choices'  => array($this->getI18N()->__('exact'), $this->getI18N()->__('imprecise')),
-        'expanded' => true,
-    ));
+    $code_enable_mask_default_val = ($this->isNew());
+    $this->widgetSchema['code_enable_mask'] = new WidgetFormInputCheckboxDarwin(
+      array('default'=>$code_enable_mask_default_val),
+      array('class'=>'enable_mask')
+    );
+    $code_mask_default_val = $this->getOption('code_mask','');
+    $this->widgetSchema['code_mask'] = new sfWidgetFormInputText(
+      array('default'=>$code_mask_default_val),
+      array('class'=>'code_mask')
+    );
 
-    $this->setDefault('accuracy_females', 1);
-    $this->validatorSchema['accuracy_females'] = new sfValidatorPass(); 
-    
-     $this->widgetSchema['accuracy_juveniles'] = new sfWidgetFormChoice(array(
-        'choices'  => array($this->getI18N()->__('exact'), $this->getI18N()->__('imprecise')),
-        'expanded' => true,
-    ));
-
-    $this->setDefault('accuracy_juveniles', 1);
-    $this->validatorSchema['accuracy_juveniles'] = new sfValidatorPass(); 
-    
     /* Labels */
-    //2016 06 22 ftheeten added male fema count
     $this->widgetSchema->setLabels(array(
       'gtu_ref' => 'Sampling location Tags',
       'station_visible' => 'Public sampling location ?',
       'filenames' => 'Add File',
       'institution_ref' => 'Institution',
       'accuracy' => 'Accuracy',
-      'accuracy_males' => 'Accuracy males count',
-      'accuracy_females' => 'Accuracy females count',
       'surnumerary' => 'supernumerary',
       'col' => 'Column',
+      'code_enable_mask' => 'Apply input mask ?',
+      'code_mask'=>'Mask: ',
     ));
 
     /* Validators */
-    //$this->validatorSchema['specimen_part'] = new sfValidatorString(array('required' => false, 'trim' => true));
-    //$this->validatorSchema['object_name'] = new sfValidatorString(array('required' => false, 'trim' => true));
+    $this->validatorSchema['specimen_part'] = new sfValidatorString(array('required' => false, 'trim' => true));
+    $this->validatorSchema['object_name'] = new sfValidatorString(array('required' => false, 'trim' => true));
 
     $this->validatorSchema['extlink'] = new sfValidatorPass();
 
@@ -487,6 +431,8 @@ class SpecimensForm extends BaseSpecimensForm
     $this->validatorSchema['social_status'] = new sfValidatorString(array('trim'=>true, 'required'=>false, 'empty_value'=>$this->getDefault('social_status')));
     $this->validatorSchema['rock_form'] = new sfValidatorString(array('trim'=>true, 'required'=>false, 'empty_value'=>$this->getDefault('rock_form')));
 
+    $this->validatorSchema['code_enable_mask'] = new sfValidatorBoolean();
+    $this->validatorSchema['code_mask'] = new sfValidatorPass();
 
     $this->validatorSchema['acquisition_category'] = new sfValidatorChoice(array(
       'choices' => array_keys(SpecimensTable::getDistinctCategories()),
@@ -503,45 +449,33 @@ class SpecimensForm extends BaseSpecimensForm
       array('invalid' => 'Date provided is not valid',
     ));
 
+    /*ftheeten 2018 11 30*/
+     //ftheeten 2016 07 07 group date
     
-        //ftheeten 2016 07 07 group date
-    
-
-
-    $this->validatorSchema['gtu_from_date'] = new fuzzyDateValidator(array(
-      'required' => false,
-      'from_date' => true,
-      'min' => $minDate,
-      'max' => $maxDate,
-      'empty_value' => $dateLowerBound,
+    $this->widgetSchema['gtu_from_date'] = new widgetFormJQueryFuzzyDate(array(
+      'culture'=>$this->getCurrentCulture(),
+      'image'=>'/images/calendar.gif',
+      'format' => '%day%/%month%/%year%',
+      'years' => $years,
+      'empty_values' => $dateText,
       'with_time' => true
       ),
-      array('invalid' => 'Date provided is not valid',)
+      array('class' => 'from_date')
     );
 
-    $this->validatorSchema['gtu_to_date'] = new fuzzyDateValidator(array(
-      'required' => false,
-      'from_date' => false,
-      'min' => $minDate,
-      'max' => $maxDate,
-      'empty_value' => $dateUpperBound,
+    $this->widgetSchema['gtu_to_date'] = new widgetFormJQueryFuzzyDate(array(
+      'culture'=>$this->getCurrentCulture(),
+      'image'=>'/images/calendar.gif',
+      'format' => '%day%/%month%/%year%',
+      'years' => $years,
+      'empty_values' => $dateText,
       'with_time' => true
       ),
-      array('invalid' => 'Date provided is not valid',)
+      array('class' => 'to_date')
     );
-    $this->validatorSchema->setPostValidator(
-      new sfValidatorAnd(array(
-        new sfValidatorSchemaCompare(
-          'gtu_from_date',
-          '<=',
-          'gtu_to_date',
-          array('throw_global_error' => true),
-          array('invalid'=>'The "begin" date cannot be above the "end" date.')
-        )
-      )
-    ));
 
-    //end group date
+    
+    /**/
 
     $this->widgetSchema['prefix_separator'] = new sfWidgetFormDoctrineChoice(array(
       'model' => 'Codes',
@@ -591,14 +525,6 @@ class SpecimensForm extends BaseSpecimensForm
 
     $this->validatorSchema['Comments_holder'] = new sfValidatorPass();
     $this->widgetSchema['Comments_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
-    
-    #ftheeten 2016 06 30
-    $this->validatorSchema['Ecology_holder'] = new sfValidatorPass();
-    $this->widgetSchema['Ecology_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
-    
-    #ftheeten 2016 08 11
-    $this->widgetSchema['StorageParts_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
-    $this->validatorSchema['StorageParts_holder'] = new sfValidatorPass();
 
     $this->validatorSchema['ExtLinks_holder'] = new sfValidatorPass();
     $this->widgetSchema['ExtLinks_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
@@ -612,50 +538,59 @@ class SpecimensForm extends BaseSpecimensForm
     $this->widgetSchema['Insurances_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
     $this->validatorSchema['Insurances_holder'] = new sfValidatorPass();
     
-    #ftheeten 2017 02 10
-   $this->widgetSchema['valid_label'] = new sfWidgetFormChoice(array(
-        'expanded' => true,
-        'choices'  => array(True => 'true', False => 'false'),
-        'default'=> true,
-       
-        ), array( 'style' => "display: inline-block;text-align:center; width: auto !important"));
-    $this->validatorSchema['valid_label'] = new sfValidatorString(array('required' => false));
 
     $this->mergePostValidator(new sfValidatorSchemaCompare('specimen_count_min', '<=', 'specimen_count_max',
       array(),
       array('invalid' => 'The min number ("%left_field%") must be lower or equal the max number ("%right_field%")' )
     ));
-    //ftheeten 2016 06 22
-	$this->mergePostValidator(new sfValidatorSchemaCompare('specimen_count_males_min', '<=', 'specimen_count_males_max',
-      array(),
-      array('invalid' => 'The min number ("%left_field%") must be lower or equal the max number ("%right_field%")' )
-    ));
-    $this->mergePostValidator(new sfValidatorSchemaCompare('specimen_count_females_min', '<=', 'specimen_count_females_max',
-      array(),
-      array('invalid' => 'The min number ("%left_field%") must be lower or equal the max number ("%right_field%")' )
-    ));
     
-     //ftheeten 2016 06 22
-	$this->mergePostValidator(new sfValidatorSchemaCompare('specimen_count_juveniles_min', '<=', 'specimen_count_juveniles_max',
-      array(),
-      array('invalid' => 'The min number ("%left_field%") must be lower or equal the max number ("%right_field%")' )
-    ));
-    
-    
-	//ftheeten 2015 01 16
+    //ftheeten 2015 01 16
 	$this->widgetSchema['unicity_check'] = new sfWidgetFormInputCheckBox();
 	$this->widgetSchema['unicity_check']->setAttributes(array('class'=>'class_unicity_check'));
 	$this->setDefault('unicity_check', true);
 	////ftheeten 2015 01 16
 	$this->validatorSchema['unicity_check'] = new sfValidatorPass();
     
+    /* ftheeten 2018 11 30*/
+    
+        
+        $this->validatorSchema['gtu_from_date'] = new fuzzyDateValidator(array(
+      'required' => false,
+      'from_date' => true,
+      'min' => $minDate,
+      'max' => $maxDate,
+      'empty_value' => $dateLowerBound,
+      'with_time' => true
+      ),
+      array('invalid' => 'Date provided is not valid',)
+    );
 
+    $this->validatorSchema['gtu_to_date'] = new fuzzyDateValidator(array(
+      'required' => false,
+      'from_date' => false,
+      'min' => $minDate,
+      'max' => $maxDate,
+      'empty_value' => $dateUpperBound,
+      'with_time' => true
+      ),
+      array('invalid' => 'Date provided is not valid',)
+    );
+    $this->validatorSchema->setPostValidator(
+      new sfValidatorAnd(array(
+        new sfValidatorSchemaCompare(
+          'gtu_from_date',
+          '<=',
+          'gtu_to_date',
+          array('throw_global_error' => true),
+          array('invalid'=>'The "begin" date cannot be above the "end" date.')
+        )
+      )
+    ));
+    /**/
   }
 
   public function forceContainerChoices()
   {
-    //ftheeten 2016 09 21
-    /*
     $this->widgetSchema['container_storage']->setOption('forced_choices',
       Doctrine::getTable('Specimens')->getDistinctContainerStorages($this->getObject()->getContainerType())
     );
@@ -663,11 +598,6 @@ class SpecimensForm extends BaseSpecimensForm
     $this->widgetSchema['sub_container_storage']->setOption('forced_choices',
       Doctrine::getTable('Specimens')->getDistinctSubContainerStorages($this->getObject()->getSubContainerType())
     );
-    */
-    foreach($this->arrayFormsStorage as $tmpForm)
-    {
-        $tmpForm->forceContainerChoices();
-    }
   }
 
   public function addIdentifications($num, $order_by=0, $obj=null)
@@ -734,8 +664,8 @@ class SpecimensForm extends BaseSpecimensForm
       'Tool' => array('collecting_tools_list'),
       'Method' => array('collecting_methods_list'),
 
-      //'Part' => array('specimen_part'),
-      /* 'Complete' => array(
+      'Part' => array('specimen_part'),
+      'Complete' => array(
       'specimen_status',
         'complete',
        ),
@@ -755,26 +685,18 @@ class SpecimensForm extends BaseSpecimensForm
         'sub_container',
         'sub_container_type',
         'sub_container_storage',
-      ),*/
+      ),
       'Count' => array(
         'accuracy',
         'specimen_count_min',
         'specimen_count_max',
-        //ftheeten 2016 06 22
-        'accuracy_males',
-        'specimen_count_males_min',
-        'specimen_count_males_max',
-        'accuracy_females',
-        'specimen_count_females_min',
-        'specimen_count_females_max',
-        'specimen_count_juveniles_min',
-        'specimen_count_juveniles_max',
       ),
       'Type' => array('type'),
       'Sex' => array('sex', 'state'),
       'Stage' => array('stage'),
       'Social' => array('social_status'),
       'Rock' => array('rock_form'),
+      /*ftheeten 2018 11 30*/
       'GtuDate' => array(
         'gtu_from_date',
         'gtu_from_to',
@@ -861,11 +783,9 @@ class SpecimensForm extends BaseSpecimensForm
      * test if the widget is on screen by testing a flag field present on the concerned widget
      * If widget is not on screen, remove the field from list of fields to be bound, and than potentially saved
     */
-	
-	
-	//ftheeten 2015 03 11 ('pass collection id to code form')
+    	//ftheeten 2015 03 11 ('pass collection id to code form')
 	sfContext::getInstance()->getUser()->setAttribute("collection_for_insertion", $taintedValues['collection_ref'] );
-	
+    
     if(!isset($taintedValues['ident']))
     {
       $this->offsetUnset('Identifications');
@@ -944,6 +864,7 @@ class SpecimensForm extends BaseSpecimensForm
     }
     else
       $this->loadEmbedTools();
+
      //ftheeten 2016 11 04 workaround as the widget control is not unsetted when empty
     if(!isset($taintedValues['coll_methods'])||array_key_exists('collecting_methods_list',$taintedValues )===false)
     {
@@ -953,12 +874,11 @@ class SpecimensForm extends BaseSpecimensForm
     }
     else
       $this->loadEmbedMethods();
-      
+   
     $this->bindEmbed('Biblio', 'addBiblio' , $taintedValues);
     $this->bindEmbed('Collectors', 'addCollectors' , $taintedValues);
     $this->bindEmbed('Donators', 'addDonators' , $taintedValues);
-	
-	//ftheeten hack to pass the unicity check setting to the "code" embedded subform
+    //ftheeten hack to pass the unicity check setting to the "code" embedded subform
 	//via a session variable 2015 01 19
 	sfContext::getInstance()->getUser()->setAttribute("unicity_check_in_session", "off");
 	if(isset($taintedValues['unicity_check']))
@@ -968,11 +888,9 @@ class SpecimensForm extends BaseSpecimensForm
 				sfContext::getInstance()->getUser()->setAttribute("unicity_check_in_session", "on");
 		}
 	}
-	
+    
     $this->bindEmbed('Codes', 'addCodes' , $taintedValues);
     $this->bindEmbed('Comments', 'addComments' , $taintedValues);
-    #ftheeten 2016 06 30
-    $this->bindEmbed('Ecology', 'addEcology' , $taintedValues);
     $this->bindEmbed('ExtLinks', 'addExtLinks' , $taintedValues);
     $this->bindEmbed('RelatedFiles', 'addRelatedFiles' , $taintedValues);
     $this->bindEmbed('SpecimensRelationships', 'addSpecimensRelationships' , $taintedValues);
@@ -1001,8 +919,6 @@ class SpecimensForm extends BaseSpecimensForm
         $taintedValues['institution_ref'] = sfConfig::get('dw_defaultInstitutionRef');
       }
     }
-    //ftheeten 2016 09 21
-    $this->bindEmbed('StorageParts', 'addStorageParts' , $taintedValues);
     parent::bind($taintedValues, $taintedFiles);
   }
 
@@ -1026,25 +942,7 @@ class SpecimensForm extends BaseSpecimensForm
     $options = array('referenced_relation' => 'specimens', 'record_id' => $this->getObject()->getId());
     $this->attachEmbedRecord('Comments', new CommentsSubForm(DarwinTable::newObjectFromArray('Comments',$options)), $num);
   }
-  
-  //ftheeten 2016 06 12
-  public function addEcology($num, $values, $order_by=0)
-  {
-    $options = array('referenced_relation' => 'specimens', 'notion_concerned'=> "ecology", 'record_id' => $this->getObject()->getId());
-    $this->attachEmbedRecord('Ecology', new EcologySubForm(DarwinTable::newObjectFromArray('Ecology',$options)), $num);
-  }
 
-  //ftheeten 2016 08 24    
-  public function addStorageParts($num, $values, $order_by=0)
-  {
-        $options = array( 'specimen_ref' => $this->getObject()->getId());
-        $tmpForm=new StoragePartsSubForm(DarwinTable::newObjectFromArray('StorageParts',$options));
-        $this->arrayFormsStorage[$num]=$tmpForm;
-        $this->attachEmbedRecord('StorageParts', $tmpForm, $num);
-      //  $options = array('referenced_relation' => 'specimens', 'notion_concerned'=> "ecology", 'record_id' => $this->getObject()->getId());
-    //$this->attachEmbedRecord('Ecology', new EcologySubForm(DarwinTable::newObjectFromArray('Ecology',$options)), $num);
-  }  
-  
   public function addBiblio($num, $values, $order_by=0)
   {
     $options = array('referenced_relation' => 'specimens', 'bibliography_ref' => $values['bibliography_ref'], 'record_id' => $this->getObject()->getId());
@@ -1065,8 +963,7 @@ class SpecimensForm extends BaseSpecimensForm
     $this->attachEmbedRecord('Donators', new PeopleAssociationsForm(DarwinTable::newObjectFromArray('CataloguePeople',$options)), $num);
   }
 
-  //ftheeten 2015 10 12 add DirectLink (when new identification of specimen, values are already in the form)
-  public function addCodes($num, $values, $order_by=0, $directLink=FALSE)
+  public function addCodes($num, $values, $order_by=0)
   {
     $options = array('referenced_relation' => 'specimens', 'record_id' => $this->getObject()->getId());
     if(isset($values['collection_ref']))
@@ -1074,33 +971,22 @@ class SpecimensForm extends BaseSpecimensForm
     else
       $col = $this->getObject()->getCollectionRef();
 
-	 //added ftheeten 2015 12 10 (to copy an already existing code 	
-	if($directLink===TRUE)
-	{
-		    $options['code_prefix'] =  $values['code_prefix'];
-			$options['code_prefix_separator'] = $values['code_prefix_separator'];
-			$options['code'] = $values['code'] ;
-			$options['code_suffix'] = $values['code_suffix'];
-			$options['code_suffix_separator'] = $values['code_suffix_separator'];
-	}
-	else
-	{
-		if($col != '') {
-			
-		
-		  $collection = Doctrine::getTable('Collections')->find($col);
-		  if($collection)
-		  {
-			$options['code_prefix'] = $collection->getCodePrefix();
-			$options['code_prefix_separator'] = $collection->getCodePrefixSeparator();
-			if($collection->getCodeAutoIncrement())
-			  $options['code'] = $collection->getCodeLastValue() + 1 ;
-			$options['code_suffix'] = $collection->getCodeSuffix();
-			$options['code_suffix_separator'] = $collection->getCodeSuffixSeparator();
-		  }
-		}
-	}
-    $this->attachEmbedRecord('Codes', new CodesForm(DarwinTable::newObjectFromArray('Codes',$options), $options), $num);
+    if($col != '') {
+      $collections = Doctrine::getTable('Collections');
+      $collection = $collections->findOneById($col);
+      if($collection)
+      {
+        $options['code_prefix'] = $collection->getCodePrefix();
+        $options['code_prefix_separator'] = $collection->getCodePrefixSeparator();
+        if($collection->getCodeAutoIncrement() && (empty($values['code']) || $values['code'] == ''))
+          $options['code'] = $collections->getAndUpdateLastCode($collection->getId());
+        elseif (!empty($values['code']) && $values['code'] != '')
+          $options['code'] = $values['code'];
+        $options['code_suffix'] = $collection->getCodeSuffix();
+        $options['code_suffix_separator'] = $collection->getCodeSuffixSeparator();
+      }
+    }
+    $this->attachEmbedRecord('Codes', new CodesForm(DarwinTable::newObjectFromArray('Codes',$options)), $num);
   }
 
   public function addExtLinks($num, $obj=null)
@@ -1123,10 +1009,7 @@ class SpecimensForm extends BaseSpecimensForm
     if( $emFieldName =='Codes' )
       return Doctrine::getTable('Codes')->getCodesRelated('specimens', $record_id);
     if( $emFieldName =='Comments' )
-      return Doctrine::getTable('Comments')->findForTableByNotion('specimens', $record_id,'ecology', 'different_from');
-    // ftheeten 2016 06 30
-    if( $emFieldName =='Ecology' )
-      return Doctrine::getTable('Ecology')->findForTableByNotion('specimens', $record_id,'ecology');
+      return Doctrine::getTable('Comments')->findForTable('specimens', $record_id);
     if( $emFieldName =='ExtLinks' )
       return Doctrine::getTable('ExtLinks')->findForTable('specimens', $record_id);
     if( $emFieldName =='RelatedFiles' )
@@ -1135,9 +1018,6 @@ class SpecimensForm extends BaseSpecimensForm
       return Doctrine::getTable('SpecimensRelationships')->findBySpecimenRef($record_id);
     if( $emFieldName =='Insurances' )
       return Doctrine::getTable('Insurances')->findForTable('specimens', $record_id);
-    // ftheeten 2016 09 21
-     if( $emFieldName =='StorageParts' )
-      return Doctrine::getTable('StorageParts')->findBySpecimenRef($record_id);
   }
 
   public function getEmbedRelationForm($emFieldName, $values)
@@ -1150,9 +1030,6 @@ class SpecimensForm extends BaseSpecimensForm
       return new CodesForm($values);
     if( $emFieldName =='Comments' )
       return new CommentsSubForm($values);
-    //ftheeten 2016 06 30
-    if( $emFieldName =='Ecology' )
-      return new EcologySubForm($values);
     if( $emFieldName =='ExtLinks' )
       return new ExtLinksForm($values);
     if( $emFieldName =='RelatedFiles' )
@@ -1161,9 +1038,6 @@ class SpecimensForm extends BaseSpecimensForm
       return new SpecimensRelationshipsForm($values);
     if( $emFieldName =='Insurances' )
       return new InsurancesSubForm($values);
-    //ftheeten 2016 08 11
-     if( $emFieldName =='StorageParts' )
-      return new StoragePartsSubForm($values);
   }
 
   public function duplicate($id)
@@ -1203,23 +1077,13 @@ class SpecimensForm extends BaseSpecimensForm
     }
 
     // reembed duplicated comment
-    $Comments = Doctrine::getTable('Comments')->findForTableByNotion('specimens', $id, 'ecology', 'different_from') ;
+    $Comments = Doctrine::getTable('Comments')->findForTable('specimens', $id) ;
     foreach ($Comments as $key=>$val)
     {
       $comment = new Comments();
       $comment->fromArray($val->toArray());
       $form = new CommentsSubForm($comment);
       $this->attachEmbedRecord('Comments', $form, $key);
-    }
-    
-    //ftheeten 2016 06 30
-     $Ecologies = Doctrine::getTable('Ecology')->findForTableByNotion('specimens', $id, 'ecology') ;
-    foreach ($Ecologies as $key=>$val)
-    {
-      $ecology = new Ecology();
-      $ecology->fromArray($val->toArray());
-      $form = new EcologySubForm($ecology);
-      $this->attachEmbedRecord('Ecology', $form, $key);
     }
 
     // reembed duplicated external url
@@ -1251,16 +1115,6 @@ class SpecimensForm extends BaseSpecimensForm
       $form = new InsurancesSubForm($insurance);
       $this->attachEmbedRecord('Insurances', $form, $key);
     }
-    
-    //ftheeten 2016 08 11
-    $StorageParts = Doctrine::getTable('StorageParts')->findBySpecimenRef($id) ;
-    foreach ($StorageParts as $key=>$val)
-    {
-      $parts = new StorageParts() ;
-      $parts->fromArray($val->toArray());
-      $form = new StoragePartsSubForm($parts);
-      $this->attachEmbedRecord('StorageParts', $form, $key);
-    }
   }
 
   public function saveEmbeddedForms($con = null, $forms = null)
@@ -1270,16 +1124,12 @@ class SpecimensForm extends BaseSpecimensForm
     $this->saveEmbed('Donators', 'people_ref', $forms, array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
     $this->saveEmbed('Codes', 'code' ,$forms, array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
     $this->saveEmbed('Comments', 'comment' ,$forms, array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
-    //ftheeten 2016 06 30
-    $this->saveEmbed('Ecology', 'comment' ,$forms, array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
     $this->saveEmbed('ExtLinks', 'url' ,$forms, array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
     $this->saveEmbed('RelatedFiles', 'mime_type' ,$forms, array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
     $this->saveEmbed('SpecimensRelationships', 'unit_type' ,$forms, array('specimen_ref' => $this->getObject()->getId()));
     $this->saveEmbed('Insurances', 'insurance_value' ,$forms, array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
-    //ftheeten 2016 08 11
-   $this->saveEmbed('StorageParts', 'check' ,$forms, array('specimen_ref' => $this->getObject()->getId()));
-   
-   if (null === $forms && $this->getValue('ident'))
+
+    if (null === $forms && $this->getValue('ident'))
     {
       $value = $this->getValue('newIdentification');
       foreach($this->embeddedForms['newIdentification']->getEmbeddedForms() as $name => $form)
@@ -1340,9 +1190,36 @@ class SpecimensForm extends BaseSpecimensForm
         }
       }
     }
+     //ftheeten 2019 01 18
+    $form_vals = $this->getTaintedValues();
+    
+    print("try to save");
+    if(array_key_exists('timestamp', $form_vals))
+    {
+        print("TIMESTAMP !!!!");
+        if(isset($_SESSION["TEMP_DARWIN_PROPERTY_".$form_vals['timestamp']]))
+        {
+             $tmp_array=$_SESSION["TEMP_DARWIN_PROPERTY_".$form_vals['timestamp']];
+             foreach($tmp_array as $elem=> $id_prop)
+             {
+                if(is_integer($id_prop))
+                {
+                    $prop=Doctrine::getTable('Properties')->findOneById($id_prop);
+                    if($prop)
+                    {
+                        $prop->setRecordId($this->getObject()->getId());
+                        $prop->save();
+                    }
+                }
+             }
+        
+            unset($_SESSION["TEMP_DARWIN_PROPERTY_".$form_vals['timestamp']]);
+        }
+    }
+    
     return parent::saveEmbeddedForms($con, $forms);
   }
-  
+
   //ftheeten 2016 11 04 (dirty, SQL should be in the form, bug preventing deletion of empty list via bind)
   public function deleteCollectingMethods()
   {
@@ -1364,17 +1241,14 @@ class SpecimensForm extends BaseSpecimensForm
         sfContext::getInstance()->getUser()->setAttribute('callbackTools',NULL );
         $this->setDefault('collecting_tools_list',NULL);
   }
-
+  
   public function getJavaScripts()
   {
     $javascripts=parent::getJavascripts();
     $javascripts[]='/js/jquery-datepicker-lang.js';
     $javascripts[]='/js/ui.complete.js';
-	
-	//ftheeten 2015 10 15 link inputmask library
-	//from https://github.com/RobinHerbots/jquery.inputmask 
-	$javascripts[]='/RobinHerbots-jquery.inputmask-3.1.63-38/js/jquery.inputmask.js';
-	$javascripts[]='/RobinHerbots-jquery.inputmask-3.1.63-38/js/inputmask.js';
+	  $javascripts[]='/js/jquery.inputmask.js';
+	  $javascripts[]='/js/inputmask.js';
     return $javascripts;
   }
 

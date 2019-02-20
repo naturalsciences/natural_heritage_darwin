@@ -23,6 +23,14 @@ abstract class BaseGtuForm extends BaseFormDoctrine
       'gtu_to_date'             => new sfWidgetFormTextarea(),
       'latitude'                => new sfWidgetFormInputText(),
       'longitude'               => new sfWidgetFormInputText(),
+      'location'                => new sfWidgetFormTextarea(),
+      'lat_long_accuracy'       => new sfWidgetFormInputText(),
+      'elevation'               => new sfWidgetFormInputText(),
+      'elevation_accuracy'      => new sfWidgetFormInputText(),
+      'import_ref'              => new sfWidgetFormInputText(),
+      'collector_refs'          => new sfWidgetFormTextarea(),
+      'expedition_refs'         => new sfWidgetFormTextarea(),
+      'collection_ref'          => new sfWidgetFormInputText(),
       'coordinates_source'      => new sfWidgetFormTextarea(),
       'latitude_dms_degree'     => new sfWidgetFormInputText(),
       'latitude_dms_minutes'    => new sfWidgetFormInputText(),
@@ -35,11 +43,6 @@ abstract class BaseGtuForm extends BaseFormDoctrine
       'latitude_utm'            => new sfWidgetFormInputText(),
       'longitude_utm'           => new sfWidgetFormInputText(),
       'utm_zone'                => new sfWidgetFormInputText(),
-      'location'                => new sfWidgetFormTextarea(),
-      'lat_long_accuracy'       => new sfWidgetFormInputText(),
-      'elevation'               => new sfWidgetFormInputText(),
-      'elevation_accuracy'      => new sfWidgetFormInputText(),
-      'elevation_unit'          => new sfWidgetFormTextarea(),
     ));
 
     $this->setValidators(array(
@@ -51,6 +54,14 @@ abstract class BaseGtuForm extends BaseFormDoctrine
       'gtu_to_date'             => new sfValidatorString(array('required' => false)),
       'latitude'                => new sfValidatorNumber(array('required' => false)),
       'longitude'               => new sfValidatorNumber(array('required' => false)),
+      'location'                => new sfValidatorString(array('required' => false)),
+      'lat_long_accuracy'       => new sfValidatorNumber(array('required' => false)),
+      'elevation'               => new sfValidatorNumber(array('required' => false)),
+      'elevation_accuracy'      => new sfValidatorNumber(array('required' => false)),
+      'import_ref'              => new sfValidatorInteger(array('required' => false)),
+      'collector_refs'          => new sfValidatorString(array('required' => false)),
+      'expedition_refs'         => new sfValidatorString(array('required' => false)),
+      'collection_ref'          => new sfValidatorInteger(array('required' => false)),
       'coordinates_source'      => new sfValidatorString(array('required' => false)),
       'latitude_dms_degree'     => new sfValidatorInteger(array('required' => false)),
       'latitude_dms_minutes'    => new sfValidatorNumber(array('required' => false)),
@@ -63,11 +74,6 @@ abstract class BaseGtuForm extends BaseFormDoctrine
       'latitude_utm'            => new sfValidatorNumber(array('required' => false)),
       'longitude_utm'           => new sfValidatorNumber(array('required' => false)),
       'utm_zone'                => new sfValidatorPass(array('required' => false)),
-      'location'                => new sfValidatorString(array('required' => false)),
-      'lat_long_accuracy'       => new sfValidatorNumber(array('required' => false)),
-      'elevation'               => new sfValidatorNumber(array('required' => false)),
-      'elevation_accuracy'      => new sfValidatorNumber(array('required' => false)),
-      'elevation_unit'          => new sfValidatorString(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('gtu[%s]');

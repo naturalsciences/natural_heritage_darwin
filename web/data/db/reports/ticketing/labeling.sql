@@ -69,3 +69,4 @@ CREATE INDEX idx_labeling_part ON specimens using gin (labeling_part_for_indexat
 CREATE INDEX idx_labeling_ig_num_numeric ON specimens(convert_to_integer(coalesce(ig_num, '-')));
 
 \i reports/ticketing/create_labeling_view.sql
+

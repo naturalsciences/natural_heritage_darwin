@@ -15,7 +15,6 @@ class IdentificationsTable extends DarwinTable
 
   public function getIdentificationsRelated($table='specimens', $specId)
   {
-        $conn_MGR = Doctrine_Manager::connection();
     $q = Doctrine_Query::create()->
          from('Identifications')->
          where('referenced_relation = ?', $table)->
@@ -23,8 +22,6 @@ class IdentificationsTable extends DarwinTable
          orderBy('order_by ASC, notion_date DESC, notion_concerned ASC');
     return $q->execute();
   }
-  
-
   
   public function getStagingIds($id)
   {

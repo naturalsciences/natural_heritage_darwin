@@ -93,12 +93,14 @@ class LoanItemsForm extends BaseLoanItemsForm
             'box_title' => $this->getI18N()->__('Choose Darwin item'),
             'button_class'=>'',
             'nullable'=> true,
+            'edit_route' => 'specimen/edit',
+            'edit_route_params' => array('id')
            ),
       array('class'=>'inline',
            )
      );
-    $this->widgetSchema->setLabels(array('from_date' => 'Expedition',
-                                         'to_date' => 'Return'
+    $this->widgetSchema->setLabels(array('from_date' => 'Expedition date',
+                                         'to_date' => 'Return date'
                                         )
                                   );
     $this->validatorSchema['specimen_ref'] = new sfValidatorInteger(array('required'=>false));

@@ -70,6 +70,12 @@ table#registration div.check_right
   margin-right: 0.4em;
 }
 
+.check_right
+{
+  padding-bottom: 0.3em ;
+  padding-top: 0.7em ;
+}
+
 .page
 {
   margin-left:auto;
@@ -831,6 +837,11 @@ a#register_link, a#login_lostpwd
 {
   color:#3390A1;
 }
+.lfloatin
+{
+   float:left;
+   margin-bottom: 2em ;
+}
 
 .tour
 {
@@ -1058,8 +1069,7 @@ div.files .file_title {
 /*   text-align: right; */
 }
 
-
-.datesNum em, #properties table em
+.datesNum em, #properties table em, .table_view table em, table.catalogue_table em
 {
   color:#C1C1C1;
   font-style:normal;

@@ -2,7 +2,7 @@ all:
   .general:
     salt: salt
     yearRangeMin: 1700
-    yearRangeMax:  <?php echo date('Y')+2 ."\n"; ?>
+    yearRangeMax:  2038
     dateUpperBound: '2038/12/31'
     dateLowerBound: '0001/01/01'
     yearUpperBound: '2038'
@@ -11,7 +11,13 @@ all:
     catalogueRecLimit: 200
     queryTimeout: 30000
     defaultInstitutionRef: ~
-
+    tagsDisplayLimit: 10
+    tagsLowerLimit: 4
+    tempFilePath: '/tmp/temp_file'
+    #rmca 2016 02 22
+    disableXSDValidation: true
+    domain_disable_menu: http://collections.naturalsciences.be/darwin/
+    
   mailer:
     sender: your_send_email@example.com
 

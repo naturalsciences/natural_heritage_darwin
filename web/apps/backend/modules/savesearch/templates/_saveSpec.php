@@ -1,4 +1,3 @@
-<!-- <label><?php //echo format_number_choice('[1] Save my pinned specimen|(1,+Inf] Save my %1% pinned specimens', array('%1%' =>  count($sf_user->getAllPinned())), count($sf_user->getAllPinned()) );?></label> -->
 <label><?php echo __('Save my pinned specimens');?></label>
 <select id="save_specs_choice">
     <option value="" selected="selected"></option>

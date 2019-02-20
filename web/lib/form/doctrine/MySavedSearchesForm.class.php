@@ -46,12 +46,11 @@ class MySavedSearchesForm extends BaseMySavedSearchesForm
     $this->validatorSchema['modification_date_time'] = new sfValidatorString(array('required' => false)) ;
     $this->validatorSchema['user_ref'] = new sfValidatorString(array('required' => false)) ;
     
-    //ftheeten 2016 06 08
+        //ftheeten 2016 06 08
     $this->widgetSchema['query_where'] = new sfWidgetFormInputText() ;
     $this->validatorSchema['query_where'] = new sfValidatorString(array('required' => false)) ;
     $this->widgetSchema['query_parameters'] = new sfWidgetFormInputText() ;
     $this->validatorSchema['query_parameters'] = new sfValidatorString(array('required' => false)) ;
-    
     
   }
   
@@ -87,7 +86,6 @@ class MySavedSearchesForm extends BaseMySavedSearchesForm
     $string_fields = implode('|',$values['visible_fields_in_result']) ;
     $this->getObject()->setModificationDateTime(date('d/m/Y H:i:s'));
     $this->getObject()->setVisibleFieldsInResult($string_fields) ;
-    
     //ftheeten 2016 06 08
     $this->setParamsToSaveQuery();
     $this->getObject()->save();
@@ -96,9 +94,7 @@ class MySavedSearchesForm extends BaseMySavedSearchesForm
     $this->cleanParamsToSaveQuery();
   }
   
-  
-  
-  //ftheeten 2016 06 08
+    //ftheeten 2016 06 08
   function setParamsToSaveQuery()
   {
     

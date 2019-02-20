@@ -1,0 +1,52 @@
+ <!--ftheeten 2018 11 29-->
+ <table class="display_temporal_information_<?php echo $rownum;?>">
+ <tbody id="temporal_information_<?php print($rownum); $edit=="true"?'':"";?>">
+  <?php if($form->hasError()): ?>
+  <tr>
+    <td colspan="7">
+      <?php echo $form->renderError();?>
+    </td>
+  </tr>
+  <?php else: ?>
+  <tr>
+        <tr>
+            <th>Date cluster <?php echo $rownum+1;?></th>
+        </tr>
+        <th><?php echo $form['from_date']->renderLabel() ?></th>
+        <td>
+          <div style="display:none"><?php echo $form['gtu_ref'] ?></div>
+          <?php echo $form['from_date']->renderError() ?>
+          <?php echo $form['from_date'] ?>
+         
+        </td>
+      </tr>
+      <tr>
+        <th class="top_aligned"><?php echo $form['to_date']->renderLabel() ?></th>
+        <td>
+          <?php echo $form['to_date']->renderError() ?>
+          <?php echo $form['to_date'] ?>
+        </td>
+        <td>
+            <td class="widget_row_delete">
+                <?php echo image_tag('remove.png', 'alt=Delete class=clear_code id=clear_temporal_information_'.$rownum); ?>
+                <?php echo $form->renderHiddenFields() ?>
+            </td> 
+        </td>
+      </tr>
+     
+  <?php endif;?>
+ </tbody>
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $("#clear_temporal_information_<?php echo $rownum;?>").click( function()
+      {     
+             $('.display_temporal_information_<?php echo $rownum;?>').empty();
+	        //$('.display_temporal_information_<?php echo $rownum;?>').hide();
+            //$("#count_gtu_date").val(parseInt($("#count_gtu_date").val())-1);
+	      
+      });
+    });
+  </script>
+  </table>  

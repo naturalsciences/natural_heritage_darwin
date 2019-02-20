@@ -367,10 +367,10 @@ CREATE TABLE public.identifications_abdc as
   CASE WHEN notion_date_mask = 0 THEN current_timestamp ELSE notion_date END as notion_date,
   determination_status,
   false as is_current,
-  notion_concerned,
+  CASE when notion_concerned = null THEN 'determination' ELSE notion_concerned END as notion_concerned,
   c.id as old_identification_id
   FROM  darwin2.specimens s
-  INNER JOIN darwin2.identifications as c ON s.id = c.record_id  AND c.referenced_relation = 'specimens'
+  LEFT JOIN darwin2.identifications as c ON s.id = c.record_id  AND c.referenced_relation = 'specimens'
 
 );
 
@@ -580,6 +580,145 @@ insert into public.identifications_abdc
     WHERE NOT EXISTS( SELECT 1 FROM public.identifications_abdc i INNER JOIN mineral_identified mi ON i.id = mi.identification_ref WHERE i.specimen_id = s.id AND mi.mineral_ref = s.mineral_ref)
       AND s.mineral_ref is not null
       AND s.mineral_ref != 0
+);
+
+insert into public.taxon_identified(id, identification_ref, taxon_name, taxon_ref, taxon_parent_ref, 
+            taxon_level_name, authorteam, authorteamparenthesis, authorteamandyear, 
+            authorteamoriginalandyear, authorteamparenthesisandyear, combinationauthorteamandyear, 
+            cultivargroupname, cultivarname, botanygenusormonomial, zoogenusormonomial, 
+            bacterialgenusormonomial, zoosubgenus, bacterialsubgenus, firstepithet, 
+            zoospeciesepithet, bacterialspeciesepithet, infraspecificepithet, 
+            breed, zoosubspeciesepithet, bacterialsubspeciesepithet, subgenusauthorandyear, 
+            namedindividual)
+(
+  SELECT
+  nextval('public.taxon_identified_id_seq') as id,
+  i.id as identification_ref,
+  s.taxon_name as taxon_name,
+  s.taxon_ref as taxon_ref,
+  s.taxon_parent_ref as taxon_parent_ref,
+  s.taxon_level_name as taxon_level_name,
+  (SELECT keyword FROM darwin2.classification_keywords where
+        referenced_relation = 'taxonomy' and record_id = s.taxon_ref AND keyword_type='AuthorTeam' AND
+        exists (select 1 from taxonomy where id = s.taxon_ref and path like '/-1/141538/%')
+   LIMIT 1
+  ) as AuthorTeam,
+  (SELECT keyword FROM darwin2.classification_keywords where
+        referenced_relation = 'taxonomy' and record_id = s.taxon_ref AND keyword_type='AuthorTeamParenthesis' AND
+        exists (select 1 from taxonomy where id = s.taxon_ref and path like '/-1/141538/%')
+   LIMIT 1
+  ) as AuthorTeamParenthesis,
+  (SELECT keyword FROM darwin2.classification_keywords where
+        referenced_relation = 'taxonomy' and record_id = s.taxon_ref AND keyword_type='AuthorTeamAndYear' AND
+        exists (select 1 from taxonomy where id = s.taxon_ref and path like '/-1/141541/%')
+   LIMIT 1
+  ) as AuthorTeamAndYear,
+  (SELECT keyword FROM darwin2.classification_keywords where
+        referenced_relation = 'taxonomy' and record_id = s.taxon_ref AND keyword_type='AuthorTeamOriginalAndYear' AND
+        exists (select 1 from taxonomy where id = s.taxon_ref and path like '/-1/1/%')
+   LIMIT 1
+  ) as AuthorTeamOriginalAndYear,
+  (SELECT keyword FROM darwin2.classification_keywords where
+        referenced_relation = 'taxonomy' and record_id = s.taxon_ref AND keyword_type='AuthorTeamParenthesisAndYear' AND
+        exists (select 1 from taxonomy where id = s.taxon_ref and path like '/-1/1/%')
+   LIMIT 1
+  ) as AuthorTeamParenthesisAndYear,
+  (SELECT keyword FROM darwin2.classification_keywords where
+        referenced_relation = 'taxonomy' and record_id = s.taxon_ref AND keyword_type='CombinationAuthorTeamAndYear' AND
+        exists (select 1 from taxonomy where id = s.taxon_ref and path like '/-1/1/%')
+   LIMIT 1
+  ) as CombinationAuthorTeamAndYear,
+  (SELECT keyword FROM darwin2.classification_keywords where
+        referenced_relation = 'taxonomy' and record_id = s.taxon_ref AND keyword_type='CultivarGroupName' AND
+        exists (select 1 from taxonomy where id = s.taxon_ref and path like '/-1/141538/%')
+   LIMIT 1
+  ) as CultivarGroupName,
+  (SELECT keyword FROM darwin2.classification_keywords where
+        referenced_relation = 'taxonomy' and record_id = s.taxon_ref AND keyword_type='CultivarName' AND
+        exists (select 1 from taxonomy where id = s.taxon_ref and path like '/-1/141538/%')
+   LIMIT 1
+  ) as CultivarName,
+  (SELECT keyword FROM darwin2.classification_keywords where
+        referenced_relation = 'taxonomy' and record_id = s.taxon_ref AND keyword_type='GenusOrMonomial' AND
+        exists (select 1 from taxonomy where id = s.taxon_ref and path like '/-1/141538/%')
+   LIMIT 1
+  ) as BotanyGenusOrMonomial,
+  (SELECT keyword FROM darwin2.classification_keywords where
+        referenced_relation = 'taxonomy' and record_id = s.taxon_ref AND keyword_type='GenusOrMonomial' AND
+        exists (select 1 from taxonomy where id = s.taxon_ref and path like '/-1/1/%')
+   LIMIT 1
+  ) as ZooGenusOrMonomial,
+  (SELECT keyword FROM darwin2.classification_keywords where
+        referenced_relation = 'taxonomy' and record_id = s.taxon_ref AND keyword_type='GenusOrMonomial' AND
+        exists (select 1 from taxonomy where id = s.taxon_ref and path like '/-1/141541/%')
+   LIMIT 1
+  ) as BacterialGenusOrMonomial,
+  (SELECT keyword FROM darwin2.classification_keywords where
+        referenced_relation = 'taxonomy' and record_id = s.taxon_ref AND keyword_type='Subgenus' AND
+        exists (select 1 from taxonomy where id = s.taxon_ref and path like '/-1/1/%')
+   LIMIT 1
+  ) as ZooSubgenus,
+  (SELECT keyword FROM darwin2.classification_keywords where
+        referenced_relation = 'taxonomy' and record_id = s.taxon_ref AND keyword_type='Subgenus' AND
+        exists (select 1 from taxonomy where id = s.taxon_ref and path like '/-1/141541/%')
+   LIMIT 1
+  ) as BacterialSubgenus,
+  (SELECT keyword FROM darwin2.classification_keywords where
+        referenced_relation = 'taxonomy' and record_id = s.taxon_ref AND keyword_type='FirstEpithet' AND
+        exists (select 1 from taxonomy where id = s.taxon_ref and path like '/-1/141538/%')
+   LIMIT 1
+  ) as FirstEpithet,
+  (SELECT keyword FROM darwin2.classification_keywords where
+        referenced_relation = 'taxonomy' and record_id = s.taxon_ref AND keyword_type='SpeciesEpithet' AND
+        exists (select 1 from taxonomy where id = s.taxon_ref and path like '/-1/1/%')
+   LIMIT 1
+  ) as ZooSpeciesEpithet,
+  (SELECT keyword FROM darwin2.classification_keywords where
+        referenced_relation = 'taxonomy' and record_id = s.taxon_ref AND keyword_type='SpeciesEpithet' AND
+        exists (select 1 from taxonomy where id = s.taxon_ref and path like '/-1/141541/%')
+   LIMIT 1
+  ) as BacterialSpeciesEpithet,
+  (SELECT keyword FROM darwin2.classification_keywords where
+        referenced_relation = 'taxonomy' and record_id = s.taxon_ref AND keyword_type='InfraspecificEpithet' AND
+        exists (select 1 from taxonomy where id = s.taxon_ref and path like '/-1/141538/%')
+   LIMIT 1
+  ) as InfraspecificEpithet,
+  (SELECT keyword FROM darwin2.classification_keywords where
+        referenced_relation = 'taxonomy' and record_id = s.taxon_ref AND keyword_type='Breed' AND
+        exists (select 1 from taxonomy where id = s.taxon_ref and path like '/-1/1/%')
+   LIMIT 1
+  ) as Breed,
+  (SELECT keyword FROM darwin2.classification_keywords where
+        referenced_relation = 'taxonomy' and record_id = s.taxon_ref AND keyword_type='SubspeciesEpithet' AND
+        exists (select 1 from taxonomy where id = s.taxon_ref and path like '/-1/1/%')
+   LIMIT 1
+  ) as ZooSubspeciesEpithet,
+  (SELECT keyword FROM darwin2.classification_keywords where
+        referenced_relation = 'taxonomy' and record_id = s.taxon_ref AND keyword_type='SubspeciesEpithet' AND
+        exists (select 1 from taxonomy where id = s.taxon_ref and path like '/-1/141541/%')
+   LIMIT 1
+  ) as BacterialSubspeciesEpithet,
+  (SELECT keyword FROM darwin2.classification_keywords where
+        referenced_relation = 'taxonomy' and record_id = s.taxon_ref AND keyword_type='SubgenusAuthorAndYear' AND
+        exists (select 1 from taxonomy where id = s.taxon_ref and path like '/-1/141541/%')
+   LIMIT 1
+  ) as SubgenusAuthorAndYear,
+  (SELECT keyword FROM darwin2.classification_keywords where
+        referenced_relation = 'taxonomy' and record_id = s.taxon_ref AND keyword_type='NamedIndividual' AND
+        exists (select 1 from taxonomy where id = s.taxon_ref and path like '/-1/1/%')
+   LIMIT 1
+  ) as NamedIndividual
+  FROM public.identifications_abdc i
+    INNER JOIN darwin2.specimens s ON  s.id = i.specimen_id
+    WHERE
+      i.specimen_id in(
+        select
+          s.id as specimen_id
+          FROM  darwin2.specimens  s
+          WHERE NOT EXISTS( SELECT 1 FROM identifications_abdc i INNER JOIN taxon_identified ti ON i.id = ti.identification_ref WHERE i.specimen_id = s.id AND ti.taxon_ref = s.taxon_ref)
+          AND s.taxon_ref is not null
+          AND s.taxon_ref != 0
+      )
 );
 
 insert into mineral_identified
