@@ -56,9 +56,9 @@ th, td {
          <td><?php print($item['name_cluster']);?></td>
          <td><?php print($item['imported'] ? "TRUE" : "FALSE");?></td>
          <td><?php print($text);?></td>
-         <td><?php if($text=="conflict_in_reference_taxonomies"):?><table><tr><td><b>Staging hierarchy</b><br/><?php print($item['staging_hierarchy']);?></td></tr>
+         <td><table><tr><td><b>Staging hierarchy</b><br/><?php print($item['staging_hierarchy']);?></td></tr>
                     <tr><td><b>Darwin hierarchy</b><br/><?php print($item['darwin_hierarchy']);?></td></tr>
-         </table><?php endif;?></td>
+         </table></td>
           <td>
                 <?php if(!$item['imported']):?>
                     <a target="_blank" href="<?php print(url_for("taxonomy/new"));?>?taxonomy[name]=<?php print($item['name']);?>&taxonomy[level_ref]=<?php print($item['level_ref']);?>&taxonomy[metadata_ref]=<?php print($metadata_ref);?>"><?php print(__("Create taxon"));?></a>

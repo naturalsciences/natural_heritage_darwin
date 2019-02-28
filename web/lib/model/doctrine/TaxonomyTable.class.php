@@ -190,14 +190,25 @@ WHERE taxonomy_level_ref= min_taxonomy_level_ref";
   }
   
   //ftheeten 2018 06 06
-   public static function getTaxaByLevel( $level)
+   public static function getTaxaByLevel( $level, $with_taxon_ref=FALSE)
   {
         $returned=Array();
-		$q = Doctrine_Query::create()
-		  ->from('Taxonomy t')
-		  ->where("level_ref = ?", $level)
-		  ->orderBy("t.name");
-		
+        if($with_taxon_ref)
+        {
+            $q = Doctrine_Query::create()
+            ->select('t.*, m.taxonomy_name as taxonomy_name')
+            ->from('Taxonomy t')
+            ->leftJoin('t.TaxonomyMetadata m on t.metadata_ref=m.id')            
+            ->where("level_ref = ?", $level)
+            ->orderBy("t.name");
+        }
+        else
+        {
+            $q = Doctrine_Query::create()
+            ->from('Taxonomy t')
+            ->where("level_ref = ?", $level)
+            ->orderBy("t.name");
+		}
 		$res= $q->execute();
 		if($addAll===TRUE)
 		{
@@ -205,8 +216,15 @@ WHERE taxonomy_level_ref= min_taxonomy_level_ref";
 		}
 		foreach($res as $row)
 		{
-		  $returned[$row->getId()] = $row->getName();
-		}
+          if($with_taxon_ref)
+          {
+            $returned[$row->getId()] = $row->getName()." (".$row->getTaxonomyName().")";
+          }
+          else
+          {
+            $returned[$row->getId()] = $row->getName();
+          }
+        }
 		return $returned;
   }
   

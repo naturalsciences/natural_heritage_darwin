@@ -66,6 +66,7 @@
  * @property string $sampling_method
  * @property string $sampling_fixation
  * @property boolean $imported
+ * @property string $import_exception
  * @property Imports $Import
  * @property Doctrine_Collection $StagingGtuTagGroups
  * 
@@ -130,6 +131,7 @@
  * @method string              getSamplingMethod()                 Returns the current record's "sampling_method" value
  * @method string              getSamplingFixation()               Returns the current record's "sampling_fixation" value
  * @method boolean             getImported()                       Returns the current record's "imported" value
+ * @method string              getImportException()                Returns the current record's "import_exception" value
  * @method Imports             getImport()                         Returns the current record's "Import" value
  * @method Doctrine_Collection getStagingGtuTagGroups()            Returns the current record's "StagingGtuTagGroups" collection
  * @method StagingGtu          setId()                             Sets the current record's "id" value
@@ -193,6 +195,7 @@
  * @method StagingGtu          setSamplingMethod()                 Sets the current record's "sampling_method" value
  * @method StagingGtu          setSamplingFixation()               Sets the current record's "sampling_fixation" value
  * @method StagingGtu          setImported()                       Sets the current record's "imported" value
+ * @method StagingGtu          setImportException()                Sets the current record's "import_exception" value
  * @method StagingGtu          setImport()                         Sets the current record's "Import" value
  * @method StagingGtu          setStagingGtuTagGroups()            Sets the current record's "StagingGtuTagGroups" collection
  * 
@@ -415,6 +418,9 @@ abstract class BaseStagingGtu extends DarwinModel
              ));
         $this->hasColumn('imported', 'boolean', null, array(
              'type' => 'boolean',
+             ));
+        $this->hasColumn('import_exception', 'string', null, array(
+             'type' => 'string',
              ));
     }
 

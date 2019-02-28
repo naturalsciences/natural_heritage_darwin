@@ -22,4 +22,33 @@ class StagingGtuTable extends DarwinTable
     return $response;     
     
     }
+    
+    public function getImportData($import_ref)
+    {
+        $response = Doctrine_Query::create()
+               ->select()
+               ->from('StagingGtu')
+               ->where('import_ref= ?', $import_ref)              
+				->orderBy('id')			   
+               ->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
+
+    return $response;     
+    
+    }
+    
+    
+    //2019 02 27
+    public function countExceptionMessages($import_ref)
+	{
+		$conn_MGR = Doctrine_Manager::connection();
+		$conn = $conn_MGR->getDbh();
+			
+			
+		$params[':import_ref'] = $import_ref;
+		$sql =" SELECT count(*) as count, import_exception FROM staging_gtu WHERE import_ref=:import_ref GROUP BY import_exception ORDER BY import_exception;";
+		$statement = $conn->prepare($sql);
+		$statement->execute($params);
+		$results = $statement->fetchAll(PDO::FETCH_ASSOC);
+		return $results;
+	}
 }

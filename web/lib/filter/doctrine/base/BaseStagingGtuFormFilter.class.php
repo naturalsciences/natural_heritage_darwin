@@ -73,6 +73,7 @@ abstract class BaseStagingGtuFormFilter extends BaseFormFilterDoctrine
       'sampling_method'                => new sfWidgetFormFilterInput(),
       'sampling_fixation'              => new sfWidgetFormFilterInput(),
       'imported'                       => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
+      'import_exception'               => new sfWidgetFormFilterInput(),
     ));
 
     $this->setValidators(array(
@@ -136,6 +137,7 @@ abstract class BaseStagingGtuFormFilter extends BaseFormFilterDoctrine
       'sampling_method'                => new sfValidatorPass(array('required' => false)),
       'sampling_fixation'              => new sfValidatorPass(array('required' => false)),
       'imported'                       => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
+      'import_exception'               => new sfValidatorPass(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('staging_gtu_filters[%s]');
@@ -216,6 +218,7 @@ abstract class BaseStagingGtuFormFilter extends BaseFormFilterDoctrine
       'sampling_method'                => 'Text',
       'sampling_fixation'              => 'Text',
       'imported'                       => 'Boolean',
+      'import_exception'               => 'Text',
     );
   }
 }

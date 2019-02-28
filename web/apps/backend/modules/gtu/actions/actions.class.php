@@ -48,6 +48,9 @@ class gtuActions extends DarwinActions
 
       if ($this->form->isValid())
       {
+        // 2019 02 28
+        $this->referer = $request->getReferer();
+      
         $query = $this->form->getQuery();
         if($request->getParameter('format') == 'json' || $request->getParameter('format') == 'text')
         {

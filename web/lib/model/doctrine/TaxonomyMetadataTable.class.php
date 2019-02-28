@@ -17,7 +17,7 @@ class TaxonomyMetadataTable extends Doctrine_Table
         return Doctrine_Core::getTable('TaxonomyMetadata');
     }
     
-  public static function getAllTaxonomicMetadata($orderBy='taxonomy_name ASC', $addAll=false)
+  public static function getAllTaxonomicMetadata($orderBy='taxonomy_name ASC', $addAll=false, $addReferenceInformation=false)
   {
     $returned=Array();
     $q = Doctrine_Query::create()
@@ -31,7 +31,12 @@ class TaxonomyMetadataTable extends Doctrine_Table
 	}
     foreach($res as $row)
     {
-      $returned[$row->getId()] = $row->getTaxonomyName();
+      $name= $row->getTaxonomyName();
+      if($addReferenceInformation and $row->getIsReferenceTaxonomy())
+      {
+        $name.=" (is reference)";
+      }
+      $returned[$row->getId()] = $name;
     }
     return $returned;
   }

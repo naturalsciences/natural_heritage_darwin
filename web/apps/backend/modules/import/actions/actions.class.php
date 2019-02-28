@@ -145,10 +145,22 @@ class importActions extends DarwinActions
     if(!$this->getUser()->isAtLeast(Users::ENCODER)) $this->forwardToSecureAction();
     // Initialization of the import form
     if($request->isMethod('post')) {
-      $this->type = $request->getParameter('imports')[ 'format' ];
+          $this->type = $request->getParameter('imports')[ 'format' ];
     }
     else {
-      $this->type = $request->getParameter('format') == 'taxon' ? 'taxon' : 'abcd';
+      //$this->type = $request->getParameter('format') == 'taxon' ? 'taxon' : 'abcd';
+      if($request->getParameter('format') == 'taxon')
+      {
+        $this->type="taxon";
+      }
+      elseif($request->getParameter('format') == 'locality')
+      {
+        $this->type="locality";        
+      }
+      else
+      {
+        $this->type="abcd";
+      }
     }
     $this->form = new ImportsForm(null,array('format' => $this->type));
     if($request->isMethod('post'))
@@ -357,6 +369,10 @@ class importActions extends DarwinActions
 					{
 						$this->redirect('import/indexTaxon');
 					}
+                    elseif($importTmp->getFormat()=="locality")
+					{
+						$this->redirect('import/indexLocalities');
+					}
 					else
 					{
 						$this->redirect('import/index');
@@ -518,7 +534,7 @@ EOF
   }
 
  //ftheeten 2018 08 06
-  public function executeLoadGtuInStaging(sfWebRequest $request)
+  public function executeLoadGtuInDB(sfWebRequest $request)
   {
 	  $idImport=$request->getParameter("id");
 	  $currentDir=getcwd();
@@ -532,11 +548,44 @@ EOF
 	  $this->redirect('import/indexLocalities');
   }
   
-   public function executeViewUnimported(sfWebRequest $request)
+   //ftheeten 2019 02 28
+  public function executeLoadSingleGtuInDB(sfWebRequest $request)
+  {
+	  $idStagingGtu=$request->getParameter("staging_gtu_id");
+	  $currentDir=getcwd();
+
+      chdir(sfconfig::get('sf_root_dir')); 
+  
+       $cmd='darwin:import-staging-gtu --id='.$idStagingGtu;          
+       exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+
+      chdir($currentDir);	 
+	  $this->redirect('import/indexLocalities');
+  }
+  
+  //2019 02 28
+  public function executeChangeStagingGtuCode(sfWebRequest $request)
+  {
+    $id_staging_gtu=$request->getParameter("staging_gtu_id");
+    $sampling_code=$request->getParameter("sampling_code");
+    if(is_numeric($id_staging_gtu) && strlen(trim($sampling_code))>0)
+    {
+        $staging_gtu=Doctrine::getTable("StagingGtu")->find($id_staging_gtu);
+        if( $staging_gtu)
+        {
+            $staging_gtu->setSamplingCode($sampling_code);
+            $staging_gtu->save();
+        }
+    }
+     $this->redirect('import/indexLocalities');
+  }
+  
+   public function executeViewUnimportedGtu(sfWebRequest $request)
   {
      $idImport=$request->getParameter("id");
      $this->id= $idImport;
-     $this->items = Doctrine::getTable("StagingGtu")->getNonimportedData($idImport);
+     $this->items = Doctrine::getTable("StagingGtu")->getImportData($idImport);
+      $this->stats= Doctrine::getTable("StagingGtu")->countExceptionMessages($idImport);
      $this->form = new ImportsLocalityForm(null,array('items' =>$this->items));
        
   } 
@@ -668,5 +717,6 @@ EOF
         
         
   }
+  
   
 }

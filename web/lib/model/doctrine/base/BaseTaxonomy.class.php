@@ -18,6 +18,7 @@
  * @property boolean $sensitive_info_withheld
  * @property Taxonomy $Parent
  * @property CatalogueLevels $Level
+ * @property TaxonomyMetadata $TaxonomyMetadata
  * @property Doctrine_Collection $Taxonomy
  * @property Doctrine_Collection $Specimens
  * @property Doctrine_Collection $SpecimensRelationships
@@ -36,6 +37,7 @@
  * @method boolean             getSensitiveInfoWithheld()   Returns the current record's "sensitive_info_withheld" value
  * @method Taxonomy            getParent()                  Returns the current record's "Parent" value
  * @method CatalogueLevels     getLevel()                   Returns the current record's "Level" value
+ * @method TaxonomyMetadata    getTaxonomyMetadata()        Returns the current record's "TaxonomyMetadata" value
  * @method Doctrine_Collection getTaxonomy()                Returns the current record's "Taxonomy" collection
  * @method Doctrine_Collection getSpecimens()               Returns the current record's "Specimens" collection
  * @method Doctrine_Collection getSpecimensRelationships()  Returns the current record's "SpecimensRelationships" collection
@@ -53,6 +55,7 @@
  * @method Taxonomy            setSensitiveInfoWithheld()   Sets the current record's "sensitive_info_withheld" value
  * @method Taxonomy            setParent()                  Sets the current record's "Parent" value
  * @method Taxonomy            setLevel()                   Sets the current record's "Level" value
+ * @method Taxonomy            setTaxonomyMetadata()        Sets the current record's "TaxonomyMetadata" value
  * @method Taxonomy            setTaxonomy()                Sets the current record's "Taxonomy" collection
  * @method Taxonomy            setSpecimens()               Sets the current record's "Specimens" collection
  * @method Taxonomy            setSpecimensRelationships()  Sets the current record's "SpecimensRelationships" collection
@@ -124,6 +127,10 @@ abstract class BaseTaxonomy extends DarwinModel
 
         $this->hasOne('CatalogueLevels as Level', array(
              'local' => 'level_ref',
+             'foreign' => 'id'));
+
+        $this->hasOne('TaxonomyMetadata', array(
+             'local' => 'metadata_ref',
              'foreign' => 'id'));
 
         $this->hasMany('Taxonomy', array(

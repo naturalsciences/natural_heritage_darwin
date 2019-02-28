@@ -163,7 +163,14 @@ function constructReportBaseUrl($name, $lang, $format){
         }
     }
     
-
+  //2019 02 27
+    
+  function hstore2array($param)
+  {
+        $param=html_entity_decode($param);
+        return json_decode('{' . str_replace('"=>"', '":"', $param) . '}', true);
+  }
+  
 
 ?>
 

@@ -24,7 +24,7 @@ abstract class BaseTaxonomyForm extends BaseFormDoctrine
       'parent_ref'              => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'add_empty' => true)),
       'extinct'                 => new sfWidgetFormInputCheckbox(),
       'is_reference_taxonomy'   => new sfWidgetFormInputCheckbox(),
-      'metadata_ref'            => new sfWidgetFormInputText(),
+      'metadata_ref'            => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('TaxonomyMetadata'), 'add_empty' => true)),
       'sensitive_info_withheld' => new sfWidgetFormInputCheckbox(),
     ));
 
@@ -38,7 +38,7 @@ abstract class BaseTaxonomyForm extends BaseFormDoctrine
       'parent_ref'              => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'required' => false)),
       'extinct'                 => new sfValidatorBoolean(array('required' => false)),
       'is_reference_taxonomy'   => new sfValidatorBoolean(array('required' => false)),
-      'metadata_ref'            => new sfValidatorInteger(array('required' => false)),
+      'metadata_ref'            => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('TaxonomyMetadata'), 'required' => false)),
       'sensitive_info_withheld' => new sfValidatorBoolean(array('required' => false)),
     ));
 

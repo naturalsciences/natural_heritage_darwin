@@ -76,6 +76,7 @@ abstract class BaseStagingGtuForm extends BaseFormDoctrine
       'sampling_method'                => new sfWidgetFormTextarea(),
       'sampling_fixation'              => new sfWidgetFormTextarea(),
       'imported'                       => new sfWidgetFormInputCheckbox(),
+      'import_exception'               => new sfWidgetFormTextarea(),
     ));
 
     $this->setValidators(array(
@@ -140,6 +141,7 @@ abstract class BaseStagingGtuForm extends BaseFormDoctrine
       'sampling_method'                => new sfValidatorString(array('required' => false)),
       'sampling_fixation'              => new sfValidatorString(array('required' => false)),
       'imported'                       => new sfValidatorBoolean(array('required' => false)),
+      'import_exception'               => new sfValidatorString(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('staging_gtu[%s]');

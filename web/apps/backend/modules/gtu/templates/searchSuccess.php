@@ -33,7 +33,7 @@
       <tbody>
         <?php foreach($items as $item):?>
           <tr class="rid_<?php echo $item->getId();?>">
-            <td class="top_aligned"><?php echo $item->getCode();?>
+            <td class="top_aligned gtu_code"><?php echo $item->getCode();?>
 			 
             <td class=""><?php echo $item->getName(ESC_RAW);?>
 			<!--ftheeten 2018 12 2-->
@@ -122,11 +122,12 @@
                             <?php if($is_choose):?>                             
                                  <br/><div  name="date_choose" class="result_choose"><?php echo __('Choose place and date');?></div>                                   
                             <?php endif;?>
-                            </li>
-                        
-                       
+                            </li>                   
                    <?php else:?>
                     <br/><div name="gtu_choose" class="result_choose"><?php echo __('Choose place without date');?></div>  
+                   <?php endif;?>
+                   <?php if(strpos($referer,"/staging/edit/id")):?>
+                    <br/><div name="gtu_choose" class="result_choose"><?php echo __('Choose place id');?></div>  
                    <?php endif;?>
 			</td>
 			</td>

@@ -15,27 +15,30 @@
  * @property string $source
  * @property string $url_website
  * @property string $url_webservice
+ * @property Doctrine_Collection $Taxonomy
  * 
- * @method integer          getId()                    Returns the current record's "id" value
- * @method string           getCreationDate()          Returns the current record's "creation_date" value
- * @method integer          getCreationDateMask()      Returns the current record's "creation_date_mask" value
- * @method integer          getImportRef()             Returns the current record's "import_ref" value
- * @method string           getTaxonomyName()          Returns the current record's "taxonomy_name" value
- * @method string           getDefinition()            Returns the current record's "definition" value
- * @method boolean          getIsReferenceTaxonomy()   Returns the current record's "is_reference_taxonomy" value
- * @method string           getSource()                Returns the current record's "source" value
- * @method string           getUrlWebsite()            Returns the current record's "url_website" value
- * @method string           getUrlWebservice()         Returns the current record's "url_webservice" value
- * @method TaxonomyMetadata setId()                    Sets the current record's "id" value
- * @method TaxonomyMetadata setCreationDate()          Sets the current record's "creation_date" value
- * @method TaxonomyMetadata setCreationDateMask()      Sets the current record's "creation_date_mask" value
- * @method TaxonomyMetadata setImportRef()             Sets the current record's "import_ref" value
- * @method TaxonomyMetadata setTaxonomyName()          Sets the current record's "taxonomy_name" value
- * @method TaxonomyMetadata setDefinition()            Sets the current record's "definition" value
- * @method TaxonomyMetadata setIsReferenceTaxonomy()   Sets the current record's "is_reference_taxonomy" value
- * @method TaxonomyMetadata setSource()                Sets the current record's "source" value
- * @method TaxonomyMetadata setUrlWebsite()            Sets the current record's "url_website" value
- * @method TaxonomyMetadata setUrlWebservice()         Sets the current record's "url_webservice" value
+ * @method integer             getId()                    Returns the current record's "id" value
+ * @method string              getCreationDate()          Returns the current record's "creation_date" value
+ * @method integer             getCreationDateMask()      Returns the current record's "creation_date_mask" value
+ * @method integer             getImportRef()             Returns the current record's "import_ref" value
+ * @method string              getTaxonomyName()          Returns the current record's "taxonomy_name" value
+ * @method string              getDefinition()            Returns the current record's "definition" value
+ * @method boolean             getIsReferenceTaxonomy()   Returns the current record's "is_reference_taxonomy" value
+ * @method string              getSource()                Returns the current record's "source" value
+ * @method string              getUrlWebsite()            Returns the current record's "url_website" value
+ * @method string              getUrlWebservice()         Returns the current record's "url_webservice" value
+ * @method Doctrine_Collection getTaxonomy()              Returns the current record's "Taxonomy" collection
+ * @method TaxonomyMetadata    setId()                    Sets the current record's "id" value
+ * @method TaxonomyMetadata    setCreationDate()          Sets the current record's "creation_date" value
+ * @method TaxonomyMetadata    setCreationDateMask()      Sets the current record's "creation_date_mask" value
+ * @method TaxonomyMetadata    setImportRef()             Sets the current record's "import_ref" value
+ * @method TaxonomyMetadata    setTaxonomyName()          Sets the current record's "taxonomy_name" value
+ * @method TaxonomyMetadata    setDefinition()            Sets the current record's "definition" value
+ * @method TaxonomyMetadata    setIsReferenceTaxonomy()   Sets the current record's "is_reference_taxonomy" value
+ * @method TaxonomyMetadata    setSource()                Sets the current record's "source" value
+ * @method TaxonomyMetadata    setUrlWebsite()            Sets the current record's "url_website" value
+ * @method TaxonomyMetadata    setUrlWebservice()         Sets the current record's "url_webservice" value
+ * @method TaxonomyMetadata    setTaxonomy()              Sets the current record's "Taxonomy" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -89,6 +92,8 @@ abstract class BaseTaxonomyMetadata extends DarwinModel
     public function setUp()
     {
         parent::setUp();
-        
+        $this->hasMany('Taxonomy', array(
+             'local' => 'id',
+             'foreign' => 'metadata_ref'));
     }
 }

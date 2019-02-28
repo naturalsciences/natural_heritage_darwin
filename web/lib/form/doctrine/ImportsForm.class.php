@@ -31,14 +31,14 @@ class ImportsForm extends BaseImportsForm
       //ftheeten 2017 08 02
        //ftheeten 2018 03 06
        $this->widgetSchema['specimen_taxonomy_ref']=new sfWidgetFormChoice(array(
-      'choices' =>  TaxonomyMetadataTable::getAllTaxonomicMetadata('taxonomy_name ASC', false)
+      'choices' =>  TaxonomyMetadataTable::getAllTaxonomicMetadata('taxonomy_name ASC', false, true)
     ));
       $this->validatorSchema['specimen_taxonomy_ref'] = new sfValidatorInteger(array('required'=>false));
       
        //ftheeeten 2018 06 06
       $this->widgetSchema['taxonomy_kingdom'] =new sfWidgetFormChoice(array(
       
-      'choices' =>  TaxonomyTable::getTaxaByLevel("2")
+      'choices' =>  TaxonomyTable::getTaxaByLevel("2", True)
         ));
       $this->validatorSchema['taxonomy_kingdom'] = new sfValidatorInteger(array('required'=>false));
     }
@@ -90,7 +90,7 @@ class ImportsForm extends BaseImportsForm
         ));
       $this->validatorSchema['specimen_taxonomy_ref'] = new sfValidatorInteger(array('required'=>false));
       $this->widgetSchema['taxonomy_kingdom'] =new sfWidgetFormChoice(array(      
-      'choices' =>  TaxonomyTable::getTaxaByLevel("2")
+      'choices' =>  TaxonomyTable::getTaxaByLevel("2", True)
         ));
       $this->validatorSchema['taxonomy_kingdom'] = new sfValidatorInteger(array('required'=>false));
       

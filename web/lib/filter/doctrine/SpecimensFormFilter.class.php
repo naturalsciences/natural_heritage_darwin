@@ -624,6 +624,37 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->validatorSchema['comment_notion_concerned'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($comment_choices)));
 
 
+      //2019 02 25
+    $this->widgetSchema['creation_from_date'] = new widgetFormJQueryFuzzyDate(
+      $this->getDateItemOptions(),
+      array('class' => 'from_date')
+    );
+
+    $this->widgetSchema['creation_to_date'] = new widgetFormJQueryFuzzyDate(
+      $this->getDateItemOptions(),
+      array('class' => 'to_date')
+    );
+    
+     $this->validatorSchema['creation_from_date'] = new fuzzyDateValidator(array(
+      'required' => false,
+      'from_date' => true,
+      'min' => $minDate,
+      'max' => $maxDate,
+      'empty_value' => $dateLowerBound,
+      ),
+      array('invalid' => 'Date provided is not valid',)
+    );
+    
+    $this->validatorSchema['creation_to_date'] = new fuzzyDateValidator(array(
+      'required' => false,
+      'from_date' => false,
+      'min' => $minDate,
+      'max' => $maxDate,
+      'empty_value' => $dateUpperBound,
+      ),
+      array('invalid' => 'Date provided is not valid',)
+    );
+    
     $subForm = new sfForm();
     $this->embedForm('Codes',$subForm);
 
@@ -1752,7 +1783,9 @@ $query = DQ::create()
     $this->addDateFromToColumnQuery($query, $fields, $values['gtu_from_date'], $values['gtu_to_date']);
     $this->addDateFromToColumnQuery($query, array('ig_date'), $values['ig_from_date'], $values['ig_to_date']);
     $this->addDateFromToColumnQuery($query, array('acquisition_date'), $values['acquisition_from_date'], $values['acquisition_to_date']);
-
+    //2019 02 25
+    $this->addCreationDateFromToColumnQuery($query, array('modification_date_time'), $values['creation_from_date'], $values['creation_to_date']);
+    
     //$this->addCatalogueRelationColumnQuery($query, $values['taxon_item_ref'], $values['taxon_relation'],'taxonomy','taxon');
     //ftheeten 2016 03 24
     $this->addCatalogueRelationColumnQueryArrayRelations($query, $values['taxa_list'], $values['taxon_relation'],'taxonomy','taxon');
@@ -1765,6 +1798,59 @@ $query = DQ::create()
 
     return $query;
   }
+  
+     //ftheeten 2019 02 25
+   public function addCreationDateFromToColumnQuery(Doctrine_Query $query, array $dateFields, $val_from, $val_to)
+  {
+    if (count($dateFields) > 0 && ($val_from->getMask() > 0 || $val_to->getMask() > 0 ))
+    {
+      $query->innerJoin('s.UsersTrackingSpecimens ut');
+      $query->andWhere("ut.referenced_relation = ? ",'specimens');
+       $query->andWhere("ut.action = ? ",'insert');
+      if($val_from->getMask() > 0 && $val_to->getMask() > 0)
+      {
+        if (count($dateFields) == 1)
+        {
+          $query->andWhere($dateFields[0] . " Between ? and ? ",
+                           array($val_from->format('d/m/Y'),
+                                 $val_to->format('d/m/Y')
+                                )
+                          );
+        }
+        else
+        {
+          $query->andWhere(" " . $dateFields[0] . " >= ? ", $val_from->format('d/m/Y'))
+                ->andWhere(" " . $dateFields[1] . " <= ? ", $val_to->format('d/m/Y'));
+        }
+      }
+      elseif ($val_from->getMask() > 0)
+      {
+        $sql = " (" . $dateFields[0] . " >= ? ) ";
+        for ($i = 1; $i <= count($dateFields); $i++)
+        {
+          $vals[] = $val_from->format('d/m/Y');
+        }
+        if (count($dateFields) > 1) $sql .= " OR (" . $dateFields[1] . " >= ?) ";
+        $query->andWhere($sql,
+                         $vals
+                        );
+      }
+      elseif ($val_to->getMask() > 0)
+      {
+        $sql = " (" . $dateFields[0] . " <= ? AND " . $dateFields[0] . ") ";
+        for ($i = 1; $i <= count($dateFields); $i++)
+        {
+          $vals[] = $val_to->format('d/m/Y');
+        }
+        if (count($dateFields) > 1) $sql .= " OR (" . $dateFields[1] . " <= ? AND " . $dateFields[1] . ") ";
+        $query->andWhere($sql,
+                         $vals
+                        );
+      }
+    }
+    return $query;
+  }
+  
 
   public function getJavaScripts()
   {

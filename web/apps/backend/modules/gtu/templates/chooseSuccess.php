@@ -4,6 +4,7 @@
 
 <?php if($sf_params->get('with_js') == '1' || $sf_params->get('with_js') === true):?>
 
+<input type="hidden" id="http_referer" name="http_referer" value="<?php print($_SERVER["HTTP_REFERER"]);?>">
 <script language="javascript">
 $(document).ready(function () {
     $('.result_choose').live('click',chooseGtu);
@@ -15,11 +16,20 @@ $(document).ready(function () {
 function chooseGtu(event)
 {
   el = $(this).closest('tr');
-
+ 
   ref_element_id = getIdInClasses(el);
   //ftheeten 2018 12 13
   cell=el.find('td.item_name');
-  ref_element_name = cell.html();
+  //2019 02 28
+  var referer = $("#http_referer").val();
+  if(referer.includes("/staging/edit/"))
+  {   
+    ref_element_name = el.find(".gtu_code").html();   
+  }
+  else
+  {
+    ref_element_name = cell.html();
+  }
   //ftheeten 2018 12 13
   if($(event.target).attr("name")=="date_choose")
   {   

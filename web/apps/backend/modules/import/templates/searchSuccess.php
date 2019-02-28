@@ -75,7 +75,7 @@
               </td>
 			  <!--ftheeten 2018 08 06-->
              
-			   <?php if($format == 'locality'&& $import->getState() == 'loaded') : ?><td><?php echo link_to("Load GTU in DB",'import/loadGtuInStaging?id='.$import->getId()); ?></td><?php endif ; ?>
+			   <?php if($format == 'locality'&& $import->getState() == 'loaded') : ?><td><?php echo link_to("Load GTU in DB",'import/loadGtuInDB?id='.$import->getId()); ?></td><?php endif ; ?>
               <?php if ($import->getState() == 'error') : ?>
               <td colspan="2">
                   <?php echo link_to(image_tag('warning.png',array('title'=>__('View errors while importing'))),'import/viewError?id='.$import->getId());?>
@@ -85,8 +85,8 @@
 			   <!--ftheeten 2018 09 25 update for locality-->
                 <?php if ($import->isEditableState()&&$format != 'locality') : ?>
                   <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit import'))),'staging/index?import='.$import->getId());?>
-				<?php elseif ($format == 'locality'&& $import->getState() != 'finished') : ?>
-				<?php echo link_to(image_tag('edit.png',array('title'=>__('Edit import'))),'import/viewUnimported?id='.$import->getId()); ?>
+				<?php elseif ($format == 'locality'&& $import->getState() != 'finished'&& $import->getState() != 'processing'&& $import->getState() != 'aloaded') : ?>
+				<?php echo link_to(image_tag('edit.png',array('title'=>__('Edit import'))),'import/viewUnimportedGtu?id='.$import->getId()); ?>
                 <?php elseif ($format == 'taxon'&& ($import->getState() == 'finished')||$import->isEditableState()) : ?>
                    <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit import'))),'import/viewUnimportedTaxa?id='.$import->getId()); ?>
 				<?php else: ?>
@@ -94,7 +94,7 @@
                 <?php endif ; ?>
               </td>
               <td>
-                <?php if ($import->isEditableState()) : ?>
+                <?php if ($import->isEditableState()&&$format=="abcd") : ?>
                   <?php echo link_to(image_tag('checkbox_checked.png',array('title'=>__('Import "Ok" lines'))),'staging/markok?import='.$import->getId());?>
                 <?php endif ; ?>
               </td>
@@ -113,7 +113,7 @@
                 <td>
                     <?php echo link_to("Load in staging",'import/loadstaging?id='.$import->getId()); ?>
 				</td>
-             <?php elseif($import->getState()==="loaded") : ?>
+             <?php elseif($import->getState()==="loaded"&& $format != 'locality') : ?>
 					<td>
 						<?php echo link_to("Check import",'import/checkstaging?id='.$import->getId()); ?>
 					</td>   
