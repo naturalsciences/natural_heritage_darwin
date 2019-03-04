@@ -41,9 +41,11 @@
           </a>
         </th>
          <!--ftheeten 2018 07 19-->
-        <?php if($items[0]['taxonomy_metadata_name']&&$items[0]['metadata_ref']): ?>
-            <th> <?php echo __('Taxonomy name');?></th>
-            <th><?php echo __('Reference taxon');?></th>
+        <?php if(array_key_exists('taxonomy_metadata_name', $items[0])&&array_key_exists('metadata_ref', $items[0])): ?>
+            <?php if($items[0]['taxonomy_metadata_name']&&$items[0]['metadata_ref']): ?>
+                <th> <?php echo __('Taxonomy name');?></th>
+                <th><?php echo __('Reference taxon');?></th>
+            <?php endif;?>
         <?php endif;?>
         <?php if(isset($items[0]['lower_bound']) && isset($items[0]['upper_bound'])): ?>
           <th class="datesNum">
@@ -95,7 +97,7 @@
               <span class="level_name"><?php echo $item->getLevel();?></span>
             </td>
              <!--ftheeten 2018 07 19-->
-            <?php if($item['taxonomy_metadata_name']&&$item['metadata_ref']): ?>
+            <?php if(isset($item['taxonomy_metadata_name'])&&isset($item['metadata_ref'])): ?>
              <td>
               <span><?php echo $item->getTaxonomyMetadataName();?></span>
             </td>

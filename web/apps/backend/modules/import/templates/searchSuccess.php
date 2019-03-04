@@ -109,7 +109,7 @@
                 <?php echo link_to(image_tag('remove.png', array("title" => __("Delete"))), 'import/delete?id='.$import->getId(),'class=remove_import');?>
               </td>             
              <?php endif ; ?>
-             <?php if($import->getState()==="to_be_loaded") : ?>
+             <?php if($import->getState()==="to_be_loaded"&& !$import->getWorking() ) : ?>
                 <td>
                     <?php echo link_to("Load in staging",'import/loadstaging?id='.$import->getId()); ?>
 				</td>

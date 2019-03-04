@@ -83,6 +83,21 @@ class ImportsForm extends BaseImportsForm
           'class'=>'inline',
         )
       );
+      
+      $this->widgetSchema['collection_ref_for_gtu'] = new widgetFormButtonRef(
+        array(
+          'model' => 'Collections',
+          'link_url' => 'collection/choose',
+          'method' => 'getName',
+          'box_title' => $this->getI18N()->__('Choose'),
+          'button_class'=>'',
+        ),
+        array(
+          'class'=>'inline',
+        )
+      );
+      $this->validatorSchema['collection_ref_for_gtu'] = new sfValidatorInteger(array('required'=>false)); 
+      
              //ftheeten 2017 08 02
       $this->widgetSchema['specimen_taxonomy_ref'] =new sfWidgetFormChoice(array(
       //'choices' => array_merge( array(''=>'All'), TaxonomyMetadataTable::getAllTaxonomicMetadata())

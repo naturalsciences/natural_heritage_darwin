@@ -29,6 +29,7 @@
  * @property string $taxonomy_kingdom
  * @property integer $specimen_taxonomy_ref
  * @property string $history_taxonomy
+ * @property integer $collection_ref_for_gtu
  * @property Collections $Collections
  * @property Users $Users
  * @property Doctrine_Collection $Staging
@@ -59,6 +60,7 @@
  * @method string              getTaxonomyKingdom()                Returns the current record's "taxonomy_kingdom" value
  * @method integer             getSpecimenTaxonomyRef()            Returns the current record's "specimen_taxonomy_ref" value
  * @method string              getHistoryTaxonomy()                Returns the current record's "history_taxonomy" value
+ * @method integer             getCollectionRefForGtu()            Returns the current record's "collection_ref_for_gtu" value
  * @method Collections         getCollections()                    Returns the current record's "Collections" value
  * @method Users               getUsers()                          Returns the current record's "Users" value
  * @method Doctrine_Collection getStaging()                        Returns the current record's "Staging" collection
@@ -88,6 +90,7 @@
  * @method Imports             setTaxonomyKingdom()                Sets the current record's "taxonomy_kingdom" value
  * @method Imports             setSpecimenTaxonomyRef()            Sets the current record's "specimen_taxonomy_ref" value
  * @method Imports             setHistoryTaxonomy()                Sets the current record's "history_taxonomy" value
+ * @method Imports             setCollectionRefForGtu()            Sets the current record's "collection_ref_for_gtu" value
  * @method Imports             setCollections()                    Sets the current record's "Collections" value
  * @method Imports             setUsers()                          Sets the current record's "Users" value
  * @method Imports             setStaging()                        Sets the current record's "Staging" collection
@@ -194,6 +197,10 @@ abstract class BaseImports extends DarwinModel
              ));
         $this->hasColumn('history_taxonomy', 'string', null, array(
              'type' => 'string',
+             ));
+        $this->hasColumn('collection_ref_for_gtu', 'integer', null, array(
+             'type' => 'integer',
+             'notnull' => true,
              ));
     }
 

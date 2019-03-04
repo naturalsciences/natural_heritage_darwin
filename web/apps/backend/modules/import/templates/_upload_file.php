@@ -58,6 +58,13 @@ $(document).ready(function ()
               <?php echo $form['specimen_taxonomy_ref'] ?>
             </td>
           </tr>
+          <tr>
+            <th><?php echo $form['collection_ref_for_gtu']->renderLabel() ?> :</th>
+            <td>
+              <?php echo $form['collection_ref_for_gtu']->renderError() ?>
+              <?php echo $form['collection_ref_for_gtu'] ?>
+            </td>
+          </tr>
       <?php endif ?>
       <?php if($type == 'taxon') : ?>
       <tr>
@@ -77,7 +84,7 @@ $(document).ready(function ()
       </tr>
       <?php endif ?>
      <!--ftheeten 2018 09 24-->
-      <?php if($type == 'taxon'||$type=="abcd") : ?>
+      <?php if($type == 'taxon') : ?>
 	  <tr>
       <th><?php echo $form['taxonomy_kingdom']->renderLabel() ?> :</th>
         <td>

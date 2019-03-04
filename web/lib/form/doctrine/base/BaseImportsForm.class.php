@@ -39,6 +39,7 @@ abstract class BaseImportsForm extends BaseFormDoctrine
       'taxonomy_kingdom'               => new sfWidgetFormTextarea(),
       'specimen_taxonomy_ref'          => new sfWidgetFormInputText(),
       'history_taxonomy'               => new sfWidgetFormTextarea(),
+      'collection_ref_for_gtu'         => new sfWidgetFormInputText(),
     ));
 
     $this->setValidators(array(
@@ -66,6 +67,7 @@ abstract class BaseImportsForm extends BaseFormDoctrine
       'taxonomy_kingdom'               => new sfValidatorString(array('required' => false)),
       'specimen_taxonomy_ref'          => new sfValidatorInteger(array('required' => false)),
       'history_taxonomy'               => new sfValidatorString(array('required' => false)),
+      'collection_ref_for_gtu'         => new sfValidatorInteger(),
     ));
 
     $this->widgetSchema->setNameFormat('imports[%s]');

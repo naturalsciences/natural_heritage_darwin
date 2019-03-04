@@ -65,10 +65,15 @@ EOF;
                 break;				
               case 'abcd':
               default:
-                $import = new importABCDXml() ;
-				$result = $import->parseFile($file,$id) ;
-                $count_line = "(select count(*) from staging where import_ref = $id )" ;
-                break;
+                    /*$import_obj = Doctrine::getTable('Imports')->find($id);
+                    $import_obj->setWorking(TRUE);
+                    $import_obj->save();*/
+                    $import = new importABCDXml() ;
+                    $result = $import->parseFile($file,$id) ;
+                    $count_line = "(select count(*) from staging where import_ref = $id )" ;
+                    /*$import_obj->setWorking(FALSE);
+                    $import_obj->save();*/
+                    break;
             } 
             //$result = $import->parseFile($file,$id) ;
             if ( $result == '' && $q->getFormat() == 'taxon') {

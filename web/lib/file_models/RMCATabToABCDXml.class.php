@@ -147,6 +147,12 @@ class RMCATabToABCDXml
             $fields[] = "sitePropertyValue".$i;
         }
         
+        //2019 03 01 paleo
+        
+        $fields[] = "GeologicalEpoch";
+        $fields[] = "GeologicalAge";
+        $fields[] = "GeologicalAge2";
+        
         return $fields;
     }
     
@@ -867,6 +873,36 @@ class RMCATabToABCDXml
         
     }
     
+    //2019 03 01 
+    public function addPaleontology($p_parentElement, $p_valueArray)
+    {
+        if (array_key_exists(strtolower("GeologicalEpoch"), $this->headers_inverted)||array_key_exists(strtolower("GeologicalAge"), $this->headers_inverted)||array_key_exists(strtolower("GeologicalAge2"), $this->headers_inverted )) 
+        {
+            $namespace_efg= "http://www.synthesys.info/ABCDEFG/1.0";
+            $extensionForPaleontology         = $this->testAndAppendTag($p_parentElement, null, "UnitExtension", null, null, true);
+            $paleoNode         = $this->testAndAppendTag($extensionForPaleontology, null, "efg:EarthScienceSpecimen", null, null, true, $namespace_efg);
+            $chronoGroupNode         = $this->testAndAppendTag($paleoNode, null,"efg:ChronostratigraphicAttributions", null, null, true, $namespace_efg); 
+            if (array_key_exists(strtolower("GeologicalEpoch") , $this->headers_inverted))
+            {
+                $interm_node=$this->testAndAppendTag($chronoGroupNode, null, "efg:ChronostratigraphicAttribution", null, null, true, $namespace_efg);
+                $this->testAndAppendTag($interm_node, null, "efg:ChronoStratigraphicDivision", null, "Epoch/Serie", false, $namespace_efg);
+                $this->testAndAppendTag($interm_node, "GeologicalEpoch", "efg:ChronostratigraphicName", $p_valueArray, null, false, $namespace_efg);
+            }
+            if (array_key_exists(strtolower("GeologicalAge") , $this->headers_inverted))
+            {
+                $interm_node=$this->testAndAppendTag($chronoGroupNode, null, "efg:ChronostratigraphicAttribution", null, null, true, $namespace_efg);
+                $this->testAndAppendTag($interm_node, null, "efg:ChronoStratigraphicDivision", null, "Age/Stage", false, $namespace_efg);
+                $this->testAndAppendTag($interm_node, "GeologicalAge", "efg:ChronostratigraphicName", $p_valueArray, null, false, $namespace_efg);
+            }
+            if (array_key_exists(strtolower("GeologicalAge2") , $this->headers_inverted))
+            {
+                $interm_node=$this->testAndAppendTag($chronoGroupNode, null, "efg:ChronostratigraphicAttribution", null, null, true, $namespace_efg);
+                $this->testAndAppendTag($interm_node, null, "efg:ChronoStratigraphicDivision", null, "Age/Stage", false, $namespace_efg);
+                $this->testAndAppendTag($interm_node, "GeologicalAge2", "efg:ChronostratigraphicName", $p_valueArray, null, false, $namespace_efg);
+            }
+        }
+    }
+    
     public function identifyHeader($p_handle)
     {
         
@@ -1009,7 +1045,10 @@ class RMCATabToABCDXml
         $this->addStorage($unit, $p_row);
         $this->addNotes($unit, $p_row);
         
-              //ftheeten 2018 10 31
+        //2019 03 01
+        $this->addPaleontology($unit, $p_row);
+        
+       //ftheeten 2018 10 31
        $xpath = new DOMXPath($dom);
 
         foreach( $xpath->query('//*[not(node())]') as $node ) {
@@ -1017,7 +1056,7 @@ class RMCATabToABCDXml
         }
         
         
-        //print($dom->saveXML($root, LIBXML_NOEMPTYTAG ));
+        print($dom->saveXML($root, LIBXML_NOEMPTYTAG ));
        
         return $dom->saveXML($root, LIBXML_NOEMPTYTAG );
     }
