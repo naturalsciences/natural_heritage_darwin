@@ -157,6 +157,10 @@ class importActions extends DarwinActions
       {
         $this->type="locality";        
       }
+      elseif($request->getParameter('format') == 'lithostratigraphy')
+      {
+        $this->type="lithostratigraphy";        
+      }
       else
       {
         $this->type="abcd";
@@ -200,6 +204,10 @@ class importActions extends DarwinActions
                   elseif($this->type == 'locality')
                   {
                     $this->redirect('import/indexLocalities');
+                  }
+                   elseif($this->type == 'lithostratigraphy')
+                  {
+                    $this->redirect('import/indexLithostratigraphy');
                   }
                   else
                   {          
@@ -346,14 +354,7 @@ class importActions extends DarwinActions
                         }
                     }
                     
-                    /*if(count($mails)>0)
-                    {
-                        $cmd='darwin:load-import --direct-check='.$idImport.'  --mailsfornotification='.implode(";",$mails);
-                    }
-                    else
-                    {
-                        $cmd='darwin:load-import --direct-check='.$idImport;
-                    }*/
+                   
                      $cmd='darwin:load-import';
                     $currentDir=getcwd();
 
@@ -372,6 +373,10 @@ class importActions extends DarwinActions
                     elseif($importTmp->getFormat()=="locality")
 					{
 						$this->redirect('import/indexLocalities');
+					}
+                     elseif($importTmp->getFormat()=="lithostratigraphy")
+					{
+						$this->redirect('import/indexLithostratigraphy');
 					}
 					else
 					{
@@ -442,6 +447,10 @@ class importActions extends DarwinActions
 					{
 						$this->redirect('import/indexTaxon');
 					}
+                    elseif($importTmp->getFormat()=="lithostratigraphy")
+					{
+						$this->redirect('import/indexLithostratigraphy');
+					}
 					else
 					{
 						$this->redirect('import/index');
@@ -466,6 +475,22 @@ class importActions extends DarwinActions
 			
 		$params[':import_ref'] = $import_ref;
 		$sql =" SELECT * FROM fct_rmca_redo_taxonomic_import(:import_ref);";
+		$statement = $conn->prepare($sql);
+		$statement->execute($params);
+        $this->executeCheckstaging($request);
+        return sfView::NONE; 
+    }
+    
+        //ftheeten 2019 02 19
+    public function executeRechecklithostratigraphy(sfWebRequest $request)
+    {   
+        $import_ref=$request->getParameter("id");
+        $conn_MGR = Doctrine_Manager::connection();
+		$conn = $conn_MGR->getDbh();
+			
+			
+		$params[':import_ref'] = $import_ref;
+		$sql =" SELECT * FROM fct_rmca_handle_lithostratigraphy_import(:import_ref);";
 		$statement = $conn->prepare($sql);
 		$statement->execute($params);
         $this->executeCheckstaging($request);
@@ -548,6 +573,24 @@ EOF
 	  $this->redirect('import/indexLocalities');
   }
   
+  
+  
+     //ftheeten 2018 08 06
+   public function executeLoadLithoInDB(sfWebRequest $request)
+  {
+	  $idImport=$request->getParameter("id");
+	  $currentDir=getcwd();
+
+      chdir(sfconfig::get('sf_root_dir')); 
+  
+       $cmd='darwin:import-litho --id='.$idImport;          
+      exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+
+      chdir($currentDir);	 
+	  $this->redirect('import/indexLithostratigraphy');
+  }
+  
+  
    //ftheeten 2019 02 28
   public function executeLoadSingleGtuInDB(sfWebRequest $request)
   {
@@ -601,7 +644,20 @@ EOF
      $this->metadata_ref=$this->import->getSpecimenTaxonomyRef();
      
        
-  }  
+  } 
+
+  //ftheeten 2019 02 14
+  public function executeViewUnimportedLitho(sfWebRequest $request)
+  {
+     $idImport=$request->getParameter("id");
+     $this->id= $idImport;
+     $this->items = Doctrine::getTable("StagingCatalogue")->getByImportRef($idImport);	 
+	 $this->stats= Doctrine::getTable("StagingCatalogue")->countExceptionMessages($idImport);
+     $this->import=Doctrine::getTable("Imports")->find($idImport);
+     $this->metadata_ref=$this->import->getSpecimenTaxonomyRef();
+     
+       
+  }    
   
   public function executeDownloadTaxonomicStaging(sfWebRequest $request)
   {
@@ -717,6 +773,23 @@ EOF
         
         
   }
+  
+    //ftheeten 2019 03 04
+    public function executeIndexLithostratigraphy(sfWebRequest $request)
+  {
+    $this->format = 'lithostratigraphy' ;
+    $this->form = new ImportsLithostratigraphyFormFilter(null,array('user' =>$this->getUser()));    
+    $this->setTemplate('index');
+  }
+  
+      //ftheeten2019 03 04 
+  public function executeSearchLithostratigraphy(sfWebRequest $request)
+  {
+    $this->form = new ImportsLithostratigraphyFormFilter(null,array('user' =>$this->getUser()));
+    $this->andSearch($request,'lithostratigraphy') ;
+    $this->setTemplate('search');
+  }
+
   
   
 }

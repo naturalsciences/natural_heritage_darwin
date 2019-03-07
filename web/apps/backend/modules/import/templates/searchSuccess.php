@@ -13,7 +13,7 @@
         <thead>
           <tr>
             <th></th>
-            <?php if($format != 'taxon') : ?>
+            <?php if($format != 'taxon'&&$format != 'lithostratigraphy') : ?>
             <th>
               <a class="sort" href="<?php echo url_for($s_url.'&orderby=name'.( ($orderBy=='name' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
                 <?php echo __('Collection');?>
@@ -52,7 +52,7 @@
           <?php foreach($imports as $import):?>
             <tr class="rid_<?php echo $import->getId(); ?>">
               <td></td>
-              <?php if($format != 'taxon') : ?><td><?php echo $import->Collections->getName();?></td><?php endif ; ?>
+              <?php if($format != 'taxon'&&$format != 'lithostratigraphy') : ?><td><?php echo $import->Collections->getName();?></td><?php endif ; ?>
               <td><?php echo $import->getFilename();?></td>
 			  <?php if($format == 'taxon') : ?>
 				<td>
@@ -75,7 +75,12 @@
               </td>
 			  <!--ftheeten 2018 08 06-->
              
-			   <?php if($format == 'locality'&& $import->getState() == 'loaded') : ?><td><?php echo link_to("Load GTU in DB",'import/loadGtuInDB?id='.$import->getId()); ?></td><?php endif ; ?>
+			   <?php if($format == 'locality'&& $import->getState() == 'loaded') : ?>
+               
+                <td><?php echo link_to("Load GTU in DB",'import/loadGtuInDB?id='.$import->getId()); ?></td>
+               <?php elseif($format == 'lithostratigraphy'&& $import->getState() == 'loaded') : ?>
+                <td><?php echo link_to("Load Lithostratigraphy in DB",'import/loadLithoInDB?id='.$import->getId()); ?></td>
+               <?php endif ; ?>
               <?php if ($import->getState() == 'error') : ?>
               <td colspan="2">
                   <?php echo link_to(image_tag('warning.png',array('title'=>__('View errors while importing'))),'import/viewError?id='.$import->getId());?>
@@ -89,6 +94,8 @@
 				<?php echo link_to(image_tag('edit.png',array('title'=>__('Edit import'))),'import/viewUnimportedGtu?id='.$import->getId()); ?>
                 <?php elseif ($format == 'taxon'&& ($import->getState() == 'finished')||$import->isEditableState()) : ?>
                    <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit import'))),'import/viewUnimportedTaxa?id='.$import->getId()); ?>
+               <?php elseif ($format == 'lithostratigraphy'&& ($import->getState() == 'finished')||$import->isEditableState()) : ?>
+                   <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit import'))),'import/viewUnimportedLitho?id='.$import->getId()); ?>
 				<?php else: ?>
 				NOT EDITABLE
                 <?php endif ; ?>
@@ -113,7 +120,7 @@
                 <td>
                     <?php echo link_to("Load in staging",'import/loadstaging?id='.$import->getId()); ?>
 				</td>
-             <?php elseif($import->getState()==="loaded"&& $format != 'locality') : ?>
+             <?php elseif($import->getState()==="loaded"&& $format != 'locality'&& $format != 'lithostratigraphy') : ?>
 					<td>
 						<?php echo link_to("Check import",'import/checkstaging?id='.$import->getId()); ?>
 					</td>   

@@ -113,7 +113,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       )
     );
 
-    $this->widgetSchema['litho_relation'] = new sfWidgetFormChoice(array('choices'=> $rel,'expanded'=> true));
+    $this->widgetSchema['litho_relation'] = new sfWidgetFormChoice(array('choices'=> $rel,'expanded'=> true, 'multiple'=> true));
     $this->widgetSchema['litho_relation']->setDefault('child');
     $this->widgetSchema['litho_item_ref'] = new widgetFormCompleteButtonRef(
       array(
@@ -132,7 +132,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->widgetSchema['litho_child_syn_included']->setOption('label','Syn. included ?');
 
     $this->validatorSchema['litho_item_ref'] = new sfValidatorInteger(array('required'=>false));
-    $this->validatorSchema['litho_relation'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($rel)));
+    $this->validatorSchema['litho_relation'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($rel), 'multiple'=> true));
     $this->validatorSchema['litho_child_syn_included'] = new sfValidatorBoolean();
 
     $this->widgetSchema['chrono_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size chrono_name'));
@@ -147,7 +147,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       )
     );
 
-    $this->widgetSchema['chrono_relation'] = new sfWidgetFormChoice(array('choices'=> $rel,'expanded'=> true));
+    $this->widgetSchema['chrono_relation'] = new sfWidgetFormChoice(array('choices'=> $rel,'expanded'=> true, 'multiple'=> true));
     $this->widgetSchema['chrono_relation']->setDefault('child');
 
     $this->widgetSchema['chrono_item_ref'] = new widgetFormCompleteButtonRef(
@@ -168,7 +168,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->widgetSchema['chrono_child_syn_included']->setOption('label','Syn. included ?');
 
     $this->validatorSchema['chrono_item_ref'] = new sfValidatorInteger(array('required'=>false));
-    $this->validatorSchema['chrono_relation'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($rel)));
+    $this->validatorSchema['chrono_relation'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($rel), 'multiple'=>true));
     $this->validatorSchema['chrono_child_syn_included'] = new sfValidatorBoolean();
 
     $this->widgetSchema['mineral_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size mineral_name'));
@@ -1789,8 +1789,9 @@ $query = DQ::create()
     //$this->addCatalogueRelationColumnQuery($query, $values['taxon_item_ref'], $values['taxon_relation'],'taxonomy','taxon');
     //ftheeten 2016 03 24
     $this->addCatalogueRelationColumnQueryArrayRelations($query, $values['taxa_list'], $values['taxon_relation'],'taxonomy','taxon');
-    $this->addCatalogueRelationColumnQuery($query, $values['chrono_item_ref'], $values['chrono_relation'],'chronostratigraphy','chrono', $values['chrono_child_syn_included']);
-    $this->addCatalogueRelationColumnQuery($query, $values['litho_item_ref'], $values['litho_relation'],'lithostratigraphy','litho', $values['litho_child_syn_included']);
+    $this->addCatalogueRelationColumnQueryArrayRelations($query, $values['chrono_item_ref'], $values['chrono_relation'],'chronostratigraphy','chrono');
+    $this->addCatalogueRelationColumnQueryArrayRelations($query, $values['litho_item_ref'], $values['litho_relation'],'lithostratigraphy','litho');
+    
     $this->addCatalogueRelationColumnQuery($query, $values['lithology_item_ref'], $values['lithology_relation'],'lithology','lithology', $values['lithology_child_syn_included']);
     $this->addCatalogueRelationColumnQuery($query, $values['mineral_item_ref'], $values['mineral_relation'],'mineralogy','mineral', $values['mineral_child_syn_included']);
 

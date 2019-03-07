@@ -5,7 +5,7 @@
 -- Dumped from database version 9.5.14
 -- Dumped by pg_dump version 11.1
 
--- Started on 2019-02-20 16:00:55
+-- Started on 2019-03-07 17:52:11
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -36,7 +36,7 @@ CREATE EXTENSION IF NOT EXISTS file_fdw WITH SCHEMA public;
 
 
 --
--- TOC entry 5775 (class 0 OID 0)
+-- TOC entry 5796 (class 0 OID 0)
 -- Dependencies: 7
 -- Name: EXTENSION file_fdw; Type: COMMENT; Schema: -; Owner: 
 --
@@ -53,7 +53,7 @@ CREATE EXTENSION IF NOT EXISTS fuzzystrmatch WITH SCHEMA public;
 
 
 --
--- TOC entry 5776 (class 0 OID 0)
+-- TOC entry 5797 (class 0 OID 0)
 -- Dependencies: 6
 -- Name: EXTENSION fuzzystrmatch; Type: COMMENT; Schema: -; Owner: 
 --
@@ -70,7 +70,7 @@ CREATE EXTENSION IF NOT EXISTS hstore WITH SCHEMA public;
 
 
 --
--- TOC entry 5777 (class 0 OID 0)
+-- TOC entry 5798 (class 0 OID 0)
 -- Dependencies: 5
 -- Name: EXTENSION hstore; Type: COMMENT; Schema: -; Owner: 
 --
@@ -87,7 +87,7 @@ CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA public;
 
 
 --
--- TOC entry 5778 (class 0 OID 0)
+-- TOC entry 5799 (class 0 OID 0)
 -- Dependencies: 4
 -- Name: EXTENSION pg_trgm; Type: COMMENT; Schema: -; Owner: 
 --
@@ -104,7 +104,7 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
 
 
 --
--- TOC entry 5779 (class 0 OID 0)
+-- TOC entry 5800 (class 0 OID 0)
 -- Dependencies: 3
 -- Name: EXTENSION pgcrypto; Type: COMMENT; Schema: -; Owner: 
 --
@@ -121,7 +121,7 @@ CREATE EXTENSION IF NOT EXISTS postgis WITH SCHEMA public;
 
 
 --
--- TOC entry 5780 (class 0 OID 0)
+-- TOC entry 5801 (class 0 OID 0)
 -- Dependencies: 2
 -- Name: EXTENSION postgis; Type: COMMENT; Schema: -; Owner: 
 --
@@ -138,7 +138,7 @@ CREATE EXTENSION IF NOT EXISTS tablefunc WITH SCHEMA darwin2;
 
 
 --
--- TOC entry 5781 (class 0 OID 0)
+-- TOC entry 5802 (class 0 OID 0)
 -- Dependencies: 8
 -- Name: EXTENSION tablefunc; Type: COMMENT; Schema: -; Owner: 
 --
@@ -147,7 +147,7 @@ COMMENT ON EXTENSION tablefunc IS 'functions that manipulate whole tables, inclu
 
 
 --
--- TOC entry 2368 (class 1247 OID 4816276)
+-- TOC entry 2388 (class 1247 OID 4816276)
 -- Name: coverages; Type: TYPE; Schema: darwin2; Owner: darwin2
 --
 
@@ -160,7 +160,7 @@ CREATE TYPE darwin2.coverages AS ENUM (
 ALTER TYPE darwin2.coverages OWNER TO darwin2;
 
 --
--- TOC entry 2371 (class 1247 OID 4816283)
+-- TOC entry 2391 (class 1247 OID 4816283)
 -- Name: encoders_stats_collections; Type: TYPE; Schema: darwin2; Owner: postgres
 --
 
@@ -178,7 +178,7 @@ CREATE TYPE darwin2.encoders_stats_collections AS (
 ALTER TYPE darwin2.encoders_stats_collections OWNER TO postgres;
 
 --
--- TOC entry 2374 (class 1247 OID 4816284)
+-- TOC entry 2394 (class 1247 OID 4816284)
 -- Name: full_text_language; Type: DOMAIN; Schema: darwin2; Owner: darwin2
 --
 
@@ -189,7 +189,7 @@ CREATE DOMAIN darwin2.full_text_language AS character varying NOT NULL DEFAULT '
 ALTER DOMAIN darwin2.full_text_language OWNER TO darwin2;
 
 --
--- TOC entry 2376 (class 1247 OID 4816288)
+-- TOC entry 2396 (class 1247 OID 4816288)
 -- Name: rmca_taxon_report; Type: TYPE; Schema: darwin2; Owner: darwin2
 --
 
@@ -254,7 +254,7 @@ CREATE TYPE darwin2.rmca_taxon_report AS (
 ALTER TYPE darwin2.rmca_taxon_report OWNER TO darwin2;
 
 --
--- TOC entry 2379 (class 1247 OID 4816291)
+-- TOC entry 2399 (class 1247 OID 4816291)
 -- Name: stats_collections; Type: TYPE; Schema: darwin2; Owner: postgres
 --
 
@@ -271,7 +271,7 @@ CREATE TYPE darwin2.stats_collections AS (
 ALTER TYPE darwin2.stats_collections OWNER TO postgres;
 
 --
--- TOC entry 2382 (class 1247 OID 4816294)
+-- TOC entry 2402 (class 1247 OID 4816294)
 -- Name: taxo_collections; Type: TYPE; Schema: darwin2; Owner: darwin2
 --
 
@@ -288,7 +288,7 @@ CREATE TYPE darwin2.taxo_collections AS (
 ALTER TYPE darwin2.taxo_collections OWNER TO darwin2;
 
 --
--- TOC entry 2385 (class 1247 OID 4816297)
+-- TOC entry 2405 (class 1247 OID 4816297)
 -- Name: taxo_collections_no_fam; Type: TYPE; Schema: darwin2; Owner: darwin2
 --
 
@@ -300,7 +300,7 @@ CREATE TYPE darwin2.taxo_collections_no_fam AS (
 ALTER TYPE darwin2.taxo_collections_no_fam OWNER TO darwin2;
 
 --
--- TOC entry 2388 (class 1247 OID 4816300)
+-- TOC entry 2408 (class 1247 OID 4816300)
 -- Name: taxo_collections_total; Type: TYPE; Schema: darwin2; Owner: darwin2
 --
 
@@ -312,7 +312,7 @@ CREATE TYPE darwin2.taxo_collections_total AS (
 ALTER TYPE darwin2.taxo_collections_total OWNER TO darwin2;
 
 --
--- TOC entry 2391 (class 1247 OID 4816301)
+-- TOC entry 2411 (class 1247 OID 4816301)
 -- Name: box3d_extent; Type: TYPE; Schema: public; Owner: postgres
 --
 
@@ -322,7 +322,7 @@ CREATE TYPE public.box3d_extent;
 ALTER TYPE public.box3d_extent OWNER TO postgres;
 
 --
--- TOC entry 2392 (class 1247 OID 4816302)
+-- TOC entry 2412 (class 1247 OID 4816302)
 -- Name: chip; Type: TYPE; Schema: public; Owner: postgres
 --
 
@@ -332,7 +332,7 @@ CREATE TYPE public.chip;
 ALTER TYPE public.chip OWNER TO postgres;
 
 --
--- TOC entry 1696 (class 1255 OID 4816303)
+-- TOC entry 1706 (class 1255 OID 4816303)
 -- Name: check_auto_increment_code_in_spec(); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -454,7 +454,7 @@ $$;
 ALTER FUNCTION darwin2.check_auto_increment_code_in_spec() OWNER TO postgres;
 
 --
--- TOC entry 1695 (class 1255 OID 4816304)
+-- TOC entry 1705 (class 1255 OID 4816304)
 -- Name: chk_part_not_loaned(); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -475,7 +475,7 @@ $$;
 ALTER FUNCTION darwin2.chk_part_not_loaned() OWNER TO postgres;
 
 --
--- TOC entry 1697 (class 1255 OID 4816305)
+-- TOC entry 1707 (class 1255 OID 4816305)
 -- Name: chk_specimens_not_loaned(); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -496,7 +496,7 @@ $$;
 ALTER FUNCTION darwin2.chk_specimens_not_loaned() OWNER TO postgres;
 
 --
--- TOC entry 1698 (class 1255 OID 4816306)
+-- TOC entry 1708 (class 1255 OID 4816306)
 -- Name: clean_imports(integer); Type: FUNCTION; Schema: darwin2; Owner: cebmpad
 --
 
@@ -539,7 +539,7 @@ $$;
 ALTER FUNCTION darwin2.clean_imports(integer) OWNER TO cebmpad;
 
 --
--- TOC entry 1699 (class 1255 OID 4816307)
+-- TOC entry 1709 (class 1255 OID 4816307)
 -- Name: concat(text[]); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -553,7 +553,7 @@ $_$;
 ALTER FUNCTION darwin2.concat(VARIADIC text[]) OWNER TO darwin2;
 
 --
--- TOC entry 1700 (class 1255 OID 4816308)
+-- TOC entry 1710 (class 1255 OID 4816308)
 -- Name: convert_to_integer(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -576,7 +576,7 @@ $$;
 ALTER FUNCTION darwin2.convert_to_integer(v_input character varying) OWNER TO darwin2;
 
 --
--- TOC entry 1701 (class 1255 OID 4816309)
+-- TOC entry 1711 (class 1255 OID 4816309)
 -- Name: convert_to_real(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -599,7 +599,7 @@ $$;
 ALTER FUNCTION darwin2.convert_to_real(v_input character varying) OWNER TO darwin2;
 
 --
--- TOC entry 1884 (class 1255 OID 4816310)
+-- TOC entry 1892 (class 1255 OID 4816310)
 -- Name: convert_to_unified(character varying, character varying); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -648,7 +648,7 @@ $$;
 ALTER FUNCTION darwin2.convert_to_unified(property character varying, property_unit character varying) OWNER TO postgres;
 
 --
--- TOC entry 1703 (class 1255 OID 4816311)
+-- TOC entry 1713 (class 1255 OID 4816311)
 -- Name: convert_to_unified(character varying, character varying, character varying); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -696,7 +696,7 @@ $$;
 ALTER FUNCTION darwin2.convert_to_unified(property character varying, property_unit character varying, property_type character varying) OWNER TO postgres;
 
 --
--- TOC entry 1702 (class 1255 OID 4816312)
+-- TOC entry 1712 (class 1255 OID 4816312)
 -- Name: fct_add_in_dict(text, text, text); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -726,7 +726,7 @@ $$;
 ALTER FUNCTION darwin2.fct_add_in_dict(ref_relation text, ref_field text, dict_val text) OWNER TO darwin2;
 
 --
--- TOC entry 1704 (class 1255 OID 4816313)
+-- TOC entry 1714 (class 1255 OID 4816313)
 -- Name: fct_add_in_dict(text, text, text, text); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -756,7 +756,7 @@ $$;
 ALTER FUNCTION darwin2.fct_add_in_dict(ref_relation text, ref_field text, old_value text, new_val text) OWNER TO darwin2;
 
 --
--- TOC entry 1705 (class 1255 OID 4816314)
+-- TOC entry 1715 (class 1255 OID 4816314)
 -- Name: fct_add_in_dict_dept(text, text, text, text, text, text); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -793,7 +793,7 @@ $$;
 ALTER FUNCTION darwin2.fct_add_in_dict_dept(ref_relation text, ref_field text, old_value text, new_val text, depending_old_value text, depending_new_value text) OWNER TO postgres;
 
 --
--- TOC entry 1710 (class 1255 OID 4816315)
+-- TOC entry 1720 (class 1255 OID 4816315)
 -- Name: fct_after_save_add_code(integer, integer); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -826,7 +826,7 @@ $$;
 ALTER FUNCTION darwin2.fct_after_save_add_code(collectionid integer, specimenid integer) OWNER TO postgres;
 
 --
--- TOC entry 1706 (class 1255 OID 4816316)
+-- TOC entry 1716 (class 1255 OID 4816316)
 -- Name: fct_array_find(anyarray, anyelement); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -840,7 +840,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_array_find(in_array anyarray, elem anyelement, OUT item_order integer) OWNER TO darwin2;
 
 --
--- TOC entry 1707 (class 1255 OID 4816317)
+-- TOC entry 1717 (class 1255 OID 4816317)
 -- Name: fct_array_find(character varying, anyelement); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -854,7 +854,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_array_find(in_array character varying, elem anyelement, OUT item_order integer) OWNER TO darwin2;
 
 --
--- TOC entry 1708 (class 1255 OID 4816318)
+-- TOC entry 1718 (class 1255 OID 4816318)
 -- Name: fct_auto_insert_status_history(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -887,7 +887,7 @@ $$;
 ALTER FUNCTION darwin2.fct_auto_insert_status_history() OWNER TO darwin2;
 
 --
--- TOC entry 1709 (class 1255 OID 4816319)
+-- TOC entry 1719 (class 1255 OID 4816319)
 -- Name: fct_cast_to_real(text); Type: FUNCTION; Schema: darwin2; Owner: cebmpad
 --
 
@@ -909,7 +909,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cast_to_real(element text) OWNER TO cebmpad;
 
 --
--- TOC entry 1715 (class 1255 OID 4816320)
+-- TOC entry 1725 (class 1255 OID 4816320)
 -- Name: fct_catalogue_import_keywords_update(); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -1042,7 +1042,7 @@ $$;
 ALTER FUNCTION darwin2.fct_catalogue_import_keywords_update() OWNER TO postgres;
 
 --
--- TOC entry 1711 (class 1255 OID 4816321)
+-- TOC entry 1721 (class 1255 OID 4816321)
 -- Name: fct_chk_arerole(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1085,7 +1085,7 @@ $$;
 ALTER FUNCTION darwin2.fct_chk_arerole() OWNER TO darwin2;
 
 --
--- TOC entry 1712 (class 1255 OID 4816322)
+-- TOC entry 1722 (class 1255 OID 4816322)
 -- Name: fct_chk_canupdatecollectionsrights(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1117,7 +1117,7 @@ $$;
 ALTER FUNCTION darwin2.fct_chk_canupdatecollectionsrights() OWNER TO darwin2;
 
 --
--- TOC entry 1713 (class 1255 OID 4816323)
+-- TOC entry 1723 (class 1255 OID 4816323)
 -- Name: fct_chk_onceinpath(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1137,7 +1137,7 @@ $$;
 ALTER FUNCTION darwin2.fct_chk_onceinpath(path character varying) OWNER TO darwin2;
 
 --
--- TOC entry 1714 (class 1255 OID 4816324)
+-- TOC entry 1724 (class 1255 OID 4816324)
 -- Name: fct_chk_parentcollinstitution(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1171,7 +1171,7 @@ $$;
 ALTER FUNCTION darwin2.fct_chk_parentcollinstitution() OWNER TO darwin2;
 
 --
--- TOC entry 1646 (class 1255 OID 4816325)
+-- TOC entry 1656 (class 1255 OID 4816325)
 -- Name: fct_chk_peopleismoral(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1195,7 +1195,7 @@ $$;
 ALTER FUNCTION darwin2.fct_chk_peopleismoral() OWNER TO darwin2;
 
 --
--- TOC entry 1716 (class 1255 OID 4816326)
+-- TOC entry 1726 (class 1255 OID 4816326)
 -- Name: fct_chk_peopletype(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1243,7 +1243,7 @@ $$;
 ALTER FUNCTION darwin2.fct_chk_peopletype() OWNER TO darwin2;
 
 --
--- TOC entry 1717 (class 1255 OID 4816327)
+-- TOC entry 1727 (class 1255 OID 4816327)
 -- Name: fct_chk_possible_upper_level(character varying, integer, integer, integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1273,7 +1273,7 @@ $$;
 ALTER FUNCTION darwin2.fct_chk_possible_upper_level(referenced_relation character varying, new_parent_ref integer, new_level_ref integer, new_id integer) OWNER TO darwin2;
 
 --
--- TOC entry 1720 (class 1255 OID 4816328)
+-- TOC entry 1730 (class 1255 OID 4816328)
 -- Name: fct_chk_referencedrecord(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1297,7 +1297,7 @@ $$;
 ALTER FUNCTION darwin2.fct_chk_referencedrecord() OWNER TO darwin2;
 
 --
--- TOC entry 1718 (class 1255 OID 4816329)
+-- TOC entry 1728 (class 1255 OID 4816329)
 -- Name: fct_chk_referencedrecordrelationship(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1323,7 +1323,7 @@ $$;
 ALTER FUNCTION darwin2.fct_chk_referencedrecordrelationship() OWNER TO darwin2;
 
 --
--- TOC entry 1721 (class 1255 OID 4816330)
+-- TOC entry 1731 (class 1255 OID 4816330)
 -- Name: fct_chk_specimencollectionallowed(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1380,7 +1380,7 @@ $$;
 ALTER FUNCTION darwin2.fct_chk_specimencollectionallowed() OWNER TO darwin2;
 
 --
--- TOC entry 1722 (class 1255 OID 4816331)
+-- TOC entry 1732 (class 1255 OID 4816331)
 -- Name: fct_chk_upper_level_for_childrens(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1408,7 +1408,7 @@ $$;
 ALTER FUNCTION darwin2.fct_chk_upper_level_for_childrens() OWNER TO darwin2;
 
 --
--- TOC entry 1725 (class 1255 OID 4816332)
+-- TOC entry 1735 (class 1255 OID 4816332)
 -- Name: fct_clean_staging_catalogue(integer); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -1463,7 +1463,7 @@ $$;
 ALTER FUNCTION darwin2.fct_clean_staging_catalogue(importref integer) OWNER TO postgres;
 
 --
--- TOC entry 1723 (class 1255 OID 4816333)
+-- TOC entry 1733 (class 1255 OID 4816333)
 -- Name: fct_clear_identifiers_in_flat(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1500,7 +1500,7 @@ $$;
 ALTER FUNCTION darwin2.fct_clear_identifiers_in_flat() OWNER TO darwin2;
 
 --
--- TOC entry 1724 (class 1255 OID 4816334)
+-- TOC entry 1734 (class 1255 OID 4816334)
 -- Name: fct_clear_referencedrecord(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1523,7 +1523,7 @@ $$;
 ALTER FUNCTION darwin2.fct_clear_referencedrecord() OWNER TO darwin2;
 
 --
--- TOC entry 1719 (class 1255 OID 4816335)
+-- TOC entry 1729 (class 1255 OID 4816335)
 -- Name: fct_clr_specialstatus(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1614,7 +1614,7 @@ $$;
 ALTER FUNCTION darwin2.fct_clr_specialstatus() OWNER TO darwin2;
 
 --
--- TOC entry 1726 (class 1255 OID 4816336)
+-- TOC entry 1736 (class 1255 OID 4816336)
 -- Name: fct_count_units(); Type: FUNCTION; Schema: darwin2; Owner: cebmpad
 --
 
@@ -1674,7 +1674,7 @@ $$;
 ALTER FUNCTION darwin2.fct_count_units() OWNER TO cebmpad;
 
 --
--- TOC entry 1727 (class 1255 OID 4816337)
+-- TOC entry 1737 (class 1255 OID 4816337)
 -- Name: fct_cpy_deleted_file(); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -1691,7 +1691,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cpy_deleted_file() OWNER TO postgres;
 
 --
--- TOC entry 1728 (class 1255 OID 4816338)
+-- TOC entry 1738 (class 1255 OID 4816338)
 -- Name: fct_cpy_formattedname(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1725,7 +1725,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cpy_formattedname() OWNER TO darwin2;
 
 --
--- TOC entry 1729 (class 1255 OID 4816339)
+-- TOC entry 1739 (class 1255 OID 4816339)
 -- Name: fct_cpy_fulltoindex(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1805,7 +1805,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cpy_fulltoindex() OWNER TO darwin2;
 
 --
--- TOC entry 1730 (class 1255 OID 4816340)
+-- TOC entry 1740 (class 1255 OID 4816340)
 -- Name: fct_cpy_gtutags(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1887,7 +1887,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cpy_gtutags() OWNER TO darwin2;
 
 --
--- TOC entry 1731 (class 1255 OID 4816341)
+-- TOC entry 1741 (class 1255 OID 4816341)
 -- Name: fct_cpy_ig_to_loan_items(); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -1908,7 +1908,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cpy_ig_to_loan_items() OWNER TO postgres;
 
 --
--- TOC entry 1737 (class 1255 OID 4816342)
+-- TOC entry 1747 (class 1255 OID 4816342)
 -- Name: fct_cpy_length_conversion(real, text); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -2015,7 +2015,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_cpy_length_conversion(property real, property_unit text) OWNER TO postgres;
 
 --
--- TOC entry 1732 (class 1255 OID 4816343)
+-- TOC entry 1742 (class 1255 OID 4816343)
 -- Name: fct_cpy_length_conversion(real, character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -2122,7 +2122,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_cpy_length_conversion(property real, property_unit character varying) OWNER TO darwin2;
 
 --
--- TOC entry 1733 (class 1255 OID 4816344)
+-- TOC entry 1743 (class 1255 OID 4816344)
 -- Name: fct_cpy_loan_history(integer); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -2179,7 +2179,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cpy_loan_history(loan_id integer) OWNER TO postgres;
 
 --
--- TOC entry 1734 (class 1255 OID 4816345)
+-- TOC entry 1744 (class 1255 OID 4816345)
 -- Name: fct_cpy_location(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -2196,7 +2196,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cpy_location() OWNER TO darwin2;
 
 --
--- TOC entry 1735 (class 1255 OID 4816346)
+-- TOC entry 1745 (class 1255 OID 4816346)
 -- Name: fct_cpy_path(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -2258,7 +2258,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cpy_path() OWNER TO darwin2;
 
 --
--- TOC entry 1738 (class 1255 OID 4816347)
+-- TOC entry 1748 (class 1255 OID 4816347)
 -- Name: fct_cpy_path_catalogs(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -2305,7 +2305,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cpy_path_catalogs() OWNER TO darwin2;
 
 --
--- TOC entry 1739 (class 1255 OID 4816348)
+-- TOC entry 1749 (class 1255 OID 4816348)
 -- Name: fct_cpy_specimensmaincode(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -2342,7 +2342,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cpy_specimensmaincode() OWNER TO darwin2;
 
 --
--- TOC entry 1885 (class 1255 OID 4816349)
+-- TOC entry 1893 (class 1255 OID 4816349)
 -- Name: fct_cpy_speed_conversion(real, text); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -2395,7 +2395,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_cpy_speed_conversion(property real, property_unit text) OWNER TO postgres;
 
 --
--- TOC entry 1740 (class 1255 OID 4816350)
+-- TOC entry 1750 (class 1255 OID 4816350)
 -- Name: fct_cpy_speed_conversion(real, character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -2448,7 +2448,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_cpy_speed_conversion(property real, property_unit character varying) OWNER TO darwin2;
 
 --
--- TOC entry 1908 (class 1255 OID 5308610)
+-- TOC entry 1934 (class 1255 OID 5308610)
 -- Name: fct_cpy_tags_to_distinct_bedic(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -2512,6 +2512,8 @@ BEGIN
             END;
       END CASE;
    END IF;
+
+   RETURN NEW;
 END;
 $$;
 
@@ -2519,7 +2521,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cpy_tags_to_distinct_bedic() OWNER TO darwin2;
 
 --
--- TOC entry 1742 (class 1255 OID 4816351)
+-- TOC entry 1752 (class 1255 OID 4816351)
 -- Name: fct_cpy_temperature_conversion(real, text); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -2550,7 +2552,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_cpy_temperature_conversion(property real, property_unit text) OWNER TO postgres;
 
 --
--- TOC entry 1741 (class 1255 OID 4816352)
+-- TOC entry 1751 (class 1255 OID 4816352)
 -- Name: fct_cpy_temperature_conversion(real, character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -2581,7 +2583,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_cpy_temperature_conversion(property real, property_unit character varying) OWNER TO darwin2;
 
 --
--- TOC entry 1749 (class 1255 OID 4816353)
+-- TOC entry 1759 (class 1255 OID 4816353)
 -- Name: fct_cpy_time_conversion(real, text); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -2620,7 +2622,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_cpy_time_conversion(property real, property_unit text) OWNER TO postgres;
 
 --
--- TOC entry 1743 (class 1255 OID 4816354)
+-- TOC entry 1753 (class 1255 OID 4816354)
 -- Name: fct_cpy_time_conversion(real, character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -2659,7 +2661,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_cpy_time_conversion(property real, property_unit character varying) OWNER TO darwin2;
 
 --
--- TOC entry 1744 (class 1255 OID 4816355)
+-- TOC entry 1754 (class 1255 OID 4816355)
 -- Name: fct_cpy_unified_values(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -2679,7 +2681,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cpy_unified_values() OWNER TO darwin2;
 
 --
--- TOC entry 1745 (class 1255 OID 4816356)
+-- TOC entry 1755 (class 1255 OID 4816356)
 -- Name: fct_cpy_updatecollectionrights(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -2741,7 +2743,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cpy_updatecollectionrights() OWNER TO darwin2;
 
 --
--- TOC entry 1746 (class 1255 OID 4816357)
+-- TOC entry 1756 (class 1255 OID 4816357)
 -- Name: fct_cpy_updatecollinstitutioncascade(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -2763,7 +2765,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cpy_updatecollinstitutioncascade() OWNER TO darwin2;
 
 --
--- TOC entry 1747 (class 1255 OID 4816358)
+-- TOC entry 1757 (class 1255 OID 4816358)
 -- Name: fct_cpy_updatemywidgetscoll(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -2802,7 +2804,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cpy_updatemywidgetscoll() OWNER TO darwin2;
 
 --
--- TOC entry 1748 (class 1255 OID 4816359)
+-- TOC entry 1758 (class 1255 OID 4816359)
 -- Name: fct_cpy_updatespechostimpact(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -2825,7 +2827,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cpy_updatespechostimpact() OWNER TO darwin2;
 
 --
--- TOC entry 1750 (class 1255 OID 4816360)
+-- TOC entry 1760 (class 1255 OID 4816360)
 -- Name: fct_cpy_updateuserrights(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -2932,7 +2934,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cpy_updateuserrights() OWNER TO darwin2;
 
 --
--- TOC entry 1756 (class 1255 OID 4816361)
+-- TOC entry 1766 (class 1255 OID 4816361)
 -- Name: fct_cpy_volume_conversion(real, text); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -2963,7 +2965,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_cpy_volume_conversion(property real, property_unit text) OWNER TO postgres;
 
 --
--- TOC entry 1751 (class 1255 OID 4816362)
+-- TOC entry 1761 (class 1255 OID 4816362)
 -- Name: fct_cpy_volume_conversion(real, character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -2994,7 +2996,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_cpy_volume_conversion(property real, property_unit character varying) OWNER TO darwin2;
 
 --
--- TOC entry 1757 (class 1255 OID 4816363)
+-- TOC entry 1767 (class 1255 OID 4816363)
 -- Name: fct_cpy_weight_conversion(real, text); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -3029,7 +3031,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_cpy_weight_conversion(property real, property_unit text) OWNER TO postgres;
 
 --
--- TOC entry 1752 (class 1255 OID 4816364)
+-- TOC entry 1762 (class 1255 OID 4816364)
 -- Name: fct_cpy_weight_conversion(real, character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -3064,7 +3066,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_cpy_weight_conversion(property real, property_unit character varying) OWNER TO darwin2;
 
 --
--- TOC entry 1753 (class 1255 OID 4816365)
+-- TOC entry 1763 (class 1255 OID 4816365)
 -- Name: fct_del_in_dict(text, text, text); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -3095,7 +3097,7 @@ $$;
 ALTER FUNCTION darwin2.fct_del_in_dict(ref_relation text, ref_field text, dict_val text) OWNER TO darwin2;
 
 --
--- TOC entry 1754 (class 1255 OID 4816366)
+-- TOC entry 1764 (class 1255 OID 4816366)
 -- Name: fct_del_in_dict(text, text, text, text); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -3126,7 +3128,7 @@ $$;
 ALTER FUNCTION darwin2.fct_del_in_dict(ref_relation text, ref_field text, old_value text, new_val text) OWNER TO darwin2;
 
 --
--- TOC entry 1755 (class 1255 OID 4816367)
+-- TOC entry 1765 (class 1255 OID 4816367)
 -- Name: fct_del_in_dict_dept(text, text, text, text, text, text, text); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -3159,7 +3161,7 @@ $$;
 ALTER FUNCTION darwin2.fct_del_in_dict_dept(ref_relation text, ref_field text, old_value text, new_val text, depending_old_value text, depending_new_value text, depending_field text) OWNER TO postgres;
 
 --
--- TOC entry 1763 (class 1255 OID 4816368)
+-- TOC entry 1773 (class 1255 OID 4816368)
 -- Name: fct_duplicate_loans(integer); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -3361,7 +3363,7 @@ CREATE FUNCTION darwin2.fct_duplicate_loans(loan_id integer) RETURNS integer
 ALTER FUNCTION darwin2.fct_duplicate_loans(loan_id integer) OWNER TO postgres;
 
 --
--- TOC entry 1758 (class 1255 OID 4816369)
+-- TOC entry 1768 (class 1255 OID 4816369)
 -- Name: fct_explode_array(anyarray); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -3375,7 +3377,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_explode_array(in_array anyarray) OWNER TO darwin2;
 
 --
--- TOC entry 1759 (class 1255 OID 4816370)
+-- TOC entry 1769 (class 1255 OID 4816370)
 -- Name: fct_filter_encodable_row(character varying, character varying, integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -3403,7 +3405,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_filter_encodable_row(ids character varying, col_name character varying, user_id integer) OWNER TO darwin2;
 
 --
--- TOC entry 1760 (class 1255 OID 4816371)
+-- TOC entry 1770 (class 1255 OID 4816371)
 -- Name: fct_find_tax_level(text, integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -3417,7 +3419,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_find_tax_level(tax_path text, searched_level integer) OWNER TO darwin2;
 
 --
--- TOC entry 1909 (class 1255 OID 5308662)
+-- TOC entry 1914 (class 1255 OID 5308662)
 -- Name: fct_get_tax_hierarchy(integer, integer[]); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -3441,7 +3443,7 @@ $$;
 ALTER FUNCTION darwin2.fct_get_tax_hierarchy(start_id integer, levels integer[]) OWNER TO darwin2;
 
 --
--- TOC entry 225 (class 1259 OID 4816372)
+-- TOC entry 235 (class 1259 OID 4816372)
 -- Name: staging_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -3460,7 +3462,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- TOC entry 226 (class 1259 OID 4816374)
+-- TOC entry 236 (class 1259 OID 4816374)
 -- Name: staging; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -3583,7 +3585,7 @@ CREATE TABLE darwin2.staging (
 ALTER TABLE darwin2.staging OWNER TO darwin2;
 
 --
--- TOC entry 1761 (class 1255 OID 4816384)
+-- TOC entry 1771 (class 1255 OID 4816384)
 -- Name: fct_imp_checker(darwin2.staging, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -3822,7 +3824,7 @@ $$;
 ALTER FUNCTION darwin2.fct_imp_checker(line darwin2.staging, import boolean) OWNER TO darwin2;
 
 --
--- TOC entry 1762 (class 1255 OID 4816387)
+-- TOC entry 1772 (class 1255 OID 4816387)
 -- Name: fct_imp_checker_catalogue(darwin2.staging, text, text); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -3950,7 +3952,7 @@ $$;
 ALTER FUNCTION darwin2.fct_imp_checker_catalogue(line darwin2.staging, catalogue_table text, prefix text) OWNER TO darwin2;
 
 --
--- TOC entry 1764 (class 1255 OID 4816388)
+-- TOC entry 1774 (class 1255 OID 4816388)
 -- Name: fct_imp_checker_catalogue_bck20180829(darwin2.staging, text, text); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -4060,7 +4062,7 @@ $$;
 ALTER FUNCTION darwin2.fct_imp_checker_catalogue_bck20180829(line darwin2.staging, catalogue_table text, prefix text) OWNER TO darwin2;
 
 --
--- TOC entry 1765 (class 1255 OID 4816389)
+-- TOC entry 1775 (class 1255 OID 4816389)
 -- Name: fct_imp_checker_catalogues_parents(darwin2.staging, integer, text, text); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -4142,7 +4144,7 @@ $$;
 ALTER FUNCTION darwin2.fct_imp_checker_catalogues_parents(line darwin2.staging, rec_id integer, catalogue_table text, prefix text) OWNER TO darwin2;
 
 --
--- TOC entry 1766 (class 1255 OID 4816390)
+-- TOC entry 1776 (class 1255 OID 4816390)
 -- Name: fct_imp_checker_catalogues_parents_bck20180829(darwin2.staging, integer, text, text); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -4190,7 +4192,7 @@ $$;
 ALTER FUNCTION darwin2.fct_imp_checker_catalogues_parents_bck20180829(line darwin2.staging, rec_id integer, catalogue_table text, prefix text) OWNER TO darwin2;
 
 --
--- TOC entry 1767 (class 1255 OID 4816391)
+-- TOC entry 1777 (class 1255 OID 4816391)
 -- Name: fct_imp_checker_expeditions(darwin2.staging, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -4246,7 +4248,7 @@ $$;
 ALTER FUNCTION darwin2.fct_imp_checker_expeditions(line darwin2.staging, import boolean) OWNER TO darwin2;
 
 --
--- TOC entry 1768 (class 1255 OID 4816392)
+-- TOC entry 1780 (class 1255 OID 4816392)
 -- Name: fct_imp_checker_gtu(darwin2.staging, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -4572,7 +4574,7 @@ $$;
 ALTER FUNCTION darwin2.fct_imp_checker_gtu(line darwin2.staging, import boolean) OWNER TO darwin2;
 
 --
--- TOC entry 1769 (class 1255 OID 4816395)
+-- TOC entry 1778 (class 1255 OID 4816395)
 -- Name: fct_imp_checker_gtu_bck20180918(darwin2.staging, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -4734,7 +4736,7 @@ $$;
 ALTER FUNCTION darwin2.fct_imp_checker_gtu_bck20180918(line darwin2.staging, import boolean) OWNER TO darwin2;
 
 --
--- TOC entry 1770 (class 1255 OID 4816398)
+-- TOC entry 1779 (class 1255 OID 4816398)
 -- Name: fct_imp_checker_igs(darwin2.staging, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -4773,15 +4775,19 @@ $$;
 ALTER FUNCTION darwin2.fct_imp_checker_igs(line darwin2.staging, import boolean) OWNER TO darwin2;
 
 --
--- TOC entry 1773 (class 1255 OID 4816399)
+-- TOC entry 1937 (class 1255 OID 4816399)
 -- Name: fct_imp_checker_manager(darwin2.staging); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
 CREATE FUNCTION darwin2.fct_imp_checker_manager(line darwin2.staging) RETURNS boolean
     LANGUAGE plpgsql
     AS $$
+DECLARE
+	collection_ref_for_gtu_var INTEGER;
+	
 BEGIN
-
+--2019 03 01
+ SELECT collection_ref_for_gtu INTO collection_ref_for_gtu_var FROM imports where imports.id =line.import_ref;
   IF line.taxon_name IS NOT NULL AND line.taxon_name is distinct from '' AND line.taxon_ref is null THEN
     PERFORM fct_imp_create_catalogues_and_parents(line, 'taxonomy','taxon');
     PERFORM fct_imp_checker_catalogue(line,'taxonomy','taxon');
@@ -4810,7 +4816,7 @@ BEGIN
   --MADAM FTHEETEN 2019 01 29 (DEV LINK TO GTU)
   --PERFORM fct_imp_checker_gtu(line);
   raise notice 'check gtu';
-  PERFORM fct_rmca_imp_checker_gtu_search_code(line);
+  PERFORM fct_rmca_imp_checker_gtu_search_code(line, collection_ref_for_gtu_var);
   PERFORM fct_imp_checker_people(line);
   RETURN true;
 END;
@@ -4820,7 +4826,7 @@ $$;
 ALTER FUNCTION darwin2.fct_imp_checker_manager(line darwin2.staging) OWNER TO darwin2;
 
 --
--- TOC entry 1771 (class 1255 OID 4816400)
+-- TOC entry 1781 (class 1255 OID 4816400)
 -- Name: fct_imp_checker_people(darwin2.staging); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -4954,7 +4960,7 @@ $$;
 ALTER FUNCTION darwin2.fct_imp_checker_people(line darwin2.staging) OWNER TO darwin2;
 
 --
--- TOC entry 1772 (class 1255 OID 4816401)
+-- TOC entry 1782 (class 1255 OID 4816401)
 -- Name: fct_imp_checker_people_bck20180829(darwin2.staging); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -5086,7 +5092,7 @@ $$;
 ALTER FUNCTION darwin2.fct_imp_checker_people_bck20180829(line darwin2.staging) OWNER TO darwin2;
 
 --
--- TOC entry 1876 (class 1255 OID 4816402)
+-- TOC entry 1884 (class 1255 OID 4816402)
 -- Name: fct_imp_checker_staging_info(darwin2.staging, text); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -5192,7 +5198,7 @@ $$;
 ALTER FUNCTION darwin2.fct_imp_checker_staging_info(line darwin2.staging, st_type text) OWNER TO postgres;
 
 --
--- TOC entry 1774 (class 1255 OID 4816403)
+-- TOC entry 1783 (class 1255 OID 4816403)
 -- Name: fct_imp_checker_staging_info_comments(character varying, integer, character varying, integer); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -5217,7 +5223,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_imp_checker_staging_info_comments(targeted_referenced_relation character varying, targeted_record_id integer, new_referenced_relation character varying, new_record_id integer) OWNER TO postgres;
 
 --
--- TOC entry 1775 (class 1255 OID 4816404)
+-- TOC entry 1784 (class 1255 OID 4816404)
 -- Name: fct_imp_checker_staging_info_ext_links(character varying, integer, character varying, integer); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -5240,7 +5246,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_imp_checker_staging_info_ext_links(targeted_referenced_relation character varying, targeted_record_id integer, new_referenced_relation character varying, new_record_id integer) OWNER TO postgres;
 
 --
--- TOC entry 1776 (class 1255 OID 4816405)
+-- TOC entry 1785 (class 1255 OID 4816405)
 -- Name: fct_imp_checker_staging_info_insurances(character varying, integer, character varying, integer); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -5269,7 +5275,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_imp_checker_staging_info_insurances(targeted_referenced_relation character varying, targeted_record_id integer, new_referenced_relation character varying, new_record_id integer) OWNER TO postgres;
 
 --
--- TOC entry 1777 (class 1255 OID 4816406)
+-- TOC entry 1786 (class 1255 OID 4816406)
 -- Name: fct_imp_checker_staging_info_multimedia(character varying, integer, character varying, integer); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -5293,7 +5299,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_imp_checker_staging_info_multimedia(targeted_referenced_relation character varying, targeted_record_id integer, new_referenced_relation character varying, new_record_id integer) OWNER TO postgres;
 
 --
--- TOC entry 1778 (class 1255 OID 4816407)
+-- TOC entry 1787 (class 1255 OID 4816407)
 -- Name: fct_imp_checker_staging_info_properties(character varying, integer, character varying, integer); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -5327,7 +5333,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_imp_checker_staging_info_properties(targeted_referenced_relation character varying, targeted_record_id integer, new_referenced_relation character varying, new_record_id integer) OWNER TO postgres;
 
 --
--- TOC entry 1886 (class 1255 OID 4816408)
+-- TOC entry 1894 (class 1255 OID 4816408)
 -- Name: fct_imp_checker_staging_relationship(); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -5369,7 +5375,7 @@ $$;
 ALTER FUNCTION darwin2.fct_imp_checker_staging_relationship() OWNER TO postgres;
 
 --
--- TOC entry 1782 (class 1255 OID 4816409)
+-- TOC entry 1790 (class 1255 OID 4816409)
 -- Name: fct_imp_create_catalogues_and_parents(darwin2.staging, text, text); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -5440,7 +5446,7 @@ $$;
 ALTER FUNCTION darwin2.fct_imp_create_catalogues_and_parents(line darwin2.staging, catalogue_table text, prefix text) OWNER TO postgres;
 
 --
--- TOC entry 1779 (class 1255 OID 4816410)
+-- TOC entry 1791 (class 1255 OID 4816410)
 -- Name: fct_importer_abcd(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -5460,7 +5466,10 @@ DECLARE
   id_to_keep integer ARRAY ;
   collection collections%ROWTYPE;
   code_count integer;
+  collection_ref_for_gtu_var INTEGER;
 BEGIN
+--2019 03 01
+ SELECT collection_ref_for_gtu INTO collection_ref_for_gtu_var FROM imports where imports.id =line.import_ref;
   SELECT * INTO collection FROM collections WHERE id = (SELECT collection_ref FROM imports WHERE id = req_import_ref AND is_finished = FALSE LIMIT 1);
   select user_ref into userid from imports where id=req_import_ref ;
   PERFORM set_config('darwin.userid',userid::varchar, false) ;
@@ -5507,7 +5516,9 @@ BEGIN
       select * into staging_line from staging where id = all_line.id;
       PERFORM fct_imp_checker_igs(staging_line, true);
       PERFORM fct_imp_checker_expeditions(staging_line, true);
-      PERFORM fct_imp_checker_gtu(staging_line, true);
+     -- PERFORM fct_imp_checker_gtu(staging_line, true);
+     --ftheeten 2019 03 01
+      PERFORM fct_rmca_imp_checker_gtu_search_code(staging_line, collection_ref_for_gtu_var, true);
 
       --RE SELECT WITH UPDATE
       select * into line from staging s INNER JOIN imports i on  s.import_ref = i.id where s.id=all_line.id;
@@ -5605,7 +5616,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_importer_abcd(req_import_ref integer) OWNER TO darwin2;
 
 --
--- TOC entry 1918 (class 1255 OID 4816413)
+-- TOC entry 1923 (class 1255 OID 4816413)
 -- Name: fct_importer_catalogue(integer, text, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -5681,7 +5692,7 @@ $$;
 ALTER FUNCTION darwin2.fct_importer_catalogue(req_import_ref integer, referenced_relation text, exclude_invalid_entries boolean) OWNER TO darwin2;
 
 --
--- TOC entry 1902 (class 1255 OID 5308235)
+-- TOC entry 1910 (class 1255 OID 5308235)
 -- Name: fct_importer_catalogue_backup_pad(integer, text, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -5918,7 +5929,7 @@ CREATE FUNCTION darwin2.fct_importer_catalogue_backup_pad(req_import_ref integer
 ALTER FUNCTION darwin2.fct_importer_catalogue_backup_pad(req_import_ref integer, referenced_relation text, exclude_invalid_entries boolean) OWNER TO darwin2;
 
 --
--- TOC entry 1898 (class 1255 OID 5308249)
+-- TOC entry 1904 (class 1255 OID 5308249)
 -- Name: fct_importer_catalogue_reference_taxonomy(integer, integer, text, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -5933,29 +5944,10 @@ CREATE FUNCTION darwin2.fct_importer_catalogue_reference_taxonomy(req_import_ref
   BEGIN	
   raise notice 'test';
 	IF referenced_relation= 'taxonomy' THEN
-	raise notice '0';
-		--DAETECT taxonomical conflics
-		PERFORM * FROM  fct_rmca_compare_taxonomy_staging_darwin(req_import_ref);
-		IF FOUND THEN
-			raise notice '1';
-			--SELECT fct_rmca_compare_taxonomy_staging_darwin_tagging INTO returned FROM  fct_rmca_compare_taxonomy_staging_darwin_tagging(req_import_ref);
-			PERFORM fct_rmca_document_taxonomy_staging_darwin(req_import_ref);
-				raise notice '2';
-			--duplicate_hierarchies_msg :='';
-			--FOR check_duplicates_hierarchies IN SELECT * FROM  fct_rmca_compare_taxonomy_staging_darwin(req_import_ref)
-			--LOOP 
-			/*raise notice '%',check_duplicates_hierarchies.staging_catalogue_hierarchy;
-				duplicate_hierarchies_msg :=duplicate_hierarchies_msg ||E'Conflicting hierarchy for name : '||check_duplicates_hierarchies.name||' level ('||check_duplicates_hierarchies.level_name||')\r\n';
-				duplicate_hierarchies_msg :=duplicate_hierarchies_msg ||E'Hierarchy in source file : \t'|| check_duplicates_hierarchies.staging_catalogue_hierarchy ||'\r\n';
-				duplicate_hierarchies_msg :=duplicate_hierarchies_msg ||E'Hierarchy in DaRWIN : \t'|| check_duplicates_hierarchies.darwin_hierarchy ||'\r\n\r\n';
-				UPDATE staging_catalogue SET hierarchical_conflict = TRUE WHERE import_ref=req_import_ref AND level_ref=check_duplicates_hierarchies.level_ref AND name=check_duplicates_hierarchies.level_name;
-			END LOOP;*/
-			--BLOCK and stop if cnflicts and send message
-			return returned;
-			--RAISE Exception E'Taxonomical conflicts !\r\n %', duplicate_hierarchies_msg;
-		    END IF;
-		  --import
-		SELECT fct_importer_catalogue_reference_taxonomy_logic INTO returned FROM  fct_importer_catalogue_reference_taxonomy_logic(req_import_ref , var_metadata_ref ,  exclude_invalid_entries );
+		raise notice '0';
+		
+		PERFORM fct_rmca_document_taxonomy_staging_darwin_reference(req_import_ref, true, false, not exclude_invalid_entries);
+		SELECT fct_importer_catalogue_reference_taxonomy_logic_reference INTO returned FROM  fct_importer_catalogue_reference_taxonomy_logic_reference(req_import_ref , var_metadata_ref ,  exclude_invalid_entries );
 	ELSE
 		SELECT fct_importer_catalogue_reference_taxonomy_rmca_non_taxo INTO returned  FROM fct_importer_catalogue_reference_taxonomy_rmca_non_taxo(req_import_ref , var_metadata_ref , referenced_relation , exclude_invalid_entries );
 	END IF;
@@ -5968,7 +5960,7 @@ CREATE FUNCTION darwin2.fct_importer_catalogue_reference_taxonomy(req_import_ref
 ALTER FUNCTION darwin2.fct_importer_catalogue_reference_taxonomy(req_import_ref integer, var_metadata_ref integer, referenced_relation text, exclude_invalid_entries boolean) OWNER TO darwin2;
 
 --
--- TOC entry 1910 (class 1255 OID 5308248)
+-- TOC entry 1915 (class 1255 OID 5308248)
 -- Name: fct_importer_catalogue_reference_taxonomy_logic(integer, integer, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -6091,7 +6083,134 @@ CREATE FUNCTION darwin2.fct_importer_catalogue_reference_taxonomy_logic(req_impo
 ALTER FUNCTION darwin2.fct_importer_catalogue_reference_taxonomy_logic(req_import_ref integer, var_metadata_ref integer, exclude_invalid_entries boolean) OWNER TO darwin2;
 
 --
--- TOC entry 1896 (class 1255 OID 5308246)
+-- TOC entry 1933 (class 1255 OID 5309216)
+-- Name: fct_importer_catalogue_reference_taxonomy_logic_reference(integer, integer, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
+--
+
+CREATE FUNCTION darwin2.fct_importer_catalogue_reference_taxonomy_logic_reference(req_import_ref integer, var_metadata_ref integer, exclude_invalid_entries boolean) RETURNS boolean
+    LANGUAGE plpgsql
+    AS $_$
+  DECLARE
+	returned boolean;
+	i integer;
+	array_levels integer[];
+	current_level integer;
+	current_names RECORD;
+	
+	--taxo_path varchar[];
+	reference_kingdom int;
+	recCatalogue RECORD;
+	line_created boolean;
+	existing_taxon integer;
+	taxon_to_copy integer;
+	parent_to_update integer;
+
+	name_parent varchar;
+	--updated_id integer;
+	is_updated boolean;
+
+
+  BEGIN	
+	PERFORM setval('taxonomy_id_seq', (SELECT MAX(id)+1 FROM taxonomy ), false);
+	returned :=FALSE;
+
+	SELECT taxonomy_kingdom INTO reference_kingdom FROM imports where id=req_import_ref LIMIT 1;
+	SELECT  array_agg(distinct level_ref order by level_ref) INTO array_levels FROM  staging_catalogue WHERE  import_ref=req_import_ref ;
+
+
+	FOR i in 1..ARRAY_LENGTH(array_levels, 1)
+	LOOP
+		current_level := array_levels[i];
+		RAISE NOTICE '%', current_level;
+		FOR  current_names in SELECT DISTINCT min(id) as min_id, min(parent_ref) as min_parent_ref, name,  fulltoindex(name,FALSE) as name_indexed FROM  staging_catalogue WHERE  import_ref=req_import_ref and level_ref = current_level AND name_cluster IN (select distinct s2.name_cluster FROM staging_catalogue s2 WHERE s2.import_exception= 'taxon_to_be_created' AND s2.import_ref=req_import_ref) --AND catalogue_ref IS NULL --AND parent_updated=false 
+		GROUP BY name ORDER BY name_indexed
+		LOOP
+			line_created:=FALSE;
+			raise notice 'NAME TO IMPORT %', current_names.name;
+			--SELECT fct_rmca_taxo_staging_path_in_reference INTO taxo_path FROM fct_rmca_taxo_staging_path_in_reference(current_names.min_id);
+			--raise notice '%', taxo_path;
+			IF exclude_invalid_entries =FALSE THEN
+			RAISE NOTICE 'INVALID_INCLUDED';
+				SELECT taxonomy.id INTO existing_taxon FROM taxonomy INNER JOIN taxonomy_metadata ON metadata_ref=taxonomy_metadata.id WHERE  taxonomy_metadata.is_reference_taxonomy = TRUE and name_indexed=current_names.name_indexed and level_ref=current_level;
+			ELSE
+			RAISE NOTICE 'EXCLUDE_INVALID';
+				SELECT taxonomy.id INTO existing_taxon FROM taxonomy INNER JOIN taxonomy_metadata ON metadata_ref=taxonomy_metadata.id WHERE  taxonomy_metadata.is_reference_taxonomy = TRUE and name_indexed=current_names.name_indexed and level_ref=current_level  AND status != 'invalid' ;
+			END IF;
+			IF existing_taxon IS NULL THEN
+				RAISE NOTICE 'CREATE';
+				--create higher of taxonomy
+				IF current_level = 4 AND i=1 THEN 
+					--raise notice 'init';
+					parent_to_update:=reference_kingdom;
+				ELSE
+					SELECT parent_updated into is_updated FROM staging_catalogue WHERE id=current_names.min_id;
+					--raise notice 'min parent ref %',current_names.min_parent_ref;
+					IF is_updated IS TRUE THEN
+						--raise notice 'found updated';
+						parent_to_update:=current_names.min_parent_ref;
+					ELSE
+						SELECT catalogue_ref, name INTO parent_to_update, name_parent FROM staging_catalogue WHERE id=current_names.min_parent_ref;
+					END IF;
+					--parent_to_update:=current_names.min_parent_ref;
+				END IF;
+				raise notice 'parent_to_update %',parent_to_update;
+				IF parent_to_update IS NOT NULL THEN
+					EXECUTE 'INSERT INTO taxonomy  (id,name,level_ref,parent_ref, metadata_ref, import_ref) ' ||
+						  'VALUES(DEFAULT,$1,$2,$3,$4,$5) ' ||
+						  'RETURNING *;'
+						INTO recCatalogue
+						USING current_names.name,current_level , parent_to_update , var_metadata_ref, req_import_ref;
+					line_created:=TRUE;
+						  --2019 02 10
+						UPDATE staging_catalogue set imported =true , import_exception='imported_taxon' WHERE id=current_names.min_id;
+
+				ELSE
+					UPDATE staging_catalogue set imported =false , import_exception='taxon_to_be_created_without_suitable_parent' WHERE id=current_names.min_id;
+				END IF;	
+				--in principle we'll be never in this case as the previosu row of the same staging record shoudl have created the taxonomy			
+				
+			ELSE
+				RAISE NOTICE 'EXISTS';
+				taxon_to_copy:=existing_taxon;
+				line_created:=TRUE;
+
+				
+				
+			END IF;
+			IF line_created=TRUE THEN
+				--raise notice 'taxon_to_copy %',taxon_to_copy;
+				--raise notice 'UPDATE staging';
+				WITH staging_catalogue_updated(updated_id) AS (
+				  UPDATE staging_catalogue as sc
+				  SET catalogue_ref = taxon_to_copy
+				  WHERE sc.import_ref = req_import_ref
+					AND sc.name = current_names.name
+					AND sc.level_ref = current_level
+				  RETURNING id
+				)
+				UPDATE staging_catalogue as msc
+				SET parent_ref = taxon_to_copy,
+				  parent_updated = TRUE
+				WHERE msc.import_ref = req_import_ref
+				      AND msc.parent_ref IN (
+				  SELECT updated_id FROM staging_catalogue_updated
+				)
+				      AND parent_updated = FALSE;
+			      END IF;
+
+		END LOOP;
+	END LOOP;
+
+	returned =TRUE;
+	 RETURN returned;
+  END;
+  $_$;
+
+
+ALTER FUNCTION darwin2.fct_importer_catalogue_reference_taxonomy_logic_reference(req_import_ref integer, var_metadata_ref integer, exclude_invalid_entries boolean) OWNER TO darwin2;
+
+--
+-- TOC entry 1905 (class 1255 OID 5308246)
 -- Name: fct_importer_catalogue_reference_taxonomy_rmca_non_taxo(integer, integer, text, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -6376,7 +6495,7 @@ existing_text_hierarchy ;
 ALTER FUNCTION darwin2.fct_importer_catalogue_reference_taxonomy_rmca_non_taxo(req_import_ref integer, var_metadata_ref integer, referenced_relation text, exclude_invalid_entries boolean) OWNER TO darwin2;
 
 --
--- TOC entry 1781 (class 1255 OID 4816416)
+-- TOC entry 1789 (class 1255 OID 4816416)
 -- Name: fct_informative_reset_last_flag(); Type: FUNCTION; Schema: darwin2; Owner: cebmpad
 --
 
@@ -6399,7 +6518,7 @@ $$;
 ALTER FUNCTION darwin2.fct_informative_reset_last_flag() OWNER TO cebmpad;
 
 --
--- TOC entry 1887 (class 1255 OID 4816417)
+-- TOC entry 1895 (class 1255 OID 4816417)
 -- Name: fct_listing_botany(integer, integer[]); Type: FUNCTION; Schema: darwin2; Owner: cebmpad
 --
 
@@ -6413,7 +6532,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_listing_botany(nbr_records integer, VARIADIC taxon_ids integer[]) OWNER TO cebmpad;
 
 --
--- TOC entry 1783 (class 1255 OID 4816418)
+-- TOC entry 1792 (class 1255 OID 4816418)
 -- Name: fct_listing_chronostratigraphy(integer, integer[]); Type: FUNCTION; Schema: darwin2; Owner: cebmpad
 --
 
@@ -6482,7 +6601,7 @@ $$;
 ALTER FUNCTION darwin2.fct_listing_chronostratigraphy(nbr_records integer, VARIADIC chrono_unit_ids integer[]) OWNER TO cebmpad;
 
 --
--- TOC entry 1784 (class 1255 OID 4816419)
+-- TOC entry 1793 (class 1255 OID 4816419)
 -- Name: fct_listing_lithology(integer, integer[]); Type: FUNCTION; Schema: darwin2; Owner: cebmpad
 --
 
@@ -6551,7 +6670,7 @@ $$;
 ALTER FUNCTION darwin2.fct_listing_lithology(nbr_records integer, VARIADIC litholo_unit_ids integer[]) OWNER TO cebmpad;
 
 --
--- TOC entry 1785 (class 1255 OID 4816420)
+-- TOC entry 1794 (class 1255 OID 4816420)
 -- Name: fct_listing_lithostratigraphy(integer, integer[]); Type: FUNCTION; Schema: darwin2; Owner: cebmpad
 --
 
@@ -6620,7 +6739,7 @@ $$;
 ALTER FUNCTION darwin2.fct_listing_lithostratigraphy(nbr_records integer, VARIADIC litho_unit_ids integer[]) OWNER TO cebmpad;
 
 --
--- TOC entry 1786 (class 1255 OID 4816421)
+-- TOC entry 1795 (class 1255 OID 4816421)
 -- Name: fct_listing_mineralogy(integer, integer[]); Type: FUNCTION; Schema: darwin2; Owner: cebmpad
 --
 
@@ -6689,7 +6808,7 @@ $$;
 ALTER FUNCTION darwin2.fct_listing_mineralogy(nbr_records integer, VARIADIC mineralo_unit_ids integer[]) OWNER TO cebmpad;
 
 --
--- TOC entry 1780 (class 1255 OID 4816422)
+-- TOC entry 1788 (class 1255 OID 4816422)
 -- Name: fct_listing_taxonomy(integer, integer[]); Type: FUNCTION; Schema: darwin2; Owner: cebmpad
 --
 
@@ -6758,7 +6877,7 @@ $$;
 ALTER FUNCTION darwin2.fct_listing_taxonomy(nbr_records integer, VARIADIC taxon_ids integer[]) OWNER TO cebmpad;
 
 --
--- TOC entry 1790 (class 1255 OID 4816425)
+-- TOC entry 1799 (class 1255 OID 4816425)
 -- Name: fct_listing_zoology(integer, integer[]); Type: FUNCTION; Schema: darwin2; Owner: cebmpad
 --
 
@@ -6772,7 +6891,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_listing_zoology(nbr_records integer, VARIADIC taxon_ids integer[]) OWNER TO cebmpad;
 
 --
--- TOC entry 1787 (class 1255 OID 4816426)
+-- TOC entry 1796 (class 1255 OID 4816426)
 -- Name: fct_look_for_institution(text); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -6809,7 +6928,7 @@ $$;
 ALTER FUNCTION darwin2.fct_look_for_institution(fullname text) OWNER TO darwin2;
 
 --
--- TOC entry 1788 (class 1255 OID 4816427)
+-- TOC entry 1797 (class 1255 OID 4816427)
 -- Name: fct_look_for_people(text); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -6848,7 +6967,7 @@ $$;
 ALTER FUNCTION darwin2.fct_look_for_people(fullname text) OWNER TO darwin2;
 
 --
--- TOC entry 1789 (class 1255 OID 4816428)
+-- TOC entry 1798 (class 1255 OID 4816428)
 -- Name: fct_mask_date(timestamp without time zone, integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -6866,7 +6985,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_mask_date(date_fld timestamp without time zone, mask_fld integer) OWNER TO darwin2;
 
 --
--- TOC entry 1791 (class 1255 OID 4816429)
+-- TOC entry 1800 (class 1255 OID 4816429)
 -- Name: fct_nbr_in_relation(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -6910,7 +7029,7 @@ $$;
 ALTER FUNCTION darwin2.fct_nbr_in_relation() OWNER TO darwin2;
 
 --
--- TOC entry 1792 (class 1255 OID 4816430)
+-- TOC entry 1801 (class 1255 OID 4816430)
 -- Name: fct_nbr_in_synonym(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -6945,7 +7064,7 @@ $$;
 ALTER FUNCTION darwin2.fct_nbr_in_synonym() OWNER TO darwin2;
 
 --
--- TOC entry 1793 (class 1255 OID 4816431)
+-- TOC entry 1802 (class 1255 OID 4816431)
 -- Name: fct_remove_array_elem(anyarray, anyarray); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -6961,7 +7080,7 @@ $$;
 ALTER FUNCTION darwin2.fct_remove_array_elem(in_array anyarray, elem anyarray, OUT out_array anyarray) OWNER TO darwin2;
 
 --
--- TOC entry 1794 (class 1255 OID 4816432)
+-- TOC entry 1803 (class 1255 OID 4816432)
 -- Name: fct_remove_array_elem(anyarray, anyelement); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -6977,7 +7096,7 @@ $$;
 ALTER FUNCTION darwin2.fct_remove_array_elem(in_array anyarray, elem anyelement, OUT out_array anyarray) OWNER TO darwin2;
 
 --
--- TOC entry 1795 (class 1255 OID 4816433)
+-- TOC entry 1804 (class 1255 OID 4816433)
 -- Name: fct_remove_last_flag(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -6997,7 +7116,7 @@ $$;
 ALTER FUNCTION darwin2.fct_remove_last_flag() OWNER TO darwin2;
 
 --
--- TOC entry 1796 (class 1255 OID 4816434)
+-- TOC entry 1805 (class 1255 OID 4816434)
 -- Name: fct_remove_last_flag_loan(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -7016,7 +7135,7 @@ $$;
 ALTER FUNCTION darwin2.fct_remove_last_flag_loan() OWNER TO darwin2;
 
 --
--- TOC entry 1917 (class 1255 OID 5308995)
+-- TOC entry 1922 (class 1255 OID 5308995)
 -- Name: fct_remove_null_array_elem(anyarray); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -7032,7 +7151,7 @@ $$;
 ALTER FUNCTION darwin2.fct_remove_null_array_elem(in_array anyarray, OUT out_array anyarray) OWNER TO darwin2;
 
 --
--- TOC entry 1797 (class 1255 OID 4816435)
+-- TOC entry 1806 (class 1255 OID 4816435)
 -- Name: fct_report_loans_addresses(integer, text); Type: FUNCTION; Schema: darwin2; Owner: cebmpad
 --
 
@@ -7205,7 +7324,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_report_loans_addresses(loan_id integer, target_copy text) OWNER TO cebmpad;
 
 --
--- TOC entry 1798 (class 1255 OID 4816436)
+-- TOC entry 1807 (class 1255 OID 4816436)
 -- Name: fct_report_loans_forms(integer, text, text, text, text, boolean, text); Type: FUNCTION; Schema: darwin2; Owner: cebmpad
 --
 
@@ -7466,7 +7585,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_report_loans_forms(loan_id integer, full_target_list text, short_target_list text, selected_target_list text, targeted_catalogues text, with_addr boolean, lang text) OWNER TO cebmpad;
 
 --
--- TOC entry 1800 (class 1255 OID 4816439)
+-- TOC entry 1809 (class 1255 OID 4816439)
 -- Name: fct_report_loans_maintenances(integer, text); Type: FUNCTION; Schema: darwin2; Owner: cebmpad
 --
 
@@ -7524,7 +7643,7 @@ CREATE FUNCTION darwin2.fct_report_loans_maintenances(loan_id integer, maintenan
 ALTER FUNCTION darwin2.fct_report_loans_maintenances(loan_id integer, maintenance_type text) OWNER TO cebmpad;
 
 --
--- TOC entry 1801 (class 1255 OID 4816440)
+-- TOC entry 1810 (class 1255 OID 4816440)
 -- Name: fct_report_loans_return_to(integer, text); Type: FUNCTION; Schema: darwin2; Owner: cebmpad
 --
 
@@ -7570,7 +7689,7 @@ CREATE FUNCTION darwin2.fct_report_loans_return_to(loan_id integer, lang text DE
 ALTER FUNCTION darwin2.fct_report_loans_return_to(loan_id integer, lang text) OWNER TO cebmpad;
 
 --
--- TOC entry 1802 (class 1255 OID 4816441)
+-- TOC entry 1811 (class 1255 OID 4816441)
 -- Name: fct_report_loans_transporters(integer, text, text); Type: FUNCTION; Schema: darwin2; Owner: cebmpad
 --
 
@@ -7652,7 +7771,7 @@ CREATE FUNCTION darwin2.fct_report_loans_transporters(loan_id integer, transport
 ALTER FUNCTION darwin2.fct_report_loans_transporters(loan_id integer, transporter_side text, lang text) OWNER TO cebmpad;
 
 --
--- TOC entry 1888 (class 1255 OID 4816442)
+-- TOC entry 1896 (class 1255 OID 4816442)
 -- Name: fct_rmca_abbreviate_names(character varying); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -7713,7 +7832,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_abbreviate_names(given_name character varying) OWNER TO postgres;
 
 --
--- TOC entry 1805 (class 1255 OID 4816443)
+-- TOC entry 1814 (class 1255 OID 4816443)
 -- Name: fct_rmca_chk_is_already_reference_taxo(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -7758,7 +7877,31 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_chk_is_already_reference_taxo() OWNER TO darwin2;
 
 --
--- TOC entry 1806 (class 1255 OID 4816444)
+-- TOC entry 1926 (class 1255 OID 5309160)
+-- Name: fct_rmca_chk_only_one_reference_taxo(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
+--
+
+CREATE FUNCTION darwin2.fct_rmca_chk_only_one_reference_taxo() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	
+BEGIN
+  
+	IF (SELECT COUNT(*) FROM taxonomy_metadata where is_reference_taxonomy=TRUE)>=1 THEN
+		RAISE EXCEPTION 'A reference taxonomy already exists in this database (only one is supported)';
+	END IF;
+   
+ 	    
+  RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION darwin2.fct_rmca_chk_only_one_reference_taxo() OWNER TO darwin2;
+
+--
+-- TOC entry 1816 (class 1255 OID 4816444)
 -- Name: fct_rmca_chk_uniqueness_reference_taxo(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -7773,37 +7916,39 @@ DECLARE
 BEGIN
 --ftheeten 2017 07 03
 
-  IF new.is_reference_taxonomy =TRUE AND TG_OP = 'UPDATE' THEN
-	i:=0;
-	test_refs:=test_refs||new.id;
-	FOR  cursor_tmp IN 
-	SELECT  DISTINCT a.name, a.level_ref, a.metadata_ref as metadata_refs 
-	--,fct_find_tax_level(a.path,4 ) as phylum
-	from taxonomy a
-	LEFT JOIN taxonomy b
-	ON fulltoindex(a.name)=fulltoindex(b.name)
-	AND a.level_ref=b.level_ref
-	LEFT JOIN taxonomy_metadata c
-	ON a.metadata_ref=c.id AND a.id<> b.id
-	WHERe 
-        b.metadata_ref=NEW.id
-	AND c.is_reference_taxonomy=true
-	AND fct_find_tax_level(a.path,4 )=fct_find_tax_level(b.path,4 )
+   IF new.is_reference_taxonomy =TRUE THEN
+		IF (SELECT COUNT(*) FROM taxonomy_metadata where is_reference_taxonomy=TRUE)>=1 THEN
+			RAISE EXCEPTION 'A reference taxonomy already exists in this database (only one is supported)';
+		END IF;
+		IF TG_OP = 'UPDATE' THEN
+			i:=0;
+			test_refs:=test_refs||new.id;
+			FOR  cursor_tmp IN 
+			SELECT  DISTINCT a.name, a.level_ref, a.metadata_ref as metadata_refs 
+			--,fct_find_tax_level(a.path,4 ) as phylum
+			from taxonomy a
+			LEFT JOIN taxonomy b
+			ON fulltoindex(a.name)=fulltoindex(b.name)
+			AND a.level_ref=b.level_ref
+			LEFT JOIN taxonomy_metadata c
+			ON a.metadata_ref=c.id AND a.id<> b.id
+			WHERe 
+			b.metadata_ref=NEW.id
+			AND c.is_reference_taxonomy=true
+			AND fct_find_tax_level(a.path,4 )=fct_find_tax_level(b.path,4 )
 
-	/*SELECT * FROM (SELECT count(*) as cpt , name, level_ref, array_agg(metadata_ref) as metadata_refs 
-	,fct_find_tax_level(path,4 ) as phylum
-	from taxonomy 
-	WHERE metadata_ref in (SELECT id FROM taxonomy_metadata where is_reference_taxonomy=true)
-GROUP BY name, level_ref , fct_find_tax_level(path,4 ) HAVING count(*) >0) a where test_refs <@ metadata_refs*/
-	LOOP 
-		duplicates:=duplicates||cursor_tmp.name;
-		i:=i+1;
-	END LOOP;
-	IF i>0 THEN
-		RAISE EXCEPTION 'Some taxa are present several times in the reference taxonomy, check %', array_to_string(duplicates,',');
-	END IF;
-   
-   END IF;	    
+
+			LOOP 
+				duplicates:=duplicates||cursor_tmp.name;
+				i:=i+1;
+			END LOOP;
+			IF i>0 THEN
+				RAISE EXCEPTION 'Some taxa are present several times in the reference taxonomy, check %', array_to_string(duplicates,',');
+			END IF;
+		END IF;
+   END IF;
+
+	    
   RETURN NEW;
 END;
 $$;
@@ -7812,7 +7957,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_chk_uniqueness_reference_taxo() OWNER TO darwin2;
 
 --
--- TOC entry 1921 (class 1255 OID 5309144)
+-- TOC entry 1925 (class 1255 OID 5309144)
 -- Name: fct_rmca_compare_taxonomy_staging_darwin(integer, boolean, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -7852,7 +7997,162 @@ fct_rmca_sort_taxon_path_alphabetically(path||taxonomy.id::varchar
 ALTER FUNCTION darwin2.fct_rmca_compare_taxonomy_staging_darwin(req_import_ref integer, with_rank boolean, is_indexed boolean) OWNER TO darwin2;
 
 --
--- TOC entry 1919 (class 1255 OID 5309116)
+-- TOC entry 1935 (class 1255 OID 5309225)
+-- Name: fct_rmca_compare_taxonomy_staging_darwin_reference(integer, boolean, boolean, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
+--
+
+CREATE FUNCTION darwin2.fct_rmca_compare_taxonomy_staging_darwin_reference(req_import_ref integer, with_rank boolean DEFAULT true, is_indexed boolean DEFAULT false, match_invalid_units boolean DEFAULT true) RETURNS TABLE(id integer, name character varying, staging_catalogue_hierarchy character varying, darwin_hierarchy character varying, level_name character varying, level_ref integer, taxonomic_id integer, msg character varying)
+    LANGUAGE plpgsql
+    AS $_$ 
+BEGIN
+IF match_invalid_units IS FALSE THEN
+	RETURN QUERY SELECT a.*, 
+	CASE 
+	WHEN 
+	taxonomy_id is NULL THEN
+	'taxon_to_be_created'::varchar
+	when
+	staging_catalogue_hierarchy_db=darwin_hierarchy_db THEN
+	'taxonomic_hierarchy_already_exists'::varchar
+	WHEN 
+	staging_catalogue_hierarchy_db <> darwin_hierarchy_db THEN
+	'taxonomic_conflict_in_reference'::varchar
+
+	END
+
+	 FROM (SELECT distinct 
+
+	staging_catalogue.id, staging_catalogue.name, fct_rmca_sort_taxon_path_alphabetically_staging_merge_reference(staging_catalogue.id,req_import_ref, $2, $3)
+
+	as staging_catalogue_hierarchy_db 
+
+	, 
+	fct_rmca_sort_taxon_path_alphabetically(path||taxonomy.id::varchar
+
+	,
+	1 , true, false
+	) as darwin_hierarchy_db, catalogue_levels.level_name,
+
+	staging_catalogue.level_ref,
+	taxonomy.id  as taxonomy_id
+	 from staging_catalogue
+
+	LEFT JOIN taxonomy ON fulltoindex(name_indexed, false)= fulltoindex(staging_catalogue.name, false) and staging_catalogue.level_ref=taxonomy.level_ref
+	 AND taxonomy.is_reference_taxonomy=TRUE
+	LEFT JOIN catalogue_levels
+	ON staging_catalogue.level_ref=catalogue_levels.id
+	 WHERE staging_catalogue.import_ref=$1 AND taxonomy.status !='invalid'
+
+	 ORDER BY staging_catalogue.level_ref, staging_catalogue.name) a ;
+
+ELSE
+
+	RETURN QUERY SELECT a.*, 
+	CASE 
+	WHEN 
+	taxonomy_id is NULL THEN
+	'taxon_to_be_created'::varchar
+	when
+	staging_catalogue_hierarchy_db=darwin_hierarchy_db THEN
+	'taxonomic_hierarchy_already_exists'::varchar
+	WHEN 
+	staging_catalogue_hierarchy_db <> darwin_hierarchy_db THEN
+	'taxonomic_conflict_in_reference'::varchar
+
+	END
+
+	 FROM (SELECT distinct 
+
+	staging_catalogue.id, staging_catalogue.name, fct_rmca_sort_taxon_path_alphabetically_staging_merge_reference(staging_catalogue.id,req_import_ref, $2, $3)
+
+	as staging_catalogue_hierarchy_db 
+
+	, 
+	fct_rmca_sort_taxon_path_alphabetically(path||taxonomy.id::varchar
+
+	,
+	1 , true, false
+	) as darwin_hierarchy_db,  catalogue_levels.level_name,
+
+	staging_catalogue.level_ref,
+	taxonomy.id  as taxonomy_id
+	 from staging_catalogue
+
+	LEFT JOIN taxonomy ON fulltoindex(name_indexed, false)= fulltoindex(staging_catalogue.name, false) and staging_catalogue.level_ref=taxonomy.level_ref
+	 AND taxonomy.is_reference_taxonomy=TRUE
+	LEFT JOIN catalogue_levels
+	ON staging_catalogue.level_ref=catalogue_levels.id
+	 WHERE staging_catalogue.import_ref=$1
+
+	 ORDER BY  staging_catalogue.level_ref, staging_catalogue.name) a ;
+   END IF;
+ END 
+ $_$;
+
+
+ALTER FUNCTION darwin2.fct_rmca_compare_taxonomy_staging_darwin_reference(req_import_ref integer, with_rank boolean, is_indexed boolean, match_invalid_units boolean) OWNER TO darwin2;
+
+--
+-- TOC entry 1932 (class 1255 OID 5309228)
+-- Name: fct_rmca_compare_taxonomy_staging_darwin_reference_bck(integer, boolean, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
+--
+
+CREATE FUNCTION darwin2.fct_rmca_compare_taxonomy_staging_darwin_reference_bck(req_import_ref integer, with_rank boolean DEFAULT true, is_indexed boolean DEFAULT false) RETURNS TABLE(id integer, name character varying, staging_catalogue_hierarchy character varying, darwin_hierarchy character varying, level_name character varying, level_ref integer, taxonomic_id integer, msg character varying)
+    LANGUAGE sql
+    AS $_$ SELECT *, 
+cASE 
+WHEN 
+taxonomy_id is NULL THEN
+'taxon_to_be_created'
+when
+staging_catalogue_hierarchy=darwin_hierarchy THEN
+'taxonomic_hierarchy_already_exists'
+WHEN 
+staging_catalogue_hierarchy <> darwin_hierarchy THEN
+'taxonomic_conflict_in_reference'
+
+END
+
+ FROM (SELECT distinct 
+
+staging_catalogue.id, staging_catalogue.name, fct_rmca_sort_taxon_path_alphabetically_staging_merge_reference(staging_catalogue.id,req_import_ref, $2, $3)
+
+as staging_catalogue_hierarchy 
+
+, 
+fct_rmca_sort_taxon_path_alphabetically(path||taxonomy.id::varchar
+
+,
+1 , true, false
+) as darwin_hierarchy, level_name,
+
+staging_catalogue.level_ref,
+taxonomy.id  as taxonomy_id
+ from staging_catalogue
+
+LEFT JOIN taxonomy ON fulltoindex(name_indexed, false)= fulltoindex(staging_catalogue.name, false) and staging_catalogue.level_ref=taxonomy.level_ref
+ AND taxonomy.is_reference_taxonomy=TRUE
+LEFT JOIN catalogue_levels
+ON staging_catalogue.level_ref=catalogue_levels.id
+ WHERE staging_catalogue.import_ref=$1
+
+ /*AND path !='/' and
+
+fct_rmca_sort_taxon_path_alphabetically(path||taxonomy.id::varchar
+
+,
+1 , $2, $3
+)
+ !=
+
+ fct_rmca_sort_taxon_path_alphabetically_staging_merge_reference(staging_catalogue.id, req_import_ref, $2, $3)*/ order by staging_catalogue.level_ref, staging_catalogue.name) a ;
+ $_$;
+
+
+ALTER FUNCTION darwin2.fct_rmca_compare_taxonomy_staging_darwin_reference_bck(req_import_ref integer, with_rank boolean, is_indexed boolean) OWNER TO darwin2;
+
+--
+-- TOC entry 1924 (class 1255 OID 5309116)
 -- Name: fct_rmca_compare_taxonomy_staging_darwin_tagging(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -7886,11 +8186,11 @@ END;
 ALTER FUNCTION darwin2.fct_rmca_compare_taxonomy_staging_darwin_tagging(req_import_ref integer) OWNER TO darwin2;
 
 --
--- TOC entry 1920 (class 1255 OID 5309137)
--- Name: fct_rmca_document_taxonomy_staging_darwin(integer, boolean, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
+-- TOC entry 1928 (class 1255 OID 5309230)
+-- Name: fct_rmca_document_taxonomy_staging_darwin_reference(integer, boolean, boolean, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
-CREATE FUNCTION darwin2.fct_rmca_document_taxonomy_staging_darwin(req_import_ref integer, with_rank boolean DEFAULT true, is_indexed boolean DEFAULT false) RETURNS boolean
+CREATE FUNCTION darwin2.fct_rmca_document_taxonomy_staging_darwin_reference(req_import_ref integer, with_rank boolean DEFAULT true, is_indexed boolean DEFAULT false, match_invalid_taxonomies boolean DEFAULT true) RETURNS boolean
     LANGUAGE plpgsql
     AS $$ 
 DECLARE
@@ -7899,9 +8199,9 @@ DECLARE
 BEGIN 
 
 	returned = false;
-	for curs_taxo IN SELECT *  FROM fct_rmca_compare_taxonomy_staging_darwin(req_import_ref, with_rank, is_indexed)
+	for curs_taxo IN SELECT *  FROM fct_rmca_compare_taxonomy_staging_darwin_reference(req_import_ref, with_rank, is_indexed, match_invalid_taxonomies)
 	LOOP
-		UPDATE staging_catalogue SET import_exception='conflict_in_reference_taxonomies', staging_hierarchy=curs_taxo.staging_catalogue_hierarchy, darwin_hierarchy=curs_taxo.darwin_hierarchy WHERE id=curs_taxo.id;
+		UPDATE staging_catalogue SET import_exception=curs_taxo.msg, staging_hierarchy=curs_taxo.staging_catalogue_hierarchy, darwin_hierarchy=curs_taxo.darwin_hierarchy WHERE id=curs_taxo.id;
 	END LOOP;
 	returned:=TRUE;
 	return returned;
@@ -7909,10 +8209,10 @@ END
  $$;
 
 
-ALTER FUNCTION darwin2.fct_rmca_document_taxonomy_staging_darwin(req_import_ref integer, with_rank boolean, is_indexed boolean) OWNER TO darwin2;
+ALTER FUNCTION darwin2.fct_rmca_document_taxonomy_staging_darwin_reference(req_import_ref integer, with_rank boolean, is_indexed boolean, match_invalid_taxonomies boolean) OWNER TO darwin2;
 
 --
--- TOC entry 1807 (class 1255 OID 4816445)
+-- TOC entry 1815 (class 1255 OID 4816445)
 -- Name: fct_rmca_dynamic_saved_search(integer, integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -7950,7 +8250,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_rmca_dynamic_saved_search(id_query integer, id_user integer) OWNER TO darwin2;
 
 --
--- TOC entry 1799 (class 1255 OID 4816446)
+-- TOC entry 1808 (class 1255 OID 4816446)
 -- Name: fct_rmca_dynamic_saved_search_geojson(integer, integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -7993,7 +8293,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_dynamic_saved_search_geojson(id_query integer, id_user integer) OWNER TO darwin2;
 
 --
--- TOC entry 1803 (class 1255 OID 4816447)
+-- TOC entry 1812 (class 1255 OID 4816447)
 -- Name: fct_rmca_dynamic_saved_search_taxonomy(integer, integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -8027,7 +8327,7 @@ END; $$;
 ALTER FUNCTION darwin2.fct_rmca_dynamic_saved_search_taxonomy(id_query integer, id_user integer) OWNER TO darwin2;
 
 --
--- TOC entry 1914 (class 1255 OID 5308877)
+-- TOC entry 1920 (class 1255 OID 5308877)
 -- Name: fct_rmca_get_merge_catalogue_path_in_staging_existing_taxonomy(integer, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -8261,7 +8561,244 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_get_merge_catalogue_path_in_staging_existing_taxonomy(id_staging_taxon integer, exclude_invalid_entries boolean) OWNER TO darwin2;
 
 --
--- TOC entry 1912 (class 1255 OID 5308865)
+-- TOC entry 1939 (class 1255 OID 5309273)
+-- Name: fct_rmca_get_merge_catalogue_path_in_staging_existing_taxonomy(integer, integer, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
+--
+
+CREATE FUNCTION darwin2.fct_rmca_get_merge_catalogue_path_in_staging_existing_taxonomy(id_staging_taxon integer, taxonomy_metadata_id integer, exclude_invalid_entries boolean DEFAULT false) RETURNS character varying[]
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+ --new 2019 02 26
+ --this function searches a taxon path insde the same taxonomy
+ returned varchar[];
+ returned_tmp varchar;
+ --ftheeten 2019 02 15
+ returned_tmp_levels varchar;
+ returned_name varchar;
+ returned_ids_staging varchar;
+
+ staging_path_name varchar;
+ staging_path_level varchar;
+ staging_path_level_array int[];
+ staging_path_name_array varchar[];
+ --ftheeten 2019 02 15
+taxonomy_path_level_array int[];
+ 
+ parent integer;
+ i integer;
+ tmp_id integer;
+ tmp_name_path varchar;
+ name_tmp varchar;
+ level_tmp integer;
+  level_tmp_char varchar;
+  level_of_parent_staging int;
+  level_of_parent_taxonomy int;
+  
+ id_main_taxon integer;
+ --ftheeten 2019 02 15
+ id_level_taxon integer;
+ staging_path_found boolean;
+ array_ids integer[];
+ array_ids_string varchar;
+ last_id varchar;
+ last_id_set boolean;
+ catalogue_ref_tmp integer;
+ import_ref_tmp integer;
+ parent_updated_tmp boolean;
+ parent_updated_refs_array integer[];
+ --ftheeten 2019 02 15
+  parent_updated_levels_array integer[];
+ taxon_found_in_staging boolean;
+BEGIN
+--raise notice 'ENTRY';
+	SELECT parent_updated INTO parent_updated_tmp FROM  staging_catalogue WHERE id=tmp_id;
+	IF parent_updated_tmp=true THEN
+		return NULL;
+	END IF;
+		tmp_id:= id_staging_taxon;
+		i:=0;
+		parent:=-1;
+
+		--staging_path_name:='/';
+		--staging_path_level:='/';
+		
+		--array_ids_string:='/'||tmp_id||'/';
+		array_ids:=tmp_id||array_ids;
+		WHILE parent is not null and i<30 LOOP
+			SELECT parent_ref, name, level_ref, catalogue_ref, import_ref  INTO parent, name_tmp, level_of_parent_staging , catalogue_ref_tmp, import_ref_tmp FROM staging_catalogue WHERE id=tmp_id --and catalogue_ref is NULL 
+			LIMIT 1;
+			
+			IF parent is not null THEN
+				
+				IF catalogue_ref_tmp IS NULL THEN
+					tmp_id:=parent;
+				ELSE
+					--raise notice 'APPEND';
+					SELECT id, level_ref into tmp_id, level_tmp  FROM  staging_catalogue WHERE import_ref=import_ref_tmp AND catalogue_ref=parent; --AND parent_updated=TRUE;
+					parent_updated_refs_array:=parent||parent_updated_refs_array;
+					--ftheeten 2019 02 15
+					parent_updated_levels_array:= level_tmp||parent_updated_levels_array;
+					--raise notice 'APPENDED';
+				END IF;
+				IF tmp_id IS NOT NULL THEN
+					
+					array_ids := tmp_id||array_ids;
+					--raise notice '%',array_ids_string;
+				END IF;
+			END IF;
+			
+			staging_path_name_array:= name_tmp::varchar||staging_path_name_array;
+			--raise notice '%',staging_path_name;
+			staging_path_level_array:= level_of_parent_staging||staging_path_level_array;
+			
+			i:=i+1;
+		END LOOP;
+		--raise notice '%', staging_path_name_array;
+		--raise notice '%', staging_path_level_array;
+		--raise notice '%', array_ids;
+		--raise notice '%', parent_updated_refs_array;
+		/*IF staging_path_name='/' OR
+		staging_path_level='/' OR 
+		array_ids_string='/' THEN
+			RETURN NULL;
+		END IF;*/
+		
+		IF ARRAY_LENGTH(staging_path_name_array,1)=0 OR
+		ARRAY_LENGTH(staging_path_level_array,1)=0 OR 
+		ARRAY_LENGTH(array_ids,1)=0 THEN
+		--RAISE NOTICE 'EXIT 0';
+			RETURN NULL;
+		END IF;
+		--staging_path_level_array:=string_to_array(staging_path_level, '/');
+		--staging_path_name_array:=string_to_array(staging_path_name, '/');
+		--array_ids=string_to_array(array_ids_string, '/');
+		
+		returned_tmp:='/';
+		returned_tmp_levels:='/';
+		returned_name:='/';
+		returned_ids_staging='/';
+		staging_path_found:=false;
+		taxon_found_in_staging:=false;
+		last_id_set:=false;
+--raise notice 'staging_path_name_array %', staging_path_name_array;
+		IF ARRAY_LENGTH(staging_path_level_array, 1)=ARRAY_LENGTH(staging_path_name_array, 1) THEN
+			FOR i IN  1..ARRAY_LENGTH(staging_path_name_array,1) LOOP
+				--RAISe NOTICE '%d', i;
+				--RAISe NOTICE '%d', ARRAY_LENGTH(staging_path_name_array,1);
+				--RAISe NOTICE '%d', ARRAY_LENGTH(parent_updated_refs_array,1);
+				tmp_name_path:=staging_path_name_array[i];
+--raise notice 'tmp_name_path %',tmp_name_path;
+				IF LENGTH(tmp_name_path)>0 THEN
+				
+					raise notice 'TEST tmp_name_path';
+					level_tmp_char:=staging_path_level_array[i];
+					--taxonomic parent already in staging
+					IF ARRAY_LENGTH( parent_updated_refs_array ,1)> 0 AND i < ARRAY_LENGTH( parent_updated_refs_array ,1) THEN
+						
+						id_main_taxon:=parent_updated_refs_array[i];
+						--ftheeten 2019 02 15
+						id_level_taxon=parent_updated_levels_array[i];
+						--raise notice 'id_main_taxon %', id_main_taxon;
+						taxon_found_in_staging:=true;
+					--find taxonomuic parent from string
+					ELSE
+						
+						taxon_found_in_staging:=false;
+
+						IF exclude_invalid_entries=true THEN
+							SELECT id, level_ref INTO id_main_taxon, id_level_taxon FROM taxonomy WHERE name_indexed=fulltoindex(tmp_name_path) AND level_ref=level_tmp_char::int AND status !='invalid' AND metadata_ref=taxonomy_metadata_id LIMIT 1;
+
+						
+						ELSE
+							SELECT id, level_ref INTO id_main_taxon, id_level_taxon FROM taxonomy WHERE name_indexed=fulltoindex(tmp_name_path) AND level_ref=level_tmp_char::int AND metadata_ref=taxonomy_metadata_id LIMIT 1;
+							
+						END IF;
+					END IF;
+					IF id_main_taxon IS NULL THEN
+						--raise notice 'NOT_FOUND';
+						returned_tmp:= returned_tmp||'NOT_FOUND/';
+						returned_tmp_levels:= returned_tmp_levels||'NOT_FOUND/';
+						staging_path_found:=false;
+					ELSE						
+						--RAISE NOTICE 'FOUND';
+						returned_tmp:= returned_tmp||id_main_taxon::varchar||'/';
+						--ftheeten 2019 02 15
+						returned_tmp_levels:= returned_tmp_levels||id_level_taxon::varchar||'/';
+						returned_name:=returned_name||tmp_name_path||'/';
+						returned_ids_staging:=returned_ids_staging||array_ids[i]::varchar||'/';
+						
+						last_id:=array_ids[i];
+						staging_path_found:=TRUE;
+					END IF;
+					IF staging_path_found=TRUE THEN
+						IF exclude_invalid_entries=true AND taxon_found_in_staging=false THEN
+							
+							PERFORM id FROM taxonomy WHERE path||id::varchar||'/'=returned_tmp AND status !='invalid' AND metadata_ref=taxonomy_metadata_id;
+						ELSIF taxon_found_in_staging=false THEN
+						
+						--raise notice 'returned_tmp : %',returned_tmp; 
+							PERFORM id FROM taxonomy WHERE path||id::varchar||'/'=returned_tmp AND metadata_ref=taxonomy_metadata_id;
+							IF NOT FOUND THEN
+								PERFORM id FROM taxonomy WHERE path||id::varchar||'/'LIKE '%'||returned_tmp AND metadata_ref=taxonomy_metadata_id;
+							END IF;
+						--ELSE
+						--	RAISE NOTICE 'NO check';
+						END IF;
+						IF FOUND OR taxon_found_in_staging=true THEN
+							--RAISE NOTICE 'DEF';
+							--parent path found in taxonomy (longest prefix)
+
+							--eg for complete path in staging /97909/97910/97911/97912/97913/97914/97922/ )
+							--eg. /1/5/5953/5954/5955/
+							returned[1]:=returned_tmp;
+							--string trascription of the path
+							--eg. /Eucaryota/Animalia/CHORDATA/ACTINOPTERYGII/PERCIFORMES/
+							returned[2]:=returned_name;
+							--path corresponding to the longest taxonomical prefix with the staging ids
+							--/97909/97910/97911/97912/97913/
+							returned[3]:=returned_ids_staging;
+							--lowest taxon of the path 
+							--eg. 97913
+							returned[4]:=last_id;
+							--path the parents in staging not found in taxonomy (remainded of the longest prefix)
+							--eg. /97914/97922/ 
+							IF(i<ARRAY_LENGTH(array_ids,1)) THEN
+								returned[5]:='/'||array_to_string(array_ids[i+1:ARRAY_LENGTH(array_ids,1)],'/')||'/';
+							ELSE
+								
+								returned[5]:='/';
+							END IF;
+
+							--levels in staging
+							returned[6]:='/'||array_to_string(staging_path_level_array,'/')||'/';
+							--levels in taxonomy
+							returned[7]:=returned_tmp_levels;
+							
+							--SUBSTRING(array_ids_string FROM  POSITION ('/'||last_id||'/' IN array_ids_string) + LENGTH('/'||last_id));
+						ELSE
+							--RAISE NOTICE 'EXIT 1';
+							RETURN returned;
+						END IF;
+					ELSE 
+						RAISE NOTICE 'EXIT 2';
+						RETURN returned;
+					END IF;
+				END IF;
+				
+			END LOOP;
+		END IF;
+--RAISE NOTICE 'EXIT 3';
+	return returned;
+END;
+
+$$;
+
+
+ALTER FUNCTION darwin2.fct_rmca_get_merge_catalogue_path_in_staging_existing_taxonomy(id_staging_taxon integer, taxonomy_metadata_id integer, exclude_invalid_entries boolean) OWNER TO darwin2;
+
+--
+-- TOC entry 1917 (class 1255 OID 5308865)
 -- Name: fct_rmca_get_merge_catalogue_path_in_staging_json_mauvais(integer, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -8480,7 +9017,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_get_merge_catalogue_path_in_staging_json_mauvais(id_staging_taxon integer, exclude_invalid_entries boolean) OWNER TO darwin2;
 
 --
--- TOC entry 1897 (class 1255 OID 5307647)
+-- TOC entry 1906 (class 1255 OID 5307647)
 -- Name: fct_rmca_gtu_linetotagarray_pattern(text); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -8499,7 +9036,76 @@ $_$;
 ALTER FUNCTION darwin2.fct_rmca_gtu_linetotagarray_pattern(pattern text) OWNER TO darwin2;
 
 --
--- TOC entry 1916 (class 1255 OID 5308883)
+-- TOC entry 1942 (class 1255 OID 5314954)
+-- Name: fct_rmca_handle_lithostratigraphy_import(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
+--
+
+CREATE FUNCTION darwin2.fct_rmca_handle_lithostratigraphy_import(req_import_ref integer) RETURNS boolean
+    LANGUAGE plpgsql
+    AS $$
+	DECLARE
+		returned boolean;
+		staging_catalogue_line staging_catalogue;
+		id_litho integer;
+		parent_updated_flag boolean;
+		imported boolean;
+		new_parent integer;
+		_c text;
+	BEGIN
+		returned := false;
+		FOR staging_catalogue_line IN SELECT staging_catalogue.* FROM staging_catalogue
+			LEFT JOIN imports ON
+			staging_catalogue.import_ref=imports.id 
+			WHERE 
+			staging_catalogue.import_ref= req_import_ref 
+			AND imports.format = 'lithostratigraphy' AND staging_catalogue.imported=false ORDER BY staging_catalogue.id
+			LOOP
+				BEGIN
+					imported:=false;
+					SELECT id INTO id_litho FROM lithostratigraphy WHERE fulltoindex(lithostratigraphy.name)=fulltoindex(staging_catalogue_line.name) AND lithostratigraphy.level_ref =staging_catalogue_line.level_ref;
+					IF FOUND THEN
+						UPDATE staging_catalogue SET import_exception = 'already_existing', catalogue_ref=id_litho WHERE staging_catalogue.id=staging_catalogue_line.id; 
+						--update parent ref in children
+						UPDATE staging_catalogue SET parent_ref = id_litho, parent_updated=TRUE WHERE import_ref=req_import_ref AND parent_ref=staging_catalogue_line.id;
+					ELSE
+						IF staging_catalogue_line.parent_ref IS NULL THEN
+							INSERT INTO lithostratigraphy (name, level_ref, import_ref ) VALUES (staging_catalogue_line.name, staging_catalogue_line.level_ref, req_import_ref) RETURNING id INTO id_litho;
+							imported:=true;
+						ELSE 
+							SELECT parent_updated , parent_ref INTO parent_updated_flag, new_parent FROM staging_catalogue WHERE id=staging_catalogue_line.id;
+							IF parent_updated_flag IS TRUE THEN
+								INSERT INTO lithostratigraphy (name, level_ref, parent_ref, import_ref) VALUES (staging_catalogue_line.name, staging_catalogue_line.level_ref, new_parent, req_import_ref) RETURNING id INTO id_litho;
+								imported:=true;
+							ELSE 
+								UPDATE staging_catalogue SET import_exception = 'could_not_find_parent_in_db', catalogue_ref=id_litho WHERE staging_catalogue.id=staging_catalogue_line.id; 
+							END IF;
+						END IF;
+						IF imported IS TRUE THEN
+							UPDATE staging_catalogue SET import_exception = 'imported', imported=true, catalogue_ref=id_litho WHERE staging_catalogue.id=staging_catalogue_line.id; 
+							UPDATE staging_catalogue SET parent_ref=id_litho , parent_updated=true 
+							 WHERE import_ref=req_import_ref AND parent_ref=staging_catalogue_line.id;
+						END IF;
+					END IF;
+				EXCEPTION WHEN OTHERS THEN
+					--RAISE NOTICE 'EXCEPTION';
+					--RAISE NOTICE '% %', SQLERRM, SQLSTATE;
+					GET STACKED DIAGNOSTICS _c = PG_EXCEPTION_CONTEXT;
+					UPDATE staging_catalogue SET import_exception = 'Exception : ' ||SQLERRM || ' ' || _c WHERE staging_catalogue.id=staging_catalogue_line.id; 
+					
+					RAISE NOTICE 'context: >>%<<', _c;
+				END;
+			END LOOP;
+			UPDATE staging_catalogue SET import_exception='could_not_import' WHERE import_ref=req_import_ref AND staging_catalogue.imported=false and import_exception is null;
+		returned :=true;
+		return returned;
+	END;
+	$$;
+
+
+ALTER FUNCTION darwin2.fct_rmca_handle_lithostratigraphy_import(req_import_ref integer) OWNER TO darwin2;
+
+--
+-- TOC entry 1919 (class 1255 OID 5308883)
 -- Name: fct_rmca_handle_non_reference_taxonomies(integer, integer, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -8541,17 +9147,30 @@ CREATE FUNCTION darwin2.fct_rmca_handle_non_reference_taxonomies(req_import_ref 
 		--hierarchy_name varchar;
 		 _c text;
 		 kingdom_id integer;
+		 staging_kingdom_id integer;
+		 kingdom_name varchar;
 		 --kingdom_name varchar;
 		
 		
 	BEGIN
 				--FTHEETEN 2019 02 14
-		UPDATE staging_catalogue SET import_exception='taxon_already_exists_in_taxonomy' FROM taxonomy WHERE staging_catalogue.import_ref=req_import_ref AND fulltoindex(staging_catalogue.name)=taxonomy.name_indexed AND taxonomy.metadata_ref=var_metadata_ref;
+		UPDATE staging_catalogue SET  import_exception=NULL WHERE import_ref=req_import_ref; 
+		UPDATE staging_catalogue SET import_exception='taxon_already_exists_in_taxonomy' FROM taxonomy WHERE staging_catalogue.import_ref=req_import_ref AND fulltoindex(staging_catalogue.name)=taxonomy.name_indexed AND taxonomy.metadata_ref=var_metadata_ref ;
 		--raise notice 'enter handle';
-
-		--create phylum beforehand if not exists
-		i:=0;
-		--ftheeten 2018 12 14
+		--2019 02 26 create kingdom if not exists
+		PERFORM FROM staging_catalogue WHERE import_ref= req_import_ref AND level_ref=2 ;
+		IF NOT FOUND THEN
+			SELECT name INTO kingdom_name FROM taxonomy LEFT JOIN imports on taxonomy.id::varchar=imports.taxonomy_kingdom WHERE imports.id=req_import_ref;
+			SELECT id INTO kingdom_id  FROM taxonomy WHERE metadata_ref=var_metadata_ref AND level_ref=2 AND fulltoindex(name)=fulltoindex(kingdom_name);
+			IF NOT FOUND THEN
+				INSERT INTO taxonomy (name, level_ref, metadata_ref, parent_ref) VALUES (kingdom_name, 2, var_metadata_ref, -1) RETURNING id INTO kingdom_id;
+			END IF;
+			INSERT INTO staging_catalogue (import_ref, name, level_ref, name_cluster, imported) VALUES
+				(req_import_ref, kingdom_name, 2, (SELECT MAX(name_cluster::integer)+1 FROM staging_catalogue WHERE import_ref= req_import_ref ), FALSE) RETURNING id INTO staging_kingdom_id;
+			RAISE NOTICE 'ADDED KINGDOM';
+			UPDATE staging_catalogue SET parent_ref= staging_kingdom_id WHERe parent_ref IS NULL and level_ref>2 AND import_ref=req_import_ref;
+		END IF;
+		
 		FOR staging_catalogue_line IN SELECT staging_catalogue.* FROM staging_catalogue
 			LEFT JOIN imports ON
 			staging_catalogue.import_ref=imports.id
@@ -8559,15 +9178,32 @@ CREATE FUNCTION darwin2.fct_rmca_handle_non_reference_taxonomies(req_import_ref 
 			ON 
 			imports.specimen_taxonomy_ref=taxonomy_metadata.id  
 			WHERE staging_catalogue.import_ref= req_import_ref AND taxonomy_metadata.is_reference_taxonomy= FALSE
-			AND level_ref=4
+			AND level_ref=2 and taxonomy_metadata.id=var_metadata_ref
 			LOOP
-				PERFORM id FROM taxonomy WHERE level_ref=4 AND fulltoindex(taxonomy.name)=fulltoindex(staging_catalogue_line.name);
+				PERFORM id FROM taxonomy WHERE level_ref=2 AND fulltoindex(taxonomy.name)=fulltoindex(staging_catalogue_line.name) AND metadata_ref= var_metadata_ref;
+				IF NOT FOUND THEN
+					INSERT INTO taxonomy (name, level_ref, metadata_ref, import_ref, parent_ref) VALUES(staging_catalogue_line.name,2,var_metadata_ref, req_import_ref, (SELECT taxonomy_kingdom::integer FROM imports where id= req_import_ref));
+				END IF;
+			END LOOP;
+		--create phylum beforehand if not exists
+		i:=0;
+		--ftheeten 2018 12 14
+		/*FOR staging_catalogue_line IN SELECT staging_catalogue.* FROM staging_catalogue
+			LEFT JOIN imports ON
+			staging_catalogue.import_ref=imports.id
+			LEFT JOIN taxonomy_metadata
+			ON 
+			imports.specimen_taxonomy_ref=taxonomy_metadata.id  
+			WHERE staging_catalogue.import_ref= req_import_ref AND taxonomy_metadata.is_reference_taxonomy= FALSE
+			AND level_ref=4 and taxonomy_metadata.id=var_metadata_ref
+			LOOP
+				PERFORM id FROM taxonomy WHERE level_ref=4 AND fulltoindex(taxonomy.name)=fulltoindex(staging_catalogue_line.name) AND metadata_ref= var_metadata_ref;
 				IF NOT FOUND THEN
 					INSERT INTO taxonomy (name, level_ref, metadata_ref, import_ref, parent_ref) VALUES(staging_catalogue_line.name,4,var_metadata_ref, req_import_ref, (SELECT taxonomy_kingdom::integer FROM imports where id= req_import_ref));
 				END IF;
 			END LOOP;
 
-                
+                */
 		
 		
 		FOR staging_catalogue_line IN SELECT staging_catalogue.*, taxonomy_metadata.id as metadata_id FROM staging_catalogue 
@@ -8576,7 +9212,12 @@ CREATE FUNCTION darwin2.fct_rmca_handle_non_reference_taxonomies(req_import_ref 
 		LEFT JOIN taxonomy_metadata
 		ON 
 		imports.specimen_taxonomy_ref=taxonomy_metadata.id 
-		WHERE staging_catalogue.import_ref= req_import_ref AND taxonomy_metadata.is_reference_taxonomy= FALSE ORDER BY staging_catalogue.level_ref DESC
+		WHERE staging_catalogue.import_ref= req_import_ref AND taxonomy_metadata.is_reference_taxonomy= FALSE 
+		AND 
+		--new 2019 02 26
+		taxonomy_metadata.id=var_metadata_ref  
+		ORDER BY staging_catalogue.level_ref 
+		DESC
 		, fulltoindex(staging_catalogue.name) ASC
 		--LOOP 1			
 		LOOP
@@ -8593,16 +9234,12 @@ CREATE FUNCTION darwin2.fct_rmca_handle_non_reference_taxonomies(req_import_ref 
 				IF staging_catalogue_line.catalogue_ref IS NULL AND staging_catalogue_line.parent_updated = FALSE THEN
 
 					--FTHEETEN 2019 02 14
-					/*PERFORM FROM taxonomy WHERE taxonomy.name_indexed=fulltoindex(name)
- AND taxonomy.level_ref=staging_catalogue.level_ref AND taxonomy.metadata_ref=metadata_id;
-					IF FOUND THEN
-						UPDATE staging_catalogue SET import_exception='taxon_already_exists' WHERE id=staging_catalogue_line.id;
-					END IF;*/
+
 
 					
- 					--RAISE NOTICE 'try import';
-					--raise notice 'line id=%',staging_catalogue_line.id ;
-					--raise notice 'test %',staging_catalogue_line.id;
+ 					RAISE NOTICE 'try import';
+					raise notice 'line id=%',staging_catalogue_line.id ;
+					raise notice 'test %',staging_catalogue_line.id;
 					SELECT fct_rmca_get_merge_catalogue_path_in_staging_existing_taxonomy INTO test_taxo FROM fct_rmca_get_merge_catalogue_path_in_staging_existing_taxonomy(staging_catalogue_line.id);
 					existing_longest_path=test_taxo[1];
 					existing_longest_path_staging=test_taxo[3];
@@ -8792,10 +9429,10 @@ CREATE FUNCTION darwin2.fct_rmca_handle_non_reference_taxonomies(req_import_ref 
 						END IF;
 					--END IF TWO 	
 					END IF;
-				--ELSE IF ONE	
+				ELSE --IF ONE	
 				--ELSIF staging_catalogue_line.catalogue_ref IS NOT NULL AND staging_catalogue_line.parent_updated = FALSE THEN
 				--partially updated
-					--raise notice 'Catalogue_updated';
+					raise notice 'else 2';
 				--END IF ONE
 				END IF;
 		--END LOOP ONE
@@ -8809,7 +9446,9 @@ CREATE FUNCTION darwin2.fct_rmca_handle_non_reference_taxonomies(req_import_ref 
 			LEFT JOIN taxonomy_metadata
 			ON taxonomy.metadata_ref=taxonomy_metadata.id
 			 WHERE  
-			staging_catalogue.catalogue_ref=taxonomy.id AND staging_catalogue.import_ref=req_import_ref AND imported=FALSE AND catalogue_ref IS NOT NULL;
+			staging_catalogue.catalogue_ref=taxonomy.id AND staging_catalogue.import_ref=req_import_ref AND imported=FALSE AND catalogue_ref IS NOT NULL
+			--new 2019 02 26
+			AND taxonomy.metadata_ref=var_metadata_ref;
 		UPDATE staging_catalogue
 		SET import_exception='could_not_link_taxon_check_upper_ranks'			
 			WHERE staging_catalogue.import_ref=req_import_ref AND imported=FALSE AND import_exception IS NULL;
@@ -8829,7 +9468,7 @@ CREATE FUNCTION darwin2.fct_rmca_handle_non_reference_taxonomies(req_import_ref 
 ALTER FUNCTION darwin2.fct_rmca_handle_non_reference_taxonomies(req_import_ref integer, var_metadata_ref integer, exclude_invalid_entries boolean) OWNER TO darwin2;
 
 --
--- TOC entry 1915 (class 1255 OID 5308897)
+-- TOC entry 1921 (class 1255 OID 5308897)
 -- Name: fct_rmca_handle_non_reference_taxonomies_bck(integer, integer, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -9086,7 +9725,7 @@ CREATE FUNCTION darwin2.fct_rmca_handle_non_reference_taxonomies_bck(req_import_
 ALTER FUNCTION darwin2.fct_rmca_handle_non_reference_taxonomies_bck(req_import_ref integer, var_metadata_ref integer, exclude_invalid_entries boolean) OWNER TO darwin2;
 
 --
--- TOC entry 1911 (class 1255 OID 5308851)
+-- TOC entry 1916 (class 1255 OID 5308851)
 -- Name: fct_rmca_handle_non_reference_taxonomies_bck20190214(integer, integer, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -9340,7 +9979,7 @@ CREATE FUNCTION darwin2.fct_rmca_handle_non_reference_taxonomies_bck20190214(req
 ALTER FUNCTION darwin2.fct_rmca_handle_non_reference_taxonomies_bck20190214(req_import_ref integer, var_metadata_ref integer, exclude_invalid_entries boolean) OWNER TO darwin2;
 
 --
--- TOC entry 1913 (class 1255 OID 5308879)
+-- TOC entry 1918 (class 1255 OID 5308879)
 -- Name: fct_rmca_handle_non_reference_taxonomies_json_mauvais(integer, integer, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -9594,8 +10233,334 @@ CREATE FUNCTION darwin2.fct_rmca_handle_non_reference_taxonomies_json_mauvais(re
 ALTER FUNCTION darwin2.fct_rmca_handle_non_reference_taxonomies_json_mauvais(req_import_ref integer, var_metadata_ref integer, exclude_invalid_entries boolean) OWNER TO darwin2;
 
 --
--- TOC entry 1903 (class 1255 OID 5307731)
--- Name: fct_rmca_imp_checker_gtu_search_code(darwin2.staging, boolean); Type: FUNCTION; Schema: darwin2; Owner: postgres
+-- TOC entry 1938 (class 1255 OID 5309281)
+-- Name: fct_rmca_handle_non_reference_taxonomies_same_taxo(integer, integer, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
+--
+
+CREATE FUNCTION darwin2.fct_rmca_handle_non_reference_taxonomies_same_taxo(req_import_ref integer, var_metadata_ref integer, exclude_invalid_entries boolean) RETURNS boolean
+    LANGUAGE plpgsql
+    AS $$
+	DECLARE
+		staging_catalogue_line staging_catalogue;
+		test_taxo  varchar[];
+		higher_found_taxon varchar;
+		existing_longest_path varchar;
+		existing_longest_path_staging varchar;
+		existing_longest_path_array varchar[];
+		--marielle adam 2019 02 28
+		existing_longest_path_array_no_null varchar[];
+		existing_longest_path_staging_array varchar[];
+		tmp_staging_id VARCHAR;
+		tmp_taxonomy_id VARCHAR;
+		is_parent boolean;
+		i INTEGER;
+		previous_staging_id_as_parent varchar;
+		previous_taxonomy_id_as_parent varchar;
+		staging_path_to_create_in_taxonomy varchar;
+		staging_path_to_create_in_taxonomy_array varchar[];
+		tmp_new_parent varchar;
+		catalogue_ref_var integer;
+		parent_ref_var integer; 
+		staging_ref integer;
+		parent_updated_var boolean;
+		source_text varchar;
+		tmp_name varchar;
+		tmp_level_ref integer;
+		last_id integer;
+		parent_ref_var_staging integer;
+		--ftheeten 2019 02 15
+		staging_levels varchar;
+		--ftheeten 2019 02 15
+		taxonomy_levels varchar;
+		--hierarchy_name varchar;
+		 _c text;
+		 kingdom_id integer;
+		 --kingdom_name varchar;
+		
+		
+	BEGIN
+				--FTHEETEN 2019 02 14
+		UPDATE staging_catalogue SET import_exception='taxon_already_exists_in_taxonomy' FROM taxonomy WHERE staging_catalogue.import_ref=req_import_ref AND fulltoindex(staging_catalogue.name)=taxonomy.name_indexed AND taxonomy.metadata_ref=var_metadata_ref;
+		--raise notice 'enter handle';
+
+		--create phylum beforehand if not exists
+		i:=0;
+		--ftheeten 2018 12 14
+		FOR staging_catalogue_line IN SELECT staging_catalogue.* FROM staging_catalogue
+			LEFT JOIN imports ON
+			staging_catalogue.import_ref=imports.id
+			LEFT JOIN taxonomy_metadata
+			ON 
+			imports.specimen_taxonomy_ref=taxonomy_metadata.id  
+			WHERE staging_catalogue.import_ref= req_import_ref AND taxonomy_metadata.is_reference_taxonomy= FALSE
+			AND level_ref=4
+			LOOP
+				PERFORM id FROM taxonomy WHERE level_ref=4 AND fulltoindex(taxonomy.name)=fulltoindex(staging_catalogue_line.name) AND metadata_ref=var_metadata_ref;
+				IF NOT FOUND THEN
+					INSERT INTO taxonomy (name, level_ref, metadata_ref, import_ref, parent_ref) VALUES(staging_catalogue_line.name,4,var_metadata_ref, req_import_ref, (SELECT taxonomy_kingdom::integer FROM imports where id= req_import_ref));
+				END IF;
+			END LOOP;
+
+                
+		
+		
+		FOR staging_catalogue_line IN SELECT staging_catalogue.*, taxonomy_metadata.id as metadata_id FROM staging_catalogue 
+		LEFT JOIN imports ON
+		staging_catalogue.import_ref=imports.id
+		LEFT JOIN taxonomy_metadata
+		ON 
+		imports.specimen_taxonomy_ref=taxonomy_metadata.id 
+		WHERE staging_catalogue.import_ref= req_import_ref AND taxonomy_metadata.is_reference_taxonomy= FALSE ORDER BY staging_catalogue.level_ref DESC
+		, fulltoindex(staging_catalogue.name) ASC
+		--LOOP 1			
+		LOOP
+				raise notice 'in loop';
+				raise notice '------------------------------%',(i::varchar);
+				raise notice '------------------------------%',(staging_catalogue_line.id::varchar);
+				--raise notice 'id %', staging_catalogue_line.id;
+				--raise notice 'catalogue_ref %', staging_catalogue_line.catalogue_ref;
+				raise notice 'name %', staging_catalogue_line.name;
+				--take only not yet updated lines into considerations 
+				--(attention this field can bbe updated from within the cursor) !
+
+				--IF ONE
+				IF staging_catalogue_line.catalogue_ref IS NULL AND staging_catalogue_line.parent_updated = FALSE THEN
+
+					--FTHEETEN 2019 02 14
+					/*PERFORM FROM taxonomy WHERE taxonomy.name_indexed=fulltoindex(name)
+ AND taxonomy.level_ref=staging_catalogue.level_ref AND taxonomy.metadata_ref=metadata_id;
+					IF FOUND THEN
+						UPDATE staging_catalogue SET import_exception='taxon_already_exists' WHERE id=staging_catalogue_line.id;
+					END IF;*/
+
+					
+ 					--RAISE NOTICE 'try import';
+					--raise notice 'line id=%',staging_catalogue_line.id ;
+					--raise notice 'test %',staging_catalogue_line.id;
+					SELECT fct_rmca_get_merge_catalogue_path_in_staging_existing_taxonomy INTO test_taxo FROM fct_rmca_get_merge_catalogue_path_in_staging_existing_taxonomy(staging_catalogue_line.id
+					--new 2019 02 26 stay in the same taxo
+					,var_metadata_ref
+					);
+					existing_longest_path=test_taxo[1];
+					existing_longest_path_staging=test_taxo[3];
+					higher_found_taxon=test_taxo[4];
+					staging_levels=test_taxo[6];
+					taxonomy_levels=test_taxo[7];
+					existing_longest_path_array=string_to_array( existing_longest_path, '/');
+					existing_longest_path_staging_array=string_to_array( existing_longest_path_staging, '/');
+
+					RAISE NOTICE 'Existing longest path %', existing_longest_path; 
+					RAISE NOTICE 'Existing longest path staging %', existing_longest_path_staging;
+					RAISE NOTICE 'Higher found taxon %', higher_found_taxon;
+					RAISE NOTICE 'Staging level path %', staging_levels;
+					RAISE NOTICE 'Taxonomy level path %', taxonomy_levels;
+					--IF TWO 
+					IF higher_found_taxon::varchar= staging_catalogue_line.id::varchar THEN
+						RAISE notice 'taxon found !';
+						--whole taxonomic path already in taxonomy
+						--update parent_ref and catalogue_ref for the whole path
+						--IF THIRD
+						existing_longest_path_array_no_null:=array_remove(existing_longest_path_array,'');
+
+						RAISE NOTICE 'taxonomy of taxon %',  array_remove(existing_longest_path_array,''); 
+						IF(ARRAY_LENGTH(existing_longest_path_array,1)=ARRAY_LENGTH(existing_longest_path_staging_array,1)) THEN
+							is_parent:=TRUE;
+							--LOOP 2
+							FOR i IN  1..ARRAY_LENGTH(existing_longest_path_staging_array,1) LOOP
+								tmp_taxonomy_id:=existing_longest_path_array[i];
+								tmp_staging_id:=existing_longest_path_staging_array[i];
+								--IF FOUR
+								If LENGTH(TRIM(tmp_taxonomy_id))>0 AND LENGTH(trim(tmp_staging_id))>0 THEN
+									--IF FIVE
+									IF is_parent=TRUE THEN
+										UPDATE staging_catalogue SET catalogue_ref=tmp_taxonomy_id::integer WHERE id= staging_catalogue_line.id;								
+									--ELSE FIVE	
+									ELSE
+										UPDATE staging_catalogue SET catalogue_ref=tmp_taxonomy_id::integer, parent_updated=true, parent_ref=previous_taxonomy_id_as_parent::integer WHERE id= staging_catalogue_line.id;
+									--END IF FIVE		
+									END IF;
+									--MENTION source in the original taxonomy
+									--UPDATE taxonomy SET source=TRIM(COALESCE(source,'')||'; '||staging_catalogue_line.source_taxonomy) WHERE id=tmp_taxonomy_id::integer;
+									is_parent:=FALSE;
+									previous_staging_id_as_parent:=staging_catalogue_line.id;
+									previous_taxonomy_id_as_parent:=tmp_taxonomy_id;
+								--END IF FOUR
+								END IF;
+							--END LOOP 2	
+							END LOOP;
+						
+						END IF;
+						--lowest taxon is not in taxonomy
+					--END IF TWO
+					ELSE
+						RAISE notice 'taxon to be created %', staging_catalogue_line.name;
+						--take part of path which is already in taxonomy
+						--(longest prefix)
+						--existing_longest_path=test_taxo[1];
+						--existing_longest_path_staging=test_taxo[3];
+						--higher_found_taxon=test_taxo[4];
+						staging_path_to_create_in_taxonomy=test_taxo[5];
+						--RAISE NOTICE 'staging path to create in taxonomy (all) %' , test_taxo;  
+						--RAISE NOTICE 'staging path to create in taxonomy %' , test_taxo[5];  
+						--first create exisint hierarchy 
+						--create taxon in taxonomy and keep id
+						--update parent_ref and catalogue_ref
+
+						existing_longest_path_array=string_to_array( existing_longest_path, '/');
+						existing_longest_path_staging_array=string_to_array( existing_longest_path_staging, '/');
+						staging_path_to_create_in_taxonomy_array=string_to_array(staging_path_to_create_in_taxonomy, '/');	
+						--IF THIRD B	
+						IF(ARRAY_LENGTH(existing_longest_path_array,1)=ARRAY_LENGTH(existing_longest_path_staging_array,1)) THEN
+						
+						parent_updated_var:=false;
+						--existing taxa
+							--LOOP 3
+							FOR i IN   1 .. ARRAY_LENGTH( existing_longest_path_array,1) LOOP
+								--IF FOUR B
+								IF LENGTH(TRIM(existing_longest_path_array[i]))>0 AND LENGTH(TRIM(existing_longest_path_staging_array[i]))>0 THEN
+									--RAISE NOTICE 'IN IF';
+									catalogue_ref_var:=existing_longest_path_array[i]::int;
+									staging_ref:=existing_longest_path_staging_array[i]::int;
+									--RAISE NOTICE 'catalogue_ref_var %', catalogue_ref_var;
+									--RAISE NOTICE 'staging_ref %', staging_ref;
+									--IF FIVE B
+									IF parent_updated_var=false THEN
+										--RAISE NOTICE 'UPDATE NO PARENT';
+										UPDATE staging_catalogue SET catalogue_ref=catalogue_ref_var
+										WHERE id=staging_ref AND parent_updated=false AND parent_ref IS NULL;
+									--ELSE FIVE B
+									ELSE
+										--RAISE NOTICE 'UPDATE  PARENT';
+										UPDATE staging_catalogue SET catalogue_ref=catalogue_ref_var,
+										parent_ref=parent_ref_var, parent_updated=true
+										WHERE id=staging_ref and parent_updated=false;
+									--END IF FIVE B
+									END IF;
+									parent_updated_var:=true;
+									parent_ref_var:=catalogue_ref_var;
+									--update source in taxonomy
+									--UPDATe taxonomy SET source=COALESCE(source||', '||source_text) WHERE id=catalogue_ref_var;
+									--RAISE notice 'parent_ref_var %', parent_ref_var;
+								--END IF FOUR B
+								END IF;
+							--END LOOP 3	
+							END LOOP;
+						--create new taxa
+						--raise notice 'To create array %', staging_path_to_create_in_taxonomy_array; 
+						--raise notice 'length array %' , ARRAY_LENGTH( staging_path_to_create_in_taxonomy_array,1);
+						--RAISE notice 'parent_ref_var between loops %', parent_ref_var;
+							--LOOP 3 B
+							FOR i IN  1..ARRAY_LENGTH( staging_path_to_create_in_taxonomy_array,1) LOOP
+							
+								--RAISE NOTICE 'IN LOOP NEW TAXA';
+								--IF FOUR C
+								IF LENGTH(TRIM(staging_path_to_create_in_taxonomy_array[i]))>0 THEN
+
+								--raise notice 'new taxa id %', staging_path_to_create_in_taxonomy_array[i];
+									SELECT name , level_ref, parent_ref INTO tmp_name, tmp_level_ref, parent_ref_var_staging FROM staging_catalogue WHERE id=staging_path_to_create_in_taxonomy_array[i]::int;
+									SELECT catalogue_ref INTO parent_ref_var FROM staging_catalogue WHERe id=parent_ref_var_staging;
+									--IF FIVE C
+									IF parent_updated_var=false AND parent_ref_var IS NULL THEN 
+									BEGIN
+										--raise notice 'tmp_name %', tmp_name;
+										PERFORM FROM taxonomy WHERe name=tmp_name AND  level_ref=tmp_level_ref;
+										IF NOT FOUND THEN
+
+											INSERT INTO taxonomy (id, name, level_ref,  metadata_ref, import_ref) VALUES (DEFAULT,
+											tmp_name, tmp_level_ref, var_metadata_ref, req_import_ref) 
+											RETURNING id INTO last_id;
+											UPDATE staging_catalogue SET catalogue_ref=last_id, imported=true
+											FROM inserted WHERE id=staging_path_to_create_in_taxonomy_array[i]::int;
+										--raise notice 'last_id A %', last_id;
+											parent_ref_var:=last_id;
+										ELSE
+											RAISE NOTICE 'HIERARCHY EXISTS !!!!!!!!!!!!!!!!!!!!!';
+											UPDATE staging_catalogue SET imported=FALSE,
+											import_exception='path_already_exists (Hierarchy)'
+											||(SELECT taxonomy_metadata.taxonomy_name FROM taxonomy_metadata WHERE taxonomy_metadata.id = (SELECT metadata_ref FROM taxonomy WHERE taxonomy.name=tmp_name AND  taxonomy.level_ref=tmp_level_ref ) LIMIT 1)||')' 
+											WHERE id=staging_path_to_create_in_taxonomy_array[i]::int;
+										END IF;
+									EXCEPTION WHEN OTHERS THEN
+										UPDATE staging_catalogue SET import_exception= SQLERRM WHERE staging_catalogue.id=staging_path_to_create_in_taxonomy_array[i]::int;
+									END;
+									--ELSIF FIVE C
+									ELSIF parent_ref_var IS NOT NULL THEN
+									BEGIN
+										PERFORM FROM taxonomy WHERe name=tmp_name AND  level_ref=tmp_level_ref AND parent_ref=parent_ref_var AND metadata_ref=var_metadata_ref;
+										IF NOT FOUND THEN
+											--raise notice 'tmp_name %', tmp_name;
+											--raise notice 'tmp_level_ref %', tmp_level_ref;
+											--raise notice 'parent_ref_var %', parent_ref_var;
+											--raise notice 'source_text %', source_text;
+											INSERT INTO taxonomy (id, name, level_ref, parent_ref,  metadata_ref, import_ref) VALUES (DEFAULT,
+											tmp_name, tmp_level_ref, parent_ref_var,  var_metadata_ref, req_import_ref) RETURNING id INTO last_id;
+											/*IF staging_levels != taxonomy_levels THEN
+												UPDATE staging_catalogue SET catalogue_ref=last_id, parent_ref=parent_ref_var, parent_updated=TRUE, imported=true , import_exception = 'taxon_already_exists_with_another_hierarchy' WHERE id=staging_path_to_create_in_taxonomy_array[i]::int;
+											ELSE
+											
+												UPDATE staging_catalogue SET catalogue_ref=last_id, parent_ref=parent_ref_var, parent_updated=TRUE, imported=true WHERE id=staging_path_to_create_in_taxonomy_array[i]::int;
+											END IF;*/
+											UPDATE staging_catalogue SET catalogue_ref=last_id, parent_ref=parent_ref_var, parent_updated=TRUE, imported=true , import_exception = 'taxon_imported' WHERE id=staging_path_to_create_in_taxonomy_array[i]::int;
+											--raise notice 'last_id B %', last_id;
+											 parent_ref_var:=last_id; 
+										ELSE
+											UPDATE staging_catalogue SET imported=FALSE,
+											import_exception='path_already_exists' WHERE id=staging_path_to_create_in_taxonomy_array[i]::int;
+											--raise notice 'last_id B %', last_id;
+											 
+										END IF;
+									--END IF FIVE C
+									EXCEPTION WHEN OTHERS THEN
+										UPDATE staging_catalogue SET import_exception= SQLERRM WHERE staging_catalogue.id=staging_path_to_create_in_taxonomy_array[i]::int;
+									END;
+									END IF;
+								--END IF FOUR C	
+								END IF;
+							--END LOOP 3 B	
+							END LOOP;
+						--END IF THIRD B
+						END IF;
+					--END IF TWO 	
+					END IF;
+				--ELSE IF ONE	
+				--ELSIF staging_catalogue_line.catalogue_ref IS NOT NULL AND staging_catalogue_line.parent_updated = FALSE THEN
+				--partially updated
+					--raise notice 'Catalogue_updated';
+				--END IF ONE
+				END IF;
+		--END LOOP ONE
+		i:=i+1;
+		END LOOP;
+		--RAISE NOTICE 'exit';
+
+		UPDATE staging_catalogue
+		SET import_exception='taxon_already_exists (check '||taxonomy_name||')'
+			FROM taxonomy
+			LEFT JOIN taxonomy_metadata
+			ON taxonomy.metadata_ref=taxonomy_metadata.id
+			 WHERE  
+			staging_catalogue.catalogue_ref=taxonomy.id AND staging_catalogue.import_ref=req_import_ref AND imported=FALSE AND catalogue_ref IS NOT NULL;
+		UPDATE staging_catalogue
+		SET import_exception='could_not_link_taxon_check_upper_ranks'			
+			WHERE staging_catalogue.import_ref=req_import_ref AND imported=FALSE AND import_exception IS NULL;
+					
+		RETURN TRUE;
+	EXCEPTION WHEN OTHERS THEN
+		RAISE NOTICE 'EXCEPTION';
+		RAISE NOTICE '% %', SQLERRM, SQLSTATE;
+	        GET STACKED DIAGNOSTICS _c = PG_EXCEPTION_CONTEXT;
+		RAISE NOTICE 'context: >>%<<', _c;
+		UPDATE imports SET state='error', errors_in_import=SQLERRM||' NAME ('||staging_catalogue_line.name||')'  WHERE id=req_import_ref;
+		RETURN FALSE;
+	END;
+	$$;
+
+
+ALTER FUNCTION darwin2.fct_rmca_handle_non_reference_taxonomies_same_taxo(req_import_ref integer, var_metadata_ref integer, exclude_invalid_entries boolean) OWNER TO darwin2;
+
+--
+-- TOC entry 1929 (class 1255 OID 5307731)
+-- Name: fct_rmca_imp_checker_gtu_search_code(darwin2.staging, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
 CREATE FUNCTION darwin2.fct_rmca_imp_checker_gtu_search_code(line darwin2.staging, import boolean DEFAULT false) RETURNS boolean
@@ -9603,12 +10568,18 @@ CREATE FUNCTION darwin2.fct_rmca_imp_checker_gtu_search_code(line darwin2.stagin
     AS $$
 DECLARE
 	counter integer;
+	--collection_ref_for_gtu_var integer;
 	gtu_ids integer[];
 BEGIN
 raise notice 'in function';
 raise notice 'staging gtu code %', line.gtu_code;
-  SELECT count(gtu.id), array_agg(gtu.id) INTO counter, gtu_ids FROM gtu WHERE TRIM(LOWER(gtu.code))=TRIM(LOWER(line.gtu_code));
-
+  --SELECT collection_ref_for_gtu INTO collection_ref_for_gtu_var FROM imports where imports.id =line.import_ref;
+  --IF collection_ref_for_gtu_var  IS NOT NULL THEN
+--	SELECT count(gtu.id), array_agg(gtu.id) INTO counter, gtu_ids FROM gtu WHERE TRIM(LOWER(gtu.code))=TRIM(LOWER(line.gtu_code))
+--	AND collection_ref= collection_ref_for_gtu_var ;	
+ -- ELSE
+	SELECT count(gtu.id), array_agg(gtu.id) INTO counter, gtu_ids FROM gtu WHERE TRIM(LOWER(gtu.code))=TRIM(LOWER(line.gtu_code));
+  --END IF;
   IF counter = 0 THEN
 	UPDATE staging SET status = (status || hstore('gtu' , 'not_found')) where staging.id= line.id; 
   ELSEIF counter=1 THEN
@@ -9624,10 +10595,48 @@ END;
 $$;
 
 
-ALTER FUNCTION darwin2.fct_rmca_imp_checker_gtu_search_code(line darwin2.staging, import boolean) OWNER TO postgres;
+ALTER FUNCTION darwin2.fct_rmca_imp_checker_gtu_search_code(line darwin2.staging, import boolean) OWNER TO darwin2;
 
 --
--- TOC entry 1901 (class 1255 OID 5308233)
+-- TOC entry 1936 (class 1255 OID 5310059)
+-- Name: fct_rmca_imp_checker_gtu_search_code(darwin2.staging, integer, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
+--
+
+CREATE FUNCTION darwin2.fct_rmca_imp_checker_gtu_search_code(line darwin2.staging, collection_ref_for_gtu_var integer, import boolean DEFAULT false) RETURNS boolean
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	counter integer;
+	gtu_ids integer[];
+BEGIN
+raise notice 'in function';
+raise notice 'staging gtu code %', line.gtu_code;
+ 
+  IF collection_ref_for_gtu_var  IS NOT NULL THEN
+	SELECT count(gtu.id), array_agg(gtu.id) INTO counter, gtu_ids FROM gtu WHERE TRIM(LOWER(gtu.code))=TRIM(LOWER(line.gtu_code))
+	AND collection_ref= collection_ref_for_gtu_var ;	
+  ELSE
+	SELECT count(gtu.id), array_agg(gtu.id) INTO counter, gtu_ids FROM gtu WHERE TRIM(LOWER(gtu.code))=TRIM(LOWER(line.gtu_code));
+  END IF;
+  IF counter = 0 THEN
+	UPDATE staging SET status = (status || hstore('gtu' , 'not_found')) where staging.id= line.id; 
+  ELSEIF counter=1 THEN
+	UPDATE staging SET gtu_ref=gtu_ids[1] where staging.id= line.id; 
+  ELSEIF counter>1 THEN
+	UPDATE staging SET status = (status || hstore('gtu' , 'too_much')) where staging.id= line.id; 
+  END IF;
+
+  
+
+  RETURN true;
+END;
+$$;
+
+
+ALTER FUNCTION darwin2.fct_rmca_imp_checker_gtu_search_code(line darwin2.staging, collection_ref_for_gtu_var integer, import boolean) OWNER TO darwin2;
+
+--
+-- TOC entry 1909 (class 1255 OID 5308233)
 -- Name: fct_rmca_keep_staging_catalogue_parent(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -9650,7 +10659,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_keep_staging_catalogue_parent() OWNER TO darwin2;
 
 --
--- TOC entry 1900 (class 1255 OID 5307720)
+-- TOC entry 1908 (class 1255 OID 5307720)
 -- Name: fct_rmca_people_array_to_name(integer[]); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -9673,7 +10682,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_people_array_to_name(int_array integer[]) OWNER TO darwin2;
 
 --
--- TOC entry 1922 (class 1255 OID 5309145)
+-- TOC entry 1927 (class 1255 OID 5309145)
 -- Name: fct_rmca_redo_taxonomic_import(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -9698,7 +10707,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_redo_taxonomic_import(req_import_ref integer) OWNER TO darwin2;
 
 --
--- TOC entry 1804 (class 1255 OID 4816448)
+-- TOC entry 1813 (class 1255 OID 4816448)
 -- Name: fct_rmca_retrieve_taxa_in_collection_fastly_array(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -9721,7 +10730,7 @@ SELECT DISTINCT array_agg(id) FROM taxonomy
 ALTER FUNCTION darwin2.fct_rmca_retrieve_taxa_in_collection_fastly_array(integer) OWNER TO darwin2;
 
 --
--- TOC entry 1736 (class 1255 OID 4816449)
+-- TOC entry 1746 (class 1255 OID 4816449)
 -- Name: fct_rmca_sort_taxon_get_parent_level(integer, integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -9753,7 +10762,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_sort_taxon_get_parent_level(id_taxon integer, id_level integer) OWNER TO darwin2;
 
 --
--- TOC entry 1808 (class 1255 OID 4816450)
+-- TOC entry 1817 (class 1255 OID 4816450)
 -- Name: fct_rmca_sort_taxon_get_parent_level_text(integer, integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -9792,7 +10801,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_sort_taxon_get_parent_level_text(id_taxon integer, id_level integer) OWNER TO darwin2;
 
 --
--- TOC entry 1809 (class 1255 OID 4816451)
+-- TOC entry 1818 (class 1255 OID 4816451)
 -- Name: fct_rmca_sort_taxon_path_alphabetically(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -9825,7 +10834,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_sort_taxon_path_alphabetically(path character varying) OWNER TO darwin2;
 
 --
--- TOC entry 1905 (class 1255 OID 5308258)
+-- TOC entry 1911 (class 1255 OID 5308258)
 -- Name: fct_rmca_sort_taxon_path_alphabetically(character varying, integer, boolean, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -9876,7 +10885,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_sort_taxon_path_alphabetically(path character varying, last_level integer, with_rank boolean, is_indexed boolean) OWNER TO darwin2;
 
 --
--- TOC entry 1810 (class 1255 OID 4816452)
+-- TOC entry 1819 (class 1255 OID 4816452)
 -- Name: fct_rmca_sort_taxon_path_alphabetically_hstore(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -9916,7 +10925,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_sort_taxon_path_alphabetically_hstore(path character varying) OWNER TO darwin2;
 
 --
--- TOC entry 1811 (class 1255 OID 4816453)
+-- TOC entry 1820 (class 1255 OID 4816453)
 -- Name: fct_rmca_sort_taxon_path_alphabetically_hstore_bck20180829(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -9957,7 +10966,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_sort_taxon_path_alphabetically_hstore_bck20180829(path character varying) OWNER TO darwin2;
 
 --
--- TOC entry 1812 (class 1255 OID 4816454)
+-- TOC entry 1821 (class 1255 OID 4816454)
 -- Name: fct_rmca_sort_taxon_path_alphabetically_hstore_key(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -9997,7 +11006,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_sort_taxon_path_alphabetically_hstore_key(path character varying) OWNER TO darwin2;
 
 --
--- TOC entry 1813 (class 1255 OID 4816455)
+-- TOC entry 1822 (class 1255 OID 4816455)
 -- Name: fct_rmca_sort_taxon_path_alphabetically_hstore_key_bck20180829(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -10037,7 +11046,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_sort_taxon_path_alphabetically_hstore_key_bck20180829(path character varying) OWNER TO darwin2;
 
 --
--- TOC entry 1814 (class 1255 OID 4816456)
+-- TOC entry 1823 (class 1255 OID 4816456)
 -- Name: fct_rmca_sort_taxon_path_alphabetically_not_indexed(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -10070,7 +11079,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_sort_taxon_path_alphabetically_not_indexed(path character varying) OWNER TO darwin2;
 
 --
--- TOC entry 1907 (class 1255 OID 5308260)
+-- TOC entry 1913 (class 1255 OID 5308260)
 -- Name: fct_rmca_sort_taxon_path_alphabetically_staging(integer, boolean, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -10154,7 +11163,115 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_sort_taxon_path_alphabetically_staging(taxon_id integer, with_rank boolean, is_indexed boolean) OWNER TO darwin2;
 
 --
--- TOC entry 1906 (class 1255 OID 5308259)
+-- TOC entry 1931 (class 1255 OID 5309202)
+-- Name: fct_rmca_sort_taxon_path_alphabetically_staging_merge_reference(integer, integer, boolean, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
+--
+
+CREATE FUNCTION darwin2.fct_rmca_sort_taxon_path_alphabetically_staging_merge_reference(taxon_id integer, req_import_ref integer, with_rank boolean DEFAULT true, is_indexed boolean DEFAULT false) RETURNS character varying
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+  --ftheeten 2019 02 21
+ returned varchar;
+
+ tmp varchar;
+ tmp_id integer;
+ tmp_level integer;
+ kingdom_given boolean;
+ kingdom_id integer;
+ kingdom_name varchar;
+
+  domain_given boolean;
+  domain_name varchar;
+  name_rank varchar;
+  in_taxonomy boolean;
+  taxonomy_id integer; 
+  is_reference boolean; 
+BEGIN
+
+	in_taxonomy :=false;
+	SELECT COALESCE(taxonomy_metadata.is_reference_taxonomy,FALSE) INTO is_reference FROM taxonomy_metadata LEFT JOIN imports ON taxonomy_metadata.id=imports.specimen_taxonomy_ref AND imports.id=req_import_ref LIMIT 1;
+	returned ='';
+	IF is_reference = FALSE THEN
+		RAISE EXCEPTION 'Not a reference taxonomy';
+	END IF ;
+	tmp_id:=taxon_id;
+	kingdom_given :=FALSE;
+	domain_given :=FALSE;
+	
+	while tmp_id is not null
+	LOOP 
+		taxonomy_id := NULL;
+		IF in_taxonomy THEN
+			SELECT name, parent_ref, level_ref, level_name INTO tmp, tmp_id, tmp_level, name_rank  FROM taxonomy INNER JOIN catalogue_levels ON level_ref=catalogue_levels.id
+			WHERE taxonomy.id=tmp_id;
+		ELSE
+			SELECT name, parent_ref_internal, level_ref, level_name INTO tmp, tmp_id, tmp_level, name_rank FROM staging_catalogue 
+			INNER JOIN catalogue_levels ON level_ref=catalogue_levels.id
+			WHERE staging_catalogue.id=tmp_id;
+		END IF;
+		IF tmp_level=2 THEN
+			kingdom_given = true;
+		END IF;
+		IF tmp_level=1 THEN
+			domain_given = true;
+		END IF;
+		--raise notice '%', returned;
+		--raise notice '%', tmp_id;
+		IF is_indexed=TRUE THEN
+			tmp:=fulltoindex(tmp, false);
+		END IF;
+		IF with_rank = FALSE THEN
+			returned := tmp||'/'||returned;
+		ELSE
+			returned := tmp||' ('||name_rank||')'||'/'||returned;
+		END IF;
+		IF in_taxonomy = FALSE THEN
+			SELECT taxonomy.parent_ref INTO taxonomy_id FROM taxonomy LEFT JOIN taxonomy_metadata ON taxonomy.metadata_ref= taxonomy_metadata.id WHERE taxonomy.level_ref=tmp_level AND taxonomy.name=tmp AND taxonomy_metadata.is_reference_taxonomy=TRUE;
+			IF taxonomy_id IS NOT NULL THEN
+				--merge
+				tmp_id:=taxonomy_id;
+				in_taxonomy:=TRUE;
+			END IF;
+		END IF;
+	END LOOP;
+	IF kingdom_given = FALSE THEN
+		-- 2019 02 19
+		IF is_indexed =TRUE THEN
+			SELECT fulltoindex(taxonomy.name, false), taxonomy.id INTO kingdom_name, kingdom_id FROM taxonomy INNER JOIN imports ON taxonomy.id=imports.taxonomy_kingdom::int INNER JOIN staging_catalogue ON imports.id=staging_catalogue.import_ref WHERE staging_catalogue.id=taxon_id;
+		ELSE
+			SELECT taxonomy.name, taxonomy.id INTO kingdom_name, kingdom_id FROM taxonomy INNER JOIN imports ON taxonomy.id=imports.taxonomy_kingdom::int INNER JOIN staging_catalogue ON imports.id=staging_catalogue.import_ref WHERE staging_catalogue.id=taxon_id;
+		END IF;
+		IF with_rank = TRUE THEN
+			kingdom_name:= kingdom_name||' (kingdom)';
+		END If;
+		returned :=  kingdom_name||'/'||returned;
+		
+		IF domain_given = FALSE THEN
+				-- 2019 02 19
+			IF is_indexed =TRUE THEN
+				SELECT fulltoindex(taxonomy.name, false) INTO domain_name FROM taxonomy where id = (select parent_ref from taxonomy as b where b.id = kingdom_id);
+			ELSE
+				SELECT taxonomy.name INTO domain_name FROM taxonomy where id = (select parent_ref from taxonomy as b where b.id = kingdom_id);
+			END IF;
+			IF with_rank = TRUE THEN
+				domain_name:= domain_name||' (domain)';
+			END If;
+			returned :=  domain_name||'/'||returned;
+		END IF;
+	END IF;
+
+
+	return '/'||returned;
+END;
+
+$$;
+
+
+ALTER FUNCTION darwin2.fct_rmca_sort_taxon_path_alphabetically_staging_merge_reference(taxon_id integer, req_import_ref integer, with_rank boolean, is_indexed boolean) OWNER TO darwin2;
+
+--
+-- TOC entry 1912 (class 1255 OID 5308259)
 -- Name: fct_rmca_sort_taxon_path_get_max_level_in_staging(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -10188,7 +11305,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_sort_taxon_path_get_max_level_in_staging(taxon_id integer) OWNER TO darwin2;
 
 --
--- TOC entry 1816 (class 1255 OID 4816457)
+-- TOC entry 1825 (class 1255 OID 4816457)
 -- Name: fct_rmca_taxonomy_split_name_author(character varying, integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -10242,7 +11359,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_taxonomy_split_name_author(name character varying, rank_id integer) OWNER TO darwin2;
 
 --
--- TOC entry 1817 (class 1255 OID 4816458)
+-- TOC entry 1826 (class 1255 OID 4816458)
 -- Name: fct_rmca_taxonomy_try_to_isolate_from_author(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -10292,7 +11409,7 @@ DECLARE
 ALTER FUNCTION darwin2.fct_rmca_taxonomy_try_to_isolate_from_author(name character varying) OWNER TO darwin2;
 
 --
--- TOC entry 1818 (class 1255 OID 4816459)
+-- TOC entry 1827 (class 1255 OID 4816459)
 -- Name: fct_rmca_taxonomy_try_to_isolate_from_author_old(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -10317,7 +11434,7 @@ E' (von|van|de|l\')$',''
 ALTER FUNCTION darwin2.fct_rmca_taxonomy_try_to_isolate_from_author_old(character varying) OWNER TO darwin2;
 
 --
--- TOC entry 1819 (class 1255 OID 4816461)
+-- TOC entry 1828 (class 1255 OID 4816461)
 -- Name: fct_rmca_update_child_of_taxon_protected(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -10345,7 +11462,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_update_child_of_taxon_protected() OWNER TO darwin2;
 
 --
--- TOC entry 1820 (class 1255 OID 4816462)
+-- TOC entry 1829 (class 1255 OID 4816462)
 -- Name: fct_rmca_update_reference_taxo(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -10369,7 +11486,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_update_reference_taxo() OWNER TO darwin2;
 
 --
--- TOC entry 1821 (class 1255 OID 4816463)
+-- TOC entry 1830 (class 1255 OID 4816463)
 -- Name: fct_search_authorized_encoding_collections(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -10383,7 +11500,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_search_authorized_encoding_collections(user_id integer) OWNER TO darwin2;
 
 --
--- TOC entry 1822 (class 1255 OID 4816464)
+-- TOC entry 1831 (class 1255 OID 4816464)
 -- Name: fct_search_authorized_view_collections(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -10401,7 +11518,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_search_authorized_view_collections(user_id integer) OWNER TO darwin2;
 
 --
--- TOC entry 1823 (class 1255 OID 4816465)
+-- TOC entry 1832 (class 1255 OID 4816465)
 -- Name: fct_search_methods(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -10415,7 +11532,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_search_methods(str_ids character varying) OWNER TO darwin2;
 
 --
--- TOC entry 1824 (class 1255 OID 4816466)
+-- TOC entry 1833 (class 1255 OID 4816466)
 -- Name: fct_search_tools(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -10429,7 +11546,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_search_tools(str_ids character varying) OWNER TO darwin2;
 
 --
--- TOC entry 1826 (class 1255 OID 4816467)
+-- TOC entry 1835 (class 1255 OID 4816467)
 -- Name: fct_searchcodes(character varying[]); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -10487,7 +11604,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_searchcodes(VARIADIC character varying[]) OWNER TO darwin2;
 
 --
--- TOC entry 1827 (class 1255 OID 4816468)
+-- TOC entry 1836 (class 1255 OID 4816468)
 -- Name: fct_set_user(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -10506,7 +11623,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_set_user(userid integer) OWNER TO darwin2;
 
 --
--- TOC entry 1828 (class 1255 OID 4816469)
+-- TOC entry 1837 (class 1255 OID 4816469)
 -- Name: fct_trg_chk_possible_upper_level(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -10529,7 +11646,7 @@ $$;
 ALTER FUNCTION darwin2.fct_trg_chk_possible_upper_level() OWNER TO darwin2;
 
 --
--- TOC entry 1829 (class 1255 OID 4816470)
+-- TOC entry 1838 (class 1255 OID 4816470)
 -- Name: fct_trk_log_table(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -10591,7 +11708,7 @@ $$;
 ALTER FUNCTION darwin2.fct_trk_log_table() OWNER TO darwin2;
 
 --
--- TOC entry 1830 (class 1255 OID 4816471)
+-- TOC entry 1839 (class 1255 OID 4816471)
 -- Name: fct_unpromotion_impact_prefs(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -10637,7 +11754,7 @@ $$;
 ALTER FUNCTION darwin2.fct_unpromotion_impact_prefs() OWNER TO darwin2;
 
 --
--- TOC entry 1815 (class 1255 OID 4816472)
+-- TOC entry 1824 (class 1255 OID 4816472)
 -- Name: fct_upd_institution_staging_relationship(); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -10669,7 +11786,7 @@ $$;
 ALTER FUNCTION darwin2.fct_upd_institution_staging_relationship() OWNER TO postgres;
 
 --
--- TOC entry 1825 (class 1255 OID 4816473)
+-- TOC entry 1834 (class 1255 OID 4816473)
 -- Name: fct_upd_people_in_flat(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -10760,7 +11877,7 @@ $$;
 ALTER FUNCTION darwin2.fct_upd_people_in_flat() OWNER TO darwin2;
 
 --
--- TOC entry 1831 (class 1255 OID 4816474)
+-- TOC entry 1840 (class 1255 OID 4816474)
 -- Name: fct_upd_people_staging_fields(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -10804,7 +11921,7 @@ $$;
 ALTER FUNCTION darwin2.fct_upd_people_staging_fields() OWNER TO darwin2;
 
 --
--- TOC entry 1832 (class 1255 OID 4816475)
+-- TOC entry 1841 (class 1255 OID 4816475)
 -- Name: fct_upd_staging_fields(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -10958,7 +12075,7 @@ $$;
 ALTER FUNCTION darwin2.fct_upd_staging_fields() OWNER TO darwin2;
 
 --
--- TOC entry 1833 (class 1255 OID 4816478)
+-- TOC entry 1842 (class 1255 OID 4816478)
 -- Name: fct_update_import(); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -10977,7 +12094,7 @@ $$;
 ALTER FUNCTION darwin2.fct_update_import() OWNER TO postgres;
 
 --
--- TOC entry 1834 (class 1255 OID 4816479)
+-- TOC entry 1843 (class 1255 OID 4816479)
 -- Name: fct_update_specimen_flat(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -11099,7 +12216,7 @@ $$;
 ALTER FUNCTION darwin2.fct_update_specimen_flat() OWNER TO darwin2;
 
 --
--- TOC entry 1835 (class 1255 OID 4816480)
+-- TOC entry 1844 (class 1255 OID 4816480)
 -- Name: fct_update_specimens_flat_related(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -11338,7 +12455,7 @@ $$;
 ALTER FUNCTION darwin2.fct_update_specimens_flat_related() OWNER TO darwin2;
 
 --
--- TOC entry 1842 (class 1255 OID 4816483)
+-- TOC entry 1851 (class 1255 OID 4816483)
 -- Name: fulltoindex(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -11354,7 +12471,7 @@ $$;
 ALTER FUNCTION darwin2.fulltoindex(to_indexed character varying) OWNER TO darwin2;
 
 --
--- TOC entry 1899 (class 1255 OID 5307648)
+-- TOC entry 1907 (class 1255 OID 5307648)
 -- Name: fulltoindex(character varying, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -11419,7 +12536,7 @@ $$;
 ALTER FUNCTION darwin2.fulltoindex(to_indexed character varying, keep_space boolean) OWNER TO darwin2;
 
 --
--- TOC entry 1836 (class 1255 OID 4816484)
+-- TOC entry 1845 (class 1255 OID 4816484)
 -- Name: get_import_row(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -11441,7 +12558,7 @@ $$;
 ALTER FUNCTION darwin2.get_import_row() OWNER TO darwin2;
 
 --
--- TOC entry 1837 (class 1255 OID 4816485)
+-- TOC entry 1846 (class 1255 OID 4816485)
 -- Name: get_setting(text); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -11458,7 +12575,7 @@ END;$$;
 ALTER FUNCTION darwin2.get_setting(param text, OUT value text) OWNER TO darwin2;
 
 --
--- TOC entry 1838 (class 1255 OID 4816486)
+-- TOC entry 1847 (class 1255 OID 4816486)
 -- Name: getspecificparentforlevel(character varying, character varying, character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -11489,7 +12606,7 @@ $$;
 ALTER FUNCTION darwin2.getspecificparentforlevel(referenced_relation character varying, path character varying, level_searched character varying) OWNER TO darwin2;
 
 --
--- TOC entry 1839 (class 1255 OID 4816487)
+-- TOC entry 1848 (class 1255 OID 4816487)
 -- Name: gettagsindexedasarray(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -11503,7 +12620,7 @@ $_$;
 ALTER FUNCTION darwin2.gettagsindexedasarray(taglist character varying) OWNER TO darwin2;
 
 --
--- TOC entry 1889 (class 1255 OID 4816488)
+-- TOC entry 1897 (class 1255 OID 4816488)
 -- Name: is_property_unit_in_group(text, text); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -11537,7 +12654,7 @@ $_$;
 ALTER FUNCTION darwin2.is_property_unit_in_group(searched_unit text, property_unit text) OWNER TO postgres;
 
 --
--- TOC entry 1845 (class 1255 OID 4816489)
+-- TOC entry 1854 (class 1255 OID 4816489)
 -- Name: isnumeric(text); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -11557,7 +12674,7 @@ $_$;
 ALTER FUNCTION darwin2.isnumeric(text) OWNER TO postgres;
 
 --
--- TOC entry 1847 (class 1255 OID 4816490)
+-- TOC entry 1856 (class 1255 OID 4816490)
 -- Name: labeling_code_for_indexation(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -11578,7 +12695,7 @@ $_$;
 ALTER FUNCTION darwin2.labeling_code_for_indexation(part_ref integer) OWNER TO darwin2;
 
 --
--- TOC entry 1846 (class 1255 OID 4816491)
+-- TOC entry 1855 (class 1255 OID 4816491)
 -- Name: labeling_individual_type_for_indexation(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -11592,7 +12709,7 @@ $_$;
 ALTER FUNCTION darwin2.labeling_individual_type_for_indexation(individual_type character varying) OWNER TO darwin2;
 
 --
--- TOC entry 1848 (class 1255 OID 4816492)
+-- TOC entry 1857 (class 1255 OID 4816492)
 -- Name: labeling_part_for_indexation(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -11606,7 +12723,7 @@ $_$;
 ALTER FUNCTION darwin2.labeling_part_for_indexation(part character varying) OWNER TO darwin2;
 
 --
--- TOC entry 1840 (class 1255 OID 4816493)
+-- TOC entry 1849 (class 1255 OID 4816493)
 -- Name: labeling_type_for_indexation(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -11620,7 +12737,7 @@ $_$;
 ALTER FUNCTION darwin2.labeling_type_for_indexation(individual_type character varying) OWNER TO darwin2;
 
 --
--- TOC entry 1843 (class 1255 OID 4816494)
+-- TOC entry 1852 (class 1255 OID 4816494)
 -- Name: linetotagarray(text); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -11634,7 +12751,7 @@ $_$;
 ALTER FUNCTION darwin2.linetotagarray(line text) OWNER TO darwin2;
 
 --
--- TOC entry 1844 (class 1255 OID 4816495)
+-- TOC entry 1853 (class 1255 OID 4816495)
 -- Name: linetotagrows(text); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -11648,7 +12765,7 @@ $_$;
 ALTER FUNCTION darwin2.linetotagrows(line text) OWNER TO darwin2;
 
 --
--- TOC entry 1841 (class 1255 OID 4816496)
+-- TOC entry 1850 (class 1255 OID 4816496)
 -- Name: point_equal(point, point); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -11662,7 +12779,7 @@ ELSE false END;$_$;
 ALTER FUNCTION darwin2.point_equal(point, point) OWNER TO postgres;
 
 --
--- TOC entry 1849 (class 1255 OID 4816497)
+-- TOC entry 1858 (class 1255 OID 4816497)
 -- Name: rmca_cast_staging_gtu_date_to_mask(timestamp without time zone, time without time zone, character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -11702,7 +12819,7 @@ $$;
 ALTER FUNCTION darwin2.rmca_cast_staging_gtu_date_to_mask(p_date timestamp without time zone, p_time time without time zone, date_resolution character varying) OWNER TO darwin2;
 
 --
--- TOC entry 1850 (class 1255 OID 4816498)
+-- TOC entry 1859 (class 1255 OID 4816498)
 -- Name: rmca_create_missing_people_in_staging(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -11873,7 +12990,7 @@ $$;
 ALTER FUNCTION darwin2.rmca_create_missing_people_in_staging(p_import_ref integer) OWNER TO darwin2;
 
 --
--- TOC entry 1851 (class 1255 OID 4816499)
+-- TOC entry 1941 (class 1255 OID 4816499)
 -- Name: rmca_delete_specimens_from_import_all(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -11980,13 +13097,20 @@ RAISE NOTICE 'before delete staging %', (SELECT count(*) FROM staging);
 DELETE FROM staging WHERE import_ref =p_import_ref;
 RAISE NOTICE 'after  delete staging %', (SELECT count(*) FROM staging);
 
-
+/*
 ALTER TABLE storage_parts DISABLE TRIGGER user;
 RAISE NOTICE 'before delete storage_parts %', (SELECT count(*) FROM storage_parts);
 DELETE FROM storage_parts where specimen_ref in (select id from specimens WHERE import_ref=p_import_ref);
 RAISE NOTICE 'after delete storage_parts %', (SELECT count(*) FROM storage_parts);
 --DELETE FROM collections WHERE id=p_coll_ref;
 ALTER TABLE storage_parts ENABLE TRIGGER user;
+*/
+
+ALTER TABLE temporal_information DISABLE TRIGGER user;
+RAISE NOTICE 'before delete temporal_information %', (SELECT count(*) FROM temporal_information);
+DELETE FROM temporal_information WHERE specimen_ref IN (SELECT id FROM specimens WHERe import_ref = p_import_ref) ;
+RAISE NOTICE 'after delete temporal_information %', (SELECT count(*) FROM temporal_information);
+ALTER TABLE temporal_information ENABLE TRIGGER user;
 
 ALTER TABLE specimens DISABLE TRIGGER user;
 RAISE NOTICE 'before delete specimens %', (SELECT count(*) FROM specimens);
@@ -12003,7 +13127,7 @@ $$;
 ALTER FUNCTION darwin2.rmca_delete_specimens_from_import_all(p_import_ref integer) OWNER TO darwin2;
 
 --
--- TOC entry 1853 (class 1255 OID 4816500)
+-- TOC entry 1861 (class 1255 OID 4816500)
 -- Name: rmca_dms_to_dd(character varying, character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -12061,7 +13185,7 @@ $$;
 ALTER FUNCTION darwin2.rmca_dms_to_dd(coord_dms character varying, direction character varying) OWNER TO darwin2;
 
 --
--- TOC entry 1852 (class 1255 OID 4816501)
+-- TOC entry 1860 (class 1255 OID 4816501)
 -- Name: rmca_dms_to_text(character varying, integer, double precision, double precision, integer, double precision, character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -12119,8 +13243,8 @@ $$;
 ALTER FUNCTION darwin2.rmca_dms_to_text(coordinates_format character varying, degrees integer, minutes double precision, seconds double precision, direction integer, coord_decimal double precision, lat_lon character varying) OWNER TO darwin2;
 
 --
--- TOC entry 1904 (class 1255 OID 5307855)
--- Name: rmca_dmscheck_syntax(character varying); Type: FUNCTION; Schema: darwin2; Owner: postgres
+-- TOC entry 1930 (class 1255 OID 5307855)
+-- Name: rmca_dmscheck_syntax(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
 CREATE FUNCTION darwin2.rmca_dmscheck_syntax(coord_dms character varying) RETURNS boolean
@@ -12132,6 +13256,9 @@ DECLARE
 BEGIN
 
         returned:=false;
+        IF coord_dms IS NULL THEN
+		RETURN NULL;
+        END IF;
         coord_dms:=replace(coord_dms, ',','.');
 	acc :=regexp_matches(coord_dms, '[^\d]*(\d+)°');
 	
@@ -12163,10 +13290,10 @@ END;
 $$;
 
 
-ALTER FUNCTION darwin2.rmca_dmscheck_syntax(coord_dms character varying) OWNER TO postgres;
+ALTER FUNCTION darwin2.rmca_dmscheck_syntax(coord_dms character varying) OWNER TO darwin2;
 
 --
--- TOC entry 1893 (class 1255 OID 5304957)
+-- TOC entry 1901 (class 1255 OID 5304957)
 -- Name: rmca_fct_clear_gtu_date(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -12185,7 +13312,7 @@ $$;
 ALTER FUNCTION darwin2.rmca_fct_clear_gtu_date() OWNER TO darwin2;
 
 --
--- TOC entry 1894 (class 1255 OID 5304961)
+-- TOC entry 1902 (class 1255 OID 5304961)
 -- Name: rmca_fct_clear_specimen_date(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -12196,7 +13323,7 @@ BEGIN
   IF TG_OP = 'DELETE' THEN
     DELETE FROM temporal_information where specimen_ref = OLD.id;
   END IF;
-  RETURN NULL;
+  RETURN OLD;
  END;
 $$;
 
@@ -12204,7 +13331,7 @@ $$;
 ALTER FUNCTION darwin2.rmca_fct_clear_specimen_date() OWNER TO darwin2;
 
 --
--- TOC entry 1895 (class 1255 OID 5304959)
+-- TOC entry 1903 (class 1255 OID 5304959)
 -- Name: rmca_fct_update_specimen_date(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -12240,7 +13367,7 @@ $$;
 ALTER FUNCTION darwin2.rmca_fct_update_specimen_date() OWNER TO darwin2;
 
 --
--- TOC entry 1854 (class 1255 OID 4816502)
+-- TOC entry 1870 (class 1255 OID 4816502)
 -- Name: rmca_import_gtu_create_missing_people_in_staging(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -12366,7 +13493,214 @@ $$;
 ALTER FUNCTION darwin2.rmca_import_gtu_create_missing_people_in_staging(p_import_ref integer) OWNER TO darwin2;
 
 --
--- TOC entry 1859 (class 1255 OID 4816503)
+-- TOC entry 1940 (class 1255 OID 5309972)
+-- Name: rmca_import_gtu_force(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
+--
+
+CREATE FUNCTION darwin2.rmca_import_gtu_force(p_staging_gtu_id integer) RETURNS boolean
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+        curs record;
+        expedition varchar;
+        expedition_id integer;
+        expedition_array integer[];
+        gtu_id integer;
+        collection_id integer;
+	returned BOOLEAN;
+
+BEGIN
+	returned := false;
+    FOR curs IN SELECT staging_gtu.* from staging_gtu WHERE id = p_staging_gtu_id		
+    LOOP
+    
+        raise notice 'test %', curs.sampling_code;
+		
+					
+		SELECT collection_ref INTO collection_id FROM darwin2.imports WHERE id=curs.import_ref;
+                expedition :=NULL;
+                expedition_id :=NULL;
+                expedition_array := ARRAY[]::integer[];
+                gtu_id :=NULL;
+
+                raise notice 'go';                
+               
+                expedition:=curs.expeditions[1];
+                raise notice 'expedition : %', expedition;
+                expedition_id:=NULL;
+                IF expedition IS NOT NULL THEN
+                    SELECT id into expedition_id FROM expeditions WHERE LOWER(name)= LOWER(expedition) ;
+                    IF NOT FOUND THEN
+                        raise notice 'insert %', expedition;
+                        INSERT INTO expeditions (name) VALUES (expedition) RETURNING id INTO expedition_id;
+                    END IF;
+                END IF;
+                RAISE NOTICE 'exp_id %', expedition_id;
+                expedition_array=expedition_array|| expedition_id;
+                
+                INSERT INTO gtu(
+                    code,
+                    
+                    tag_values_indexed, 
+                    latitude, 
+                    longitude, --lat_long_accuracy, 
+                    
+                     elevation, import_ref, collection_ref,
+                    expedition_refs,
+                    collector_refs
+                     )
+                VALUES ( 
+                curs.sampling_code, 
+                
+                (SELECT array_agg(tag_value) FROM staging_gtu_tag_groups WHERE staging_gtu_ref=curs.id),
+                
+                rmca_dms_to_dd(curs.latitude1, 'latitude'), 
+                rmca_dms_to_dd(curs.longitude1, 'longitude'),
+                
+                curs.station_baseline_elevation, curs.import_ref, collection_id,
+                expedition_array,
+                (SELECT array_agg(people_ref) FROM staging_people WHERE referenced_relation='staging_gtu' AND record_id=curs.id)
+                ) RETURNING id INTO gtu_id;
+
+                IF curs.collectors IS NOT NULL THEN
+                    INSERT INTO properties( referenced_relation, record_id, property_type, lower_value, upper_value) VALUES ('gtu', gtu_id, 'collectors', curs.collectors,'' );
+                END IF;
+                IF curs.expeditions IS NOT NULL THEN
+                    INSERT INTO properties( referenced_relation, record_id, property_type, lower_value, upper_value) VALUES ('gtu', gtu_id, 'expeditions', curs.expeditions,'');
+                END IF;
+                IF curs.ig_num IS NOT NULL THEN
+                    INSERT INTO properties( referenced_relation, record_id, property_type, lower_value, upper_value) VALUES ('gtu', gtu_id, 'ig_num', curs.ig_num,'' );
+                END IF;
+                IF curs.station_type IS NOT NULL THEN
+                    INSERT INTO properties( referenced_relation, record_id, property_type, lower_value, upper_value) VALUES ('gtu', gtu_id, 'station_type', curs.station_type,'' );
+                END IF;
+                IF curs.sampling_field_number IS NOT NULL THEN
+                    INSERT INTO properties( referenced_relation, record_id, property_type, lower_value, upper_value) VALUES ('gtu', gtu_id, 'sampling_field_number', curs.sampling_field_number,'' );
+                END IF;
+                IF curs.event_cluster_code IS NOT NULL THEN
+                    INSERT INTO properties( referenced_relation, record_id, property_type, lower_value, upper_value) VALUES ('gtu', gtu_id, 'event_cluster_code', curs.event_cluster_code,'' );
+                END IF;
+                IF curs.event_order IS NOT NULL THEN
+                    INSERT INTO properties( referenced_relation, record_id, property_type, lower_value, upper_value) VALUES ('gtu', gtu_id, 'event_order', curs.event_order,'' );
+                END IF;
+                IF curs.iso3166 IS NOT NULL THEN
+                    INSERT INTO properties( referenced_relation, record_id, property_type, lower_value, upper_value) VALUES ('gtu', gtu_id, 'iso3166', curs.iso3166,'' );
+                END IF;
+                IF curs.iso3166_subdivision IS NOT NULL THEN
+                    INSERT INTO properties( referenced_relation, record_id, property_type, lower_value, upper_value) VALUES ('gtu', gtu_id, 'iso3166_subdivision', curs.iso3166_subdivision ,'');
+                END IF;
+                IF curs.locality_text IS NOT NULL THEN
+                    INSERT INTO properties( referenced_relation, record_id, property_type, lower_value, upper_value) VALUES ('gtu', gtu_id, 'locality_text', curs.locality_text,'' );
+                END IF;
+                IF curs.ecology_text IS NOT NULL THEN
+                    INSERT INTO properties( referenced_relation, record_id, property_type, lower_value, upper_value) VALUES ('gtu', gtu_id, 'ecology_text', curs.ecology_text ,'');
+                END IF;
+                IF curs.coordinates_format IS NOT NULL THEN
+                    INSERT INTO properties( referenced_relation, record_id, property_type, lower_value, upper_value) VALUES ('gtu', gtu_id, 'coordinates_format', curs.coordinates_format,'' );
+                END IF;
+                IF curs.latitude1 IS NOT NULL THEN
+                    INSERT INTO properties( referenced_relation, record_id, property_type, lower_value, upper_value) VALUES ('gtu', gtu_id, 'latitude1', curs.latitude1,'' );
+                END IF;
+                IF curs.longitude1 IS NOT NULL THEN
+                    INSERT INTO properties( referenced_relation, record_id, property_type, lower_value, upper_value) VALUES ('gtu', gtu_id, 'longitude1', curs.longitude1,'' );
+                END IF;
+                IF curs.latitude2 IS NOT NULL THEN
+                    INSERT INTO properties( referenced_relation, record_id, property_type, lower_value, upper_value) VALUES ('gtu', gtu_id, 'latitude2', curs.latitude2,'' );
+                END IF;
+                IF curs.longitude2 IS NOT NULL THEN
+                    INSERT INTO properties( referenced_relation, record_id, property_type, lower_value, upper_value) VALUES ('gtu', gtu_id, 'longitude2', curs.longitude2 ,'');
+                END IF;
+                IF curs.gis_type IS NOT NULL THEN
+                    INSERT INTO properties( referenced_relation, record_id, property_type, lower_value, upper_value) VALUES ('gtu', gtu_id, 'gis_type', curs.gis_type,'' );
+                END IF;
+                IF curs.coordinates_datum IS NOT NULL THEN
+                    INSERT INTO properties( referenced_relation, record_id, property_type, lower_value, upper_value) VALUES ('gtu', gtu_id, 'coordinates_datum', curs.coordinates_datum ,'');
+                END IF;
+                IF curs.coordinates_original IS NOT NULL THEN
+                    INSERT INTO properties( referenced_relation, record_id, property_type, lower_value, upper_value) VALUES ('gtu', gtu_id, 'coordinates_original', curs.coordinates_original,'' );
+                END IF;
+                IF curs.coordinates_accuracy IS NOT NULL THEN
+                    INSERT INTO properties( referenced_relation, record_id, property_type, lower_value, upper_value) VALUES ('gtu', gtu_id, 'coordinates_accuracy', curs.coordinates_accuracy,'' );
+                END IF;
+                IF curs.coordinates_accuracy IS NOT NULL THEN
+                    INSERT INTO properties( referenced_relation, record_id, property_type, lower_value, upper_value) VALUES ('gtu', gtu_id, 'coordinates_accuracy', curs.coordinates_accuracy,'' );
+                END IF;
+                IF curs.station_baseline_elevation IS NOT NULL THEN
+                    INSERT INTO properties( referenced_relation, record_id, property_type, lower_value, upper_value) VALUES ('gtu', gtu_id, 'station_baseline_elevation', curs.station_baseline_elevation,'' );
+                END IF;
+                IF curs.station_baseline_accuracy IS NOT NULL THEN
+                    INSERT INTO properties( referenced_relation, record_id, property_type, lower_value, upper_value) VALUES ('gtu', gtu_id, 'station_baseline_accuracy', curs.station_baseline_accuracy,'' );
+                END IF;
+
+                IF curs.sampling_elevation_start IS NOT NULL THEN
+                    INSERT INTO properties( referenced_relation, record_id, property_type, lower_value, upper_value) VALUES ('gtu', gtu_id, 'sampling_elevation_start', curs.sampling_elevation_start,'' );
+                END IF;
+
+                IF curs.sampling_elevation_end IS NOT NULL THEN
+                    INSERT INTO properties( referenced_relation, record_id, property_type, lower_value, upper_value) VALUES ('gtu', gtu_id, 'sampling_elevation_end', curs.sampling_elevation_end,'' );
+                END IF;
+
+                IF curs.sampling_elevation_accuracy IS NOT NULL THEN
+                    INSERT INTO properties( referenced_relation, record_id, property_type, lower_value, upper_value) VALUES ('gtu', gtu_id, 'sampling_elevation_accuracy', curs.sampling_elevation_accuracy,'' );
+                END IF;
+
+                IF curs.original_elevation_data IS NOT NULL THEN
+                    INSERT INTO properties( referenced_relation, record_id, property_type, lower_value, upper_value) VALUES ('gtu', gtu_id, 'original_elevation_data', curs.original_elevation_data,'' );
+                END IF;
+
+                IF curs.sampling_depth_start IS NOT NULL THEN
+                    INSERT INTO properties( referenced_relation, record_id, property_type, lower_value, upper_value) VALUES ('gtu', gtu_id, 'sampling_depth_start', curs.sampling_depth_start,'' );
+                END IF;
+
+                IF curs.sampling_depth_end IS NOT NULL THEN
+                    INSERT INTO properties( referenced_relation, record_id, property_type, lower_value, upper_value) VALUES ('gtu', gtu_id, 'sampling_depth_end', curs.sampling_depth_end,'' );
+                END IF;
+
+                IF curs.sampling_depth_accuracy IS NOT NULL THEN
+                    INSERT INTO properties( referenced_relation, record_id, property_type, lower_value, upper_value) VALUES ('gtu', gtu_id, 'sampling_depth_accuracy', curs.sampling_depth_accuracy,'' );
+                END IF;
+
+                IF curs.original_depth_data IS NOT NULL THEN
+                    INSERT INTO properties( referenced_relation, record_id, property_type, lower_value, upper_value) VALUES ('gtu', gtu_id, 'original_depth_data', curs.original_depth_data ,'');
+                END IF;
+
+                IF curs.sampling_method IS NOT NULL THEN
+                    INSERT INTO properties( referenced_relation, record_id, property_type, lower_value, upper_value) VALUES ('gtu', gtu_id, 'sampling_method', curs.sampling_method,'' );
+                END IF;
+
+                IF curs.sampling_fixation IS NOT NULL THEN
+                    INSERT INTO properties( referenced_relation, record_id, property_type, lower_value, upper_value) VALUES ('gtu', gtu_id, 'sampling_fixation', curs.sampling_fixation,'' );
+                END IF;
+
+                UPDATE properties SET referenced_relation='gtu', record_id=gtu_id WHERE referenced_relation='staging_gtu' AND record_id=curs.id;
+
+                UPDATE comments SET referenced_relation='gtu', record_id=gtu_id WHERE referenced_relation='staging_gtu' AND record_id=curs.id;
+		BEGIN
+			INSERT INTO tag_groups (gtu_ref, group_name, sub_group_name, tag_value) SELECT DISTINCT gtu_id, staging_gtu_tag_groups.group_name, staging_gtu_tag_groups.sub_group_name, staging_gtu_tag_groups.tag_value FROM staging_gtu_tag_groups WHERE staging_gtu_ref=curs.id; 
+		EXCEPTION WHEN unique_violation THEN
+			-- Do nothing, and loop to try the UPDATE again.
+		END; 	
+                --ftheeten countries 2018 09 25
+		BEGIN
+			INSERT INTO tag_groups (gtu_ref, group_name, sub_group_name,  tag_value) SELECT DISTINCT gtu_id, 'administrative', 'country', unnest(countries) FROM staging_gtu WHERE id=curs.id;
+		EXCEPTION WHEN unique_violation THEN
+			-- Do nothing, and loop to try the UPDATE again.
+		END; 
+                UPDATE staging_gtu SET imported=true, import_exception='imported' WHERE id=curs.id;            
+        END LOOP;
+        
+	UPDATE staging_gtu SET imported=true, import_exception='imported' , gtu_ref=gtu_id WHERE id=p_staging_gtu_id;
+           
+	returned :=TRUE;
+	RETURN returned;
+END;
+$$;
+
+
+ALTER FUNCTION darwin2.rmca_import_gtu_force(p_staging_gtu_id integer) OWNER TO darwin2;
+
+--
+-- TOC entry 1866 (class 1255 OID 4816503)
 -- Name: rmca_import_gtu_in_darwin_fast(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -12382,6 +13716,8 @@ DECLARE
     collection_id integer;
         
 BEGIN 
+
+    UPDATE staging_gtu set status=''::public.hstore, import_exception=NULL WHERE import_ref = p_import_ref AND imported=FALSE;
     DROP TABLE if EXISTs tmp_codes;
     DROP TABLE if EXISTs tmp_coord_errors;
     CREATE TEMPORARY TABLE tmp_codes(
@@ -12397,8 +13733,9 @@ BEGIN
        INSERT INTO tmp_coord_errors (code) SELECT staging_gtu.sampling_code FROM staging_gtu WHERE (darwin2.rmca_dmscheck_syntax(latitude1)=false OR darwin2.rmca_dmscheck_syntax(longitude1)=false
        OR darwin2.rmca_dmscheck_syntax(latitude2)=false OR darwin2.rmca_dmscheck_syntax(longitude2)=false) AND import_ref = p_import_ref;
 
-       UPDATE staging_gtu SET status = status ||hstore('wong_dms_coordinate_format' , 'check_long1_lat1_long2_lat2')  WHERE darwin2.rmca_dmscheck_syntax(latitude1)=false OR darwin2.rmca_dmscheck_syntax(longitude1)=false
-       OR darwin2.rmca_dmscheck_syntax(latitude2)=false OR darwin2.rmca_dmscheck_syntax(longitude2)=false AND import_ref = p_import_ref;
+       UPDATE staging_gtu SET status = status ||hstore('wrong_dms_coordinate_format' , 'check_long1_lat1_long2_lat2') ,
+	import_exception=COALESCE(import_exception, 'wrong_dms_coordinate_format')   WHERE darwin2.rmca_dmscheck_syntax(latitude1)=false OR darwin2.rmca_dmscheck_syntax(longitude1)=false
+       OR darwin2.rmca_dmscheck_syntax(latitude2)=false OR darwin2.rmca_dmscheck_syntax(longitude2)=false AND import_ref = p_import_ref ;
     
 	FOR curs IN SELECT staging_gtu.* from staging_gtu 
 		LEFT JOIN gtu
@@ -12589,28 +13926,51 @@ BEGIN
 		EXCEPTION WHEN unique_violation THEN
 			-- Do nothing, and loop to try the UPDATE again.
 		END; 
-                UPDATE staging_gtu SET imported=true WHERE id=curs.id;
+                UPDATE staging_gtu SET imported=true, import_exception='imported', gtu_ref=gtu_id WHERE id=curs.id;
             ELSE
 		PERFORM * FROM tmp_codes WHERE 	tmp_codes.code=curs.sampling_code ;
 		IF FOUND THEN
-			UPDATE staging_gtu SET status = status ||hstore('duplicate_code', 'duplicate_in_file') WHERE id=curs.id AND staging_gtu.sampling_code IN (SELECT code FROM tmp_code);
+			UPDATE staging_gtu SET status = status ||hstore('duplicate_code', 'duplicate_in_file') WHERE id=curs.id AND staging_gtu.sampling_code IN (SELECT code FROM tmp_codes);
 		END IF;
 	    END IF;
         END LOOP;
 
 	
-	FOR curs IN SELECT staging_gtu.*, gtu.id as gtu_id from staging_gtu 
+	FOR curs IN SELECT staging_gtu.*, string_agg(gtu.id::varchar,'; '::varchar ORDER BY gtu.id) as gtu_ids 
+
+from staging_gtu 
 	
 		LEFT JOIN gtu
 		ON 
 			LOWER(staging_gtu.sampling_code)=LOWER(code)
 
-		WHERE staging_gtu.import_ref = p_import_ref  
+		WHERE staging_gtu.import_ref = p_import_ref 
 		AND gtu.id IS NOT NULL --NOT NULL as we are looking the duplicates in DB
 		AND staging_gtu.imported=FALSE 
+		GROUP BY
+
+		staging_gtu.id, staging_gtu.import_ref, status, date_included, tags_merged, sensitive_information_withheld, 
+		       gtu_ref, station_type, sampling_code, sampling_field_number, 
+		       event_cluster_code, event_order, ig_num, ig_num_indexed, collections, 
+		       collectors, expeditions, collection_refs, staging_gtu.collector_refs, staging_gtu.expedition_refs, 
+		       iso3166, iso3166_subdivision, countries, tags, tags_indexed, 
+		       locality_text, locality_text_indexed, ecology_text, ecology_text_indexed, 
+		       coordinates_format, latitude1, longitude1, latitude2, longitude2, 
+		       gis_type, coordinates_wkt, coordinates_datum, coordinates_proj_ref, 
+		       coordinates_original, coordinates_accuracy, coordinates_accuracy_text, 
+		       station_baseline_elevation, station_baseline_accuracy, sampling_elevation_start, 
+		       sampling_elevation_end, sampling_elevation_accuracy, original_elevation_data, 
+		       sampling_depth_start, sampling_depth_end, sampling_depth_accuracy, 
+		       original_depth_data, collecting_date_begin, collecting_date_begin_mask, 
+		       collecting_date_end, collecting_date_end_mask, collecting_time_begin, 
+		       collecting_time_end, sampling_method, sampling_fixation, imported, 
+		       pos_in_file, import_exception
 	LOOP 
-		UPDATE staging_gtu SET status = status ||hstore(ARRAY['duplicate_code', 'gtu_id']::varchar[], ARRAY['duplicate_with_database',curs.gtu_id]::varchar[]) WHERE id=curs.id;
+		UPDATE staging_gtu SET status = status ||hstore(ARRAY['duplicate_code', 'gtu_id']::varchar[], ARRAY['duplicate_with_database',curs.gtu_ids]::varchar[]), import_exception='duplicate_code' WHERE id=curs.id;
 	END LOOP;
+
+	--2019 02 28 
+	UPDATE imports SET state='pending' WHERE id=p_import_ref;
 
 	
 
@@ -12621,7 +13981,7 @@ $$;
 ALTER FUNCTION darwin2.rmca_import_gtu_in_darwin_fast(p_import_ref integer) OWNER TO darwin2;
 
 --
--- TOC entry 1856 (class 1255 OID 4816506)
+-- TOC entry 1863 (class 1255 OID 4816506)
 -- Name: rmca_reinit_statistical_view(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -12646,7 +14006,7 @@ $$;
 ALTER FUNCTION darwin2.rmca_reinit_statistical_view() OWNER TO darwin2;
 
 --
--- TOC entry 1857 (class 1255 OID 4816507)
+-- TOC entry 1864 (class 1255 OID 4816507)
 -- Name: set_path(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -12666,7 +14026,7 @@ $_$;
 ALTER FUNCTION darwin2.set_path() OWNER TO darwin2;
 
 --
--- TOC entry 1858 (class 1255 OID 4816508)
+-- TOC entry 1865 (class 1255 OID 4816508)
 -- Name: sha1(bytea); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -12682,7 +14042,7 @@ $_$;
 ALTER FUNCTION darwin2.sha1(bytea) OWNER TO darwin2;
 
 --
--- TOC entry 1860 (class 1255 OID 4816509)
+-- TOC entry 1867 (class 1255 OID 4816509)
 -- Name: stats_collections_encoding(integer, text, text); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -12696,8 +14056,8 @@ $_$;
 ALTER FUNCTION darwin2.stats_collections_encoding(integer, text, text) OWNER TO postgres;
 
 --
--- TOC entry 5831 (class 0 OID 0)
--- Dependencies: 1860
+-- TOC entry 5854 (class 0 OID 0)
+-- Dependencies: 1867
 -- Name: FUNCTION stats_collections_encoding(integer, text, text); Type: COMMENT; Schema: darwin2; Owner: postgres
 --
 
@@ -12705,7 +14065,7 @@ COMMENT ON FUNCTION darwin2.stats_collections_encoding(integer, text, text) IS '
 
 
 --
--- TOC entry 1855 (class 1255 OID 4816510)
+-- TOC entry 1862 (class 1255 OID 4816510)
 -- Name: stats_collections_encoding(integer, timestamp without time zone, timestamp without time zone); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -12849,8 +14209,8 @@ $_$;
 ALTER FUNCTION darwin2.stats_collections_encoding(integer, timestamp without time zone, timestamp without time zone) OWNER TO postgres;
 
 --
--- TOC entry 5833 (class 0 OID 0)
--- Dependencies: 1855
+-- TOC entry 5856 (class 0 OID 0)
+-- Dependencies: 1862
 -- Name: FUNCTION stats_collections_encoding(integer, timestamp without time zone, timestamp without time zone); Type: COMMENT; Schema: darwin2; Owner: postgres
 --
 
@@ -12858,7 +14218,7 @@ COMMENT ON FUNCTION darwin2.stats_collections_encoding(integer, timestamp withou
 
 
 --
--- TOC entry 1861 (class 1255 OID 4816511)
+-- TOC entry 1868 (class 1255 OID 4816511)
 -- Name: stats_collections_encoding_optimistics(integer, text, text); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -12872,8 +14232,8 @@ $_$;
 ALTER FUNCTION darwin2.stats_collections_encoding_optimistics(integer, text, text) OWNER TO postgres;
 
 --
--- TOC entry 5835 (class 0 OID 0)
--- Dependencies: 1861
+-- TOC entry 5858 (class 0 OID 0)
+-- Dependencies: 1868
 -- Name: FUNCTION stats_collections_encoding_optimistics(integer, text, text); Type: COMMENT; Schema: darwin2; Owner: postgres
 --
 
@@ -12881,7 +14241,7 @@ COMMENT ON FUNCTION darwin2.stats_collections_encoding_optimistics(integer, text
 
 
 --
--- TOC entry 1877 (class 1255 OID 4816512)
+-- TOC entry 1885 (class 1255 OID 4816512)
 -- Name: stats_collections_encoding_optimistics(integer, timestamp without time zone, timestamp without time zone); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -13040,8 +14400,8 @@ $_$;
 ALTER FUNCTION darwin2.stats_collections_encoding_optimistics(integer, timestamp without time zone, timestamp without time zone) OWNER TO postgres;
 
 --
--- TOC entry 5837 (class 0 OID 0)
--- Dependencies: 1877
+-- TOC entry 5860 (class 0 OID 0)
+-- Dependencies: 1885
 -- Name: FUNCTION stats_collections_encoding_optimistics(integer, timestamp without time zone, timestamp without time zone); Type: COMMENT; Schema: darwin2; Owner: postgres
 --
 
@@ -13049,7 +14409,7 @@ COMMENT ON FUNCTION darwin2.stats_collections_encoding_optimistics(integer, time
 
 
 --
--- TOC entry 1862 (class 1255 OID 4816513)
+-- TOC entry 1869 (class 1255 OID 4816513)
 -- Name: stats_encoders_encoding(integer, text, text, text); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -13063,8 +14423,8 @@ $_$;
 ALTER FUNCTION darwin2.stats_encoders_encoding(top_collection integer, users_array text, from_date text, to_date text) OWNER TO postgres;
 
 --
--- TOC entry 5839 (class 0 OID 0)
--- Dependencies: 1862
+-- TOC entry 5862 (class 0 OID 0)
+-- Dependencies: 1869
 -- Name: FUNCTION stats_encoders_encoding(top_collection integer, users_array text, from_date text, to_date text); Type: COMMENT; Schema: darwin2; Owner: postgres
 --
 
@@ -13072,7 +14432,7 @@ COMMENT ON FUNCTION darwin2.stats_encoders_encoding(top_collection integer, user
 
 
 --
--- TOC entry 1890 (class 1255 OID 4816514)
+-- TOC entry 1898 (class 1255 OID 4816514)
 -- Name: stats_encoders_encoding(integer, text, timestamp without time zone, timestamp without time zone); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -13230,8 +14590,8 @@ $_$;
 ALTER FUNCTION darwin2.stats_encoders_encoding(top_collection integer, users_array text, from_date timestamp without time zone, to_date timestamp without time zone) OWNER TO postgres;
 
 --
--- TOC entry 5841 (class 0 OID 0)
--- Dependencies: 1890
+-- TOC entry 5864 (class 0 OID 0)
+-- Dependencies: 1898
 -- Name: FUNCTION stats_encoders_encoding(top_collection integer, users_array text, from_date timestamp without time zone, to_date timestamp without time zone); Type: COMMENT; Schema: darwin2; Owner: postgres
 --
 
@@ -13239,7 +14599,7 @@ COMMENT ON FUNCTION darwin2.stats_encoders_encoding(top_collection integer, user
 
 
 --
--- TOC entry 1865 (class 1255 OID 4816515)
+-- TOC entry 1873 (class 1255 OID 4816515)
 -- Name: stats_encoders_encoding_optimistics(integer, text, text, text); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -13253,8 +14613,8 @@ $_$;
 ALTER FUNCTION darwin2.stats_encoders_encoding_optimistics(top_collection integer, users_array text, from_date text, to_date text) OWNER TO postgres;
 
 --
--- TOC entry 5843 (class 0 OID 0)
--- Dependencies: 1865
+-- TOC entry 5866 (class 0 OID 0)
+-- Dependencies: 1873
 -- Name: FUNCTION stats_encoders_encoding_optimistics(top_collection integer, users_array text, from_date text, to_date text); Type: COMMENT; Schema: darwin2; Owner: postgres
 --
 
@@ -13262,7 +14622,7 @@ COMMENT ON FUNCTION darwin2.stats_encoders_encoding_optimistics(top_collection i
 
 
 --
--- TOC entry 1891 (class 1255 OID 4816516)
+-- TOC entry 1899 (class 1255 OID 4816516)
 -- Name: stats_encoders_encoding_optimistics(integer, text, timestamp without time zone, timestamp without time zone); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -13437,8 +14797,8 @@ $_$;
 ALTER FUNCTION darwin2.stats_encoders_encoding_optimistics(top_collection integer, users_array text, from_date timestamp without time zone, to_date timestamp without time zone) OWNER TO postgres;
 
 --
--- TOC entry 5845 (class 0 OID 0)
--- Dependencies: 1891
+-- TOC entry 5868 (class 0 OID 0)
+-- Dependencies: 1899
 -- Name: FUNCTION stats_encoders_encoding_optimistics(top_collection integer, users_array text, from_date timestamp without time zone, to_date timestamp without time zone); Type: COMMENT; Schema: darwin2; Owner: postgres
 --
 
@@ -13446,7 +14806,7 @@ COMMENT ON FUNCTION darwin2.stats_encoders_encoding_optimistics(top_collection i
 
 
 --
--- TOC entry 1863 (class 1255 OID 4816517)
+-- TOC entry 1871 (class 1255 OID 4816517)
 -- Name: taxo_collections_count(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -13550,7 +14910,7 @@ $_$;
 ALTER FUNCTION darwin2.taxo_collections_count(integer) OWNER TO darwin2;
 
 --
--- TOC entry 1864 (class 1255 OID 4816518)
+-- TOC entry 1872 (class 1255 OID 4816518)
 -- Name: touniquestr(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -13573,7 +14933,7 @@ $_$;
 ALTER FUNCTION darwin2.touniquestr(to_indexed character varying) OWNER TO darwin2;
 
 --
--- TOC entry 1866 (class 1255 OID 4816519)
+-- TOC entry 1874 (class 1255 OID 4816519)
 -- Name: trg_del_dict(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -13668,7 +15028,7 @@ $$;
 ALTER FUNCTION darwin2.trg_del_dict() OWNER TO darwin2;
 
 --
--- TOC entry 1867 (class 1255 OID 4816520)
+-- TOC entry 1875 (class 1255 OID 4816520)
 -- Name: trg_ins_update_dict(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -13769,7 +15129,7 @@ $$;
 ALTER FUNCTION darwin2.trg_ins_update_dict() OWNER TO darwin2;
 
 --
--- TOC entry 1868 (class 1255 OID 4816521)
+-- TOC entry 1878 (class 1255 OID 4816521)
 -- Name: trg_rmca_del_import_related(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -13786,6 +15146,7 @@ BEGIN
 	DELETE FROM staging_people WHERE referenced_relation='staging_gtu' AND record_id IN (SELECT id FROM staging_gtu WHERE import_ref= OLD.id ) ;
 	DELETE FROM staging_gtu_tag_groups WHERE staging_gtu_ref IN (SELECT id FROM staging_gtu WHERE import_ref= OLD.id ) ;
 	DELETE FROM staging_gtu WHERE import_ref=OLD.id;
+	DELETE FROM staging_catalogue WHERE import_ref=OLD.id;
 	PERFORM setval('darwin2.staging_gtu_id_seq', (SELECT MAX(id)+1 FROM staging_gtu) , false);
   
  END IF;
@@ -13802,7 +15163,7 @@ $$;
 ALTER FUNCTION darwin2.trg_rmca_del_import_related() OWNER TO darwin2;
 
 --
--- TOC entry 1869 (class 1255 OID 4816522)
+-- TOC entry 1876 (class 1255 OID 4816522)
 -- Name: trg_rmca_import_taxonomy_history(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -13833,7 +15194,7 @@ $$;
 ALTER FUNCTION darwin2.trg_rmca_import_taxonomy_history() OWNER TO darwin2;
 
 --
--- TOC entry 1870 (class 1255 OID 4816523)
+-- TOC entry 1877 (class 1255 OID 4816523)
 -- Name: update_collections_code_last_val(); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -13894,7 +15255,7 @@ $$;
 ALTER FUNCTION darwin2.update_collections_code_last_val() OWNER TO postgres;
 
 --
--- TOC entry 1892 (class 1255 OID 4816524)
+-- TOC entry 1900 (class 1255 OID 4816524)
 -- Name: update_collections_code_last_val_after_spec_del(); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -13937,7 +15298,7 @@ $$;
 ALTER FUNCTION darwin2.update_collections_code_last_val_after_spec_del() OWNER TO postgres;
 
 --
--- TOC entry 1871 (class 1255 OID 4816525)
+-- TOC entry 1879 (class 1255 OID 4816525)
 -- Name: upsert(character varying, public.hstore); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -14006,7 +15367,7 @@ $$;
 ALTER FUNCTION darwin2.upsert(tablename character varying, keyvalues public.hstore) OWNER TO darwin2;
 
 --
--- TOC entry 1872 (class 1255 OID 4816526)
+-- TOC entry 1880 (class 1255 OID 4816526)
 -- Name: addgeometrycolumn(character varying, character varying, integer, character varying, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -14025,7 +15386,7 @@ $_$;
 ALTER FUNCTION public.addgeometrycolumn(character varying, character varying, integer, character varying, integer) OWNER TO postgres;
 
 --
--- TOC entry 1873 (class 1255 OID 4816527)
+-- TOC entry 1881 (class 1255 OID 4816527)
 -- Name: addgeometrycolumn(character varying, character varying, character varying, integer, character varying, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -14044,7 +15405,7 @@ $_$;
 ALTER FUNCTION public.addgeometrycolumn(character varying, character varying, character varying, integer, character varying, integer) OWNER TO postgres;
 
 --
--- TOC entry 1874 (class 1255 OID 4816528)
+-- TOC entry 1882 (class 1255 OID 4816528)
 -- Name: addgeometrycolumn(character varying, character varying, character varying, character varying, integer, character varying, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -14244,7 +15605,7 @@ $_$;
 ALTER FUNCTION public.addgeometrycolumn(character varying, character varying, character varying, character varying, integer, character varying, integer) OWNER TO postgres;
 
 --
--- TOC entry 1875 (class 1255 OID 4816529)
+-- TOC entry 1883 (class 1255 OID 4816529)
 -- Name: fix_geometry_columns(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -14309,7 +15670,7 @@ $$;
 ALTER FUNCTION public.fix_geometry_columns() OWNER TO postgres;
 
 --
--- TOC entry 1878 (class 1255 OID 4816530)
+-- TOC entry 1886 (class 1255 OID 4816530)
 -- Name: fulltoindex(character varying, boolean); Type: FUNCTION; Schema: public; Owner: darwin2
 --
 
@@ -14374,7 +15735,7 @@ $$;
 ALTER FUNCTION public.fulltoindex(to_indexed character varying, keep_space boolean) OWNER TO darwin2;
 
 --
--- TOC entry 1879 (class 1255 OID 4816531)
+-- TOC entry 1887 (class 1255 OID 4816531)
 -- Name: populate_geometry_columns(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -14469,7 +15830,7 @@ $$;
 ALTER FUNCTION public.populate_geometry_columns() OWNER TO postgres;
 
 --
--- TOC entry 1880 (class 1255 OID 4816532)
+-- TOC entry 1888 (class 1255 OID 4816532)
 -- Name: populate_geometry_columns(oid); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -14700,7 +16061,7 @@ $$;
 ALTER FUNCTION public.populate_geometry_columns(tbl_oid oid) OWNER TO postgres;
 
 --
--- TOC entry 1881 (class 1255 OID 4816534)
+-- TOC entry 1889 (class 1255 OID 4816534)
 -- Name: probe_geometry_columns(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -14790,7 +16151,7 @@ $$;
 ALTER FUNCTION public.probe_geometry_columns() OWNER TO postgres;
 
 --
--- TOC entry 1882 (class 1255 OID 4816535)
+-- TOC entry 1890 (class 1255 OID 4816535)
 -- Name: rename_geometry_table_constraints(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -14804,7 +16165,7 @@ $$;
 ALTER FUNCTION public.rename_geometry_table_constraints() OWNER TO postgres;
 
 --
--- TOC entry 1883 (class 1255 OID 4816536)
+-- TOC entry 1891 (class 1255 OID 4816536)
 -- Name: st_asbinary(text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -14816,7 +16177,7 @@ CREATE FUNCTION public.st_asbinary(text) RETURNS bytea
 ALTER FUNCTION public.st_asbinary(text) OWNER TO postgres;
 
 --
--- TOC entry 3831 (class 2617 OID 4816537)
+-- TOC entry 3851 (class 2617 OID 4816537)
 -- Name: =; Type: OPERATOR; Schema: darwin2; Owner: postgres
 --
 
@@ -14830,7 +16191,7 @@ CREATE OPERATOR darwin2.= (
 ALTER OPERATOR darwin2.= (point, point) OWNER TO postgres;
 
 --
--- TOC entry 4125 (class 2753 OID 4816538)
+-- TOC entry 4145 (class 2753 OID 4816538)
 -- Name: gist_geometry_ops; Type: OPERATOR FAMILY; Schema: public; Owner: postgres
 --
 
@@ -14840,7 +16201,7 @@ CREATE OPERATOR FAMILY public.gist_geometry_ops USING gist;
 ALTER OPERATOR FAMILY public.gist_geometry_ops USING gist OWNER TO postgres;
 
 --
--- TOC entry 4165 (class 1417 OID 4816539)
+-- TOC entry 4185 (class 1417 OID 4816539)
 -- Name: file_server; Type: SERVER; Schema: -; Owner: postgres
 --
 
@@ -14850,7 +16211,7 @@ CREATE SERVER file_server FOREIGN DATA WRAPPER file_fdw;
 ALTER SERVER file_server OWNER TO postgres;
 
 --
--- TOC entry 425 (class 1259 OID 5308564)
+-- TOC entry 435 (class 1259 OID 5308564)
 -- Name: authority_domain; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -14866,8 +16227,8 @@ CREATE TABLE darwin2.authority_domain (
 ALTER TABLE darwin2.authority_domain OWNER TO darwin2;
 
 --
--- TOC entry 5849 (class 0 OID 0)
--- Dependencies: 425
+-- TOC entry 5872 (class 0 OID 0)
+-- Dependencies: 435
 -- Name: TABLE authority_domain; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -14875,8 +16236,8 @@ COMMENT ON TABLE darwin2.authority_domain IS 'List of all authority domains that
 
 
 --
--- TOC entry 5850 (class 0 OID 0)
--- Dependencies: 425
+-- TOC entry 5873 (class 0 OID 0)
+-- Dependencies: 435
 -- Name: COLUMN authority_domain.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -14884,8 +16245,8 @@ COMMENT ON COLUMN darwin2.authority_domain.id IS 'Unique identifier of a authori
 
 
 --
--- TOC entry 5851 (class 0 OID 0)
--- Dependencies: 425
+-- TOC entry 5874 (class 0 OID 0)
+-- Dependencies: 435
 -- Name: COLUMN authority_domain.name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -14893,8 +16254,8 @@ COMMENT ON COLUMN darwin2.authority_domain.name IS 'Name of the authority domain
 
 
 --
--- TOC entry 5852 (class 0 OID 0)
--- Dependencies: 425
+-- TOC entry 5875 (class 0 OID 0)
+-- Dependencies: 435
 -- Name: COLUMN authority_domain.website_url; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -14902,8 +16263,8 @@ COMMENT ON COLUMN darwin2.authority_domain.website_url IS 'Front-end URL of the 
 
 
 --
--- TOC entry 5853 (class 0 OID 0)
--- Dependencies: 425
+-- TOC entry 5876 (class 0 OID 0)
+-- Dependencies: 435
 -- Name: COLUMN authority_domain.webservice_root; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -14911,8 +16272,8 @@ COMMENT ON COLUMN darwin2.authority_domain.webservice_root IS 'Webservice endpoi
 
 
 --
--- TOC entry 5854 (class 0 OID 0)
--- Dependencies: 425
+-- TOC entry 5877 (class 0 OID 0)
+-- Dependencies: 435
 -- Name: COLUMN authority_domain.webservice_format; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -14920,7 +16281,7 @@ COMMENT ON COLUMN darwin2.authority_domain.webservice_format IS 'Main returned f
 
 
 --
--- TOC entry 424 (class 1259 OID 5308562)
+-- TOC entry 434 (class 1259 OID 5308562)
 -- Name: authority_domain_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -14935,8 +16296,8 @@ CREATE SEQUENCE darwin2.authority_domain_id_seq
 ALTER TABLE darwin2.authority_domain_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 5856 (class 0 OID 0)
--- Dependencies: 424
+-- TOC entry 5879 (class 0 OID 0)
+-- Dependencies: 434
 -- Name: authority_domain_id_seq; Type: SEQUENCE OWNED BY; Schema: darwin2; Owner: darwin2
 --
 
@@ -14944,7 +16305,7 @@ ALTER SEQUENCE darwin2.authority_domain_id_seq OWNED BY darwin2.authority_domain
 
 
 --
--- TOC entry 227 (class 1259 OID 4816540)
+-- TOC entry 237 (class 1259 OID 4816540)
 -- Name: bibliography; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -14961,8 +16322,8 @@ CREATE TABLE darwin2.bibliography (
 ALTER TABLE darwin2.bibliography OWNER TO darwin2;
 
 --
--- TOC entry 5858 (class 0 OID 0)
--- Dependencies: 227
+-- TOC entry 5881 (class 0 OID 0)
+-- Dependencies: 237
 -- Name: TABLE bibliography; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -14970,8 +16331,8 @@ COMMENT ON TABLE darwin2.bibliography IS 'List of expeditions made to collect sp
 
 
 --
--- TOC entry 5859 (class 0 OID 0)
--- Dependencies: 227
+-- TOC entry 5882 (class 0 OID 0)
+-- Dependencies: 237
 -- Name: COLUMN bibliography.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -14979,8 +16340,8 @@ COMMENT ON COLUMN darwin2.bibliography.id IS 'Unique identifier';
 
 
 --
--- TOC entry 5860 (class 0 OID 0)
--- Dependencies: 227
+-- TOC entry 5883 (class 0 OID 0)
+-- Dependencies: 237
 -- Name: COLUMN bibliography.title; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -14988,8 +16349,8 @@ COMMENT ON COLUMN darwin2.bibliography.title IS 'bibliography title';
 
 
 --
--- TOC entry 5861 (class 0 OID 0)
--- Dependencies: 227
+-- TOC entry 5884 (class 0 OID 0)
+-- Dependencies: 237
 -- Name: COLUMN bibliography.title_indexed; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -14997,8 +16358,8 @@ COMMENT ON COLUMN darwin2.bibliography.title_indexed IS 'Indexed form of title';
 
 
 --
--- TOC entry 5862 (class 0 OID 0)
--- Dependencies: 227
+-- TOC entry 5885 (class 0 OID 0)
+-- Dependencies: 237
 -- Name: COLUMN bibliography.type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15006,8 +16367,8 @@ COMMENT ON COLUMN darwin2.bibliography.type IS 'bibliography type : article, boo
 
 
 --
--- TOC entry 5863 (class 0 OID 0)
--- Dependencies: 227
+-- TOC entry 5886 (class 0 OID 0)
+-- Dependencies: 237
 -- Name: COLUMN bibliography.abstract; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15015,8 +16376,8 @@ COMMENT ON COLUMN darwin2.bibliography.abstract IS 'optional abstract of the bib
 
 
 --
--- TOC entry 5864 (class 0 OID 0)
--- Dependencies: 227
+-- TOC entry 5887 (class 0 OID 0)
+-- Dependencies: 237
 -- Name: COLUMN bibliography.year; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15024,7 +16385,7 @@ COMMENT ON COLUMN darwin2.bibliography.year IS 'The year of publication (or, if 
 
 
 --
--- TOC entry 228 (class 1259 OID 4816547)
+-- TOC entry 238 (class 1259 OID 4816547)
 -- Name: bibliography_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -15039,8 +16400,8 @@ CREATE SEQUENCE darwin2.bibliography_id_seq
 ALTER TABLE darwin2.bibliography_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 5866 (class 0 OID 0)
--- Dependencies: 228
+-- TOC entry 5889 (class 0 OID 0)
+-- Dependencies: 238
 -- Name: bibliography_id_seq; Type: SEQUENCE OWNED BY; Schema: darwin2; Owner: darwin2
 --
 
@@ -15048,7 +16409,7 @@ ALTER SEQUENCE darwin2.bibliography_id_seq OWNED BY darwin2.bibliography.id;
 
 
 --
--- TOC entry 229 (class 1259 OID 4816549)
+-- TOC entry 239 (class 1259 OID 4816549)
 -- Name: template_table_record_ref; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -15061,8 +16422,8 @@ CREATE TABLE darwin2.template_table_record_ref (
 ALTER TABLE darwin2.template_table_record_ref OWNER TO darwin2;
 
 --
--- TOC entry 5867 (class 0 OID 0)
--- Dependencies: 229
+-- TOC entry 5890 (class 0 OID 0)
+-- Dependencies: 239
 -- Name: TABLE template_table_record_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15070,8 +16431,8 @@ COMMENT ON TABLE darwin2.template_table_record_ref IS 'Template called to add re
 
 
 --
--- TOC entry 5868 (class 0 OID 0)
--- Dependencies: 229
+-- TOC entry 5891 (class 0 OID 0)
+-- Dependencies: 239
 -- Name: COLUMN template_table_record_ref.referenced_relation; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15079,8 +16440,8 @@ COMMENT ON COLUMN darwin2.template_table_record_ref.referenced_relation IS 'Refe
 
 
 --
--- TOC entry 5869 (class 0 OID 0)
--- Dependencies: 229
+-- TOC entry 5892 (class 0 OID 0)
+-- Dependencies: 239
 -- Name: COLUMN template_table_record_ref.record_id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15088,7 +16449,7 @@ COMMENT ON COLUMN darwin2.template_table_record_ref.record_id IS 'Id of record c
 
 
 --
--- TOC entry 230 (class 1259 OID 4816555)
+-- TOC entry 240 (class 1259 OID 4816555)
 -- Name: catalogue_bibliography; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -15102,8 +16463,8 @@ INHERITS (darwin2.template_table_record_ref);
 ALTER TABLE darwin2.catalogue_bibliography OWNER TO darwin2;
 
 --
--- TOC entry 5871 (class 0 OID 0)
--- Dependencies: 230
+-- TOC entry 5894 (class 0 OID 0)
+-- Dependencies: 240
 -- Name: TABLE catalogue_bibliography; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15111,8 +16472,8 @@ COMMENT ON TABLE darwin2.catalogue_bibliography IS 'List of people of catalogues
 
 
 --
--- TOC entry 5872 (class 0 OID 0)
--- Dependencies: 230
+-- TOC entry 5895 (class 0 OID 0)
+-- Dependencies: 240
 -- Name: COLUMN catalogue_bibliography.referenced_relation; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15120,8 +16481,8 @@ COMMENT ON COLUMN darwin2.catalogue_bibliography.referenced_relation IS 'Identif
 
 
 --
--- TOC entry 5873 (class 0 OID 0)
--- Dependencies: 230
+-- TOC entry 5896 (class 0 OID 0)
+-- Dependencies: 240
 -- Name: COLUMN catalogue_bibliography.record_id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15129,8 +16490,8 @@ COMMENT ON COLUMN darwin2.catalogue_bibliography.record_id IS 'Identifier of rec
 
 
 --
--- TOC entry 5874 (class 0 OID 0)
--- Dependencies: 230
+-- TOC entry 5897 (class 0 OID 0)
+-- Dependencies: 240
 -- Name: COLUMN catalogue_bibliography.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15138,8 +16499,8 @@ COMMENT ON COLUMN darwin2.catalogue_bibliography.id IS 'Unique identifier of rec
 
 
 --
--- TOC entry 5875 (class 0 OID 0)
--- Dependencies: 230
+-- TOC entry 5898 (class 0 OID 0)
+-- Dependencies: 240
 -- Name: COLUMN catalogue_bibliography.bibliography_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15147,7 +16508,7 @@ COMMENT ON COLUMN darwin2.catalogue_bibliography.bibliography_ref IS 'Reference 
 
 
 --
--- TOC entry 231 (class 1259 OID 4816561)
+-- TOC entry 241 (class 1259 OID 4816561)
 -- Name: catalogue_bibliography_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -15162,8 +16523,8 @@ CREATE SEQUENCE darwin2.catalogue_bibliography_id_seq
 ALTER TABLE darwin2.catalogue_bibliography_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 5877 (class 0 OID 0)
--- Dependencies: 231
+-- TOC entry 5900 (class 0 OID 0)
+-- Dependencies: 241
 -- Name: catalogue_bibliography_id_seq; Type: SEQUENCE OWNED BY; Schema: darwin2; Owner: darwin2
 --
 
@@ -15171,7 +16532,7 @@ ALTER SEQUENCE darwin2.catalogue_bibliography_id_seq OWNED BY darwin2.catalogue_
 
 
 --
--- TOC entry 232 (class 1259 OID 4816563)
+-- TOC entry 242 (class 1259 OID 4816563)
 -- Name: catalogue_levels_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -15186,7 +16547,7 @@ CREATE SEQUENCE darwin2.catalogue_levels_id_seq
 ALTER TABLE darwin2.catalogue_levels_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 233 (class 1259 OID 4816565)
+-- TOC entry 243 (class 1259 OID 4816565)
 -- Name: catalogue_levels; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -15203,8 +16564,8 @@ CREATE TABLE darwin2.catalogue_levels (
 ALTER TABLE darwin2.catalogue_levels OWNER TO darwin2;
 
 --
--- TOC entry 5878 (class 0 OID 0)
--- Dependencies: 233
+-- TOC entry 5901 (class 0 OID 0)
+-- Dependencies: 243
 -- Name: TABLE catalogue_levels; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15212,8 +16573,8 @@ COMMENT ON TABLE darwin2.catalogue_levels IS 'List of hierarchical units levels 
 
 
 --
--- TOC entry 5879 (class 0 OID 0)
--- Dependencies: 233
+-- TOC entry 5902 (class 0 OID 0)
+-- Dependencies: 243
 -- Name: COLUMN catalogue_levels.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15221,8 +16582,8 @@ COMMENT ON COLUMN darwin2.catalogue_levels.id IS 'Unique identifier of a hierarc
 
 
 --
--- TOC entry 5880 (class 0 OID 0)
--- Dependencies: 233
+-- TOC entry 5903 (class 0 OID 0)
+-- Dependencies: 243
 -- Name: COLUMN catalogue_levels.level_type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15230,8 +16591,8 @@ COMMENT ON COLUMN darwin2.catalogue_levels.level_type IS 'Type of unit the level
 
 
 --
--- TOC entry 5881 (class 0 OID 0)
--- Dependencies: 233
+-- TOC entry 5904 (class 0 OID 0)
+-- Dependencies: 243
 -- Name: COLUMN catalogue_levels.level_name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15239,8 +16600,8 @@ COMMENT ON COLUMN darwin2.catalogue_levels.level_name IS 'Name given to level co
 
 
 --
--- TOC entry 5882 (class 0 OID 0)
--- Dependencies: 233
+-- TOC entry 5905 (class 0 OID 0)
+-- Dependencies: 243
 -- Name: COLUMN catalogue_levels.level_sys_name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15248,8 +16609,8 @@ COMMENT ON COLUMN darwin2.catalogue_levels.level_sys_name IS 'Name given to leve
 
 
 --
--- TOC entry 5883 (class 0 OID 0)
--- Dependencies: 233
+-- TOC entry 5906 (class 0 OID 0)
+-- Dependencies: 243
 -- Name: COLUMN catalogue_levels.optional_level; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15257,7 +16618,7 @@ COMMENT ON COLUMN darwin2.catalogue_levels.optional_level IS 'Tells if the level
 
 
 --
--- TOC entry 234 (class 1259 OID 4816574)
+-- TOC entry 244 (class 1259 OID 4816574)
 -- Name: catalogue_people_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -15272,7 +16633,7 @@ CREATE SEQUENCE darwin2.catalogue_people_id_seq
 ALTER TABLE darwin2.catalogue_people_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 235 (class 1259 OID 4816576)
+-- TOC entry 245 (class 1259 OID 4816576)
 -- Name: catalogue_people; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -15289,8 +16650,8 @@ INHERITS (darwin2.template_table_record_ref);
 ALTER TABLE darwin2.catalogue_people OWNER TO darwin2;
 
 --
--- TOC entry 5885 (class 0 OID 0)
--- Dependencies: 235
+-- TOC entry 5908 (class 0 OID 0)
+-- Dependencies: 245
 -- Name: TABLE catalogue_people; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15298,8 +16659,8 @@ COMMENT ON TABLE darwin2.catalogue_people IS 'List of people of catalogues units
 
 
 --
--- TOC entry 5886 (class 0 OID 0)
--- Dependencies: 235
+-- TOC entry 5909 (class 0 OID 0)
+-- Dependencies: 245
 -- Name: COLUMN catalogue_people.referenced_relation; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15307,8 +16668,8 @@ COMMENT ON COLUMN darwin2.catalogue_people.referenced_relation IS 'Identifier-Na
 
 
 --
--- TOC entry 5887 (class 0 OID 0)
--- Dependencies: 235
+-- TOC entry 5910 (class 0 OID 0)
+-- Dependencies: 245
 -- Name: COLUMN catalogue_people.record_id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15316,8 +16677,8 @@ COMMENT ON COLUMN darwin2.catalogue_people.record_id IS 'Identifier of record co
 
 
 --
--- TOC entry 5888 (class 0 OID 0)
--- Dependencies: 235
+-- TOC entry 5911 (class 0 OID 0)
+-- Dependencies: 245
 -- Name: COLUMN catalogue_people.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15325,8 +16686,8 @@ COMMENT ON COLUMN darwin2.catalogue_people.id IS 'Unique identifier of record';
 
 
 --
--- TOC entry 5889 (class 0 OID 0)
--- Dependencies: 235
+-- TOC entry 5912 (class 0 OID 0)
+-- Dependencies: 245
 -- Name: COLUMN catalogue_people.people_type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15334,8 +16695,8 @@ COMMENT ON COLUMN darwin2.catalogue_people.people_type IS 'Type of "people" asso
 
 
 --
--- TOC entry 5890 (class 0 OID 0)
--- Dependencies: 235
+-- TOC entry 5913 (class 0 OID 0)
+-- Dependencies: 245
 -- Name: COLUMN catalogue_people.people_sub_type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15343,8 +16704,8 @@ COMMENT ON COLUMN darwin2.catalogue_people.people_sub_type IS 'Type of "people" 
 
 
 --
--- TOC entry 5891 (class 0 OID 0)
--- Dependencies: 235
+-- TOC entry 5914 (class 0 OID 0)
+-- Dependencies: 245
 -- Name: COLUMN catalogue_people.order_by; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15352,8 +16713,8 @@ COMMENT ON COLUMN darwin2.catalogue_people.order_by IS 'Integer used to order th
 
 
 --
--- TOC entry 5892 (class 0 OID 0)
--- Dependencies: 235
+-- TOC entry 5915 (class 0 OID 0)
+-- Dependencies: 245
 -- Name: COLUMN catalogue_people.people_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15361,7 +16722,7 @@ COMMENT ON COLUMN darwin2.catalogue_people.people_ref IS 'Reference of person co
 
 
 --
--- TOC entry 236 (class 1259 OID 4816586)
+-- TOC entry 246 (class 1259 OID 4816586)
 -- Name: catalogue_properties_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -15376,7 +16737,7 @@ CREATE SEQUENCE darwin2.catalogue_properties_id_seq
 ALTER TABLE darwin2.catalogue_properties_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 237 (class 1259 OID 4816588)
+-- TOC entry 247 (class 1259 OID 4816588)
 -- Name: catalogue_relationships_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -15391,7 +16752,7 @@ CREATE SEQUENCE darwin2.catalogue_relationships_id_seq
 ALTER TABLE darwin2.catalogue_relationships_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 238 (class 1259 OID 4816590)
+-- TOC entry 248 (class 1259 OID 4816590)
 -- Name: catalogue_relationships; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -15408,8 +16769,8 @@ CREATE TABLE darwin2.catalogue_relationships (
 ALTER TABLE darwin2.catalogue_relationships OWNER TO darwin2;
 
 --
--- TOC entry 5894 (class 0 OID 0)
--- Dependencies: 238
+-- TOC entry 5917 (class 0 OID 0)
+-- Dependencies: 248
 -- Name: TABLE catalogue_relationships; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15417,8 +16778,8 @@ COMMENT ON TABLE darwin2.catalogue_relationships IS 'Stores the relationships be
 
 
 --
--- TOC entry 5895 (class 0 OID 0)
--- Dependencies: 238
+-- TOC entry 5918 (class 0 OID 0)
+-- Dependencies: 248
 -- Name: COLUMN catalogue_relationships.referenced_relation; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15426,8 +16787,8 @@ COMMENT ON COLUMN darwin2.catalogue_relationships.referenced_relation IS 'Refere
 
 
 --
--- TOC entry 5896 (class 0 OID 0)
--- Dependencies: 238
+-- TOC entry 5919 (class 0 OID 0)
+-- Dependencies: 248
 -- Name: COLUMN catalogue_relationships.record_id_1; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15435,8 +16796,8 @@ COMMENT ON COLUMN darwin2.catalogue_relationships.record_id_1 IS 'Identifier of 
 
 
 --
--- TOC entry 5897 (class 0 OID 0)
--- Dependencies: 238
+-- TOC entry 5920 (class 0 OID 0)
+-- Dependencies: 248
 -- Name: COLUMN catalogue_relationships.record_id_2; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15444,8 +16805,8 @@ COMMENT ON COLUMN darwin2.catalogue_relationships.record_id_2 IS 'Identifier of 
 
 
 --
--- TOC entry 5898 (class 0 OID 0)
--- Dependencies: 238
+-- TOC entry 5921 (class 0 OID 0)
+-- Dependencies: 248
 -- Name: COLUMN catalogue_relationships.relationship_type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15453,7 +16814,7 @@ COMMENT ON COLUMN darwin2.catalogue_relationships.relationship_type IS 'Type of 
 
 
 --
--- TOC entry 239 (class 1259 OID 4816599)
+-- TOC entry 249 (class 1259 OID 4816599)
 -- Name: chronostratigraphy_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -15468,7 +16829,7 @@ CREATE SEQUENCE darwin2.chronostratigraphy_id_seq
 ALTER TABLE darwin2.chronostratigraphy_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 240 (class 1259 OID 4816601)
+-- TOC entry 250 (class 1259 OID 4816601)
 -- Name: template_classifications; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -15487,8 +16848,8 @@ CREATE TABLE darwin2.template_classifications (
 ALTER TABLE darwin2.template_classifications OWNER TO darwin2;
 
 --
--- TOC entry 5900 (class 0 OID 0)
--- Dependencies: 240
+-- TOC entry 5923 (class 0 OID 0)
+-- Dependencies: 250
 -- Name: TABLE template_classifications; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15496,8 +16857,8 @@ COMMENT ON TABLE darwin2.template_classifications IS 'Template table used to con
 
 
 --
--- TOC entry 5901 (class 0 OID 0)
--- Dependencies: 240
+-- TOC entry 5924 (class 0 OID 0)
+-- Dependencies: 250
 -- Name: COLUMN template_classifications.name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15505,8 +16866,8 @@ COMMENT ON COLUMN darwin2.template_classifications.name IS 'Classification unit 
 
 
 --
--- TOC entry 5902 (class 0 OID 0)
--- Dependencies: 240
+-- TOC entry 5925 (class 0 OID 0)
+-- Dependencies: 250
 -- Name: COLUMN template_classifications.name_indexed; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15514,8 +16875,8 @@ COMMENT ON COLUMN darwin2.template_classifications.name_indexed IS 'Indexed form
 
 
 --
--- TOC entry 5903 (class 0 OID 0)
--- Dependencies: 240
+-- TOC entry 5926 (class 0 OID 0)
+-- Dependencies: 250
 -- Name: COLUMN template_classifications.level_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15523,8 +16884,8 @@ COMMENT ON COLUMN darwin2.template_classifications.level_ref IS 'Reference of cl
 
 
 --
--- TOC entry 5904 (class 0 OID 0)
--- Dependencies: 240
+-- TOC entry 5927 (class 0 OID 0)
+-- Dependencies: 250
 -- Name: COLUMN template_classifications.status; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15532,8 +16893,8 @@ COMMENT ON COLUMN darwin2.template_classifications.status IS 'Validitiy status: 
 
 
 --
--- TOC entry 5905 (class 0 OID 0)
--- Dependencies: 240
+-- TOC entry 5928 (class 0 OID 0)
+-- Dependencies: 250
 -- Name: COLUMN template_classifications.local_naming; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15541,8 +16902,8 @@ COMMENT ON COLUMN darwin2.template_classifications.local_naming IS 'Flag telling
 
 
 --
--- TOC entry 5906 (class 0 OID 0)
--- Dependencies: 240
+-- TOC entry 5929 (class 0 OID 0)
+-- Dependencies: 250
 -- Name: COLUMN template_classifications.color; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15550,8 +16911,8 @@ COMMENT ON COLUMN darwin2.template_classifications.color IS 'Hexadecimal value o
 
 
 --
--- TOC entry 5907 (class 0 OID 0)
--- Dependencies: 240
+-- TOC entry 5930 (class 0 OID 0)
+-- Dependencies: 250
 -- Name: COLUMN template_classifications.path; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15559,8 +16920,8 @@ COMMENT ON COLUMN darwin2.template_classifications.path IS 'Hierarchy path (/ fo
 
 
 --
--- TOC entry 5908 (class 0 OID 0)
--- Dependencies: 240
+-- TOC entry 5931 (class 0 OID 0)
+-- Dependencies: 250
 -- Name: COLUMN template_classifications.parent_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15568,7 +16929,7 @@ COMMENT ON COLUMN darwin2.template_classifications.parent_ref IS 'Id of parent -
 
 
 --
--- TOC entry 241 (class 1259 OID 4816610)
+-- TOC entry 251 (class 1259 OID 4816610)
 -- Name: chronostratigraphy; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -15584,8 +16945,8 @@ INHERITS (darwin2.template_classifications);
 ALTER TABLE darwin2.chronostratigraphy OWNER TO darwin2;
 
 --
--- TOC entry 5910 (class 0 OID 0)
--- Dependencies: 241
+-- TOC entry 5933 (class 0 OID 0)
+-- Dependencies: 251
 -- Name: TABLE chronostratigraphy; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15593,8 +16954,8 @@ COMMENT ON TABLE darwin2.chronostratigraphy IS 'List of chronostratigraphic unit
 
 
 --
--- TOC entry 5911 (class 0 OID 0)
--- Dependencies: 241
+-- TOC entry 5934 (class 0 OID 0)
+-- Dependencies: 251
 -- Name: COLUMN chronostratigraphy.name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15602,8 +16963,8 @@ COMMENT ON COLUMN darwin2.chronostratigraphy.name IS 'Classification unit name';
 
 
 --
--- TOC entry 5912 (class 0 OID 0)
--- Dependencies: 241
+-- TOC entry 5935 (class 0 OID 0)
+-- Dependencies: 251
 -- Name: COLUMN chronostratigraphy.name_indexed; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15611,8 +16972,8 @@ COMMENT ON COLUMN darwin2.chronostratigraphy.name_indexed IS 'Indexed form of na
 
 
 --
--- TOC entry 5913 (class 0 OID 0)
--- Dependencies: 241
+-- TOC entry 5936 (class 0 OID 0)
+-- Dependencies: 251
 -- Name: COLUMN chronostratigraphy.level_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15620,8 +16981,8 @@ COMMENT ON COLUMN darwin2.chronostratigraphy.level_ref IS 'Reference of classifi
 
 
 --
--- TOC entry 5914 (class 0 OID 0)
--- Dependencies: 241
+-- TOC entry 5937 (class 0 OID 0)
+-- Dependencies: 251
 -- Name: COLUMN chronostratigraphy.status; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15629,8 +16990,8 @@ COMMENT ON COLUMN darwin2.chronostratigraphy.status IS 'Validitiy status: valid,
 
 
 --
--- TOC entry 5915 (class 0 OID 0)
--- Dependencies: 241
+-- TOC entry 5938 (class 0 OID 0)
+-- Dependencies: 251
 -- Name: COLUMN chronostratigraphy.path; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15638,8 +16999,8 @@ COMMENT ON COLUMN darwin2.chronostratigraphy.path IS 'Hierarchy path (/ for root
 
 
 --
--- TOC entry 5916 (class 0 OID 0)
--- Dependencies: 241
+-- TOC entry 5939 (class 0 OID 0)
+-- Dependencies: 251
 -- Name: COLUMN chronostratigraphy.parent_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15647,8 +17008,8 @@ COMMENT ON COLUMN darwin2.chronostratigraphy.parent_ref IS 'Id of parent - id fi
 
 
 --
--- TOC entry 5917 (class 0 OID 0)
--- Dependencies: 241
+-- TOC entry 5940 (class 0 OID 0)
+-- Dependencies: 251
 -- Name: COLUMN chronostratigraphy.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15656,8 +17017,8 @@ COMMENT ON COLUMN darwin2.chronostratigraphy.id IS 'Unique identifier of a class
 
 
 --
--- TOC entry 5918 (class 0 OID 0)
--- Dependencies: 241
+-- TOC entry 5941 (class 0 OID 0)
+-- Dependencies: 251
 -- Name: COLUMN chronostratigraphy.lower_bound; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15665,8 +17026,8 @@ COMMENT ON COLUMN darwin2.chronostratigraphy.lower_bound IS 'Lower age boundary 
 
 
 --
--- TOC entry 5919 (class 0 OID 0)
--- Dependencies: 241
+-- TOC entry 5942 (class 0 OID 0)
+-- Dependencies: 251
 -- Name: COLUMN chronostratigraphy.upper_bound; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15674,7 +17035,7 @@ COMMENT ON COLUMN darwin2.chronostratigraphy.upper_bound IS 'Upper age boundary 
 
 
 --
--- TOC entry 242 (class 1259 OID 4816621)
+-- TOC entry 252 (class 1259 OID 4816621)
 -- Name: class_vernacular_names_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -15689,7 +17050,7 @@ CREATE SEQUENCE darwin2.class_vernacular_names_id_seq
 ALTER TABLE darwin2.class_vernacular_names_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 243 (class 1259 OID 4816623)
+-- TOC entry 253 (class 1259 OID 4816623)
 -- Name: classification_keywords_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -15704,7 +17065,7 @@ CREATE SEQUENCE darwin2.classification_keywords_id_seq
 ALTER TABLE darwin2.classification_keywords_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 244 (class 1259 OID 4816625)
+-- TOC entry 254 (class 1259 OID 4816625)
 -- Name: classification_keywords; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -15720,8 +17081,8 @@ INHERITS (darwin2.template_table_record_ref);
 ALTER TABLE darwin2.classification_keywords OWNER TO darwin2;
 
 --
--- TOC entry 5921 (class 0 OID 0)
--- Dependencies: 244
+-- TOC entry 5944 (class 0 OID 0)
+-- Dependencies: 254
 -- Name: TABLE classification_keywords; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15729,8 +17090,8 @@ COMMENT ON TABLE darwin2.classification_keywords IS 'Help user to tag-label each
 
 
 --
--- TOC entry 5922 (class 0 OID 0)
--- Dependencies: 244
+-- TOC entry 5945 (class 0 OID 0)
+-- Dependencies: 254
 -- Name: COLUMN classification_keywords.referenced_relation; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15738,8 +17099,8 @@ COMMENT ON COLUMN darwin2.classification_keywords.referenced_relation IS 'Name o
 
 
 --
--- TOC entry 5923 (class 0 OID 0)
--- Dependencies: 244
+-- TOC entry 5946 (class 0 OID 0)
+-- Dependencies: 254
 -- Name: COLUMN classification_keywords.record_id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15747,8 +17108,8 @@ COMMENT ON COLUMN darwin2.classification_keywords.record_id IS 'Id of record con
 
 
 --
--- TOC entry 5924 (class 0 OID 0)
--- Dependencies: 244
+-- TOC entry 5947 (class 0 OID 0)
+-- Dependencies: 254
 -- Name: COLUMN classification_keywords.keyword_type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15756,8 +17117,8 @@ COMMENT ON COLUMN darwin2.classification_keywords.keyword_type IS 'Keyword type:
 
 
 --
--- TOC entry 5925 (class 0 OID 0)
--- Dependencies: 244
+-- TOC entry 5948 (class 0 OID 0)
+-- Dependencies: 254
 -- Name: COLUMN classification_keywords.keyword; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15765,7 +17126,7 @@ COMMENT ON COLUMN darwin2.classification_keywords.keyword IS 'Keyword';
 
 
 --
--- TOC entry 245 (class 1259 OID 4816633)
+-- TOC entry 255 (class 1259 OID 4816633)
 -- Name: classification_synonymies_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -15780,7 +17141,7 @@ CREATE SEQUENCE darwin2.classification_synonymies_id_seq
 ALTER TABLE darwin2.classification_synonymies_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 246 (class 1259 OID 4816635)
+-- TOC entry 256 (class 1259 OID 4816635)
 -- Name: classification_synonymies; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -15797,8 +17158,8 @@ INHERITS (darwin2.template_table_record_ref);
 ALTER TABLE darwin2.classification_synonymies OWNER TO darwin2;
 
 --
--- TOC entry 5927 (class 0 OID 0)
--- Dependencies: 246
+-- TOC entry 5950 (class 0 OID 0)
+-- Dependencies: 256
 -- Name: TABLE classification_synonymies; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15806,8 +17167,8 @@ COMMENT ON TABLE darwin2.classification_synonymies IS 'Table containing classifi
 
 
 --
--- TOC entry 5928 (class 0 OID 0)
--- Dependencies: 246
+-- TOC entry 5951 (class 0 OID 0)
+-- Dependencies: 256
 -- Name: COLUMN classification_synonymies.referenced_relation; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15815,8 +17176,8 @@ COMMENT ON COLUMN darwin2.classification_synonymies.referenced_relation IS 'Clas
 
 
 --
--- TOC entry 5929 (class 0 OID 0)
--- Dependencies: 246
+-- TOC entry 5952 (class 0 OID 0)
+-- Dependencies: 256
 -- Name: COLUMN classification_synonymies.record_id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15824,8 +17185,8 @@ COMMENT ON COLUMN darwin2.classification_synonymies.record_id IS 'Id of record p
 
 
 --
--- TOC entry 5930 (class 0 OID 0)
--- Dependencies: 246
+-- TOC entry 5953 (class 0 OID 0)
+-- Dependencies: 256
 -- Name: COLUMN classification_synonymies.group_id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15833,8 +17194,8 @@ COMMENT ON COLUMN darwin2.classification_synonymies.group_id IS 'Id given to gro
 
 
 --
--- TOC entry 5931 (class 0 OID 0)
--- Dependencies: 246
+-- TOC entry 5954 (class 0 OID 0)
+-- Dependencies: 256
 -- Name: COLUMN classification_synonymies.group_name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15842,8 +17203,8 @@ COMMENT ON COLUMN darwin2.classification_synonymies.group_name IS 'Name of group
 
 
 --
--- TOC entry 5932 (class 0 OID 0)
--- Dependencies: 246
+-- TOC entry 5955 (class 0 OID 0)
+-- Dependencies: 256
 -- Name: COLUMN classification_synonymies.is_basionym; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15851,8 +17212,8 @@ COMMENT ON COLUMN darwin2.classification_synonymies.is_basionym IS 'If record is
 
 
 --
--- TOC entry 5933 (class 0 OID 0)
--- Dependencies: 246
+-- TOC entry 5956 (class 0 OID 0)
+-- Dependencies: 256
 -- Name: COLUMN classification_synonymies.order_by; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15860,7 +17221,7 @@ COMMENT ON COLUMN darwin2.classification_synonymies.order_by IS 'Order by used t
 
 
 --
--- TOC entry 247 (class 1259 OID 4816644)
+-- TOC entry 257 (class 1259 OID 4816644)
 -- Name: classification_synonymies_group_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -15875,7 +17236,7 @@ CREATE SEQUENCE darwin2.classification_synonymies_group_id_seq
 ALTER TABLE darwin2.classification_synonymies_group_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 248 (class 1259 OID 4816646)
+-- TOC entry 258 (class 1259 OID 4816646)
 -- Name: codes_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -15890,7 +17251,7 @@ CREATE SEQUENCE darwin2.codes_id_seq
 ALTER TABLE darwin2.codes_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 249 (class 1259 OID 4816648)
+-- TOC entry 259 (class 1259 OID 4816648)
 -- Name: codes; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -15913,8 +17274,8 @@ INHERITS (darwin2.template_table_record_ref);
 ALTER TABLE darwin2.codes OWNER TO darwin2;
 
 --
--- TOC entry 5935 (class 0 OID 0)
--- Dependencies: 249
+-- TOC entry 5958 (class 0 OID 0)
+-- Dependencies: 259
 -- Name: TABLE codes; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15922,8 +17283,8 @@ COMMENT ON TABLE darwin2.codes IS 'Template used to construct the specimen codes
 
 
 --
--- TOC entry 5936 (class 0 OID 0)
--- Dependencies: 249
+-- TOC entry 5959 (class 0 OID 0)
+-- Dependencies: 259
 -- Name: COLUMN codes.referenced_relation; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15931,8 +17292,8 @@ COMMENT ON COLUMN darwin2.codes.referenced_relation IS 'Reference name of table 
 
 
 --
--- TOC entry 5937 (class 0 OID 0)
--- Dependencies: 249
+-- TOC entry 5960 (class 0 OID 0)
+-- Dependencies: 259
 -- Name: COLUMN codes.record_id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15940,8 +17301,8 @@ COMMENT ON COLUMN darwin2.codes.record_id IS 'Identifier of record concerned';
 
 
 --
--- TOC entry 5938 (class 0 OID 0)
--- Dependencies: 249
+-- TOC entry 5961 (class 0 OID 0)
+-- Dependencies: 259
 -- Name: COLUMN codes.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15949,8 +17310,8 @@ COMMENT ON COLUMN darwin2.codes.id IS 'Unique identifier of a code';
 
 
 --
--- TOC entry 5939 (class 0 OID 0)
--- Dependencies: 249
+-- TOC entry 5962 (class 0 OID 0)
+-- Dependencies: 259
 -- Name: COLUMN codes.code_category; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15958,8 +17319,8 @@ COMMENT ON COLUMN darwin2.codes.code_category IS 'Category of code: main, second
 
 
 --
--- TOC entry 5940 (class 0 OID 0)
--- Dependencies: 249
+-- TOC entry 5963 (class 0 OID 0)
+-- Dependencies: 259
 -- Name: COLUMN codes.code_prefix; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15967,8 +17328,8 @@ COMMENT ON COLUMN darwin2.codes.code_prefix IS 'Code prefix - entire code if all
 
 
 --
--- TOC entry 5941 (class 0 OID 0)
--- Dependencies: 249
+-- TOC entry 5964 (class 0 OID 0)
+-- Dependencies: 259
 -- Name: COLUMN codes.code_prefix_separator; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15976,8 +17337,8 @@ COMMENT ON COLUMN darwin2.codes.code_prefix_separator IS 'Separtor used between 
 
 
 --
--- TOC entry 5942 (class 0 OID 0)
--- Dependencies: 249
+-- TOC entry 5965 (class 0 OID 0)
+-- Dependencies: 259
 -- Name: COLUMN codes.code; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15985,8 +17346,8 @@ COMMENT ON COLUMN darwin2.codes.code IS 'Numerical part of code - but not forced
 
 
 --
--- TOC entry 5943 (class 0 OID 0)
--- Dependencies: 249
+-- TOC entry 5966 (class 0 OID 0)
+-- Dependencies: 259
 -- Name: COLUMN codes.code_suffix; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15994,8 +17355,8 @@ COMMENT ON COLUMN darwin2.codes.code_suffix IS 'For codes made of characters and
 
 
 --
--- TOC entry 5944 (class 0 OID 0)
--- Dependencies: 249
+-- TOC entry 5967 (class 0 OID 0)
+-- Dependencies: 259
 -- Name: COLUMN codes.code_suffix_separator; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16003,8 +17364,8 @@ COMMENT ON COLUMN darwin2.codes.code_suffix_separator IS 'Separtor used between 
 
 
 --
--- TOC entry 5945 (class 0 OID 0)
--- Dependencies: 249
+-- TOC entry 5968 (class 0 OID 0)
+-- Dependencies: 259
 -- Name: COLUMN codes.full_code_indexed; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16012,8 +17373,8 @@ COMMENT ON COLUMN darwin2.codes.full_code_indexed IS 'Full code composition by c
 
 
 --
--- TOC entry 5946 (class 0 OID 0)
--- Dependencies: 249
+-- TOC entry 5969 (class 0 OID 0)
+-- Dependencies: 259
 -- Name: COLUMN codes.code_date; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16021,8 +17382,8 @@ COMMENT ON COLUMN darwin2.codes.code_date IS 'Date of code creation (fuzzy date)
 
 
 --
--- TOC entry 5947 (class 0 OID 0)
--- Dependencies: 249
+-- TOC entry 5970 (class 0 OID 0)
+-- Dependencies: 259
 -- Name: COLUMN codes.code_date_mask; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16030,7 +17391,7 @@ COMMENT ON COLUMN darwin2.codes.code_date_mask IS 'Mask used for code date';
 
 
 --
--- TOC entry 250 (class 1259 OID 4816659)
+-- TOC entry 260 (class 1259 OID 4816659)
 -- Name: collecting_methods_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -16045,7 +17406,7 @@ CREATE SEQUENCE darwin2.collecting_methods_id_seq
 ALTER TABLE darwin2.collecting_methods_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 251 (class 1259 OID 4816661)
+-- TOC entry 261 (class 1259 OID 4816661)
 -- Name: collecting_methods; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -16060,8 +17421,8 @@ CREATE TABLE darwin2.collecting_methods (
 ALTER TABLE darwin2.collecting_methods OWNER TO darwin2;
 
 --
--- TOC entry 5949 (class 0 OID 0)
--- Dependencies: 251
+-- TOC entry 5972 (class 0 OID 0)
+-- Dependencies: 261
 -- Name: TABLE collecting_methods; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16069,8 +17430,8 @@ COMMENT ON TABLE darwin2.collecting_methods IS 'List of all available collecting
 
 
 --
--- TOC entry 5950 (class 0 OID 0)
--- Dependencies: 251
+-- TOC entry 5973 (class 0 OID 0)
+-- Dependencies: 261
 -- Name: COLUMN collecting_methods.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16078,8 +17439,8 @@ COMMENT ON COLUMN darwin2.collecting_methods.id IS 'Unique identifier of a colle
 
 
 --
--- TOC entry 5951 (class 0 OID 0)
--- Dependencies: 251
+-- TOC entry 5974 (class 0 OID 0)
+-- Dependencies: 261
 -- Name: COLUMN collecting_methods.method; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16087,8 +17448,8 @@ COMMENT ON COLUMN darwin2.collecting_methods.method IS 'Method used';
 
 
 --
--- TOC entry 5952 (class 0 OID 0)
--- Dependencies: 251
+-- TOC entry 5975 (class 0 OID 0)
+-- Dependencies: 261
 -- Name: COLUMN collecting_methods.method_indexed; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16096,7 +17457,7 @@ COMMENT ON COLUMN darwin2.collecting_methods.method_indexed IS 'Indexed form of 
 
 
 --
--- TOC entry 252 (class 1259 OID 4816669)
+-- TOC entry 262 (class 1259 OID 4816669)
 -- Name: collecting_tools_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -16111,7 +17472,7 @@ CREATE SEQUENCE darwin2.collecting_tools_id_seq
 ALTER TABLE darwin2.collecting_tools_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 253 (class 1259 OID 4816671)
+-- TOC entry 263 (class 1259 OID 4816671)
 -- Name: collecting_tools; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -16126,8 +17487,8 @@ CREATE TABLE darwin2.collecting_tools (
 ALTER TABLE darwin2.collecting_tools OWNER TO darwin2;
 
 --
--- TOC entry 5954 (class 0 OID 0)
--- Dependencies: 253
+-- TOC entry 5977 (class 0 OID 0)
+-- Dependencies: 263
 -- Name: TABLE collecting_tools; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16135,8 +17496,8 @@ COMMENT ON TABLE darwin2.collecting_tools IS 'List of all available collecting t
 
 
 --
--- TOC entry 5955 (class 0 OID 0)
--- Dependencies: 253
+-- TOC entry 5978 (class 0 OID 0)
+-- Dependencies: 263
 -- Name: COLUMN collecting_tools.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16144,8 +17505,8 @@ COMMENT ON COLUMN darwin2.collecting_tools.id IS 'Unique identifier of a collect
 
 
 --
--- TOC entry 5956 (class 0 OID 0)
--- Dependencies: 253
+-- TOC entry 5979 (class 0 OID 0)
+-- Dependencies: 263
 -- Name: COLUMN collecting_tools.tool; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16153,8 +17514,8 @@ COMMENT ON COLUMN darwin2.collecting_tools.tool IS 'Tool used';
 
 
 --
--- TOC entry 5957 (class 0 OID 0)
--- Dependencies: 253
+-- TOC entry 5980 (class 0 OID 0)
+-- Dependencies: 263
 -- Name: COLUMN collecting_tools.tool_indexed; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16162,7 +17523,7 @@ COMMENT ON COLUMN darwin2.collecting_tools.tool_indexed IS 'Indexed form of tool
 
 
 --
--- TOC entry 254 (class 1259 OID 4816679)
+-- TOC entry 264 (class 1259 OID 4816679)
 -- Name: collection_maintenance_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -16177,7 +17538,7 @@ CREATE SEQUENCE darwin2.collection_maintenance_id_seq
 ALTER TABLE darwin2.collection_maintenance_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 255 (class 1259 OID 4816681)
+-- TOC entry 265 (class 1259 OID 4816681)
 -- Name: collection_maintenance; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -16197,8 +17558,8 @@ INHERITS (darwin2.template_table_record_ref);
 ALTER TABLE darwin2.collection_maintenance OWNER TO darwin2;
 
 --
--- TOC entry 5959 (class 0 OID 0)
--- Dependencies: 255
+-- TOC entry 5982 (class 0 OID 0)
+-- Dependencies: 265
 -- Name: TABLE collection_maintenance; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16206,8 +17567,8 @@ COMMENT ON TABLE darwin2.collection_maintenance IS 'History of specimen maintena
 
 
 --
--- TOC entry 5960 (class 0 OID 0)
--- Dependencies: 255
+-- TOC entry 5983 (class 0 OID 0)
+-- Dependencies: 265
 -- Name: COLUMN collection_maintenance.referenced_relation; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16215,8 +17576,8 @@ COMMENT ON COLUMN darwin2.collection_maintenance.referenced_relation IS 'Referen
 
 
 --
--- TOC entry 5961 (class 0 OID 0)
--- Dependencies: 255
+-- TOC entry 5984 (class 0 OID 0)
+-- Dependencies: 265
 -- Name: COLUMN collection_maintenance.record_id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16224,8 +17585,8 @@ COMMENT ON COLUMN darwin2.collection_maintenance.record_id IS 'ID of record a ma
 
 
 --
--- TOC entry 5962 (class 0 OID 0)
--- Dependencies: 255
+-- TOC entry 5985 (class 0 OID 0)
+-- Dependencies: 265
 -- Name: COLUMN collection_maintenance.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16233,8 +17594,8 @@ COMMENT ON COLUMN darwin2.collection_maintenance.id IS 'Unique identifier of a s
 
 
 --
--- TOC entry 5963 (class 0 OID 0)
--- Dependencies: 255
+-- TOC entry 5986 (class 0 OID 0)
+-- Dependencies: 265
 -- Name: COLUMN collection_maintenance.people_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16242,8 +17603,8 @@ COMMENT ON COLUMN darwin2.collection_maintenance.people_ref IS 'Reference of per
 
 
 --
--- TOC entry 5964 (class 0 OID 0)
--- Dependencies: 255
+-- TOC entry 5987 (class 0 OID 0)
+-- Dependencies: 265
 -- Name: COLUMN collection_maintenance.category; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16251,8 +17612,8 @@ COMMENT ON COLUMN darwin2.collection_maintenance.category IS 'Action or Observat
 
 
 --
--- TOC entry 5965 (class 0 OID 0)
--- Dependencies: 255
+-- TOC entry 5988 (class 0 OID 0)
+-- Dependencies: 265
 -- Name: COLUMN collection_maintenance.action_observation; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16260,8 +17621,8 @@ COMMENT ON COLUMN darwin2.collection_maintenance.action_observation IS 'Action o
 
 
 --
--- TOC entry 5966 (class 0 OID 0)
--- Dependencies: 255
+-- TOC entry 5989 (class 0 OID 0)
+-- Dependencies: 265
 -- Name: COLUMN collection_maintenance.description; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16269,8 +17630,8 @@ COMMENT ON COLUMN darwin2.collection_maintenance.description IS 'Complementary d
 
 
 --
--- TOC entry 5967 (class 0 OID 0)
--- Dependencies: 255
+-- TOC entry 5990 (class 0 OID 0)
+-- Dependencies: 265
 -- Name: COLUMN collection_maintenance.modification_date_time; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16278,8 +17639,8 @@ COMMENT ON COLUMN darwin2.collection_maintenance.modification_date_time IS 'Last
 
 
 --
--- TOC entry 5968 (class 0 OID 0)
--- Dependencies: 255
+-- TOC entry 5991 (class 0 OID 0)
+-- Dependencies: 265
 -- Name: COLUMN collection_maintenance.description_indexed; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16287,7 +17648,7 @@ COMMENT ON COLUMN darwin2.collection_maintenance.description_indexed IS 'indexed
 
 
 --
--- TOC entry 256 (class 1259 OID 4816691)
+-- TOC entry 266 (class 1259 OID 4816691)
 -- Name: collections_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -16302,7 +17663,7 @@ CREATE SEQUENCE darwin2.collections_id_seq
 ALTER TABLE darwin2.collections_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 257 (class 1259 OID 4816693)
+-- TOC entry 267 (class 1259 OID 4816693)
 -- Name: collections; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -16341,8 +17702,8 @@ CREATE TABLE darwin2.collections (
 ALTER TABLE darwin2.collections OWNER TO darwin2;
 
 --
--- TOC entry 5970 (class 0 OID 0)
--- Dependencies: 257
+-- TOC entry 5993 (class 0 OID 0)
+-- Dependencies: 267
 -- Name: TABLE collections; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16350,8 +17711,8 @@ COMMENT ON TABLE darwin2.collections IS 'List of all collections encoded in DaRW
 
 
 --
--- TOC entry 5971 (class 0 OID 0)
--- Dependencies: 257
+-- TOC entry 5994 (class 0 OID 0)
+-- Dependencies: 267
 -- Name: COLUMN collections.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16359,8 +17720,8 @@ COMMENT ON COLUMN darwin2.collections.id IS 'Unique identifier of a collection';
 
 
 --
--- TOC entry 5972 (class 0 OID 0)
--- Dependencies: 257
+-- TOC entry 5995 (class 0 OID 0)
+-- Dependencies: 267
 -- Name: COLUMN collections.collection_type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16368,8 +17729,8 @@ COMMENT ON COLUMN darwin2.collections.collection_type IS 'Type of collection: ph
 
 
 --
--- TOC entry 5973 (class 0 OID 0)
--- Dependencies: 257
+-- TOC entry 5996 (class 0 OID 0)
+-- Dependencies: 267
 -- Name: COLUMN collections.code; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16377,8 +17738,8 @@ COMMENT ON COLUMN darwin2.collections.code IS 'Code given to collection';
 
 
 --
--- TOC entry 5974 (class 0 OID 0)
--- Dependencies: 257
+-- TOC entry 5997 (class 0 OID 0)
+-- Dependencies: 267
 -- Name: COLUMN collections.name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16386,8 +17747,8 @@ COMMENT ON COLUMN darwin2.collections.name IS 'Collection name';
 
 
 --
--- TOC entry 5975 (class 0 OID 0)
--- Dependencies: 257
+-- TOC entry 5998 (class 0 OID 0)
+-- Dependencies: 267
 -- Name: COLUMN collections.name_indexed; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16395,8 +17756,8 @@ COMMENT ON COLUMN darwin2.collections.name_indexed IS 'Collection name indexed';
 
 
 --
--- TOC entry 5976 (class 0 OID 0)
--- Dependencies: 257
+-- TOC entry 5999 (class 0 OID 0)
+-- Dependencies: 267
 -- Name: COLUMN collections.institution_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16404,8 +17765,8 @@ COMMENT ON COLUMN darwin2.collections.institution_ref IS 'Reference of instituti
 
 
 --
--- TOC entry 5977 (class 0 OID 0)
--- Dependencies: 257
+-- TOC entry 6000 (class 0 OID 0)
+-- Dependencies: 267
 -- Name: COLUMN collections.main_manager_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16413,8 +17774,8 @@ COMMENT ON COLUMN darwin2.collections.main_manager_ref IS 'Reference of collecti
 
 
 --
--- TOC entry 5978 (class 0 OID 0)
--- Dependencies: 257
+-- TOC entry 6001 (class 0 OID 0)
+-- Dependencies: 267
 -- Name: COLUMN collections.parent_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16422,8 +17783,8 @@ COMMENT ON COLUMN darwin2.collections.parent_ref IS 'Recursive reference to coll
 
 
 --
--- TOC entry 5979 (class 0 OID 0)
--- Dependencies: 257
+-- TOC entry 6002 (class 0 OID 0)
+-- Dependencies: 267
 -- Name: COLUMN collections.path; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16431,8 +17792,8 @@ COMMENT ON COLUMN darwin2.collections.path IS 'Descriptive path for collection h
 
 
 --
--- TOC entry 5980 (class 0 OID 0)
--- Dependencies: 257
+-- TOC entry 6003 (class 0 OID 0)
+-- Dependencies: 267
 -- Name: COLUMN collections.code_auto_increment; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16440,8 +17801,8 @@ COMMENT ON COLUMN darwin2.collections.code_auto_increment IS 'Flag telling if th
 
 
 --
--- TOC entry 5981 (class 0 OID 0)
--- Dependencies: 257
+-- TOC entry 6004 (class 0 OID 0)
+-- Dependencies: 267
 -- Name: COLUMN collections.code_last_value; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16449,8 +17810,8 @@ COMMENT ON COLUMN darwin2.collections.code_last_value IS 'Value of the last nume
 
 
 --
--- TOC entry 5982 (class 0 OID 0)
--- Dependencies: 257
+-- TOC entry 6005 (class 0 OID 0)
+-- Dependencies: 267
 -- Name: COLUMN collections.code_prefix; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16458,8 +17819,8 @@ COMMENT ON COLUMN darwin2.collections.code_prefix IS 'Default code prefix to be 
 
 
 --
--- TOC entry 5983 (class 0 OID 0)
--- Dependencies: 257
+-- TOC entry 6006 (class 0 OID 0)
+-- Dependencies: 267
 -- Name: COLUMN collections.code_prefix_separator; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16467,8 +17828,8 @@ COMMENT ON COLUMN darwin2.collections.code_prefix_separator IS 'Character chain 
 
 
 --
--- TOC entry 5984 (class 0 OID 0)
--- Dependencies: 257
+-- TOC entry 6007 (class 0 OID 0)
+-- Dependencies: 267
 -- Name: COLUMN collections.code_suffix; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16476,8 +17837,8 @@ COMMENT ON COLUMN darwin2.collections.code_suffix IS 'Default code suffix to be 
 
 
 --
--- TOC entry 5985 (class 0 OID 0)
--- Dependencies: 257
+-- TOC entry 6008 (class 0 OID 0)
+-- Dependencies: 267
 -- Name: COLUMN collections.code_suffix_separator; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16485,8 +17846,8 @@ COMMENT ON COLUMN darwin2.collections.code_suffix_separator IS 'Character chain 
 
 
 --
--- TOC entry 5986 (class 0 OID 0)
--- Dependencies: 257
+-- TOC entry 6009 (class 0 OID 0)
+-- Dependencies: 267
 -- Name: COLUMN collections.is_public; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16494,8 +17855,8 @@ COMMENT ON COLUMN darwin2.collections.is_public IS 'Flag telling if the collecti
 
 
 --
--- TOC entry 5987 (class 0 OID 0)
--- Dependencies: 257
+-- TOC entry 6010 (class 0 OID 0)
+-- Dependencies: 267
 -- Name: COLUMN collections.code_specimen_duplicate; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16503,8 +17864,8 @@ COMMENT ON COLUMN darwin2.collections.code_specimen_duplicate IS 'Flag telling i
 
 
 --
--- TOC entry 5988 (class 0 OID 0)
--- Dependencies: 257
+-- TOC entry 6011 (class 0 OID 0)
+-- Dependencies: 267
 -- Name: COLUMN collections.staff_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16512,8 +17873,8 @@ COMMENT ON COLUMN darwin2.collections.staff_ref IS 'Reference of staff member, s
 
 
 --
--- TOC entry 5989 (class 0 OID 0)
--- Dependencies: 257
+-- TOC entry 6012 (class 0 OID 0)
+-- Dependencies: 267
 -- Name: COLUMN collections.code_auto_increment_for_insert_only; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16521,8 +17882,8 @@ COMMENT ON COLUMN darwin2.collections.code_auto_increment_for_insert_only IS 'Fl
 
 
 --
--- TOC entry 5990 (class 0 OID 0)
--- Dependencies: 257
+-- TOC entry 6013 (class 0 OID 0)
+-- Dependencies: 267
 -- Name: COLUMN collections.code_mask; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16530,7 +17891,7 @@ COMMENT ON COLUMN darwin2.collections.code_mask IS 'A mask that should be applie
 
 
 --
--- TOC entry 258 (class 1259 OID 4816709)
+-- TOC entry 268 (class 1259 OID 4816709)
 -- Name: collections_rights_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -16545,7 +17906,7 @@ CREATE SEQUENCE darwin2.collections_rights_id_seq
 ALTER TABLE darwin2.collections_rights_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 259 (class 1259 OID 4816711)
+-- TOC entry 269 (class 1259 OID 4816711)
 -- Name: collections_rights; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -16560,8 +17921,8 @@ CREATE TABLE darwin2.collections_rights (
 ALTER TABLE darwin2.collections_rights OWNER TO darwin2;
 
 --
--- TOC entry 5992 (class 0 OID 0)
--- Dependencies: 259
+-- TOC entry 6015 (class 0 OID 0)
+-- Dependencies: 269
 -- Name: TABLE collections_rights; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16569,8 +17930,8 @@ COMMENT ON TABLE darwin2.collections_rights IS 'List of rights of given users on
 
 
 --
--- TOC entry 5993 (class 0 OID 0)
--- Dependencies: 259
+-- TOC entry 6016 (class 0 OID 0)
+-- Dependencies: 269
 -- Name: COLUMN collections_rights.collection_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16578,8 +17939,8 @@ COMMENT ON COLUMN darwin2.collections_rights.collection_ref IS 'Reference of col
 
 
 --
--- TOC entry 5994 (class 0 OID 0)
--- Dependencies: 259
+-- TOC entry 6017 (class 0 OID 0)
+-- Dependencies: 269
 -- Name: COLUMN collections_rights.user_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16587,8 +17948,8 @@ COMMENT ON COLUMN darwin2.collections_rights.user_ref IS 'Reference of user - id
 
 
 --
--- TOC entry 5995 (class 0 OID 0)
--- Dependencies: 259
+-- TOC entry 6018 (class 0 OID 0)
+-- Dependencies: 269
 -- Name: COLUMN collections_rights.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16596,8 +17957,8 @@ COMMENT ON COLUMN darwin2.collections_rights.id IS 'Unique identifier for collec
 
 
 --
--- TOC entry 5996 (class 0 OID 0)
--- Dependencies: 259
+-- TOC entry 6019 (class 0 OID 0)
+-- Dependencies: 269
 -- Name: COLUMN collections_rights.db_user_type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16605,7 +17966,7 @@ COMMENT ON COLUMN darwin2.collections_rights.db_user_type IS 'Integer is represe
 
 
 --
--- TOC entry 260 (class 1259 OID 4816718)
+-- TOC entry 270 (class 1259 OID 4816718)
 -- Name: comments_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -16620,7 +17981,7 @@ CREATE SEQUENCE darwin2.comments_id_seq
 ALTER TABLE darwin2.comments_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 261 (class 1259 OID 4816720)
+-- TOC entry 271 (class 1259 OID 4816720)
 -- Name: comments; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -16636,8 +17997,8 @@ INHERITS (darwin2.template_table_record_ref);
 ALTER TABLE darwin2.comments OWNER TO darwin2;
 
 --
--- TOC entry 5998 (class 0 OID 0)
--- Dependencies: 261
+-- TOC entry 6021 (class 0 OID 0)
+-- Dependencies: 271
 -- Name: TABLE comments; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16645,8 +18006,8 @@ COMMENT ON TABLE darwin2.comments IS 'Comments associated to a record of a given
 
 
 --
--- TOC entry 5999 (class 0 OID 0)
--- Dependencies: 261
+-- TOC entry 6022 (class 0 OID 0)
+-- Dependencies: 271
 -- Name: COLUMN comments.referenced_relation; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16654,8 +18015,8 @@ COMMENT ON COLUMN darwin2.comments.referenced_relation IS 'Reference-Name of tab
 
 
 --
--- TOC entry 6000 (class 0 OID 0)
--- Dependencies: 261
+-- TOC entry 6023 (class 0 OID 0)
+-- Dependencies: 271
 -- Name: COLUMN comments.record_id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16663,8 +18024,8 @@ COMMENT ON COLUMN darwin2.comments.record_id IS 'Identifier of the record concer
 
 
 --
--- TOC entry 6001 (class 0 OID 0)
--- Dependencies: 261
+-- TOC entry 6024 (class 0 OID 0)
+-- Dependencies: 271
 -- Name: COLUMN comments.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16672,8 +18033,8 @@ COMMENT ON COLUMN darwin2.comments.id IS 'Unique identifier of a comment';
 
 
 --
--- TOC entry 6002 (class 0 OID 0)
--- Dependencies: 261
+-- TOC entry 6025 (class 0 OID 0)
+-- Dependencies: 271
 -- Name: COLUMN comments.notion_concerned; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16681,8 +18042,8 @@ COMMENT ON COLUMN darwin2.comments.notion_concerned IS 'Notion concerned by comm
 
 
 --
--- TOC entry 6003 (class 0 OID 0)
--- Dependencies: 261
+-- TOC entry 6026 (class 0 OID 0)
+-- Dependencies: 271
 -- Name: COLUMN comments.comment; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16690,8 +18051,8 @@ COMMENT ON COLUMN darwin2.comments.comment IS 'Comment';
 
 
 --
--- TOC entry 6004 (class 0 OID 0)
--- Dependencies: 261
+-- TOC entry 6027 (class 0 OID 0)
+-- Dependencies: 271
 -- Name: COLUMN comments.comment_indexed; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16699,7 +18060,7 @@ COMMENT ON COLUMN darwin2.comments.comment_indexed IS 'indexed form of comment f
 
 
 --
--- TOC entry 262 (class 1259 OID 4816727)
+-- TOC entry 272 (class 1259 OID 4816727)
 -- Name: darwin_flat_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -16714,7 +18075,7 @@ CREATE SEQUENCE darwin2.darwin_flat_id_seq
 ALTER TABLE darwin2.darwin_flat_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 263 (class 1259 OID 4816729)
+-- TOC entry 273 (class 1259 OID 4816729)
 -- Name: db_version; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -16727,8 +18088,8 @@ CREATE TABLE darwin2.db_version (
 ALTER TABLE darwin2.db_version OWNER TO darwin2;
 
 --
--- TOC entry 6006 (class 0 OID 0)
--- Dependencies: 263
+-- TOC entry 6029 (class 0 OID 0)
+-- Dependencies: 273
 -- Name: TABLE db_version; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16736,7 +18097,7 @@ COMMENT ON TABLE darwin2.db_version IS 'Table holding the database version and u
 
 
 --
--- TOC entry 264 (class 1259 OID 4816733)
+-- TOC entry 274 (class 1259 OID 4816733)
 -- Name: properties; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -16765,8 +18126,8 @@ INHERITS (darwin2.template_table_record_ref);
 ALTER TABLE darwin2.properties OWNER TO darwin2;
 
 --
--- TOC entry 6007 (class 0 OID 0)
--- Dependencies: 264
+-- TOC entry 6030 (class 0 OID 0)
+-- Dependencies: 274
 -- Name: TABLE properties; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16774,8 +18135,8 @@ COMMENT ON TABLE darwin2.properties IS 'All properties or all measurements descr
 
 
 --
--- TOC entry 6008 (class 0 OID 0)
--- Dependencies: 264
+-- TOC entry 6031 (class 0 OID 0)
+-- Dependencies: 274
 -- Name: COLUMN properties.referenced_relation; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16783,8 +18144,8 @@ COMMENT ON COLUMN darwin2.properties.referenced_relation IS 'Identifier-Name of 
 
 
 --
--- TOC entry 6009 (class 0 OID 0)
--- Dependencies: 264
+-- TOC entry 6032 (class 0 OID 0)
+-- Dependencies: 274
 -- Name: COLUMN properties.record_id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16792,8 +18153,8 @@ COMMENT ON COLUMN darwin2.properties.record_id IS 'Identifier of record a proper
 
 
 --
--- TOC entry 6010 (class 0 OID 0)
--- Dependencies: 264
+-- TOC entry 6033 (class 0 OID 0)
+-- Dependencies: 274
 -- Name: COLUMN properties.property_type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16801,8 +18162,8 @@ COMMENT ON COLUMN darwin2.properties.property_type IS 'Type-Category of property
 
 
 --
--- TOC entry 6011 (class 0 OID 0)
--- Dependencies: 264
+-- TOC entry 6034 (class 0 OID 0)
+-- Dependencies: 274
 -- Name: COLUMN properties.applies_to; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16810,8 +18171,8 @@ COMMENT ON COLUMN darwin2.properties.applies_to IS 'Depending on the use of the 
 
 
 --
--- TOC entry 6012 (class 0 OID 0)
--- Dependencies: 264
+-- TOC entry 6035 (class 0 OID 0)
+-- Dependencies: 274
 -- Name: COLUMN properties.applies_to_indexed; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16819,8 +18180,8 @@ COMMENT ON COLUMN darwin2.properties.applies_to_indexed IS 'Indexed form of Sub 
 
 
 --
--- TOC entry 6013 (class 0 OID 0)
--- Dependencies: 264
+-- TOC entry 6036 (class 0 OID 0)
+-- Dependencies: 274
 -- Name: COLUMN properties.date_from_mask; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16828,8 +18189,8 @@ COMMENT ON COLUMN darwin2.properties.date_from_mask IS 'Mask Flag to know wich p
 
 
 --
--- TOC entry 6014 (class 0 OID 0)
--- Dependencies: 264
+-- TOC entry 6037 (class 0 OID 0)
+-- Dependencies: 274
 -- Name: COLUMN properties.date_from; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16837,8 +18198,8 @@ COMMENT ON COLUMN darwin2.properties.date_from IS 'For a range of measurements, 
 
 
 --
--- TOC entry 6015 (class 0 OID 0)
--- Dependencies: 264
+-- TOC entry 6038 (class 0 OID 0)
+-- Dependencies: 274
 -- Name: COLUMN properties.date_to_mask; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16846,8 +18207,8 @@ COMMENT ON COLUMN darwin2.properties.date_to_mask IS 'Mask Flag to know wich par
 
 
 --
--- TOC entry 6016 (class 0 OID 0)
--- Dependencies: 264
+-- TOC entry 6039 (class 0 OID 0)
+-- Dependencies: 274
 -- Name: COLUMN properties.date_to; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16855,8 +18216,8 @@ COMMENT ON COLUMN darwin2.properties.date_to IS 'For a range of measurements, gi
 
 
 --
--- TOC entry 6017 (class 0 OID 0)
--- Dependencies: 264
+-- TOC entry 6040 (class 0 OID 0)
+-- Dependencies: 274
 -- Name: COLUMN properties.property_unit; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16864,8 +18225,8 @@ COMMENT ON COLUMN darwin2.properties.property_unit IS 'Unit used for property va
 
 
 --
--- TOC entry 6018 (class 0 OID 0)
--- Dependencies: 264
+-- TOC entry 6041 (class 0 OID 0)
+-- Dependencies: 274
 -- Name: COLUMN properties.method; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16873,8 +18234,8 @@ COMMENT ON COLUMN darwin2.properties.method IS 'Method used to collect property 
 
 
 --
--- TOC entry 6019 (class 0 OID 0)
--- Dependencies: 264
+-- TOC entry 6042 (class 0 OID 0)
+-- Dependencies: 274
 -- Name: COLUMN properties.method_indexed; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16882,8 +18243,8 @@ COMMENT ON COLUMN darwin2.properties.method_indexed IS 'Indexed version of prope
 
 
 --
--- TOC entry 6020 (class 0 OID 0)
--- Dependencies: 264
+-- TOC entry 6043 (class 0 OID 0)
+-- Dependencies: 274
 -- Name: COLUMN properties.lower_value; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16891,8 +18252,8 @@ COMMENT ON COLUMN darwin2.properties.lower_value IS 'Lower value of Single Value
 
 
 --
--- TOC entry 6021 (class 0 OID 0)
--- Dependencies: 264
+-- TOC entry 6044 (class 0 OID 0)
+-- Dependencies: 274
 -- Name: COLUMN properties.lower_value_unified; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16900,8 +18261,8 @@ COMMENT ON COLUMN darwin2.properties.lower_value_unified IS 'unified version of 
 
 
 --
--- TOC entry 6022 (class 0 OID 0)
--- Dependencies: 264
+-- TOC entry 6045 (class 0 OID 0)
+-- Dependencies: 274
 -- Name: COLUMN properties.upper_value; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16909,8 +18270,8 @@ COMMENT ON COLUMN darwin2.properties.upper_value IS 'upper value if in bound';
 
 
 --
--- TOC entry 6023 (class 0 OID 0)
--- Dependencies: 264
+-- TOC entry 6046 (class 0 OID 0)
+-- Dependencies: 274
 -- Name: COLUMN properties.upper_value_unified; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16918,8 +18279,8 @@ COMMENT ON COLUMN darwin2.properties.upper_value_unified IS 'unified version of 
 
 
 --
--- TOC entry 6024 (class 0 OID 0)
--- Dependencies: 264
+-- TOC entry 6047 (class 0 OID 0)
+-- Dependencies: 274
 -- Name: COLUMN properties.property_accuracy; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16927,7 +18288,7 @@ COMMENT ON COLUMN darwin2.properties.property_accuracy IS 'Accuracy of the value
 
 
 --
--- TOC entry 265 (class 1259 OID 4816747)
+-- TOC entry 275 (class 1259 OID 4816747)
 -- Name: doctrine_gtu_comments; Type: VIEW; Schema: darwin2; Owner: darwin2
 --
 
@@ -16950,7 +18311,7 @@ UNION
 ALTER TABLE darwin2.doctrine_gtu_comments OWNER TO darwin2;
 
 --
--- TOC entry 266 (class 1259 OID 4816752)
+-- TOC entry 276 (class 1259 OID 4816752)
 -- Name: identifications_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -16965,7 +18326,7 @@ CREATE SEQUENCE darwin2.identifications_id_seq
 ALTER TABLE darwin2.identifications_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 267 (class 1259 OID 4816754)
+-- TOC entry 277 (class 1259 OID 4816754)
 -- Name: identifications; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -16985,8 +18346,8 @@ INHERITS (darwin2.template_table_record_ref);
 ALTER TABLE darwin2.identifications OWNER TO darwin2;
 
 --
--- TOC entry 6026 (class 0 OID 0)
--- Dependencies: 267
+-- TOC entry 6049 (class 0 OID 0)
+-- Dependencies: 277
 -- Name: TABLE identifications; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -16994,8 +18355,8 @@ COMMENT ON TABLE darwin2.identifications IS 'History of identifications';
 
 
 --
--- TOC entry 6027 (class 0 OID 0)
--- Dependencies: 267
+-- TOC entry 6050 (class 0 OID 0)
+-- Dependencies: 277
 -- Name: COLUMN identifications.referenced_relation; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17003,8 +18364,8 @@ COMMENT ON COLUMN darwin2.identifications.referenced_relation IS 'Reference of t
 
 
 --
--- TOC entry 6028 (class 0 OID 0)
--- Dependencies: 267
+-- TOC entry 6051 (class 0 OID 0)
+-- Dependencies: 277
 -- Name: COLUMN identifications.record_id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17012,8 +18373,8 @@ COMMENT ON COLUMN darwin2.identifications.record_id IS 'Id of record concerned b
 
 
 --
--- TOC entry 6029 (class 0 OID 0)
--- Dependencies: 267
+-- TOC entry 6052 (class 0 OID 0)
+-- Dependencies: 277
 -- Name: COLUMN identifications.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17021,8 +18382,8 @@ COMMENT ON COLUMN darwin2.identifications.id IS 'Unique identifier of an identif
 
 
 --
--- TOC entry 6030 (class 0 OID 0)
--- Dependencies: 267
+-- TOC entry 6053 (class 0 OID 0)
+-- Dependencies: 277
 -- Name: COLUMN identifications.notion_concerned; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17030,8 +18391,8 @@ COMMENT ON COLUMN darwin2.identifications.notion_concerned IS 'Type of entry: Id
 
 
 --
--- TOC entry 6031 (class 0 OID 0)
--- Dependencies: 267
+-- TOC entry 6054 (class 0 OID 0)
+-- Dependencies: 277
 -- Name: COLUMN identifications.notion_date; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17039,8 +18400,8 @@ COMMENT ON COLUMN darwin2.identifications.notion_date IS 'Date of identification
 
 
 --
--- TOC entry 6032 (class 0 OID 0)
--- Dependencies: 267
+-- TOC entry 6055 (class 0 OID 0)
+-- Dependencies: 277
 -- Name: COLUMN identifications.notion_date_mask; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17048,8 +18409,8 @@ COMMENT ON COLUMN darwin2.identifications.notion_date_mask IS 'Date/Time mask us
 
 
 --
--- TOC entry 6033 (class 0 OID 0)
--- Dependencies: 267
+-- TOC entry 6056 (class 0 OID 0)
+-- Dependencies: 277
 -- Name: COLUMN identifications.value_defined; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17057,8 +18418,8 @@ COMMENT ON COLUMN darwin2.identifications.value_defined IS 'When making identifi
 
 
 --
--- TOC entry 6034 (class 0 OID 0)
--- Dependencies: 267
+-- TOC entry 6057 (class 0 OID 0)
+-- Dependencies: 277
 -- Name: COLUMN identifications.value_defined_indexed; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17066,8 +18427,8 @@ COMMENT ON COLUMN darwin2.identifications.value_defined_indexed IS 'Indexed form
 
 
 --
--- TOC entry 6035 (class 0 OID 0)
--- Dependencies: 267
+-- TOC entry 6058 (class 0 OID 0)
+-- Dependencies: 277
 -- Name: COLUMN identifications.determination_status; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17075,8 +18436,8 @@ COMMENT ON COLUMN darwin2.identifications.determination_status IS 'Status of ide
 
 
 --
--- TOC entry 6036 (class 0 OID 0)
--- Dependencies: 267
+-- TOC entry 6059 (class 0 OID 0)
+-- Dependencies: 277
 -- Name: COLUMN identifications.order_by; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17084,7 +18445,7 @@ COMMENT ON COLUMN darwin2.identifications.order_by IS 'Integer used to order the
 
 
 --
--- TOC entry 268 (class 1259 OID 4816764)
+-- TOC entry 278 (class 1259 OID 4816764)
 -- Name: doctrine_taxonomic_identifications; Type: VIEW; Schema: darwin2; Owner: darwin2
 --
 
@@ -17100,7 +18461,7 @@ CREATE VIEW darwin2.doctrine_taxonomic_identifications AS
 ALTER TABLE darwin2.doctrine_taxonomic_identifications OWNER TO darwin2;
 
 --
--- TOC entry 275 (class 1259 OID 4816801)
+-- TOC entry 285 (class 1259 OID 4816801)
 -- Name: gtu_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -17115,7 +18476,7 @@ CREATE SEQUENCE darwin2.gtu_id_seq
 ALTER TABLE darwin2.gtu_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 276 (class 1259 OID 4816803)
+-- TOC entry 286 (class 1259 OID 4816803)
 -- Name: gtu; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -17156,8 +18517,8 @@ CREATE TABLE darwin2.gtu (
 ALTER TABLE darwin2.gtu OWNER TO darwin2;
 
 --
--- TOC entry 6038 (class 0 OID 0)
--- Dependencies: 276
+-- TOC entry 6061 (class 0 OID 0)
+-- Dependencies: 286
 -- Name: TABLE gtu; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17165,8 +18526,8 @@ COMMENT ON TABLE darwin2.gtu IS 'Location or sampling units - GeoTemporalUnits';
 
 
 --
--- TOC entry 6039 (class 0 OID 0)
--- Dependencies: 276
+-- TOC entry 6062 (class 0 OID 0)
+-- Dependencies: 286
 -- Name: COLUMN gtu.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17174,8 +18535,8 @@ COMMENT ON COLUMN darwin2.gtu.id IS 'Unique identifier of a location or sampling
 
 
 --
--- TOC entry 6040 (class 0 OID 0)
--- Dependencies: 276
+-- TOC entry 6063 (class 0 OID 0)
+-- Dependencies: 286
 -- Name: COLUMN gtu.code; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17183,8 +18544,8 @@ COMMENT ON COLUMN darwin2.gtu.code IS 'Code given - for sampling units - takes i
 
 
 --
--- TOC entry 6041 (class 0 OID 0)
--- Dependencies: 276
+-- TOC entry 6064 (class 0 OID 0)
+-- Dependencies: 286
 -- Name: COLUMN gtu.gtu_from_date_mask; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17192,8 +18553,8 @@ COMMENT ON COLUMN darwin2.gtu.gtu_from_date_mask IS 'Mask Flag to know wich part
 
 
 --
--- TOC entry 6042 (class 0 OID 0)
--- Dependencies: 276
+-- TOC entry 6065 (class 0 OID 0)
+-- Dependencies: 286
 -- Name: COLUMN gtu.gtu_from_date; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17201,8 +18562,8 @@ COMMENT ON COLUMN darwin2.gtu.gtu_from_date IS 'composed from date of the GTU';
 
 
 --
--- TOC entry 6043 (class 0 OID 0)
--- Dependencies: 276
+-- TOC entry 6066 (class 0 OID 0)
+-- Dependencies: 286
 -- Name: COLUMN gtu.gtu_to_date_mask; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17210,8 +18571,8 @@ COMMENT ON COLUMN darwin2.gtu.gtu_to_date_mask IS 'Mask Flag to know wich part o
 
 
 --
--- TOC entry 6044 (class 0 OID 0)
--- Dependencies: 276
+-- TOC entry 6067 (class 0 OID 0)
+-- Dependencies: 286
 -- Name: COLUMN gtu.gtu_to_date; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17219,8 +18580,8 @@ COMMENT ON COLUMN darwin2.gtu.gtu_to_date IS 'composed to date of the GTU';
 
 
 --
--- TOC entry 6045 (class 0 OID 0)
--- Dependencies: 276
+-- TOC entry 6068 (class 0 OID 0)
+-- Dependencies: 286
 -- Name: COLUMN gtu.tag_values_indexed; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17228,8 +18589,8 @@ COMMENT ON COLUMN darwin2.gtu.tag_values_indexed IS 'Array of all tags associate
 
 
 --
--- TOC entry 6046 (class 0 OID 0)
--- Dependencies: 276
+-- TOC entry 6069 (class 0 OID 0)
+-- Dependencies: 286
 -- Name: COLUMN gtu.latitude; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17237,8 +18598,8 @@ COMMENT ON COLUMN darwin2.gtu.latitude IS 'Latitude of the gtu';
 
 
 --
--- TOC entry 6047 (class 0 OID 0)
--- Dependencies: 276
+-- TOC entry 6070 (class 0 OID 0)
+-- Dependencies: 286
 -- Name: COLUMN gtu.longitude; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17246,8 +18607,8 @@ COMMENT ON COLUMN darwin2.gtu.longitude IS 'longitude of the gtu';
 
 
 --
--- TOC entry 6048 (class 0 OID 0)
--- Dependencies: 276
+-- TOC entry 6071 (class 0 OID 0)
+-- Dependencies: 286
 -- Name: COLUMN gtu.lat_long_accuracy; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17255,8 +18616,8 @@ COMMENT ON COLUMN darwin2.gtu.lat_long_accuracy IS 'Accuracy in meter of both la
 
 
 --
--- TOC entry 6049 (class 0 OID 0)
--- Dependencies: 276
+-- TOC entry 6072 (class 0 OID 0)
+-- Dependencies: 286
 -- Name: COLUMN gtu.elevation; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17264,8 +18625,8 @@ COMMENT ON COLUMN darwin2.gtu.elevation IS 'Elevation from the level of the sea 
 
 
 --
--- TOC entry 6050 (class 0 OID 0)
--- Dependencies: 276
+-- TOC entry 6073 (class 0 OID 0)
+-- Dependencies: 286
 -- Name: COLUMN gtu.elevation_accuracy; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17273,7 +18634,7 @@ COMMENT ON COLUMN darwin2.gtu.elevation_accuracy IS 'Accuracy in meter of the el
 
 
 --
--- TOC entry 417 (class 1259 OID 5304935)
+-- TOC entry 427 (class 1259 OID 5304935)
 -- Name: temporal_information; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -17291,8 +18652,8 @@ CREATE TABLE darwin2.temporal_information (
 ALTER TABLE darwin2.temporal_information OWNER TO darwin2;
 
 --
--- TOC entry 6052 (class 0 OID 0)
--- Dependencies: 417
+-- TOC entry 6075 (class 0 OID 0)
+-- Dependencies: 427
 -- Name: COLUMN temporal_information.from_date_mask; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17300,8 +18661,8 @@ COMMENT ON COLUMN darwin2.temporal_information.from_date_mask IS 'Mask Flag to k
 
 
 --
--- TOC entry 6053 (class 0 OID 0)
--- Dependencies: 417
+-- TOC entry 6076 (class 0 OID 0)
+-- Dependencies: 427
 -- Name: COLUMN temporal_information.from_date; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17309,8 +18670,8 @@ COMMENT ON COLUMN darwin2.temporal_information.from_date IS 'composed from date 
 
 
 --
--- TOC entry 6054 (class 0 OID 0)
--- Dependencies: 417
+-- TOC entry 6077 (class 0 OID 0)
+-- Dependencies: 427
 -- Name: COLUMN temporal_information.to_date_mask; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17318,8 +18679,8 @@ COMMENT ON COLUMN darwin2.temporal_information.to_date_mask IS 'Mask Flag to kno
 
 
 --
--- TOC entry 6055 (class 0 OID 0)
--- Dependencies: 417
+-- TOC entry 6078 (class 0 OID 0)
+-- Dependencies: 427
 -- Name: COLUMN temporal_information.to_date; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17327,7 +18688,7 @@ COMMENT ON COLUMN darwin2.temporal_information.to_date IS 'composed to date of t
 
 
 --
--- TOC entry 420 (class 1259 OID 5307583)
+-- TOC entry 430 (class 1259 OID 5307583)
 -- Name: doctrine_temporal_information_gtu_group; Type: VIEW; Schema: darwin2; Owner: darwin2
 --
 
@@ -17378,7 +18739,7 @@ CREATE VIEW darwin2.doctrine_temporal_information_gtu_group AS
 ALTER TABLE darwin2.doctrine_temporal_information_gtu_group OWNER TO darwin2;
 
 --
--- TOC entry 269 (class 1259 OID 4816768)
+-- TOC entry 279 (class 1259 OID 4816768)
 -- Name: expeditions_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -17393,7 +18754,7 @@ CREATE SEQUENCE darwin2.expeditions_id_seq
 ALTER TABLE darwin2.expeditions_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 270 (class 1259 OID 4816770)
+-- TOC entry 280 (class 1259 OID 4816770)
 -- Name: expeditions; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -17411,8 +18772,8 @@ CREATE TABLE darwin2.expeditions (
 ALTER TABLE darwin2.expeditions OWNER TO darwin2;
 
 --
--- TOC entry 6057 (class 0 OID 0)
--- Dependencies: 270
+-- TOC entry 6080 (class 0 OID 0)
+-- Dependencies: 280
 -- Name: TABLE expeditions; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17420,8 +18781,8 @@ COMMENT ON TABLE darwin2.expeditions IS 'List of expeditions made to collect spe
 
 
 --
--- TOC entry 6058 (class 0 OID 0)
--- Dependencies: 270
+-- TOC entry 6081 (class 0 OID 0)
+-- Dependencies: 280
 -- Name: COLUMN expeditions.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17429,8 +18790,8 @@ COMMENT ON COLUMN darwin2.expeditions.id IS 'Unique identifier of an expedition'
 
 
 --
--- TOC entry 6059 (class 0 OID 0)
--- Dependencies: 270
+-- TOC entry 6082 (class 0 OID 0)
+-- Dependencies: 280
 -- Name: COLUMN expeditions.name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17438,8 +18799,8 @@ COMMENT ON COLUMN darwin2.expeditions.name IS 'Expedition name';
 
 
 --
--- TOC entry 6060 (class 0 OID 0)
--- Dependencies: 270
+-- TOC entry 6083 (class 0 OID 0)
+-- Dependencies: 280
 -- Name: COLUMN expeditions.name_indexed; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17447,8 +18808,8 @@ COMMENT ON COLUMN darwin2.expeditions.name_indexed IS 'Indexed form of expeditio
 
 
 --
--- TOC entry 6061 (class 0 OID 0)
--- Dependencies: 270
+-- TOC entry 6084 (class 0 OID 0)
+-- Dependencies: 280
 -- Name: COLUMN expeditions.expedition_from_date_mask; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17456,8 +18817,8 @@ COMMENT ON COLUMN darwin2.expeditions.expedition_from_date_mask IS 'Contains the
 
 
 --
--- TOC entry 6062 (class 0 OID 0)
--- Dependencies: 270
+-- TOC entry 6085 (class 0 OID 0)
+-- Dependencies: 280
 -- Name: COLUMN expeditions.expedition_from_date; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17465,8 +18826,8 @@ COMMENT ON COLUMN darwin2.expeditions.expedition_from_date IS 'Start date of the
 
 
 --
--- TOC entry 6063 (class 0 OID 0)
--- Dependencies: 270
+-- TOC entry 6086 (class 0 OID 0)
+-- Dependencies: 280
 -- Name: COLUMN expeditions.expedition_to_date_mask; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17474,8 +18835,8 @@ COMMENT ON COLUMN darwin2.expeditions.expedition_to_date_mask IS 'Contains the M
 
 
 --
--- TOC entry 6064 (class 0 OID 0)
--- Dependencies: 270
+-- TOC entry 6087 (class 0 OID 0)
+-- Dependencies: 280
 -- Name: COLUMN expeditions.expedition_to_date; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17483,7 +18844,7 @@ COMMENT ON COLUMN darwin2.expeditions.expedition_to_date IS 'End date of the exp
 
 
 --
--- TOC entry 271 (class 1259 OID 4816781)
+-- TOC entry 281 (class 1259 OID 4816781)
 -- Name: ext_links_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -17498,7 +18859,7 @@ CREATE SEQUENCE darwin2.ext_links_id_seq
 ALTER TABLE darwin2.ext_links_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 272 (class 1259 OID 4816783)
+-- TOC entry 282 (class 1259 OID 4816783)
 -- Name: ext_links; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -17515,8 +18876,8 @@ INHERITS (darwin2.template_table_record_ref);
 ALTER TABLE darwin2.ext_links OWNER TO darwin2;
 
 --
--- TOC entry 6066 (class 0 OID 0)
--- Dependencies: 272
+-- TOC entry 6089 (class 0 OID 0)
+-- Dependencies: 282
 -- Name: TABLE ext_links; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17524,8 +18885,8 @@ COMMENT ON TABLE darwin2.ext_links IS 'External link possibly refereced for a sp
 
 
 --
--- TOC entry 6067 (class 0 OID 0)
--- Dependencies: 272
+-- TOC entry 6090 (class 0 OID 0)
+-- Dependencies: 282
 -- Name: COLUMN ext_links.referenced_relation; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17533,8 +18894,8 @@ COMMENT ON COLUMN darwin2.ext_links.referenced_relation IS 'Reference-Name of ta
 
 
 --
--- TOC entry 6068 (class 0 OID 0)
--- Dependencies: 272
+-- TOC entry 6091 (class 0 OID 0)
+-- Dependencies: 282
 -- Name: COLUMN ext_links.record_id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17542,8 +18903,8 @@ COMMENT ON COLUMN darwin2.ext_links.record_id IS 'Identifier of the record conce
 
 
 --
--- TOC entry 6069 (class 0 OID 0)
--- Dependencies: 272
+-- TOC entry 6092 (class 0 OID 0)
+-- Dependencies: 282
 -- Name: COLUMN ext_links.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17551,8 +18912,8 @@ COMMENT ON COLUMN darwin2.ext_links.id IS 'Unique identifier of a comment';
 
 
 --
--- TOC entry 6070 (class 0 OID 0)
--- Dependencies: 272
+-- TOC entry 6093 (class 0 OID 0)
+-- Dependencies: 282
 -- Name: COLUMN ext_links.url; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17560,8 +18921,8 @@ COMMENT ON COLUMN darwin2.ext_links.url IS 'External URL';
 
 
 --
--- TOC entry 6071 (class 0 OID 0)
--- Dependencies: 272
+-- TOC entry 6094 (class 0 OID 0)
+-- Dependencies: 282
 -- Name: COLUMN ext_links.comment; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17569,8 +18930,8 @@ COMMENT ON COLUMN darwin2.ext_links.comment IS 'Comment';
 
 
 --
--- TOC entry 6072 (class 0 OID 0)
--- Dependencies: 272
+-- TOC entry 6095 (class 0 OID 0)
+-- Dependencies: 282
 -- Name: COLUMN ext_links.comment_indexed; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17578,8 +18939,8 @@ COMMENT ON COLUMN darwin2.ext_links.comment_indexed IS 'indexed form of comment 
 
 
 --
--- TOC entry 6073 (class 0 OID 0)
--- Dependencies: 272
+-- TOC entry 6096 (class 0 OID 0)
+-- Dependencies: 282
 -- Name: COLUMN ext_links.type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17587,7 +18948,7 @@ COMMENT ON COLUMN darwin2.ext_links.type IS 'Sort of external link given';
 
 
 --
--- TOC entry 273 (class 1259 OID 4816791)
+-- TOC entry 283 (class 1259 OID 4816791)
 -- Name: flat_dict_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -17602,7 +18963,7 @@ CREATE SEQUENCE darwin2.flat_dict_id_seq
 ALTER TABLE darwin2.flat_dict_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 274 (class 1259 OID 4816793)
+-- TOC entry 284 (class 1259 OID 4816793)
 -- Name: flat_dict; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -17618,8 +18979,8 @@ CREATE TABLE darwin2.flat_dict (
 ALTER TABLE darwin2.flat_dict OWNER TO darwin2;
 
 --
--- TOC entry 6075 (class 0 OID 0)
--- Dependencies: 274
+-- TOC entry 6098 (class 0 OID 0)
+-- Dependencies: 284
 -- Name: TABLE flat_dict; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17627,8 +18988,8 @@ COMMENT ON TABLE darwin2.flat_dict IS 'Flat table compiling all small distinct v
 
 
 --
--- TOC entry 6076 (class 0 OID 0)
--- Dependencies: 274
+-- TOC entry 6099 (class 0 OID 0)
+-- Dependencies: 284
 -- Name: COLUMN flat_dict.referenced_relation; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17636,8 +18997,8 @@ COMMENT ON COLUMN darwin2.flat_dict.referenced_relation IS 'The table where the 
 
 
 --
--- TOC entry 6077 (class 0 OID 0)
--- Dependencies: 274
+-- TOC entry 6100 (class 0 OID 0)
+-- Dependencies: 284
 -- Name: COLUMN flat_dict.dict_field; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17645,8 +19006,8 @@ COMMENT ON COLUMN darwin2.flat_dict.dict_field IS 'the field name of where the v
 
 
 --
--- TOC entry 6078 (class 0 OID 0)
--- Dependencies: 274
+-- TOC entry 6101 (class 0 OID 0)
+-- Dependencies: 284
 -- Name: COLUMN flat_dict.dict_value; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17654,7 +19015,7 @@ COMMENT ON COLUMN darwin2.flat_dict.dict_value IS 'the distinct value';
 
 
 --
--- TOC entry 277 (class 1259 OID 4816816)
+-- TOC entry 287 (class 1259 OID 4816816)
 -- Name: gtu_analyse_normalisation_20181127; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -17668,7 +19029,7 @@ CREATE TABLE darwin2.gtu_analyse_normalisation_20181127 (
 ALTER TABLE darwin2.gtu_analyse_normalisation_20181127 OWNER TO darwin2;
 
 --
--- TOC entry 278 (class 1259 OID 4816822)
+-- TOC entry 288 (class 1259 OID 4816822)
 -- Name: gtu_bck20181123; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -17709,7 +19070,7 @@ CREATE TABLE darwin2.gtu_bck20181123 (
 ALTER TABLE darwin2.gtu_bck20181123 OWNER TO darwin2;
 
 --
--- TOC entry 279 (class 1259 OID 4816828)
+-- TOC entry 289 (class 1259 OID 4816828)
 -- Name: gtu_bck20181130; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -17750,7 +19111,7 @@ CREATE TABLE darwin2.gtu_bck20181130 (
 ALTER TABLE darwin2.gtu_bck20181130 OWNER TO darwin2;
 
 --
--- TOC entry 419 (class 1259 OID 5305093)
+-- TOC entry 429 (class 1259 OID 5305093)
 -- Name: gtu_bck20181213; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -17791,7 +19152,7 @@ CREATE TABLE darwin2.gtu_bck20181213 (
 ALTER TABLE darwin2.gtu_bck20181213 OWNER TO darwin2;
 
 --
--- TOC entry 280 (class 1259 OID 4816834)
+-- TOC entry 290 (class 1259 OID 4816834)
 -- Name: igs_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -17806,7 +19167,7 @@ CREATE SEQUENCE darwin2.igs_id_seq
 ALTER TABLE darwin2.igs_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 281 (class 1259 OID 4816836)
+-- TOC entry 291 (class 1259 OID 4816836)
 -- Name: igs; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -17822,8 +19183,8 @@ CREATE TABLE darwin2.igs (
 ALTER TABLE darwin2.igs OWNER TO darwin2;
 
 --
--- TOC entry 6080 (class 0 OID 0)
--- Dependencies: 281
+-- TOC entry 6103 (class 0 OID 0)
+-- Dependencies: 291
 -- Name: TABLE igs; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17831,8 +19192,8 @@ COMMENT ON TABLE darwin2.igs IS 'Inventory table - register all ig (inventory ge
 
 
 --
--- TOC entry 6081 (class 0 OID 0)
--- Dependencies: 281
+-- TOC entry 6104 (class 0 OID 0)
+-- Dependencies: 291
 -- Name: COLUMN igs.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17840,8 +19201,8 @@ COMMENT ON COLUMN darwin2.igs.id IS 'Unique identifier of an ig reference';
 
 
 --
--- TOC entry 6082 (class 0 OID 0)
--- Dependencies: 281
+-- TOC entry 6105 (class 0 OID 0)
+-- Dependencies: 291
 -- Name: COLUMN igs.ig_num; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17849,8 +19210,8 @@ COMMENT ON COLUMN darwin2.igs.ig_num IS 'IG number';
 
 
 --
--- TOC entry 6083 (class 0 OID 0)
--- Dependencies: 281
+-- TOC entry 6106 (class 0 OID 0)
+-- Dependencies: 291
 -- Name: COLUMN igs.ig_date_mask; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17858,8 +19219,8 @@ COMMENT ON COLUMN darwin2.igs.ig_date_mask IS 'Mask Flag to know wich part of th
 
 
 --
--- TOC entry 6084 (class 0 OID 0)
--- Dependencies: 281
+-- TOC entry 6107 (class 0 OID 0)
+-- Dependencies: 291
 -- Name: COLUMN igs.ig_date; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17867,7 +19228,7 @@ COMMENT ON COLUMN darwin2.igs.ig_date IS 'Date of ig number creation';
 
 
 --
--- TOC entry 282 (class 1259 OID 4816845)
+-- TOC entry 292 (class 1259 OID 4816845)
 -- Name: imports_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -17882,7 +19243,7 @@ CREATE SEQUENCE darwin2.imports_id_seq
 ALTER TABLE darwin2.imports_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 283 (class 1259 OID 4816847)
+-- TOC entry 293 (class 1259 OID 4816847)
 -- Name: imports; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -17916,15 +19277,16 @@ CREATE TABLE darwin2.imports (
     is_reference_taxonomy boolean,
     source_taxonomy character varying,
     url_website_taxonomy character varying,
-    url_webservice_taxonomy character varying
+    url_webservice_taxonomy character varying,
+    collection_ref_for_gtu integer
 );
 
 
 ALTER TABLE darwin2.imports OWNER TO darwin2;
 
 --
--- TOC entry 6086 (class 0 OID 0)
--- Dependencies: 283
+-- TOC entry 6109 (class 0 OID 0)
+-- Dependencies: 293
 -- Name: TABLE imports; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17932,8 +19294,8 @@ COMMENT ON TABLE darwin2.imports IS 'Table used to check the state of the date c
 
 
 --
--- TOC entry 6087 (class 0 OID 0)
--- Dependencies: 283
+-- TOC entry 6110 (class 0 OID 0)
+-- Dependencies: 293
 -- Name: COLUMN imports.user_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17941,8 +19303,8 @@ COMMENT ON COLUMN darwin2.imports.user_ref IS 'The referenced user id';
 
 
 --
--- TOC entry 6088 (class 0 OID 0)
--- Dependencies: 283
+-- TOC entry 6111 (class 0 OID 0)
+-- Dependencies: 293
 -- Name: COLUMN imports.format; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17950,8 +19312,8 @@ COMMENT ON COLUMN darwin2.imports.format IS 'The import template to use for the 
 
 
 --
--- TOC entry 6089 (class 0 OID 0)
--- Dependencies: 283
+-- TOC entry 6112 (class 0 OID 0)
+-- Dependencies: 293
 -- Name: COLUMN imports.collection_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17959,8 +19321,8 @@ COMMENT ON COLUMN darwin2.imports.collection_ref IS 'The collection associated';
 
 
 --
--- TOC entry 6090 (class 0 OID 0)
--- Dependencies: 283
+-- TOC entry 6113 (class 0 OID 0)
+-- Dependencies: 293
 -- Name: COLUMN imports.filename; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17968,8 +19330,8 @@ COMMENT ON COLUMN darwin2.imports.filename IS 'The filename of the file to proce
 
 
 --
--- TOC entry 6091 (class 0 OID 0)
--- Dependencies: 283
+-- TOC entry 6114 (class 0 OID 0)
+-- Dependencies: 293
 -- Name: COLUMN imports.state; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17977,8 +19339,8 @@ COMMENT ON COLUMN darwin2.imports.state IS 'the state of the processing the file
 
 
 --
--- TOC entry 6092 (class 0 OID 0)
--- Dependencies: 283
+-- TOC entry 6115 (class 0 OID 0)
+-- Dependencies: 293
 -- Name: COLUMN imports.created_at; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17986,8 +19348,8 @@ COMMENT ON COLUMN darwin2.imports.created_at IS 'Creation of the file';
 
 
 --
--- TOC entry 6093 (class 0 OID 0)
--- Dependencies: 283
+-- TOC entry 6116 (class 0 OID 0)
+-- Dependencies: 293
 -- Name: COLUMN imports.updated_at; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -17995,8 +19357,8 @@ COMMENT ON COLUMN darwin2.imports.updated_at IS 'When the data has been modified
 
 
 --
--- TOC entry 6094 (class 0 OID 0)
--- Dependencies: 283
+-- TOC entry 6117 (class 0 OID 0)
+-- Dependencies: 293
 -- Name: COLUMN imports.initial_count; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18004,8 +19366,8 @@ COMMENT ON COLUMN darwin2.imports.initial_count IS 'Number of rows of staging wh
 
 
 --
--- TOC entry 6095 (class 0 OID 0)
--- Dependencies: 283
+-- TOC entry 6118 (class 0 OID 0)
+-- Dependencies: 293
 -- Name: COLUMN imports.is_finished; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18013,8 +19375,8 @@ COMMENT ON COLUMN darwin2.imports.is_finished IS 'Boolean to mark if the import 
 
 
 --
--- TOC entry 6096 (class 0 OID 0)
--- Dependencies: 283
+-- TOC entry 6119 (class 0 OID 0)
+-- Dependencies: 293
 -- Name: COLUMN imports.exclude_invalid_entries; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18022,7 +19384,7 @@ COMMENT ON COLUMN darwin2.imports.exclude_invalid_entries IS 'Tell if, for this 
 
 
 --
--- TOC entry 284 (class 1259 OID 4816862)
+-- TOC entry 294 (class 1259 OID 4816862)
 -- Name: informative_workflow_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -18037,7 +19399,7 @@ CREATE SEQUENCE darwin2.informative_workflow_id_seq
 ALTER TABLE darwin2.informative_workflow_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 285 (class 1259 OID 4816864)
+-- TOC entry 295 (class 1259 OID 4816864)
 -- Name: informative_workflow; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -18056,8 +19418,8 @@ INHERITS (darwin2.template_table_record_ref);
 ALTER TABLE darwin2.informative_workflow OWNER TO darwin2;
 
 --
--- TOC entry 6098 (class 0 OID 0)
--- Dependencies: 285
+-- TOC entry 6121 (class 0 OID 0)
+-- Dependencies: 295
 -- Name: TABLE informative_workflow; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18065,8 +19427,8 @@ COMMENT ON TABLE darwin2.informative_workflow IS 'Workflow information for each 
 
 
 --
--- TOC entry 6099 (class 0 OID 0)
--- Dependencies: 285
+-- TOC entry 6122 (class 0 OID 0)
+-- Dependencies: 295
 -- Name: COLUMN informative_workflow.referenced_relation; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18074,8 +19436,8 @@ COMMENT ON COLUMN darwin2.informative_workflow.referenced_relation IS 'Reference
 
 
 --
--- TOC entry 6100 (class 0 OID 0)
--- Dependencies: 285
+-- TOC entry 6123 (class 0 OID 0)
+-- Dependencies: 295
 -- Name: COLUMN informative_workflow.record_id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18083,8 +19445,8 @@ COMMENT ON COLUMN darwin2.informative_workflow.record_id IS 'ID of record a work
 
 
 --
--- TOC entry 6101 (class 0 OID 0)
--- Dependencies: 285
+-- TOC entry 6124 (class 0 OID 0)
+-- Dependencies: 295
 -- Name: COLUMN informative_workflow.user_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18092,8 +19454,8 @@ COMMENT ON COLUMN darwin2.informative_workflow.user_ref IS 'Reference of user - 
 
 
 --
--- TOC entry 6102 (class 0 OID 0)
--- Dependencies: 285
+-- TOC entry 6125 (class 0 OID 0)
+-- Dependencies: 295
 -- Name: COLUMN informative_workflow.status; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18101,8 +19463,8 @@ COMMENT ON COLUMN darwin2.informative_workflow.status IS 'Record status: to corr
 
 
 --
--- TOC entry 6103 (class 0 OID 0)
--- Dependencies: 285
+-- TOC entry 6126 (class 0 OID 0)
+-- Dependencies: 295
 -- Name: COLUMN informative_workflow.modification_date_time; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18110,8 +19472,8 @@ COMMENT ON COLUMN darwin2.informative_workflow.modification_date_time IS 'Date a
 
 
 --
--- TOC entry 6104 (class 0 OID 0)
--- Dependencies: 285
+-- TOC entry 6127 (class 0 OID 0)
+-- Dependencies: 295
 -- Name: COLUMN informative_workflow.comment; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18119,8 +19481,8 @@ COMMENT ON COLUMN darwin2.informative_workflow.comment IS 'Complementary comment
 
 
 --
--- TOC entry 6105 (class 0 OID 0)
--- Dependencies: 285
+-- TOC entry 6128 (class 0 OID 0)
+-- Dependencies: 295
 -- Name: COLUMN informative_workflow.formated_name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18128,8 +19490,8 @@ COMMENT ON COLUMN darwin2.informative_workflow.formated_name IS 'used to allow n
 
 
 --
--- TOC entry 6106 (class 0 OID 0)
--- Dependencies: 285
+-- TOC entry 6129 (class 0 OID 0)
+-- Dependencies: 295
 -- Name: COLUMN informative_workflow.is_last; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18137,7 +19499,7 @@ COMMENT ON COLUMN darwin2.informative_workflow.is_last IS 'a flag witch allow us
 
 
 --
--- TOC entry 286 (class 1259 OID 4816875)
+-- TOC entry 296 (class 1259 OID 4816875)
 -- Name: insurances_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -18152,7 +19514,7 @@ CREATE SEQUENCE darwin2.insurances_id_seq
 ALTER TABLE darwin2.insurances_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 287 (class 1259 OID 4816877)
+-- TOC entry 297 (class 1259 OID 4816877)
 -- Name: insurances; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -18174,8 +19536,8 @@ INHERITS (darwin2.template_table_record_ref);
 ALTER TABLE darwin2.insurances OWNER TO darwin2;
 
 --
--- TOC entry 6108 (class 0 OID 0)
--- Dependencies: 287
+-- TOC entry 6131 (class 0 OID 0)
+-- Dependencies: 297
 -- Name: TABLE insurances; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18183,8 +19545,8 @@ COMMENT ON TABLE darwin2.insurances IS 'List of insurances values for given spec
 
 
 --
--- TOC entry 6109 (class 0 OID 0)
--- Dependencies: 287
+-- TOC entry 6132 (class 0 OID 0)
+-- Dependencies: 297
 -- Name: COLUMN insurances.referenced_relation; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18192,8 +19554,8 @@ COMMENT ON COLUMN darwin2.insurances.referenced_relation IS 'Reference-Name of t
 
 
 --
--- TOC entry 6110 (class 0 OID 0)
--- Dependencies: 287
+-- TOC entry 6133 (class 0 OID 0)
+-- Dependencies: 297
 -- Name: COLUMN insurances.record_id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18201,8 +19563,8 @@ COMMENT ON COLUMN darwin2.insurances.record_id IS 'Identifier of record concerne
 
 
 --
--- TOC entry 6111 (class 0 OID 0)
--- Dependencies: 287
+-- TOC entry 6134 (class 0 OID 0)
+-- Dependencies: 297
 -- Name: COLUMN insurances.insurance_value; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18210,8 +19572,8 @@ COMMENT ON COLUMN darwin2.insurances.insurance_value IS 'Insurance value';
 
 
 --
--- TOC entry 6112 (class 0 OID 0)
--- Dependencies: 287
+-- TOC entry 6135 (class 0 OID 0)
+-- Dependencies: 297
 -- Name: COLUMN insurances.insurance_currency; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18219,8 +19581,8 @@ COMMENT ON COLUMN darwin2.insurances.insurance_currency IS 'Currency used with i
 
 
 --
--- TOC entry 6113 (class 0 OID 0)
--- Dependencies: 287
+-- TOC entry 6136 (class 0 OID 0)
+-- Dependencies: 297
 -- Name: COLUMN insurances.insurer_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18228,7 +19590,7 @@ COMMENT ON COLUMN darwin2.insurances.insurer_ref IS 'Reference of the insurance 
 
 
 --
--- TOC entry 288 (class 1259 OID 4816890)
+-- TOC entry 298 (class 1259 OID 4816890)
 -- Name: lithology_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -18243,7 +19605,7 @@ CREATE SEQUENCE darwin2.lithology_id_seq
 ALTER TABLE darwin2.lithology_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 289 (class 1259 OID 4816892)
+-- TOC entry 299 (class 1259 OID 4816892)
 -- Name: lithology; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -18257,8 +19619,8 @@ INHERITS (darwin2.template_classifications);
 ALTER TABLE darwin2.lithology OWNER TO darwin2;
 
 --
--- TOC entry 6115 (class 0 OID 0)
--- Dependencies: 289
+-- TOC entry 6138 (class 0 OID 0)
+-- Dependencies: 299
 -- Name: TABLE lithology; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18266,8 +19628,8 @@ COMMENT ON TABLE darwin2.lithology IS 'List of lithologic units';
 
 
 --
--- TOC entry 6116 (class 0 OID 0)
--- Dependencies: 289
+-- TOC entry 6139 (class 0 OID 0)
+-- Dependencies: 299
 -- Name: COLUMN lithology.name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18275,8 +19637,8 @@ COMMENT ON COLUMN darwin2.lithology.name IS 'Classification unit name';
 
 
 --
--- TOC entry 6117 (class 0 OID 0)
--- Dependencies: 289
+-- TOC entry 6140 (class 0 OID 0)
+-- Dependencies: 299
 -- Name: COLUMN lithology.name_indexed; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18284,8 +19646,8 @@ COMMENT ON COLUMN darwin2.lithology.name_indexed IS 'Indexed form of name field'
 
 
 --
--- TOC entry 6118 (class 0 OID 0)
--- Dependencies: 289
+-- TOC entry 6141 (class 0 OID 0)
+-- Dependencies: 299
 -- Name: COLUMN lithology.level_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18293,8 +19655,8 @@ COMMENT ON COLUMN darwin2.lithology.level_ref IS 'Reference of classification le
 
 
 --
--- TOC entry 6119 (class 0 OID 0)
--- Dependencies: 289
+-- TOC entry 6142 (class 0 OID 0)
+-- Dependencies: 299
 -- Name: COLUMN lithology.status; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18302,8 +19664,8 @@ COMMENT ON COLUMN darwin2.lithology.status IS 'Validitiy status: valid, invalid,
 
 
 --
--- TOC entry 6120 (class 0 OID 0)
--- Dependencies: 289
+-- TOC entry 6143 (class 0 OID 0)
+-- Dependencies: 299
 -- Name: COLUMN lithology.path; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18311,8 +19673,8 @@ COMMENT ON COLUMN darwin2.lithology.path IS 'Hierarchy path (/ for root)';
 
 
 --
--- TOC entry 6121 (class 0 OID 0)
--- Dependencies: 289
+-- TOC entry 6144 (class 0 OID 0)
+-- Dependencies: 299
 -- Name: COLUMN lithology.parent_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18320,8 +19682,8 @@ COMMENT ON COLUMN darwin2.lithology.parent_ref IS 'Id of parent - id field from 
 
 
 --
--- TOC entry 6122 (class 0 OID 0)
--- Dependencies: 289
+-- TOC entry 6145 (class 0 OID 0)
+-- Dependencies: 299
 -- Name: COLUMN lithology.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18329,7 +19691,7 @@ COMMENT ON COLUMN darwin2.lithology.id IS 'Unique identifier of a classification
 
 
 --
--- TOC entry 290 (class 1259 OID 4816903)
+-- TOC entry 300 (class 1259 OID 4816903)
 -- Name: lithostratigraphy_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -18344,12 +19706,13 @@ CREATE SEQUENCE darwin2.lithostratigraphy_id_seq
 ALTER TABLE darwin2.lithostratigraphy_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 291 (class 1259 OID 4816905)
+-- TOC entry 301 (class 1259 OID 4816905)
 -- Name: lithostratigraphy; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
 CREATE TABLE darwin2.lithostratigraphy (
     id integer DEFAULT nextval('darwin2.lithostratigraphy_id_seq'::regclass) NOT NULL,
+    import_ref integer,
     CONSTRAINT fct_chk_onceinpath_lithostratigraphy CHECK (darwin2.fct_chk_onceinpath(((((COALESCE(path, ''::character varying))::text || '/'::text) || id))::character varying))
 )
 INHERITS (darwin2.template_classifications);
@@ -18358,8 +19721,8 @@ INHERITS (darwin2.template_classifications);
 ALTER TABLE darwin2.lithostratigraphy OWNER TO darwin2;
 
 --
--- TOC entry 6124 (class 0 OID 0)
--- Dependencies: 291
+-- TOC entry 6147 (class 0 OID 0)
+-- Dependencies: 301
 -- Name: TABLE lithostratigraphy; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18367,8 +19730,8 @@ COMMENT ON TABLE darwin2.lithostratigraphy IS 'List of lithostratigraphic units'
 
 
 --
--- TOC entry 6125 (class 0 OID 0)
--- Dependencies: 291
+-- TOC entry 6148 (class 0 OID 0)
+-- Dependencies: 301
 -- Name: COLUMN lithostratigraphy.name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18376,8 +19739,8 @@ COMMENT ON COLUMN darwin2.lithostratigraphy.name IS 'Classification unit name';
 
 
 --
--- TOC entry 6126 (class 0 OID 0)
--- Dependencies: 291
+-- TOC entry 6149 (class 0 OID 0)
+-- Dependencies: 301
 -- Name: COLUMN lithostratigraphy.name_indexed; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18385,8 +19748,8 @@ COMMENT ON COLUMN darwin2.lithostratigraphy.name_indexed IS 'Indexed form of nam
 
 
 --
--- TOC entry 6127 (class 0 OID 0)
--- Dependencies: 291
+-- TOC entry 6150 (class 0 OID 0)
+-- Dependencies: 301
 -- Name: COLUMN lithostratigraphy.level_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18394,8 +19757,8 @@ COMMENT ON COLUMN darwin2.lithostratigraphy.level_ref IS 'Reference of classific
 
 
 --
--- TOC entry 6128 (class 0 OID 0)
--- Dependencies: 291
+-- TOC entry 6151 (class 0 OID 0)
+-- Dependencies: 301
 -- Name: COLUMN lithostratigraphy.status; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18403,8 +19766,8 @@ COMMENT ON COLUMN darwin2.lithostratigraphy.status IS 'Validitiy status: valid, 
 
 
 --
--- TOC entry 6129 (class 0 OID 0)
--- Dependencies: 291
+-- TOC entry 6152 (class 0 OID 0)
+-- Dependencies: 301
 -- Name: COLUMN lithostratigraphy.path; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18412,8 +19775,8 @@ COMMENT ON COLUMN darwin2.lithostratigraphy.path IS 'Hierarchy path (/ for root)
 
 
 --
--- TOC entry 6130 (class 0 OID 0)
--- Dependencies: 291
+-- TOC entry 6153 (class 0 OID 0)
+-- Dependencies: 301
 -- Name: COLUMN lithostratigraphy.parent_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18421,8 +19784,8 @@ COMMENT ON COLUMN darwin2.lithostratigraphy.parent_ref IS 'Id of parent - id fie
 
 
 --
--- TOC entry 6131 (class 0 OID 0)
--- Dependencies: 291
+-- TOC entry 6154 (class 0 OID 0)
+-- Dependencies: 301
 -- Name: COLUMN lithostratigraphy.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18430,7 +19793,7 @@ COMMENT ON COLUMN darwin2.lithostratigraphy.id IS 'Unique identifier of a classi
 
 
 --
--- TOC entry 292 (class 1259 OID 4816916)
+-- TOC entry 302 (class 1259 OID 4816916)
 -- Name: loan_history; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -18446,8 +19809,8 @@ CREATE TABLE darwin2.loan_history (
 ALTER TABLE darwin2.loan_history OWNER TO darwin2;
 
 --
--- TOC entry 6133 (class 0 OID 0)
--- Dependencies: 292
+-- TOC entry 6156 (class 0 OID 0)
+-- Dependencies: 302
 -- Name: TABLE loan_history; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18455,8 +19818,8 @@ COMMENT ON TABLE darwin2.loan_history IS 'Table is a snapshot of an entire loan 
 
 
 --
--- TOC entry 6134 (class 0 OID 0)
--- Dependencies: 292
+-- TOC entry 6157 (class 0 OID 0)
+-- Dependencies: 302
 -- Name: COLUMN loan_history.loan_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18464,8 +19827,8 @@ COMMENT ON COLUMN darwin2.loan_history.loan_ref IS 'Mandatory Reference to a loa
 
 
 --
--- TOC entry 6135 (class 0 OID 0)
--- Dependencies: 292
+-- TOC entry 6158 (class 0 OID 0)
+-- Dependencies: 302
 -- Name: COLUMN loan_history.referenced_table; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18473,8 +19836,8 @@ COMMENT ON COLUMN darwin2.loan_history.referenced_table IS 'Mandatory Reference 
 
 
 --
--- TOC entry 6136 (class 0 OID 0)
--- Dependencies: 292
+-- TOC entry 6159 (class 0 OID 0)
+-- Dependencies: 302
 -- Name: COLUMN loan_history.modification_date_time; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18482,8 +19845,8 @@ COMMENT ON COLUMN darwin2.loan_history.modification_date_time IS 'date of the mo
 
 
 --
--- TOC entry 6137 (class 0 OID 0)
--- Dependencies: 292
+-- TOC entry 6160 (class 0 OID 0)
+-- Dependencies: 302
 -- Name: COLUMN loan_history.record_line; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18491,7 +19854,7 @@ COMMENT ON COLUMN darwin2.loan_history.record_line IS 'hstore containing the who
 
 
 --
--- TOC entry 293 (class 1259 OID 4816923)
+-- TOC entry 303 (class 1259 OID 4816923)
 -- Name: loan_history_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -18506,8 +19869,8 @@ CREATE SEQUENCE darwin2.loan_history_id_seq
 ALTER TABLE darwin2.loan_history_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 6139 (class 0 OID 0)
--- Dependencies: 293
+-- TOC entry 6162 (class 0 OID 0)
+-- Dependencies: 303
 -- Name: loan_history_id_seq; Type: SEQUENCE OWNED BY; Schema: darwin2; Owner: darwin2
 --
 
@@ -18515,7 +19878,7 @@ ALTER SEQUENCE darwin2.loan_history_id_seq OWNED BY darwin2.loan_history.id;
 
 
 --
--- TOC entry 294 (class 1259 OID 4816925)
+-- TOC entry 304 (class 1259 OID 4816925)
 -- Name: loan_items_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -18530,7 +19893,7 @@ CREATE SEQUENCE darwin2.loan_items_id_seq
 ALTER TABLE darwin2.loan_items_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 295 (class 1259 OID 4816927)
+-- TOC entry 305 (class 1259 OID 4816927)
 -- Name: loan_items; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -18548,8 +19911,8 @@ CREATE TABLE darwin2.loan_items (
 ALTER TABLE darwin2.loan_items OWNER TO darwin2;
 
 --
--- TOC entry 6142 (class 0 OID 0)
--- Dependencies: 295
+-- TOC entry 6165 (class 0 OID 0)
+-- Dependencies: 305
 -- Name: TABLE loan_items; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18557,8 +19920,8 @@ COMMENT ON TABLE darwin2.loan_items IS 'Table holding an item of a loan. It may 
 
 
 --
--- TOC entry 6143 (class 0 OID 0)
--- Dependencies: 295
+-- TOC entry 6166 (class 0 OID 0)
+-- Dependencies: 305
 -- Name: COLUMN loan_items.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18566,8 +19929,8 @@ COMMENT ON COLUMN darwin2.loan_items.id IS 'Unique identifier of record';
 
 
 --
--- TOC entry 6144 (class 0 OID 0)
--- Dependencies: 295
+-- TOC entry 6167 (class 0 OID 0)
+-- Dependencies: 305
 -- Name: COLUMN loan_items.loan_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18575,8 +19938,8 @@ COMMENT ON COLUMN darwin2.loan_items.loan_ref IS 'Mandatory Reference to a loan'
 
 
 --
--- TOC entry 6145 (class 0 OID 0)
--- Dependencies: 295
+-- TOC entry 6168 (class 0 OID 0)
+-- Dependencies: 305
 -- Name: COLUMN loan_items.ig_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18584,8 +19947,8 @@ COMMENT ON COLUMN darwin2.loan_items.ig_ref IS 'Optional ref to an IG stored in 
 
 
 --
--- TOC entry 6146 (class 0 OID 0)
--- Dependencies: 295
+-- TOC entry 6169 (class 0 OID 0)
+-- Dependencies: 305
 -- Name: COLUMN loan_items.from_date; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18593,8 +19956,8 @@ COMMENT ON COLUMN darwin2.loan_items.from_date IS 'Date when the item was sended
 
 
 --
--- TOC entry 6147 (class 0 OID 0)
--- Dependencies: 295
+-- TOC entry 6170 (class 0 OID 0)
+-- Dependencies: 305
 -- Name: COLUMN loan_items.to_date; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18602,8 +19965,8 @@ COMMENT ON COLUMN darwin2.loan_items.to_date IS 'Date when the item was recieved
 
 
 --
--- TOC entry 6148 (class 0 OID 0)
--- Dependencies: 295
+-- TOC entry 6171 (class 0 OID 0)
+-- Dependencies: 305
 -- Name: COLUMN loan_items.specimen_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18611,8 +19974,8 @@ COMMENT ON COLUMN darwin2.loan_items.specimen_ref IS 'Optional reference to a Da
 
 
 --
--- TOC entry 6149 (class 0 OID 0)
--- Dependencies: 295
+-- TOC entry 6172 (class 0 OID 0)
+-- Dependencies: 305
 -- Name: COLUMN loan_items.details; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18620,7 +19983,7 @@ COMMENT ON COLUMN darwin2.loan_items.details IS 'Textual details describing the 
 
 
 --
--- TOC entry 296 (class 1259 OID 4816935)
+-- TOC entry 306 (class 1259 OID 4816935)
 -- Name: loan_rights_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -18635,7 +19998,7 @@ CREATE SEQUENCE darwin2.loan_rights_id_seq
 ALTER TABLE darwin2.loan_rights_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 297 (class 1259 OID 4816937)
+-- TOC entry 307 (class 1259 OID 4816937)
 -- Name: loan_rights; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -18650,8 +20013,8 @@ CREATE TABLE darwin2.loan_rights (
 ALTER TABLE darwin2.loan_rights OWNER TO darwin2;
 
 --
--- TOC entry 6152 (class 0 OID 0)
--- Dependencies: 297
+-- TOC entry 6175 (class 0 OID 0)
+-- Dependencies: 307
 -- Name: TABLE loan_rights; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18659,8 +20022,8 @@ COMMENT ON TABLE darwin2.loan_rights IS 'Table describing rights into an entire 
 
 
 --
--- TOC entry 6153 (class 0 OID 0)
--- Dependencies: 297
+-- TOC entry 6176 (class 0 OID 0)
+-- Dependencies: 307
 -- Name: COLUMN loan_rights.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18668,8 +20031,8 @@ COMMENT ON COLUMN darwin2.loan_rights.id IS 'Unique identifier of record';
 
 
 --
--- TOC entry 6154 (class 0 OID 0)
--- Dependencies: 297
+-- TOC entry 6177 (class 0 OID 0)
+-- Dependencies: 307
 -- Name: COLUMN loan_rights.loan_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18677,8 +20040,8 @@ COMMENT ON COLUMN darwin2.loan_rights.loan_ref IS 'Mandatory Reference to a loan
 
 
 --
--- TOC entry 6155 (class 0 OID 0)
--- Dependencies: 297
+-- TOC entry 6178 (class 0 OID 0)
+-- Dependencies: 307
 -- Name: COLUMN loan_rights.user_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18686,8 +20049,8 @@ COMMENT ON COLUMN darwin2.loan_rights.user_ref IS 'Mandatory Reference to a user
 
 
 --
--- TOC entry 6156 (class 0 OID 0)
--- Dependencies: 297
+-- TOC entry 6179 (class 0 OID 0)
+-- Dependencies: 307
 -- Name: COLUMN loan_rights.has_encoding_right; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18695,7 +20058,7 @@ COMMENT ON COLUMN darwin2.loan_rights.has_encoding_right IS 'Bool saying if the 
 
 
 --
--- TOC entry 298 (class 1259 OID 4816942)
+-- TOC entry 308 (class 1259 OID 4816942)
 -- Name: loan_status_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -18710,7 +20073,7 @@ CREATE SEQUENCE darwin2.loan_status_id_seq
 ALTER TABLE darwin2.loan_status_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 299 (class 1259 OID 4816944)
+-- TOC entry 309 (class 1259 OID 4816944)
 -- Name: loan_status; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -18728,8 +20091,8 @@ CREATE TABLE darwin2.loan_status (
 ALTER TABLE darwin2.loan_status OWNER TO darwin2;
 
 --
--- TOC entry 6159 (class 0 OID 0)
--- Dependencies: 299
+-- TOC entry 6182 (class 0 OID 0)
+-- Dependencies: 309
 -- Name: TABLE loan_status; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18737,8 +20100,8 @@ COMMENT ON TABLE darwin2.loan_status IS 'Table describing various states of a lo
 
 
 --
--- TOC entry 6160 (class 0 OID 0)
--- Dependencies: 299
+-- TOC entry 6183 (class 0 OID 0)
+-- Dependencies: 309
 -- Name: COLUMN loan_status.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18746,8 +20109,8 @@ COMMENT ON COLUMN darwin2.loan_status.id IS 'Unique identifier of record';
 
 
 --
--- TOC entry 6161 (class 0 OID 0)
--- Dependencies: 299
+-- TOC entry 6184 (class 0 OID 0)
+-- Dependencies: 309
 -- Name: COLUMN loan_status.loan_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18755,8 +20118,8 @@ COMMENT ON COLUMN darwin2.loan_status.loan_ref IS 'Mandatory Reference to a loan
 
 
 --
--- TOC entry 6162 (class 0 OID 0)
--- Dependencies: 299
+-- TOC entry 6185 (class 0 OID 0)
+-- Dependencies: 309
 -- Name: COLUMN loan_status.user_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18764,8 +20127,8 @@ COMMENT ON COLUMN darwin2.loan_status.user_ref IS 'Mandatory Reference to a user
 
 
 --
--- TOC entry 6163 (class 0 OID 0)
--- Dependencies: 299
+-- TOC entry 6186 (class 0 OID 0)
+-- Dependencies: 309
 -- Name: COLUMN loan_status.status; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18773,8 +20136,8 @@ COMMENT ON COLUMN darwin2.loan_status.status IS 'Current status of the loan in a
 
 
 --
--- TOC entry 6164 (class 0 OID 0)
--- Dependencies: 299
+-- TOC entry 6187 (class 0 OID 0)
+-- Dependencies: 309
 -- Name: COLUMN loan_status.modification_date_time; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18782,8 +20145,8 @@ COMMENT ON COLUMN darwin2.loan_status.modification_date_time IS 'date of the mod
 
 
 --
--- TOC entry 6165 (class 0 OID 0)
--- Dependencies: 299
+-- TOC entry 6188 (class 0 OID 0)
+-- Dependencies: 309
 -- Name: COLUMN loan_status.comment; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18791,8 +20154,8 @@ COMMENT ON COLUMN darwin2.loan_status.comment IS 'comment of the status modifica
 
 
 --
--- TOC entry 6166 (class 0 OID 0)
--- Dependencies: 299
+-- TOC entry 6189 (class 0 OID 0)
+-- Dependencies: 309
 -- Name: COLUMN loan_status.is_last; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18800,7 +20163,7 @@ COMMENT ON COLUMN darwin2.loan_status.is_last IS 'flag telling which line is the
 
 
 --
--- TOC entry 300 (class 1259 OID 4816955)
+-- TOC entry 310 (class 1259 OID 4816955)
 -- Name: loans_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -18815,7 +20178,7 @@ CREATE SEQUENCE darwin2.loans_id_seq
 ALTER TABLE darwin2.loans_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 301 (class 1259 OID 4816957)
+-- TOC entry 311 (class 1259 OID 4816957)
 -- Name: loans; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -18833,8 +20196,8 @@ CREATE TABLE darwin2.loans (
 ALTER TABLE darwin2.loans OWNER TO darwin2;
 
 --
--- TOC entry 6169 (class 0 OID 0)
--- Dependencies: 301
+-- TOC entry 6192 (class 0 OID 0)
+-- Dependencies: 311
 -- Name: TABLE loans; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18842,8 +20205,8 @@ COMMENT ON TABLE darwin2.loans IS 'Table holding an entire loan made of multiple
 
 
 --
--- TOC entry 6170 (class 0 OID 0)
--- Dependencies: 301
+-- TOC entry 6193 (class 0 OID 0)
+-- Dependencies: 311
 -- Name: COLUMN loans.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18851,8 +20214,8 @@ COMMENT ON COLUMN darwin2.loans.id IS 'Unique identifier of record';
 
 
 --
--- TOC entry 6171 (class 0 OID 0)
--- Dependencies: 301
+-- TOC entry 6194 (class 0 OID 0)
+-- Dependencies: 311
 -- Name: COLUMN loans.name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18860,8 +20223,8 @@ COMMENT ON COLUMN darwin2.loans.name IS 'Global name of the loan. May be a sort 
 
 
 --
--- TOC entry 6172 (class 0 OID 0)
--- Dependencies: 301
+-- TOC entry 6195 (class 0 OID 0)
+-- Dependencies: 311
 -- Name: COLUMN loans.description; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18869,8 +20232,8 @@ COMMENT ON COLUMN darwin2.loans.description IS 'Description of the meaning of th
 
 
 --
--- TOC entry 6173 (class 0 OID 0)
--- Dependencies: 301
+-- TOC entry 6196 (class 0 OID 0)
+-- Dependencies: 311
 -- Name: COLUMN loans.from_date; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18878,8 +20241,8 @@ COMMENT ON COLUMN darwin2.loans.from_date IS 'Date of the start of the loan';
 
 
 --
--- TOC entry 6174 (class 0 OID 0)
--- Dependencies: 301
+-- TOC entry 6197 (class 0 OID 0)
+-- Dependencies: 311
 -- Name: COLUMN loans.to_date; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18887,8 +20250,8 @@ COMMENT ON COLUMN darwin2.loans.to_date IS 'Planned date of the end of the loan'
 
 
 --
--- TOC entry 6175 (class 0 OID 0)
--- Dependencies: 301
+-- TOC entry 6198 (class 0 OID 0)
+-- Dependencies: 311
 -- Name: COLUMN loans.search_indexed; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18896,7 +20259,7 @@ COMMENT ON COLUMN darwin2.loans.search_indexed IS 'indexed getting Description a
 
 
 --
--- TOC entry 302 (class 1259 OID 4816966)
+-- TOC entry 312 (class 1259 OID 4816966)
 -- Name: mineralogy_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -18911,7 +20274,7 @@ CREATE SEQUENCE darwin2.mineralogy_id_seq
 ALTER TABLE darwin2.mineralogy_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 303 (class 1259 OID 4816968)
+-- TOC entry 313 (class 1259 OID 4816968)
 -- Name: mineralogy; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -18930,8 +20293,8 @@ INHERITS (darwin2.template_classifications);
 ALTER TABLE darwin2.mineralogy OWNER TO darwin2;
 
 --
--- TOC entry 6177 (class 0 OID 0)
--- Dependencies: 303
+-- TOC entry 6200 (class 0 OID 0)
+-- Dependencies: 313
 -- Name: TABLE mineralogy; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18939,8 +20302,8 @@ COMMENT ON TABLE darwin2.mineralogy IS 'List of mineralogic units';
 
 
 --
--- TOC entry 6178 (class 0 OID 0)
--- Dependencies: 303
+-- TOC entry 6201 (class 0 OID 0)
+-- Dependencies: 313
 -- Name: COLUMN mineralogy.name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18948,8 +20311,8 @@ COMMENT ON COLUMN darwin2.mineralogy.name IS 'Classification unit name';
 
 
 --
--- TOC entry 6179 (class 0 OID 0)
--- Dependencies: 303
+-- TOC entry 6202 (class 0 OID 0)
+-- Dependencies: 313
 -- Name: COLUMN mineralogy.name_indexed; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18957,8 +20320,8 @@ COMMENT ON COLUMN darwin2.mineralogy.name_indexed IS 'Indexed form of name field
 
 
 --
--- TOC entry 6180 (class 0 OID 0)
--- Dependencies: 303
+-- TOC entry 6203 (class 0 OID 0)
+-- Dependencies: 313
 -- Name: COLUMN mineralogy.level_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18966,8 +20329,8 @@ COMMENT ON COLUMN darwin2.mineralogy.level_ref IS 'Reference of classification l
 
 
 --
--- TOC entry 6181 (class 0 OID 0)
--- Dependencies: 303
+-- TOC entry 6204 (class 0 OID 0)
+-- Dependencies: 313
 -- Name: COLUMN mineralogy.status; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18975,8 +20338,8 @@ COMMENT ON COLUMN darwin2.mineralogy.status IS 'Validitiy status: valid, invalid
 
 
 --
--- TOC entry 6182 (class 0 OID 0)
--- Dependencies: 303
+-- TOC entry 6205 (class 0 OID 0)
+-- Dependencies: 313
 -- Name: COLUMN mineralogy.path; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18984,8 +20347,8 @@ COMMENT ON COLUMN darwin2.mineralogy.path IS 'Hierarchy path (/ for root)';
 
 
 --
--- TOC entry 6183 (class 0 OID 0)
--- Dependencies: 303
+-- TOC entry 6206 (class 0 OID 0)
+-- Dependencies: 313
 -- Name: COLUMN mineralogy.parent_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -18993,8 +20356,8 @@ COMMENT ON COLUMN darwin2.mineralogy.parent_ref IS 'Id of parent - id field from
 
 
 --
--- TOC entry 6184 (class 0 OID 0)
--- Dependencies: 303
+-- TOC entry 6207 (class 0 OID 0)
+-- Dependencies: 313
 -- Name: COLUMN mineralogy.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19002,8 +20365,8 @@ COMMENT ON COLUMN darwin2.mineralogy.id IS 'Unique identifier of a classificatio
 
 
 --
--- TOC entry 6185 (class 0 OID 0)
--- Dependencies: 303
+-- TOC entry 6208 (class 0 OID 0)
+-- Dependencies: 313
 -- Name: COLUMN mineralogy.code; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19011,8 +20374,8 @@ COMMENT ON COLUMN darwin2.mineralogy.code IS 'Classification code given to miner
 
 
 --
--- TOC entry 6186 (class 0 OID 0)
--- Dependencies: 303
+-- TOC entry 6209 (class 0 OID 0)
+-- Dependencies: 313
 -- Name: COLUMN mineralogy.classification; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19020,8 +20383,8 @@ COMMENT ON COLUMN darwin2.mineralogy.classification IS 'Classification system us
 
 
 --
--- TOC entry 6187 (class 0 OID 0)
--- Dependencies: 303
+-- TOC entry 6210 (class 0 OID 0)
+-- Dependencies: 313
 -- Name: COLUMN mineralogy.formule; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19029,8 +20392,8 @@ COMMENT ON COLUMN darwin2.mineralogy.formule IS 'Chemical formulation';
 
 
 --
--- TOC entry 6188 (class 0 OID 0)
--- Dependencies: 303
+-- TOC entry 6211 (class 0 OID 0)
+-- Dependencies: 313
 -- Name: COLUMN mineralogy.formule_indexed; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19038,8 +20401,8 @@ COMMENT ON COLUMN darwin2.mineralogy.formule_indexed IS 'Indexed form of foumule
 
 
 --
--- TOC entry 6189 (class 0 OID 0)
--- Dependencies: 303
+-- TOC entry 6212 (class 0 OID 0)
+-- Dependencies: 313
 -- Name: COLUMN mineralogy.cristal_system; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19047,7 +20410,7 @@ COMMENT ON COLUMN darwin2.mineralogy.cristal_system IS 'Cristal system defining 
 
 
 --
--- TOC entry 304 (class 1259 OID 4816980)
+-- TOC entry 314 (class 1259 OID 4816980)
 -- Name: multimedia_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -19062,7 +20425,7 @@ CREATE SEQUENCE darwin2.multimedia_id_seq
 ALTER TABLE darwin2.multimedia_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 305 (class 1259 OID 4816982)
+-- TOC entry 315 (class 1259 OID 4816982)
 -- Name: multimedia; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -19089,8 +20452,8 @@ INHERITS (darwin2.template_table_record_ref);
 ALTER TABLE darwin2.multimedia OWNER TO darwin2;
 
 --
--- TOC entry 6192 (class 0 OID 0)
--- Dependencies: 305
+-- TOC entry 6215 (class 0 OID 0)
+-- Dependencies: 315
 -- Name: TABLE multimedia; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19098,8 +20461,8 @@ COMMENT ON TABLE darwin2.multimedia IS 'Stores all multimedia objects encoded in
 
 
 --
--- TOC entry 6193 (class 0 OID 0)
--- Dependencies: 305
+-- TOC entry 6216 (class 0 OID 0)
+-- Dependencies: 315
 -- Name: COLUMN multimedia.referenced_relation; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19107,8 +20470,8 @@ COMMENT ON COLUMN darwin2.multimedia.referenced_relation IS 'Reference-Name of t
 
 
 --
--- TOC entry 6194 (class 0 OID 0)
--- Dependencies: 305
+-- TOC entry 6217 (class 0 OID 0)
+-- Dependencies: 315
 -- Name: COLUMN multimedia.record_id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19116,8 +20479,8 @@ COMMENT ON COLUMN darwin2.multimedia.record_id IS 'Identifier of record concerne
 
 
 --
--- TOC entry 6195 (class 0 OID 0)
--- Dependencies: 305
+-- TOC entry 6218 (class 0 OID 0)
+-- Dependencies: 315
 -- Name: COLUMN multimedia.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19125,8 +20488,8 @@ COMMENT ON COLUMN darwin2.multimedia.id IS 'Unique identifier of a multimedia ob
 
 
 --
--- TOC entry 6196 (class 0 OID 0)
--- Dependencies: 305
+-- TOC entry 6219 (class 0 OID 0)
+-- Dependencies: 315
 -- Name: COLUMN multimedia.is_digital; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19134,8 +20497,8 @@ COMMENT ON COLUMN darwin2.multimedia.is_digital IS 'Flag telling if the object i
 
 
 --
--- TOC entry 6197 (class 0 OID 0)
--- Dependencies: 305
+-- TOC entry 6220 (class 0 OID 0)
+-- Dependencies: 315
 -- Name: COLUMN multimedia.type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19143,8 +20506,8 @@ COMMENT ON COLUMN darwin2.multimedia.type IS 'Main multimedia object type: image
 
 
 --
--- TOC entry 6198 (class 0 OID 0)
--- Dependencies: 305
+-- TOC entry 6221 (class 0 OID 0)
+-- Dependencies: 315
 -- Name: COLUMN multimedia.sub_type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19152,8 +20515,8 @@ COMMENT ON COLUMN darwin2.multimedia.sub_type IS 'Characterization of object typ
 
 
 --
--- TOC entry 6199 (class 0 OID 0)
--- Dependencies: 305
+-- TOC entry 6222 (class 0 OID 0)
+-- Dependencies: 315
 -- Name: COLUMN multimedia.title; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19161,8 +20524,8 @@ COMMENT ON COLUMN darwin2.multimedia.title IS 'Title of the multimedia object';
 
 
 --
--- TOC entry 6200 (class 0 OID 0)
--- Dependencies: 305
+-- TOC entry 6223 (class 0 OID 0)
+-- Dependencies: 315
 -- Name: COLUMN multimedia.description; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19170,8 +20533,8 @@ COMMENT ON COLUMN darwin2.multimedia.description IS 'Description of the current 
 
 
 --
--- TOC entry 6201 (class 0 OID 0)
--- Dependencies: 305
+-- TOC entry 6224 (class 0 OID 0)
+-- Dependencies: 315
 -- Name: COLUMN multimedia.uri; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19179,8 +20542,8 @@ COMMENT ON COLUMN darwin2.multimedia.uri IS 'URI of object if digital';
 
 
 --
--- TOC entry 6202 (class 0 OID 0)
--- Dependencies: 305
+-- TOC entry 6225 (class 0 OID 0)
+-- Dependencies: 315
 -- Name: COLUMN multimedia.filename; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19188,8 +20551,8 @@ COMMENT ON COLUMN darwin2.multimedia.filename IS 'The original name of the saved
 
 
 --
--- TOC entry 6203 (class 0 OID 0)
--- Dependencies: 305
+-- TOC entry 6226 (class 0 OID 0)
+-- Dependencies: 315
 -- Name: COLUMN multimedia.creation_date; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19197,8 +20560,8 @@ COMMENT ON COLUMN darwin2.multimedia.creation_date IS 'Object creation date';
 
 
 --
--- TOC entry 6204 (class 0 OID 0)
--- Dependencies: 305
+-- TOC entry 6227 (class 0 OID 0)
+-- Dependencies: 315
 -- Name: COLUMN multimedia.creation_date_mask; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19206,8 +20569,8 @@ COMMENT ON COLUMN darwin2.multimedia.creation_date_mask IS 'Mask used for object
 
 
 --
--- TOC entry 6205 (class 0 OID 0)
--- Dependencies: 305
+-- TOC entry 6228 (class 0 OID 0)
+-- Dependencies: 315
 -- Name: COLUMN multimedia.mime_type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19215,8 +20578,8 @@ COMMENT ON COLUMN darwin2.multimedia.mime_type IS 'Mime/Type of the linked digit
 
 
 --
--- TOC entry 6206 (class 0 OID 0)
--- Dependencies: 305
+-- TOC entry 6229 (class 0 OID 0)
+-- Dependencies: 315
 -- Name: COLUMN multimedia.visible; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19224,8 +20587,8 @@ COMMENT ON COLUMN darwin2.multimedia.visible IS 'Flag telling if the related fil
 
 
 --
--- TOC entry 6207 (class 0 OID 0)
--- Dependencies: 305
+-- TOC entry 6230 (class 0 OID 0)
+-- Dependencies: 315
 -- Name: COLUMN multimedia.publishable; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19233,8 +20596,8 @@ COMMENT ON COLUMN darwin2.multimedia.publishable IS 'Flag telling if the related
 
 
 --
--- TOC entry 6208 (class 0 OID 0)
--- Dependencies: 305
+-- TOC entry 6231 (class 0 OID 0)
+-- Dependencies: 315
 -- Name: COLUMN multimedia.search_indexed; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19242,7 +20605,7 @@ COMMENT ON COLUMN darwin2.multimedia.search_indexed IS 'indexed form of title an
 
 
 --
--- TOC entry 306 (class 1259 OID 4816996)
+-- TOC entry 316 (class 1259 OID 4816996)
 -- Name: multimedia_todelete; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -19255,8 +20618,8 @@ CREATE TABLE darwin2.multimedia_todelete (
 ALTER TABLE darwin2.multimedia_todelete OWNER TO darwin2;
 
 --
--- TOC entry 6210 (class 0 OID 0)
--- Dependencies: 306
+-- TOC entry 6233 (class 0 OID 0)
+-- Dependencies: 316
 -- Name: TABLE multimedia_todelete; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19264,8 +20627,8 @@ COMMENT ON TABLE darwin2.multimedia_todelete IS 'Table here to save deleted mult
 
 
 --
--- TOC entry 6211 (class 0 OID 0)
--- Dependencies: 306
+-- TOC entry 6234 (class 0 OID 0)
+-- Dependencies: 316
 -- Name: COLUMN multimedia_todelete.uri; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19273,7 +20636,7 @@ COMMENT ON COLUMN darwin2.multimedia_todelete.uri IS 'URI of the file to delete'
 
 
 --
--- TOC entry 307 (class 1259 OID 4817002)
+-- TOC entry 317 (class 1259 OID 4817002)
 -- Name: multimedia_todelete_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -19288,8 +20651,8 @@ CREATE SEQUENCE darwin2.multimedia_todelete_id_seq
 ALTER TABLE darwin2.multimedia_todelete_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 6213 (class 0 OID 0)
--- Dependencies: 307
+-- TOC entry 6236 (class 0 OID 0)
+-- Dependencies: 317
 -- Name: multimedia_todelete_id_seq; Type: SEQUENCE OWNED BY; Schema: darwin2; Owner: darwin2
 --
 
@@ -19297,7 +20660,7 @@ ALTER SEQUENCE darwin2.multimedia_todelete_id_seq OWNED BY darwin2.multimedia_to
 
 
 --
--- TOC entry 427 (class 1259 OID 5308577)
+-- TOC entry 437 (class 1259 OID 5308577)
 -- Name: tag_authority; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -19321,8 +20684,8 @@ CREATE TABLE darwin2.tag_authority (
 ALTER TABLE darwin2.tag_authority OWNER TO darwin2;
 
 --
--- TOC entry 6215 (class 0 OID 0)
--- Dependencies: 427
+-- TOC entry 6238 (class 0 OID 0)
+-- Dependencies: 437
 -- Name: TABLE tag_authority; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19330,8 +20693,8 @@ COMMENT ON TABLE darwin2.tag_authority IS 'Formal representations of tags used i
 
 
 --
--- TOC entry 6216 (class 0 OID 0)
--- Dependencies: 427
+-- TOC entry 6239 (class 0 OID 0)
+-- Dependencies: 437
 -- Name: COLUMN tag_authority.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19339,8 +20702,8 @@ COMMENT ON COLUMN darwin2.tag_authority.id IS 'Primary key of the authoritative 
 
 
 --
--- TOC entry 6217 (class 0 OID 0)
--- Dependencies: 427
+-- TOC entry 6240 (class 0 OID 0)
+-- Dependencies: 437
 -- Name: COLUMN tag_authority.domain_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19348,8 +20711,8 @@ COMMENT ON COLUMN darwin2.tag_authority.domain_ref IS 'Reference to the domain t
 
 
 --
--- TOC entry 6218 (class 0 OID 0)
--- Dependencies: 427
+-- TOC entry 6241 (class 0 OID 0)
+-- Dependencies: 437
 -- Name: COLUMN tag_authority.source; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19357,8 +20720,8 @@ COMMENT ON COLUMN darwin2.tag_authority.source IS 'A gazetter might have aggrega
 
 
 --
--- TOC entry 6219 (class 0 OID 0)
--- Dependencies: 427
+-- TOC entry 6242 (class 0 OID 0)
+-- Dependencies: 437
 -- Name: COLUMN tag_authority.url; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19366,8 +20729,8 @@ COMMENT ON COLUMN darwin2.tag_authority.url IS 'The url of the authority entry. 
 
 
 --
--- TOC entry 6220 (class 0 OID 0)
--- Dependencies: 427
+-- TOC entry 6243 (class 0 OID 0)
+-- Dependencies: 437
 -- Name: COLUMN tag_authority.urn; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19375,8 +20738,8 @@ COMMENT ON COLUMN darwin2.tag_authority.urn IS 'The urn or pseudo-urn of the aut
 
 
 --
--- TOC entry 6221 (class 0 OID 0)
--- Dependencies: 427
+-- TOC entry 6244 (class 0 OID 0)
+-- Dependencies: 437
 -- Name: COLUMN tag_authority.code; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19384,8 +20747,8 @@ COMMENT ON COLUMN darwin2.tag_authority.code IS 'The internal identifier used in
 
 
 --
--- TOC entry 6222 (class 0 OID 0)
--- Dependencies: 427
+-- TOC entry 6245 (class 0 OID 0)
+-- Dependencies: 437
 -- Name: COLUMN tag_authority.type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19393,8 +20756,8 @@ COMMENT ON COLUMN darwin2.tag_authority.type IS 'An array of the most specific t
 
 
 --
--- TOC entry 6223 (class 0 OID 0)
--- Dependencies: 427
+-- TOC entry 6246 (class 0 OID 0)
+-- Dependencies: 437
 -- Name: COLUMN tag_authority.pref_label; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19402,8 +20765,8 @@ COMMENT ON COLUMN darwin2.tag_authority.pref_label IS 'The principal name used f
 
 
 --
--- TOC entry 6224 (class 0 OID 0)
--- Dependencies: 427
+-- TOC entry 6247 (class 0 OID 0)
+-- Dependencies: 437
 -- Name: COLUMN tag_authority.definition; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19411,8 +20774,8 @@ COMMENT ON COLUMN darwin2.tag_authority.definition IS 'The definition of the ter
 
 
 --
--- TOC entry 6225 (class 0 OID 0)
--- Dependencies: 427
+-- TOC entry 6248 (class 0 OID 0)
+-- Dependencies: 437
 -- Name: COLUMN tag_authority.synonyms; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19420,8 +20783,8 @@ COMMENT ON COLUMN darwin2.tag_authority.synonyms IS 'A flat array containing syn
 
 
 --
--- TOC entry 6226 (class 0 OID 0)
--- Dependencies: 427
+-- TOC entry 6249 (class 0 OID 0)
+-- Dependencies: 437
 -- Name: COLUMN tag_authority.language_variants; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19429,8 +20792,8 @@ COMMENT ON COLUMN darwin2.tag_authority.language_variants IS 'An associative arr
 
 
 --
--- TOC entry 6227 (class 0 OID 0)
--- Dependencies: 427
+-- TOC entry 6250 (class 0 OID 0)
+-- Dependencies: 437
 -- Name: COLUMN tag_authority.alternative_representations; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19438,7 +20801,7 @@ COMMENT ON COLUMN darwin2.tag_authority.alternative_representations IS 'An assoc
 
 
 --
--- TOC entry 423 (class 1259 OID 5308546)
+-- TOC entry 433 (class 1259 OID 5308546)
 -- Name: tag_group_distinct; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -19453,8 +20816,8 @@ CREATE TABLE darwin2.tag_group_distinct (
 ALTER TABLE darwin2.tag_group_distinct OWNER TO darwin2;
 
 --
--- TOC entry 6229 (class 0 OID 0)
--- Dependencies: 423
+-- TOC entry 6252 (class 0 OID 0)
+-- Dependencies: 433
 -- Name: TABLE tag_group_distinct; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19462,8 +20825,8 @@ COMMENT ON TABLE darwin2.tag_group_distinct IS 'List of all distinct tags';
 
 
 --
--- TOC entry 6230 (class 0 OID 0)
--- Dependencies: 423
+-- TOC entry 6253 (class 0 OID 0)
+-- Dependencies: 433
 -- Name: COLUMN tag_group_distinct.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19471,8 +20834,8 @@ COMMENT ON COLUMN darwin2.tag_group_distinct.id IS 'Unique identifier of a tag v
 
 
 --
--- TOC entry 6231 (class 0 OID 0)
--- Dependencies: 423
+-- TOC entry 6254 (class 0 OID 0)
+-- Dependencies: 433
 -- Name: COLUMN tag_group_distinct.sub_group_name_indexed; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19480,8 +20843,8 @@ COMMENT ON COLUMN darwin2.tag_group_distinct.sub_group_name_indexed IS 'Referenc
 
 
 --
--- TOC entry 6232 (class 0 OID 0)
--- Dependencies: 423
+-- TOC entry 6255 (class 0 OID 0)
+-- Dependencies: 433
 -- Name: COLUMN tag_group_distinct.group_name_indexed; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19489,8 +20852,8 @@ COMMENT ON COLUMN darwin2.tag_group_distinct.group_name_indexed IS 'Reference to
 
 
 --
--- TOC entry 6233 (class 0 OID 0)
--- Dependencies: 423
+-- TOC entry 6256 (class 0 OID 0)
+-- Dependencies: 433
 -- Name: COLUMN tag_group_distinct.tag_value; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19498,7 +20861,7 @@ COMMENT ON COLUMN darwin2.tag_group_distinct.tag_value IS 'Textual value of the 
 
 
 --
--- TOC entry 365 (class 1259 OID 4817347)
+-- TOC entry 375 (class 1259 OID 4817347)
 -- Name: tag_groups_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -19513,7 +20876,7 @@ CREATE SEQUENCE darwin2.tag_groups_id_seq
 ALTER TABLE darwin2.tag_groups_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 366 (class 1259 OID 4817349)
+-- TOC entry 376 (class 1259 OID 4817349)
 -- Name: tag_groups; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -19527,15 +20890,15 @@ CREATE TABLE darwin2.tag_groups (
     color character varying DEFAULT '#FFFFFF'::character varying NOT NULL,
     tag_value character varying NOT NULL,
     international_name text DEFAULT ''::text NOT NULL,
-    tag_group_distinct_ref bigint NOT NULL
+    tag_group_distinct_ref bigint
 );
 
 
 ALTER TABLE darwin2.tag_groups OWNER TO darwin2;
 
 --
--- TOC entry 6235 (class 0 OID 0)
--- Dependencies: 366
+-- TOC entry 6258 (class 0 OID 0)
+-- Dependencies: 376
 -- Name: TABLE tag_groups; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19543,8 +20906,8 @@ COMMENT ON TABLE darwin2.tag_groups IS 'List of grouped tags';
 
 
 --
--- TOC entry 6236 (class 0 OID 0)
--- Dependencies: 366
+-- TOC entry 6259 (class 0 OID 0)
+-- Dependencies: 376
 -- Name: COLUMN tag_groups.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19552,8 +20915,8 @@ COMMENT ON COLUMN darwin2.tag_groups.id IS 'Unique identifier of a grouped tag';
 
 
 --
--- TOC entry 6237 (class 0 OID 0)
--- Dependencies: 366
+-- TOC entry 6260 (class 0 OID 0)
+-- Dependencies: 376
 -- Name: COLUMN tag_groups.gtu_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19561,8 +20924,8 @@ COMMENT ON COLUMN darwin2.tag_groups.gtu_ref IS 'Reference to a Gtu';
 
 
 --
--- TOC entry 6238 (class 0 OID 0)
--- Dependencies: 366
+-- TOC entry 6261 (class 0 OID 0)
+-- Dependencies: 376
 -- Name: COLUMN tag_groups.group_name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19570,8 +20933,8 @@ COMMENT ON COLUMN darwin2.tag_groups.group_name IS 'Group name under which the t
 
 
 --
--- TOC entry 6239 (class 0 OID 0)
--- Dependencies: 366
+-- TOC entry 6262 (class 0 OID 0)
+-- Dependencies: 376
 -- Name: COLUMN tag_groups.group_name_indexed; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19579,8 +20942,8 @@ COMMENT ON COLUMN darwin2.tag_groups.group_name_indexed IS 'Indexed form of a gr
 
 
 --
--- TOC entry 6240 (class 0 OID 0)
--- Dependencies: 366
+-- TOC entry 6263 (class 0 OID 0)
+-- Dependencies: 376
 -- Name: COLUMN tag_groups.sub_group_name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19588,8 +20951,8 @@ COMMENT ON COLUMN darwin2.tag_groups.sub_group_name IS 'Sub-Group name under whi
 
 
 --
--- TOC entry 6241 (class 0 OID 0)
--- Dependencies: 366
+-- TOC entry 6264 (class 0 OID 0)
+-- Dependencies: 376
 -- Name: COLUMN tag_groups.sub_group_name_indexed; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19597,8 +20960,8 @@ COMMENT ON COLUMN darwin2.tag_groups.sub_group_name_indexed IS 'Indexed form of 
 
 
 --
--- TOC entry 6242 (class 0 OID 0)
--- Dependencies: 366
+-- TOC entry 6265 (class 0 OID 0)
+-- Dependencies: 376
 -- Name: COLUMN tag_groups.color; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19606,8 +20969,8 @@ COMMENT ON COLUMN darwin2.tag_groups.color IS 'Color associated to the group con
 
 
 --
--- TOC entry 6243 (class 0 OID 0)
--- Dependencies: 366
+-- TOC entry 6266 (class 0 OID 0)
+-- Dependencies: 376
 -- Name: COLUMN tag_groups.tag_value; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19615,8 +20978,8 @@ COMMENT ON COLUMN darwin2.tag_groups.tag_value IS 'Ensemble of Tags';
 
 
 --
--- TOC entry 6244 (class 0 OID 0)
--- Dependencies: 366
+-- TOC entry 6267 (class 0 OID 0)
+-- Dependencies: 376
 -- Name: COLUMN tag_groups.international_name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19624,7 +20987,7 @@ COMMENT ON COLUMN darwin2.tag_groups.international_name IS 'The international(en
 
 
 --
--- TOC entry 428 (class 1259 OID 5308593)
+-- TOC entry 438 (class 1259 OID 5308593)
 -- Name: tag_tag_authority; Type: TABLE; Schema: darwin2; Owner: postgres
 --
 
@@ -19639,8 +21002,8 @@ CREATE TABLE darwin2.tag_tag_authority (
 ALTER TABLE darwin2.tag_tag_authority OWNER TO postgres;
 
 --
--- TOC entry 6246 (class 0 OID 0)
--- Dependencies: 428
+-- TOC entry 6269 (class 0 OID 0)
+-- Dependencies: 438
 -- Name: TABLE tag_tag_authority; Type: COMMENT; Schema: darwin2; Owner: postgres
 --
 
@@ -19648,8 +21011,8 @@ COMMENT ON TABLE darwin2.tag_tag_authority IS 'The coupling table between vocabu
 
 
 --
--- TOC entry 6247 (class 0 OID 0)
--- Dependencies: 428
+-- TOC entry 6270 (class 0 OID 0)
+-- Dependencies: 438
 -- Name: COLUMN tag_tag_authority.tag_authority_ref; Type: COMMENT; Schema: darwin2; Owner: postgres
 --
 
@@ -19657,8 +21020,8 @@ COMMENT ON COLUMN darwin2.tag_tag_authority.tag_authority_ref IS 'Reference to t
 
 
 --
--- TOC entry 6248 (class 0 OID 0)
--- Dependencies: 428
+-- TOC entry 6271 (class 0 OID 0)
+-- Dependencies: 438
 -- Name: COLUMN tag_tag_authority.tag_group_distinct_ref; Type: COMMENT; Schema: darwin2; Owner: postgres
 --
 
@@ -19666,8 +21029,8 @@ COMMENT ON COLUMN darwin2.tag_tag_authority.tag_group_distinct_ref IS 'Reference
 
 
 --
--- TOC entry 6249 (class 0 OID 0)
--- Dependencies: 428
+-- TOC entry 6272 (class 0 OID 0)
+-- Dependencies: 438
 -- Name: COLUMN tag_tag_authority.tag_authority_match_predicate; Type: COMMENT; Schema: darwin2; Owner: postgres
 --
 
@@ -19675,7 +21038,7 @@ COMMENT ON COLUMN darwin2.tag_tag_authority.tag_authority_match_predicate IS 'Pr
 
 
 --
--- TOC entry 429 (class 1259 OID 5308612)
+-- TOC entry 439 (class 1259 OID 5308612)
 -- Name: mv_tag_to_country; Type: MATERIALIZED VIEW; Schema: darwin2; Owner: postgres
 --
 
@@ -19700,7 +21063,7 @@ CREATE MATERIALIZED VIEW darwin2.mv_tag_to_country AS
 ALTER TABLE darwin2.mv_tag_to_country OWNER TO postgres;
 
 --
--- TOC entry 341 (class 1259 OID 4817202)
+-- TOC entry 351 (class 1259 OID 4817202)
 -- Name: specimens; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -19834,8 +21197,8 @@ CREATE TABLE darwin2.specimens (
 ALTER TABLE darwin2.specimens OWNER TO darwin2;
 
 --
--- TOC entry 6252 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6275 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: TABLE specimens; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19843,8 +21206,8 @@ COMMENT ON TABLE darwin2.specimens IS 'Specimens or batch of specimens stored in
 
 
 --
--- TOC entry 6253 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6276 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19852,8 +21215,8 @@ COMMENT ON COLUMN darwin2.specimens.id IS 'Unique identifier of a specimen or ba
 
 
 --
--- TOC entry 6254 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6277 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.category; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19861,8 +21224,8 @@ COMMENT ON COLUMN darwin2.specimens.category IS 'Type of specimen encoded: a phy
 
 
 --
--- TOC entry 6255 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6278 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.collection_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19870,8 +21233,8 @@ COMMENT ON COLUMN darwin2.specimens.collection_ref IS 'Reference of collection t
 
 
 --
--- TOC entry 6256 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6279 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.expedition_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19879,8 +21242,8 @@ COMMENT ON COLUMN darwin2.specimens.expedition_ref IS 'When acquisition category
 
 
 --
--- TOC entry 6257 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6280 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.gtu_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19888,8 +21251,8 @@ COMMENT ON COLUMN darwin2.specimens.gtu_ref IS 'Reference of the sampling locati
 
 
 --
--- TOC entry 6258 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6281 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.taxon_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19897,8 +21260,8 @@ COMMENT ON COLUMN darwin2.specimens.taxon_ref IS 'When encoding a ''living'' spe
 
 
 --
--- TOC entry 6259 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6282 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.litho_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19906,8 +21269,8 @@ COMMENT ON COLUMN darwin2.specimens.litho_ref IS 'When encoding a rock, mineral 
 
 
 --
--- TOC entry 6260 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6283 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.chrono_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19915,8 +21278,8 @@ COMMENT ON COLUMN darwin2.specimens.chrono_ref IS 'When encoding a rock, mineral
 
 
 --
--- TOC entry 6261 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6284 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.lithology_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19924,8 +21287,8 @@ COMMENT ON COLUMN darwin2.specimens.lithology_ref IS 'Reference of a rock classi
 
 
 --
--- TOC entry 6262 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6285 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.mineral_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19933,8 +21296,8 @@ COMMENT ON COLUMN darwin2.specimens.mineral_ref IS 'Reference of a mineral class
 
 
 --
--- TOC entry 6263 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6286 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.acquisition_category; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19942,8 +21305,8 @@ COMMENT ON COLUMN darwin2.specimens.acquisition_category IS 'Describe how the sp
 
 
 --
--- TOC entry 6264 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6287 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.acquisition_date_mask; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19951,8 +21314,8 @@ COMMENT ON COLUMN darwin2.specimens.acquisition_date_mask IS 'Mask Flag to know 
 
 
 --
--- TOC entry 6265 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6288 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.acquisition_date; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19960,8 +21323,8 @@ COMMENT ON COLUMN darwin2.specimens.acquisition_date IS 'Date Composed (if possi
 
 
 --
--- TOC entry 6266 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6289 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.station_visible; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19969,8 +21332,8 @@ COMMENT ON COLUMN darwin2.specimens.station_visible IS 'Flag telling if the samp
 
 
 --
--- TOC entry 6267 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6290 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.ig_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19978,8 +21341,8 @@ COMMENT ON COLUMN darwin2.specimens.ig_ref IS 'Reference of ig number this speci
 
 
 --
--- TOC entry 6268 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6291 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19987,8 +21350,8 @@ COMMENT ON COLUMN darwin2.specimens.type IS 'Flag indicating if the taxa has bee
 
 
 --
--- TOC entry 6269 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6292 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.type_group; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -19996,8 +21359,8 @@ COMMENT ON COLUMN darwin2.specimens.type_group IS 'For some special status, a co
 
 
 --
--- TOC entry 6270 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6293 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.type_search; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20005,8 +21368,8 @@ COMMENT ON COLUMN darwin2.specimens.type_search IS 'On the interface, the separa
 
 
 --
--- TOC entry 6271 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6294 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.sex; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20014,8 +21377,8 @@ COMMENT ON COLUMN darwin2.specimens.sex IS 'sex: male , female,...';
 
 
 --
--- TOC entry 6272 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6295 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.stage; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20023,8 +21386,8 @@ COMMENT ON COLUMN darwin2.specimens.stage IS 'stage: adult, juvenile,...';
 
 
 --
--- TOC entry 6273 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6296 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.state; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20032,8 +21395,8 @@ COMMENT ON COLUMN darwin2.specimens.state IS 'state - a sex complement: ovigerou
 
 
 --
--- TOC entry 6274 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6297 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.social_status; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20041,8 +21404,8 @@ COMMENT ON COLUMN darwin2.specimens.social_status IS 'For social specimens, give
 
 
 --
--- TOC entry 6275 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6298 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.rock_form; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20050,8 +21413,8 @@ COMMENT ON COLUMN darwin2.specimens.rock_form IS 'For rock specimens, a descript
 
 
 --
--- TOC entry 6276 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6299 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.specimen_part; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20059,8 +21422,8 @@ COMMENT ON COLUMN darwin2.specimens.specimen_part IS 'Description of the part st
 
 
 --
--- TOC entry 6277 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6300 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.complete; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20068,8 +21431,8 @@ COMMENT ON COLUMN darwin2.specimens.complete IS 'Flag telling if specimen is com
 
 
 --
--- TOC entry 6278 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6301 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.building; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20077,8 +21440,8 @@ COMMENT ON COLUMN darwin2.specimens.building IS 'Building the specimen is stored
 
 
 --
--- TOC entry 6279 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6302 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.floor; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20086,8 +21449,8 @@ COMMENT ON COLUMN darwin2.specimens.floor IS 'Floor the specimen is stored in';
 
 
 --
--- TOC entry 6280 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6303 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.room; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20095,8 +21458,8 @@ COMMENT ON COLUMN darwin2.specimens.room IS 'Room the specimen is stored in';
 
 
 --
--- TOC entry 6281 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6304 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens."row"; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20104,8 +21467,8 @@ COMMENT ON COLUMN darwin2.specimens."row" IS 'Row the specimen is stored in';
 
 
 --
--- TOC entry 6282 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6305 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.shelf; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20113,8 +21476,8 @@ COMMENT ON COLUMN darwin2.specimens.shelf IS 'Shelf the specimen is stored in';
 
 
 --
--- TOC entry 6283 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6306 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.container; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20122,8 +21485,8 @@ COMMENT ON COLUMN darwin2.specimens.container IS 'Container the specimen is stor
 
 
 --
--- TOC entry 6284 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6307 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.sub_container; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20131,8 +21494,8 @@ COMMENT ON COLUMN darwin2.specimens.sub_container IS 'Sub-Container the specimen
 
 
 --
--- TOC entry 6285 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6308 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.container_type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20140,8 +21503,8 @@ COMMENT ON COLUMN darwin2.specimens.container_type IS 'Type of container: box, p
 
 
 --
--- TOC entry 6286 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6309 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.sub_container_type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20149,8 +21512,8 @@ COMMENT ON COLUMN darwin2.specimens.sub_container_type IS 'Type of sub-container
 
 
 --
--- TOC entry 6287 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6310 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.container_storage; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20158,8 +21521,8 @@ COMMENT ON COLUMN darwin2.specimens.container_storage IS 'Conservative medium us
 
 
 --
--- TOC entry 6288 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6311 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.sub_container_storage; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20167,8 +21530,8 @@ COMMENT ON COLUMN darwin2.specimens.sub_container_storage IS 'Conservative mediu
 
 
 --
--- TOC entry 6289 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6312 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.surnumerary; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20176,8 +21539,8 @@ COMMENT ON COLUMN darwin2.specimens.surnumerary IS 'Tells if this specimen has b
 
 
 --
--- TOC entry 6290 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6313 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.specimen_status; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20185,8 +21548,8 @@ COMMENT ON COLUMN darwin2.specimens.specimen_status IS 'Specimen status: good st
 
 
 --
--- TOC entry 6291 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6314 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.specimen_count_min; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20194,8 +21557,8 @@ COMMENT ON COLUMN darwin2.specimens.specimen_count_min IS 'Minimum number of spe
 
 
 --
--- TOC entry 6292 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6315 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.specimen_count_max; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20203,8 +21566,8 @@ COMMENT ON COLUMN darwin2.specimens.specimen_count_max IS 'Maximum number of spe
 
 
 --
--- TOC entry 6293 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6316 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.gtu_from_date_mask; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20212,8 +21575,8 @@ COMMENT ON COLUMN darwin2.specimens.gtu_from_date_mask IS 'Mask Flag to know wic
 
 
 --
--- TOC entry 6294 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6317 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.gtu_from_date; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20221,8 +21584,8 @@ COMMENT ON COLUMN darwin2.specimens.gtu_from_date IS 'composed from date of the 
 
 
 --
--- TOC entry 6295 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6318 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.gtu_to_date_mask; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20230,8 +21593,8 @@ COMMENT ON COLUMN darwin2.specimens.gtu_to_date_mask IS 'Mask Flag to know wich 
 
 
 --
--- TOC entry 6296 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6319 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: COLUMN specimens.gtu_to_date; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20239,7 +21602,7 @@ COMMENT ON COLUMN darwin2.specimens.gtu_to_date IS 'composed to date of the GTU'
 
 
 --
--- TOC entry 314 (class 1259 OID 4817057)
+-- TOC entry 324 (class 1259 OID 4817057)
 -- Name: template_people; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -20263,8 +21626,8 @@ CREATE TABLE darwin2.template_people (
 ALTER TABLE darwin2.template_people OWNER TO darwin2;
 
 --
--- TOC entry 6298 (class 0 OID 0)
--- Dependencies: 314
+-- TOC entry 6321 (class 0 OID 0)
+-- Dependencies: 324
 -- Name: TABLE template_people; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20272,8 +21635,8 @@ COMMENT ON TABLE darwin2.template_people IS 'Template table used to describe use
 
 
 --
--- TOC entry 6299 (class 0 OID 0)
--- Dependencies: 314
+-- TOC entry 6322 (class 0 OID 0)
+-- Dependencies: 324
 -- Name: COLUMN template_people.is_physical; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20281,8 +21644,8 @@ COMMENT ON COLUMN darwin2.template_people.is_physical IS 'Type of user/person: p
 
 
 --
--- TOC entry 6300 (class 0 OID 0)
--- Dependencies: 314
+-- TOC entry 6323 (class 0 OID 0)
+-- Dependencies: 324
 -- Name: COLUMN template_people.sub_type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20290,8 +21653,8 @@ COMMENT ON COLUMN darwin2.template_people.sub_type IS 'Used for moral user/perso
 
 
 --
--- TOC entry 6301 (class 0 OID 0)
--- Dependencies: 314
+-- TOC entry 6324 (class 0 OID 0)
+-- Dependencies: 324
 -- Name: COLUMN template_people.formated_name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20299,8 +21662,8 @@ COMMENT ON COLUMN darwin2.template_people.formated_name IS 'Complete user/person
 
 
 --
--- TOC entry 6302 (class 0 OID 0)
--- Dependencies: 314
+-- TOC entry 6325 (class 0 OID 0)
+-- Dependencies: 324
 -- Name: COLUMN template_people.formated_name_indexed; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20308,8 +21671,8 @@ COMMENT ON COLUMN darwin2.template_people.formated_name_indexed IS 'Indexed form
 
 
 --
--- TOC entry 6303 (class 0 OID 0)
--- Dependencies: 314
+-- TOC entry 6326 (class 0 OID 0)
+-- Dependencies: 324
 -- Name: COLUMN template_people.formated_name_unique; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20317,8 +21680,8 @@ COMMENT ON COLUMN darwin2.template_people.formated_name_unique IS 'Indexed form 
 
 
 --
--- TOC entry 6304 (class 0 OID 0)
--- Dependencies: 314
+-- TOC entry 6327 (class 0 OID 0)
+-- Dependencies: 324
 -- Name: COLUMN template_people.title; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20326,8 +21689,8 @@ COMMENT ON COLUMN darwin2.template_people.title IS 'Title of a physical user/per
 
 
 --
--- TOC entry 6305 (class 0 OID 0)
--- Dependencies: 314
+-- TOC entry 6328 (class 0 OID 0)
+-- Dependencies: 324
 -- Name: COLUMN template_people.family_name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20335,8 +21698,8 @@ COMMENT ON COLUMN darwin2.template_people.family_name IS 'Family name for physic
 
 
 --
--- TOC entry 6306 (class 0 OID 0)
--- Dependencies: 314
+-- TOC entry 6329 (class 0 OID 0)
+-- Dependencies: 324
 -- Name: COLUMN template_people.given_name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20344,8 +21707,8 @@ COMMENT ON COLUMN darwin2.template_people.given_name IS 'User/person''s given na
 
 
 --
--- TOC entry 6307 (class 0 OID 0)
--- Dependencies: 314
+-- TOC entry 6330 (class 0 OID 0)
+-- Dependencies: 324
 -- Name: COLUMN template_people.additional_names; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20353,8 +21716,8 @@ COMMENT ON COLUMN darwin2.template_people.additional_names IS 'Any additional na
 
 
 --
--- TOC entry 6308 (class 0 OID 0)
--- Dependencies: 314
+-- TOC entry 6331 (class 0 OID 0)
+-- Dependencies: 324
 -- Name: COLUMN template_people.birth_date_mask; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20362,8 +21725,8 @@ COMMENT ON COLUMN darwin2.template_people.birth_date_mask IS 'Contains the Mask 
 
 
 --
--- TOC entry 6309 (class 0 OID 0)
--- Dependencies: 314
+-- TOC entry 6332 (class 0 OID 0)
+-- Dependencies: 324
 -- Name: COLUMN template_people.birth_date; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20371,8 +21734,8 @@ COMMENT ON COLUMN darwin2.template_people.birth_date IS 'Birth/Creation date com
 
 
 --
--- TOC entry 6310 (class 0 OID 0)
--- Dependencies: 314
+-- TOC entry 6333 (class 0 OID 0)
+-- Dependencies: 324
 -- Name: COLUMN template_people.gender; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20380,7 +21743,7 @@ COMMENT ON COLUMN darwin2.template_people.gender IS 'For physical user/persons g
 
 
 --
--- TOC entry 318 (class 1259 OID 4817096)
+-- TOC entry 328 (class 1259 OID 4817096)
 -- Name: template_people_users_comm_common; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -20393,8 +21756,8 @@ CREATE TABLE darwin2.template_people_users_comm_common (
 ALTER TABLE darwin2.template_people_users_comm_common OWNER TO darwin2;
 
 --
--- TOC entry 6312 (class 0 OID 0)
--- Dependencies: 318
+-- TOC entry 6335 (class 0 OID 0)
+-- Dependencies: 328
 -- Name: TABLE template_people_users_comm_common; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20402,8 +21765,8 @@ COMMENT ON TABLE darwin2.template_people_users_comm_common IS 'Template table us
 
 
 --
--- TOC entry 6313 (class 0 OID 0)
--- Dependencies: 318
+-- TOC entry 6336 (class 0 OID 0)
+-- Dependencies: 328
 -- Name: COLUMN template_people_users_comm_common.person_user_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20411,8 +21774,8 @@ COMMENT ON COLUMN darwin2.template_people_users_comm_common.person_user_ref IS '
 
 
 --
--- TOC entry 6314 (class 0 OID 0)
--- Dependencies: 318
+-- TOC entry 6337 (class 0 OID 0)
+-- Dependencies: 328
 -- Name: COLUMN template_people_users_comm_common.entry; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20420,7 +21783,7 @@ COMMENT ON COLUMN darwin2.template_people_users_comm_common.entry IS 'Communicat
 
 
 --
--- TOC entry 377 (class 1259 OID 4817414)
+-- TOC entry 387 (class 1259 OID 4817414)
 -- Name: users_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -20435,7 +21798,7 @@ CREATE SEQUENCE darwin2.users_id_seq
 ALTER TABLE darwin2.users_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 378 (class 1259 OID 4817416)
+-- TOC entry 388 (class 1259 OID 4817416)
 -- Name: users; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -20452,8 +21815,8 @@ INHERITS (darwin2.template_people);
 ALTER TABLE darwin2.users OWNER TO darwin2;
 
 --
--- TOC entry 6317 (class 0 OID 0)
--- Dependencies: 378
+-- TOC entry 6340 (class 0 OID 0)
+-- Dependencies: 388
 -- Name: TABLE users; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20461,8 +21824,8 @@ COMMENT ON TABLE darwin2.users IS 'List all application users';
 
 
 --
--- TOC entry 6318 (class 0 OID 0)
--- Dependencies: 378
+-- TOC entry 6341 (class 0 OID 0)
+-- Dependencies: 388
 -- Name: COLUMN users.is_physical; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20470,8 +21833,8 @@ COMMENT ON COLUMN darwin2.users.is_physical IS 'Type of user: physical or moral 
 
 
 --
--- TOC entry 6319 (class 0 OID 0)
--- Dependencies: 378
+-- TOC entry 6342 (class 0 OID 0)
+-- Dependencies: 388
 -- Name: COLUMN users.sub_type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20479,8 +21842,8 @@ COMMENT ON COLUMN darwin2.users.sub_type IS 'Used for moral users: precise natur
 
 
 --
--- TOC entry 6320 (class 0 OID 0)
--- Dependencies: 378
+-- TOC entry 6343 (class 0 OID 0)
+-- Dependencies: 388
 -- Name: COLUMN users.formated_name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20488,8 +21851,8 @@ COMMENT ON COLUMN darwin2.users.formated_name IS 'Complete user formated name (w
 
 
 --
--- TOC entry 6321 (class 0 OID 0)
--- Dependencies: 378
+-- TOC entry 6344 (class 0 OID 0)
+-- Dependencies: 388
 -- Name: COLUMN users.formated_name_indexed; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20497,8 +21860,8 @@ COMMENT ON COLUMN darwin2.users.formated_name_indexed IS 'Indexed form of format
 
 
 --
--- TOC entry 6322 (class 0 OID 0)
--- Dependencies: 378
+-- TOC entry 6345 (class 0 OID 0)
+-- Dependencies: 388
 -- Name: COLUMN users.formated_name_unique; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20506,8 +21869,8 @@ COMMENT ON COLUMN darwin2.users.formated_name_unique IS 'Indexed form of formate
 
 
 --
--- TOC entry 6323 (class 0 OID 0)
--- Dependencies: 378
+-- TOC entry 6346 (class 0 OID 0)
+-- Dependencies: 388
 -- Name: COLUMN users.title; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20515,8 +21878,8 @@ COMMENT ON COLUMN darwin2.users.title IS 'Title of a physical user/person like M
 
 
 --
--- TOC entry 6324 (class 0 OID 0)
--- Dependencies: 378
+-- TOC entry 6347 (class 0 OID 0)
+-- Dependencies: 388
 -- Name: COLUMN users.family_name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20524,8 +21887,8 @@ COMMENT ON COLUMN darwin2.users.family_name IS 'Family name for physical users a
 
 
 --
--- TOC entry 6325 (class 0 OID 0)
--- Dependencies: 378
+-- TOC entry 6348 (class 0 OID 0)
+-- Dependencies: 388
 -- Name: COLUMN users.given_name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20533,8 +21896,8 @@ COMMENT ON COLUMN darwin2.users.given_name IS 'User/user''s given name - usually
 
 
 --
--- TOC entry 6326 (class 0 OID 0)
--- Dependencies: 378
+-- TOC entry 6349 (class 0 OID 0)
+-- Dependencies: 388
 -- Name: COLUMN users.additional_names; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20542,8 +21905,8 @@ COMMENT ON COLUMN darwin2.users.additional_names IS 'Any additional names given 
 
 
 --
--- TOC entry 6327 (class 0 OID 0)
--- Dependencies: 378
+-- TOC entry 6350 (class 0 OID 0)
+-- Dependencies: 388
 -- Name: COLUMN users.birth_date_mask; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20551,8 +21914,8 @@ COMMENT ON COLUMN darwin2.users.birth_date_mask IS 'Mask Flag to know wich part 
 
 
 --
--- TOC entry 6328 (class 0 OID 0)
--- Dependencies: 378
+-- TOC entry 6351 (class 0 OID 0)
+-- Dependencies: 388
 -- Name: COLUMN users.birth_date; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20560,8 +21923,8 @@ COMMENT ON COLUMN darwin2.users.birth_date IS 'Birth/Creation date composed';
 
 
 --
--- TOC entry 6329 (class 0 OID 0)
--- Dependencies: 378
+-- TOC entry 6352 (class 0 OID 0)
+-- Dependencies: 388
 -- Name: COLUMN users.gender; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20569,8 +21932,8 @@ COMMENT ON COLUMN darwin2.users.gender IS 'For physical users give the gender: M
 
 
 --
--- TOC entry 6330 (class 0 OID 0)
--- Dependencies: 378
+-- TOC entry 6353 (class 0 OID 0)
+-- Dependencies: 388
 -- Name: COLUMN users.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20578,8 +21941,8 @@ COMMENT ON COLUMN darwin2.users.id IS 'Unique identifier of a user';
 
 
 --
--- TOC entry 6331 (class 0 OID 0)
--- Dependencies: 378
+-- TOC entry 6354 (class 0 OID 0)
+-- Dependencies: 388
 -- Name: COLUMN users.db_user_type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20587,8 +21950,8 @@ COMMENT ON COLUMN darwin2.users.db_user_type IS 'Integer is representing a role:
 
 
 --
--- TOC entry 6332 (class 0 OID 0)
--- Dependencies: 378
+-- TOC entry 6355 (class 0 OID 0)
+-- Dependencies: 388
 -- Name: COLUMN users.people_id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20596,8 +21959,8 @@ COMMENT ON COLUMN darwin2.users.people_id IS 'Reference to a people if this user
 
 
 --
--- TOC entry 6333 (class 0 OID 0)
--- Dependencies: 378
+-- TOC entry 6356 (class 0 OID 0)
+-- Dependencies: 388
 -- Name: COLUMN users.selected_lang; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20605,7 +21968,7 @@ COMMENT ON COLUMN darwin2.users.selected_lang IS 'Lang of the interface for the 
 
 
 --
--- TOC entry 381 (class 1259 OID 4817441)
+-- TOC entry 391 (class 1259 OID 4817441)
 -- Name: users_comm_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -20620,7 +21983,7 @@ CREATE SEQUENCE darwin2.users_comm_id_seq
 ALTER TABLE darwin2.users_comm_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 382 (class 1259 OID 4817443)
+-- TOC entry 392 (class 1259 OID 4817443)
 -- Name: users_comm; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -20635,8 +21998,8 @@ INHERITS (darwin2.template_people_users_comm_common);
 ALTER TABLE darwin2.users_comm OWNER TO darwin2;
 
 --
--- TOC entry 6336 (class 0 OID 0)
--- Dependencies: 382
+-- TOC entry 6359 (class 0 OID 0)
+-- Dependencies: 392
 -- Name: TABLE users_comm; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20644,8 +22007,8 @@ COMMENT ON TABLE darwin2.users_comm IS 'Users phones and e-mails';
 
 
 --
--- TOC entry 6337 (class 0 OID 0)
--- Dependencies: 382
+-- TOC entry 6360 (class 0 OID 0)
+-- Dependencies: 392
 -- Name: COLUMN users_comm.person_user_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20653,8 +22016,8 @@ COMMENT ON COLUMN darwin2.users_comm.person_user_ref IS 'Reference of user - id 
 
 
 --
--- TOC entry 6338 (class 0 OID 0)
--- Dependencies: 382
+-- TOC entry 6361 (class 0 OID 0)
+-- Dependencies: 392
 -- Name: COLUMN users_comm.entry; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20662,8 +22025,8 @@ COMMENT ON COLUMN darwin2.users_comm.entry IS 'Communication entry';
 
 
 --
--- TOC entry 6339 (class 0 OID 0)
--- Dependencies: 382
+-- TOC entry 6362 (class 0 OID 0)
+-- Dependencies: 392
 -- Name: COLUMN users_comm.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20671,8 +22034,8 @@ COMMENT ON COLUMN darwin2.users_comm.id IS 'Unique identifier of a users communi
 
 
 --
--- TOC entry 6340 (class 0 OID 0)
--- Dependencies: 382
+-- TOC entry 6363 (class 0 OID 0)
+-- Dependencies: 392
 -- Name: COLUMN users_comm.comm_type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20680,8 +22043,8 @@ COMMENT ON COLUMN darwin2.users_comm.comm_type IS 'Type of communication table c
 
 
 --
--- TOC entry 6341 (class 0 OID 0)
--- Dependencies: 382
+-- TOC entry 6364 (class 0 OID 0)
+-- Dependencies: 392
 -- Name: COLUMN users_comm.tag; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -20689,7 +22052,7 @@ COMMENT ON COLUMN darwin2.users_comm.tag IS 'List of descriptive tags: internet,
 
 
 --
--- TOC entry 431 (class 1259 OID 5308663)
+-- TOC entry 441 (class 1259 OID 5308663)
 -- Name: mv_eml; Type: MATERIALIZED VIEW; Schema: darwin2; Owner: postgres
 --
 
@@ -20806,7 +22169,7 @@ CREATE MATERIALIZED VIEW darwin2.mv_eml AS
 ALTER TABLE darwin2.mv_eml OWNER TO postgres;
 
 --
--- TOC entry 432 (class 1259 OID 5308682)
+-- TOC entry 442 (class 1259 OID 5308682)
 -- Name: mv_eml_marine; Type: MATERIALIZED VIEW; Schema: darwin2; Owner: darwin2
 --
 
@@ -20849,7 +22212,7 @@ CREATE MATERIALIZED VIEW darwin2.mv_eml_marine AS
 ALTER TABLE darwin2.mv_eml_marine OWNER TO darwin2;
 
 --
--- TOC entry 433 (class 1259 OID 5308700)
+-- TOC entry 443 (class 1259 OID 5308700)
 -- Name: mv_spatial; Type: MATERIALIZED VIEW; Schema: darwin2; Owner: darwin2
 --
 
@@ -20904,7 +22267,7 @@ CREATE MATERIALIZED VIEW darwin2.mv_spatial AS
 ALTER TABLE darwin2.mv_spatial OWNER TO darwin2;
 
 --
--- TOC entry 430 (class 1259 OID 5308620)
+-- TOC entry 440 (class 1259 OID 5308620)
 -- Name: mv_tag_to_locations; Type: MATERIALIZED VIEW; Schema: darwin2; Owner: postgres
 --
 
@@ -21736,7 +23099,7 @@ CREATE MATERIALIZED VIEW darwin2.mv_tag_to_locations AS
 ALTER TABLE darwin2.mv_tag_to_locations OWNER TO postgres;
 
 --
--- TOC entry 308 (class 1259 OID 4817004)
+-- TOC entry 318 (class 1259 OID 4817004)
 -- Name: my_saved_searches_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -21751,7 +23114,7 @@ CREATE SEQUENCE darwin2.my_saved_searches_id_seq
 ALTER TABLE darwin2.my_saved_searches_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 309 (class 1259 OID 4817006)
+-- TOC entry 319 (class 1259 OID 4817006)
 -- Name: my_saved_searches; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -21773,8 +23136,8 @@ CREATE TABLE darwin2.my_saved_searches (
 ALTER TABLE darwin2.my_saved_searches OWNER TO darwin2;
 
 --
--- TOC entry 6347 (class 0 OID 0)
--- Dependencies: 309
+-- TOC entry 6370 (class 0 OID 0)
+-- Dependencies: 319
 -- Name: TABLE my_saved_searches; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -21782,8 +23145,8 @@ COMMENT ON TABLE darwin2.my_saved_searches IS 'Stores user''s saved searches but
 
 
 --
--- TOC entry 6348 (class 0 OID 0)
--- Dependencies: 309
+-- TOC entry 6371 (class 0 OID 0)
+-- Dependencies: 319
 -- Name: COLUMN my_saved_searches.user_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -21791,8 +23154,8 @@ COMMENT ON COLUMN darwin2.my_saved_searches.user_ref IS 'Reference of user havin
 
 
 --
--- TOC entry 6349 (class 0 OID 0)
--- Dependencies: 309
+-- TOC entry 6372 (class 0 OID 0)
+-- Dependencies: 319
 -- Name: COLUMN my_saved_searches.name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -21800,8 +23163,8 @@ COMMENT ON COLUMN darwin2.my_saved_searches.name IS 'Name given by user to his/h
 
 
 --
--- TOC entry 6350 (class 0 OID 0)
--- Dependencies: 309
+-- TOC entry 6373 (class 0 OID 0)
+-- Dependencies: 319
 -- Name: COLUMN my_saved_searches.search_criterias; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -21809,8 +23172,8 @@ COMMENT ON COLUMN darwin2.my_saved_searches.search_criterias IS 'String field co
 
 
 --
--- TOC entry 6351 (class 0 OID 0)
--- Dependencies: 309
+-- TOC entry 6374 (class 0 OID 0)
+-- Dependencies: 319
 -- Name: COLUMN my_saved_searches.favorite; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -21818,8 +23181,8 @@ COMMENT ON COLUMN darwin2.my_saved_searches.favorite IS 'Flag telling if saved s
 
 
 --
--- TOC entry 6352 (class 0 OID 0)
--- Dependencies: 309
+-- TOC entry 6375 (class 0 OID 0)
+-- Dependencies: 319
 -- Name: COLUMN my_saved_searches.modification_date_time; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -21827,8 +23190,8 @@ COMMENT ON COLUMN darwin2.my_saved_searches.modification_date_time IS 'Last modi
 
 
 --
--- TOC entry 6353 (class 0 OID 0)
--- Dependencies: 309
+-- TOC entry 6376 (class 0 OID 0)
+-- Dependencies: 319
 -- Name: COLUMN my_saved_searches.visible_fields_in_result; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -21836,8 +23199,8 @@ COMMENT ON COLUMN darwin2.my_saved_searches.visible_fields_in_result IS 'Array o
 
 
 --
--- TOC entry 6354 (class 0 OID 0)
--- Dependencies: 309
+-- TOC entry 6377 (class 0 OID 0)
+-- Dependencies: 319
 -- Name: COLUMN my_saved_searches.is_only_id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -21845,7 +23208,7 @@ COMMENT ON COLUMN darwin2.my_saved_searches.is_only_id IS 'Tell if the search on
 
 
 --
--- TOC entry 310 (class 1259 OID 4817018)
+-- TOC entry 320 (class 1259 OID 4817018)
 -- Name: my_widgets_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -21860,7 +23223,7 @@ CREATE SEQUENCE darwin2.my_widgets_id_seq
 ALTER TABLE darwin2.my_widgets_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 311 (class 1259 OID 4817020)
+-- TOC entry 321 (class 1259 OID 4817020)
 -- Name: my_widgets; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -21886,8 +23249,8 @@ CREATE TABLE darwin2.my_widgets (
 ALTER TABLE darwin2.my_widgets OWNER TO darwin2;
 
 --
--- TOC entry 6357 (class 0 OID 0)
--- Dependencies: 311
+-- TOC entry 6380 (class 0 OID 0)
+-- Dependencies: 321
 -- Name: TABLE my_widgets; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -21895,8 +23258,8 @@ COMMENT ON TABLE darwin2.my_widgets IS 'Stores user''s preferences for customiza
 
 
 --
--- TOC entry 6358 (class 0 OID 0)
--- Dependencies: 311
+-- TOC entry 6381 (class 0 OID 0)
+-- Dependencies: 321
 -- Name: COLUMN my_widgets.user_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -21904,8 +23267,8 @@ COMMENT ON COLUMN darwin2.my_widgets.user_ref IS 'Reference of user concerned - 
 
 
 --
--- TOC entry 6359 (class 0 OID 0)
--- Dependencies: 311
+-- TOC entry 6382 (class 0 OID 0)
+-- Dependencies: 321
 -- Name: COLUMN my_widgets.category; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -21913,8 +23276,8 @@ COMMENT ON COLUMN darwin2.my_widgets.category IS 'Customizable page element cate
 
 
 --
--- TOC entry 6360 (class 0 OID 0)
--- Dependencies: 311
+-- TOC entry 6383 (class 0 OID 0)
+-- Dependencies: 321
 -- Name: COLUMN my_widgets.group_name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -21922,8 +23285,8 @@ COMMENT ON COLUMN darwin2.my_widgets.group_name IS 'Customizable page element na
 
 
 --
--- TOC entry 6361 (class 0 OID 0)
--- Dependencies: 311
+-- TOC entry 6384 (class 0 OID 0)
+-- Dependencies: 321
 -- Name: COLUMN my_widgets.order_by; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -21931,8 +23294,8 @@ COMMENT ON COLUMN darwin2.my_widgets.order_by IS 'Absolute order by between page
 
 
 --
--- TOC entry 6362 (class 0 OID 0)
--- Dependencies: 311
+-- TOC entry 6385 (class 0 OID 0)
+-- Dependencies: 321
 -- Name: COLUMN my_widgets.col_num; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -21940,8 +23303,8 @@ COMMENT ON COLUMN darwin2.my_widgets.col_num IS 'Column number - tells in which 
 
 
 --
--- TOC entry 6363 (class 0 OID 0)
--- Dependencies: 311
+-- TOC entry 6386 (class 0 OID 0)
+-- Dependencies: 321
 -- Name: COLUMN my_widgets.mandatory; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -21949,8 +23312,8 @@ COMMENT ON COLUMN darwin2.my_widgets.mandatory IS 'Flag telling if the page elem
 
 
 --
--- TOC entry 6364 (class 0 OID 0)
--- Dependencies: 311
+-- TOC entry 6387 (class 0 OID 0)
+-- Dependencies: 321
 -- Name: COLUMN my_widgets.visible; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -21958,8 +23321,8 @@ COMMENT ON COLUMN darwin2.my_widgets.visible IS 'Flag telling if the page elemen
 
 
 --
--- TOC entry 6365 (class 0 OID 0)
--- Dependencies: 311
+-- TOC entry 6388 (class 0 OID 0)
+-- Dependencies: 321
 -- Name: COLUMN my_widgets.opened; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -21967,8 +23330,8 @@ COMMENT ON COLUMN darwin2.my_widgets.opened IS 'Flag telling if the page element
 
 
 --
--- TOC entry 6366 (class 0 OID 0)
--- Dependencies: 311
+-- TOC entry 6389 (class 0 OID 0)
+-- Dependencies: 321
 -- Name: COLUMN my_widgets.color; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -21976,8 +23339,8 @@ COMMENT ON COLUMN darwin2.my_widgets.color IS 'Color given to page element by us
 
 
 --
--- TOC entry 6367 (class 0 OID 0)
--- Dependencies: 311
+-- TOC entry 6390 (class 0 OID 0)
+-- Dependencies: 321
 -- Name: COLUMN my_widgets.is_available; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -21985,8 +23348,8 @@ COMMENT ON COLUMN darwin2.my_widgets.is_available IS 'Flag telling if the widget
 
 
 --
--- TOC entry 6368 (class 0 OID 0)
--- Dependencies: 311
+-- TOC entry 6391 (class 0 OID 0)
+-- Dependencies: 321
 -- Name: COLUMN my_widgets.icon_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -21994,8 +23357,8 @@ COMMENT ON COLUMN darwin2.my_widgets.icon_ref IS 'Reference of multimedia icon t
 
 
 --
--- TOC entry 6369 (class 0 OID 0)
--- Dependencies: 311
+-- TOC entry 6392 (class 0 OID 0)
+-- Dependencies: 321
 -- Name: COLUMN my_widgets.title_perso; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22003,8 +23366,8 @@ COMMENT ON COLUMN darwin2.my_widgets.title_perso IS 'Page element title given by
 
 
 --
--- TOC entry 6370 (class 0 OID 0)
--- Dependencies: 311
+-- TOC entry 6393 (class 0 OID 0)
+-- Dependencies: 321
 -- Name: COLUMN my_widgets.collections; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22012,8 +23375,8 @@ COMMENT ON COLUMN darwin2.my_widgets.collections IS 'list of collections whitch 
 
 
 --
--- TOC entry 6371 (class 0 OID 0)
--- Dependencies: 311
+-- TOC entry 6394 (class 0 OID 0)
+-- Dependencies: 321
 -- Name: COLUMN my_widgets.all_public; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22021,7 +23384,7 @@ COMMENT ON COLUMN darwin2.my_widgets.all_public IS 'Set to determine if the widg
 
 
 --
--- TOC entry 312 (class 1259 OID 4817037)
+-- TOC entry 322 (class 1259 OID 4817037)
 -- Name: old_multimedia; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -22056,8 +23419,8 @@ CREATE TABLE darwin2.old_multimedia (
 ALTER TABLE darwin2.old_multimedia OWNER TO darwin2;
 
 --
--- TOC entry 6373 (class 0 OID 0)
--- Dependencies: 312
+-- TOC entry 6396 (class 0 OID 0)
+-- Dependencies: 322
 -- Name: TABLE old_multimedia; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22065,8 +23428,8 @@ COMMENT ON TABLE darwin2.old_multimedia IS 'Stores all multimedia objects encode
 
 
 --
--- TOC entry 6374 (class 0 OID 0)
--- Dependencies: 312
+-- TOC entry 6397 (class 0 OID 0)
+-- Dependencies: 322
 -- Name: COLUMN old_multimedia.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22074,8 +23437,8 @@ COMMENT ON COLUMN darwin2.old_multimedia.id IS 'Unique identifier of a multimedi
 
 
 --
--- TOC entry 6375 (class 0 OID 0)
--- Dependencies: 312
+-- TOC entry 6398 (class 0 OID 0)
+-- Dependencies: 322
 -- Name: COLUMN old_multimedia.is_digital; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22083,8 +23446,8 @@ COMMENT ON COLUMN darwin2.old_multimedia.is_digital IS 'Flag telling if the obje
 
 
 --
--- TOC entry 6376 (class 0 OID 0)
--- Dependencies: 312
+-- TOC entry 6399 (class 0 OID 0)
+-- Dependencies: 322
 -- Name: COLUMN old_multimedia.type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22092,8 +23455,8 @@ COMMENT ON COLUMN darwin2.old_multimedia.type IS 'Main multimedia object type: i
 
 
 --
--- TOC entry 6377 (class 0 OID 0)
--- Dependencies: 312
+-- TOC entry 6400 (class 0 OID 0)
+-- Dependencies: 322
 -- Name: COLUMN old_multimedia.sub_type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22101,8 +23464,8 @@ COMMENT ON COLUMN darwin2.old_multimedia.sub_type IS 'Characterization of object
 
 
 --
--- TOC entry 6378 (class 0 OID 0)
--- Dependencies: 312
+-- TOC entry 6401 (class 0 OID 0)
+-- Dependencies: 322
 -- Name: COLUMN old_multimedia.title; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22110,8 +23473,8 @@ COMMENT ON COLUMN darwin2.old_multimedia.title IS 'Object title';
 
 
 --
--- TOC entry 6379 (class 0 OID 0)
--- Dependencies: 312
+-- TOC entry 6402 (class 0 OID 0)
+-- Dependencies: 322
 -- Name: COLUMN old_multimedia.title_indexed; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22119,8 +23482,8 @@ COMMENT ON COLUMN darwin2.old_multimedia.title_indexed IS 'Indexed form of title
 
 
 --
--- TOC entry 6380 (class 0 OID 0)
--- Dependencies: 312
+-- TOC entry 6403 (class 0 OID 0)
+-- Dependencies: 322
 -- Name: COLUMN old_multimedia.subject; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22128,8 +23491,8 @@ COMMENT ON COLUMN darwin2.old_multimedia.subject IS 'Multimedia object subject (
 
 
 --
--- TOC entry 6381 (class 0 OID 0)
--- Dependencies: 312
+-- TOC entry 6404 (class 0 OID 0)
+-- Dependencies: 322
 -- Name: COLUMN old_multimedia.coverage; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22137,8 +23500,8 @@ COMMENT ON COLUMN darwin2.old_multimedia.coverage IS 'Coverage of multimedia obj
 
 
 --
--- TOC entry 6382 (class 0 OID 0)
--- Dependencies: 312
+-- TOC entry 6405 (class 0 OID 0)
+-- Dependencies: 322
 -- Name: COLUMN old_multimedia.apercu_path; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22146,8 +23509,8 @@ COMMENT ON COLUMN darwin2.old_multimedia.apercu_path IS 'URI path to the thumbna
 
 
 --
--- TOC entry 6383 (class 0 OID 0)
--- Dependencies: 312
+-- TOC entry 6406 (class 0 OID 0)
+-- Dependencies: 322
 -- Name: COLUMN old_multimedia.copyright; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22155,8 +23518,8 @@ COMMENT ON COLUMN darwin2.old_multimedia.copyright IS 'Copyright notice';
 
 
 --
--- TOC entry 6384 (class 0 OID 0)
--- Dependencies: 312
+-- TOC entry 6407 (class 0 OID 0)
+-- Dependencies: 322
 -- Name: COLUMN old_multimedia.license; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22164,8 +23527,8 @@ COMMENT ON COLUMN darwin2.old_multimedia.license IS 'License notice';
 
 
 --
--- TOC entry 6385 (class 0 OID 0)
--- Dependencies: 312
+-- TOC entry 6408 (class 0 OID 0)
+-- Dependencies: 322
 -- Name: COLUMN old_multimedia.uri; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22173,8 +23536,8 @@ COMMENT ON COLUMN darwin2.old_multimedia.uri IS 'URI of object if digital';
 
 
 --
--- TOC entry 6386 (class 0 OID 0)
--- Dependencies: 312
+-- TOC entry 6409 (class 0 OID 0)
+-- Dependencies: 322
 -- Name: COLUMN old_multimedia.descriptive_ts; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22182,8 +23545,8 @@ COMMENT ON COLUMN darwin2.old_multimedia.descriptive_ts IS 'tsvector form of tit
 
 
 --
--- TOC entry 6387 (class 0 OID 0)
--- Dependencies: 312
+-- TOC entry 6410 (class 0 OID 0)
+-- Dependencies: 322
 -- Name: COLUMN old_multimedia.descriptive_language_full_text; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22191,8 +23554,8 @@ COMMENT ON COLUMN darwin2.old_multimedia.descriptive_language_full_text IS 'Lang
 
 
 --
--- TOC entry 6388 (class 0 OID 0)
--- Dependencies: 312
+-- TOC entry 6411 (class 0 OID 0)
+-- Dependencies: 322
 -- Name: COLUMN old_multimedia.creation_date; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22200,8 +23563,8 @@ COMMENT ON COLUMN darwin2.old_multimedia.creation_date IS 'Object creation date'
 
 
 --
--- TOC entry 6389 (class 0 OID 0)
--- Dependencies: 312
+-- TOC entry 6412 (class 0 OID 0)
+-- Dependencies: 322
 -- Name: COLUMN old_multimedia.creation_date_mask; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22209,8 +23572,8 @@ COMMENT ON COLUMN darwin2.old_multimedia.creation_date_mask IS 'Mask used for ob
 
 
 --
--- TOC entry 6390 (class 0 OID 0)
--- Dependencies: 312
+-- TOC entry 6413 (class 0 OID 0)
+-- Dependencies: 322
 -- Name: COLUMN old_multimedia.publication_date_from; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22218,8 +23581,8 @@ COMMENT ON COLUMN darwin2.old_multimedia.publication_date_from IS 'Object public
 
 
 --
--- TOC entry 6391 (class 0 OID 0)
--- Dependencies: 312
+-- TOC entry 6414 (class 0 OID 0)
+-- Dependencies: 322
 -- Name: COLUMN old_multimedia.publication_date_from_mask; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22227,8 +23590,8 @@ COMMENT ON COLUMN darwin2.old_multimedia.publication_date_from_mask IS 'Mask use
 
 
 --
--- TOC entry 6392 (class 0 OID 0)
--- Dependencies: 312
+-- TOC entry 6415 (class 0 OID 0)
+-- Dependencies: 322
 -- Name: COLUMN old_multimedia.publication_date_to; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22236,8 +23599,8 @@ COMMENT ON COLUMN darwin2.old_multimedia.publication_date_to IS 'Object publicat
 
 
 --
--- TOC entry 6393 (class 0 OID 0)
--- Dependencies: 312
+-- TOC entry 6416 (class 0 OID 0)
+-- Dependencies: 322
 -- Name: COLUMN old_multimedia.publication_date_to_mask; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22245,8 +23608,8 @@ COMMENT ON COLUMN darwin2.old_multimedia.publication_date_to_mask IS 'Mask used 
 
 
 --
--- TOC entry 6394 (class 0 OID 0)
--- Dependencies: 312
+-- TOC entry 6417 (class 0 OID 0)
+-- Dependencies: 322
 -- Name: COLUMN old_multimedia.parent_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22254,8 +23617,8 @@ COMMENT ON COLUMN darwin2.old_multimedia.parent_ref IS 'Reference of a parent mu
 
 
 --
--- TOC entry 6395 (class 0 OID 0)
--- Dependencies: 312
+-- TOC entry 6418 (class 0 OID 0)
+-- Dependencies: 322
 -- Name: COLUMN old_multimedia.path; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22263,8 +23626,8 @@ COMMENT ON COLUMN darwin2.old_multimedia.path IS 'Path of parent of the object (
 
 
 --
--- TOC entry 6396 (class 0 OID 0)
--- Dependencies: 312
+-- TOC entry 6419 (class 0 OID 0)
+-- Dependencies: 322
 -- Name: COLUMN old_multimedia.mime_type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22272,7 +23635,7 @@ COMMENT ON COLUMN darwin2.old_multimedia.mime_type IS 'Mime/Type of the linked d
 
 
 --
--- TOC entry 313 (class 1259 OID 4817055)
+-- TOC entry 323 (class 1259 OID 4817055)
 -- Name: people_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -22287,7 +23650,7 @@ CREATE SEQUENCE darwin2.people_id_seq
 ALTER TABLE darwin2.people_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 315 (class 1259 OID 4817068)
+-- TOC entry 325 (class 1259 OID 4817068)
 -- Name: people; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -22309,8 +23672,8 @@ INHERITS (darwin2.template_people);
 ALTER TABLE darwin2.people OWNER TO darwin2;
 
 --
--- TOC entry 6398 (class 0 OID 0)
--- Dependencies: 315
+-- TOC entry 6421 (class 0 OID 0)
+-- Dependencies: 325
 -- Name: TABLE people; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22318,8 +23681,8 @@ COMMENT ON TABLE darwin2.people IS 'All physical and moral persons used in the a
 
 
 --
--- TOC entry 6399 (class 0 OID 0)
--- Dependencies: 315
+-- TOC entry 6422 (class 0 OID 0)
+-- Dependencies: 325
 -- Name: COLUMN people.is_physical; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22327,8 +23690,8 @@ COMMENT ON COLUMN darwin2.people.is_physical IS 'Type of person: physical or mor
 
 
 --
--- TOC entry 6400 (class 0 OID 0)
--- Dependencies: 315
+-- TOC entry 6423 (class 0 OID 0)
+-- Dependencies: 325
 -- Name: COLUMN people.sub_type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22336,8 +23699,8 @@ COMMENT ON COLUMN darwin2.people.sub_type IS 'Used for moral persons: precise na
 
 
 --
--- TOC entry 6401 (class 0 OID 0)
--- Dependencies: 315
+-- TOC entry 6424 (class 0 OID 0)
+-- Dependencies: 325
 -- Name: COLUMN people.formated_name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22345,8 +23708,8 @@ COMMENT ON COLUMN darwin2.people.formated_name IS 'Complete person formated name
 
 
 --
--- TOC entry 6402 (class 0 OID 0)
--- Dependencies: 315
+-- TOC entry 6425 (class 0 OID 0)
+-- Dependencies: 325
 -- Name: COLUMN people.formated_name_indexed; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22354,8 +23717,8 @@ COMMENT ON COLUMN darwin2.people.formated_name_indexed IS 'Indexed form of forma
 
 
 --
--- TOC entry 6403 (class 0 OID 0)
--- Dependencies: 315
+-- TOC entry 6426 (class 0 OID 0)
+-- Dependencies: 325
 -- Name: COLUMN people.title; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22363,8 +23726,8 @@ COMMENT ON COLUMN darwin2.people.title IS 'Title of a physical user/person like 
 
 
 --
--- TOC entry 6404 (class 0 OID 0)
--- Dependencies: 315
+-- TOC entry 6427 (class 0 OID 0)
+-- Dependencies: 325
 -- Name: COLUMN people.family_name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22372,8 +23735,8 @@ COMMENT ON COLUMN darwin2.people.family_name IS 'Family name for physical person
 
 
 --
--- TOC entry 6405 (class 0 OID 0)
--- Dependencies: 315
+-- TOC entry 6428 (class 0 OID 0)
+-- Dependencies: 325
 -- Name: COLUMN people.given_name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22381,8 +23744,8 @@ COMMENT ON COLUMN darwin2.people.given_name IS 'User/person''s given name - usua
 
 
 --
--- TOC entry 6406 (class 0 OID 0)
--- Dependencies: 315
+-- TOC entry 6429 (class 0 OID 0)
+-- Dependencies: 325
 -- Name: COLUMN people.additional_names; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22390,8 +23753,8 @@ COMMENT ON COLUMN darwin2.people.additional_names IS 'Any additional names given
 
 
 --
--- TOC entry 6407 (class 0 OID 0)
--- Dependencies: 315
+-- TOC entry 6430 (class 0 OID 0)
+-- Dependencies: 325
 -- Name: COLUMN people.birth_date_mask; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22399,8 +23762,8 @@ COMMENT ON COLUMN darwin2.people.birth_date_mask IS 'Mask Flag to know wich part
 
 
 --
--- TOC entry 6408 (class 0 OID 0)
--- Dependencies: 315
+-- TOC entry 6431 (class 0 OID 0)
+-- Dependencies: 325
 -- Name: COLUMN people.birth_date; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22408,8 +23771,8 @@ COMMENT ON COLUMN darwin2.people.birth_date IS 'Day of birth/creation';
 
 
 --
--- TOC entry 6409 (class 0 OID 0)
--- Dependencies: 315
+-- TOC entry 6432 (class 0 OID 0)
+-- Dependencies: 325
 -- Name: COLUMN people.gender; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22417,8 +23780,8 @@ COMMENT ON COLUMN darwin2.people.gender IS 'For physical persons give the gender
 
 
 --
--- TOC entry 6410 (class 0 OID 0)
--- Dependencies: 315
+-- TOC entry 6433 (class 0 OID 0)
+-- Dependencies: 325
 -- Name: COLUMN people.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22426,8 +23789,8 @@ COMMENT ON COLUMN darwin2.people.id IS 'Unique identifier of a person';
 
 
 --
--- TOC entry 6411 (class 0 OID 0)
--- Dependencies: 315
+-- TOC entry 6434 (class 0 OID 0)
+-- Dependencies: 325
 -- Name: COLUMN people.db_people_type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22435,8 +23798,8 @@ COMMENT ON COLUMN darwin2.people.db_people_type IS 'Sum of numbers in an arithme
 
 
 --
--- TOC entry 6412 (class 0 OID 0)
--- Dependencies: 315
+-- TOC entry 6435 (class 0 OID 0)
+-- Dependencies: 325
 -- Name: COLUMN people.end_date_mask; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22444,8 +23807,8 @@ COMMENT ON COLUMN darwin2.people.end_date_mask IS 'Mask Flag to know wich part o
 
 
 --
--- TOC entry 6413 (class 0 OID 0)
--- Dependencies: 315
+-- TOC entry 6436 (class 0 OID 0)
+-- Dependencies: 325
 -- Name: COLUMN people.end_date; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22453,8 +23816,8 @@ COMMENT ON COLUMN darwin2.people.end_date IS 'End date';
 
 
 --
--- TOC entry 6414 (class 0 OID 0)
--- Dependencies: 315
+-- TOC entry 6437 (class 0 OID 0)
+-- Dependencies: 325
 -- Name: COLUMN people.activity_date_from_mask; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22462,8 +23825,8 @@ COMMENT ON COLUMN darwin2.people.activity_date_from_mask IS 'person general acti
 
 
 --
--- TOC entry 6415 (class 0 OID 0)
--- Dependencies: 315
+-- TOC entry 6438 (class 0 OID 0)
+-- Dependencies: 325
 -- Name: COLUMN people.activity_date_from; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22471,8 +23834,8 @@ COMMENT ON COLUMN darwin2.people.activity_date_from IS 'person general activity 
 
 
 --
--- TOC entry 6416 (class 0 OID 0)
--- Dependencies: 315
+-- TOC entry 6439 (class 0 OID 0)
+-- Dependencies: 325
 -- Name: COLUMN people.activity_date_to_mask; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22480,8 +23843,8 @@ COMMENT ON COLUMN darwin2.people.activity_date_to_mask IS 'person general activi
 
 
 --
--- TOC entry 6417 (class 0 OID 0)
--- Dependencies: 315
+-- TOC entry 6440 (class 0 OID 0)
+-- Dependencies: 325
 -- Name: COLUMN people.activity_date_to; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22489,7 +23852,7 @@ COMMENT ON COLUMN darwin2.people.activity_date_to IS 'person general activity pe
 
 
 --
--- TOC entry 316 (class 1259 OID 4817088)
+-- TOC entry 326 (class 1259 OID 4817088)
 -- Name: people_addresses_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -22504,7 +23867,7 @@ CREATE SEQUENCE darwin2.people_addresses_id_seq
 ALTER TABLE darwin2.people_addresses_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 317 (class 1259 OID 4817090)
+-- TOC entry 327 (class 1259 OID 4817090)
 -- Name: template_people_users_addr_common; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -22521,8 +23884,8 @@ CREATE TABLE darwin2.template_people_users_addr_common (
 ALTER TABLE darwin2.template_people_users_addr_common OWNER TO darwin2;
 
 --
--- TOC entry 6419 (class 0 OID 0)
--- Dependencies: 317
+-- TOC entry 6442 (class 0 OID 0)
+-- Dependencies: 327
 -- Name: TABLE template_people_users_addr_common; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22530,8 +23893,8 @@ COMMENT ON TABLE darwin2.template_people_users_addr_common IS 'Template table us
 
 
 --
--- TOC entry 6420 (class 0 OID 0)
--- Dependencies: 317
+-- TOC entry 6443 (class 0 OID 0)
+-- Dependencies: 327
 -- Name: COLUMN template_people_users_addr_common.po_box; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22539,8 +23902,8 @@ COMMENT ON COLUMN darwin2.template_people_users_addr_common.po_box IS 'PO Box';
 
 
 --
--- TOC entry 6421 (class 0 OID 0)
--- Dependencies: 317
+-- TOC entry 6444 (class 0 OID 0)
+-- Dependencies: 327
 -- Name: COLUMN template_people_users_addr_common.extended_address; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22548,8 +23911,8 @@ COMMENT ON COLUMN darwin2.template_people_users_addr_common.extended_address IS 
 
 
 --
--- TOC entry 6422 (class 0 OID 0)
--- Dependencies: 317
+-- TOC entry 6445 (class 0 OID 0)
+-- Dependencies: 327
 -- Name: COLUMN template_people_users_addr_common.locality; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22557,8 +23920,8 @@ COMMENT ON COLUMN darwin2.template_people_users_addr_common.locality IS 'Localit
 
 
 --
--- TOC entry 6423 (class 0 OID 0)
--- Dependencies: 317
+-- TOC entry 6446 (class 0 OID 0)
+-- Dependencies: 327
 -- Name: COLUMN template_people_users_addr_common.region; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22566,8 +23929,8 @@ COMMENT ON COLUMN darwin2.template_people_users_addr_common.region IS 'Region';
 
 
 --
--- TOC entry 6424 (class 0 OID 0)
--- Dependencies: 317
+-- TOC entry 6447 (class 0 OID 0)
+-- Dependencies: 327
 -- Name: COLUMN template_people_users_addr_common.zip_code; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22575,8 +23938,8 @@ COMMENT ON COLUMN darwin2.template_people_users_addr_common.zip_code IS 'zip cod
 
 
 --
--- TOC entry 6425 (class 0 OID 0)
--- Dependencies: 317
+-- TOC entry 6448 (class 0 OID 0)
+-- Dependencies: 327
 -- Name: COLUMN template_people_users_addr_common.country; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22584,7 +23947,7 @@ COMMENT ON COLUMN darwin2.template_people_users_addr_common.country IS 'Country'
 
 
 --
--- TOC entry 319 (class 1259 OID 4817102)
+-- TOC entry 329 (class 1259 OID 4817102)
 -- Name: people_addresses; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -22598,8 +23961,8 @@ INHERITS (darwin2.template_people_users_comm_common, darwin2.template_people_use
 ALTER TABLE darwin2.people_addresses OWNER TO darwin2;
 
 --
--- TOC entry 6427 (class 0 OID 0)
--- Dependencies: 319
+-- TOC entry 6450 (class 0 OID 0)
+-- Dependencies: 329
 -- Name: TABLE people_addresses; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22607,8 +23970,8 @@ COMMENT ON TABLE darwin2.people_addresses IS 'People addresses';
 
 
 --
--- TOC entry 6428 (class 0 OID 0)
--- Dependencies: 319
+-- TOC entry 6451 (class 0 OID 0)
+-- Dependencies: 329
 -- Name: COLUMN people_addresses.person_user_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22616,8 +23979,8 @@ COMMENT ON COLUMN darwin2.people_addresses.person_user_ref IS 'Reference of the 
 
 
 --
--- TOC entry 6429 (class 0 OID 0)
--- Dependencies: 319
+-- TOC entry 6452 (class 0 OID 0)
+-- Dependencies: 329
 -- Name: COLUMN people_addresses.entry; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22625,8 +23988,8 @@ COMMENT ON COLUMN darwin2.people_addresses.entry IS 'Street address';
 
 
 --
--- TOC entry 6430 (class 0 OID 0)
--- Dependencies: 319
+-- TOC entry 6453 (class 0 OID 0)
+-- Dependencies: 329
 -- Name: COLUMN people_addresses.po_box; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22634,8 +23997,8 @@ COMMENT ON COLUMN darwin2.people_addresses.po_box IS 'PO Box';
 
 
 --
--- TOC entry 6431 (class 0 OID 0)
--- Dependencies: 319
+-- TOC entry 6454 (class 0 OID 0)
+-- Dependencies: 329
 -- Name: COLUMN people_addresses.extended_address; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22643,8 +24006,8 @@ COMMENT ON COLUMN darwin2.people_addresses.extended_address IS 'Address extensio
 
 
 --
--- TOC entry 6432 (class 0 OID 0)
--- Dependencies: 319
+-- TOC entry 6455 (class 0 OID 0)
+-- Dependencies: 329
 -- Name: COLUMN people_addresses.locality; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22652,8 +24015,8 @@ COMMENT ON COLUMN darwin2.people_addresses.locality IS 'Locality';
 
 
 --
--- TOC entry 6433 (class 0 OID 0)
--- Dependencies: 319
+-- TOC entry 6456 (class 0 OID 0)
+-- Dependencies: 329
 -- Name: COLUMN people_addresses.region; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22661,8 +24024,8 @@ COMMENT ON COLUMN darwin2.people_addresses.region IS 'Region';
 
 
 --
--- TOC entry 6434 (class 0 OID 0)
--- Dependencies: 319
+-- TOC entry 6457 (class 0 OID 0)
+-- Dependencies: 329
 -- Name: COLUMN people_addresses.zip_code; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22670,8 +24033,8 @@ COMMENT ON COLUMN darwin2.people_addresses.zip_code IS 'Zip code';
 
 
 --
--- TOC entry 6435 (class 0 OID 0)
--- Dependencies: 319
+-- TOC entry 6458 (class 0 OID 0)
+-- Dependencies: 329
 -- Name: COLUMN people_addresses.country; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22679,8 +24042,8 @@ COMMENT ON COLUMN darwin2.people_addresses.country IS 'Country';
 
 
 --
--- TOC entry 6436 (class 0 OID 0)
--- Dependencies: 319
+-- TOC entry 6459 (class 0 OID 0)
+-- Dependencies: 329
 -- Name: COLUMN people_addresses.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22688,8 +24051,8 @@ COMMENT ON COLUMN darwin2.people_addresses.id IS 'Unique identifier of a person 
 
 
 --
--- TOC entry 6437 (class 0 OID 0)
--- Dependencies: 319
+-- TOC entry 6460 (class 0 OID 0)
+-- Dependencies: 329
 -- Name: COLUMN people_addresses.tag; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22697,7 +24060,7 @@ COMMENT ON COLUMN darwin2.people_addresses.tag IS 'List of descriptive tags: hom
 
 
 --
--- TOC entry 320 (class 1259 OID 4817110)
+-- TOC entry 330 (class 1259 OID 4817110)
 -- Name: people_comm_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -22712,7 +24075,7 @@ CREATE SEQUENCE darwin2.people_comm_id_seq
 ALTER TABLE darwin2.people_comm_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 321 (class 1259 OID 4817112)
+-- TOC entry 331 (class 1259 OID 4817112)
 -- Name: people_comm; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -22727,8 +24090,8 @@ INHERITS (darwin2.template_people_users_comm_common);
 ALTER TABLE darwin2.people_comm OWNER TO darwin2;
 
 --
--- TOC entry 6439 (class 0 OID 0)
--- Dependencies: 321
+-- TOC entry 6462 (class 0 OID 0)
+-- Dependencies: 331
 -- Name: TABLE people_comm; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22736,8 +24099,8 @@ COMMENT ON TABLE darwin2.people_comm IS 'People phones and e-mails';
 
 
 --
--- TOC entry 6440 (class 0 OID 0)
--- Dependencies: 321
+-- TOC entry 6463 (class 0 OID 0)
+-- Dependencies: 331
 -- Name: COLUMN people_comm.person_user_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22745,8 +24108,8 @@ COMMENT ON COLUMN darwin2.people_comm.person_user_ref IS 'Reference of person - 
 
 
 --
--- TOC entry 6441 (class 0 OID 0)
--- Dependencies: 321
+-- TOC entry 6464 (class 0 OID 0)
+-- Dependencies: 331
 -- Name: COLUMN people_comm.entry; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22754,8 +24117,8 @@ COMMENT ON COLUMN darwin2.people_comm.entry IS 'Communication entry';
 
 
 --
--- TOC entry 6442 (class 0 OID 0)
--- Dependencies: 321
+-- TOC entry 6465 (class 0 OID 0)
+-- Dependencies: 331
 -- Name: COLUMN people_comm.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22763,8 +24126,8 @@ COMMENT ON COLUMN darwin2.people_comm.id IS 'Unique identifier of a person commu
 
 
 --
--- TOC entry 6443 (class 0 OID 0)
--- Dependencies: 321
+-- TOC entry 6466 (class 0 OID 0)
+-- Dependencies: 331
 -- Name: COLUMN people_comm.comm_type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22772,8 +24135,8 @@ COMMENT ON COLUMN darwin2.people_comm.comm_type IS 'Type of communication table 
 
 
 --
--- TOC entry 6444 (class 0 OID 0)
--- Dependencies: 321
+-- TOC entry 6467 (class 0 OID 0)
+-- Dependencies: 331
 -- Name: COLUMN people_comm.tag; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22781,7 +24144,7 @@ COMMENT ON COLUMN darwin2.people_comm.tag IS 'List of descriptive tags separated
 
 
 --
--- TOC entry 322 (class 1259 OID 4817121)
+-- TOC entry 332 (class 1259 OID 4817121)
 -- Name: people_languages_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -22796,7 +24159,7 @@ CREATE SEQUENCE darwin2.people_languages_id_seq
 ALTER TABLE darwin2.people_languages_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 323 (class 1259 OID 4817123)
+-- TOC entry 333 (class 1259 OID 4817123)
 -- Name: people_languages; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -22812,8 +24175,8 @@ CREATE TABLE darwin2.people_languages (
 ALTER TABLE darwin2.people_languages OWNER TO darwin2;
 
 --
--- TOC entry 6446 (class 0 OID 0)
--- Dependencies: 323
+-- TOC entry 6469 (class 0 OID 0)
+-- Dependencies: 333
 -- Name: TABLE people_languages; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22821,8 +24184,8 @@ COMMENT ON TABLE darwin2.people_languages IS 'Languages spoken by a given person
 
 
 --
--- TOC entry 6447 (class 0 OID 0)
--- Dependencies: 323
+-- TOC entry 6470 (class 0 OID 0)
+-- Dependencies: 333
 -- Name: COLUMN people_languages.language_country; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22830,8 +24193,8 @@ COMMENT ON COLUMN darwin2.people_languages.language_country IS 'Reference of Lan
 
 
 --
--- TOC entry 6448 (class 0 OID 0)
--- Dependencies: 323
+-- TOC entry 6471 (class 0 OID 0)
+-- Dependencies: 333
 -- Name: COLUMN people_languages.mother; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22839,8 +24202,8 @@ COMMENT ON COLUMN darwin2.people_languages.mother IS 'Flag telling if its mother
 
 
 --
--- TOC entry 6449 (class 0 OID 0)
--- Dependencies: 323
+-- TOC entry 6472 (class 0 OID 0)
+-- Dependencies: 333
 -- Name: COLUMN people_languages.preferred_language; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22848,8 +24211,8 @@ COMMENT ON COLUMN darwin2.people_languages.preferred_language IS 'Flag telling w
 
 
 --
--- TOC entry 6450 (class 0 OID 0)
--- Dependencies: 323
+-- TOC entry 6473 (class 0 OID 0)
+-- Dependencies: 333
 -- Name: COLUMN people_languages.people_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22857,7 +24220,7 @@ COMMENT ON COLUMN darwin2.people_languages.people_ref IS 'Reference of person - 
 
 
 --
--- TOC entry 324 (class 1259 OID 4817133)
+-- TOC entry 334 (class 1259 OID 4817133)
 -- Name: people_relationships_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -22872,7 +24235,7 @@ CREATE SEQUENCE darwin2.people_relationships_id_seq
 ALTER TABLE darwin2.people_relationships_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 325 (class 1259 OID 4817135)
+-- TOC entry 335 (class 1259 OID 4817135)
 -- Name: people_relationships; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -22893,8 +24256,8 @@ CREATE TABLE darwin2.people_relationships (
 ALTER TABLE darwin2.people_relationships OWNER TO darwin2;
 
 --
--- TOC entry 6452 (class 0 OID 0)
--- Dependencies: 325
+-- TOC entry 6475 (class 0 OID 0)
+-- Dependencies: 335
 -- Name: TABLE people_relationships; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22902,8 +24265,8 @@ COMMENT ON TABLE darwin2.people_relationships IS 'Relationships between people -
 
 
 --
--- TOC entry 6453 (class 0 OID 0)
--- Dependencies: 325
+-- TOC entry 6476 (class 0 OID 0)
+-- Dependencies: 335
 -- Name: COLUMN people_relationships.person_user_role; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22911,8 +24274,8 @@ COMMENT ON COLUMN darwin2.people_relationships.person_user_role IS 'Person role 
 
 
 --
--- TOC entry 6454 (class 0 OID 0)
--- Dependencies: 325
+-- TOC entry 6477 (class 0 OID 0)
+-- Dependencies: 335
 -- Name: COLUMN people_relationships.relationship_type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22920,8 +24283,8 @@ COMMENT ON COLUMN darwin2.people_relationships.relationship_type IS 'Type of rel
 
 
 --
--- TOC entry 6455 (class 0 OID 0)
--- Dependencies: 325
+-- TOC entry 6478 (class 0 OID 0)
+-- Dependencies: 335
 -- Name: COLUMN people_relationships.person_1_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22929,8 +24292,8 @@ COMMENT ON COLUMN darwin2.people_relationships.person_1_ref IS 'Reference of per
 
 
 --
--- TOC entry 6456 (class 0 OID 0)
--- Dependencies: 325
+-- TOC entry 6479 (class 0 OID 0)
+-- Dependencies: 335
 -- Name: COLUMN people_relationships.person_2_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22938,8 +24301,8 @@ COMMENT ON COLUMN darwin2.people_relationships.person_2_ref IS 'Reference of per
 
 
 --
--- TOC entry 6457 (class 0 OID 0)
--- Dependencies: 325
+-- TOC entry 6480 (class 0 OID 0)
+-- Dependencies: 335
 -- Name: COLUMN people_relationships.path; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22947,8 +24310,8 @@ COMMENT ON COLUMN darwin2.people_relationships.path IS 'Hierarchical path of the
 
 
 --
--- TOC entry 6458 (class 0 OID 0)
--- Dependencies: 325
+-- TOC entry 6481 (class 0 OID 0)
+-- Dependencies: 335
 -- Name: COLUMN people_relationships.activity_date_from_mask; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22956,8 +24319,8 @@ COMMENT ON COLUMN darwin2.people_relationships.activity_date_from_mask IS 'perso
 
 
 --
--- TOC entry 6459 (class 0 OID 0)
--- Dependencies: 325
+-- TOC entry 6482 (class 0 OID 0)
+-- Dependencies: 335
 -- Name: COLUMN people_relationships.activity_date_from; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22965,8 +24328,8 @@ COMMENT ON COLUMN darwin2.people_relationships.activity_date_from IS 'person act
 
 
 --
--- TOC entry 6460 (class 0 OID 0)
--- Dependencies: 325
+-- TOC entry 6483 (class 0 OID 0)
+-- Dependencies: 335
 -- Name: COLUMN people_relationships.activity_date_to_mask; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22974,8 +24337,8 @@ COMMENT ON COLUMN darwin2.people_relationships.activity_date_to_mask IS 'person 
 
 
 --
--- TOC entry 6461 (class 0 OID 0)
--- Dependencies: 325
+-- TOC entry 6484 (class 0 OID 0)
+-- Dependencies: 335
 -- Name: COLUMN people_relationships.activity_date_to; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -22983,7 +24346,7 @@ COMMENT ON COLUMN darwin2.people_relationships.activity_date_to IS 'person activ
 
 
 --
--- TOC entry 326 (class 1259 OID 4817147)
+-- TOC entry 336 (class 1259 OID 4817147)
 -- Name: possible_upper_levels; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -22996,8 +24359,8 @@ CREATE TABLE darwin2.possible_upper_levels (
 ALTER TABLE darwin2.possible_upper_levels OWNER TO darwin2;
 
 --
--- TOC entry 6463 (class 0 OID 0)
--- Dependencies: 326
+-- TOC entry 6486 (class 0 OID 0)
+-- Dependencies: 336
 -- Name: TABLE possible_upper_levels; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -23005,8 +24368,8 @@ COMMENT ON TABLE darwin2.possible_upper_levels IS 'For each level, list all the 
 
 
 --
--- TOC entry 6464 (class 0 OID 0)
--- Dependencies: 326
+-- TOC entry 6487 (class 0 OID 0)
+-- Dependencies: 336
 -- Name: COLUMN possible_upper_levels.level_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -23014,8 +24377,8 @@ COMMENT ON COLUMN darwin2.possible_upper_levels.level_ref IS 'Reference of curre
 
 
 --
--- TOC entry 6465 (class 0 OID 0)
--- Dependencies: 326
+-- TOC entry 6488 (class 0 OID 0)
+-- Dependencies: 336
 -- Name: COLUMN possible_upper_levels.level_upper_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -23023,7 +24386,7 @@ COMMENT ON COLUMN darwin2.possible_upper_levels.level_upper_ref IS 'Reference of
 
 
 --
--- TOC entry 327 (class 1259 OID 4817150)
+-- TOC entry 337 (class 1259 OID 4817150)
 -- Name: possible_upper_levels_20180924_before_rmca_merge; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -23036,7 +24399,7 @@ CREATE TABLE darwin2.possible_upper_levels_20180924_before_rmca_merge (
 ALTER TABLE darwin2.possible_upper_levels_20180924_before_rmca_merge OWNER TO darwin2;
 
 --
--- TOC entry 328 (class 1259 OID 4817153)
+-- TOC entry 338 (class 1259 OID 4817153)
 -- Name: preferences_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -23051,7 +24414,7 @@ CREATE SEQUENCE darwin2.preferences_id_seq
 ALTER TABLE darwin2.preferences_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 329 (class 1259 OID 4817155)
+-- TOC entry 339 (class 1259 OID 4817155)
 -- Name: preferences; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -23066,8 +24429,8 @@ CREATE TABLE darwin2.preferences (
 ALTER TABLE darwin2.preferences OWNER TO darwin2;
 
 --
--- TOC entry 6467 (class 0 OID 0)
--- Dependencies: 329
+-- TOC entry 6490 (class 0 OID 0)
+-- Dependencies: 339
 -- Name: TABLE preferences; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -23075,8 +24438,8 @@ COMMENT ON TABLE darwin2.preferences IS 'Table to handle users preferences';
 
 
 --
--- TOC entry 6468 (class 0 OID 0)
--- Dependencies: 329
+-- TOC entry 6491 (class 0 OID 0)
+-- Dependencies: 339
 -- Name: COLUMN preferences.user_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -23084,8 +24447,8 @@ COMMENT ON COLUMN darwin2.preferences.user_ref IS 'The referenced user id';
 
 
 --
--- TOC entry 6469 (class 0 OID 0)
--- Dependencies: 329
+-- TOC entry 6492 (class 0 OID 0)
+-- Dependencies: 339
 -- Name: COLUMN preferences.pref_key; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -23093,8 +24456,8 @@ COMMENT ON COLUMN darwin2.preferences.pref_key IS 'The classification key of the
 
 
 --
--- TOC entry 6470 (class 0 OID 0)
--- Dependencies: 329
+-- TOC entry 6493 (class 0 OID 0)
+-- Dependencies: 339
 -- Name: COLUMN preferences.pref_value; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -23102,7 +24465,7 @@ COMMENT ON COLUMN darwin2.preferences.pref_value IS 'The value of the preference
 
 
 --
--- TOC entry 330 (class 1259 OID 4817162)
+-- TOC entry 340 (class 1259 OID 4817162)
 -- Name: properties_bck20180731_fix_colmate_dates; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -23132,7 +24495,7 @@ CREATE TABLE darwin2.properties_bck20180731_fix_colmate_dates (
 ALTER TABLE darwin2.properties_bck20180731_fix_colmate_dates OWNER TO darwin2;
 
 --
--- TOC entry 331 (class 1259 OID 4817168)
+-- TOC entry 341 (class 1259 OID 4817168)
 -- Name: properties_bck20181127; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -23162,7 +24525,7 @@ CREATE TABLE darwin2.properties_bck20181127 (
 ALTER TABLE darwin2.properties_bck20181127 OWNER TO darwin2;
 
 --
--- TOC entry 332 (class 1259 OID 4817174)
+-- TOC entry 342 (class 1259 OID 4817174)
 -- Name: properties_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -23177,8 +24540,8 @@ CREATE SEQUENCE darwin2.properties_id_seq
 ALTER TABLE darwin2.properties_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 6472 (class 0 OID 0)
--- Dependencies: 332
+-- TOC entry 6495 (class 0 OID 0)
+-- Dependencies: 342
 -- Name: properties_id_seq; Type: SEQUENCE OWNED BY; Schema: darwin2; Owner: darwin2
 --
 
@@ -23186,7 +24549,7 @@ ALTER SEQUENCE darwin2.properties_id_seq OWNED BY darwin2.properties.id;
 
 
 --
--- TOC entry 333 (class 1259 OID 4817176)
+-- TOC entry 343 (class 1259 OID 4817176)
 -- Name: properties_values_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -23201,7 +24564,7 @@ CREATE SEQUENCE darwin2.properties_values_id_seq
 ALTER TABLE darwin2.properties_values_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 334 (class 1259 OID 4817178)
+-- TOC entry 344 (class 1259 OID 4817178)
 -- Name: ref_rec; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -23213,7 +24576,7 @@ CREATE TABLE darwin2.ref_rec (
 ALTER TABLE darwin2.ref_rec OWNER TO darwin2;
 
 --
--- TOC entry 335 (class 1259 OID 4817181)
+-- TOC entry 345 (class 1259 OID 4817181)
 -- Name: reports; Type: TABLE; Schema: darwin2; Owner: postgres
 --
 
@@ -23232,8 +24595,8 @@ CREATE TABLE darwin2.reports (
 ALTER TABLE darwin2.reports OWNER TO postgres;
 
 --
--- TOC entry 6474 (class 0 OID 0)
--- Dependencies: 335
+-- TOC entry 6497 (class 0 OID 0)
+-- Dependencies: 345
 -- Name: TABLE reports; Type: COMMENT; Schema: darwin2; Owner: postgres
 --
 
@@ -23241,8 +24604,8 @@ COMMENT ON TABLE darwin2.reports IS 'Table to handle users reports asking';
 
 
 --
--- TOC entry 6475 (class 0 OID 0)
--- Dependencies: 335
+-- TOC entry 6498 (class 0 OID 0)
+-- Dependencies: 345
 -- Name: COLUMN reports.user_ref; Type: COMMENT; Schema: darwin2; Owner: postgres
 --
 
@@ -23250,8 +24613,8 @@ COMMENT ON COLUMN darwin2.reports.user_ref IS 'The referenced user id';
 
 
 --
--- TOC entry 6476 (class 0 OID 0)
--- Dependencies: 335
+-- TOC entry 6499 (class 0 OID 0)
+-- Dependencies: 345
 -- Name: COLUMN reports.name; Type: COMMENT; Schema: darwin2; Owner: postgres
 --
 
@@ -23259,8 +24622,8 @@ COMMENT ON COLUMN darwin2.reports.name IS 'The report name';
 
 
 --
--- TOC entry 6477 (class 0 OID 0)
--- Dependencies: 335
+-- TOC entry 6500 (class 0 OID 0)
+-- Dependencies: 345
 -- Name: COLUMN reports.uri; Type: COMMENT; Schema: darwin2; Owner: postgres
 --
 
@@ -23268,8 +24631,8 @@ COMMENT ON COLUMN darwin2.reports.uri IS 'The path where the report file is stor
 
 
 --
--- TOC entry 6478 (class 0 OID 0)
--- Dependencies: 335
+-- TOC entry 6501 (class 0 OID 0)
+-- Dependencies: 345
 -- Name: COLUMN reports.lang; Type: COMMENT; Schema: darwin2; Owner: postgres
 --
 
@@ -23277,8 +24640,8 @@ COMMENT ON COLUMN darwin2.reports.lang IS 'The lang asked for this report';
 
 
 --
--- TOC entry 6479 (class 0 OID 0)
--- Dependencies: 335
+-- TOC entry 6502 (class 0 OID 0)
+-- Dependencies: 345
 -- Name: COLUMN reports.format; Type: COMMENT; Schema: darwin2; Owner: postgres
 --
 
@@ -23286,8 +24649,8 @@ COMMENT ON COLUMN darwin2.reports.format IS 'The file type of the report file, g
 
 
 --
--- TOC entry 6480 (class 0 OID 0)
--- Dependencies: 335
+-- TOC entry 6503 (class 0 OID 0)
+-- Dependencies: 345
 -- Name: COLUMN reports.comment; Type: COMMENT; Schema: darwin2; Owner: postgres
 --
 
@@ -23295,8 +24658,8 @@ COMMENT ON COLUMN darwin2.reports.comment IS 'A comment to add to the report, ju
 
 
 --
--- TOC entry 6481 (class 0 OID 0)
--- Dependencies: 335
+-- TOC entry 6504 (class 0 OID 0)
+-- Dependencies: 345
 -- Name: COLUMN reports.parameters; Type: COMMENT; Schema: darwin2; Owner: postgres
 --
 
@@ -23304,7 +24667,7 @@ COMMENT ON COLUMN darwin2.reports.parameters IS 'if the report requires some inf
 
 
 --
--- TOC entry 336 (class 1259 OID 4817188)
+-- TOC entry 346 (class 1259 OID 4817188)
 -- Name: reports_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: postgres
 --
 
@@ -23319,8 +24682,8 @@ CREATE SEQUENCE darwin2.reports_id_seq
 ALTER TABLE darwin2.reports_id_seq OWNER TO postgres;
 
 --
--- TOC entry 6483 (class 0 OID 0)
--- Dependencies: 336
+-- TOC entry 6506 (class 0 OID 0)
+-- Dependencies: 346
 -- Name: reports_id_seq; Type: SEQUENCE OWNED BY; Schema: darwin2; Owner: postgres
 --
 
@@ -23328,7 +24691,7 @@ ALTER SEQUENCE darwin2.reports_id_seq OWNED BY darwin2.reports.id;
 
 
 --
--- TOC entry 337 (class 1259 OID 4817190)
+-- TOC entry 347 (class 1259 OID 4817190)
 -- Name: specimen_collecting_methods_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -23343,7 +24706,7 @@ CREATE SEQUENCE darwin2.specimen_collecting_methods_id_seq
 ALTER TABLE darwin2.specimen_collecting_methods_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 338 (class 1259 OID 4817192)
+-- TOC entry 348 (class 1259 OID 4817192)
 -- Name: specimen_collecting_methods; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -23357,8 +24720,8 @@ CREATE TABLE darwin2.specimen_collecting_methods (
 ALTER TABLE darwin2.specimen_collecting_methods OWNER TO darwin2;
 
 --
--- TOC entry 6485 (class 0 OID 0)
--- Dependencies: 338
+-- TOC entry 6508 (class 0 OID 0)
+-- Dependencies: 348
 -- Name: TABLE specimen_collecting_methods; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -23366,8 +24729,8 @@ COMMENT ON TABLE darwin2.specimen_collecting_methods IS 'Association of collecti
 
 
 --
--- TOC entry 6486 (class 0 OID 0)
--- Dependencies: 338
+-- TOC entry 6509 (class 0 OID 0)
+-- Dependencies: 348
 -- Name: COLUMN specimen_collecting_methods.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -23375,8 +24738,8 @@ COMMENT ON COLUMN darwin2.specimen_collecting_methods.id IS 'Unique identifier o
 
 
 --
--- TOC entry 6487 (class 0 OID 0)
--- Dependencies: 338
+-- TOC entry 6510 (class 0 OID 0)
+-- Dependencies: 348
 -- Name: COLUMN specimen_collecting_methods.specimen_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -23384,8 +24747,8 @@ COMMENT ON COLUMN darwin2.specimen_collecting_methods.specimen_ref IS 'Identifie
 
 
 --
--- TOC entry 6488 (class 0 OID 0)
--- Dependencies: 338
+-- TOC entry 6511 (class 0 OID 0)
+-- Dependencies: 348
 -- Name: COLUMN specimen_collecting_methods.collecting_method_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -23393,7 +24756,7 @@ COMMENT ON COLUMN darwin2.specimen_collecting_methods.collecting_method_ref IS '
 
 
 --
--- TOC entry 339 (class 1259 OID 4817196)
+-- TOC entry 349 (class 1259 OID 4817196)
 -- Name: specimen_collecting_tools_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -23408,7 +24771,7 @@ CREATE SEQUENCE darwin2.specimen_collecting_tools_id_seq
 ALTER TABLE darwin2.specimen_collecting_tools_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 340 (class 1259 OID 4817198)
+-- TOC entry 350 (class 1259 OID 4817198)
 -- Name: specimen_collecting_tools; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -23422,8 +24785,8 @@ CREATE TABLE darwin2.specimen_collecting_tools (
 ALTER TABLE darwin2.specimen_collecting_tools OWNER TO darwin2;
 
 --
--- TOC entry 6490 (class 0 OID 0)
--- Dependencies: 340
+-- TOC entry 6513 (class 0 OID 0)
+-- Dependencies: 350
 -- Name: TABLE specimen_collecting_tools; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -23431,8 +24794,8 @@ COMMENT ON TABLE darwin2.specimen_collecting_tools IS 'Association of collecting
 
 
 --
--- TOC entry 6491 (class 0 OID 0)
--- Dependencies: 340
+-- TOC entry 6514 (class 0 OID 0)
+-- Dependencies: 350
 -- Name: COLUMN specimen_collecting_tools.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -23440,8 +24803,8 @@ COMMENT ON COLUMN darwin2.specimen_collecting_tools.id IS 'Unique identifier of 
 
 
 --
--- TOC entry 6492 (class 0 OID 0)
--- Dependencies: 340
+-- TOC entry 6515 (class 0 OID 0)
+-- Dependencies: 350
 -- Name: COLUMN specimen_collecting_tools.specimen_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -23449,8 +24812,8 @@ COMMENT ON COLUMN darwin2.specimen_collecting_tools.specimen_ref IS 'Identifier 
 
 
 --
--- TOC entry 6493 (class 0 OID 0)
--- Dependencies: 340
+-- TOC entry 6516 (class 0 OID 0)
+-- Dependencies: 350
 -- Name: COLUMN specimen_collecting_tools.collecting_tool_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -23458,7 +24821,7 @@ COMMENT ON COLUMN darwin2.specimen_collecting_tools.collecting_tool_ref IS 'Iden
 
 
 --
--- TOC entry 342 (class 1259 OID 4817242)
+-- TOC entry 352 (class 1259 OID 4817242)
 -- Name: specimens_accompanying_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -23473,7 +24836,7 @@ CREATE SEQUENCE darwin2.specimens_accompanying_id_seq
 ALTER TABLE darwin2.specimens_accompanying_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 343 (class 1259 OID 4817244)
+-- TOC entry 353 (class 1259 OID 4817244)
 -- Name: specimens_bck20181203; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -23605,7 +24968,7 @@ CREATE TABLE darwin2.specimens_bck20181203 (
 ALTER TABLE darwin2.specimens_bck20181203 OWNER TO darwin2;
 
 --
--- TOC entry 418 (class 1259 OID 5304987)
+-- TOC entry 428 (class 1259 OID 5304987)
 -- Name: specimens_bck20181213; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -23737,7 +25100,7 @@ CREATE TABLE darwin2.specimens_bck20181213 (
 ALTER TABLE darwin2.specimens_bck20181213 OWNER TO darwin2;
 
 --
--- TOC entry 344 (class 1259 OID 4817250)
+-- TOC entry 354 (class 1259 OID 4817250)
 -- Name: specimens_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -23752,8 +25115,8 @@ CREATE SEQUENCE darwin2.specimens_id_seq
 ALTER TABLE darwin2.specimens_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 6495 (class 0 OID 0)
--- Dependencies: 344
+-- TOC entry 6518 (class 0 OID 0)
+-- Dependencies: 354
 -- Name: specimens_id_seq; Type: SEQUENCE OWNED BY; Schema: darwin2; Owner: darwin2
 --
 
@@ -23761,7 +25124,7 @@ ALTER SEQUENCE darwin2.specimens_id_seq OWNED BY darwin2.specimens.id;
 
 
 --
--- TOC entry 345 (class 1259 OID 4817252)
+-- TOC entry 355 (class 1259 OID 4817252)
 -- Name: specimens_maincodes; Type: VIEW; Schema: darwin2; Owner: darwin2
 --
 
@@ -23895,7 +25258,7 @@ CREATE VIEW darwin2.specimens_maincodes AS
 ALTER TABLE darwin2.specimens_maincodes OWNER TO darwin2;
 
 --
--- TOC entry 346 (class 1259 OID 4817257)
+-- TOC entry 356 (class 1259 OID 4817257)
 -- Name: specimens_relationships; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -23918,8 +25281,8 @@ CREATE TABLE darwin2.specimens_relationships (
 ALTER TABLE darwin2.specimens_relationships OWNER TO darwin2;
 
 --
--- TOC entry 6497 (class 0 OID 0)
--- Dependencies: 346
+-- TOC entry 6520 (class 0 OID 0)
+-- Dependencies: 356
 -- Name: TABLE specimens_relationships; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -23927,8 +25290,8 @@ COMMENT ON TABLE darwin2.specimens_relationships IS 'List all the objects/specim
 
 
 --
--- TOC entry 6498 (class 0 OID 0)
--- Dependencies: 346
+-- TOC entry 6521 (class 0 OID 0)
+-- Dependencies: 356
 -- Name: COLUMN specimens_relationships.specimen_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -23936,8 +25299,8 @@ COMMENT ON COLUMN darwin2.specimens_relationships.specimen_ref IS 'Reference of 
 
 
 --
--- TOC entry 6499 (class 0 OID 0)
--- Dependencies: 346
+-- TOC entry 6522 (class 0 OID 0)
+-- Dependencies: 356
 -- Name: COLUMN specimens_relationships.relationship_type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -23945,8 +25308,8 @@ COMMENT ON COLUMN darwin2.specimens_relationships.relationship_type IS 'Type of 
 
 
 --
--- TOC entry 6500 (class 0 OID 0)
--- Dependencies: 346
+-- TOC entry 6523 (class 0 OID 0)
+-- Dependencies: 356
 -- Name: COLUMN specimens_relationships.unit_type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -23954,8 +25317,8 @@ COMMENT ON COLUMN darwin2.specimens_relationships.unit_type IS 'Type of the rela
 
 
 --
--- TOC entry 6501 (class 0 OID 0)
--- Dependencies: 346
+-- TOC entry 6524 (class 0 OID 0)
+-- Dependencies: 356
 -- Name: COLUMN specimens_relationships.taxon_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -23963,8 +25326,8 @@ COMMENT ON COLUMN darwin2.specimens_relationships.taxon_ref IS 'Reference of the
 
 
 --
--- TOC entry 6502 (class 0 OID 0)
--- Dependencies: 346
+-- TOC entry 6525 (class 0 OID 0)
+-- Dependencies: 356
 -- Name: COLUMN specimens_relationships.mineral_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -23972,8 +25335,8 @@ COMMENT ON COLUMN darwin2.specimens_relationships.mineral_ref IS 'Reference of r
 
 
 --
--- TOC entry 6503 (class 0 OID 0)
--- Dependencies: 346
+-- TOC entry 6526 (class 0 OID 0)
+-- Dependencies: 356
 -- Name: COLUMN specimens_relationships.institution_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -23981,8 +25344,8 @@ COMMENT ON COLUMN darwin2.specimens_relationships.institution_ref IS 'External S
 
 
 --
--- TOC entry 6504 (class 0 OID 0)
--- Dependencies: 346
+-- TOC entry 6527 (class 0 OID 0)
+-- Dependencies: 356
 -- Name: COLUMN specimens_relationships.source_name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -23990,8 +25353,8 @@ COMMENT ON COLUMN darwin2.specimens_relationships.source_name IS 'External Speci
 
 
 --
--- TOC entry 6505 (class 0 OID 0)
--- Dependencies: 346
+-- TOC entry 6528 (class 0 OID 0)
+-- Dependencies: 356
 -- Name: COLUMN specimens_relationships.source_id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -23999,8 +25362,8 @@ COMMENT ON COLUMN darwin2.specimens_relationships.source_id IS 'External Specime
 
 
 --
--- TOC entry 6506 (class 0 OID 0)
--- Dependencies: 346
+-- TOC entry 6529 (class 0 OID 0)
+-- Dependencies: 356
 -- Name: COLUMN specimens_relationships.quantity; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24008,7 +25371,7 @@ COMMENT ON COLUMN darwin2.specimens_relationships.quantity IS 'Quantity of accom
 
 
 --
--- TOC entry 347 (class 1259 OID 4817266)
+-- TOC entry 357 (class 1259 OID 4817266)
 -- Name: specimens_relationships_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -24023,8 +25386,8 @@ CREATE SEQUENCE darwin2.specimens_relationships_id_seq
 ALTER TABLE darwin2.specimens_relationships_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 6508 (class 0 OID 0)
--- Dependencies: 347
+-- TOC entry 6531 (class 0 OID 0)
+-- Dependencies: 357
 -- Name: specimens_relationships_id_seq; Type: SEQUENCE OWNED BY; Schema: darwin2; Owner: darwin2
 --
 
@@ -24032,7 +25395,7 @@ ALTER SEQUENCE darwin2.specimens_relationships_id_seq OWNED BY darwin2.specimens
 
 
 --
--- TOC entry 348 (class 1259 OID 4817268)
+-- TOC entry 358 (class 1259 OID 4817268)
 -- Name: staging_catalogue; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -24059,8 +25422,8 @@ CREATE TABLE darwin2.staging_catalogue (
 ALTER TABLE darwin2.staging_catalogue OWNER TO darwin2;
 
 --
--- TOC entry 6510 (class 0 OID 0)
--- Dependencies: 348
+-- TOC entry 6533 (class 0 OID 0)
+-- Dependencies: 358
 -- Name: TABLE staging_catalogue; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24068,8 +25431,8 @@ COMMENT ON TABLE darwin2.staging_catalogue IS 'Stores the catalogues hierarchy t
 
 
 --
--- TOC entry 6511 (class 0 OID 0)
--- Dependencies: 348
+-- TOC entry 6534 (class 0 OID 0)
+-- Dependencies: 358
 -- Name: COLUMN staging_catalogue.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24077,8 +25440,8 @@ COMMENT ON COLUMN darwin2.staging_catalogue.id IS 'Unique identifier of a to be 
 
 
 --
--- TOC entry 6512 (class 0 OID 0)
--- Dependencies: 348
+-- TOC entry 6535 (class 0 OID 0)
+-- Dependencies: 358
 -- Name: COLUMN staging_catalogue.import_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24086,8 +25449,8 @@ COMMENT ON COLUMN darwin2.staging_catalogue.import_ref IS 'Reference of import c
 
 
 --
--- TOC entry 6513 (class 0 OID 0)
--- Dependencies: 348
+-- TOC entry 6536 (class 0 OID 0)
+-- Dependencies: 358
 -- Name: COLUMN staging_catalogue.name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24095,8 +25458,8 @@ COMMENT ON COLUMN darwin2.staging_catalogue.name IS 'Name of unit to be imported
 
 
 --
--- TOC entry 6514 (class 0 OID 0)
--- Dependencies: 348
+-- TOC entry 6537 (class 0 OID 0)
+-- Dependencies: 358
 -- Name: COLUMN staging_catalogue.level_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24104,8 +25467,8 @@ COMMENT ON COLUMN darwin2.staging_catalogue.level_ref IS 'Level of unit to be im
 
 
 --
--- TOC entry 6515 (class 0 OID 0)
--- Dependencies: 348
+-- TOC entry 6538 (class 0 OID 0)
+-- Dependencies: 358
 -- Name: COLUMN staging_catalogue.parent_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24113,8 +25476,8 @@ COMMENT ON COLUMN darwin2.staging_catalogue.parent_ref IS 'ID of parent the unit
 
 
 --
--- TOC entry 6516 (class 0 OID 0)
--- Dependencies: 348
+-- TOC entry 6539 (class 0 OID 0)
+-- Dependencies: 358
 -- Name: COLUMN staging_catalogue.catalogue_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24122,8 +25485,8 @@ COMMENT ON COLUMN darwin2.staging_catalogue.catalogue_ref IS 'ID of unit in conc
 
 
 --
--- TOC entry 6517 (class 0 OID 0)
--- Dependencies: 348
+-- TOC entry 6540 (class 0 OID 0)
+-- Dependencies: 358
 -- Name: COLUMN staging_catalogue.parent_updated; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24131,7 +25494,7 @@ COMMENT ON COLUMN darwin2.staging_catalogue.parent_updated IS 'During the catalo
 
 
 --
--- TOC entry 349 (class 1259 OID 4817276)
+-- TOC entry 359 (class 1259 OID 4817276)
 -- Name: staging_catalogue_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -24146,8 +25509,8 @@ CREATE SEQUENCE darwin2.staging_catalogue_id_seq
 ALTER TABLE darwin2.staging_catalogue_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 6519 (class 0 OID 0)
--- Dependencies: 349
+-- TOC entry 6542 (class 0 OID 0)
+-- Dependencies: 359
 -- Name: staging_catalogue_id_seq; Type: SEQUENCE OWNED BY; Schema: darwin2; Owner: darwin2
 --
 
@@ -24155,7 +25518,7 @@ ALTER SEQUENCE darwin2.staging_catalogue_id_seq OWNED BY darwin2.staging_catalog
 
 
 --
--- TOC entry 350 (class 1259 OID 4817278)
+-- TOC entry 360 (class 1259 OID 4817278)
 -- Name: staging_collecting_methods; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -24169,8 +25532,8 @@ CREATE TABLE darwin2.staging_collecting_methods (
 ALTER TABLE darwin2.staging_collecting_methods OWNER TO darwin2;
 
 --
--- TOC entry 6521 (class 0 OID 0)
--- Dependencies: 350
+-- TOC entry 6544 (class 0 OID 0)
+-- Dependencies: 360
 -- Name: TABLE staging_collecting_methods; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24178,8 +25541,8 @@ COMMENT ON TABLE darwin2.staging_collecting_methods IS 'Association of collectin
 
 
 --
--- TOC entry 6522 (class 0 OID 0)
--- Dependencies: 350
+-- TOC entry 6545 (class 0 OID 0)
+-- Dependencies: 360
 -- Name: COLUMN staging_collecting_methods.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24187,8 +25550,8 @@ COMMENT ON COLUMN darwin2.staging_collecting_methods.id IS 'Unique identifier of
 
 
 --
--- TOC entry 6523 (class 0 OID 0)
--- Dependencies: 350
+-- TOC entry 6546 (class 0 OID 0)
+-- Dependencies: 360
 -- Name: COLUMN staging_collecting_methods.staging_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24196,8 +25559,8 @@ COMMENT ON COLUMN darwin2.staging_collecting_methods.staging_ref IS 'Identifier 
 
 
 --
--- TOC entry 6524 (class 0 OID 0)
--- Dependencies: 350
+-- TOC entry 6547 (class 0 OID 0)
+-- Dependencies: 360
 -- Name: COLUMN staging_collecting_methods.collecting_method_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24205,7 +25568,7 @@ COMMENT ON COLUMN darwin2.staging_collecting_methods.collecting_method_ref IS 'I
 
 
 --
--- TOC entry 351 (class 1259 OID 4817281)
+-- TOC entry 361 (class 1259 OID 4817281)
 -- Name: staging_collecting_methods_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -24220,8 +25583,8 @@ CREATE SEQUENCE darwin2.staging_collecting_methods_id_seq
 ALTER TABLE darwin2.staging_collecting_methods_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 6526 (class 0 OID 0)
--- Dependencies: 351
+-- TOC entry 6549 (class 0 OID 0)
+-- Dependencies: 361
 -- Name: staging_collecting_methods_id_seq; Type: SEQUENCE OWNED BY; Schema: darwin2; Owner: darwin2
 --
 
@@ -24229,7 +25592,7 @@ ALTER SEQUENCE darwin2.staging_collecting_methods_id_seq OWNED BY darwin2.stagin
 
 
 --
--- TOC entry 352 (class 1259 OID 4817283)
+-- TOC entry 362 (class 1259 OID 4817283)
 -- Name: staging_gtu_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -24244,7 +25607,7 @@ CREATE SEQUENCE darwin2.staging_gtu_id_seq
 ALTER TABLE darwin2.staging_gtu_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 353 (class 1259 OID 4817285)
+-- TOC entry 363 (class 1259 OID 4817285)
 -- Name: staging_gtu; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -24309,14 +25672,15 @@ CREATE TABLE darwin2.staging_gtu (
     sampling_method character varying,
     sampling_fixation character varying,
     imported boolean DEFAULT false,
-    pos_in_file integer
+    pos_in_file integer,
+    import_exception character varying
 );
 
 
 ALTER TABLE darwin2.staging_gtu OWNER TO darwin2;
 
 --
--- TOC entry 354 (class 1259 OID 4817298)
+-- TOC entry 364 (class 1259 OID 4817298)
 -- Name: staging_gtu_id_seq1; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -24331,8 +25695,8 @@ CREATE SEQUENCE darwin2.staging_gtu_id_seq1
 ALTER TABLE darwin2.staging_gtu_id_seq1 OWNER TO darwin2;
 
 --
--- TOC entry 6527 (class 0 OID 0)
--- Dependencies: 354
+-- TOC entry 6550 (class 0 OID 0)
+-- Dependencies: 364
 -- Name: staging_gtu_id_seq1; Type: SEQUENCE OWNED BY; Schema: darwin2; Owner: darwin2
 --
 
@@ -24340,7 +25704,7 @@ ALTER SEQUENCE darwin2.staging_gtu_id_seq1 OWNED BY darwin2.staging_gtu.id;
 
 
 --
--- TOC entry 355 (class 1259 OID 4817300)
+-- TOC entry 365 (class 1259 OID 4817300)
 -- Name: staging_gtu_tag_groups; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -24356,8 +25720,8 @@ CREATE TABLE darwin2.staging_gtu_tag_groups (
 ALTER TABLE darwin2.staging_gtu_tag_groups OWNER TO darwin2;
 
 --
--- TOC entry 6528 (class 0 OID 0)
--- Dependencies: 355
+-- TOC entry 6551 (class 0 OID 0)
+-- Dependencies: 365
 -- Name: TABLE staging_gtu_tag_groups; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24365,8 +25729,8 @@ COMMENT ON TABLE darwin2.staging_gtu_tag_groups IS 'List of grouped tags for an 
 
 
 --
--- TOC entry 6529 (class 0 OID 0)
--- Dependencies: 355
+-- TOC entry 6552 (class 0 OID 0)
+-- Dependencies: 365
 -- Name: COLUMN staging_gtu_tag_groups.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24374,8 +25738,8 @@ COMMENT ON COLUMN darwin2.staging_gtu_tag_groups.id IS 'Unique identifier of a g
 
 
 --
--- TOC entry 6530 (class 0 OID 0)
--- Dependencies: 355
+-- TOC entry 6553 (class 0 OID 0)
+-- Dependencies: 365
 -- Name: COLUMN staging_gtu_tag_groups.staging_gtu_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24383,8 +25747,8 @@ COMMENT ON COLUMN darwin2.staging_gtu_tag_groups.staging_gtu_ref IS 'Ref of an i
 
 
 --
--- TOC entry 6531 (class 0 OID 0)
--- Dependencies: 355
+-- TOC entry 6554 (class 0 OID 0)
+-- Dependencies: 365
 -- Name: COLUMN staging_gtu_tag_groups.group_name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24392,8 +25756,8 @@ COMMENT ON COLUMN darwin2.staging_gtu_tag_groups.group_name IS 'Group name under
 
 
 --
--- TOC entry 6532 (class 0 OID 0)
--- Dependencies: 355
+-- TOC entry 6555 (class 0 OID 0)
+-- Dependencies: 365
 -- Name: COLUMN staging_gtu_tag_groups.sub_group_name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24401,8 +25765,8 @@ COMMENT ON COLUMN darwin2.staging_gtu_tag_groups.sub_group_name IS 'Sub-Group na
 
 
 --
--- TOC entry 6533 (class 0 OID 0)
--- Dependencies: 355
+-- TOC entry 6556 (class 0 OID 0)
+-- Dependencies: 365
 -- Name: COLUMN staging_gtu_tag_groups.tag_value; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24410,7 +25774,7 @@ COMMENT ON COLUMN darwin2.staging_gtu_tag_groups.tag_value IS 'Ensemble of Tags'
 
 
 --
--- TOC entry 356 (class 1259 OID 4817306)
+-- TOC entry 366 (class 1259 OID 4817306)
 -- Name: staging_gtu_tag_groups_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -24425,8 +25789,8 @@ CREATE SEQUENCE darwin2.staging_gtu_tag_groups_id_seq
 ALTER TABLE darwin2.staging_gtu_tag_groups_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 6535 (class 0 OID 0)
--- Dependencies: 356
+-- TOC entry 6558 (class 0 OID 0)
+-- Dependencies: 366
 -- Name: staging_gtu_tag_groups_id_seq; Type: SEQUENCE OWNED BY; Schema: darwin2; Owner: darwin2
 --
 
@@ -24434,7 +25798,7 @@ ALTER SEQUENCE darwin2.staging_gtu_tag_groups_id_seq OWNED BY darwin2.staging_gt
 
 
 --
--- TOC entry 357 (class 1259 OID 4817308)
+-- TOC entry 367 (class 1259 OID 4817308)
 -- Name: staging_info; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -24448,7 +25812,7 @@ CREATE TABLE darwin2.staging_info (
 ALTER TABLE darwin2.staging_info OWNER TO darwin2;
 
 --
--- TOC entry 358 (class 1259 OID 4817314)
+-- TOC entry 368 (class 1259 OID 4817314)
 -- Name: staging_info_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -24463,8 +25827,8 @@ CREATE SEQUENCE darwin2.staging_info_id_seq
 ALTER TABLE darwin2.staging_info_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 6537 (class 0 OID 0)
--- Dependencies: 358
+-- TOC entry 6560 (class 0 OID 0)
+-- Dependencies: 368
 -- Name: staging_info_id_seq; Type: SEQUENCE OWNED BY; Schema: darwin2; Owner: darwin2
 --
 
@@ -24472,7 +25836,7 @@ ALTER SEQUENCE darwin2.staging_info_id_seq OWNED BY darwin2.staging_info.id;
 
 
 --
--- TOC entry 359 (class 1259 OID 4817316)
+-- TOC entry 369 (class 1259 OID 4817316)
 -- Name: staging_people_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -24487,7 +25851,7 @@ CREATE SEQUENCE darwin2.staging_people_id_seq
 ALTER TABLE darwin2.staging_people_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 360 (class 1259 OID 4817318)
+-- TOC entry 370 (class 1259 OID 4817318)
 -- Name: staging_people; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -24505,8 +25869,8 @@ INHERITS (darwin2.template_table_record_ref);
 ALTER TABLE darwin2.staging_people OWNER TO darwin2;
 
 --
--- TOC entry 6538 (class 0 OID 0)
--- Dependencies: 360
+-- TOC entry 6561 (class 0 OID 0)
+-- Dependencies: 370
 -- Name: TABLE staging_people; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24514,8 +25878,8 @@ COMMENT ON TABLE darwin2.staging_people IS 'List of people of staging units';
 
 
 --
--- TOC entry 6539 (class 0 OID 0)
--- Dependencies: 360
+-- TOC entry 6562 (class 0 OID 0)
+-- Dependencies: 370
 -- Name: COLUMN staging_people.referenced_relation; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24523,8 +25887,8 @@ COMMENT ON COLUMN darwin2.staging_people.referenced_relation IS 'Identifier-Name
 
 
 --
--- TOC entry 6540 (class 0 OID 0)
--- Dependencies: 360
+-- TOC entry 6563 (class 0 OID 0)
+-- Dependencies: 370
 -- Name: COLUMN staging_people.record_id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24532,8 +25896,8 @@ COMMENT ON COLUMN darwin2.staging_people.record_id IS 'Identifier of record conc
 
 
 --
--- TOC entry 6541 (class 0 OID 0)
--- Dependencies: 360
+-- TOC entry 6564 (class 0 OID 0)
+-- Dependencies: 370
 -- Name: COLUMN staging_people.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24541,8 +25905,8 @@ COMMENT ON COLUMN darwin2.staging_people.id IS 'Unique identifier of record';
 
 
 --
--- TOC entry 6542 (class 0 OID 0)
--- Dependencies: 360
+-- TOC entry 6565 (class 0 OID 0)
+-- Dependencies: 370
 -- Name: COLUMN staging_people.people_type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24550,8 +25914,8 @@ COMMENT ON COLUMN darwin2.staging_people.people_type IS 'Type of "people" associ
 
 
 --
--- TOC entry 6543 (class 0 OID 0)
--- Dependencies: 360
+-- TOC entry 6566 (class 0 OID 0)
+-- Dependencies: 370
 -- Name: COLUMN staging_people.people_sub_type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24559,8 +25923,8 @@ COMMENT ON COLUMN darwin2.staging_people.people_sub_type IS 'Type of "people" as
 
 
 --
--- TOC entry 6544 (class 0 OID 0)
--- Dependencies: 360
+-- TOC entry 6567 (class 0 OID 0)
+-- Dependencies: 370
 -- Name: COLUMN staging_people.order_by; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24568,8 +25932,8 @@ COMMENT ON COLUMN darwin2.staging_people.order_by IS 'Integer used to order the 
 
 
 --
--- TOC entry 6545 (class 0 OID 0)
--- Dependencies: 360
+-- TOC entry 6568 (class 0 OID 0)
+-- Dependencies: 370
 -- Name: COLUMN staging_people.people_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24577,8 +25941,8 @@ COMMENT ON COLUMN darwin2.staging_people.people_ref IS 'Reference of person conc
 
 
 --
--- TOC entry 6546 (class 0 OID 0)
--- Dependencies: 360
+-- TOC entry 6569 (class 0 OID 0)
+-- Dependencies: 370
 -- Name: COLUMN staging_people.formated_name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24586,7 +25950,7 @@ COMMENT ON COLUMN darwin2.staging_people.formated_name IS 'full name of the peop
 
 
 --
--- TOC entry 361 (class 1259 OID 4817328)
+-- TOC entry 371 (class 1259 OID 4817328)
 -- Name: staging_relationship; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -24611,8 +25975,8 @@ CREATE TABLE darwin2.staging_relationship (
 ALTER TABLE darwin2.staging_relationship OWNER TO darwin2;
 
 --
--- TOC entry 6547 (class 0 OID 0)
--- Dependencies: 361
+-- TOC entry 6570 (class 0 OID 0)
+-- Dependencies: 371
 -- Name: COLUMN staging_relationship.record_id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24620,8 +25984,8 @@ COMMENT ON COLUMN darwin2.staging_relationship.record_id IS 'id of the orignial 
 
 
 --
--- TOC entry 6548 (class 0 OID 0)
--- Dependencies: 361
+-- TOC entry 6571 (class 0 OID 0)
+-- Dependencies: 371
 -- Name: COLUMN staging_relationship.referenced_relation; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24629,8 +25993,8 @@ COMMENT ON COLUMN darwin2.staging_relationship.referenced_relation IS 'where to 
 
 
 --
--- TOC entry 6549 (class 0 OID 0)
--- Dependencies: 361
+-- TOC entry 6572 (class 0 OID 0)
+-- Dependencies: 371
 -- Name: COLUMN staging_relationship.relationship_type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24638,8 +26002,8 @@ COMMENT ON COLUMN darwin2.staging_relationship.relationship_type IS 'relation ty
 
 
 --
--- TOC entry 6550 (class 0 OID 0)
--- Dependencies: 361
+-- TOC entry 6573 (class 0 OID 0)
+-- Dependencies: 371
 -- Name: COLUMN staging_relationship.staging_related_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24647,8 +26011,8 @@ COMMENT ON COLUMN darwin2.staging_relationship.staging_related_ref IS 'the recor
 
 
 --
--- TOC entry 6551 (class 0 OID 0)
--- Dependencies: 361
+-- TOC entry 6574 (class 0 OID 0)
+-- Dependencies: 371
 -- Name: COLUMN staging_relationship.institution_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24656,8 +26020,8 @@ COMMENT ON COLUMN darwin2.staging_relationship.institution_ref IS 'the instituti
 
 
 --
--- TOC entry 6552 (class 0 OID 0)
--- Dependencies: 361
+-- TOC entry 6575 (class 0 OID 0)
+-- Dependencies: 371
 -- Name: COLUMN staging_relationship.institution_name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24665,8 +26029,8 @@ COMMENT ON COLUMN darwin2.staging_relationship.institution_name IS 'the institut
 
 
 --
--- TOC entry 6553 (class 0 OID 0)
--- Dependencies: 361
+-- TOC entry 6576 (class 0 OID 0)
+-- Dependencies: 371
 -- Name: COLUMN staging_relationship.source_name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24674,8 +26038,8 @@ COMMENT ON COLUMN darwin2.staging_relationship.source_name IS 'External Specimen
 
 
 --
--- TOC entry 6554 (class 0 OID 0)
--- Dependencies: 361
+-- TOC entry 6577 (class 0 OID 0)
+-- Dependencies: 371
 -- Name: COLUMN staging_relationship.source_id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24683,7 +26047,7 @@ COMMENT ON COLUMN darwin2.staging_relationship.source_id IS 'External Specimen r
 
 
 --
--- TOC entry 362 (class 1259 OID 4817336)
+-- TOC entry 372 (class 1259 OID 4817336)
 -- Name: staging_relationship_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -24698,8 +26062,8 @@ CREATE SEQUENCE darwin2.staging_relationship_id_seq
 ALTER TABLE darwin2.staging_relationship_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 6556 (class 0 OID 0)
--- Dependencies: 362
+-- TOC entry 6579 (class 0 OID 0)
+-- Dependencies: 372
 -- Name: staging_relationship_id_seq; Type: SEQUENCE OWNED BY; Schema: darwin2; Owner: darwin2
 --
 
@@ -24707,7 +26071,7 @@ ALTER SEQUENCE darwin2.staging_relationship_id_seq OWNED BY darwin2.staging_rela
 
 
 --
--- TOC entry 363 (class 1259 OID 4817338)
+-- TOC entry 373 (class 1259 OID 4817338)
 -- Name: staging_tag_groups_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -24722,7 +26086,7 @@ CREATE SEQUENCE darwin2.staging_tag_groups_id_seq
 ALTER TABLE darwin2.staging_tag_groups_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 364 (class 1259 OID 4817340)
+-- TOC entry 374 (class 1259 OID 4817340)
 -- Name: staging_tag_groups; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -24738,8 +26102,8 @@ CREATE TABLE darwin2.staging_tag_groups (
 ALTER TABLE darwin2.staging_tag_groups OWNER TO darwin2;
 
 --
--- TOC entry 6557 (class 0 OID 0)
--- Dependencies: 364
+-- TOC entry 6580 (class 0 OID 0)
+-- Dependencies: 374
 -- Name: TABLE staging_tag_groups; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24747,8 +26111,8 @@ COMMENT ON TABLE darwin2.staging_tag_groups IS 'List of grouped tags for an impo
 
 
 --
--- TOC entry 6558 (class 0 OID 0)
--- Dependencies: 364
+-- TOC entry 6581 (class 0 OID 0)
+-- Dependencies: 374
 -- Name: COLUMN staging_tag_groups.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24756,8 +26120,8 @@ COMMENT ON COLUMN darwin2.staging_tag_groups.id IS 'Unique identifier of a group
 
 
 --
--- TOC entry 6559 (class 0 OID 0)
--- Dependencies: 364
+-- TOC entry 6582 (class 0 OID 0)
+-- Dependencies: 374
 -- Name: COLUMN staging_tag_groups.staging_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24765,8 +26129,8 @@ COMMENT ON COLUMN darwin2.staging_tag_groups.staging_ref IS 'Ref of an imported 
 
 
 --
--- TOC entry 6560 (class 0 OID 0)
--- Dependencies: 364
+-- TOC entry 6583 (class 0 OID 0)
+-- Dependencies: 374
 -- Name: COLUMN staging_tag_groups.group_name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24774,8 +26138,8 @@ COMMENT ON COLUMN darwin2.staging_tag_groups.group_name IS 'Group name under whi
 
 
 --
--- TOC entry 6561 (class 0 OID 0)
--- Dependencies: 364
+-- TOC entry 6584 (class 0 OID 0)
+-- Dependencies: 374
 -- Name: COLUMN staging_tag_groups.sub_group_name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24783,8 +26147,8 @@ COMMENT ON COLUMN darwin2.staging_tag_groups.sub_group_name IS 'Sub-Group name u
 
 
 --
--- TOC entry 6562 (class 0 OID 0)
--- Dependencies: 364
+-- TOC entry 6585 (class 0 OID 0)
+-- Dependencies: 374
 -- Name: COLUMN staging_tag_groups.tag_value; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24792,7 +26156,7 @@ COMMENT ON COLUMN darwin2.staging_tag_groups.tag_value IS 'Ensemble of Tags';
 
 
 --
--- TOC entry 426 (class 1259 OID 5308575)
+-- TOC entry 436 (class 1259 OID 5308575)
 -- Name: tag_authority_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -24807,8 +26171,8 @@ CREATE SEQUENCE darwin2.tag_authority_id_seq
 ALTER TABLE darwin2.tag_authority_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 6563 (class 0 OID 0)
--- Dependencies: 426
+-- TOC entry 6586 (class 0 OID 0)
+-- Dependencies: 436
 -- Name: tag_authority_id_seq; Type: SEQUENCE OWNED BY; Schema: darwin2; Owner: darwin2
 --
 
@@ -24816,7 +26180,7 @@ ALTER SEQUENCE darwin2.tag_authority_id_seq OWNED BY darwin2.tag_authority.id;
 
 
 --
--- TOC entry 422 (class 1259 OID 5308544)
+-- TOC entry 432 (class 1259 OID 5308544)
 -- Name: tag_group_distinct_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -24831,8 +26195,8 @@ CREATE SEQUENCE darwin2.tag_group_distinct_id_seq
 ALTER TABLE darwin2.tag_group_distinct_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 6565 (class 0 OID 0)
--- Dependencies: 422
+-- TOC entry 6588 (class 0 OID 0)
+-- Dependencies: 432
 -- Name: tag_group_distinct_id_seq; Type: SEQUENCE OWNED BY; Schema: darwin2; Owner: darwin2
 --
 
@@ -24840,7 +26204,7 @@ ALTER SEQUENCE darwin2.tag_group_distinct_id_seq OWNED BY darwin2.tag_group_dist
 
 
 --
--- TOC entry 367 (class 1259 OID 4817358)
+-- TOC entry 377 (class 1259 OID 4817358)
 -- Name: tags; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -24858,8 +26222,8 @@ CREATE TABLE darwin2.tags (
 ALTER TABLE darwin2.tags OWNER TO darwin2;
 
 --
--- TOC entry 6567 (class 0 OID 0)
--- Dependencies: 367
+-- TOC entry 6590 (class 0 OID 0)
+-- Dependencies: 377
 -- Name: TABLE tags; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24867,8 +26231,8 @@ COMMENT ON TABLE darwin2.tags IS 'List of calculated tags for a groups. This is 
 
 
 --
--- TOC entry 6568 (class 0 OID 0)
--- Dependencies: 367
+-- TOC entry 6591 (class 0 OID 0)
+-- Dependencies: 377
 -- Name: COLUMN tags.gtu_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24876,8 +26240,8 @@ COMMENT ON COLUMN darwin2.tags.gtu_ref IS 'Reference to a Gtu';
 
 
 --
--- TOC entry 6569 (class 0 OID 0)
--- Dependencies: 367
+-- TOC entry 6592 (class 0 OID 0)
+-- Dependencies: 377
 -- Name: COLUMN tags.group_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24885,8 +26249,8 @@ COMMENT ON COLUMN darwin2.tags.group_ref IS 'Reference of the Group name under w
 
 
 --
--- TOC entry 6570 (class 0 OID 0)
--- Dependencies: 367
+-- TOC entry 6593 (class 0 OID 0)
+-- Dependencies: 377
 -- Name: COLUMN tags.group_type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24894,8 +26258,8 @@ COMMENT ON COLUMN darwin2.tags.group_type IS 'Indexed form of a group name';
 
 
 --
--- TOC entry 6571 (class 0 OID 0)
--- Dependencies: 367
+-- TOC entry 6594 (class 0 OID 0)
+-- Dependencies: 377
 -- Name: COLUMN tags.sub_group_type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24903,8 +26267,8 @@ COMMENT ON COLUMN darwin2.tags.sub_group_type IS 'Indexed form of a sub-group na
 
 
 --
--- TOC entry 6572 (class 0 OID 0)
--- Dependencies: 367
+-- TOC entry 6595 (class 0 OID 0)
+-- Dependencies: 377
 -- Name: COLUMN tags.tag; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24912,8 +26276,8 @@ COMMENT ON COLUMN darwin2.tags.tag IS 'The readable version of the tag';
 
 
 --
--- TOC entry 6573 (class 0 OID 0)
--- Dependencies: 367
+-- TOC entry 6596 (class 0 OID 0)
+-- Dependencies: 377
 -- Name: COLUMN tags.tag_indexed; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24921,7 +26285,7 @@ COMMENT ON COLUMN darwin2.tags.tag_indexed IS 'The indexed version of the tag';
 
 
 --
--- TOC entry 368 (class 1259 OID 4817364)
+-- TOC entry 378 (class 1259 OID 4817364)
 -- Name: tags_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -24936,8 +26300,8 @@ CREATE SEQUENCE darwin2.tags_id_seq
 ALTER TABLE darwin2.tags_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 6575 (class 0 OID 0)
--- Dependencies: 368
+-- TOC entry 6598 (class 0 OID 0)
+-- Dependencies: 378
 -- Name: tags_id_seq; Type: SEQUENCE OWNED BY; Schema: darwin2; Owner: darwin2
 --
 
@@ -24945,7 +26309,7 @@ ALTER SEQUENCE darwin2.tags_id_seq OWNED BY darwin2.tags.id;
 
 
 --
--- TOC entry 369 (class 1259 OID 4817366)
+-- TOC entry 379 (class 1259 OID 4817366)
 -- Name: taxonomy_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -24960,7 +26324,7 @@ CREATE SEQUENCE darwin2.taxonomy_id_seq
 ALTER TABLE darwin2.taxonomy_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 370 (class 1259 OID 4817368)
+-- TOC entry 380 (class 1259 OID 4817368)
 -- Name: taxonomy; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -24980,8 +26344,8 @@ INHERITS (darwin2.template_classifications);
 ALTER TABLE darwin2.taxonomy OWNER TO darwin2;
 
 --
--- TOC entry 6576 (class 0 OID 0)
--- Dependencies: 370
+-- TOC entry 6599 (class 0 OID 0)
+-- Dependencies: 380
 -- Name: TABLE taxonomy; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24989,8 +26353,8 @@ COMMENT ON TABLE darwin2.taxonomy IS 'Taxonomic classification table';
 
 
 --
--- TOC entry 6577 (class 0 OID 0)
--- Dependencies: 370
+-- TOC entry 6600 (class 0 OID 0)
+-- Dependencies: 380
 -- Name: COLUMN taxonomy.name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -24998,8 +26362,8 @@ COMMENT ON COLUMN darwin2.taxonomy.name IS 'Classification unit name';
 
 
 --
--- TOC entry 6578 (class 0 OID 0)
--- Dependencies: 370
+-- TOC entry 6601 (class 0 OID 0)
+-- Dependencies: 380
 -- Name: COLUMN taxonomy.name_indexed; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -25007,8 +26371,8 @@ COMMENT ON COLUMN darwin2.taxonomy.name_indexed IS 'Indexed form of name field';
 
 
 --
--- TOC entry 6579 (class 0 OID 0)
--- Dependencies: 370
+-- TOC entry 6602 (class 0 OID 0)
+-- Dependencies: 380
 -- Name: COLUMN taxonomy.level_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -25016,8 +26380,8 @@ COMMENT ON COLUMN darwin2.taxonomy.level_ref IS 'Reference of classification lev
 
 
 --
--- TOC entry 6580 (class 0 OID 0)
--- Dependencies: 370
+-- TOC entry 6603 (class 0 OID 0)
+-- Dependencies: 380
 -- Name: COLUMN taxonomy.status; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -25025,8 +26389,8 @@ COMMENT ON COLUMN darwin2.taxonomy.status IS 'Validitiy status: valid, invalid, 
 
 
 --
--- TOC entry 6581 (class 0 OID 0)
--- Dependencies: 370
+-- TOC entry 6604 (class 0 OID 0)
+-- Dependencies: 380
 -- Name: COLUMN taxonomy.path; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -25034,8 +26398,8 @@ COMMENT ON COLUMN darwin2.taxonomy.path IS 'Hierarchy path (/ for root)';
 
 
 --
--- TOC entry 6582 (class 0 OID 0)
--- Dependencies: 370
+-- TOC entry 6605 (class 0 OID 0)
+-- Dependencies: 380
 -- Name: COLUMN taxonomy.parent_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -25043,8 +26407,8 @@ COMMENT ON COLUMN darwin2.taxonomy.parent_ref IS 'Id of parent - id field from t
 
 
 --
--- TOC entry 6583 (class 0 OID 0)
--- Dependencies: 370
+-- TOC entry 6606 (class 0 OID 0)
+-- Dependencies: 380
 -- Name: COLUMN taxonomy.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -25052,8 +26416,8 @@ COMMENT ON COLUMN darwin2.taxonomy.id IS 'Unique identifier of a classification 
 
 
 --
--- TOC entry 6584 (class 0 OID 0)
--- Dependencies: 370
+-- TOC entry 6607 (class 0 OID 0)
+-- Dependencies: 380
 -- Name: COLUMN taxonomy.extinct; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -25061,7 +26425,7 @@ COMMENT ON COLUMN darwin2.taxonomy.extinct IS 'Tells if taxonomy is extinct or n
 
 
 --
--- TOC entry 435 (class 1259 OID 5308736)
+-- TOC entry 445 (class 1259 OID 5308736)
 -- Name: taxonomy_authority; Type: TABLE; Schema: darwin2; Owner: postgres
 --
 
@@ -25080,7 +26444,7 @@ CREATE TABLE darwin2.taxonomy_authority (
 ALTER TABLE darwin2.taxonomy_authority OWNER TO postgres;
 
 --
--- TOC entry 434 (class 1259 OID 5308734)
+-- TOC entry 444 (class 1259 OID 5308734)
 -- Name: taxonomy_authority_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: postgres
 --
 
@@ -25095,8 +26459,8 @@ CREATE SEQUENCE darwin2.taxonomy_authority_id_seq
 ALTER TABLE darwin2.taxonomy_authority_id_seq OWNER TO postgres;
 
 --
--- TOC entry 6587 (class 0 OID 0)
--- Dependencies: 434
+-- TOC entry 6610 (class 0 OID 0)
+-- Dependencies: 444
 -- Name: taxonomy_authority_id_seq; Type: SEQUENCE OWNED BY; Schema: darwin2; Owner: postgres
 --
 
@@ -25104,7 +26468,7 @@ ALTER SEQUENCE darwin2.taxonomy_authority_id_seq OWNED BY darwin2.taxonomy_autho
 
 
 --
--- TOC entry 371 (class 1259 OID 4817382)
+-- TOC entry 381 (class 1259 OID 4817382)
 -- Name: taxonomy_metadata; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -25125,7 +26489,7 @@ CREATE TABLE darwin2.taxonomy_metadata (
 ALTER TABLE darwin2.taxonomy_metadata OWNER TO darwin2;
 
 --
--- TOC entry 372 (class 1259 OID 4817388)
+-- TOC entry 382 (class 1259 OID 4817388)
 -- Name: taxonomy_metadata_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -25140,8 +26504,8 @@ CREATE SEQUENCE darwin2.taxonomy_metadata_id_seq
 ALTER TABLE darwin2.taxonomy_metadata_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 6589 (class 0 OID 0)
--- Dependencies: 372
+-- TOC entry 6612 (class 0 OID 0)
+-- Dependencies: 382
 -- Name: taxonomy_metadata_id_seq; Type: SEQUENCE OWNED BY; Schema: darwin2; Owner: darwin2
 --
 
@@ -25149,7 +26513,7 @@ ALTER SEQUENCE darwin2.taxonomy_metadata_id_seq OWNED BY darwin2.taxonomy_metada
 
 
 --
--- TOC entry 373 (class 1259 OID 4817390)
+-- TOC entry 383 (class 1259 OID 4817390)
 -- Name: temp_mineralogy; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -25174,7 +26538,7 @@ CREATE TABLE darwin2.temp_mineralogy (
 ALTER TABLE darwin2.temp_mineralogy OWNER TO darwin2;
 
 --
--- TOC entry 416 (class 1259 OID 5304933)
+-- TOC entry 426 (class 1259 OID 5304933)
 -- Name: temporal_information_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -25189,8 +26553,8 @@ CREATE SEQUENCE darwin2.temporal_information_id_seq
 ALTER TABLE darwin2.temporal_information_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 6590 (class 0 OID 0)
--- Dependencies: 416
+-- TOC entry 6613 (class 0 OID 0)
+-- Dependencies: 426
 -- Name: temporal_information_id_seq; Type: SEQUENCE OWNED BY; Schema: darwin2; Owner: darwin2
 --
 
@@ -25198,7 +26562,7 @@ ALTER SEQUENCE darwin2.temporal_information_id_seq OWNED BY darwin2.temporal_inf
 
 
 --
--- TOC entry 374 (class 1259 OID 4817396)
+-- TOC entry 384 (class 1259 OID 4817396)
 -- Name: tv_reporting_count_all_specimens_by_collection_year_ig; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -25219,7 +26583,7 @@ CREATE TABLE darwin2.tv_reporting_count_all_specimens_by_collection_year_ig (
 ALTER TABLE darwin2.tv_reporting_count_all_specimens_by_collection_year_ig OWNER TO darwin2;
 
 --
--- TOC entry 375 (class 1259 OID 4817402)
+-- TOC entry 385 (class 1259 OID 4817402)
 -- Name: tv_reporting_count_all_specimens_type_by_collection_ref_year_ig; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -25241,7 +26605,7 @@ CREATE TABLE darwin2.tv_reporting_count_all_specimens_type_by_collection_ref_yea
 ALTER TABLE darwin2.tv_reporting_count_all_specimens_type_by_collection_ref_year_ig OWNER TO darwin2;
 
 --
--- TOC entry 376 (class 1259 OID 4817408)
+-- TOC entry 386 (class 1259 OID 4817408)
 -- Name: tv_reporting_taxa_in_specimen_per_rank_collection_ref_year_ig; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -25265,7 +26629,7 @@ CREATE TABLE darwin2.tv_reporting_taxa_in_specimen_per_rank_collection_ref_year_
 ALTER TABLE darwin2.tv_reporting_taxa_in_specimen_per_rank_collection_ref_year_ig OWNER TO darwin2;
 
 --
--- TOC entry 379 (class 1259 OID 4817431)
+-- TOC entry 389 (class 1259 OID 4817431)
 -- Name: users_addresses_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -25280,7 +26644,7 @@ CREATE SEQUENCE darwin2.users_addresses_id_seq
 ALTER TABLE darwin2.users_addresses_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 380 (class 1259 OID 4817433)
+-- TOC entry 390 (class 1259 OID 4817433)
 -- Name: users_addresses; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -25296,8 +26660,8 @@ INHERITS (darwin2.template_people_users_comm_common, darwin2.template_people_use
 ALTER TABLE darwin2.users_addresses OWNER TO darwin2;
 
 --
--- TOC entry 6596 (class 0 OID 0)
--- Dependencies: 380
+-- TOC entry 6619 (class 0 OID 0)
+-- Dependencies: 390
 -- Name: TABLE users_addresses; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -25305,8 +26669,8 @@ COMMENT ON TABLE darwin2.users_addresses IS 'Users addresses';
 
 
 --
--- TOC entry 6597 (class 0 OID 0)
--- Dependencies: 380
+-- TOC entry 6620 (class 0 OID 0)
+-- Dependencies: 390
 -- Name: COLUMN users_addresses.person_user_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -25314,8 +26678,8 @@ COMMENT ON COLUMN darwin2.users_addresses.person_user_ref IS 'Reference of the u
 
 
 --
--- TOC entry 6598 (class 0 OID 0)
--- Dependencies: 380
+-- TOC entry 6621 (class 0 OID 0)
+-- Dependencies: 390
 -- Name: COLUMN users_addresses.entry; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -25323,8 +26687,8 @@ COMMENT ON COLUMN darwin2.users_addresses.entry IS 'Street address';
 
 
 --
--- TOC entry 6599 (class 0 OID 0)
--- Dependencies: 380
+-- TOC entry 6622 (class 0 OID 0)
+-- Dependencies: 390
 -- Name: COLUMN users_addresses.po_box; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -25332,8 +26696,8 @@ COMMENT ON COLUMN darwin2.users_addresses.po_box IS 'PO Box';
 
 
 --
--- TOC entry 6600 (class 0 OID 0)
--- Dependencies: 380
+-- TOC entry 6623 (class 0 OID 0)
+-- Dependencies: 390
 -- Name: COLUMN users_addresses.extended_address; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -25341,8 +26705,8 @@ COMMENT ON COLUMN darwin2.users_addresses.extended_address IS 'Address extension
 
 
 --
--- TOC entry 6601 (class 0 OID 0)
--- Dependencies: 380
+-- TOC entry 6624 (class 0 OID 0)
+-- Dependencies: 390
 -- Name: COLUMN users_addresses.locality; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -25350,8 +26714,8 @@ COMMENT ON COLUMN darwin2.users_addresses.locality IS 'Locality';
 
 
 --
--- TOC entry 6602 (class 0 OID 0)
--- Dependencies: 380
+-- TOC entry 6625 (class 0 OID 0)
+-- Dependencies: 390
 -- Name: COLUMN users_addresses.region; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -25359,8 +26723,8 @@ COMMENT ON COLUMN darwin2.users_addresses.region IS 'Region';
 
 
 --
--- TOC entry 6603 (class 0 OID 0)
--- Dependencies: 380
+-- TOC entry 6626 (class 0 OID 0)
+-- Dependencies: 390
 -- Name: COLUMN users_addresses.zip_code; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -25368,8 +26732,8 @@ COMMENT ON COLUMN darwin2.users_addresses.zip_code IS 'Zip code';
 
 
 --
--- TOC entry 6604 (class 0 OID 0)
--- Dependencies: 380
+-- TOC entry 6627 (class 0 OID 0)
+-- Dependencies: 390
 -- Name: COLUMN users_addresses.country; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -25377,8 +26741,8 @@ COMMENT ON COLUMN darwin2.users_addresses.country IS 'Country';
 
 
 --
--- TOC entry 6605 (class 0 OID 0)
--- Dependencies: 380
+-- TOC entry 6628 (class 0 OID 0)
+-- Dependencies: 390
 -- Name: COLUMN users_addresses.person_user_role; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -25386,8 +26750,8 @@ COMMENT ON COLUMN darwin2.users_addresses.person_user_role IS 'User role in the 
 
 
 --
--- TOC entry 6606 (class 0 OID 0)
--- Dependencies: 380
+-- TOC entry 6629 (class 0 OID 0)
+-- Dependencies: 390
 -- Name: COLUMN users_addresses.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -25395,8 +26759,8 @@ COMMENT ON COLUMN darwin2.users_addresses.id IS 'Unique identifier of a user add
 
 
 --
--- TOC entry 6607 (class 0 OID 0)
--- Dependencies: 380
+-- TOC entry 6630 (class 0 OID 0)
+-- Dependencies: 390
 -- Name: COLUMN users_addresses.organization_unit; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -25404,8 +26768,8 @@ COMMENT ON COLUMN darwin2.users_addresses.organization_unit IS 'When a physical 
 
 
 --
--- TOC entry 6608 (class 0 OID 0)
--- Dependencies: 380
+-- TOC entry 6631 (class 0 OID 0)
+-- Dependencies: 390
 -- Name: COLUMN users_addresses.tag; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -25413,7 +26777,7 @@ COMMENT ON COLUMN darwin2.users_addresses.tag IS 'List of descriptive tags: home
 
 
 --
--- TOC entry 383 (class 1259 OID 4817452)
+-- TOC entry 393 (class 1259 OID 4817452)
 -- Name: users_languages_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -25428,7 +26792,7 @@ CREATE SEQUENCE darwin2.users_languages_id_seq
 ALTER TABLE darwin2.users_languages_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 384 (class 1259 OID 4817454)
+-- TOC entry 394 (class 1259 OID 4817454)
 -- Name: users_login_info_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -25443,7 +26807,7 @@ CREATE SEQUENCE darwin2.users_login_info_id_seq
 ALTER TABLE darwin2.users_login_info_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 385 (class 1259 OID 4817456)
+-- TOC entry 395 (class 1259 OID 4817456)
 -- Name: users_login_infos; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -25462,8 +26826,8 @@ CREATE TABLE darwin2.users_login_infos (
 ALTER TABLE darwin2.users_login_infos OWNER TO darwin2;
 
 --
--- TOC entry 6611 (class 0 OID 0)
--- Dependencies: 385
+-- TOC entry 6634 (class 0 OID 0)
+-- Dependencies: 395
 -- Name: TABLE users_login_infos; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -25471,8 +26835,8 @@ COMMENT ON TABLE darwin2.users_login_infos IS 'Contains the login/password infor
 
 
 --
--- TOC entry 6612 (class 0 OID 0)
--- Dependencies: 385
+-- TOC entry 6635 (class 0 OID 0)
+-- Dependencies: 395
 -- Name: COLUMN users_login_infos.user_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -25480,8 +26844,8 @@ COMMENT ON COLUMN darwin2.users_login_infos.user_ref IS 'Identifier of user - id
 
 
 --
--- TOC entry 6613 (class 0 OID 0)
--- Dependencies: 385
+-- TOC entry 6636 (class 0 OID 0)
+-- Dependencies: 395
 -- Name: COLUMN users_login_infos.login_type; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -25489,8 +26853,8 @@ COMMENT ON COLUMN darwin2.users_login_infos.login_type IS 'Type of identificatio
 
 
 --
--- TOC entry 6614 (class 0 OID 0)
--- Dependencies: 385
+-- TOC entry 6637 (class 0 OID 0)
+-- Dependencies: 395
 -- Name: COLUMN users_login_infos.user_name; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -25498,8 +26862,8 @@ COMMENT ON COLUMN darwin2.users_login_infos.user_name IS 'For some system (local
 
 
 --
--- TOC entry 6615 (class 0 OID 0)
--- Dependencies: 385
+-- TOC entry 6638 (class 0 OID 0)
+-- Dependencies: 395
 -- Name: COLUMN users_login_infos.password; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -25507,8 +26871,8 @@ COMMENT ON COLUMN darwin2.users_login_infos.password IS 'For some system (local,
 
 
 --
--- TOC entry 6616 (class 0 OID 0)
--- Dependencies: 385
+-- TOC entry 6639 (class 0 OID 0)
+-- Dependencies: 395
 -- Name: COLUMN users_login_infos.login_system; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -25516,8 +26880,8 @@ COMMENT ON COLUMN darwin2.users_login_infos.login_system IS 'For some system (sh
 
 
 --
--- TOC entry 6617 (class 0 OID 0)
--- Dependencies: 385
+-- TOC entry 6640 (class 0 OID 0)
+-- Dependencies: 395
 -- Name: COLUMN users_login_infos.renew_hash; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -25525,7 +26889,7 @@ COMMENT ON COLUMN darwin2.users_login_infos.renew_hash IS 'Hashed key defined wh
 
 
 --
--- TOC entry 386 (class 1259 OID 4817464)
+-- TOC entry 396 (class 1259 OID 4817464)
 -- Name: users_tracking_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: darwin2
 --
 
@@ -25540,7 +26904,7 @@ CREATE SEQUENCE darwin2.users_tracking_id_seq
 ALTER TABLE darwin2.users_tracking_id_seq OWNER TO darwin2;
 
 --
--- TOC entry 387 (class 1259 OID 4817466)
+-- TOC entry 397 (class 1259 OID 4817466)
 -- Name: users_tracking; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -25559,8 +26923,8 @@ CREATE TABLE darwin2.users_tracking (
 ALTER TABLE darwin2.users_tracking OWNER TO darwin2;
 
 --
--- TOC entry 6619 (class 0 OID 0)
--- Dependencies: 387
+-- TOC entry 6642 (class 0 OID 0)
+-- Dependencies: 397
 -- Name: TABLE users_tracking; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -25568,8 +26932,8 @@ COMMENT ON TABLE darwin2.users_tracking IS 'Tracking of users actions on tables'
 
 
 --
--- TOC entry 6620 (class 0 OID 0)
--- Dependencies: 387
+-- TOC entry 6643 (class 0 OID 0)
+-- Dependencies: 397
 -- Name: COLUMN users_tracking.id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -25577,8 +26941,8 @@ COMMENT ON COLUMN darwin2.users_tracking.id IS 'Unique identifier of a table tra
 
 
 --
--- TOC entry 6621 (class 0 OID 0)
--- Dependencies: 387
+-- TOC entry 6644 (class 0 OID 0)
+-- Dependencies: 397
 -- Name: COLUMN users_tracking.referenced_relation; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -25586,8 +26950,8 @@ COMMENT ON COLUMN darwin2.users_tracking.referenced_relation IS 'Reference-Name 
 
 
 --
--- TOC entry 6622 (class 0 OID 0)
--- Dependencies: 387
+-- TOC entry 6645 (class 0 OID 0)
+-- Dependencies: 397
 -- Name: COLUMN users_tracking.record_id; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -25595,8 +26959,8 @@ COMMENT ON COLUMN darwin2.users_tracking.record_id IS 'ID of record concerned';
 
 
 --
--- TOC entry 6623 (class 0 OID 0)
--- Dependencies: 387
+-- TOC entry 6646 (class 0 OID 0)
+-- Dependencies: 397
 -- Name: COLUMN users_tracking.user_ref; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -25604,8 +26968,8 @@ COMMENT ON COLUMN darwin2.users_tracking.user_ref IS 'Reference of user having m
 
 
 --
--- TOC entry 6624 (class 0 OID 0)
--- Dependencies: 387
+-- TOC entry 6647 (class 0 OID 0)
+-- Dependencies: 397
 -- Name: COLUMN users_tracking.action; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -25613,8 +26977,8 @@ COMMENT ON COLUMN darwin2.users_tracking.action IS 'Action done on table record:
 
 
 --
--- TOC entry 6625 (class 0 OID 0)
--- Dependencies: 387
+-- TOC entry 6648 (class 0 OID 0)
+-- Dependencies: 397
 -- Name: COLUMN users_tracking.modification_date_time; Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -25622,7 +26986,7 @@ COMMENT ON COLUMN darwin2.users_tracking.modification_date_time IS 'Track date a
 
 
 --
--- TOC entry 388 (class 1259 OID 4817475)
+-- TOC entry 398 (class 1259 OID 4817475)
 -- Name: v_darwin_ipt_rbins; Type: VIEW; Schema: darwin2; Owner: darwin2
 --
 
@@ -25672,7 +27036,7 @@ SELECT
 ALTER TABLE darwin2.v_darwin_ipt_rbins OWNER TO darwin2;
 
 --
--- TOC entry 389 (class 1259 OID 4817481)
+-- TOC entry 399 (class 1259 OID 4817481)
 -- Name: v_darwin_ipt_taxonomy; Type: VIEW; Schema: darwin2; Owner: darwin2
 --
 
@@ -25697,7 +27061,7 @@ CREATE VIEW darwin2.v_darwin_ipt_taxonomy AS
 ALTER TABLE darwin2.v_darwin_ipt_taxonomy OWNER TO darwin2;
 
 --
--- TOC entry 390 (class 1259 OID 4817486)
+-- TOC entry 400 (class 1259 OID 4817486)
 -- Name: vernacular_names; Type: TABLE; Schema: darwin2; Owner: postgres
 --
 
@@ -25714,8 +27078,8 @@ INHERITS (darwin2.template_table_record_ref);
 ALTER TABLE darwin2.vernacular_names OWNER TO postgres;
 
 --
--- TOC entry 6627 (class 0 OID 0)
--- Dependencies: 390
+-- TOC entry 6650 (class 0 OID 0)
+-- Dependencies: 400
 -- Name: TABLE vernacular_names; Type: COMMENT; Schema: darwin2; Owner: postgres
 --
 
@@ -25723,8 +27087,8 @@ COMMENT ON TABLE darwin2.vernacular_names IS 'List of vernacular names for a giv
 
 
 --
--- TOC entry 6628 (class 0 OID 0)
--- Dependencies: 390
+-- TOC entry 6651 (class 0 OID 0)
+-- Dependencies: 400
 -- Name: COLUMN vernacular_names.referenced_relation; Type: COMMENT; Schema: darwin2; Owner: postgres
 --
 
@@ -25732,8 +27096,8 @@ COMMENT ON COLUMN darwin2.vernacular_names.referenced_relation IS 'Reference of 
 
 
 --
--- TOC entry 6629 (class 0 OID 0)
--- Dependencies: 390
+-- TOC entry 6652 (class 0 OID 0)
+-- Dependencies: 400
 -- Name: COLUMN vernacular_names.record_id; Type: COMMENT; Schema: darwin2; Owner: postgres
 --
 
@@ -25741,8 +27105,8 @@ COMMENT ON COLUMN darwin2.vernacular_names.record_id IS 'Identifier of record a 
 
 
 --
--- TOC entry 6630 (class 0 OID 0)
--- Dependencies: 390
+-- TOC entry 6653 (class 0 OID 0)
+-- Dependencies: 400
 -- Name: COLUMN vernacular_names.community; Type: COMMENT; Schema: darwin2; Owner: postgres
 --
 
@@ -25750,8 +27114,8 @@ COMMENT ON COLUMN darwin2.vernacular_names.community IS 'Language community, a u
 
 
 --
--- TOC entry 6631 (class 0 OID 0)
--- Dependencies: 390
+-- TOC entry 6654 (class 0 OID 0)
+-- Dependencies: 400
 -- Name: COLUMN vernacular_names.community_indexed; Type: COMMENT; Schema: darwin2; Owner: postgres
 --
 
@@ -25759,8 +27123,8 @@ COMMENT ON COLUMN darwin2.vernacular_names.community_indexed IS 'indexed version
 
 
 --
--- TOC entry 6632 (class 0 OID 0)
--- Dependencies: 390
+-- TOC entry 6655 (class 0 OID 0)
+-- Dependencies: 400
 -- Name: COLUMN vernacular_names.name; Type: COMMENT; Schema: darwin2; Owner: postgres
 --
 
@@ -25768,8 +27132,8 @@ COMMENT ON COLUMN darwin2.vernacular_names.name IS 'Vernacular name';
 
 
 --
--- TOC entry 6633 (class 0 OID 0)
--- Dependencies: 390
+-- TOC entry 6656 (class 0 OID 0)
+-- Dependencies: 400
 -- Name: COLUMN vernacular_names.name_indexed; Type: COMMENT; Schema: darwin2; Owner: postgres
 --
 
@@ -25777,7 +27141,7 @@ COMMENT ON COLUMN darwin2.vernacular_names.name_indexed IS 'Indexed form of vern
 
 
 --
--- TOC entry 391 (class 1259 OID 4817492)
+-- TOC entry 401 (class 1259 OID 4817492)
 -- Name: v_darwin_ipt_taxonomy_vernacular; Type: VIEW; Schema: darwin2; Owner: darwin2
 --
 
@@ -25805,7 +27169,7 @@ CREATE VIEW darwin2.v_darwin_ipt_taxonomy_vernacular AS
 ALTER TABLE darwin2.v_darwin_ipt_taxonomy_vernacular OWNER TO darwin2;
 
 --
--- TOC entry 392 (class 1259 OID 4817497)
+-- TOC entry 402 (class 1259 OID 4817497)
 -- Name: v_imports_encoded_xml_name; Type: VIEW; Schema: darwin2; Owner: darwin2
 --
 
@@ -25830,7 +27194,7 @@ CREATE VIEW darwin2.v_imports_encoded_xml_name AS
 ALTER TABLE darwin2.v_imports_encoded_xml_name OWNER TO darwin2;
 
 --
--- TOC entry 393 (class 1259 OID 4817502)
+-- TOC entry 403 (class 1259 OID 4817502)
 -- Name: v_normalize_gtu_without_date; Type: MATERIALIZED VIEW; Schema: darwin2; Owner: darwin2
 --
 
@@ -25908,7 +27272,7 @@ CREATE MATERIALIZED VIEW darwin2.v_normalize_gtu_without_date AS
 ALTER TABLE darwin2.v_normalize_gtu_without_date OWNER TO darwin2;
 
 --
--- TOC entry 394 (class 1259 OID 4817510)
+-- TOC entry 404 (class 1259 OID 4817510)
 -- Name: v_normalize_gtu_without_date_no_code; Type: MATERIALIZED VIEW; Schema: darwin2; Owner: darwin2
 --
 
@@ -25984,7 +27348,7 @@ CREATE MATERIALIZED VIEW darwin2.v_normalize_gtu_without_date_no_code AS
 ALTER TABLE darwin2.v_normalize_gtu_without_date_no_code OWNER TO darwin2;
 
 --
--- TOC entry 421 (class 1259 OID 5307654)
+-- TOC entry 431 (class 1259 OID 5307654)
 -- Name: v_reindex_tag_spaces; Type: VIEW; Schema: darwin2; Owner: darwin2
 --
 
@@ -25998,7 +27362,7 @@ SELECT
 ALTER TABLE darwin2.v_reindex_tag_spaces OWNER TO darwin2;
 
 --
--- TOC entry 395 (class 1259 OID 4817518)
+-- TOC entry 405 (class 1259 OID 4817518)
 -- Name: v_reporting_count_all_specimens; Type: VIEW; Schema: darwin2; Owner: darwin2
 --
 
@@ -26012,7 +27376,7 @@ CREATE VIEW darwin2.v_reporting_count_all_specimens AS
 ALTER TABLE darwin2.v_reporting_count_all_specimens OWNER TO darwin2;
 
 --
--- TOC entry 396 (class 1259 OID 4817522)
+-- TOC entry 406 (class 1259 OID 4817522)
 -- Name: v_reporting_count_all_specimens_by_collection_year_ig; Type: VIEW; Schema: darwin2; Owner: darwin2
 --
 
@@ -26034,7 +27398,7 @@ CREATE VIEW darwin2.v_reporting_count_all_specimens_by_collection_year_ig AS
 ALTER TABLE darwin2.v_reporting_count_all_specimens_by_collection_year_ig OWNER TO darwin2;
 
 --
--- TOC entry 397 (class 1259 OID 4817527)
+-- TOC entry 407 (class 1259 OID 4817527)
 -- Name: v_reporting_count_all_specimens_by_year; Type: VIEW; Schema: darwin2; Owner: darwin2
 --
 
@@ -26050,7 +27414,7 @@ CREATE VIEW darwin2.v_reporting_count_all_specimens_by_year AS
 ALTER TABLE darwin2.v_reporting_count_all_specimens_by_year OWNER TO darwin2;
 
 --
--- TOC entry 398 (class 1259 OID 4817532)
+-- TOC entry 408 (class 1259 OID 4817532)
 -- Name: v_reporting_count_all_specimens_type; Type: VIEW; Schema: darwin2; Owner: darwin2
 --
 
@@ -26067,7 +27431,7 @@ CREATE VIEW darwin2.v_reporting_count_all_specimens_type AS
 ALTER TABLE darwin2.v_reporting_count_all_specimens_type OWNER TO darwin2;
 
 --
--- TOC entry 399 (class 1259 OID 4817537)
+-- TOC entry 409 (class 1259 OID 4817537)
 -- Name: v_reporting_count_all_specimens_type_by_collection_ref_year_ig; Type: VIEW; Schema: darwin2; Owner: darwin2
 --
 
@@ -26091,7 +27455,7 @@ CREATE VIEW darwin2.v_reporting_count_all_specimens_type_by_collection_ref_year_
 ALTER TABLE darwin2.v_reporting_count_all_specimens_type_by_collection_ref_year_ig OWNER TO darwin2;
 
 --
--- TOC entry 400 (class 1259 OID 4817542)
+-- TOC entry 410 (class 1259 OID 4817542)
 -- Name: v_reporting_count_all_specimens_type_by_year; Type: VIEW; Schema: darwin2; Owner: darwin2
 --
 
@@ -26109,7 +27473,7 @@ CREATE VIEW darwin2.v_reporting_count_all_specimens_type_by_year AS
 ALTER TABLE darwin2.v_reporting_count_all_specimens_type_by_year OWNER TO darwin2;
 
 --
--- TOC entry 401 (class 1259 OID 4817547)
+-- TOC entry 411 (class 1259 OID 4817547)
 -- Name: v_reporting_taxa_in_specimen_per_rank_collection_ref_year_ig; Type: VIEW; Schema: darwin2; Owner: darwin2
 --
 
@@ -26151,7 +27515,7 @@ CREATE VIEW darwin2.v_reporting_taxa_in_specimen_per_rank_collection_ref_year_ig
 ALTER TABLE darwin2.v_reporting_taxa_in_specimen_per_rank_collection_ref_year_ig OWNER TO darwin2;
 
 --
--- TOC entry 402 (class 1259 OID 4817552)
+-- TOC entry 412 (class 1259 OID 4817552)
 -- Name: v_reporting_taxa_in_specimen_per_year; Type: VIEW; Schema: darwin2; Owner: darwin2
 --
 
@@ -26171,7 +27535,7 @@ CREATE VIEW darwin2.v_reporting_taxa_in_specimen_per_year AS
 ALTER TABLE darwin2.v_reporting_taxa_in_specimen_per_year OWNER TO darwin2;
 
 --
--- TOC entry 403 (class 1259 OID 4817557)
+-- TOC entry 413 (class 1259 OID 4817557)
 -- Name: v_reporting_taxonomy_general; Type: VIEW; Schema: darwin2; Owner: darwin2
 --
 
@@ -26187,7 +27551,7 @@ CREATE VIEW darwin2.v_reporting_taxonomy_general AS
 ALTER TABLE darwin2.v_reporting_taxonomy_general OWNER TO darwin2;
 
 --
--- TOC entry 404 (class 1259 OID 4817561)
+-- TOC entry 414 (class 1259 OID 4817561)
 -- Name: v_reporting_taxonomy_in_specimen; Type: VIEW; Schema: darwin2; Owner: darwin2
 --
 
@@ -26202,7 +27566,7 @@ CREATE VIEW darwin2.v_reporting_taxonomy_in_specimen AS
 ALTER TABLE darwin2.v_reporting_taxonomy_in_specimen OWNER TO darwin2;
 
 --
--- TOC entry 405 (class 1259 OID 4817566)
+-- TOC entry 415 (class 1259 OID 4817566)
 -- Name: v_rmca_collections_path_as_text; Type: VIEW; Schema: darwin2; Owner: darwin2
 --
 
@@ -26251,7 +27615,7 @@ CREATE VIEW darwin2.v_rmca_collections_path_as_text AS
 ALTER TABLE darwin2.v_rmca_collections_path_as_text OWNER TO darwin2;
 
 --
--- TOC entry 406 (class 1259 OID 4817571)
+-- TOC entry 416 (class 1259 OID 4817571)
 -- Name: v_rmca_public_view; Type: VIEW; Schema: darwin2; Owner: darwin2
 --
 
@@ -26306,7 +27670,7 @@ CREATE VIEW darwin2.v_rmca_public_view AS
 ALTER TABLE darwin2.v_rmca_public_view OWNER TO darwin2;
 
 --
--- TOC entry 407 (class 1259 OID 4817576)
+-- TOC entry 417 (class 1259 OID 4817576)
 -- Name: v_rmca_taxo_detect_duplicate_hierarchies; Type: VIEW; Schema: darwin2; Owner: darwin2
 --
 
@@ -26334,7 +27698,7 @@ CREATE VIEW darwin2.v_rmca_taxo_detect_duplicate_hierarchies AS
 ALTER TABLE darwin2.v_rmca_taxo_detect_duplicate_hierarchies OWNER TO darwin2;
 
 --
--- TOC entry 408 (class 1259 OID 4817581)
+-- TOC entry 418 (class 1259 OID 4817581)
 -- Name: v_rmca_taxonomy_synonyms_with_name_and_specs; Type: VIEW; Schema: darwin2; Owner: darwin2
 --
 
@@ -26355,7 +27719,7 @@ SELECT
 ALTER TABLE darwin2.v_rmca_taxonomy_synonyms_with_name_and_specs OWNER TO darwin2;
 
 --
--- TOC entry 409 (class 1259 OID 4817587)
+-- TOC entry 419 (class 1259 OID 4817587)
 -- Name: vernacular_names_id_seq; Type: SEQUENCE; Schema: darwin2; Owner: postgres
 --
 
@@ -26370,8 +27734,8 @@ CREATE SEQUENCE darwin2.vernacular_names_id_seq
 ALTER TABLE darwin2.vernacular_names_id_seq OWNER TO postgres;
 
 --
--- TOC entry 6635 (class 0 OID 0)
--- Dependencies: 409
+-- TOC entry 6658 (class 0 OID 0)
+-- Dependencies: 419
 -- Name: vernacular_names_id_seq; Type: SEQUENCE OWNED BY; Schema: darwin2; Owner: postgres
 --
 
@@ -26379,7 +27743,7 @@ ALTER SEQUENCE darwin2.vernacular_names_id_seq OWNED BY darwin2.vernacular_names
 
 
 --
--- TOC entry 410 (class 1259 OID 4817589)
+-- TOC entry 420 (class 1259 OID 4817589)
 -- Name: zzz_franck_associate_file_to_record_march2018; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -26395,7 +27759,7 @@ CREATE TABLE darwin2.zzz_franck_associate_file_to_record_march2018 (
 ALTER TABLE darwin2.zzz_franck_associate_file_to_record_march2018 OWNER TO darwin2;
 
 --
--- TOC entry 411 (class 1259 OID 4817595)
+-- TOC entry 421 (class 1259 OID 4817595)
 -- Name: zzz_rotifer_specimens; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -26524,7 +27888,7 @@ CREATE TABLE darwin2.zzz_rotifer_specimens (
 ALTER TABLE darwin2.zzz_rotifer_specimens OWNER TO darwin2;
 
 --
--- TOC entry 412 (class 1259 OID 4817601)
+-- TOC entry 422 (class 1259 OID 4817601)
 -- Name: zzz_rotifer_taxa; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -26545,7 +27909,7 @@ CREATE TABLE darwin2.zzz_rotifer_taxa (
 ALTER TABLE darwin2.zzz_rotifer_taxa OWNER TO darwin2;
 
 --
--- TOC entry 413 (class 1259 OID 4817607)
+-- TOC entry 423 (class 1259 OID 4817607)
 -- Name: zzz_taxa_imported_not_cleaned; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -26558,7 +27922,7 @@ CREATE TABLE darwin2.zzz_taxa_imported_not_cleaned (
 ALTER TABLE darwin2.zzz_taxa_imported_not_cleaned OWNER TO darwin2;
 
 --
--- TOC entry 414 (class 1259 OID 4817613)
+-- TOC entry 424 (class 1259 OID 4817613)
 -- Name: zzz_users_tracking_archived; Type: TABLE; Schema: darwin2; Owner: darwin2
 --
 
@@ -26579,7 +27943,7 @@ CREATE TABLE darwin2.zzz_users_tracking_archived (
 ALTER TABLE darwin2.zzz_users_tracking_archived OWNER TO darwin2;
 
 --
--- TOC entry 415 (class 1259 OID 4817619)
+-- TOC entry 425 (class 1259 OID 4817619)
 -- Name: labeling; Type: VIEW; Schema: public; Owner: darwin2
 --
 
@@ -26781,7 +28145,7 @@ CREATE VIEW public.labeling AS
 ALTER TABLE public.labeling OWNER TO darwin2;
 
 --
--- TOC entry 4871 (class 2604 OID 5308567)
+-- TOC entry 4891 (class 2604 OID 5308567)
 -- Name: authority_domain id; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -26789,7 +28153,7 @@ ALTER TABLE ONLY darwin2.authority_domain ALTER COLUMN id SET DEFAULT nextval('d
 
 
 --
--- TOC entry 4556 (class 2604 OID 4817624)
+-- TOC entry 4576 (class 2604 OID 4817624)
 -- Name: bibliography id; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -26797,7 +28161,7 @@ ALTER TABLE ONLY darwin2.bibliography ALTER COLUMN id SET DEFAULT nextval('darwi
 
 
 --
--- TOC entry 4558 (class 2604 OID 4817625)
+-- TOC entry 4578 (class 2604 OID 4817625)
 -- Name: catalogue_bibliography id; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -26805,7 +28169,7 @@ ALTER TABLE ONLY darwin2.catalogue_bibliography ALTER COLUMN id SET DEFAULT next
 
 
 --
--- TOC entry 4573 (class 2604 OID 4817626)
+-- TOC entry 4593 (class 2604 OID 4817626)
 -- Name: chronostratigraphy status; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -26813,7 +28177,7 @@ ALTER TABLE ONLY darwin2.chronostratigraphy ALTER COLUMN status SET DEFAULT 'val
 
 
 --
--- TOC entry 4574 (class 2604 OID 4817627)
+-- TOC entry 4594 (class 2604 OID 4817627)
 -- Name: chronostratigraphy local_naming; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -26821,7 +28185,7 @@ ALTER TABLE ONLY darwin2.chronostratigraphy ALTER COLUMN local_naming SET DEFAUL
 
 
 --
--- TOC entry 4575 (class 2604 OID 4817628)
+-- TOC entry 4595 (class 2604 OID 4817628)
 -- Name: chronostratigraphy path; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -26829,7 +28193,7 @@ ALTER TABLE ONLY darwin2.chronostratigraphy ALTER COLUMN path SET DEFAULT '/'::c
 
 
 --
--- TOC entry 4665 (class 2604 OID 4817629)
+-- TOC entry 4685 (class 2604 OID 4817629)
 -- Name: lithology status; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -26837,7 +28201,7 @@ ALTER TABLE ONLY darwin2.lithology ALTER COLUMN status SET DEFAULT 'valid'::char
 
 
 --
--- TOC entry 4666 (class 2604 OID 4817630)
+-- TOC entry 4686 (class 2604 OID 4817630)
 -- Name: lithology local_naming; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -26845,7 +28209,7 @@ ALTER TABLE ONLY darwin2.lithology ALTER COLUMN local_naming SET DEFAULT false;
 
 
 --
--- TOC entry 4667 (class 2604 OID 4817631)
+-- TOC entry 4687 (class 2604 OID 4817631)
 -- Name: lithology path; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -26853,7 +28217,7 @@ ALTER TABLE ONLY darwin2.lithology ALTER COLUMN path SET DEFAULT '/'::character 
 
 
 --
--- TOC entry 4670 (class 2604 OID 4817632)
+-- TOC entry 4690 (class 2604 OID 4817632)
 -- Name: lithostratigraphy status; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -26861,7 +28225,7 @@ ALTER TABLE ONLY darwin2.lithostratigraphy ALTER COLUMN status SET DEFAULT 'vali
 
 
 --
--- TOC entry 4671 (class 2604 OID 4817633)
+-- TOC entry 4691 (class 2604 OID 4817633)
 -- Name: lithostratigraphy local_naming; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -26869,7 +28233,7 @@ ALTER TABLE ONLY darwin2.lithostratigraphy ALTER COLUMN local_naming SET DEFAULT
 
 
 --
--- TOC entry 4672 (class 2604 OID 4817634)
+-- TOC entry 4692 (class 2604 OID 4817634)
 -- Name: lithostratigraphy path; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -26877,7 +28241,7 @@ ALTER TABLE ONLY darwin2.lithostratigraphy ALTER COLUMN path SET DEFAULT '/'::ch
 
 
 --
--- TOC entry 4674 (class 2604 OID 4817635)
+-- TOC entry 4694 (class 2604 OID 4817635)
 -- Name: loan_history id; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -26885,7 +28249,7 @@ ALTER TABLE ONLY darwin2.loan_history ALTER COLUMN id SET DEFAULT nextval('darwi
 
 
 --
--- TOC entry 4690 (class 2604 OID 4817636)
+-- TOC entry 4710 (class 2604 OID 4817636)
 -- Name: mineralogy status; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -26893,7 +28257,7 @@ ALTER TABLE ONLY darwin2.mineralogy ALTER COLUMN status SET DEFAULT 'valid'::cha
 
 
 --
--- TOC entry 4691 (class 2604 OID 4817637)
+-- TOC entry 4711 (class 2604 OID 4817637)
 -- Name: mineralogy local_naming; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -26901,7 +28265,7 @@ ALTER TABLE ONLY darwin2.mineralogy ALTER COLUMN local_naming SET DEFAULT false;
 
 
 --
--- TOC entry 4692 (class 2604 OID 4817638)
+-- TOC entry 4712 (class 2604 OID 4817638)
 -- Name: mineralogy path; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -26909,7 +28273,7 @@ ALTER TABLE ONLY darwin2.mineralogy ALTER COLUMN path SET DEFAULT '/'::character
 
 
 --
--- TOC entry 4702 (class 2604 OID 4817639)
+-- TOC entry 4722 (class 2604 OID 4817639)
 -- Name: multimedia_todelete id; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -26917,7 +28281,7 @@ ALTER TABLE ONLY darwin2.multimedia_todelete ALTER COLUMN id SET DEFAULT nextval
 
 
 --
--- TOC entry 4746 (class 2604 OID 4817640)
+-- TOC entry 4766 (class 2604 OID 4817640)
 -- Name: people is_physical; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -26925,7 +28289,7 @@ ALTER TABLE ONLY darwin2.people ALTER COLUMN is_physical SET DEFAULT true;
 
 
 --
--- TOC entry 4747 (class 2604 OID 4817641)
+-- TOC entry 4767 (class 2604 OID 4817641)
 -- Name: people title; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -26933,7 +28297,7 @@ ALTER TABLE ONLY darwin2.people ALTER COLUMN title SET DEFAULT ''::character var
 
 
 --
--- TOC entry 4748 (class 2604 OID 4817642)
+-- TOC entry 4768 (class 2604 OID 4817642)
 -- Name: people birth_date_mask; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -26941,7 +28305,7 @@ ALTER TABLE ONLY darwin2.people ALTER COLUMN birth_date_mask SET DEFAULT 0;
 
 
 --
--- TOC entry 4749 (class 2604 OID 4817643)
+-- TOC entry 4769 (class 2604 OID 4817643)
 -- Name: people birth_date; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -26949,7 +28313,7 @@ ALTER TABLE ONLY darwin2.people ALTER COLUMN birth_date SET DEFAULT '0001-01-01'
 
 
 --
--- TOC entry 4619 (class 2604 OID 4817644)
+-- TOC entry 4639 (class 2604 OID 4817644)
 -- Name: properties id; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -26957,7 +28321,7 @@ ALTER TABLE ONLY darwin2.properties ALTER COLUMN id SET DEFAULT nextval('darwin2
 
 
 --
--- TOC entry 4767 (class 2604 OID 4817645)
+-- TOC entry 4787 (class 2604 OID 4817645)
 -- Name: reports id; Type: DEFAULT; Schema: darwin2; Owner: postgres
 --
 
@@ -26965,7 +28329,7 @@ ALTER TABLE ONLY darwin2.reports ALTER COLUMN id SET DEFAULT nextval('darwin2.re
 
 
 --
--- TOC entry 4803 (class 2604 OID 4817646)
+-- TOC entry 4823 (class 2604 OID 4817646)
 -- Name: specimens id; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -26973,7 +28337,7 @@ ALTER TABLE ONLY darwin2.specimens ALTER COLUMN id SET DEFAULT nextval('darwin2.
 
 
 --
--- TOC entry 4809 (class 2604 OID 4817647)
+-- TOC entry 4829 (class 2604 OID 4817647)
 -- Name: specimens_relationships id; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -26981,7 +28345,7 @@ ALTER TABLE ONLY darwin2.specimens_relationships ALTER COLUMN id SET DEFAULT nex
 
 
 --
--- TOC entry 4812 (class 2604 OID 4817648)
+-- TOC entry 4832 (class 2604 OID 4817648)
 -- Name: staging_catalogue id; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -26989,7 +28353,7 @@ ALTER TABLE ONLY darwin2.staging_catalogue ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
--- TOC entry 4814 (class 2604 OID 4817649)
+-- TOC entry 4834 (class 2604 OID 4817649)
 -- Name: staging_collecting_methods id; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -26997,7 +28361,7 @@ ALTER TABLE ONLY darwin2.staging_collecting_methods ALTER COLUMN id SET DEFAULT 
 
 
 --
--- TOC entry 4822 (class 2604 OID 4817650)
+-- TOC entry 4842 (class 2604 OID 4817650)
 -- Name: staging_gtu_tag_groups id; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27005,7 +28369,7 @@ ALTER TABLE ONLY darwin2.staging_gtu_tag_groups ALTER COLUMN id SET DEFAULT next
 
 
 --
--- TOC entry 4823 (class 2604 OID 4817651)
+-- TOC entry 4843 (class 2604 OID 4817651)
 -- Name: staging_info id; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27013,7 +28377,7 @@ ALTER TABLE ONLY darwin2.staging_info ALTER COLUMN id SET DEFAULT nextval('darwi
 
 
 --
--- TOC entry 4830 (class 2604 OID 4817652)
+-- TOC entry 4850 (class 2604 OID 4817652)
 -- Name: staging_relationship id; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27021,7 +28385,7 @@ ALTER TABLE ONLY darwin2.staging_relationship ALTER COLUMN id SET DEFAULT nextva
 
 
 --
--- TOC entry 4872 (class 2604 OID 5308580)
+-- TOC entry 4892 (class 2604 OID 5308580)
 -- Name: tag_authority id; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27029,7 +28393,7 @@ ALTER TABLE ONLY darwin2.tag_authority ALTER COLUMN id SET DEFAULT nextval('darw
 
 
 --
--- TOC entry 4870 (class 2604 OID 5308549)
+-- TOC entry 4890 (class 2604 OID 5308549)
 -- Name: tag_group_distinct id; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27037,7 +28401,7 @@ ALTER TABLE ONLY darwin2.tag_group_distinct ALTER COLUMN id SET DEFAULT nextval(
 
 
 --
--- TOC entry 4835 (class 2604 OID 4817653)
+-- TOC entry 4855 (class 2604 OID 4817653)
 -- Name: tags id; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27045,7 +28409,7 @@ ALTER TABLE ONLY darwin2.tags ALTER COLUMN id SET DEFAULT nextval('darwin2.tags_
 
 
 --
--- TOC entry 4840 (class 2604 OID 4817654)
+-- TOC entry 4860 (class 2604 OID 4817654)
 -- Name: taxonomy status; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27053,7 +28417,7 @@ ALTER TABLE ONLY darwin2.taxonomy ALTER COLUMN status SET DEFAULT 'valid'::chara
 
 
 --
--- TOC entry 4841 (class 2604 OID 4817655)
+-- TOC entry 4861 (class 2604 OID 4817655)
 -- Name: taxonomy local_naming; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27061,7 +28425,7 @@ ALTER TABLE ONLY darwin2.taxonomy ALTER COLUMN local_naming SET DEFAULT false;
 
 
 --
--- TOC entry 4842 (class 2604 OID 4817656)
+-- TOC entry 4862 (class 2604 OID 4817656)
 -- Name: taxonomy path; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27069,7 +28433,7 @@ ALTER TABLE ONLY darwin2.taxonomy ALTER COLUMN path SET DEFAULT '/'::character v
 
 
 --
--- TOC entry 4874 (class 2604 OID 5308739)
+-- TOC entry 4894 (class 2604 OID 5308739)
 -- Name: taxonomy_authority id; Type: DEFAULT; Schema: darwin2; Owner: postgres
 --
 
@@ -27077,7 +28441,7 @@ ALTER TABLE ONLY darwin2.taxonomy_authority ALTER COLUMN id SET DEFAULT nextval(
 
 
 --
--- TOC entry 4844 (class 2604 OID 4817657)
+-- TOC entry 4864 (class 2604 OID 4817657)
 -- Name: taxonomy_metadata id; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27085,7 +28449,7 @@ ALTER TABLE ONLY darwin2.taxonomy_metadata ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
--- TOC entry 4865 (class 2604 OID 5304938)
+-- TOC entry 4885 (class 2604 OID 5304938)
 -- Name: temporal_information id; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27093,7 +28457,7 @@ ALTER TABLE ONLY darwin2.temporal_information ALTER COLUMN id SET DEFAULT nextva
 
 
 --
--- TOC entry 4849 (class 2604 OID 4817658)
+-- TOC entry 4869 (class 2604 OID 4817658)
 -- Name: users is_physical; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27101,7 +28465,7 @@ ALTER TABLE ONLY darwin2.users ALTER COLUMN is_physical SET DEFAULT true;
 
 
 --
--- TOC entry 4850 (class 2604 OID 4817659)
+-- TOC entry 4870 (class 2604 OID 4817659)
 -- Name: users title; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27109,7 +28473,7 @@ ALTER TABLE ONLY darwin2.users ALTER COLUMN title SET DEFAULT ''::character vary
 
 
 --
--- TOC entry 4851 (class 2604 OID 4817660)
+-- TOC entry 4871 (class 2604 OID 4817660)
 -- Name: users birth_date_mask; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27117,7 +28481,7 @@ ALTER TABLE ONLY darwin2.users ALTER COLUMN birth_date_mask SET DEFAULT 0;
 
 
 --
--- TOC entry 4852 (class 2604 OID 4817661)
+-- TOC entry 4872 (class 2604 OID 4817661)
 -- Name: users birth_date; Type: DEFAULT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27125,7 +28489,7 @@ ALTER TABLE ONLY darwin2.users ALTER COLUMN birth_date SET DEFAULT '0001-01-01':
 
 
 --
--- TOC entry 4864 (class 2604 OID 4817662)
+-- TOC entry 4884 (class 2604 OID 4817662)
 -- Name: vernacular_names id; Type: DEFAULT; Schema: darwin2; Owner: postgres
 --
 
@@ -27133,7 +28497,7 @@ ALTER TABLE ONLY darwin2.vernacular_names ALTER COLUMN id SET DEFAULT nextval('d
 
 
 --
--- TOC entry 5299 (class 2606 OID 5308572)
+-- TOC entry 5319 (class 2606 OID 5308572)
 -- Name: authority_domain authority_domain_pk; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27142,7 +28506,7 @@ ALTER TABLE ONLY darwin2.authority_domain
 
 
 --
--- TOC entry 5301 (class 2606 OID 5308574)
+-- TOC entry 5321 (class 2606 OID 5308574)
 -- Name: authority_domain authority_domain_uq; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27151,7 +28515,7 @@ ALTER TABLE ONLY darwin2.authority_domain
 
 
 --
--- TOC entry 5291 (class 2606 OID 5304944)
+-- TOC entry 5311 (class 2606 OID 5304944)
 -- Name: temporal_information dates_pkey; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27160,7 +28524,7 @@ ALTER TABLE ONLY darwin2.temporal_information
 
 
 --
--- TOC entry 5295 (class 2606 OID 5308554)
+-- TOC entry 5315 (class 2606 OID 5308554)
 -- Name: tag_group_distinct id; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27169,7 +28533,7 @@ ALTER TABLE ONLY darwin2.tag_group_distinct
 
 
 --
--- TOC entry 4882 (class 2606 OID 5302430)
+-- TOC entry 4902 (class 2606 OID 5302430)
 -- Name: bibliography pk_bibliography; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27178,7 +28542,7 @@ ALTER TABLE ONLY darwin2.bibliography
 
 
 --
--- TOC entry 4887 (class 2606 OID 5302436)
+-- TOC entry 4907 (class 2606 OID 5302436)
 -- Name: catalogue_bibliography pk_catalogue_bibliography; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27187,7 +28551,7 @@ ALTER TABLE ONLY darwin2.catalogue_bibliography
 
 
 --
--- TOC entry 4891 (class 2606 OID 5302438)
+-- TOC entry 4911 (class 2606 OID 5302438)
 -- Name: catalogue_levels pk_catalogue_levels; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27196,7 +28560,7 @@ ALTER TABLE ONLY darwin2.catalogue_levels
 
 
 --
--- TOC entry 4900 (class 2606 OID 5302440)
+-- TOC entry 4920 (class 2606 OID 5302440)
 -- Name: catalogue_people pk_catalogue_people; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27205,7 +28569,7 @@ ALTER TABLE ONLY darwin2.catalogue_people
 
 
 --
--- TOC entry 4914 (class 2606 OID 5302442)
+-- TOC entry 4934 (class 2606 OID 5302442)
 -- Name: chronostratigraphy pk_chronostratigraphy; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27214,7 +28578,7 @@ ALTER TABLE ONLY darwin2.chronostratigraphy
 
 
 --
--- TOC entry 4919 (class 2606 OID 5302444)
+-- TOC entry 4939 (class 2606 OID 5302444)
 -- Name: classification_keywords pk_classification_keywords_id; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27223,7 +28587,7 @@ ALTER TABLE ONLY darwin2.classification_keywords
 
 
 --
--- TOC entry 4932 (class 2606 OID 5302446)
+-- TOC entry 4952 (class 2606 OID 5302446)
 -- Name: codes pk_codes; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27232,7 +28596,7 @@ ALTER TABLE ONLY darwin2.codes
 
 
 --
--- TOC entry 4938 (class 2606 OID 5302448)
+-- TOC entry 4958 (class 2606 OID 5302448)
 -- Name: collecting_methods pk_collecting_methods; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27241,7 +28605,7 @@ ALTER TABLE ONLY darwin2.collecting_methods
 
 
 --
--- TOC entry 4944 (class 2606 OID 5302450)
+-- TOC entry 4964 (class 2606 OID 5302450)
 -- Name: collecting_tools pk_collecting_tools; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27250,7 +28614,7 @@ ALTER TABLE ONLY darwin2.collecting_tools
 
 
 --
--- TOC entry 4951 (class 2606 OID 5302452)
+-- TOC entry 4971 (class 2606 OID 5302452)
 -- Name: collection_maintenance pk_collection_maintenance; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27259,7 +28623,7 @@ ALTER TABLE ONLY darwin2.collection_maintenance
 
 
 --
--- TOC entry 4955 (class 2606 OID 5302454)
+-- TOC entry 4975 (class 2606 OID 5302454)
 -- Name: collections pk_collections; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27268,7 +28632,7 @@ ALTER TABLE ONLY darwin2.collections
 
 
 --
--- TOC entry 4961 (class 2606 OID 5302456)
+-- TOC entry 4981 (class 2606 OID 5302456)
 -- Name: collections_rights pk_collections_right; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27277,7 +28641,7 @@ ALTER TABLE ONLY darwin2.collections_rights
 
 
 --
--- TOC entry 4969 (class 2606 OID 5302458)
+-- TOC entry 4989 (class 2606 OID 5302458)
 -- Name: comments pk_comments; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27286,7 +28650,7 @@ ALTER TABLE ONLY darwin2.comments
 
 
 --
--- TOC entry 4990 (class 2606 OID 5302460)
+-- TOC entry 5010 (class 2606 OID 5302460)
 -- Name: expeditions pk_expeditions; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27295,7 +28659,7 @@ ALTER TABLE ONLY darwin2.expeditions
 
 
 --
--- TOC entry 4995 (class 2606 OID 5302462)
+-- TOC entry 5015 (class 2606 OID 5302462)
 -- Name: ext_links pk_ext_links; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27304,7 +28668,7 @@ ALTER TABLE ONLY darwin2.ext_links
 
 
 --
--- TOC entry 4999 (class 2606 OID 5302464)
+-- TOC entry 5019 (class 2606 OID 5302464)
 -- Name: flat_dict pk_flat_dict; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27313,7 +28677,7 @@ ALTER TABLE ONLY darwin2.flat_dict
 
 
 --
--- TOC entry 5007 (class 2606 OID 5302466)
+-- TOC entry 5027 (class 2606 OID 5302466)
 -- Name: gtu pk_gtu; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27322,7 +28686,7 @@ ALTER TABLE ONLY darwin2.gtu
 
 
 --
--- TOC entry 5009 (class 2606 OID 5302468)
+-- TOC entry 5029 (class 2606 OID 5302468)
 -- Name: gtu_bck20181123 pk_gtu_bck20181123; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27331,7 +28695,7 @@ ALTER TABLE ONLY darwin2.gtu_bck20181123
 
 
 --
--- TOC entry 4983 (class 2606 OID 5302476)
+-- TOC entry 5003 (class 2606 OID 5302476)
 -- Name: identifications pk_identifications; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27340,7 +28704,7 @@ ALTER TABLE ONLY darwin2.identifications
 
 
 --
--- TOC entry 5013 (class 2606 OID 5302490)
+-- TOC entry 5033 (class 2606 OID 5302490)
 -- Name: igs pk_igs; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27349,7 +28713,7 @@ ALTER TABLE ONLY darwin2.igs
 
 
 --
--- TOC entry 5017 (class 2606 OID 5302492)
+-- TOC entry 5037 (class 2606 OID 5302492)
 -- Name: imports pk_import; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27358,7 +28722,7 @@ ALTER TABLE ONLY darwin2.imports
 
 
 --
--- TOC entry 5022 (class 2606 OID 5302494)
+-- TOC entry 5042 (class 2606 OID 5302494)
 -- Name: informative_workflow pk_informative_workflow; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27367,7 +28731,7 @@ ALTER TABLE ONLY darwin2.informative_workflow
 
 
 --
--- TOC entry 5027 (class 2606 OID 5302496)
+-- TOC entry 5047 (class 2606 OID 5302496)
 -- Name: insurances pk_insurances; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27376,7 +28740,7 @@ ALTER TABLE ONLY darwin2.insurances
 
 
 --
--- TOC entry 5036 (class 2606 OID 5302498)
+-- TOC entry 5056 (class 2606 OID 5302498)
 -- Name: lithology pk_lithology; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27385,7 +28749,7 @@ ALTER TABLE ONLY darwin2.lithology
 
 
 --
--- TOC entry 5045 (class 2606 OID 5302500)
+-- TOC entry 5065 (class 2606 OID 5302500)
 -- Name: lithostratigraphy pk_lithostratigraphy; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27394,7 +28758,7 @@ ALTER TABLE ONLY darwin2.lithostratigraphy
 
 
 --
--- TOC entry 5049 (class 2606 OID 5302502)
+-- TOC entry 5069 (class 2606 OID 5302502)
 -- Name: loan_history pk_loan_history; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27403,7 +28767,7 @@ ALTER TABLE ONLY darwin2.loan_history
 
 
 --
--- TOC entry 5054 (class 2606 OID 5302504)
+-- TOC entry 5074 (class 2606 OID 5302504)
 -- Name: loan_items pk_loan_items; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27412,7 +28776,7 @@ ALTER TABLE ONLY darwin2.loan_items
 
 
 --
--- TOC entry 5060 (class 2606 OID 5302506)
+-- TOC entry 5080 (class 2606 OID 5302506)
 -- Name: loan_rights pk_loan_rights; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27421,7 +28785,7 @@ ALTER TABLE ONLY darwin2.loan_rights
 
 
 --
--- TOC entry 5067 (class 2606 OID 5302508)
+-- TOC entry 5087 (class 2606 OID 5302508)
 -- Name: loan_status pk_loan_status; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27430,7 +28794,7 @@ ALTER TABLE ONLY darwin2.loan_status
 
 
 --
--- TOC entry 5070 (class 2606 OID 5302510)
+-- TOC entry 5090 (class 2606 OID 5302510)
 -- Name: loans pk_loans; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27439,7 +28803,7 @@ ALTER TABLE ONLY darwin2.loans
 
 
 --
--- TOC entry 5079 (class 2606 OID 5302512)
+-- TOC entry 5099 (class 2606 OID 5302512)
 -- Name: mineralogy pk_mineralogy; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27448,7 +28812,7 @@ ALTER TABLE ONLY darwin2.mineralogy
 
 
 --
--- TOC entry 5085 (class 2606 OID 5302514)
+-- TOC entry 5105 (class 2606 OID 5302514)
 -- Name: multimedia pk_multimedia; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27457,7 +28821,7 @@ ALTER TABLE ONLY darwin2.multimedia
 
 
 --
--- TOC entry 5087 (class 2606 OID 5302516)
+-- TOC entry 5107 (class 2606 OID 5302516)
 -- Name: multimedia_todelete pk_multimedia_todelete; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27466,7 +28830,7 @@ ALTER TABLE ONLY darwin2.multimedia_todelete
 
 
 --
--- TOC entry 5089 (class 2606 OID 5302518)
+-- TOC entry 5109 (class 2606 OID 5302518)
 -- Name: my_saved_searches pk_my_saved_searches; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27475,7 +28839,7 @@ ALTER TABLE ONLY darwin2.my_saved_searches
 
 
 --
--- TOC entry 5094 (class 2606 OID 5302520)
+-- TOC entry 5114 (class 2606 OID 5302520)
 -- Name: my_widgets pk_my_widgets; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27484,7 +28848,7 @@ ALTER TABLE ONLY darwin2.my_widgets
 
 
 --
--- TOC entry 5103 (class 2606 OID 5302522)
+-- TOC entry 5123 (class 2606 OID 5302522)
 -- Name: people pk_people; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27493,7 +28857,7 @@ ALTER TABLE ONLY darwin2.people
 
 
 --
--- TOC entry 5109 (class 2606 OID 5302524)
+-- TOC entry 5129 (class 2606 OID 5302524)
 -- Name: people_addresses pk_people_addresses; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27502,7 +28866,7 @@ ALTER TABLE ONLY darwin2.people_addresses
 
 
 --
--- TOC entry 5113 (class 2606 OID 5302526)
+-- TOC entry 5133 (class 2606 OID 5302526)
 -- Name: people_comm pk_people_comm; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27511,7 +28875,7 @@ ALTER TABLE ONLY darwin2.people_comm
 
 
 --
--- TOC entry 5116 (class 2606 OID 5302528)
+-- TOC entry 5136 (class 2606 OID 5302528)
 -- Name: people_languages pk_people_languages; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27520,7 +28884,7 @@ ALTER TABLE ONLY darwin2.people_languages
 
 
 --
--- TOC entry 5122 (class 2606 OID 5302530)
+-- TOC entry 5142 (class 2606 OID 5302530)
 -- Name: people_relationships pk_people_relationships; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27529,7 +28893,7 @@ ALTER TABLE ONLY darwin2.people_relationships
 
 
 --
--- TOC entry 4978 (class 2606 OID 5302532)
+-- TOC entry 4998 (class 2606 OID 5302532)
 -- Name: properties pk_properties; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27538,7 +28902,7 @@ ALTER TABLE ONLY darwin2.properties
 
 
 --
--- TOC entry 5127 (class 2606 OID 5302534)
+-- TOC entry 5147 (class 2606 OID 5302534)
 -- Name: reports pk_reports; Type: CONSTRAINT; Schema: darwin2; Owner: postgres
 --
 
@@ -27547,7 +28911,7 @@ ALTER TABLE ONLY darwin2.reports
 
 
 --
--- TOC entry 5130 (class 2606 OID 5302536)
+-- TOC entry 5150 (class 2606 OID 5302536)
 -- Name: specimen_collecting_methods pk_specimen_collecting_methods; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27556,7 +28920,7 @@ ALTER TABLE ONLY darwin2.specimen_collecting_methods
 
 
 --
--- TOC entry 5135 (class 2606 OID 5302538)
+-- TOC entry 5155 (class 2606 OID 5302538)
 -- Name: specimen_collecting_tools pk_specimen_collecting_tools; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27565,7 +28929,7 @@ ALTER TABLE ONLY darwin2.specimen_collecting_tools
 
 
 --
--- TOC entry 5190 (class 2606 OID 5302540)
+-- TOC entry 5210 (class 2606 OID 5302540)
 -- Name: specimens pk_specimens; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27574,7 +28938,7 @@ ALTER TABLE ONLY darwin2.specimens
 
 
 --
--- TOC entry 5196 (class 2606 OID 5302547)
+-- TOC entry 5216 (class 2606 OID 5302547)
 -- Name: specimens_relationships pk_specimens_relationships; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27583,7 +28947,7 @@ ALTER TABLE ONLY darwin2.specimens_relationships
 
 
 --
--- TOC entry 4879 (class 2606 OID 5302549)
+-- TOC entry 4899 (class 2606 OID 5302549)
 -- Name: staging pk_staging; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27592,7 +28956,7 @@ ALTER TABLE ONLY darwin2.staging
 
 
 --
--- TOC entry 5203 (class 2606 OID 5302551)
+-- TOC entry 5223 (class 2606 OID 5302551)
 -- Name: staging_catalogue pk_staging_catalogue; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27601,7 +28965,7 @@ ALTER TABLE ONLY darwin2.staging_catalogue
 
 
 --
--- TOC entry 5205 (class 2606 OID 5302553)
+-- TOC entry 5225 (class 2606 OID 5302553)
 -- Name: staging_collecting_methods pk_staging_collecting_methods; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27610,7 +28974,7 @@ ALTER TABLE ONLY darwin2.staging_collecting_methods
 
 
 --
--- TOC entry 5213 (class 2606 OID 5302555)
+-- TOC entry 5233 (class 2606 OID 5302555)
 -- Name: staging_gtu_tag_groups pk_staging_gtu_tag_groups; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27619,7 +28983,7 @@ ALTER TABLE ONLY darwin2.staging_gtu_tag_groups
 
 
 --
--- TOC entry 5215 (class 2606 OID 5302557)
+-- TOC entry 5235 (class 2606 OID 5302557)
 -- Name: staging_info pk_staging_info; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27628,7 +28992,7 @@ ALTER TABLE ONLY darwin2.staging_info
 
 
 --
--- TOC entry 5218 (class 2606 OID 5302559)
+-- TOC entry 5238 (class 2606 OID 5302559)
 -- Name: staging_people pk_staging_people; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27637,7 +29001,7 @@ ALTER TABLE ONLY darwin2.staging_people
 
 
 --
--- TOC entry 5220 (class 2606 OID 5302561)
+-- TOC entry 5240 (class 2606 OID 5302561)
 -- Name: staging_relationship pk_staging_relationship; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27646,7 +29010,7 @@ ALTER TABLE ONLY darwin2.staging_relationship
 
 
 --
--- TOC entry 5222 (class 2606 OID 5302563)
+-- TOC entry 5242 (class 2606 OID 5302563)
 -- Name: staging_tag_groups pk_staging_tag_groups; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27655,7 +29019,7 @@ ALTER TABLE ONLY darwin2.staging_tag_groups
 
 
 --
--- TOC entry 4924 (class 2606 OID 5302565)
+-- TOC entry 4944 (class 2606 OID 5302565)
 -- Name: classification_synonymies pk_synonym_id; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27664,7 +29028,7 @@ ALTER TABLE ONLY darwin2.classification_synonymies
 
 
 --
--- TOC entry 5229 (class 2606 OID 5302567)
+-- TOC entry 5249 (class 2606 OID 5302567)
 -- Name: tag_groups pk_tag_groups; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27673,7 +29037,7 @@ ALTER TABLE ONLY darwin2.tag_groups
 
 
 --
--- TOC entry 5245 (class 2606 OID 5302569)
+-- TOC entry 5265 (class 2606 OID 5302569)
 -- Name: taxonomy pk_taxonomy; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27682,7 +29046,7 @@ ALTER TABLE ONLY darwin2.taxonomy
 
 
 --
--- TOC entry 5254 (class 2606 OID 5302571)
+-- TOC entry 5274 (class 2606 OID 5302571)
 -- Name: users pk_users; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27691,7 +29055,7 @@ ALTER TABLE ONLY darwin2.users
 
 
 --
--- TOC entry 5260 (class 2606 OID 5302573)
+-- TOC entry 5280 (class 2606 OID 5302573)
 -- Name: users_addresses pk_users_addresses; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27700,7 +29064,7 @@ ALTER TABLE ONLY darwin2.users_addresses
 
 
 --
--- TOC entry 5264 (class 2606 OID 5302575)
+-- TOC entry 5284 (class 2606 OID 5302575)
 -- Name: users_comm pk_users_comm; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27709,7 +29073,7 @@ ALTER TABLE ONLY darwin2.users_comm
 
 
 --
--- TOC entry 5266 (class 2606 OID 5302577)
+-- TOC entry 5286 (class 2606 OID 5302577)
 -- Name: users_login_infos pk_users_login_infos; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27718,7 +29082,7 @@ ALTER TABLE ONLY darwin2.users_login_infos
 
 
 --
--- TOC entry 5275 (class 2606 OID 5302579)
+-- TOC entry 5295 (class 2606 OID 5302579)
 -- Name: users_tracking pk_users_tracking_pk; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27727,7 +29091,7 @@ ALTER TABLE ONLY darwin2.users_tracking
 
 
 --
--- TOC entry 5280 (class 2606 OID 5302581)
+-- TOC entry 5300 (class 2606 OID 5302581)
 -- Name: vernacular_names pk_vernacular_names; Type: CONSTRAINT; Schema: darwin2; Owner: postgres
 --
 
@@ -27736,7 +29100,7 @@ ALTER TABLE ONLY darwin2.vernacular_names
 
 
 --
--- TOC entry 5211 (class 2606 OID 5302583)
+-- TOC entry 5231 (class 2606 OID 5302583)
 -- Name: staging_gtu staging_gtu_pkey1; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27745,7 +29109,7 @@ ALTER TABLE ONLY darwin2.staging_gtu
 
 
 --
--- TOC entry 5297 (class 2606 OID 5308556)
+-- TOC entry 5317 (class 2606 OID 5308556)
 -- Name: tag_group_distinct subgroup_group_value_unique; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27754,7 +29118,7 @@ ALTER TABLE ONLY darwin2.tag_group_distinct
 
 
 --
--- TOC entry 5304 (class 2606 OID 5308585)
+-- TOC entry 5324 (class 2606 OID 5308585)
 -- Name: tag_authority tag_authority_pk; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27763,7 +29127,7 @@ ALTER TABLE ONLY darwin2.tag_authority
 
 
 --
--- TOC entry 5306 (class 2606 OID 5308587)
+-- TOC entry 5326 (class 2606 OID 5308587)
 -- Name: tag_authority tag_authority_uq; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27772,7 +29136,7 @@ ALTER TABLE ONLY darwin2.tag_authority
 
 
 --
--- TOC entry 5309 (class 2606 OID 5308633)
+-- TOC entry 5329 (class 2606 OID 5308633)
 -- Name: tag_tag_authority tag_tag_authority_pk; Type: CONSTRAINT; Schema: darwin2; Owner: postgres
 --
 
@@ -27781,7 +29145,7 @@ ALTER TABLE ONLY darwin2.tag_tag_authority
 
 
 --
--- TOC entry 5311 (class 2606 OID 5308744)
+-- TOC entry 5331 (class 2606 OID 5308744)
 -- Name: taxonomy_authority taxonomy_authority_pk; Type: CONSTRAINT; Schema: darwin2; Owner: postgres
 --
 
@@ -27790,7 +29154,7 @@ ALTER TABLE ONLY darwin2.taxonomy_authority
 
 
 --
--- TOC entry 5251 (class 2606 OID 5302585)
+-- TOC entry 5271 (class 2606 OID 5302585)
 -- Name: taxonomy_metadata taxonomy_metadata_pkey; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27799,7 +29163,7 @@ ALTER TABLE ONLY darwin2.taxonomy_metadata
 
 
 --
--- TOC entry 4884 (class 2606 OID 5302587)
+-- TOC entry 4904 (class 2606 OID 5302587)
 -- Name: bibliography unq_bibliography; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27808,7 +29172,7 @@ ALTER TABLE ONLY darwin2.bibliography
 
 
 --
--- TOC entry 4889 (class 2606 OID 5302589)
+-- TOC entry 4909 (class 2606 OID 5302589)
 -- Name: catalogue_bibliography unq_catalogue_bibliography; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27817,7 +29181,7 @@ ALTER TABLE ONLY darwin2.catalogue_bibliography
 
 
 --
--- TOC entry 4893 (class 2606 OID 5302591)
+-- TOC entry 4913 (class 2606 OID 5302591)
 -- Name: catalogue_levels unq_catalogue_levels; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27826,7 +29190,7 @@ ALTER TABLE ONLY darwin2.catalogue_levels
 
 
 --
--- TOC entry 4902 (class 2606 OID 5302593)
+-- TOC entry 4922 (class 2606 OID 5302593)
 -- Name: catalogue_people unq_catalogue_people; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27835,7 +29199,7 @@ ALTER TABLE ONLY darwin2.catalogue_people
 
 
 --
--- TOC entry 4905 (class 2606 OID 5302595)
+-- TOC entry 4925 (class 2606 OID 5302595)
 -- Name: catalogue_relationships unq_catalogue_relationships; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27844,7 +29208,7 @@ ALTER TABLE ONLY darwin2.catalogue_relationships
 
 
 --
--- TOC entry 4916 (class 2606 OID 5302597)
+-- TOC entry 4936 (class 2606 OID 5302597)
 -- Name: chronostratigraphy unq_chronostratigraphy; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27853,7 +29217,7 @@ ALTER TABLE ONLY darwin2.chronostratigraphy
 
 
 --
--- TOC entry 4934 (class 2606 OID 5302599)
+-- TOC entry 4954 (class 2606 OID 5302599)
 -- Name: codes unq_codes; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27862,7 +29226,7 @@ ALTER TABLE ONLY darwin2.codes
 
 
 --
--- TOC entry 4940 (class 2606 OID 5302601)
+-- TOC entry 4960 (class 2606 OID 5302601)
 -- Name: collecting_methods unq_collecting_methods; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27871,7 +29235,7 @@ ALTER TABLE ONLY darwin2.collecting_methods
 
 
 --
--- TOC entry 4946 (class 2606 OID 5302603)
+-- TOC entry 4966 (class 2606 OID 5302603)
 -- Name: collecting_tools unq_collecting_tools; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27880,7 +29244,7 @@ ALTER TABLE ONLY darwin2.collecting_tools
 
 
 --
--- TOC entry 4957 (class 2606 OID 5302605)
+-- TOC entry 4977 (class 2606 OID 5302605)
 -- Name: collections unq_collections; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27889,7 +29253,7 @@ ALTER TABLE ONLY darwin2.collections
 
 
 --
--- TOC entry 4963 (class 2606 OID 5302607)
+-- TOC entry 4983 (class 2606 OID 5302607)
 -- Name: collections_rights unq_collections_rights; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27898,7 +29262,7 @@ ALTER TABLE ONLY darwin2.collections_rights
 
 
 --
--- TOC entry 4992 (class 2606 OID 5302609)
+-- TOC entry 5012 (class 2606 OID 5302609)
 -- Name: expeditions unq_expeditions; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27907,7 +29271,7 @@ ALTER TABLE ONLY darwin2.expeditions
 
 
 --
--- TOC entry 4997 (class 2606 OID 5302611)
+-- TOC entry 5017 (class 2606 OID 5302611)
 -- Name: ext_links unq_ext_links; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27916,7 +29280,7 @@ ALTER TABLE ONLY darwin2.ext_links
 
 
 --
--- TOC entry 5001 (class 2606 OID 5302613)
+-- TOC entry 5021 (class 2606 OID 5302613)
 -- Name: flat_dict unq_flat_dict; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27925,7 +29289,7 @@ ALTER TABLE ONLY darwin2.flat_dict
 
 
 --
--- TOC entry 4985 (class 2606 OID 5302615)
+-- TOC entry 5005 (class 2606 OID 5302615)
 -- Name: identifications unq_identifications; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27934,7 +29298,7 @@ ALTER TABLE ONLY darwin2.identifications
 
 
 --
--- TOC entry 5015 (class 2606 OID 5302617)
+-- TOC entry 5035 (class 2606 OID 5302617)
 -- Name: igs unq_igs; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27943,7 +29307,7 @@ ALTER TABLE ONLY darwin2.igs
 
 
 --
--- TOC entry 5038 (class 2606 OID 5302619)
+-- TOC entry 5058 (class 2606 OID 5302619)
 -- Name: lithology unq_lithology; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27952,7 +29316,7 @@ ALTER TABLE ONLY darwin2.lithology
 
 
 --
--- TOC entry 5047 (class 2606 OID 5302621)
+-- TOC entry 5067 (class 2606 OID 5302621)
 -- Name: lithostratigraphy unq_lithostratigraphy; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27961,7 +29325,7 @@ ALTER TABLE ONLY darwin2.lithostratigraphy
 
 
 --
--- TOC entry 5056 (class 2606 OID 5302623)
+-- TOC entry 5076 (class 2606 OID 5302623)
 -- Name: loan_items unq_loan_items; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27970,7 +29334,7 @@ ALTER TABLE ONLY darwin2.loan_items
 
 
 --
--- TOC entry 5062 (class 2606 OID 5302625)
+-- TOC entry 5082 (class 2606 OID 5302625)
 -- Name: loan_rights unq_loan_rights; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27979,7 +29343,7 @@ ALTER TABLE ONLY darwin2.loan_rights
 
 
 --
--- TOC entry 5081 (class 2606 OID 5302627)
+-- TOC entry 5101 (class 2606 OID 5302627)
 -- Name: mineralogy unq_mineralogy; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27988,7 +29352,7 @@ ALTER TABLE ONLY darwin2.mineralogy
 
 
 --
--- TOC entry 5091 (class 2606 OID 5302629)
+-- TOC entry 5111 (class 2606 OID 5302629)
 -- Name: my_saved_searches unq_my_saved_searches; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -27997,7 +29361,7 @@ ALTER TABLE ONLY darwin2.my_saved_searches
 
 
 --
--- TOC entry 5096 (class 2606 OID 5302631)
+-- TOC entry 5116 (class 2606 OID 5302631)
 -- Name: my_widgets unq_my_widgets; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -28006,7 +29370,7 @@ ALTER TABLE ONLY darwin2.my_widgets
 
 
 --
--- TOC entry 5105 (class 2606 OID 5302633)
+-- TOC entry 5125 (class 2606 OID 5302633)
 -- Name: people unq_people; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -28015,7 +29379,7 @@ ALTER TABLE ONLY darwin2.people
 
 
 --
--- TOC entry 5118 (class 2606 OID 5302635)
+-- TOC entry 5138 (class 2606 OID 5302635)
 -- Name: people_languages unq_people_languages; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -28024,7 +29388,7 @@ ALTER TABLE ONLY darwin2.people_languages
 
 
 --
--- TOC entry 5125 (class 2606 OID 5302637)
+-- TOC entry 5145 (class 2606 OID 5302637)
 -- Name: possible_upper_levels unq_possible_upper_levels; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -28033,7 +29397,7 @@ ALTER TABLE ONLY darwin2.possible_upper_levels
 
 
 --
--- TOC entry 5132 (class 2606 OID 5302639)
+-- TOC entry 5152 (class 2606 OID 5302639)
 -- Name: specimen_collecting_methods unq_specimen_collecting_methods; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -28042,7 +29406,7 @@ ALTER TABLE ONLY darwin2.specimen_collecting_methods
 
 
 --
--- TOC entry 5137 (class 2606 OID 5302641)
+-- TOC entry 5157 (class 2606 OID 5302641)
 -- Name: specimen_collecting_tools unq_specimen_collecting_tools; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -28051,7 +29415,7 @@ ALTER TABLE ONLY darwin2.specimen_collecting_tools
 
 
 --
--- TOC entry 5029 (class 2606 OID 5302643)
+-- TOC entry 5049 (class 2606 OID 5302643)
 -- Name: insurances unq_specimen_parts_insurances; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -28060,7 +29424,7 @@ ALTER TABLE ONLY darwin2.insurances
 
 
 --
--- TOC entry 5207 (class 2606 OID 5302645)
+-- TOC entry 5227 (class 2606 OID 5302645)
 -- Name: staging_collecting_methods unq_staging_collecting_methods; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -28069,7 +29433,7 @@ ALTER TABLE ONLY darwin2.staging_collecting_methods
 
 
 --
--- TOC entry 5224 (class 2606 OID 5302647)
+-- TOC entry 5244 (class 2606 OID 5302647)
 -- Name: staging_tag_groups unq_staging_tag_groups; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -28078,7 +29442,7 @@ ALTER TABLE ONLY darwin2.staging_tag_groups
 
 
 --
--- TOC entry 4926 (class 2606 OID 5302649)
+-- TOC entry 4946 (class 2606 OID 5302649)
 -- Name: classification_synonymies unq_synonym; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -28087,7 +29451,7 @@ ALTER TABLE ONLY darwin2.classification_synonymies
 
 
 --
--- TOC entry 5231 (class 2606 OID 5302651)
+-- TOC entry 5251 (class 2606 OID 5302651)
 -- Name: tag_groups unq_tag_groups; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -28096,16 +29460,16 @@ ALTER TABLE ONLY darwin2.tag_groups
 
 
 --
--- TOC entry 5247 (class 2606 OID 5302653)
+-- TOC entry 5267 (class 2606 OID 5309333)
 -- Name: taxonomy unq_taxonomy; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
 ALTER TABLE ONLY darwin2.taxonomy
-    ADD CONSTRAINT unq_taxonomy UNIQUE (path, name_indexed, level_ref);
+    ADD CONSTRAINT unq_taxonomy UNIQUE (path, name_indexed, level_ref, metadata_ref);
 
 
 --
--- TOC entry 5314 (class 2606 OID 5308746)
+-- TOC entry 5334 (class 2606 OID 5308746)
 -- Name: taxonomy_authority unq_taxonomy_authority; Type: CONSTRAINT; Schema: darwin2; Owner: postgres
 --
 
@@ -28114,7 +29478,7 @@ ALTER TABLE ONLY darwin2.taxonomy_authority
 
 
 --
--- TOC entry 5293 (class 2606 OID 5304946)
+-- TOC entry 5313 (class 2606 OID 5304946)
 -- Name: temporal_information unq_temporal_information_specimen_ref; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -28123,7 +29487,7 @@ ALTER TABLE ONLY darwin2.temporal_information
 
 
 --
--- TOC entry 5256 (class 2606 OID 5302655)
+-- TOC entry 5276 (class 2606 OID 5302655)
 -- Name: users unq_users; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -28132,7 +29496,7 @@ ALTER TABLE ONLY darwin2.users
 
 
 --
--- TOC entry 5268 (class 2606 OID 5302657)
+-- TOC entry 5288 (class 2606 OID 5302657)
 -- Name: users_login_infos unq_users_login_infos; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -28141,7 +29505,7 @@ ALTER TABLE ONLY darwin2.users_login_infos
 
 
 --
--- TOC entry 5270 (class 2606 OID 5302659)
+-- TOC entry 5290 (class 2606 OID 5302659)
 -- Name: users_login_infos unq_users_login_infos_user_name; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -28150,7 +29514,7 @@ ALTER TABLE ONLY darwin2.users_login_infos
 
 
 --
--- TOC entry 5282 (class 2606 OID 5302661)
+-- TOC entry 5302 (class 2606 OID 5302661)
 -- Name: vernacular_names unq_vernacular_names; Type: CONSTRAINT; Schema: darwin2; Owner: postgres
 --
 
@@ -28159,7 +29523,7 @@ ALTER TABLE ONLY darwin2.vernacular_names
 
 
 --
--- TOC entry 5249 (class 2606 OID 5308785)
+-- TOC entry 5269 (class 2606 OID 5308785)
 -- Name: taxonomy uq_rcma_one_taxon_per_metadata; Type: CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -28168,7 +29532,7 @@ ALTER TABLE ONLY darwin2.taxonomy
 
 
 --
--- TOC entry 5208 (class 1259 OID 5302662)
+-- TOC entry 5228 (class 1259 OID 5302662)
 -- Name: fki_to_gtu; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28176,7 +29540,7 @@ CREATE INDEX fki_to_gtu ON darwin2.staging_gtu USING btree (gtu_ref);
 
 
 --
--- TOC entry 5209 (class 1259 OID 5302663)
+-- TOC entry 5229 (class 1259 OID 5302663)
 -- Name: fki_to_import; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28184,7 +29548,7 @@ CREATE INDEX fki_to_import ON darwin2.staging_gtu USING btree (import_ref);
 
 
 --
--- TOC entry 4880 (class 1259 OID 5302664)
+-- TOC entry 4900 (class 1259 OID 5302664)
 -- Name: idx_bibliography_type; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28192,7 +29556,7 @@ CREATE INDEX idx_bibliography_type ON darwin2.bibliography USING btree (type);
 
 
 --
--- TOC entry 4885 (class 1259 OID 5302665)
+-- TOC entry 4905 (class 1259 OID 5302665)
 -- Name: idx_catalogue_bibliography_referenced_record; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28200,7 +29564,7 @@ CREATE INDEX idx_catalogue_bibliography_referenced_record ON darwin2.catalogue_b
 
 
 --
--- TOC entry 4894 (class 1259 OID 5302666)
+-- TOC entry 4914 (class 1259 OID 5302666)
 -- Name: idx_catalogue_people_people_order_by; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28208,7 +29572,7 @@ CREATE INDEX idx_catalogue_people_people_order_by ON darwin2.catalogue_people US
 
 
 --
--- TOC entry 4895 (class 1259 OID 5302667)
+-- TOC entry 4915 (class 1259 OID 5302667)
 -- Name: idx_catalogue_people_people_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28216,7 +29580,7 @@ CREATE INDEX idx_catalogue_people_people_ref ON darwin2.catalogue_people USING b
 
 
 --
--- TOC entry 4896 (class 1259 OID 5302668)
+-- TOC entry 4916 (class 1259 OID 5302668)
 -- Name: idx_catalogue_people_people_sub_type; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28224,7 +29588,7 @@ CREATE INDEX idx_catalogue_people_people_sub_type ON darwin2.catalogue_people US
 
 
 --
--- TOC entry 4897 (class 1259 OID 5302669)
+-- TOC entry 4917 (class 1259 OID 5302669)
 -- Name: idx_catalogue_people_people_type; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28232,7 +29596,7 @@ CREATE INDEX idx_catalogue_people_people_type ON darwin2.catalogue_people USING 
 
 
 --
--- TOC entry 4898 (class 1259 OID 5302670)
+-- TOC entry 4918 (class 1259 OID 5302670)
 -- Name: idx_catalogue_people_referenced_record; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28240,7 +29604,7 @@ CREATE INDEX idx_catalogue_people_referenced_record ON darwin2.catalogue_people 
 
 
 --
--- TOC entry 4903 (class 1259 OID 5302671)
+-- TOC entry 4923 (class 1259 OID 5302671)
 -- Name: idx_catalogue_relationships_relations; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28248,7 +29612,7 @@ CREATE INDEX idx_catalogue_relationships_relations ON darwin2.catalogue_relation
 
 
 --
--- TOC entry 4906 (class 1259 OID 5302672)
+-- TOC entry 4926 (class 1259 OID 5302672)
 -- Name: idx_chronostratigraphy_level_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28256,7 +29620,7 @@ CREATE INDEX idx_chronostratigraphy_level_ref ON darwin2.chronostratigraphy USIN
 
 
 --
--- TOC entry 4907 (class 1259 OID 5302673)
+-- TOC entry 4927 (class 1259 OID 5302673)
 -- Name: idx_chronostratigraphy_lower_bound; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28264,7 +29628,7 @@ CREATE INDEX idx_chronostratigraphy_lower_bound ON darwin2.chronostratigraphy US
 
 
 --
--- TOC entry 4908 (class 1259 OID 5302674)
+-- TOC entry 4928 (class 1259 OID 5302674)
 -- Name: idx_chronostratigraphy_name_order_by_txt_op; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28272,7 +29636,7 @@ CREATE INDEX idx_chronostratigraphy_name_order_by_txt_op ON darwin2.chronostrati
 
 
 --
--- TOC entry 4909 (class 1259 OID 5302675)
+-- TOC entry 4929 (class 1259 OID 5302675)
 -- Name: idx_chronostratigraphy_parent_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28280,7 +29644,7 @@ CREATE INDEX idx_chronostratigraphy_parent_ref ON darwin2.chronostratigraphy USI
 
 
 --
--- TOC entry 4910 (class 1259 OID 5302676)
+-- TOC entry 4930 (class 1259 OID 5302676)
 -- Name: idx_chronostratigraphy_upper_bound; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28288,7 +29652,7 @@ CREATE INDEX idx_chronostratigraphy_upper_bound ON darwin2.chronostratigraphy US
 
 
 --
--- TOC entry 4917 (class 1259 OID 5302677)
+-- TOC entry 4937 (class 1259 OID 5302677)
 -- Name: idx_classification_keywords_referenced_record; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28296,7 +29660,7 @@ CREATE INDEX idx_classification_keywords_referenced_record ON darwin2.classifica
 
 
 --
--- TOC entry 4920 (class 1259 OID 5302678)
+-- TOC entry 4940 (class 1259 OID 5302678)
 -- Name: idx_classification_synonymies_grouping; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28304,7 +29668,7 @@ CREATE INDEX idx_classification_synonymies_grouping ON darwin2.classification_sy
 
 
 --
--- TOC entry 4921 (class 1259 OID 5302679)
+-- TOC entry 4941 (class 1259 OID 5302679)
 -- Name: idx_classification_synonymies_order_by; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28312,7 +29676,7 @@ CREATE INDEX idx_classification_synonymies_order_by ON darwin2.classification_sy
 
 
 --
--- TOC entry 4922 (class 1259 OID 5302680)
+-- TOC entry 4942 (class 1259 OID 5302680)
 -- Name: idx_classification_synonymies_referenced_record; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28320,7 +29684,7 @@ CREATE INDEX idx_classification_synonymies_referenced_record ON darwin2.classifi
 
 
 --
--- TOC entry 4927 (class 1259 OID 5302681)
+-- TOC entry 4947 (class 1259 OID 5302681)
 -- Name: idx_codes_code; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28328,7 +29692,7 @@ CREATE INDEX idx_codes_code ON darwin2.codes USING btree (code_num) WHERE (NOT (
 
 
 --
--- TOC entry 4928 (class 1259 OID 5302682)
+-- TOC entry 4948 (class 1259 OID 5302682)
 -- Name: idx_codes_full_code_indexed_btree; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28336,7 +29700,7 @@ CREATE INDEX idx_codes_full_code_indexed_btree ON darwin2.codes USING btree (ful
 
 
 --
--- TOC entry 4929 (class 1259 OID 5302683)
+-- TOC entry 4949 (class 1259 OID 5302683)
 -- Name: idx_codes_referenced_record; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28344,7 +29708,7 @@ CREATE INDEX idx_codes_referenced_record ON darwin2.codes USING btree (reference
 
 
 --
--- TOC entry 4935 (class 1259 OID 5302684)
+-- TOC entry 4955 (class 1259 OID 5302684)
 -- Name: idx_collecting_methods_method_indexed; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28352,7 +29716,7 @@ CREATE INDEX idx_collecting_methods_method_indexed ON darwin2.collecting_methods
 
 
 --
--- TOC entry 4941 (class 1259 OID 5302685)
+-- TOC entry 4961 (class 1259 OID 5302685)
 -- Name: idx_collecting_tools_tool_indexed; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28360,7 +29724,7 @@ CREATE INDEX idx_collecting_tools_tool_indexed ON darwin2.collecting_tools USING
 
 
 --
--- TOC entry 4947 (class 1259 OID 5302686)
+-- TOC entry 4967 (class 1259 OID 5302686)
 -- Name: idx_collection_maintenance_action; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28368,7 +29732,7 @@ CREATE INDEX idx_collection_maintenance_action ON darwin2.collection_maintenance
 
 
 --
--- TOC entry 4948 (class 1259 OID 5302687)
+-- TOC entry 4968 (class 1259 OID 5302687)
 -- Name: idx_collection_maintenance_referenced_record; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28376,7 +29740,7 @@ CREATE INDEX idx_collection_maintenance_referenced_record ON darwin2.collection_
 
 
 --
--- TOC entry 4949 (class 1259 OID 5302688)
+-- TOC entry 4969 (class 1259 OID 5302688)
 -- Name: idx_collection_maintenance_user_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28384,7 +29748,7 @@ CREATE INDEX idx_collection_maintenance_user_ref ON darwin2.collection_maintenan
 
 
 --
--- TOC entry 4952 (class 1259 OID 5302689)
+-- TOC entry 4972 (class 1259 OID 5302689)
 -- Name: idx_collections_main_manager_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28392,7 +29756,7 @@ CREATE INDEX idx_collections_main_manager_ref ON darwin2.collections USING btree
 
 
 --
--- TOC entry 4953 (class 1259 OID 5302690)
+-- TOC entry 4973 (class 1259 OID 5302690)
 -- Name: idx_collections_parent_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28400,7 +29764,7 @@ CREATE INDEX idx_collections_parent_ref ON darwin2.collections USING btree (pare
 
 
 --
--- TOC entry 4958 (class 1259 OID 5302691)
+-- TOC entry 4978 (class 1259 OID 5302691)
 -- Name: idx_collections_rights_db_user_type; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28408,7 +29772,7 @@ CREATE INDEX idx_collections_rights_db_user_type ON darwin2.collections_rights U
 
 
 --
--- TOC entry 4959 (class 1259 OID 5302692)
+-- TOC entry 4979 (class 1259 OID 5302692)
 -- Name: idx_collections_rights_user_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28416,7 +29780,7 @@ CREATE INDEX idx_collections_rights_user_ref ON darwin2.collections_rights USING
 
 
 --
--- TOC entry 4964 (class 1259 OID 5302693)
+-- TOC entry 4984 (class 1259 OID 5302693)
 -- Name: idx_comments_notion_concerned; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28424,7 +29788,7 @@ CREATE INDEX idx_comments_notion_concerned ON darwin2.comments USING btree (noti
 
 
 --
--- TOC entry 4965 (class 1259 OID 5302694)
+-- TOC entry 4985 (class 1259 OID 5302694)
 -- Name: idx_comments_referenced_record; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28432,7 +29796,7 @@ CREATE INDEX idx_comments_referenced_record ON darwin2.comments USING btree (ref
 
 
 --
--- TOC entry 5138 (class 1259 OID 5302695)
+-- TOC entry 5158 (class 1259 OID 5302695)
 -- Name: idx_darwin_flat_gtu_code; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28440,7 +29804,7 @@ CREATE INDEX idx_darwin_flat_gtu_code ON darwin2.specimens USING gin (gtu_code p
 
 
 --
--- TOC entry 4986 (class 1259 OID 5302696)
+-- TOC entry 5006 (class 1259 OID 5302696)
 -- Name: idx_expeditions_expedition_from_date; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28448,7 +29812,7 @@ CREATE INDEX idx_expeditions_expedition_from_date ON darwin2.expeditions USING b
 
 
 --
--- TOC entry 4987 (class 1259 OID 5302697)
+-- TOC entry 5007 (class 1259 OID 5302697)
 -- Name: idx_expeditions_expedition_to_date; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28456,7 +29820,7 @@ CREATE INDEX idx_expeditions_expedition_to_date ON darwin2.expeditions USING btr
 
 
 --
--- TOC entry 4993 (class 1259 OID 5302698)
+-- TOC entry 5013 (class 1259 OID 5302698)
 -- Name: idx_ext_links_referenced_record; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28464,7 +29828,7 @@ CREATE INDEX idx_ext_links_referenced_record ON darwin2.ext_links USING btree (r
 
 
 --
--- TOC entry 4930 (class 1259 OID 5302699)
+-- TOC entry 4950 (class 1259 OID 5302699)
 -- Name: idx_full_code_order_by; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28472,7 +29836,7 @@ CREATE INDEX idx_full_code_order_by ON darwin2.codes USING gin (full_code_indexe
 
 
 --
--- TOC entry 5002 (class 1259 OID 5302700)
+-- TOC entry 5022 (class 1259 OID 5302700)
 -- Name: idx_gin_gtu_tags_values; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28480,7 +29844,7 @@ CREATE INDEX idx_gin_gtu_tags_values ON darwin2.gtu USING gin (tag_values_indexe
 
 
 --
--- TOC entry 5082 (class 1259 OID 5302701)
+-- TOC entry 5102 (class 1259 OID 5302701)
 -- Name: idx_gin_multimedia_search_indexed; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28488,7 +29852,7 @@ CREATE INDEX idx_gin_multimedia_search_indexed ON darwin2.multimedia USING gin (
 
 
 --
--- TOC entry 5139 (class 1259 OID 5302702)
+-- TOC entry 5159 (class 1259 OID 5302702)
 -- Name: idx_gin_specimens_gtu_country_tag_indexed_indexed; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28496,7 +29860,7 @@ CREATE INDEX idx_gin_specimens_gtu_country_tag_indexed_indexed ON darwin2.specim
 
 
 --
--- TOC entry 5140 (class 1259 OID 5302703)
+-- TOC entry 5160 (class 1259 OID 5302703)
 -- Name: idx_gin_specimens_gtu_tag_values_indexed; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28504,7 +29868,7 @@ CREATE INDEX idx_gin_specimens_gtu_tag_values_indexed ON darwin2.specimens USING
 
 
 --
--- TOC entry 5141 (class 1259 OID 5302704)
+-- TOC entry 5161 (class 1259 OID 5302704)
 -- Name: idx_gin_specimens_spec_coll_ids; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28512,7 +29876,7 @@ CREATE INDEX idx_gin_specimens_spec_coll_ids ON darwin2.specimens USING gin (spe
 
 
 --
--- TOC entry 5142 (class 1259 OID 5302705)
+-- TOC entry 5162 (class 1259 OID 5302705)
 -- Name: idx_gin_specimens_spec_don_sel_ids; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28520,7 +29884,7 @@ CREATE INDEX idx_gin_specimens_spec_don_sel_ids ON darwin2.specimens USING gin (
 
 
 --
--- TOC entry 5143 (class 1259 OID 5302706)
+-- TOC entry 5163 (class 1259 OID 5302706)
 -- Name: idx_gin_specimens_spec_ident_ids; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28528,7 +29892,7 @@ CREATE INDEX idx_gin_specimens_spec_ident_ids ON darwin2.specimens USING gin (sp
 
 
 --
--- TOC entry 4911 (class 1259 OID 5302707)
+-- TOC entry 4931 (class 1259 OID 5302707)
 -- Name: idx_gin_trgm_chronostratigraphy_name_indexed; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28536,7 +29900,7 @@ CREATE INDEX idx_gin_trgm_chronostratigraphy_name_indexed ON darwin2.chronostrat
 
 
 --
--- TOC entry 4912 (class 1259 OID 5302708)
+-- TOC entry 4932 (class 1259 OID 5302708)
 -- Name: idx_gin_trgm_chronostratigraphy_naming; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28544,7 +29908,7 @@ CREATE INDEX idx_gin_trgm_chronostratigraphy_naming ON darwin2.chronostratigraph
 
 
 --
--- TOC entry 4966 (class 1259 OID 5302709)
+-- TOC entry 4986 (class 1259 OID 5302709)
 -- Name: idx_gin_trgm_comments_comment; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28552,7 +29916,7 @@ CREATE INDEX idx_gin_trgm_comments_comment ON darwin2.comments USING gin (commen
 
 
 --
--- TOC entry 4967 (class 1259 OID 5302710)
+-- TOC entry 4987 (class 1259 OID 5302710)
 -- Name: idx_gin_trgm_comments_comment_indexed; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28560,7 +29924,7 @@ CREATE INDEX idx_gin_trgm_comments_comment_indexed ON darwin2.comments USING gin
 
 
 --
--- TOC entry 4988 (class 1259 OID 5302711)
+-- TOC entry 5008 (class 1259 OID 5302711)
 -- Name: idx_gin_trgm_expeditions_name; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28568,7 +29932,7 @@ CREATE INDEX idx_gin_trgm_expeditions_name ON darwin2.expeditions USING gin (nam
 
 
 --
--- TOC entry 5030 (class 1259 OID 5302712)
+-- TOC entry 5050 (class 1259 OID 5302712)
 -- Name: idx_gin_trgm_lithology_name_indexed; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28576,7 +29940,7 @@ CREATE INDEX idx_gin_trgm_lithology_name_indexed ON darwin2.lithology USING btre
 
 
 --
--- TOC entry 5031 (class 1259 OID 5302713)
+-- TOC entry 5051 (class 1259 OID 5302713)
 -- Name: idx_gin_trgm_lithology_naming; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28584,7 +29948,7 @@ CREATE INDEX idx_gin_trgm_lithology_naming ON darwin2.lithology USING gin (name_
 
 
 --
--- TOC entry 5039 (class 1259 OID 5302714)
+-- TOC entry 5059 (class 1259 OID 5302714)
 -- Name: idx_gin_trgm_lithostratigraphy_name_indexed; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28592,7 +29956,7 @@ CREATE INDEX idx_gin_trgm_lithostratigraphy_name_indexed ON darwin2.lithostratig
 
 
 --
--- TOC entry 5040 (class 1259 OID 5302715)
+-- TOC entry 5060 (class 1259 OID 5302715)
 -- Name: idx_gin_trgm_lithostratigraphy_naming; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28600,7 +29964,7 @@ CREATE INDEX idx_gin_trgm_lithostratigraphy_naming ON darwin2.lithostratigraphy 
 
 
 --
--- TOC entry 5068 (class 1259 OID 5302716)
+-- TOC entry 5088 (class 1259 OID 5302716)
 -- Name: idx_gin_trgm_loans_search; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28608,7 +29972,7 @@ CREATE INDEX idx_gin_trgm_loans_search ON darwin2.loans USING gin (search_indexe
 
 
 --
--- TOC entry 5071 (class 1259 OID 5302717)
+-- TOC entry 5091 (class 1259 OID 5302717)
 -- Name: idx_gin_trgm_mineralogy_name_indexed; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28616,7 +29980,7 @@ CREATE INDEX idx_gin_trgm_mineralogy_name_indexed ON darwin2.mineralogy USING bt
 
 
 --
--- TOC entry 5072 (class 1259 OID 5302718)
+-- TOC entry 5092 (class 1259 OID 5302718)
 -- Name: idx_gin_trgm_mineralogy_naming; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28624,7 +29988,7 @@ CREATE INDEX idx_gin_trgm_mineralogy_naming ON darwin2.mineralogy USING gin (nam
 
 
 --
--- TOC entry 5099 (class 1259 OID 5302719)
+-- TOC entry 5119 (class 1259 OID 5302719)
 -- Name: idx_gin_trgm_people_formated_name; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28632,7 +29996,7 @@ CREATE INDEX idx_gin_trgm_people_formated_name ON darwin2.people USING gin (form
 
 
 --
--- TOC entry 5144 (class 1259 OID 5302720)
+-- TOC entry 5164 (class 1259 OID 5302720)
 -- Name: idx_gin_trgm_specimens_expedition_name_indexed; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28640,7 +30004,7 @@ CREATE INDEX idx_gin_trgm_specimens_expedition_name_indexed ON darwin2.specimens
 
 
 --
--- TOC entry 5145 (class 1259 OID 5302721)
+-- TOC entry 5165 (class 1259 OID 5302721)
 -- Name: idx_gin_trgm_specimens_ig_num; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28648,7 +30012,7 @@ CREATE INDEX idx_gin_trgm_specimens_ig_num ON darwin2.specimens USING gin (ig_nu
 
 
 --
--- TOC entry 5146 (class 1259 OID 5302722)
+-- TOC entry 5166 (class 1259 OID 5302722)
 -- Name: idx_gin_trgm_specimens_taxon_name_indexed; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28656,7 +30020,7 @@ CREATE INDEX idx_gin_trgm_specimens_taxon_name_indexed ON darwin2.specimens USIN
 
 
 --
--- TOC entry 5147 (class 1259 OID 5302723)
+-- TOC entry 5167 (class 1259 OID 5302723)
 -- Name: idx_gin_trgm_specimens_taxon_path; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28664,7 +30028,7 @@ CREATE INDEX idx_gin_trgm_specimens_taxon_path ON darwin2.specimens USING gin (t
 
 
 --
--- TOC entry 5239 (class 1259 OID 5302724)
+-- TOC entry 5259 (class 1259 OID 5302724)
 -- Name: idx_gin_trgm_taxonomy_name_indexed; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28672,7 +30036,7 @@ CREATE INDEX idx_gin_trgm_taxonomy_name_indexed ON darwin2.taxonomy USING btree 
 
 
 --
--- TOC entry 5240 (class 1259 OID 5302725)
+-- TOC entry 5260 (class 1259 OID 5302725)
 -- Name: idx_gin_trgm_taxonomy_naming; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28680,7 +30044,7 @@ CREATE INDEX idx_gin_trgm_taxonomy_naming ON darwin2.taxonomy USING gin (name_in
 
 
 --
--- TOC entry 5252 (class 1259 OID 5302726)
+-- TOC entry 5272 (class 1259 OID 5302726)
 -- Name: idx_gin_trgm_users_formated_name; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28688,7 +30052,7 @@ CREATE INDEX idx_gin_trgm_users_formated_name ON darwin2.users USING gin (format
 
 
 --
--- TOC entry 5148 (class 1259 OID 5302727)
+-- TOC entry 5168 (class 1259 OID 5302727)
 -- Name: idx_gist_specimens_gtu_location; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28696,7 +30060,7 @@ CREATE INDEX idx_gist_specimens_gtu_location ON darwin2.specimens USING gist (gt
 
 
 --
--- TOC entry 5003 (class 1259 OID 5302728)
+-- TOC entry 5023 (class 1259 OID 5302728)
 -- Name: idx_gtu_code; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28704,7 +30068,7 @@ CREATE INDEX idx_gtu_code ON darwin2.gtu USING btree (code);
 
 
 --
--- TOC entry 5004 (class 1259 OID 5302729)
+-- TOC entry 5024 (class 1259 OID 5302729)
 -- Name: idx_gtu_code_search_for_import; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28712,7 +30076,7 @@ CREATE INDEX idx_gtu_code_search_for_import ON darwin2.gtu USING btree ("positio
 
 
 --
--- TOC entry 5005 (class 1259 OID 5302730)
+-- TOC entry 5025 (class 1259 OID 5302730)
 -- Name: idx_gtu_location; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28720,7 +30084,7 @@ CREATE INDEX idx_gtu_location ON darwin2.gtu USING gist (location);
 
 
 --
--- TOC entry 4979 (class 1259 OID 5302731)
+-- TOC entry 4999 (class 1259 OID 5302731)
 -- Name: idx_identifications_determination_status; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28728,7 +30092,7 @@ CREATE INDEX idx_identifications_determination_status ON darwin2.identifications
 
 
 --
--- TOC entry 4980 (class 1259 OID 5302732)
+-- TOC entry 5000 (class 1259 OID 5302732)
 -- Name: idx_identifications_notion_concerned; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28736,7 +30100,7 @@ CREATE INDEX idx_identifications_notion_concerned ON darwin2.identifications USI
 
 
 --
--- TOC entry 4981 (class 1259 OID 5302733)
+-- TOC entry 5001 (class 1259 OID 5302733)
 -- Name: idx_identifications_order_by; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28744,7 +30108,7 @@ CREATE INDEX idx_identifications_order_by ON darwin2.identifications USING btree
 
 
 --
--- TOC entry 5010 (class 1259 OID 5302734)
+-- TOC entry 5030 (class 1259 OID 5302734)
 -- Name: idx_igs_ig_date; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28752,7 +30116,7 @@ CREATE INDEX idx_igs_ig_date ON darwin2.igs USING btree (ig_date, ig_date_mask);
 
 
 --
--- TOC entry 5011 (class 1259 OID 5302735)
+-- TOC entry 5031 (class 1259 OID 5302735)
 -- Name: idx_igs_ig_num_indexed; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28760,7 +30124,7 @@ CREATE INDEX idx_igs_ig_num_indexed ON darwin2.igs USING btree (ig_num_indexed t
 
 
 --
--- TOC entry 5018 (class 1259 OID 5302736)
+-- TOC entry 5038 (class 1259 OID 5302736)
 -- Name: idx_informative_workflow_referenced_record; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28768,7 +30132,7 @@ CREATE INDEX idx_informative_workflow_referenced_record ON darwin2.informative_w
 
 
 --
--- TOC entry 5019 (class 1259 OID 5302737)
+-- TOC entry 5039 (class 1259 OID 5302737)
 -- Name: idx_informative_workflow_user_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28776,7 +30140,7 @@ CREATE INDEX idx_informative_workflow_user_ref ON darwin2.informative_workflow U
 
 
 --
--- TOC entry 5020 (class 1259 OID 5302738)
+-- TOC entry 5040 (class 1259 OID 5302738)
 -- Name: idx_informative_workflow_user_status; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28784,7 +30148,7 @@ CREATE INDEX idx_informative_workflow_user_status ON darwin2.informative_workflo
 
 
 --
--- TOC entry 5023 (class 1259 OID 5302739)
+-- TOC entry 5043 (class 1259 OID 5302739)
 -- Name: idx_insurances_contact_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28792,7 +30156,7 @@ CREATE INDEX idx_insurances_contact_ref ON darwin2.insurances USING btree (conta
 
 
 --
--- TOC entry 5024 (class 1259 OID 5302740)
+-- TOC entry 5044 (class 1259 OID 5302740)
 -- Name: idx_insurances_insurance_currency; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28800,7 +30164,7 @@ CREATE INDEX idx_insurances_insurance_currency ON darwin2.insurances USING btree
 
 
 --
--- TOC entry 5025 (class 1259 OID 5302741)
+-- TOC entry 5045 (class 1259 OID 5302741)
 -- Name: idx_insurances_insurer_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28808,7 +30172,7 @@ CREATE INDEX idx_insurances_insurer_ref ON darwin2.insurances USING btree (insur
 
 
 --
--- TOC entry 5149 (class 1259 OID 5302742)
+-- TOC entry 5169 (class 1259 OID 5302742)
 -- Name: idx_labeling_ig_num_numeric; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28816,7 +30180,7 @@ CREATE INDEX idx_labeling_ig_num_numeric ON darwin2.specimens USING btree (darwi
 
 
 --
--- TOC entry 5150 (class 1259 OID 5302743)
+-- TOC entry 5170 (class 1259 OID 5302743)
 -- Name: idx_labeling_other_gtu; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28824,7 +30188,7 @@ CREATE INDEX idx_labeling_other_gtu ON darwin2.specimens USING gin (gtu_others_t
 
 
 --
--- TOC entry 5151 (class 1259 OID 5302744)
+-- TOC entry 5171 (class 1259 OID 5302744)
 -- Name: idx_labeling_province; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28832,7 +30196,7 @@ CREATE INDEX idx_labeling_province ON darwin2.specimens USING gin (gtu_province_
 
 
 --
--- TOC entry 5032 (class 1259 OID 5302745)
+-- TOC entry 5052 (class 1259 OID 5302745)
 -- Name: idx_lithology_level_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28840,7 +30204,7 @@ CREATE INDEX idx_lithology_level_ref ON darwin2.lithology USING btree (level_ref
 
 
 --
--- TOC entry 5033 (class 1259 OID 5302746)
+-- TOC entry 5053 (class 1259 OID 5302746)
 -- Name: idx_lithology_name_order_by_txt_op; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28848,7 +30212,7 @@ CREATE INDEX idx_lithology_name_order_by_txt_op ON darwin2.lithology USING btree
 
 
 --
--- TOC entry 5034 (class 1259 OID 5302747)
+-- TOC entry 5054 (class 1259 OID 5302747)
 -- Name: idx_lithology_parent_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28856,7 +30220,7 @@ CREATE INDEX idx_lithology_parent_ref ON darwin2.lithology USING btree (parent_r
 
 
 --
--- TOC entry 5041 (class 1259 OID 5302748)
+-- TOC entry 5061 (class 1259 OID 5302748)
 -- Name: idx_lithostratigraphy_level_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28864,7 +30228,7 @@ CREATE INDEX idx_lithostratigraphy_level_ref ON darwin2.lithostratigraphy USING 
 
 
 --
--- TOC entry 5042 (class 1259 OID 5302749)
+-- TOC entry 5062 (class 1259 OID 5302749)
 -- Name: idx_lithostratigraphy_name_order_by_txt_op; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28872,7 +30236,7 @@ CREATE INDEX idx_lithostratigraphy_name_order_by_txt_op ON darwin2.lithostratigr
 
 
 --
--- TOC entry 5043 (class 1259 OID 5302750)
+-- TOC entry 5063 (class 1259 OID 5302750)
 -- Name: idx_lithostratigraphy_parent_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28880,7 +30244,7 @@ CREATE INDEX idx_lithostratigraphy_parent_ref ON darwin2.lithostratigraphy USING
 
 
 --
--- TOC entry 5050 (class 1259 OID 5302751)
+-- TOC entry 5070 (class 1259 OID 5302751)
 -- Name: idx_loan_items_ig_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28888,7 +30252,7 @@ CREATE INDEX idx_loan_items_ig_ref ON darwin2.loan_items USING btree (ig_ref);
 
 
 --
--- TOC entry 5051 (class 1259 OID 5302752)
+-- TOC entry 5071 (class 1259 OID 5302752)
 -- Name: idx_loan_items_loan_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28896,7 +30260,7 @@ CREATE INDEX idx_loan_items_loan_ref ON darwin2.loan_items USING btree (loan_ref
 
 
 --
--- TOC entry 5052 (class 1259 OID 5302753)
+-- TOC entry 5072 (class 1259 OID 5302753)
 -- Name: idx_loan_items_part_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28904,7 +30268,7 @@ CREATE INDEX idx_loan_items_part_ref ON darwin2.loan_items USING btree (specimen
 
 
 --
--- TOC entry 5057 (class 1259 OID 5302754)
+-- TOC entry 5077 (class 1259 OID 5302754)
 -- Name: idx_loan_rights_ig_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28912,7 +30276,7 @@ CREATE INDEX idx_loan_rights_ig_ref ON darwin2.loan_rights USING btree (loan_ref
 
 
 --
--- TOC entry 5058 (class 1259 OID 5302755)
+-- TOC entry 5078 (class 1259 OID 5302755)
 -- Name: idx_loan_rights_part_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28920,7 +30284,7 @@ CREATE INDEX idx_loan_rights_part_ref ON darwin2.loan_rights USING btree (user_r
 
 
 --
--- TOC entry 5063 (class 1259 OID 5302756)
+-- TOC entry 5083 (class 1259 OID 5302756)
 -- Name: idx_loan_status_loan_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28928,7 +30292,7 @@ CREATE INDEX idx_loan_status_loan_ref ON darwin2.loan_status USING btree (loan_r
 
 
 --
--- TOC entry 5064 (class 1259 OID 5302757)
+-- TOC entry 5084 (class 1259 OID 5302757)
 -- Name: idx_loan_status_loan_ref_is_last; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28936,7 +30300,7 @@ CREATE INDEX idx_loan_status_loan_ref_is_last ON darwin2.loan_status USING btree
 
 
 --
--- TOC entry 5065 (class 1259 OID 5302758)
+-- TOC entry 5085 (class 1259 OID 5302758)
 -- Name: idx_loan_status_user_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28944,7 +30308,7 @@ CREATE INDEX idx_loan_status_user_ref ON darwin2.loan_status USING btree (user_r
 
 
 --
--- TOC entry 4936 (class 1259 OID 5302759)
+-- TOC entry 4956 (class 1259 OID 5302759)
 -- Name: idx_method_trgm; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28952,7 +30316,7 @@ CREATE INDEX idx_method_trgm ON darwin2.collecting_methods USING gin (method pub
 
 
 --
--- TOC entry 5073 (class 1259 OID 5302760)
+-- TOC entry 5093 (class 1259 OID 5302760)
 -- Name: idx_mineralogy_code; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28960,7 +30324,7 @@ CREATE INDEX idx_mineralogy_code ON darwin2.mineralogy USING btree (upper((code)
 
 
 --
--- TOC entry 5074 (class 1259 OID 5302761)
+-- TOC entry 5094 (class 1259 OID 5302761)
 -- Name: idx_mineralogy_cristal_system; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28968,7 +30332,7 @@ CREATE INDEX idx_mineralogy_cristal_system ON darwin2.mineralogy USING btree (cr
 
 
 --
--- TOC entry 5075 (class 1259 OID 5302762)
+-- TOC entry 5095 (class 1259 OID 5302762)
 -- Name: idx_mineralogy_level_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28976,7 +30340,7 @@ CREATE INDEX idx_mineralogy_level_ref ON darwin2.mineralogy USING btree (level_r
 
 
 --
--- TOC entry 5076 (class 1259 OID 5302763)
+-- TOC entry 5096 (class 1259 OID 5302763)
 -- Name: idx_mineralogy_name_order_by_txt_op; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28984,7 +30348,7 @@ CREATE INDEX idx_mineralogy_name_order_by_txt_op ON darwin2.mineralogy USING btr
 
 
 --
--- TOC entry 5077 (class 1259 OID 5302764)
+-- TOC entry 5097 (class 1259 OID 5302764)
 -- Name: idx_mineralogy_parent_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -28992,7 +30356,7 @@ CREATE INDEX idx_mineralogy_parent_ref ON darwin2.mineralogy USING btree (parent
 
 
 --
--- TOC entry 5097 (class 1259 OID 5302765)
+-- TOC entry 5117 (class 1259 OID 5302765)
 -- Name: idx_multimedia_is_digital; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29000,7 +30364,7 @@ CREATE INDEX idx_multimedia_is_digital ON darwin2.old_multimedia USING btree (is
 
 
 --
--- TOC entry 5083 (class 1259 OID 5302766)
+-- TOC entry 5103 (class 1259 OID 5302766)
 -- Name: idx_multimedia_referenced_record; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29008,7 +30372,7 @@ CREATE INDEX idx_multimedia_referenced_record ON darwin2.multimedia USING btree 
 
 
 --
--- TOC entry 5098 (class 1259 OID 5302767)
+-- TOC entry 5118 (class 1259 OID 5302767)
 -- Name: idx_multimedia_type; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29016,7 +30380,7 @@ CREATE INDEX idx_multimedia_type ON darwin2.old_multimedia USING btree (type);
 
 
 --
--- TOC entry 5092 (class 1259 OID 5302768)
+-- TOC entry 5112 (class 1259 OID 5302768)
 -- Name: idx_my_widgets_user_category; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29024,7 +30388,7 @@ CREATE INDEX idx_my_widgets_user_category ON darwin2.my_widgets USING btree (use
 
 
 --
--- TOC entry 5106 (class 1259 OID 5302769)
+-- TOC entry 5126 (class 1259 OID 5302769)
 -- Name: idx_people_addresses_country; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29032,7 +30396,7 @@ CREATE INDEX idx_people_addresses_country ON darwin2.people_addresses USING btre
 
 
 --
--- TOC entry 5107 (class 1259 OID 5302770)
+-- TOC entry 5127 (class 1259 OID 5302770)
 -- Name: idx_people_addresses_person_user_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29040,7 +30404,7 @@ CREATE INDEX idx_people_addresses_person_user_ref ON darwin2.people_addresses US
 
 
 --
--- TOC entry 5110 (class 1259 OID 5302771)
+-- TOC entry 5130 (class 1259 OID 5302771)
 -- Name: idx_people_comm_comm_type; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29048,7 +30412,7 @@ CREATE INDEX idx_people_comm_comm_type ON darwin2.people_comm USING btree (comm_
 
 
 --
--- TOC entry 5111 (class 1259 OID 5302772)
+-- TOC entry 5131 (class 1259 OID 5302772)
 -- Name: idx_people_comm_person_user_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29056,7 +30420,7 @@ CREATE INDEX idx_people_comm_person_user_ref ON darwin2.people_comm USING btree 
 
 
 --
--- TOC entry 5100 (class 1259 OID 5302773)
+-- TOC entry 5120 (class 1259 OID 5302773)
 -- Name: idx_people_family_name; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29064,7 +30428,7 @@ CREATE INDEX idx_people_family_name ON darwin2.people USING btree (family_name);
 
 
 --
--- TOC entry 5114 (class 1259 OID 5302774)
+-- TOC entry 5134 (class 1259 OID 5302774)
 -- Name: idx_people_languages_language_country; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29072,7 +30436,7 @@ CREATE INDEX idx_people_languages_language_country ON darwin2.people_languages U
 
 
 --
--- TOC entry 5119 (class 1259 OID 5302775)
+-- TOC entry 5139 (class 1259 OID 5302775)
 -- Name: idx_people_relationships_person_1_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29080,7 +30444,7 @@ CREATE INDEX idx_people_relationships_person_1_ref ON darwin2.people_relationshi
 
 
 --
--- TOC entry 5120 (class 1259 OID 5302776)
+-- TOC entry 5140 (class 1259 OID 5302776)
 -- Name: idx_people_relationships_person_2_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29088,7 +30452,7 @@ CREATE INDEX idx_people_relationships_person_2_ref ON darwin2.people_relationshi
 
 
 --
--- TOC entry 5101 (class 1259 OID 5302777)
+-- TOC entry 5121 (class 1259 OID 5302777)
 -- Name: idx_people_sub_type; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29096,7 +30460,7 @@ CREATE INDEX idx_people_sub_type ON darwin2.people USING btree (sub_type) WHERE 
 
 
 --
--- TOC entry 5123 (class 1259 OID 5302778)
+-- TOC entry 5143 (class 1259 OID 5302778)
 -- Name: idx_possible_upper_levels_level_upper_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29104,7 +30468,7 @@ CREATE INDEX idx_possible_upper_levels_level_upper_ref ON darwin2.possible_upper
 
 
 --
--- TOC entry 4970 (class 1259 OID 5302779)
+-- TOC entry 4990 (class 1259 OID 5302779)
 -- Name: idx_properties_property_lower_value; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29112,7 +30476,7 @@ CREATE INDEX idx_properties_property_lower_value ON darwin2.properties USING btr
 
 
 --
--- TOC entry 4971 (class 1259 OID 5302780)
+-- TOC entry 4991 (class 1259 OID 5302780)
 -- Name: idx_properties_property_lower_value_unified; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29120,7 +30484,7 @@ CREATE INDEX idx_properties_property_lower_value_unified ON darwin2.properties U
 
 
 --
--- TOC entry 4972 (class 1259 OID 5302781)
+-- TOC entry 4992 (class 1259 OID 5302781)
 -- Name: idx_properties_property_type; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29128,7 +30492,7 @@ CREATE INDEX idx_properties_property_type ON darwin2.properties USING btree (pro
 
 
 --
--- TOC entry 4973 (class 1259 OID 5302782)
+-- TOC entry 4993 (class 1259 OID 5302782)
 -- Name: idx_properties_property_unit; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29136,7 +30500,7 @@ CREATE INDEX idx_properties_property_unit ON darwin2.properties USING btree (pro
 
 
 --
--- TOC entry 4974 (class 1259 OID 5302783)
+-- TOC entry 4994 (class 1259 OID 5302783)
 -- Name: idx_properties_property_upper_value; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29144,7 +30508,7 @@ CREATE INDEX idx_properties_property_upper_value ON darwin2.properties USING btr
 
 
 --
--- TOC entry 4975 (class 1259 OID 5302784)
+-- TOC entry 4995 (class 1259 OID 5302784)
 -- Name: idx_properties_property_upper_value_unified; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29152,7 +30516,7 @@ CREATE INDEX idx_properties_property_upper_value_unified ON darwin2.properties U
 
 
 --
--- TOC entry 4976 (class 1259 OID 5302785)
+-- TOC entry 4996 (class 1259 OID 5302785)
 -- Name: idx_properties_referenced_record; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29160,7 +30524,7 @@ CREATE INDEX idx_properties_referenced_record ON darwin2.properties USING btree 
 
 
 --
--- TOC entry 5128 (class 1259 OID 5302786)
+-- TOC entry 5148 (class 1259 OID 5302786)
 -- Name: idx_specimen_collecting_methods_method_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29168,7 +30532,7 @@ CREATE INDEX idx_specimen_collecting_methods_method_ref ON darwin2.specimen_coll
 
 
 --
--- TOC entry 5133 (class 1259 OID 5302787)
+-- TOC entry 5153 (class 1259 OID 5302787)
 -- Name: idx_specimen_collecting_tools_tool_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29176,7 +30540,7 @@ CREATE INDEX idx_specimen_collecting_tools_tool_ref ON darwin2.specimen_collecti
 
 
 --
--- TOC entry 5152 (class 1259 OID 5302788)
+-- TOC entry 5172 (class 1259 OID 5302788)
 -- Name: idx_specimen_rock_form; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29184,7 +30548,7 @@ CREATE INDEX idx_specimen_rock_form ON darwin2.specimens USING btree (rock_form)
 
 
 --
--- TOC entry 5153 (class 1259 OID 5302789)
+-- TOC entry 5173 (class 1259 OID 5302789)
 -- Name: idx_specimens_; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29192,7 +30556,7 @@ CREATE INDEX idx_specimens_ ON darwin2.specimens USING btree (specimen_part);
 
 
 --
--- TOC entry 5154 (class 1259 OID 5302790)
+-- TOC entry 5174 (class 1259 OID 5302790)
 -- Name: idx_specimens_category; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29200,7 +30564,7 @@ CREATE INDEX idx_specimens_category ON darwin2.specimens USING btree (category);
 
 
 --
--- TOC entry 5155 (class 1259 OID 5302791)
+-- TOC entry 5175 (class 1259 OID 5302791)
 -- Name: idx_specimens_chrono_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29208,7 +30572,7 @@ CREATE INDEX idx_specimens_chrono_ref ON darwin2.specimens USING btree (chrono_r
 
 
 --
--- TOC entry 5156 (class 1259 OID 5302792)
+-- TOC entry 5176 (class 1259 OID 5302792)
 -- Name: idx_specimens_collection_is_public; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29216,7 +30580,7 @@ CREATE INDEX idx_specimens_collection_is_public ON darwin2.specimens USING btree
 
 
 --
--- TOC entry 5157 (class 1259 OID 5302793)
+-- TOC entry 5177 (class 1259 OID 5302793)
 -- Name: idx_specimens_collection_name; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29224,7 +30588,7 @@ CREATE INDEX idx_specimens_collection_name ON darwin2.specimens USING btree (col
 
 
 --
--- TOC entry 5158 (class 1259 OID 5302794)
+-- TOC entry 5178 (class 1259 OID 5302794)
 -- Name: idx_specimens_container; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29232,7 +30596,7 @@ CREATE INDEX idx_specimens_container ON darwin2.specimens USING btree (container
 
 
 --
--- TOC entry 5159 (class 1259 OID 5302795)
+-- TOC entry 5179 (class 1259 OID 5302795)
 -- Name: idx_specimens_container_storage; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29240,7 +30604,7 @@ CREATE INDEX idx_specimens_container_storage ON darwin2.specimens USING btree (c
 
 
 --
--- TOC entry 5160 (class 1259 OID 5302796)
+-- TOC entry 5180 (class 1259 OID 5302796)
 -- Name: idx_specimens_container_type; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29248,7 +30612,7 @@ CREATE INDEX idx_specimens_container_type ON darwin2.specimens USING btree (cont
 
 
 --
--- TOC entry 5161 (class 1259 OID 5302797)
+-- TOC entry 5181 (class 1259 OID 5302797)
 -- Name: idx_specimens_expedition_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29256,7 +30620,7 @@ CREATE INDEX idx_specimens_expedition_ref ON darwin2.specimens USING btree (expe
 
 
 --
--- TOC entry 5162 (class 1259 OID 5302798)
+-- TOC entry 5182 (class 1259 OID 5302798)
 -- Name: idx_specimens_gtu_from_date; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29264,7 +30628,7 @@ CREATE INDEX idx_specimens_gtu_from_date ON darwin2.specimens USING btree (gtu_f
 
 
 --
--- TOC entry 5163 (class 1259 OID 5302799)
+-- TOC entry 5183 (class 1259 OID 5302799)
 -- Name: idx_specimens_gtu_from_date_mask; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29272,7 +30636,7 @@ CREATE INDEX idx_specimens_gtu_from_date_mask ON darwin2.specimens USING btree (
 
 
 --
--- TOC entry 5164 (class 1259 OID 5302800)
+-- TOC entry 5184 (class 1259 OID 5302800)
 -- Name: idx_specimens_gtu_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29280,7 +30644,7 @@ CREATE INDEX idx_specimens_gtu_ref ON darwin2.specimens USING btree (gtu_ref) WH
 
 
 --
--- TOC entry 5165 (class 1259 OID 5302801)
+-- TOC entry 5185 (class 1259 OID 5302801)
 -- Name: idx_specimens_gtu_to_date; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29288,7 +30652,7 @@ CREATE INDEX idx_specimens_gtu_to_date ON darwin2.specimens USING btree (gtu_to_
 
 
 --
--- TOC entry 5166 (class 1259 OID 5302802)
+-- TOC entry 5186 (class 1259 OID 5302802)
 -- Name: idx_specimens_gtu_to_date_mask; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29296,7 +30660,7 @@ CREATE INDEX idx_specimens_gtu_to_date_mask ON darwin2.specimens USING btree (gt
 
 
 --
--- TOC entry 5167 (class 1259 OID 5302803)
+-- TOC entry 5187 (class 1259 OID 5302803)
 -- Name: idx_specimens_ig_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29304,7 +30668,7 @@ CREATE INDEX idx_specimens_ig_ref ON darwin2.specimens USING btree (ig_ref);
 
 
 --
--- TOC entry 5168 (class 1259 OID 5302804)
+-- TOC entry 5188 (class 1259 OID 5302804)
 -- Name: idx_specimens_institution_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29312,7 +30676,7 @@ CREATE INDEX idx_specimens_institution_ref ON darwin2.specimens USING btree (ins
 
 
 --
--- TOC entry 5169 (class 1259 OID 5302805)
+-- TOC entry 5189 (class 1259 OID 5302805)
 -- Name: idx_specimens_litho_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29320,7 +30684,7 @@ CREATE INDEX idx_specimens_litho_ref ON darwin2.specimens USING btree (litho_ref
 
 
 --
--- TOC entry 5170 (class 1259 OID 5302806)
+-- TOC entry 5190 (class 1259 OID 5302806)
 -- Name: idx_specimens_lithology_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29328,7 +30692,7 @@ CREATE INDEX idx_specimens_lithology_ref ON darwin2.specimens USING btree (litho
 
 
 --
--- TOC entry 5171 (class 1259 OID 5302807)
+-- TOC entry 5191 (class 1259 OID 5302807)
 -- Name: idx_specimens_mineral_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29336,7 +30700,7 @@ CREATE INDEX idx_specimens_mineral_ref ON darwin2.specimens USING btree (mineral
 
 
 --
--- TOC entry 5172 (class 1259 OID 5302808)
+-- TOC entry 5192 (class 1259 OID 5302808)
 -- Name: idx_specimens_object_name_indexed; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29344,7 +30708,7 @@ CREATE INDEX idx_specimens_object_name_indexed ON darwin2.specimens USING btree 
 
 
 --
--- TOC entry 5191 (class 1259 OID 5302809)
+-- TOC entry 5211 (class 1259 OID 5302809)
 -- Name: idx_specimens_relationships_mineral_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29352,7 +30716,7 @@ CREATE INDEX idx_specimens_relationships_mineral_ref ON darwin2.specimens_relati
 
 
 --
--- TOC entry 5192 (class 1259 OID 5302810)
+-- TOC entry 5212 (class 1259 OID 5302810)
 -- Name: idx_specimens_relationships_specimen_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29360,7 +30724,7 @@ CREATE INDEX idx_specimens_relationships_specimen_ref ON darwin2.specimens_relat
 
 
 --
--- TOC entry 5193 (class 1259 OID 5302811)
+-- TOC entry 5213 (class 1259 OID 5302811)
 -- Name: idx_specimens_relationships_specimen_related_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29368,7 +30732,7 @@ CREATE INDEX idx_specimens_relationships_specimen_related_ref ON darwin2.specime
 
 
 --
--- TOC entry 5194 (class 1259 OID 5302812)
+-- TOC entry 5214 (class 1259 OID 5302812)
 -- Name: idx_specimens_relationships_taxon_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29376,7 +30740,7 @@ CREATE INDEX idx_specimens_relationships_taxon_ref ON darwin2.specimens_relation
 
 
 --
--- TOC entry 5173 (class 1259 OID 5302813)
+-- TOC entry 5193 (class 1259 OID 5302813)
 -- Name: idx_specimens_room; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29384,7 +30748,7 @@ CREATE INDEX idx_specimens_room ON darwin2.specimens USING btree (room) WHERE (N
 
 
 --
--- TOC entry 5174 (class 1259 OID 5302814)
+-- TOC entry 5194 (class 1259 OID 5302814)
 -- Name: idx_specimens_row; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29392,7 +30756,7 @@ CREATE INDEX idx_specimens_row ON darwin2.specimens USING btree ("row") WHERE (N
 
 
 --
--- TOC entry 5175 (class 1259 OID 5302815)
+-- TOC entry 5195 (class 1259 OID 5302815)
 -- Name: idx_specimens_sex; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29400,7 +30764,7 @@ CREATE INDEX idx_specimens_sex ON darwin2.specimens USING btree (sex) WHERE ((se
 
 
 --
--- TOC entry 5176 (class 1259 OID 5302816)
+-- TOC entry 5196 (class 1259 OID 5302816)
 -- Name: idx_specimens_shelf; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29408,7 +30772,7 @@ CREATE INDEX idx_specimens_shelf ON darwin2.specimens USING btree (shelf) WHERE 
 
 
 --
--- TOC entry 5177 (class 1259 OID 5302817)
+-- TOC entry 5197 (class 1259 OID 5302817)
 -- Name: idx_specimens_social_status; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29416,7 +30780,7 @@ CREATE INDEX idx_specimens_social_status ON darwin2.specimens USING btree (socia
 
 
 --
--- TOC entry 5178 (class 1259 OID 5302818)
+-- TOC entry 5198 (class 1259 OID 5302818)
 -- Name: idx_specimens_stage; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29424,7 +30788,7 @@ CREATE INDEX idx_specimens_stage ON darwin2.specimens USING btree (stage) WHERE 
 
 
 --
--- TOC entry 5179 (class 1259 OID 5302819)
+-- TOC entry 5199 (class 1259 OID 5302819)
 -- Name: idx_specimens_state; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29432,7 +30796,7 @@ CREATE INDEX idx_specimens_state ON darwin2.specimens USING btree (state) WHERE 
 
 
 --
--- TOC entry 5180 (class 1259 OID 5302820)
+-- TOC entry 5200 (class 1259 OID 5302820)
 -- Name: idx_specimens_station_visible; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29440,7 +30804,7 @@ CREATE INDEX idx_specimens_station_visible ON darwin2.specimens USING btree (sta
 
 
 --
--- TOC entry 5181 (class 1259 OID 5302821)
+-- TOC entry 5201 (class 1259 OID 5302821)
 -- Name: idx_specimens_sub_container; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29448,7 +30812,7 @@ CREATE INDEX idx_specimens_sub_container ON darwin2.specimens USING btree (sub_c
 
 
 --
--- TOC entry 5182 (class 1259 OID 5302822)
+-- TOC entry 5202 (class 1259 OID 5302822)
 -- Name: idx_specimens_sub_container_storage; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29456,7 +30820,7 @@ CREATE INDEX idx_specimens_sub_container_storage ON darwin2.specimens USING btre
 
 
 --
--- TOC entry 5183 (class 1259 OID 5302823)
+-- TOC entry 5203 (class 1259 OID 5302823)
 -- Name: idx_specimens_sub_container_type; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29464,7 +30828,7 @@ CREATE INDEX idx_specimens_sub_container_type ON darwin2.specimens USING btree (
 
 
 --
--- TOC entry 5184 (class 1259 OID 5302824)
+-- TOC entry 5204 (class 1259 OID 5302824)
 -- Name: idx_specimens_taxon_name_indexed; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29472,7 +30836,7 @@ CREATE INDEX idx_specimens_taxon_name_indexed ON darwin2.specimens USING btree (
 
 
 --
--- TOC entry 5185 (class 1259 OID 5302825)
+-- TOC entry 5205 (class 1259 OID 5302825)
 -- Name: idx_specimens_taxon_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29480,7 +30844,7 @@ CREATE INDEX idx_specimens_taxon_ref ON darwin2.specimens USING btree (taxon_ref
 
 
 --
--- TOC entry 5186 (class 1259 OID 5302826)
+-- TOC entry 5206 (class 1259 OID 5302826)
 -- Name: idx_specimens_type_search; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29488,7 +30852,7 @@ CREATE INDEX idx_specimens_type_search ON darwin2.specimens USING btree (type_se
 
 
 --
--- TOC entry 5197 (class 1259 OID 5302827)
+-- TOC entry 5217 (class 1259 OID 5302827)
 -- Name: idx_staging_catalogue; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29496,7 +30860,7 @@ CREATE INDEX idx_staging_catalogue ON darwin2.staging_catalogue USING btree (lev
 
 
 --
--- TOC entry 5198 (class 1259 OID 5302828)
+-- TOC entry 5218 (class 1259 OID 5302828)
 -- Name: idx_staging_catalogue_catalogue_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29504,7 +30868,7 @@ CREATE INDEX idx_staging_catalogue_catalogue_ref ON darwin2.staging_catalogue US
 
 
 --
--- TOC entry 5199 (class 1259 OID 5302829)
+-- TOC entry 5219 (class 1259 OID 5302829)
 -- Name: idx_staging_catalogue_filter; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29512,7 +30876,7 @@ CREATE INDEX idx_staging_catalogue_filter ON darwin2.staging_catalogue USING btr
 
 
 --
--- TOC entry 5200 (class 1259 OID 5302830)
+-- TOC entry 5220 (class 1259 OID 5302830)
 -- Name: idx_staging_catalogue_parent_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29520,7 +30884,7 @@ CREATE INDEX idx_staging_catalogue_parent_ref ON darwin2.staging_catalogue USING
 
 
 --
--- TOC entry 5201 (class 1259 OID 5302831)
+-- TOC entry 5221 (class 1259 OID 5302831)
 -- Name: idx_staging_catalogue_parent_updated; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29528,7 +30892,7 @@ CREATE INDEX idx_staging_catalogue_parent_updated ON darwin2.staging_catalogue U
 
 
 --
--- TOC entry 4875 (class 1259 OID 5302832)
+-- TOC entry 4895 (class 1259 OID 5302832)
 -- Name: idx_staging_gtu_code; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29536,7 +30900,7 @@ CREATE INDEX idx_staging_gtu_code ON darwin2.staging USING btree (gtu_code) WHER
 
 
 --
--- TOC entry 4876 (class 1259 OID 5302833)
+-- TOC entry 4896 (class 1259 OID 5302833)
 -- Name: idx_staging_gtu_code_fulltoindex; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29544,7 +30908,7 @@ CREATE INDEX idx_staging_gtu_code_fulltoindex ON darwin2.staging USING btree (da
 
 
 --
--- TOC entry 4877 (class 1259 OID 5302834)
+-- TOC entry 4897 (class 1259 OID 5302834)
 -- Name: idx_staging_import_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29552,7 +30916,7 @@ CREATE INDEX idx_staging_import_ref ON darwin2.staging USING btree (import_ref);
 
 
 --
--- TOC entry 5216 (class 1259 OID 5302835)
+-- TOC entry 5236 (class 1259 OID 5302835)
 -- Name: idx_staging_people_record; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29560,7 +30924,7 @@ CREATE INDEX idx_staging_people_record ON darwin2.staging_people USING btree (re
 
 
 --
--- TOC entry 5225 (class 1259 OID 5302836)
+-- TOC entry 5245 (class 1259 OID 5302836)
 -- Name: idx_tag_groups_group_name_indexed; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29568,7 +30932,7 @@ CREATE INDEX idx_tag_groups_group_name_indexed ON darwin2.tag_groups USING btree
 
 
 --
--- TOC entry 5226 (class 1259 OID 5302837)
+-- TOC entry 5246 (class 1259 OID 5302837)
 -- Name: idx_tag_groups_group_name_indexed_txt_op; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29576,7 +30940,7 @@ CREATE INDEX idx_tag_groups_group_name_indexed_txt_op ON darwin2.tag_groups USIN
 
 
 --
--- TOC entry 5227 (class 1259 OID 5302838)
+-- TOC entry 5247 (class 1259 OID 5302838)
 -- Name: idx_tag_groups_sub_group_name; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29584,7 +30948,7 @@ CREATE INDEX idx_tag_groups_sub_group_name ON darwin2.tag_groups USING btree (su
 
 
 --
--- TOC entry 5232 (class 1259 OID 5302839)
+-- TOC entry 5252 (class 1259 OID 5302839)
 -- Name: idx_tags_group_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29592,7 +30956,7 @@ CREATE INDEX idx_tags_group_ref ON darwin2.tags USING btree (group_ref);
 
 
 --
--- TOC entry 5233 (class 1259 OID 5302840)
+-- TOC entry 5253 (class 1259 OID 5302840)
 -- Name: idx_tags_group_type; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29600,7 +30964,7 @@ CREATE INDEX idx_tags_group_type ON darwin2.tags USING btree (group_type);
 
 
 --
--- TOC entry 5234 (class 1259 OID 5302841)
+-- TOC entry 5254 (class 1259 OID 5302841)
 -- Name: idx_tags_gtu_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29608,7 +30972,7 @@ CREATE INDEX idx_tags_gtu_ref ON darwin2.tags USING btree (gtu_ref);
 
 
 --
--- TOC entry 5235 (class 1259 OID 5307726)
+-- TOC entry 5255 (class 1259 OID 5307726)
 -- Name: idx_tags_indexed_trgm; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29616,7 +30980,7 @@ CREATE INDEX idx_tags_indexed_trgm ON darwin2.tags USING gin (tag_indexed public
 
 
 --
--- TOC entry 5236 (class 1259 OID 5307727)
+-- TOC entry 5256 (class 1259 OID 5307727)
 -- Name: idx_tags_rmca_indexed_trgm; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29624,7 +30988,7 @@ CREATE INDEX idx_tags_rmca_indexed_trgm ON darwin2.tags USING gin (tag_indexed p
 
 
 --
--- TOC entry 5237 (class 1259 OID 5302842)
+-- TOC entry 5257 (class 1259 OID 5302842)
 -- Name: idx_tags_sub_group_type; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29632,7 +30996,7 @@ CREATE INDEX idx_tags_sub_group_type ON darwin2.tags USING btree (sub_group_type
 
 
 --
--- TOC entry 5238 (class 1259 OID 5302844)
+-- TOC entry 5258 (class 1259 OID 5302844)
 -- Name: idx_tags_trgm; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29640,7 +31004,7 @@ CREATE INDEX idx_tags_trgm ON darwin2.tags USING gin (tag public.gin_trgm_ops);
 
 
 --
--- TOC entry 5241 (class 1259 OID 5302845)
+-- TOC entry 5261 (class 1259 OID 5302845)
 -- Name: idx_taxonomy_level_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29648,7 +31012,7 @@ CREATE INDEX idx_taxonomy_level_ref ON darwin2.taxonomy USING btree (level_ref);
 
 
 --
--- TOC entry 5242 (class 1259 OID 5302846)
+-- TOC entry 5262 (class 1259 OID 5302846)
 -- Name: idx_taxonomy_parent_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29656,7 +31020,7 @@ CREATE INDEX idx_taxonomy_parent_ref ON darwin2.taxonomy USING btree (parent_ref
 
 
 --
--- TOC entry 5243 (class 1259 OID 5302847)
+-- TOC entry 5263 (class 1259 OID 5302847)
 -- Name: idx_taxonomy_path; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29664,7 +31028,7 @@ CREATE INDEX idx_taxonomy_path ON darwin2.taxonomy USING btree (path text_patter
 
 
 --
--- TOC entry 5187 (class 1259 OID 5307724)
+-- TOC entry 5207 (class 1259 OID 5307724)
 -- Name: idx_test_1; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29672,7 +31036,7 @@ CREATE INDEX idx_test_1 ON darwin2.specimens USING gin (spec_coll_ids);
 
 
 --
--- TOC entry 5188 (class 1259 OID 5307725)
+-- TOC entry 5208 (class 1259 OID 5307725)
 -- Name: idx_test_2; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29680,7 +31044,7 @@ CREATE INDEX idx_test_2 ON darwin2.specimens USING gin (spec_ident_ids);
 
 
 --
--- TOC entry 4942 (class 1259 OID 5302848)
+-- TOC entry 4962 (class 1259 OID 5302848)
 -- Name: idx_tool_trgm; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29688,7 +31052,7 @@ CREATE INDEX idx_tool_trgm ON darwin2.collecting_tools USING gin (tool public.gi
 
 
 --
--- TOC entry 5257 (class 1259 OID 5302849)
+-- TOC entry 5277 (class 1259 OID 5302849)
 -- Name: idx_users_addresses_country; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29696,7 +31060,7 @@ CREATE INDEX idx_users_addresses_country ON darwin2.users_addresses USING btree 
 
 
 --
--- TOC entry 5258 (class 1259 OID 5302850)
+-- TOC entry 5278 (class 1259 OID 5302850)
 -- Name: idx_users_addresses_person_user_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29704,7 +31068,7 @@ CREATE INDEX idx_users_addresses_person_user_ref ON darwin2.users_addresses USIN
 
 
 --
--- TOC entry 5261 (class 1259 OID 5302851)
+-- TOC entry 5281 (class 1259 OID 5302851)
 -- Name: idx_users_comm_comm_type; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29712,7 +31076,7 @@ CREATE INDEX idx_users_comm_comm_type ON darwin2.users_comm USING btree (comm_ty
 
 
 --
--- TOC entry 5262 (class 1259 OID 5302852)
+-- TOC entry 5282 (class 1259 OID 5302852)
 -- Name: idx_users_comm_person_user_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29720,7 +31084,7 @@ CREATE INDEX idx_users_comm_person_user_ref ON darwin2.users_comm USING btree (p
 
 
 --
--- TOC entry 5271 (class 1259 OID 5302853)
+-- TOC entry 5291 (class 1259 OID 5302853)
 -- Name: idx_users_tracking_action; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29728,7 +31092,7 @@ CREATE INDEX idx_users_tracking_action ON darwin2.users_tracking USING btree (ac
 
 
 --
--- TOC entry 5272 (class 1259 OID 5302854)
+-- TOC entry 5292 (class 1259 OID 5302854)
 -- Name: idx_users_tracking_date_time; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29736,7 +31100,7 @@ CREATE INDEX idx_users_tracking_date_time ON darwin2.users_tracking USING btree 
 
 
 --
--- TOC entry 5273 (class 1259 OID 5302855)
+-- TOC entry 5293 (class 1259 OID 5302855)
 -- Name: idx_users_tracking_user_ref_date_time; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29744,7 +31108,7 @@ CREATE INDEX idx_users_tracking_user_ref_date_time ON darwin2.users_tracking USI
 
 
 --
--- TOC entry 5276 (class 1259 OID 5302856)
+-- TOC entry 5296 (class 1259 OID 5302856)
 -- Name: idx_vernacular_names_community_indexed; Type: INDEX; Schema: darwin2; Owner: postgres
 --
 
@@ -29752,7 +31116,7 @@ CREATE INDEX idx_vernacular_names_community_indexed ON darwin2.vernacular_names 
 
 
 --
--- TOC entry 5277 (class 1259 OID 5302857)
+-- TOC entry 5297 (class 1259 OID 5302857)
 -- Name: idx_vernacular_names_name_indexed; Type: INDEX; Schema: darwin2; Owner: postgres
 --
 
@@ -29760,7 +31124,7 @@ CREATE INDEX idx_vernacular_names_name_indexed ON darwin2.vernacular_names USING
 
 
 --
--- TOC entry 5278 (class 1259 OID 5302858)
+-- TOC entry 5298 (class 1259 OID 5302858)
 -- Name: idx_vernacular_names_referenced_record; Type: INDEX; Schema: darwin2; Owner: postgres
 --
 
@@ -29768,7 +31132,7 @@ CREATE INDEX idx_vernacular_names_referenced_record ON darwin2.vernacular_names 
 
 
 --
--- TOC entry 5302 (class 1259 OID 5308640)
+-- TOC entry 5322 (class 1259 OID 5308640)
 -- Name: tag_authority_idx; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29776,7 +31140,7 @@ CREATE UNIQUE INDEX tag_authority_idx ON darwin2.tag_authority USING btree (doma
 
 
 --
--- TOC entry 5307 (class 1259 OID 5308641)
+-- TOC entry 5327 (class 1259 OID 5308641)
 -- Name: tag_tag_authority_idx; Type: INDEX; Schema: darwin2; Owner: postgres
 --
 
@@ -29784,7 +31148,7 @@ CREATE INDEX tag_tag_authority_idx ON darwin2.tag_tag_authority USING btree (tag
 
 
 --
--- TOC entry 5312 (class 1259 OID 5308759)
+-- TOC entry 5332 (class 1259 OID 5308759)
 -- Name: taxonomy_is_marine_authority_idx; Type: INDEX; Schema: darwin2; Owner: postgres
 --
 
@@ -29792,7 +31156,7 @@ CREATE INDEX taxonomy_is_marine_authority_idx ON darwin2.taxonomy_authority USIN
 
 
 --
--- TOC entry 5283 (class 1259 OID 5302859)
+-- TOC entry 5303 (class 1259 OID 5302859)
 -- Name: zzz_uta_id; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29800,7 +31164,7 @@ CREATE INDEX zzz_uta_id ON darwin2.zzz_users_tracking_archived USING btree (id);
 
 
 --
--- TOC entry 5284 (class 1259 OID 5302860)
+-- TOC entry 5304 (class 1259 OID 5302860)
 -- Name: zzz_uta_modification_date_time; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29808,7 +31172,7 @@ CREATE INDEX zzz_uta_modification_date_time ON darwin2.zzz_users_tracking_archiv
 
 
 --
--- TOC entry 5285 (class 1259 OID 5302861)
+-- TOC entry 5305 (class 1259 OID 5302861)
 -- Name: zzz_uta_record_id; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29816,7 +31180,7 @@ CREATE INDEX zzz_uta_record_id ON darwin2.zzz_users_tracking_archived USING btre
 
 
 --
--- TOC entry 5286 (class 1259 OID 5302862)
+-- TOC entry 5306 (class 1259 OID 5302862)
 -- Name: zzz_uta_referenced_relation; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29824,7 +31188,7 @@ CREATE INDEX zzz_uta_referenced_relation ON darwin2.zzz_users_tracking_archived 
 
 
 --
--- TOC entry 5287 (class 1259 OID 5302863)
+-- TOC entry 5307 (class 1259 OID 5302863)
 -- Name: zzz_uta_specimen_individual_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29832,7 +31196,7 @@ CREATE INDEX zzz_uta_specimen_individual_ref ON darwin2.zzz_users_tracking_archi
 
 
 --
--- TOC entry 5288 (class 1259 OID 5302864)
+-- TOC entry 5308 (class 1259 OID 5302864)
 -- Name: zzz_uta_specimen_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29840,7 +31204,7 @@ CREATE INDEX zzz_uta_specimen_ref ON darwin2.zzz_users_tracking_archived USING b
 
 
 --
--- TOC entry 5289 (class 1259 OID 5302865)
+-- TOC entry 5309 (class 1259 OID 5302865)
 -- Name: zzz_uta_user_ref; Type: INDEX; Schema: darwin2; Owner: darwin2
 --
 
@@ -29848,7 +31212,7 @@ CREATE INDEX zzz_uta_user_ref ON darwin2.zzz_users_tracking_archived USING btree
 
 
 --
--- TOC entry 5759 (class 2618 OID 5302866)
+-- TOC entry 5780 (class 2618 OID 5302866)
 -- Name: v_rmca_taxonomy_synonyms_with_name_and_specs _RETURN; Type: RULE; Schema: darwin2; Owner: darwin2
 --
 
@@ -29880,7 +31244,7 @@ CREATE OR REPLACE VIEW darwin2.v_rmca_taxonomy_synonyms_with_name_and_specs AS
 
 
 --
--- TOC entry 5760 (class 2618 OID 5302868)
+-- TOC entry 5781 (class 2618 OID 5302868)
 -- Name: v_darwin_ipt_rbins _RETURN; Type: RULE; Schema: darwin2; Owner: darwin2
 --
 
@@ -29943,7 +31307,7 @@ CREATE OR REPLACE VIEW darwin2.v_darwin_ipt_rbins AS
 
 
 --
--- TOC entry 5762 (class 2618 OID 5307657)
+-- TOC entry 5783 (class 2618 OID 5307657)
 -- Name: v_reindex_tag_spaces _RETURN; Type: RULE; Schema: darwin2; Owner: darwin2
 --
 
@@ -29966,7 +31330,7 @@ UNION
 
 
 --
--- TOC entry 5453 (class 2620 OID 5302870)
+-- TOC entry 5473 (class 2620 OID 5302870)
 -- Name: collections fct_chk_peopleismoral_collections; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -29974,7 +31338,7 @@ CREATE TRIGGER fct_chk_peopleismoral_collections AFTER INSERT OR UPDATE ON darwi
 
 
 --
--- TOC entry 5438 (class 2620 OID 5302871)
+-- TOC entry 5458 (class 2620 OID 5302871)
 -- Name: codes fct_cpy_trg_del_dict_codes; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -29982,7 +31346,7 @@ CREATE TRIGGER fct_cpy_trg_del_dict_codes AFTER DELETE OR UPDATE ON darwin2.code
 
 
 --
--- TOC entry 5448 (class 2620 OID 5302872)
+-- TOC entry 5468 (class 2620 OID 5302872)
 -- Name: collection_maintenance fct_cpy_trg_del_dict_collection_maintenance; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -29990,7 +31354,7 @@ CREATE TRIGGER fct_cpy_trg_del_dict_collection_maintenance AFTER DELETE OR UPDAT
 
 
 --
--- TOC entry 5476 (class 2620 OID 5302873)
+-- TOC entry 5500 (class 2620 OID 5302873)
 -- Name: identifications fct_cpy_trg_del_dict_identifications; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -29998,7 +31362,7 @@ CREATE TRIGGER fct_cpy_trg_del_dict_identifications AFTER DELETE OR UPDATE ON da
 
 
 --
--- TOC entry 5505 (class 2620 OID 5302874)
+-- TOC entry 5525 (class 2620 OID 5302874)
 -- Name: insurances fct_cpy_trg_del_dict_insurances; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30006,7 +31370,7 @@ CREATE TRIGGER fct_cpy_trg_del_dict_insurances AFTER DELETE OR UPDATE ON darwin2
 
 
 --
--- TOC entry 5527 (class 2620 OID 5302875)
+-- TOC entry 5547 (class 2620 OID 5302875)
 -- Name: loan_status fct_cpy_trg_del_dict_loan_status; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30014,7 +31378,7 @@ CREATE TRIGGER fct_cpy_trg_del_dict_loan_status AFTER DELETE OR UPDATE ON darwin
 
 
 --
--- TOC entry 5535 (class 2620 OID 5302876)
+-- TOC entry 5555 (class 2620 OID 5302876)
 -- Name: mineralogy fct_cpy_trg_del_dict_mineralogy; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30022,7 +31386,7 @@ CREATE TRIGGER fct_cpy_trg_del_dict_mineralogy AFTER DELETE OR UPDATE ON darwin2
 
 
 --
--- TOC entry 5548 (class 2620 OID 5302877)
+-- TOC entry 5568 (class 2620 OID 5302877)
 -- Name: people fct_cpy_trg_del_dict_people; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30030,7 +31394,7 @@ CREATE TRIGGER fct_cpy_trg_del_dict_people AFTER DELETE OR UPDATE ON darwin2.peo
 
 
 --
--- TOC entry 5554 (class 2620 OID 5302878)
+-- TOC entry 5574 (class 2620 OID 5302878)
 -- Name: people_addresses fct_cpy_trg_del_dict_people_addresses; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30038,7 +31402,7 @@ CREATE TRIGGER fct_cpy_trg_del_dict_people_addresses AFTER DELETE OR UPDATE ON d
 
 
 --
--- TOC entry 5470 (class 2620 OID 5302879)
+-- TOC entry 5492 (class 2620 OID 5302879)
 -- Name: properties fct_cpy_trg_del_dict_properties; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30046,7 +31410,7 @@ CREATE TRIGGER fct_cpy_trg_del_dict_properties AFTER DELETE OR UPDATE ON darwin2
 
 
 --
--- TOC entry 5562 (class 2620 OID 5302880)
+-- TOC entry 5584 (class 2620 OID 5302880)
 -- Name: specimens fct_cpy_trg_del_dict_specimens; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30054,7 +31418,7 @@ CREATE TRIGGER fct_cpy_trg_del_dict_specimens AFTER DELETE OR UPDATE ON darwin2.
 
 
 --
--- TOC entry 5577 (class 2620 OID 5302881)
+-- TOC entry 5597 (class 2620 OID 5302881)
 -- Name: specimens_relationships fct_cpy_trg_del_dict_specimens_relationships; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30062,7 +31426,7 @@ CREATE TRIGGER fct_cpy_trg_del_dict_specimens_relationships AFTER DELETE OR UPDA
 
 
 --
--- TOC entry 5590 (class 2620 OID 5302882)
+-- TOC entry 5610 (class 2620 OID 5302882)
 -- Name: tag_groups fct_cpy_trg_del_dict_tag_groups; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30070,7 +31434,7 @@ CREATE TRIGGER fct_cpy_trg_del_dict_tag_groups AFTER DELETE OR UPDATE ON darwin2
 
 
 --
--- TOC entry 5605 (class 2620 OID 5302883)
+-- TOC entry 5626 (class 2620 OID 5302883)
 -- Name: users fct_cpy_trg_del_dict_users; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30078,7 +31442,7 @@ CREATE TRIGGER fct_cpy_trg_del_dict_users AFTER DELETE OR UPDATE ON darwin2.user
 
 
 --
--- TOC entry 5610 (class 2620 OID 5302884)
+-- TOC entry 5631 (class 2620 OID 5302884)
 -- Name: users_addresses fct_cpy_trg_del_dict_users_addresses; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30086,7 +31450,7 @@ CREATE TRIGGER fct_cpy_trg_del_dict_users_addresses AFTER DELETE OR UPDATE ON da
 
 
 --
--- TOC entry 5439 (class 2620 OID 5302885)
+-- TOC entry 5459 (class 2620 OID 5302885)
 -- Name: codes fct_cpy_trg_ins_update_dict_codes; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30094,7 +31458,7 @@ CREATE TRIGGER fct_cpy_trg_ins_update_dict_codes AFTER INSERT OR UPDATE ON darwi
 
 
 --
--- TOC entry 5449 (class 2620 OID 5302886)
+-- TOC entry 5469 (class 2620 OID 5302886)
 -- Name: collection_maintenance fct_cpy_trg_ins_update_dict_collection_maintenance; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30102,7 +31466,7 @@ CREATE TRIGGER fct_cpy_trg_ins_update_dict_collection_maintenance AFTER INSERT O
 
 
 --
--- TOC entry 5477 (class 2620 OID 5302887)
+-- TOC entry 5501 (class 2620 OID 5302887)
 -- Name: identifications fct_cpy_trg_ins_update_dict_identifications; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30110,7 +31474,7 @@ CREATE TRIGGER fct_cpy_trg_ins_update_dict_identifications AFTER INSERT OR UPDAT
 
 
 --
--- TOC entry 5506 (class 2620 OID 5302888)
+-- TOC entry 5526 (class 2620 OID 5302888)
 -- Name: insurances fct_cpy_trg_ins_update_dict_insurances; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30118,7 +31482,7 @@ CREATE TRIGGER fct_cpy_trg_ins_update_dict_insurances AFTER INSERT OR UPDATE ON 
 
 
 --
--- TOC entry 5528 (class 2620 OID 5302889)
+-- TOC entry 5548 (class 2620 OID 5302889)
 -- Name: loan_status fct_cpy_trg_ins_update_dict_loan_status; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30126,7 +31490,7 @@ CREATE TRIGGER fct_cpy_trg_ins_update_dict_loan_status AFTER INSERT OR UPDATE ON
 
 
 --
--- TOC entry 5536 (class 2620 OID 5302890)
+-- TOC entry 5556 (class 2620 OID 5302890)
 -- Name: mineralogy fct_cpy_trg_ins_update_dict_mineralogy; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30134,7 +31498,7 @@ CREATE TRIGGER fct_cpy_trg_ins_update_dict_mineralogy AFTER INSERT OR UPDATE ON 
 
 
 --
--- TOC entry 5549 (class 2620 OID 5302891)
+-- TOC entry 5569 (class 2620 OID 5302891)
 -- Name: people fct_cpy_trg_ins_update_dict_people; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30142,7 +31506,7 @@ CREATE TRIGGER fct_cpy_trg_ins_update_dict_people AFTER INSERT OR UPDATE ON darw
 
 
 --
--- TOC entry 5555 (class 2620 OID 5302892)
+-- TOC entry 5575 (class 2620 OID 5302892)
 -- Name: people_addresses fct_cpy_trg_ins_update_dict_people_addresses; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30150,7 +31514,7 @@ CREATE TRIGGER fct_cpy_trg_ins_update_dict_people_addresses AFTER INSERT OR UPDA
 
 
 --
--- TOC entry 5471 (class 2620 OID 5302893)
+-- TOC entry 5493 (class 2620 OID 5302893)
 -- Name: properties fct_cpy_trg_ins_update_dict_properties; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30158,7 +31522,7 @@ CREATE TRIGGER fct_cpy_trg_ins_update_dict_properties AFTER INSERT OR UPDATE ON 
 
 
 --
--- TOC entry 5563 (class 2620 OID 5302894)
+-- TOC entry 5585 (class 2620 OID 5302894)
 -- Name: specimens fct_cpy_trg_ins_update_dict_specimens; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30166,7 +31530,7 @@ CREATE TRIGGER fct_cpy_trg_ins_update_dict_specimens AFTER INSERT OR UPDATE ON d
 
 
 --
--- TOC entry 5578 (class 2620 OID 5302895)
+-- TOC entry 5598 (class 2620 OID 5302895)
 -- Name: specimens_relationships fct_cpy_trg_ins_update_dict_specimens_relationships; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30174,7 +31538,7 @@ CREATE TRIGGER fct_cpy_trg_ins_update_dict_specimens_relationships AFTER INSERT 
 
 
 --
--- TOC entry 5591 (class 2620 OID 5302896)
+-- TOC entry 5611 (class 2620 OID 5302896)
 -- Name: tag_groups fct_cpy_trg_ins_update_dict_tag_groups; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30182,7 +31546,7 @@ CREATE TRIGGER fct_cpy_trg_ins_update_dict_tag_groups AFTER INSERT OR UPDATE ON 
 
 
 --
--- TOC entry 5606 (class 2620 OID 5302897)
+-- TOC entry 5627 (class 2620 OID 5302897)
 -- Name: users fct_cpy_trg_ins_update_dict_users; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30190,7 +31554,7 @@ CREATE TRIGGER fct_cpy_trg_ins_update_dict_users AFTER INSERT OR UPDATE ON darwi
 
 
 --
--- TOC entry 5611 (class 2620 OID 5302898)
+-- TOC entry 5632 (class 2620 OID 5302898)
 -- Name: users_addresses fct_cpy_trg_ins_update_dict_users_addresses; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30198,7 +31562,7 @@ CREATE TRIGGER fct_cpy_trg_ins_update_dict_users_addresses AFTER INSERT OR UPDAT
 
 
 --
--- TOC entry 5499 (class 2620 OID 5302899)
+-- TOC entry 5519 (class 2620 OID 5302899)
 -- Name: imports fct_trg_rmca_del_import_related; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30206,7 +31570,7 @@ CREATE TRIGGER fct_trg_rmca_del_import_related BEFORE DELETE OR UPDATE ON darwin
 
 
 --
--- TOC entry 5500 (class 2620 OID 5302900)
+-- TOC entry 5520 (class 2620 OID 5302900)
 -- Name: imports fct_trg_rmca_import_taxonomy_history; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30214,7 +31578,7 @@ CREATE TRIGGER fct_trg_rmca_import_taxonomy_history BEFORE INSERT OR UPDATE ON d
 
 
 --
--- TOC entry 5531 (class 2620 OID 5302901)
+-- TOC entry 5551 (class 2620 OID 5302901)
 -- Name: loans trg_add_status_history; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30222,7 +31586,7 @@ CREATE TRIGGER trg_add_status_history AFTER INSERT ON darwin2.loans FOR EACH ROW
 
 
 --
--- TOC entry 5581 (class 2620 OID 5302902)
+-- TOC entry 5601 (class 2620 OID 5302902)
 -- Name: staging_catalogue trg_catalogue_import_keywords_update; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30230,7 +31594,7 @@ CREATE TRIGGER trg_catalogue_import_keywords_update AFTER INSERT OR DELETE OR UP
 
 
 --
--- TOC entry 5414 (class 2620 OID 5302903)
+-- TOC entry 5434 (class 2620 OID 5302903)
 -- Name: staging trg_catalogue_import_keywords_update; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30238,7 +31602,7 @@ CREATE TRIGGER trg_catalogue_import_keywords_update AFTER INSERT OR DELETE OR UP
 
 
 --
--- TOC entry 5463 (class 2620 OID 5302904)
+-- TOC entry 5483 (class 2620 OID 5302904)
 -- Name: collections_rights trg_chk_canupdatecollectionsrights; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30246,7 +31610,7 @@ CREATE TRIGGER trg_chk_canupdatecollectionsrights BEFORE UPDATE ON darwin2.colle
 
 
 --
--- TOC entry 5502 (class 2620 OID 5302905)
+-- TOC entry 5522 (class 2620 OID 5302905)
 -- Name: informative_workflow trg_chk_is_last_informative_workflow; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30254,7 +31618,7 @@ CREATE TRIGGER trg_chk_is_last_informative_workflow BEFORE INSERT ON darwin2.inf
 
 
 --
--- TOC entry 5529 (class 2620 OID 5302906)
+-- TOC entry 5549 (class 2620 OID 5302906)
 -- Name: loan_status trg_chk_is_last_loan_status; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30262,7 +31626,7 @@ CREATE TRIGGER trg_chk_is_last_loan_status BEFORE INSERT ON darwin2.loan_status 
 
 
 --
--- TOC entry 5454 (class 2620 OID 5302907)
+-- TOC entry 5474 (class 2620 OID 5302907)
 -- Name: collections trg_chk_parentcollinstitution; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30270,7 +31634,7 @@ CREATE TRIGGER trg_chk_parentcollinstitution BEFORE INSERT OR UPDATE ON darwin2.
 
 
 --
--- TOC entry 5550 (class 2620 OID 5302908)
+-- TOC entry 5570 (class 2620 OID 5302908)
 -- Name: people trg_chk_peopletype; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30278,7 +31642,7 @@ CREATE TRIGGER trg_chk_peopletype AFTER UPDATE ON darwin2.people FOR EACH ROW EX
 
 
 --
--- TOC entry 5426 (class 2620 OID 5302909)
+-- TOC entry 5446 (class 2620 OID 5302909)
 -- Name: chronostratigraphy trg_chk_possible_upper_level_chronostratigraphy; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30286,7 +31650,7 @@ CREATE TRIGGER trg_chk_possible_upper_level_chronostratigraphy AFTER INSERT OR U
 
 
 --
--- TOC entry 5510 (class 2620 OID 5302910)
+-- TOC entry 5530 (class 2620 OID 5302910)
 -- Name: lithology trg_chk_possible_upper_level_lithology; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30294,7 +31658,7 @@ CREATE TRIGGER trg_chk_possible_upper_level_lithology AFTER INSERT OR UPDATE ON 
 
 
 --
--- TOC entry 5517 (class 2620 OID 5302911)
+-- TOC entry 5537 (class 2620 OID 5302911)
 -- Name: lithostratigraphy trg_chk_possible_upper_level_lithostratigraphy; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30302,7 +31666,7 @@ CREATE TRIGGER trg_chk_possible_upper_level_lithostratigraphy AFTER INSERT OR UP
 
 
 --
--- TOC entry 5537 (class 2620 OID 5302912)
+-- TOC entry 5557 (class 2620 OID 5302912)
 -- Name: mineralogy trg_chk_possible_upper_level_mineralogy; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30310,7 +31674,7 @@ CREATE TRIGGER trg_chk_possible_upper_level_mineralogy AFTER INSERT OR UPDATE ON
 
 
 --
--- TOC entry 5593 (class 2620 OID 5302913)
+-- TOC entry 5613 (class 2620 OID 5302913)
 -- Name: taxonomy trg_chk_possible_upper_level_taxonomy; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30318,7 +31682,7 @@ CREATE TRIGGER trg_chk_possible_upper_level_taxonomy AFTER INSERT OR UPDATE ON d
 
 
 --
--- TOC entry 5440 (class 2620 OID 5302914)
+-- TOC entry 5460 (class 2620 OID 5302914)
 -- Name: codes trg_chk_ref_record_catalogue_codes; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30326,7 +31690,7 @@ CREATE TRIGGER trg_chk_ref_record_catalogue_codes AFTER INSERT OR UPDATE ON darw
 
 
 --
--- TOC entry 5421 (class 2620 OID 5302915)
+-- TOC entry 5441 (class 2620 OID 5302915)
 -- Name: catalogue_people trg_chk_ref_record_catalogue_people; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30334,7 +31698,7 @@ CREATE TRIGGER trg_chk_ref_record_catalogue_people AFTER INSERT OR UPDATE ON dar
 
 
 --
--- TOC entry 5435 (class 2620 OID 5302916)
+-- TOC entry 5455 (class 2620 OID 5302916)
 -- Name: classification_synonymies trg_chk_ref_record_classification_synonymies; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30342,7 +31706,7 @@ CREATE TRIGGER trg_chk_ref_record_classification_synonymies AFTER INSERT OR UPDA
 
 
 --
--- TOC entry 5450 (class 2620 OID 5302917)
+-- TOC entry 5470 (class 2620 OID 5302917)
 -- Name: collection_maintenance trg_chk_ref_record_collection_maintenance; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30350,7 +31714,7 @@ CREATE TRIGGER trg_chk_ref_record_collection_maintenance AFTER INSERT OR UPDATE 
 
 
 --
--- TOC entry 5467 (class 2620 OID 5302918)
+-- TOC entry 5489 (class 2620 OID 5302918)
 -- Name: comments trg_chk_ref_record_comments; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30358,7 +31722,7 @@ CREATE TRIGGER trg_chk_ref_record_comments AFTER INSERT OR UPDATE ON darwin2.com
 
 
 --
--- TOC entry 5487 (class 2620 OID 5302919)
+-- TOC entry 5507 (class 2620 OID 5302919)
 -- Name: ext_links trg_chk_ref_record_ext_links; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30366,7 +31730,7 @@ CREATE TRIGGER trg_chk_ref_record_ext_links AFTER INSERT OR UPDATE ON darwin2.ex
 
 
 --
--- TOC entry 5478 (class 2620 OID 5302920)
+-- TOC entry 5502 (class 2620 OID 5302920)
 -- Name: identifications trg_chk_ref_record_identifications; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30374,7 +31738,7 @@ CREATE TRIGGER trg_chk_ref_record_identifications AFTER INSERT OR UPDATE ON darw
 
 
 --
--- TOC entry 5503 (class 2620 OID 5302921)
+-- TOC entry 5523 (class 2620 OID 5302921)
 -- Name: informative_workflow trg_chk_ref_record_informative_workflow; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30382,7 +31746,7 @@ CREATE TRIGGER trg_chk_ref_record_informative_workflow AFTER INSERT OR UPDATE ON
 
 
 --
--- TOC entry 5507 (class 2620 OID 5302922)
+-- TOC entry 5527 (class 2620 OID 5302922)
 -- Name: insurances trg_chk_ref_record_insurances; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30390,7 +31754,7 @@ CREATE TRIGGER trg_chk_ref_record_insurances AFTER INSERT OR UPDATE ON darwin2.i
 
 
 --
--- TOC entry 5475 (class 2620 OID 5302923)
+-- TOC entry 5494 (class 2620 OID 5302923)
 -- Name: properties trg_chk_ref_record_properties; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30398,7 +31762,7 @@ CREATE TRIGGER trg_chk_ref_record_properties AFTER INSERT OR UPDATE ON darwin2.p
 
 
 --
--- TOC entry 5423 (class 2620 OID 5302924)
+-- TOC entry 5443 (class 2620 OID 5302924)
 -- Name: catalogue_relationships trg_chk_ref_record_relationship_catalogue_relationships; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30406,7 +31770,7 @@ CREATE TRIGGER trg_chk_ref_record_relationship_catalogue_relationships AFTER INS
 
 
 --
--- TOC entry 5420 (class 2620 OID 5302925)
+-- TOC entry 5440 (class 2620 OID 5302925)
 -- Name: template_table_record_ref trg_chk_ref_record_template_table_record_ref; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30414,7 +31778,7 @@ CREATE TRIGGER trg_chk_ref_record_template_table_record_ref AFTER INSERT OR UPDA
 
 
 --
--- TOC entry 5612 (class 2620 OID 5302926)
+-- TOC entry 5633 (class 2620 OID 5302926)
 -- Name: vernacular_names trg_chk_ref_record_vernacular_names; Type: TRIGGER; Schema: darwin2; Owner: postgres
 --
 
@@ -30422,7 +31786,7 @@ CREATE TRIGGER trg_chk_ref_record_vernacular_names AFTER INSERT OR UPDATE ON dar
 
 
 --
--- TOC entry 5564 (class 2620 OID 5302927)
+-- TOC entry 5586 (class 2620 OID 5302927)
 -- Name: specimens trg_chk_specimencollectionallowed; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30430,7 +31794,7 @@ CREATE TRIGGER trg_chk_specimencollectionallowed BEFORE INSERT OR DELETE OR UPDA
 
 
 --
--- TOC entry 5565 (class 2620 OID 5302928)
+-- TOC entry 5587 (class 2620 OID 5302928)
 -- Name: specimens trg_chk_specimens_not_loaned; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30438,7 +31802,7 @@ CREATE TRIGGER trg_chk_specimens_not_loaned BEFORE DELETE ON darwin2.specimens F
 
 
 --
--- TOC entry 5427 (class 2620 OID 5302929)
+-- TOC entry 5447 (class 2620 OID 5302929)
 -- Name: chronostratigraphy trg_chk_upper_level_for_childrens_chronostratigraphy; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30446,7 +31810,7 @@ CREATE TRIGGER trg_chk_upper_level_for_childrens_chronostratigraphy AFTER UPDATE
 
 
 --
--- TOC entry 5511 (class 2620 OID 5302930)
+-- TOC entry 5531 (class 2620 OID 5302930)
 -- Name: lithology trg_chk_upper_level_for_childrens_lithology; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30454,7 +31818,7 @@ CREATE TRIGGER trg_chk_upper_level_for_childrens_lithology AFTER UPDATE ON darwi
 
 
 --
--- TOC entry 5518 (class 2620 OID 5302931)
+-- TOC entry 5538 (class 2620 OID 5302931)
 -- Name: lithostratigraphy trg_chk_upper_level_for_childrens_lithostratigraphy; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30462,7 +31826,7 @@ CREATE TRIGGER trg_chk_upper_level_for_childrens_lithostratigraphy AFTER UPDATE 
 
 
 --
--- TOC entry 5538 (class 2620 OID 5302932)
+-- TOC entry 5558 (class 2620 OID 5302932)
 -- Name: mineralogy trg_chk_upper_level_for_childrens_mineralogy; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30470,7 +31834,7 @@ CREATE TRIGGER trg_chk_upper_level_for_childrens_mineralogy AFTER UPDATE ON darw
 
 
 --
--- TOC entry 5594 (class 2620 OID 5302933)
+-- TOC entry 5614 (class 2620 OID 5302933)
 -- Name: taxonomy trg_chk_upper_level_for_childrens_taxonomy; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30478,7 +31842,7 @@ CREATE TRIGGER trg_chk_upper_level_for_childrens_taxonomy AFTER UPDATE ON darwin
 
 
 --
--- TOC entry 5479 (class 2620 OID 5302934)
+-- TOC entry 5496 (class 2620 OID 5302934)
 -- Name: identifications trg_clr_identifiers_in_flat; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30486,7 +31850,7 @@ CREATE TRIGGER trg_clr_identifiers_in_flat BEFORE DELETE ON darwin2.identificati
 
 
 --
--- TOC entry 5417 (class 2620 OID 5302935)
+-- TOC entry 5437 (class 2620 OID 5302935)
 -- Name: bibliography trg_clr_referencerecord_bibliography; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30494,7 +31858,7 @@ CREATE TRIGGER trg_clr_referencerecord_bibliography AFTER DELETE OR UPDATE ON da
 
 
 --
--- TOC entry 5428 (class 2620 OID 5302936)
+-- TOC entry 5448 (class 2620 OID 5302936)
 -- Name: chronostratigraphy trg_clr_referencerecord_chronostratigraphy; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30502,7 +31866,7 @@ CREATE TRIGGER trg_clr_referencerecord_chronostratigraphy AFTER DELETE OR UPDATE
 
 
 --
--- TOC entry 5451 (class 2620 OID 5302937)
+-- TOC entry 5471 (class 2620 OID 5302937)
 -- Name: collection_maintenance trg_clr_referencerecord_collectionmaintenance; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30510,7 +31874,7 @@ CREATE TRIGGER trg_clr_referencerecord_collectionmaintenance AFTER DELETE OR UPD
 
 
 --
--- TOC entry 5455 (class 2620 OID 5302938)
+-- TOC entry 5475 (class 2620 OID 5302938)
 -- Name: collections trg_clr_referencerecord_collections; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30518,7 +31882,7 @@ CREATE TRIGGER trg_clr_referencerecord_collections AFTER DELETE OR UPDATE ON dar
 
 
 --
--- TOC entry 5483 (class 2620 OID 5302939)
+-- TOC entry 5503 (class 2620 OID 5302939)
 -- Name: expeditions trg_clr_referencerecord_expeditions; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30526,7 +31890,7 @@ CREATE TRIGGER trg_clr_referencerecord_expeditions AFTER DELETE OR UPDATE ON dar
 
 
 --
--- TOC entry 5490 (class 2620 OID 5302940)
+-- TOC entry 5510 (class 2620 OID 5302940)
 -- Name: gtu trg_clr_referencerecord_gtu; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30534,7 +31898,7 @@ CREATE TRIGGER trg_clr_referencerecord_gtu AFTER DELETE OR UPDATE ON darwin2.gtu
 
 
 --
--- TOC entry 5480 (class 2620 OID 5302941)
+-- TOC entry 5497 (class 2620 OID 5302941)
 -- Name: identifications trg_clr_referencerecord_identifications; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30542,7 +31906,7 @@ CREATE TRIGGER trg_clr_referencerecord_identifications AFTER DELETE OR UPDATE ON
 
 
 --
--- TOC entry 5495 (class 2620 OID 5302942)
+-- TOC entry 5515 (class 2620 OID 5302942)
 -- Name: igs trg_clr_referencerecord_igs; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30550,7 +31914,7 @@ CREATE TRIGGER trg_clr_referencerecord_igs AFTER DELETE OR UPDATE ON darwin2.igs
 
 
 --
--- TOC entry 5508 (class 2620 OID 5302943)
+-- TOC entry 5528 (class 2620 OID 5302943)
 -- Name: insurances trg_clr_referencerecord_insurances; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30558,7 +31922,7 @@ CREATE TRIGGER trg_clr_referencerecord_insurances AFTER DELETE OR UPDATE ON darw
 
 
 --
--- TOC entry 5512 (class 2620 OID 5302944)
+-- TOC entry 5532 (class 2620 OID 5302944)
 -- Name: lithology trg_clr_referencerecord_lithology; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30566,7 +31930,7 @@ CREATE TRIGGER trg_clr_referencerecord_lithology AFTER DELETE OR UPDATE ON darwi
 
 
 --
--- TOC entry 5519 (class 2620 OID 5302945)
+-- TOC entry 5539 (class 2620 OID 5302945)
 -- Name: lithostratigraphy trg_clr_referencerecord_lithostratigraphy; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30574,7 +31938,7 @@ CREATE TRIGGER trg_clr_referencerecord_lithostratigraphy AFTER DELETE OR UPDATE 
 
 
 --
--- TOC entry 5524 (class 2620 OID 5302946)
+-- TOC entry 5544 (class 2620 OID 5302946)
 -- Name: loan_items trg_clr_referencerecord_loan_items; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30582,7 +31946,7 @@ CREATE TRIGGER trg_clr_referencerecord_loan_items AFTER DELETE OR UPDATE ON darw
 
 
 --
--- TOC entry 5532 (class 2620 OID 5302947)
+-- TOC entry 5552 (class 2620 OID 5302947)
 -- Name: loans trg_clr_referencerecord_loans; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30590,7 +31954,7 @@ CREATE TRIGGER trg_clr_referencerecord_loans AFTER DELETE OR UPDATE ON darwin2.l
 
 
 --
--- TOC entry 5539 (class 2620 OID 5302948)
+-- TOC entry 5559 (class 2620 OID 5302948)
 -- Name: mineralogy trg_clr_referencerecord_mineralogy; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30598,7 +31962,7 @@ CREATE TRIGGER trg_clr_referencerecord_mineralogy AFTER DELETE OR UPDATE ON darw
 
 
 --
--- TOC entry 5544 (class 2620 OID 5302949)
+-- TOC entry 5564 (class 2620 OID 5302949)
 -- Name: multimedia trg_clr_referencerecord_multimedia; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30606,7 +31970,7 @@ CREATE TRIGGER trg_clr_referencerecord_multimedia AFTER DELETE OR UPDATE ON darw
 
 
 --
--- TOC entry 5551 (class 2620 OID 5302950)
+-- TOC entry 5571 (class 2620 OID 5302950)
 -- Name: people trg_clr_referencerecord_people; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30614,7 +31978,7 @@ CREATE TRIGGER trg_clr_referencerecord_people AFTER DELETE OR UPDATE ON darwin2.
 
 
 --
--- TOC entry 5566 (class 2620 OID 5302951)
+-- TOC entry 5588 (class 2620 OID 5302951)
 -- Name: specimens trg_clr_referencerecord_specimens; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30622,7 +31986,7 @@ CREATE TRIGGER trg_clr_referencerecord_specimens AFTER DELETE OR UPDATE ON darwi
 
 
 --
--- TOC entry 5579 (class 2620 OID 5302952)
+-- TOC entry 5599 (class 2620 OID 5302952)
 -- Name: specimens_relationships trg_clr_referencerecord_specimens_relationships; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30630,7 +31994,7 @@ CREATE TRIGGER trg_clr_referencerecord_specimens_relationships AFTER DELETE OR U
 
 
 --
--- TOC entry 5415 (class 2620 OID 5302953)
+-- TOC entry 5435 (class 2620 OID 5302953)
 -- Name: staging trg_clr_referencerecord_staging; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30638,7 +32002,7 @@ CREATE TRIGGER trg_clr_referencerecord_staging AFTER DELETE OR UPDATE ON darwin2
 
 
 --
--- TOC entry 5583 (class 2620 OID 5302954)
+-- TOC entry 5603 (class 2620 OID 5302954)
 -- Name: staging_info trg_clr_referencerecord_staging_info; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30646,7 +32010,7 @@ CREATE TRIGGER trg_clr_referencerecord_staging_info AFTER DELETE OR UPDATE ON da
 
 
 --
--- TOC entry 5595 (class 2620 OID 5302955)
+-- TOC entry 5615 (class 2620 OID 5302955)
 -- Name: taxonomy trg_clr_referencerecord_taxa; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30654,7 +32018,7 @@ CREATE TRIGGER trg_clr_referencerecord_taxa AFTER DELETE OR UPDATE ON darwin2.ta
 
 
 --
--- TOC entry 5607 (class 2620 OID 5302956)
+-- TOC entry 5628 (class 2620 OID 5302956)
 -- Name: users trg_clr_referencerecord_users; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30662,7 +32026,7 @@ CREATE TRIGGER trg_clr_referencerecord_users AFTER DELETE OR UPDATE ON darwin2.u
 
 
 --
--- TOC entry 5613 (class 2620 OID 5302957)
+-- TOC entry 5634 (class 2620 OID 5302957)
 -- Name: vernacular_names trg_clr_referencerecord_vernacularnames; Type: TRIGGER; Schema: darwin2; Owner: postgres
 --
 
@@ -30670,7 +32034,7 @@ CREATE TRIGGER trg_clr_referencerecord_vernacularnames AFTER DELETE OR UPDATE ON
 
 
 --
--- TOC entry 5567 (class 2620 OID 5302958)
+-- TOC entry 5589 (class 2620 OID 5302958)
 -- Name: specimens trg_clr_specialstatus_specimens; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30678,7 +32042,7 @@ CREATE TRIGGER trg_clr_specialstatus_specimens BEFORE INSERT OR UPDATE ON darwin
 
 
 --
--- TOC entry 5545 (class 2620 OID 5302959)
+-- TOC entry 5565 (class 2620 OID 5302959)
 -- Name: multimedia trg_cpy_deleted_file; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30686,7 +32050,7 @@ CREATE TRIGGER trg_cpy_deleted_file AFTER DELETE ON darwin2.multimedia FOR EACH 
 
 
 --
--- TOC entry 5552 (class 2620 OID 5302960)
+-- TOC entry 5572 (class 2620 OID 5302960)
 -- Name: people trg_cpy_formattedname; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30694,7 +32058,7 @@ CREATE TRIGGER trg_cpy_formattedname BEFORE INSERT OR UPDATE ON darwin2.people F
 
 
 --
--- TOC entry 5608 (class 2620 OID 5302961)
+-- TOC entry 5629 (class 2620 OID 5302961)
 -- Name: users trg_cpy_formattedname; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30702,7 +32066,7 @@ CREATE TRIGGER trg_cpy_formattedname BEFORE INSERT OR UPDATE ON darwin2.users FO
 
 
 --
--- TOC entry 5418 (class 2620 OID 5302962)
+-- TOC entry 5438 (class 2620 OID 5302962)
 -- Name: bibliography trg_cpy_fulltoindex_bibliography; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30710,7 +32074,7 @@ CREATE TRIGGER trg_cpy_fulltoindex_bibliography BEFORE INSERT OR UPDATE ON darwi
 
 
 --
--- TOC entry 5429 (class 2620 OID 5302963)
+-- TOC entry 5449 (class 2620 OID 5302963)
 -- Name: chronostratigraphy trg_cpy_fulltoindex_chronostratigraphy; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30718,7 +32082,7 @@ CREATE TRIGGER trg_cpy_fulltoindex_chronostratigraphy BEFORE INSERT OR UPDATE ON
 
 
 --
--- TOC entry 5433 (class 2620 OID 5302964)
+-- TOC entry 5453 (class 2620 OID 5302964)
 -- Name: classification_keywords trg_cpy_fulltoindex_classification_keywords; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30726,7 +32090,7 @@ CREATE TRIGGER trg_cpy_fulltoindex_classification_keywords BEFORE INSERT OR UPDA
 
 
 --
--- TOC entry 5441 (class 2620 OID 5302965)
+-- TOC entry 5461 (class 2620 OID 5302965)
 -- Name: codes trg_cpy_fulltoindex_codes; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30734,7 +32098,7 @@ CREATE TRIGGER trg_cpy_fulltoindex_codes BEFORE INSERT OR UPDATE ON darwin2.code
 
 
 --
--- TOC entry 5444 (class 2620 OID 5302966)
+-- TOC entry 5464 (class 2620 OID 5302966)
 -- Name: collecting_methods trg_cpy_fulltoindex_collecting_methods; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30742,7 +32106,7 @@ CREATE TRIGGER trg_cpy_fulltoindex_collecting_methods BEFORE INSERT OR UPDATE ON
 
 
 --
--- TOC entry 5446 (class 2620 OID 5302967)
+-- TOC entry 5466 (class 2620 OID 5302967)
 -- Name: collecting_tools trg_cpy_fulltoindex_collecting_tools; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30750,7 +32114,7 @@ CREATE TRIGGER trg_cpy_fulltoindex_collecting_tools BEFORE INSERT OR UPDATE ON d
 
 
 --
--- TOC entry 5456 (class 2620 OID 5302968)
+-- TOC entry 5476 (class 2620 OID 5302968)
 -- Name: collections trg_cpy_fulltoindex_collection; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30758,7 +32122,7 @@ CREATE TRIGGER trg_cpy_fulltoindex_collection BEFORE INSERT OR UPDATE ON darwin2
 
 
 --
--- TOC entry 5468 (class 2620 OID 5302969)
+-- TOC entry 5487 (class 2620 OID 5302969)
 -- Name: comments trg_cpy_fulltoindex_comments; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30766,7 +32130,7 @@ CREATE TRIGGER trg_cpy_fulltoindex_comments BEFORE INSERT OR UPDATE ON darwin2.c
 
 
 --
--- TOC entry 5484 (class 2620 OID 5302970)
+-- TOC entry 5504 (class 2620 OID 5302970)
 -- Name: expeditions trg_cpy_fulltoindex_expeditions; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30774,7 +32138,7 @@ CREATE TRIGGER trg_cpy_fulltoindex_expeditions BEFORE INSERT OR UPDATE ON darwin
 
 
 --
--- TOC entry 5488 (class 2620 OID 5302971)
+-- TOC entry 5508 (class 2620 OID 5302971)
 -- Name: ext_links trg_cpy_fulltoindex_ext_links; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30782,7 +32146,7 @@ CREATE TRIGGER trg_cpy_fulltoindex_ext_links BEFORE INSERT OR UPDATE ON darwin2.
 
 
 --
--- TOC entry 5481 (class 2620 OID 5302972)
+-- TOC entry 5498 (class 2620 OID 5302972)
 -- Name: identifications trg_cpy_fulltoindex_identifications; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30790,7 +32154,7 @@ CREATE TRIGGER trg_cpy_fulltoindex_identifications BEFORE INSERT OR UPDATE ON da
 
 
 --
--- TOC entry 5496 (class 2620 OID 5302973)
+-- TOC entry 5516 (class 2620 OID 5302973)
 -- Name: igs trg_cpy_fulltoindex_igs; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30798,7 +32162,7 @@ CREATE TRIGGER trg_cpy_fulltoindex_igs BEFORE INSERT OR UPDATE ON darwin2.igs FO
 
 
 --
--- TOC entry 5513 (class 2620 OID 5302974)
+-- TOC entry 5533 (class 2620 OID 5302974)
 -- Name: lithology trg_cpy_fulltoindex_lithology; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30806,7 +32170,7 @@ CREATE TRIGGER trg_cpy_fulltoindex_lithology BEFORE INSERT OR UPDATE ON darwin2.
 
 
 --
--- TOC entry 5520 (class 2620 OID 5302975)
+-- TOC entry 5540 (class 2620 OID 5302975)
 -- Name: lithostratigraphy trg_cpy_fulltoindex_lithostratigraphy; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30814,7 +32178,7 @@ CREATE TRIGGER trg_cpy_fulltoindex_lithostratigraphy BEFORE INSERT OR UPDATE ON 
 
 
 --
--- TOC entry 5533 (class 2620 OID 5302976)
+-- TOC entry 5553 (class 2620 OID 5302976)
 -- Name: loans trg_cpy_fulltoindex_loans; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30822,7 +32186,7 @@ CREATE TRIGGER trg_cpy_fulltoindex_loans BEFORE INSERT OR UPDATE ON darwin2.loan
 
 
 --
--- TOC entry 5540 (class 2620 OID 5302977)
+-- TOC entry 5560 (class 2620 OID 5302977)
 -- Name: mineralogy trg_cpy_fulltoindex_mineralogy; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30830,7 +32194,7 @@ CREATE TRIGGER trg_cpy_fulltoindex_mineralogy BEFORE INSERT OR UPDATE ON darwin2
 
 
 --
--- TOC entry 5546 (class 2620 OID 5302978)
+-- TOC entry 5566 (class 2620 OID 5302978)
 -- Name: multimedia trg_cpy_fulltoindex_multimedia; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30838,7 +32202,7 @@ CREATE TRIGGER trg_cpy_fulltoindex_multimedia BEFORE INSERT OR UPDATE ON darwin2
 
 
 --
--- TOC entry 5472 (class 2620 OID 5302979)
+-- TOC entry 5490 (class 2620 OID 5302979)
 -- Name: properties trg_cpy_fulltoindex_properties; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30846,7 +32210,7 @@ CREATE TRIGGER trg_cpy_fulltoindex_properties BEFORE INSERT OR UPDATE ON darwin2
 
 
 --
--- TOC entry 5568 (class 2620 OID 5302980)
+-- TOC entry 5590 (class 2620 OID 5302980)
 -- Name: specimens trg_cpy_fulltoindex_s; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30854,7 +32218,7 @@ CREATE TRIGGER trg_cpy_fulltoindex_s BEFORE INSERT OR UPDATE ON darwin2.specimen
 
 
 --
--- TOC entry 5569 (class 2620 OID 5302981)
+-- TOC entry 5582 (class 2620 OID 5302981)
 -- Name: specimens trg_cpy_fulltoindex_specimens; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30862,7 +32226,7 @@ CREATE TRIGGER trg_cpy_fulltoindex_specimens BEFORE INSERT OR UPDATE ON darwin2.
 
 
 --
--- TOC entry 5592 (class 2620 OID 5302982)
+-- TOC entry 5612 (class 2620 OID 5302982)
 -- Name: tag_groups trg_cpy_fulltoindex_taggroups; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30870,7 +32234,7 @@ CREATE TRIGGER trg_cpy_fulltoindex_taggroups BEFORE INSERT OR UPDATE ON darwin2.
 
 
 --
--- TOC entry 5596 (class 2620 OID 5302983)
+-- TOC entry 5616 (class 2620 OID 5302983)
 -- Name: taxonomy trg_cpy_fulltoindex_taxa; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30878,7 +32242,7 @@ CREATE TRIGGER trg_cpy_fulltoindex_taxa BEFORE INSERT OR UPDATE ON darwin2.taxon
 
 
 --
--- TOC entry 5614 (class 2620 OID 5302984)
+-- TOC entry 5635 (class 2620 OID 5302984)
 -- Name: vernacular_names trg_cpy_fulltoindex_vernacularnames; Type: TRIGGER; Schema: darwin2; Owner: postgres
 --
 
@@ -30886,7 +32250,7 @@ CREATE TRIGGER trg_cpy_fulltoindex_vernacularnames BEFORE INSERT OR UPDATE ON da
 
 
 --
--- TOC entry 5587 (class 2620 OID 5302985)
+-- TOC entry 5607 (class 2620 OID 5302985)
 -- Name: tag_groups trg_cpy_gtutags_taggroups; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30894,7 +32258,7 @@ CREATE TRIGGER trg_cpy_gtutags_taggroups AFTER INSERT OR DELETE OR UPDATE ON dar
 
 
 --
--- TOC entry 5570 (class 2620 OID 5302986)
+-- TOC entry 5583 (class 2620 OID 5302986)
 -- Name: specimens trg_cpy_ig_to_loan_items; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30902,7 +32266,7 @@ CREATE TRIGGER trg_cpy_ig_to_loan_items AFTER UPDATE ON darwin2.specimens FOR EA
 
 
 --
--- TOC entry 5491 (class 2620 OID 5302987)
+-- TOC entry 5511 (class 2620 OID 5302987)
 -- Name: gtu trg_cpy_location; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30910,7 +32274,7 @@ CREATE TRIGGER trg_cpy_location BEFORE INSERT OR UPDATE ON darwin2.gtu FOR EACH 
 
 
 --
--- TOC entry 5430 (class 2620 OID 5302988)
+-- TOC entry 5450 (class 2620 OID 5302988)
 -- Name: chronostratigraphy trg_cpy_path_chronostratigraphy; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30918,7 +32282,7 @@ CREATE TRIGGER trg_cpy_path_chronostratigraphy BEFORE INSERT OR UPDATE ON darwin
 
 
 --
--- TOC entry 5457 (class 2620 OID 5302989)
+-- TOC entry 5477 (class 2620 OID 5302989)
 -- Name: collections trg_cpy_path_collections; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30926,7 +32290,7 @@ CREATE TRIGGER trg_cpy_path_collections BEFORE INSERT OR UPDATE ON darwin2.colle
 
 
 --
--- TOC entry 5514 (class 2620 OID 5302990)
+-- TOC entry 5534 (class 2620 OID 5302990)
 -- Name: lithology trg_cpy_path_lithology; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30934,7 +32298,7 @@ CREATE TRIGGER trg_cpy_path_lithology BEFORE INSERT OR UPDATE ON darwin2.litholo
 
 
 --
--- TOC entry 5521 (class 2620 OID 5302991)
+-- TOC entry 5541 (class 2620 OID 5302991)
 -- Name: lithostratigraphy trg_cpy_path_lithostratigraphy; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30942,7 +32306,7 @@ CREATE TRIGGER trg_cpy_path_lithostratigraphy BEFORE INSERT OR UPDATE ON darwin2
 
 
 --
--- TOC entry 5541 (class 2620 OID 5302992)
+-- TOC entry 5561 (class 2620 OID 5302992)
 -- Name: mineralogy trg_cpy_path_mineralogy; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30950,7 +32314,7 @@ CREATE TRIGGER trg_cpy_path_mineralogy BEFORE INSERT OR UPDATE ON darwin2.minera
 
 
 --
--- TOC entry 5558 (class 2620 OID 5302993)
+-- TOC entry 5578 (class 2620 OID 5302993)
 -- Name: people_relationships trg_cpy_path_peoplerelationships; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30958,7 +32322,7 @@ CREATE TRIGGER trg_cpy_path_peoplerelationships BEFORE INSERT OR UPDATE ON darwi
 
 
 --
--- TOC entry 5597 (class 2620 OID 5302994)
+-- TOC entry 5617 (class 2620 OID 5302994)
 -- Name: taxonomy trg_cpy_path_taxonomy; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30966,7 +32330,7 @@ CREATE TRIGGER trg_cpy_path_taxonomy BEFORE INSERT OR UPDATE ON darwin2.taxonomy
 
 
 --
--- TOC entry 5586 (class 2620 OID 5308611)
+-- TOC entry 5606 (class 2620 OID 5308611)
 -- Name: tag_groups trg_cpy_tags_to_distinct_bedic; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30974,7 +32338,7 @@ CREATE TRIGGER trg_cpy_tags_to_distinct_bedic AFTER INSERT OR UPDATE ON darwin2.
 
 
 --
--- TOC entry 5473 (class 2620 OID 5302995)
+-- TOC entry 5495 (class 2620 OID 5302995)
 -- Name: properties trg_cpy_unified_values; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30982,7 +32346,7 @@ CREATE TRIGGER trg_cpy_unified_values BEFORE INSERT OR UPDATE ON darwin2.propert
 
 
 --
--- TOC entry 5458 (class 2620 OID 5302996)
+-- TOC entry 5478 (class 2620 OID 5302996)
 -- Name: collections trg_cpy_updatecollectionrights; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30990,7 +32354,7 @@ CREATE TRIGGER trg_cpy_updatecollectionrights AFTER INSERT OR UPDATE ON darwin2.
 
 
 --
--- TOC entry 5459 (class 2620 OID 5302997)
+-- TOC entry 5479 (class 2620 OID 5302997)
 -- Name: collections trg_cpy_updatecollinstitutioncascade; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -30998,7 +32362,7 @@ CREATE TRIGGER trg_cpy_updatecollinstitutioncascade AFTER UPDATE ON darwin2.coll
 
 
 --
--- TOC entry 5464 (class 2620 OID 5302998)
+-- TOC entry 5484 (class 2620 OID 5302998)
 -- Name: collections_rights trg_cpy_updatemywidgetscollrights; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31006,7 +32370,7 @@ CREATE TRIGGER trg_cpy_updatemywidgetscollrights AFTER DELETE OR UPDATE ON darwi
 
 
 --
--- TOC entry 5465 (class 2620 OID 5302999)
+-- TOC entry 5485 (class 2620 OID 5302999)
 -- Name: collections_rights trg_cpy_updateuserrights; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31014,7 +32378,7 @@ CREATE TRIGGER trg_cpy_updateuserrights AFTER INSERT OR DELETE OR UPDATE ON darw
 
 
 --
--- TOC entry 5460 (class 2620 OID 5303000)
+-- TOC entry 5480 (class 2620 OID 5303000)
 -- Name: collections trg_cpy_updateuserrightscollections; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31022,7 +32386,7 @@ CREATE TRIGGER trg_cpy_updateuserrightscollections AFTER INSERT OR UPDATE ON dar
 
 
 --
--- TOC entry 5598 (class 2620 OID 5303001)
+-- TOC entry 5618 (class 2620 OID 5303001)
 -- Name: taxonomy trg_fct_rmca_chk_is_already_reference_taxo; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31030,15 +32394,23 @@ CREATE TRIGGER trg_fct_rmca_chk_is_already_reference_taxo BEFORE INSERT OR UPDAT
 
 
 --
--- TOC entry 5602 (class 2620 OID 5303002)
+-- TOC entry 5624 (class 2620 OID 5309161)
+-- Name: taxonomy_metadata trg_fct_rmca_chk_only_one_reference_taxo; Type: TRIGGER; Schema: darwin2; Owner: darwin2
+--
+
+CREATE TRIGGER trg_fct_rmca_chk_only_one_reference_taxo BEFORE INSERT OR UPDATE ON darwin2.taxonomy_metadata FOR EACH ROW EXECUTE PROCEDURE darwin2.fct_rmca_chk_uniqueness_reference_taxo();
+
+
+--
+-- TOC entry 5625 (class 2620 OID 5309163)
 -- Name: taxonomy_metadata trg_fct_rmca_chk_uniqueness_reference_taxo; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
-CREATE TRIGGER trg_fct_rmca_chk_uniqueness_reference_taxo BEFORE UPDATE ON darwin2.taxonomy_metadata FOR EACH ROW EXECUTE PROCEDURE darwin2.fct_rmca_chk_uniqueness_reference_taxo();
+CREATE TRIGGER trg_fct_rmca_chk_uniqueness_reference_taxo BEFORE INSERT OR UPDATE ON darwin2.taxonomy_metadata FOR EACH ROW EXECUTE PROCEDURE darwin2.fct_rmca_chk_uniqueness_reference_taxo();
 
 
 --
--- TOC entry 5582 (class 2620 OID 5308234)
+-- TOC entry 5602 (class 2620 OID 5308234)
 -- Name: staging_catalogue trg_fct_rmca_keep_staging_catalogue_parent; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31046,7 +32418,7 @@ CREATE TRIGGER trg_fct_rmca_keep_staging_catalogue_parent BEFORE INSERT OR UPDAT
 
 
 --
--- TOC entry 5599 (class 2620 OID 5303004)
+-- TOC entry 5619 (class 2620 OID 5303004)
 -- Name: taxonomy trg_fct_rmca_update_child_of_taxon_protected; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31054,7 +32426,7 @@ CREATE TRIGGER trg_fct_rmca_update_child_of_taxon_protected BEFORE UPDATE ON dar
 
 
 --
--- TOC entry 5603 (class 2620 OID 5303005)
+-- TOC entry 5622 (class 2620 OID 5303005)
 -- Name: taxonomy_metadata trg_fct_rmca_update_reference_taxo; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31062,7 +32434,7 @@ CREATE TRIGGER trg_fct_rmca_update_reference_taxo AFTER UPDATE ON darwin2.taxono
 
 
 --
--- TOC entry 5442 (class 2620 OID 5303006)
+-- TOC entry 5462 (class 2620 OID 5303006)
 -- Name: codes trg_insert_auto_code; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31070,7 +32442,7 @@ CREATE TRIGGER trg_insert_auto_code AFTER INSERT OR DELETE OR UPDATE ON darwin2.
 
 
 --
--- TOC entry 5424 (class 2620 OID 5303007)
+-- TOC entry 5444 (class 2620 OID 5303007)
 -- Name: catalogue_relationships trg_nbr_in_relation; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31078,7 +32450,7 @@ CREATE TRIGGER trg_nbr_in_relation BEFORE INSERT OR UPDATE ON darwin2.catalogue_
 
 
 --
--- TOC entry 5436 (class 2620 OID 5303008)
+-- TOC entry 5456 (class 2620 OID 5303008)
 -- Name: classification_synonymies trg_nbr_in_synonym; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31086,7 +32458,7 @@ CREATE TRIGGER trg_nbr_in_synonym AFTER INSERT OR UPDATE ON darwin2.classificati
 
 
 --
--- TOC entry 5504 (class 2620 OID 5303009)
+-- TOC entry 5524 (class 2620 OID 5303009)
 -- Name: informative_workflow trg_reset_last_flag_informative_workflow; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31094,7 +32466,7 @@ CREATE TRIGGER trg_reset_last_flag_informative_workflow AFTER DELETE ON darwin2.
 
 
 --
--- TOC entry 5494 (class 2620 OID 5304958)
+-- TOC entry 5514 (class 2620 OID 5304958)
 -- Name: gtu trg_rmca_fct_clear_gtu_date; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31102,7 +32474,7 @@ CREATE TRIGGER trg_rmca_fct_clear_gtu_date BEFORE DELETE ON darwin2.gtu FOR EACH
 
 
 --
--- TOC entry 5576 (class 2620 OID 5304962)
+-- TOC entry 5591 (class 2620 OID 5304962)
 -- Name: specimens trg_rmca_fct_clear_specimen_date; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31110,7 +32482,7 @@ CREATE TRIGGER trg_rmca_fct_clear_specimen_date BEFORE DELETE ON darwin2.specime
 
 
 --
--- TOC entry 5575 (class 2620 OID 5304960)
+-- TOC entry 5592 (class 2620 OID 5304960)
 -- Name: specimens trg_rmca_fct_update_specimen_date; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31118,7 +32490,7 @@ CREATE TRIGGER trg_rmca_fct_update_specimen_date AFTER INSERT OR UPDATE ON darwi
 
 
 --
--- TOC entry 5604 (class 2620 OID 5303010)
+-- TOC entry 5623 (class 2620 OID 5303010)
 -- Name: taxonomy_metadata trg_rmca_trk_log_table_taxonomy_metadata; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31126,7 +32498,7 @@ CREATE TRIGGER trg_rmca_trk_log_table_taxonomy_metadata AFTER INSERT OR DELETE O
 
 
 --
--- TOC entry 5419 (class 2620 OID 5303011)
+-- TOC entry 5439 (class 2620 OID 5303011)
 -- Name: bibliography trg_trk_log_table_bibliography; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31134,7 +32506,7 @@ CREATE TRIGGER trg_trk_log_table_bibliography AFTER INSERT OR DELETE OR UPDATE O
 
 
 --
--- TOC entry 5425 (class 2620 OID 5303012)
+-- TOC entry 5445 (class 2620 OID 5303012)
 -- Name: catalogue_relationships trg_trk_log_table_catalogue_relationships; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31142,7 +32514,7 @@ CREATE TRIGGER trg_trk_log_table_catalogue_relationships AFTER INSERT OR DELETE 
 
 
 --
--- TOC entry 5431 (class 2620 OID 5303013)
+-- TOC entry 5451 (class 2620 OID 5303013)
 -- Name: chronostratigraphy trg_trk_log_table_chronostratigraphy; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31150,7 +32522,7 @@ CREATE TRIGGER trg_trk_log_table_chronostratigraphy AFTER INSERT OR DELETE OR UP
 
 
 --
--- TOC entry 5434 (class 2620 OID 5303014)
+-- TOC entry 5454 (class 2620 OID 5303014)
 -- Name: classification_keywords trg_trk_log_table_classification_keywords; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31158,7 +32530,7 @@ CREATE TRIGGER trg_trk_log_table_classification_keywords AFTER INSERT OR DELETE 
 
 
 --
--- TOC entry 5437 (class 2620 OID 5303015)
+-- TOC entry 5457 (class 2620 OID 5303015)
 -- Name: classification_synonymies trg_trk_log_table_classification_synonymies; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31166,7 +32538,7 @@ CREATE TRIGGER trg_trk_log_table_classification_synonymies AFTER INSERT OR DELET
 
 
 --
--- TOC entry 5443 (class 2620 OID 5303016)
+-- TOC entry 5463 (class 2620 OID 5303016)
 -- Name: codes trg_trk_log_table_codes; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31174,7 +32546,7 @@ CREATE TRIGGER trg_trk_log_table_codes AFTER INSERT OR DELETE OR UPDATE ON darwi
 
 
 --
--- TOC entry 5445 (class 2620 OID 5303017)
+-- TOC entry 5465 (class 2620 OID 5303017)
 -- Name: collecting_methods trg_trk_log_table_collecting_methods; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31182,7 +32554,7 @@ CREATE TRIGGER trg_trk_log_table_collecting_methods AFTER INSERT OR DELETE OR UP
 
 
 --
--- TOC entry 5447 (class 2620 OID 5303018)
+-- TOC entry 5467 (class 2620 OID 5303018)
 -- Name: collecting_tools trg_trk_log_table_collecting_tools; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31190,7 +32562,7 @@ CREATE TRIGGER trg_trk_log_table_collecting_tools AFTER INSERT OR DELETE OR UPDA
 
 
 --
--- TOC entry 5452 (class 2620 OID 5303019)
+-- TOC entry 5472 (class 2620 OID 5303019)
 -- Name: collection_maintenance trg_trk_log_table_collection_maintenance; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31198,7 +32570,7 @@ CREATE TRIGGER trg_trk_log_table_collection_maintenance AFTER INSERT OR DELETE O
 
 
 --
--- TOC entry 5461 (class 2620 OID 5303020)
+-- TOC entry 5481 (class 2620 OID 5303020)
 -- Name: collections trg_trk_log_table_collections; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31206,7 +32578,7 @@ CREATE TRIGGER trg_trk_log_table_collections AFTER INSERT OR DELETE OR UPDATE ON
 
 
 --
--- TOC entry 5466 (class 2620 OID 5303021)
+-- TOC entry 5486 (class 2620 OID 5303021)
 -- Name: collections_rights trg_trk_log_table_collections_rights; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31214,7 +32586,7 @@ CREATE TRIGGER trg_trk_log_table_collections_rights AFTER INSERT OR DELETE OR UP
 
 
 --
--- TOC entry 5469 (class 2620 OID 5303022)
+-- TOC entry 5488 (class 2620 OID 5303022)
 -- Name: comments trg_trk_log_table_comments; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31222,7 +32594,7 @@ CREATE TRIGGER trg_trk_log_table_comments AFTER INSERT OR DELETE OR UPDATE ON da
 
 
 --
--- TOC entry 5485 (class 2620 OID 5303023)
+-- TOC entry 5505 (class 2620 OID 5303023)
 -- Name: expeditions trg_trk_log_table_expeditions; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31230,7 +32602,7 @@ CREATE TRIGGER trg_trk_log_table_expeditions AFTER INSERT OR DELETE OR UPDATE ON
 
 
 --
--- TOC entry 5489 (class 2620 OID 5303024)
+-- TOC entry 5509 (class 2620 OID 5303024)
 -- Name: ext_links trg_trk_log_table_ext_links; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31238,7 +32610,7 @@ CREATE TRIGGER trg_trk_log_table_ext_links AFTER INSERT OR DELETE OR UPDATE ON d
 
 
 --
--- TOC entry 5492 (class 2620 OID 5303025)
+-- TOC entry 5512 (class 2620 OID 5303025)
 -- Name: gtu trg_trk_log_table_gtu; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31246,7 +32618,7 @@ CREATE TRIGGER trg_trk_log_table_gtu AFTER INSERT OR DELETE OR UPDATE ON darwin2
 
 
 --
--- TOC entry 5482 (class 2620 OID 5303026)
+-- TOC entry 5499 (class 2620 OID 5303026)
 -- Name: identifications trg_trk_log_table_identifications; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31254,7 +32626,7 @@ CREATE TRIGGER trg_trk_log_table_identifications AFTER INSERT OR DELETE OR UPDAT
 
 
 --
--- TOC entry 5497 (class 2620 OID 5303027)
+-- TOC entry 5517 (class 2620 OID 5303027)
 -- Name: igs trg_trk_log_table_igs; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31262,7 +32634,7 @@ CREATE TRIGGER trg_trk_log_table_igs AFTER INSERT OR DELETE OR UPDATE ON darwin2
 
 
 --
--- TOC entry 5509 (class 2620 OID 5303028)
+-- TOC entry 5529 (class 2620 OID 5303028)
 -- Name: insurances trg_trk_log_table_insurances; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31270,7 +32642,7 @@ CREATE TRIGGER trg_trk_log_table_insurances AFTER INSERT OR DELETE OR UPDATE ON 
 
 
 --
--- TOC entry 5515 (class 2620 OID 5303029)
+-- TOC entry 5535 (class 2620 OID 5303029)
 -- Name: lithology trg_trk_log_table_lithology; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31278,7 +32650,7 @@ CREATE TRIGGER trg_trk_log_table_lithology AFTER INSERT OR DELETE OR UPDATE ON d
 
 
 --
--- TOC entry 5522 (class 2620 OID 5303030)
+-- TOC entry 5542 (class 2620 OID 5303030)
 -- Name: lithostratigraphy trg_trk_log_table_lithostratigraphy; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31286,7 +32658,7 @@ CREATE TRIGGER trg_trk_log_table_lithostratigraphy AFTER INSERT OR DELETE OR UPD
 
 
 --
--- TOC entry 5525 (class 2620 OID 5303031)
+-- TOC entry 5545 (class 2620 OID 5303031)
 -- Name: loan_items trg_trk_log_table_loan_items; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31294,7 +32666,7 @@ CREATE TRIGGER trg_trk_log_table_loan_items AFTER INSERT OR DELETE OR UPDATE ON 
 
 
 --
--- TOC entry 5526 (class 2620 OID 5303032)
+-- TOC entry 5546 (class 2620 OID 5303032)
 -- Name: loan_rights trg_trk_log_table_loan_rights; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31302,7 +32674,7 @@ CREATE TRIGGER trg_trk_log_table_loan_rights AFTER INSERT OR DELETE OR UPDATE ON
 
 
 --
--- TOC entry 5530 (class 2620 OID 5303033)
+-- TOC entry 5550 (class 2620 OID 5303033)
 -- Name: loan_status trg_trk_log_table_loan_status; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31310,7 +32682,7 @@ CREATE TRIGGER trg_trk_log_table_loan_status AFTER INSERT OR DELETE OR UPDATE ON
 
 
 --
--- TOC entry 5534 (class 2620 OID 5303034)
+-- TOC entry 5554 (class 2620 OID 5303034)
 -- Name: loans trg_trk_log_table_loans; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31318,7 +32690,7 @@ CREATE TRIGGER trg_trk_log_table_loans AFTER INSERT OR DELETE OR UPDATE ON darwi
 
 
 --
--- TOC entry 5542 (class 2620 OID 5303035)
+-- TOC entry 5562 (class 2620 OID 5303035)
 -- Name: mineralogy trg_trk_log_table_mineralogy; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31326,7 +32698,7 @@ CREATE TRIGGER trg_trk_log_table_mineralogy AFTER INSERT OR DELETE OR UPDATE ON 
 
 
 --
--- TOC entry 5547 (class 2620 OID 5303036)
+-- TOC entry 5567 (class 2620 OID 5303036)
 -- Name: multimedia trg_trk_log_table_multimedia; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31334,7 +32706,7 @@ CREATE TRIGGER trg_trk_log_table_multimedia AFTER INSERT OR DELETE OR UPDATE ON 
 
 
 --
--- TOC entry 5553 (class 2620 OID 5303037)
+-- TOC entry 5573 (class 2620 OID 5303037)
 -- Name: people trg_trk_log_table_people; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31342,7 +32714,7 @@ CREATE TRIGGER trg_trk_log_table_people AFTER INSERT OR DELETE OR UPDATE ON darw
 
 
 --
--- TOC entry 5556 (class 2620 OID 5303038)
+-- TOC entry 5576 (class 2620 OID 5303038)
 -- Name: people_addresses trg_trk_log_table_people_addresses; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31350,7 +32722,7 @@ CREATE TRIGGER trg_trk_log_table_people_addresses AFTER INSERT OR DELETE OR UPDA
 
 
 --
--- TOC entry 5557 (class 2620 OID 5303039)
+-- TOC entry 5577 (class 2620 OID 5303039)
 -- Name: people_comm trg_trk_log_table_people_comm; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31358,7 +32730,7 @@ CREATE TRIGGER trg_trk_log_table_people_comm AFTER INSERT OR DELETE OR UPDATE ON
 
 
 --
--- TOC entry 5559 (class 2620 OID 5303040)
+-- TOC entry 5579 (class 2620 OID 5303040)
 -- Name: people_relationships trg_trk_log_table_people_relationships; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31366,7 +32738,7 @@ CREATE TRIGGER trg_trk_log_table_people_relationships AFTER INSERT OR DELETE OR 
 
 
 --
--- TOC entry 5474 (class 2620 OID 5303041)
+-- TOC entry 5491 (class 2620 OID 5303041)
 -- Name: properties trg_trk_log_table_properties; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31374,7 +32746,7 @@ CREATE TRIGGER trg_trk_log_table_properties AFTER INSERT OR DELETE OR UPDATE ON 
 
 
 --
--- TOC entry 5560 (class 2620 OID 5303042)
+-- TOC entry 5580 (class 2620 OID 5303042)
 -- Name: specimen_collecting_methods trg_trk_log_table_specimen_collecting_methods; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31382,7 +32754,7 @@ CREATE TRIGGER trg_trk_log_table_specimen_collecting_methods AFTER INSERT OR DEL
 
 
 --
--- TOC entry 5561 (class 2620 OID 5303043)
+-- TOC entry 5581 (class 2620 OID 5303043)
 -- Name: specimen_collecting_tools trg_trk_log_table_specimen_collecting_tools; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31390,7 +32762,7 @@ CREATE TRIGGER trg_trk_log_table_specimen_collecting_tools AFTER INSERT OR DELET
 
 
 --
--- TOC entry 5571 (class 2620 OID 5303044)
+-- TOC entry 5593 (class 2620 OID 5303044)
 -- Name: specimens trg_trk_log_table_specimens; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31398,7 +32770,7 @@ CREATE TRIGGER trg_trk_log_table_specimens AFTER INSERT OR DELETE OR UPDATE ON d
 
 
 --
--- TOC entry 5580 (class 2620 OID 5303045)
+-- TOC entry 5600 (class 2620 OID 5303045)
 -- Name: specimens_relationships trg_trk_log_table_specimens_relationship; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31406,7 +32778,7 @@ CREATE TRIGGER trg_trk_log_table_specimens_relationship AFTER INSERT OR DELETE O
 
 
 --
--- TOC entry 5588 (class 2620 OID 5303046)
+-- TOC entry 5608 (class 2620 OID 5303046)
 -- Name: tag_groups trg_trk_log_table_tag_groups; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31414,7 +32786,7 @@ CREATE TRIGGER trg_trk_log_table_tag_groups AFTER INSERT OR DELETE OR UPDATE ON 
 
 
 --
--- TOC entry 5600 (class 2620 OID 5303047)
+-- TOC entry 5620 (class 2620 OID 5303047)
 -- Name: taxonomy trg_trk_log_table_taxonomy; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31422,7 +32794,7 @@ CREATE TRIGGER trg_trk_log_table_taxonomy AFTER INSERT OR DELETE OR UPDATE ON da
 
 
 --
--- TOC entry 5615 (class 2620 OID 5303048)
+-- TOC entry 5636 (class 2620 OID 5303048)
 -- Name: vernacular_names trg_trk_log_table_vernacular_names; Type: TRIGGER; Schema: darwin2; Owner: postgres
 --
 
@@ -31430,7 +32802,7 @@ CREATE TRIGGER trg_trk_log_table_vernacular_names AFTER INSERT OR DELETE OR UPDA
 
 
 --
--- TOC entry 5609 (class 2620 OID 5303049)
+-- TOC entry 5630 (class 2620 OID 5303049)
 -- Name: users trg_unpromotion_remove_cols; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31438,7 +32810,7 @@ CREATE TRIGGER trg_unpromotion_remove_cols AFTER UPDATE ON darwin2.users FOR EAC
 
 
 --
--- TOC entry 5416 (class 2620 OID 5303050)
+-- TOC entry 5436 (class 2620 OID 5303050)
 -- Name: staging trg_upd_fields_staging; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31446,7 +32818,7 @@ CREATE TRIGGER trg_upd_fields_staging AFTER UPDATE ON darwin2.staging FOR EACH R
 
 
 --
--- TOC entry 5585 (class 2620 OID 5303051)
+-- TOC entry 5605 (class 2620 OID 5303051)
 -- Name: staging_relationship trg_upd_institution_staging_relationship; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31454,7 +32826,7 @@ CREATE TRIGGER trg_upd_institution_staging_relationship AFTER UPDATE ON darwin2.
 
 
 --
--- TOC entry 5422 (class 2620 OID 5303052)
+-- TOC entry 5442 (class 2620 OID 5303052)
 -- Name: catalogue_people trg_upd_people_in_flat; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31462,7 +32834,7 @@ CREATE TRIGGER trg_upd_people_in_flat AFTER INSERT OR DELETE OR UPDATE ON darwin
 
 
 --
--- TOC entry 5584 (class 2620 OID 5303053)
+-- TOC entry 5604 (class 2620 OID 5303053)
 -- Name: staging_people trg_upd_people_ref_staging_people; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31470,7 +32842,7 @@ CREATE TRIGGER trg_upd_people_ref_staging_people AFTER UPDATE ON darwin2.staging
 
 
 --
--- TOC entry 5432 (class 2620 OID 5303054)
+-- TOC entry 5452 (class 2620 OID 5303054)
 -- Name: chronostratigraphy trg_update_chronostratigraphy_darwin_flat; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31478,7 +32850,7 @@ CREATE TRIGGER trg_update_chronostratigraphy_darwin_flat AFTER UPDATE ON darwin2
 
 
 --
--- TOC entry 5572 (class 2620 OID 5303055)
+-- TOC entry 5594 (class 2620 OID 5303055)
 -- Name: specimens trg_update_collections_code_last_val; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31486,7 +32858,7 @@ CREATE TRIGGER trg_update_collections_code_last_val AFTER UPDATE OF collection_r
 
 
 --
--- TOC entry 5573 (class 2620 OID 5303056)
+-- TOC entry 5595 (class 2620 OID 5303056)
 -- Name: specimens trg_update_collections_code_last_val_after_spec_del; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31494,7 +32866,7 @@ CREATE TRIGGER trg_update_collections_code_last_val_after_spec_del AFTER DELETE 
 
 
 --
--- TOC entry 5462 (class 2620 OID 5303057)
+-- TOC entry 5482 (class 2620 OID 5303057)
 -- Name: collections trg_update_collections_darwin_flat; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31502,7 +32874,7 @@ CREATE TRIGGER trg_update_collections_darwin_flat AFTER UPDATE ON darwin2.collec
 
 
 --
--- TOC entry 5486 (class 2620 OID 5303058)
+-- TOC entry 5506 (class 2620 OID 5303058)
 -- Name: expeditions trg_update_expeditions_darwin_flat; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31510,7 +32882,7 @@ CREATE TRIGGER trg_update_expeditions_darwin_flat AFTER UPDATE ON darwin2.expedi
 
 
 --
--- TOC entry 5493 (class 2620 OID 5303059)
+-- TOC entry 5513 (class 2620 OID 5303059)
 -- Name: gtu trg_update_gtu_darwin_flat; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31518,7 +32890,7 @@ CREATE TRIGGER trg_update_gtu_darwin_flat AFTER UPDATE ON darwin2.gtu FOR EACH R
 
 
 --
--- TOC entry 5498 (class 2620 OID 5303060)
+-- TOC entry 5518 (class 2620 OID 5303060)
 -- Name: igs trg_update_igs_darwin_flat; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31526,7 +32898,7 @@ CREATE TRIGGER trg_update_igs_darwin_flat AFTER UPDATE ON darwin2.igs FOR EACH R
 
 
 --
--- TOC entry 5501 (class 2620 OID 5303061)
+-- TOC entry 5521 (class 2620 OID 5303061)
 -- Name: imports trg_update_import; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31534,7 +32906,7 @@ CREATE TRIGGER trg_update_import AFTER UPDATE ON darwin2.imports FOR EACH ROW EX
 
 
 --
--- TOC entry 5516 (class 2620 OID 5303062)
+-- TOC entry 5536 (class 2620 OID 5303062)
 -- Name: lithology trg_update_lithology_darwin_flat; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31542,7 +32914,7 @@ CREATE TRIGGER trg_update_lithology_darwin_flat AFTER UPDATE ON darwin2.litholog
 
 
 --
--- TOC entry 5523 (class 2620 OID 5303063)
+-- TOC entry 5543 (class 2620 OID 5303063)
 -- Name: lithostratigraphy trg_update_lithostratigraphy_darwin_flat; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31550,7 +32922,7 @@ CREATE TRIGGER trg_update_lithostratigraphy_darwin_flat AFTER UPDATE ON darwin2.
 
 
 --
--- TOC entry 5543 (class 2620 OID 5303064)
+-- TOC entry 5563 (class 2620 OID 5303064)
 -- Name: mineralogy trg_update_mineralogy_darwin_flat; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31558,7 +32930,7 @@ CREATE TRIGGER trg_update_mineralogy_darwin_flat AFTER UPDATE ON darwin2.mineral
 
 
 --
--- TOC entry 5574 (class 2620 OID 5303065)
+-- TOC entry 5596 (class 2620 OID 5303065)
 -- Name: specimens trg_update_specimens_darwin_flat; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31566,7 +32938,7 @@ CREATE TRIGGER trg_update_specimens_darwin_flat BEFORE INSERT OR UPDATE ON darwi
 
 
 --
--- TOC entry 5589 (class 2620 OID 5303066)
+-- TOC entry 5609 (class 2620 OID 5303066)
 -- Name: tag_groups trg_update_tag_groups_darwin_flat; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31574,7 +32946,7 @@ CREATE TRIGGER trg_update_tag_groups_darwin_flat AFTER INSERT OR DELETE OR UPDAT
 
 
 --
--- TOC entry 5601 (class 2620 OID 5303067)
+-- TOC entry 5621 (class 2620 OID 5303067)
 -- Name: taxonomy trg_update_taxonomy_darwin_flat; Type: TRIGGER; Schema: darwin2; Owner: darwin2
 --
 
@@ -31582,7 +32954,7 @@ CREATE TRIGGER trg_update_taxonomy_darwin_flat AFTER UPDATE ON darwin2.taxonomy 
 
 
 --
--- TOC entry 5407 (class 2606 OID 5304947)
+-- TOC entry 5427 (class 2606 OID 5304947)
 -- Name: temporal_information dates_gtu_ref_fkey; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31591,7 +32963,7 @@ ALTER TABLE ONLY darwin2.temporal_information
 
 
 --
--- TOC entry 5406 (class 2606 OID 5304952)
+-- TOC entry 5426 (class 2606 OID 5304952)
 -- Name: temporal_information dates_specimen_ref_fkey; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31600,7 +32972,7 @@ ALTER TABLE ONLY darwin2.temporal_information
 
 
 --
--- TOC entry 5410 (class 2606 OID 5308605)
+-- TOC entry 5430 (class 2606 OID 5308605)
 -- Name: tag_tag_authority fk_authority; Type: FK CONSTRAINT; Schema: darwin2; Owner: postgres
 --
 
@@ -31609,7 +32981,7 @@ ALTER TABLE ONLY darwin2.tag_tag_authority
 
 
 --
--- TOC entry 5409 (class 2606 OID 5308588)
+-- TOC entry 5429 (class 2606 OID 5308588)
 -- Name: tag_authority fk_authority_domain; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31618,7 +32990,7 @@ ALTER TABLE ONLY darwin2.tag_authority
 
 
 --
--- TOC entry 5321 (class 2606 OID 5303068)
+-- TOC entry 5341 (class 2606 OID 5303068)
 -- Name: catalogue_bibliography fk_bibliography; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31627,7 +32999,7 @@ ALTER TABLE ONLY darwin2.catalogue_bibliography
 
 
 --
--- TOC entry 5323 (class 2606 OID 5303073)
+-- TOC entry 5343 (class 2606 OID 5303073)
 -- Name: chronostratigraphy fk_chronostratigraphy_catalogue_levels; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31636,7 +33008,7 @@ ALTER TABLE ONLY darwin2.chronostratigraphy
 
 
 --
--- TOC entry 5324 (class 2606 OID 5303078)
+-- TOC entry 5344 (class 2606 OID 5303078)
 -- Name: chronostratigraphy fk_chronostratigraphy_parent_ref_chronostratigraphy; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31645,7 +33017,7 @@ ALTER TABLE ONLY darwin2.chronostratigraphy
 
 
 --
--- TOC entry 5325 (class 2606 OID 5303083)
+-- TOC entry 5345 (class 2606 OID 5303083)
 -- Name: collection_maintenance fk_collection_maintenance_users; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31654,7 +33026,7 @@ ALTER TABLE ONLY darwin2.collection_maintenance
 
 
 --
--- TOC entry 5326 (class 2606 OID 5303088)
+-- TOC entry 5346 (class 2606 OID 5303088)
 -- Name: collections fk_collections_collections; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31663,7 +33035,7 @@ ALTER TABLE ONLY darwin2.collections
 
 
 --
--- TOC entry 5327 (class 2606 OID 5303093)
+-- TOC entry 5347 (class 2606 OID 5303093)
 -- Name: collections fk_collections_institutions; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31672,7 +33044,7 @@ ALTER TABLE ONLY darwin2.collections
 
 
 --
--- TOC entry 5330 (class 2606 OID 5303098)
+-- TOC entry 5350 (class 2606 OID 5303098)
 -- Name: collections_rights fk_collections_rights_collections; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31681,7 +33053,7 @@ ALTER TABLE ONLY darwin2.collections_rights
 
 
 --
--- TOC entry 5331 (class 2606 OID 5303103)
+-- TOC entry 5351 (class 2606 OID 5303103)
 -- Name: collections_rights fk_collections_rights_users; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31690,7 +33062,7 @@ ALTER TABLE ONLY darwin2.collections_rights
 
 
 --
--- TOC entry 5328 (class 2606 OID 5303108)
+-- TOC entry 5348 (class 2606 OID 5303108)
 -- Name: collections fk_collections_staff; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31699,7 +33071,7 @@ ALTER TABLE ONLY darwin2.collections
 
 
 --
--- TOC entry 5329 (class 2606 OID 5303113)
+-- TOC entry 5349 (class 2606 OID 5303113)
 -- Name: collections fk_collections_users; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31708,7 +33080,7 @@ ALTER TABLE ONLY darwin2.collections
 
 
 --
--- TOC entry 5332 (class 2606 OID 5303118)
+-- TOC entry 5352 (class 2606 OID 5303118)
 -- Name: imports fk_imports_collections; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31717,7 +33089,7 @@ ALTER TABLE ONLY darwin2.imports
 
 
 --
--- TOC entry 5333 (class 2606 OID 5303123)
+-- TOC entry 5353 (class 2606 OID 5303123)
 -- Name: imports fk_imports_users; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31726,7 +33098,7 @@ ALTER TABLE ONLY darwin2.imports
 
 
 --
--- TOC entry 5334 (class 2606 OID 5303128)
+-- TOC entry 5354 (class 2606 OID 5303128)
 -- Name: informative_workflow fk_informative_workflow_users; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31735,7 +33107,7 @@ ALTER TABLE ONLY darwin2.informative_workflow
 
 
 --
--- TOC entry 5337 (class 2606 OID 5303133)
+-- TOC entry 5357 (class 2606 OID 5303133)
 -- Name: lithology fk_lithology_catalogue_levels; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31744,7 +33116,7 @@ ALTER TABLE ONLY darwin2.lithology
 
 
 --
--- TOC entry 5338 (class 2606 OID 5303138)
+-- TOC entry 5358 (class 2606 OID 5303138)
 -- Name: lithology fk_lithology_parent_ref_lithology; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31753,7 +33125,7 @@ ALTER TABLE ONLY darwin2.lithology
 
 
 --
--- TOC entry 5339 (class 2606 OID 5303143)
+-- TOC entry 5359 (class 2606 OID 5303143)
 -- Name: lithostratigraphy fk_lithostratigraphy_catalogue_levels; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31762,7 +33134,7 @@ ALTER TABLE ONLY darwin2.lithostratigraphy
 
 
 --
--- TOC entry 5340 (class 2606 OID 5303148)
+-- TOC entry 5360 (class 2606 OID 5303148)
 -- Name: lithostratigraphy fk_lithostratigraphy_parent_ref_lithostratigraphy; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31771,7 +33143,7 @@ ALTER TABLE ONLY darwin2.lithostratigraphy
 
 
 --
--- TOC entry 5341 (class 2606 OID 5303153)
+-- TOC entry 5361 (class 2606 OID 5303153)
 -- Name: loan_history fk_loan_history_loan_ref; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31780,7 +33152,7 @@ ALTER TABLE ONLY darwin2.loan_history
 
 
 --
--- TOC entry 5342 (class 2606 OID 5303158)
+-- TOC entry 5362 (class 2606 OID 5303158)
 -- Name: loan_items fk_loan_items_ig; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31789,7 +33161,7 @@ ALTER TABLE ONLY darwin2.loan_items
 
 
 --
--- TOC entry 5343 (class 2606 OID 5303163)
+-- TOC entry 5363 (class 2606 OID 5303163)
 -- Name: loan_items fk_loan_items_loan_ref; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31798,7 +33170,7 @@ ALTER TABLE ONLY darwin2.loan_items
 
 
 --
--- TOC entry 5344 (class 2606 OID 5303168)
+-- TOC entry 5364 (class 2606 OID 5303168)
 -- Name: loan_items fk_loan_items_specimen_ref; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31807,7 +33179,7 @@ ALTER TABLE ONLY darwin2.loan_items
 
 
 --
--- TOC entry 5345 (class 2606 OID 5303173)
+-- TOC entry 5365 (class 2606 OID 5303173)
 -- Name: loan_rights fk_loan_rights_loan_ref; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31816,7 +33188,7 @@ ALTER TABLE ONLY darwin2.loan_rights
 
 
 --
--- TOC entry 5346 (class 2606 OID 5303178)
+-- TOC entry 5366 (class 2606 OID 5303178)
 -- Name: loan_rights fk_loan_rights_user_ref; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31825,7 +33197,7 @@ ALTER TABLE ONLY darwin2.loan_rights
 
 
 --
--- TOC entry 5347 (class 2606 OID 5303183)
+-- TOC entry 5367 (class 2606 OID 5303183)
 -- Name: loan_status fk_loan_status_loan_ref; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31834,7 +33206,7 @@ ALTER TABLE ONLY darwin2.loan_status
 
 
 --
--- TOC entry 5348 (class 2606 OID 5303188)
+-- TOC entry 5368 (class 2606 OID 5303188)
 -- Name: loan_status fk_loan_status_user_ref; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31843,7 +33215,7 @@ ALTER TABLE ONLY darwin2.loan_status
 
 
 --
--- TOC entry 5349 (class 2606 OID 5303193)
+-- TOC entry 5369 (class 2606 OID 5303193)
 -- Name: mineralogy fk_mineralogy_catalogue_levels; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31852,7 +33224,7 @@ ALTER TABLE ONLY darwin2.mineralogy
 
 
 --
--- TOC entry 5350 (class 2606 OID 5303198)
+-- TOC entry 5370 (class 2606 OID 5303198)
 -- Name: mineralogy fk_mineralogy_parent_ref_mineralogy; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31861,7 +33233,7 @@ ALTER TABLE ONLY darwin2.mineralogy
 
 
 --
--- TOC entry 5351 (class 2606 OID 5303203)
+-- TOC entry 5371 (class 2606 OID 5303203)
 -- Name: my_saved_searches fk_my_saved_searches_users; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31870,7 +33242,7 @@ ALTER TABLE ONLY darwin2.my_saved_searches
 
 
 --
--- TOC entry 5352 (class 2606 OID 5303208)
+-- TOC entry 5372 (class 2606 OID 5303208)
 -- Name: my_widgets fk_my_widgets_users; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31879,7 +33251,7 @@ ALTER TABLE ONLY darwin2.my_widgets
 
 
 --
--- TOC entry 5353 (class 2606 OID 5303213)
+-- TOC entry 5373 (class 2606 OID 5303213)
 -- Name: people_addresses fk_people_addresses_people; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31888,7 +33260,7 @@ ALTER TABLE ONLY darwin2.people_addresses
 
 
 --
--- TOC entry 5354 (class 2606 OID 5303218)
+-- TOC entry 5374 (class 2606 OID 5303218)
 -- Name: people_comm fk_people_comm_people; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31897,7 +33269,7 @@ ALTER TABLE ONLY darwin2.people_comm
 
 
 --
--- TOC entry 5355 (class 2606 OID 5303223)
+-- TOC entry 5375 (class 2606 OID 5303223)
 -- Name: people_languages fk_people_languages_people; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31906,7 +33278,7 @@ ALTER TABLE ONLY darwin2.people_languages
 
 
 --
--- TOC entry 5322 (class 2606 OID 5303228)
+-- TOC entry 5342 (class 2606 OID 5303228)
 -- Name: catalogue_people fk_people_list_person; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31915,7 +33287,7 @@ ALTER TABLE ONLY darwin2.catalogue_people
 
 
 --
--- TOC entry 5356 (class 2606 OID 5303233)
+-- TOC entry 5376 (class 2606 OID 5303233)
 -- Name: people_relationships fk_people_relationships_people_01; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31924,7 +33296,7 @@ ALTER TABLE ONLY darwin2.people_relationships
 
 
 --
--- TOC entry 5357 (class 2606 OID 5303238)
+-- TOC entry 5377 (class 2606 OID 5303238)
 -- Name: people_relationships fk_people_relationships_people_02; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31933,7 +33305,7 @@ ALTER TABLE ONLY darwin2.people_relationships
 
 
 --
--- TOC entry 5358 (class 2606 OID 5303243)
+-- TOC entry 5378 (class 2606 OID 5303243)
 -- Name: possible_upper_levels fk_possible_upper_levels_catalogue_levels_01; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31942,7 +33314,7 @@ ALTER TABLE ONLY darwin2.possible_upper_levels
 
 
 --
--- TOC entry 5359 (class 2606 OID 5303248)
+-- TOC entry 5379 (class 2606 OID 5303248)
 -- Name: possible_upper_levels fk_possible_upper_levels_catalogue_levels_02; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31951,7 +33323,7 @@ ALTER TABLE ONLY darwin2.possible_upper_levels
 
 
 --
--- TOC entry 5390 (class 2606 OID 5303253)
+-- TOC entry 5410 (class 2606 OID 5303253)
 -- Name: staging_relationship fk_record_id; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31960,7 +33332,7 @@ ALTER TABLE ONLY darwin2.staging_relationship
 
 
 --
--- TOC entry 5361 (class 2606 OID 5303258)
+-- TOC entry 5381 (class 2606 OID 5303258)
 -- Name: reports fk_reports_users; Type: FK CONSTRAINT; Schema: darwin2; Owner: postgres
 --
 
@@ -31969,7 +33341,7 @@ ALTER TABLE ONLY darwin2.reports
 
 
 --
--- TOC entry 5362 (class 2606 OID 5303263)
+-- TOC entry 5382 (class 2606 OID 5303263)
 -- Name: specimen_collecting_methods fk_specimen_collecting_methods_method; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31978,7 +33350,7 @@ ALTER TABLE ONLY darwin2.specimen_collecting_methods
 
 
 --
--- TOC entry 5363 (class 2606 OID 5303268)
+-- TOC entry 5383 (class 2606 OID 5303268)
 -- Name: specimen_collecting_methods fk_specimen_collecting_methods_specimen; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31987,7 +33359,7 @@ ALTER TABLE ONLY darwin2.specimen_collecting_methods
 
 
 --
--- TOC entry 5364 (class 2606 OID 5303273)
+-- TOC entry 5384 (class 2606 OID 5303273)
 -- Name: specimen_collecting_tools fk_specimen_collecting_tools_specimen; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -31996,7 +33368,7 @@ ALTER TABLE ONLY darwin2.specimen_collecting_tools
 
 
 --
--- TOC entry 5365 (class 2606 OID 5303278)
+-- TOC entry 5385 (class 2606 OID 5303278)
 -- Name: specimen_collecting_tools fk_specimen_collecting_tools_tool; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32005,7 +33377,7 @@ ALTER TABLE ONLY darwin2.specimen_collecting_tools
 
 
 --
--- TOC entry 5366 (class 2606 OID 5303283)
+-- TOC entry 5386 (class 2606 OID 5303283)
 -- Name: specimens fk_specimen_institutions; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32014,7 +33386,7 @@ ALTER TABLE ONLY darwin2.specimens
 
 
 --
--- TOC entry 5335 (class 2606 OID 5303288)
+-- TOC entry 5355 (class 2606 OID 5303288)
 -- Name: insurances fk_specimen_parts_insurances_contact; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32023,7 +33395,7 @@ ALTER TABLE ONLY darwin2.insurances
 
 
 --
--- TOC entry 5336 (class 2606 OID 5303293)
+-- TOC entry 5356 (class 2606 OID 5303293)
 -- Name: insurances fk_specimen_parts_insurances_people; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32032,7 +33404,7 @@ ALTER TABLE ONLY darwin2.insurances
 
 
 --
--- TOC entry 5367 (class 2606 OID 5303298)
+-- TOC entry 5387 (class 2606 OID 5303298)
 -- Name: specimens fk_specimens_chronostratigraphy; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32041,7 +33413,7 @@ ALTER TABLE ONLY darwin2.specimens
 
 
 --
--- TOC entry 5368 (class 2606 OID 5303303)
+-- TOC entry 5388 (class 2606 OID 5303303)
 -- Name: specimens fk_specimens_collections; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32050,7 +33422,7 @@ ALTER TABLE ONLY darwin2.specimens
 
 
 --
--- TOC entry 5369 (class 2606 OID 5303308)
+-- TOC entry 5389 (class 2606 OID 5303308)
 -- Name: specimens fk_specimens_expeditions; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32059,7 +33431,7 @@ ALTER TABLE ONLY darwin2.specimens
 
 
 --
--- TOC entry 5370 (class 2606 OID 5303313)
+-- TOC entry 5390 (class 2606 OID 5303313)
 -- Name: specimens fk_specimens_gtu; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32068,7 +33440,7 @@ ALTER TABLE ONLY darwin2.specimens
 
 
 --
--- TOC entry 5371 (class 2606 OID 5303318)
+-- TOC entry 5391 (class 2606 OID 5303318)
 -- Name: specimens fk_specimens_igs; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32077,7 +33449,7 @@ ALTER TABLE ONLY darwin2.specimens
 
 
 --
--- TOC entry 5372 (class 2606 OID 5303323)
+-- TOC entry 5392 (class 2606 OID 5303323)
 -- Name: specimens fk_specimens_lithology; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32086,7 +33458,7 @@ ALTER TABLE ONLY darwin2.specimens
 
 
 --
--- TOC entry 5373 (class 2606 OID 5303328)
+-- TOC entry 5393 (class 2606 OID 5303328)
 -- Name: specimens fk_specimens_lithostratigraphy; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32095,7 +33467,7 @@ ALTER TABLE ONLY darwin2.specimens
 
 
 --
--- TOC entry 5374 (class 2606 OID 5303333)
+-- TOC entry 5394 (class 2606 OID 5303333)
 -- Name: specimens fk_specimens_mineralogy; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32104,7 +33476,7 @@ ALTER TABLE ONLY darwin2.specimens
 
 
 --
--- TOC entry 5376 (class 2606 OID 5303338)
+-- TOC entry 5396 (class 2606 OID 5303338)
 -- Name: specimens_relationships fk_specimens_relationships_institution; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32113,7 +33485,7 @@ ALTER TABLE ONLY darwin2.specimens_relationships
 
 
 --
--- TOC entry 5391 (class 2606 OID 5303343)
+-- TOC entry 5411 (class 2606 OID 5303343)
 -- Name: staging_relationship fk_specimens_relationships_institution; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32122,7 +33494,7 @@ ALTER TABLE ONLY darwin2.staging_relationship
 
 
 --
--- TOC entry 5377 (class 2606 OID 5303348)
+-- TOC entry 5397 (class 2606 OID 5303348)
 -- Name: specimens_relationships fk_specimens_relationships_mineralogy; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32131,7 +33503,7 @@ ALTER TABLE ONLY darwin2.specimens_relationships
 
 
 --
--- TOC entry 5392 (class 2606 OID 5303353)
+-- TOC entry 5412 (class 2606 OID 5303353)
 -- Name: staging_relationship fk_specimens_relationships_mineralogy; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32140,7 +33512,7 @@ ALTER TABLE ONLY darwin2.staging_relationship
 
 
 --
--- TOC entry 5378 (class 2606 OID 5303358)
+-- TOC entry 5398 (class 2606 OID 5303358)
 -- Name: specimens_relationships fk_specimens_relationships_specimens; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32149,7 +33521,7 @@ ALTER TABLE ONLY darwin2.specimens_relationships
 
 
 --
--- TOC entry 5379 (class 2606 OID 5303363)
+-- TOC entry 5399 (class 2606 OID 5303363)
 -- Name: specimens_relationships fk_specimens_relationships_specimens_related; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32158,7 +33530,7 @@ ALTER TABLE ONLY darwin2.specimens_relationships
 
 
 --
--- TOC entry 5380 (class 2606 OID 5303368)
+-- TOC entry 5400 (class 2606 OID 5303368)
 -- Name: specimens_relationships fk_specimens_relationships_taxonomy; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32167,7 +33539,7 @@ ALTER TABLE ONLY darwin2.specimens_relationships
 
 
 --
--- TOC entry 5393 (class 2606 OID 5303373)
+-- TOC entry 5413 (class 2606 OID 5303373)
 -- Name: staging_relationship fk_specimens_relationships_taxonomy; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32176,7 +33548,7 @@ ALTER TABLE ONLY darwin2.staging_relationship
 
 
 --
--- TOC entry 5375 (class 2606 OID 5303378)
+-- TOC entry 5395 (class 2606 OID 5303378)
 -- Name: specimens fk_specimens_taxonomy; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32185,7 +33557,7 @@ ALTER TABLE ONLY darwin2.specimens
 
 
 --
--- TOC entry 5315 (class 2606 OID 5303383)
+-- TOC entry 5335 (class 2606 OID 5303383)
 -- Name: staging fk_staging_chronostratigraphy; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32194,7 +33566,7 @@ ALTER TABLE ONLY darwin2.staging
 
 
 --
--- TOC entry 5383 (class 2606 OID 5303388)
+-- TOC entry 5403 (class 2606 OID 5303388)
 -- Name: staging_collecting_methods fk_staging_collecting_methods_method; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32203,7 +33575,7 @@ ALTER TABLE ONLY darwin2.staging_collecting_methods
 
 
 --
--- TOC entry 5384 (class 2606 OID 5303393)
+-- TOC entry 5404 (class 2606 OID 5303393)
 -- Name: staging_collecting_methods fk_staging_collecting_methods_staging; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32212,7 +33584,7 @@ ALTER TABLE ONLY darwin2.staging_collecting_methods
 
 
 --
--- TOC entry 5316 (class 2606 OID 5303398)
+-- TOC entry 5336 (class 2606 OID 5303398)
 -- Name: staging fk_staging_import; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32221,7 +33593,7 @@ ALTER TABLE ONLY darwin2.staging
 
 
 --
--- TOC entry 5317 (class 2606 OID 5303403)
+-- TOC entry 5337 (class 2606 OID 5303403)
 -- Name: staging fk_staging_lithology; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32230,7 +33602,7 @@ ALTER TABLE ONLY darwin2.staging
 
 
 --
--- TOC entry 5318 (class 2606 OID 5303408)
+-- TOC entry 5338 (class 2606 OID 5303408)
 -- Name: staging fk_staging_lithostratigraphy; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32239,7 +33611,7 @@ ALTER TABLE ONLY darwin2.staging
 
 
 --
--- TOC entry 5319 (class 2606 OID 5303413)
+-- TOC entry 5339 (class 2606 OID 5303413)
 -- Name: staging fk_staging_mineralogy; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32248,7 +33620,7 @@ ALTER TABLE ONLY darwin2.staging
 
 
 --
--- TOC entry 5389 (class 2606 OID 5303418)
+-- TOC entry 5409 (class 2606 OID 5303418)
 -- Name: staging_people fk_staging_people_list_person; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32257,7 +33629,7 @@ ALTER TABLE ONLY darwin2.staging_people
 
 
 --
--- TOC entry 5388 (class 2606 OID 5303423)
+-- TOC entry 5408 (class 2606 OID 5303423)
 -- Name: staging_info fk_staging_ref; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32266,7 +33638,7 @@ ALTER TABLE ONLY darwin2.staging_info
 
 
 --
--- TOC entry 5394 (class 2606 OID 5303428)
+-- TOC entry 5414 (class 2606 OID 5303428)
 -- Name: staging_tag_groups fk_staging_tag_groups; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32275,7 +33647,7 @@ ALTER TABLE ONLY darwin2.staging_tag_groups
 
 
 --
--- TOC entry 5320 (class 2606 OID 5303433)
+-- TOC entry 5340 (class 2606 OID 5303433)
 -- Name: staging fk_staging_taxonomy; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32284,7 +33656,7 @@ ALTER TABLE ONLY darwin2.staging
 
 
 --
--- TOC entry 5381 (class 2606 OID 5303438)
+-- TOC entry 5401 (class 2606 OID 5303438)
 -- Name: staging_catalogue fk_stg_catalogue_import_ref; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32293,7 +33665,7 @@ ALTER TABLE ONLY darwin2.staging_catalogue
 
 
 --
--- TOC entry 5382 (class 2606 OID 5303443)
+-- TOC entry 5402 (class 2606 OID 5303443)
 -- Name: staging_catalogue fk_stg_catalogue_level_ref; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32302,7 +33674,7 @@ ALTER TABLE ONLY darwin2.staging_catalogue
 
 
 --
--- TOC entry 5411 (class 2606 OID 5308600)
+-- TOC entry 5431 (class 2606 OID 5308600)
 -- Name: tag_tag_authority fk_tag; Type: FK CONSTRAINT; Schema: darwin2; Owner: postgres
 --
 
@@ -32311,7 +33683,7 @@ ALTER TABLE ONLY darwin2.tag_tag_authority
 
 
 --
--- TOC entry 5396 (class 2606 OID 5308557)
+-- TOC entry 5416 (class 2606 OID 5308557)
 -- Name: tag_groups fk_tag_group_distinct_id; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32320,7 +33692,7 @@ ALTER TABLE ONLY darwin2.tag_groups
 
 
 --
--- TOC entry 5395 (class 2606 OID 5303448)
+-- TOC entry 5415 (class 2606 OID 5303448)
 -- Name: tag_groups fk_tag_groups_gtu; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32329,7 +33701,7 @@ ALTER TABLE ONLY darwin2.tag_groups
 
 
 --
--- TOC entry 5398 (class 2606 OID 5303453)
+-- TOC entry 5418 (class 2606 OID 5303453)
 -- Name: tags fk_tags_gtu; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32338,7 +33710,7 @@ ALTER TABLE ONLY darwin2.tags
 
 
 --
--- TOC entry 5397 (class 2606 OID 5303458)
+-- TOC entry 5417 (class 2606 OID 5303458)
 -- Name: tags fk_tags_tag_groups; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32347,7 +33719,7 @@ ALTER TABLE ONLY darwin2.tags
 
 
 --
--- TOC entry 5413 (class 2606 OID 5308747)
+-- TOC entry 5433 (class 2606 OID 5308747)
 -- Name: taxonomy_authority fk_taxon; Type: FK CONSTRAINT; Schema: darwin2; Owner: postgres
 --
 
@@ -32356,7 +33728,7 @@ ALTER TABLE ONLY darwin2.taxonomy_authority
 
 
 --
--- TOC entry 5412 (class 2606 OID 5308752)
+-- TOC entry 5432 (class 2606 OID 5308752)
 -- Name: taxonomy_authority fk_taxonomy_authority_domain_id; Type: FK CONSTRAINT; Schema: darwin2; Owner: postgres
 --
 
@@ -32365,7 +33737,7 @@ ALTER TABLE ONLY darwin2.taxonomy_authority
 
 
 --
--- TOC entry 5399 (class 2606 OID 5303463)
+-- TOC entry 5419 (class 2606 OID 5303463)
 -- Name: taxonomy fk_taxonomy_level_ref_catalogue_levels; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32374,7 +33746,7 @@ ALTER TABLE ONLY darwin2.taxonomy
 
 
 --
--- TOC entry 5400 (class 2606 OID 5303468)
+-- TOC entry 5420 (class 2606 OID 5303468)
 -- Name: taxonomy fk_taxonomy_parent_ref_taxonomy; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32383,7 +33755,7 @@ ALTER TABLE ONLY darwin2.taxonomy
 
 
 --
--- TOC entry 5385 (class 2606 OID 5303473)
+-- TOC entry 5405 (class 2606 OID 5303473)
 -- Name: staging_gtu fk_to_gtu; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32392,7 +33764,7 @@ ALTER TABLE ONLY darwin2.staging_gtu
 
 
 --
--- TOC entry 5386 (class 2606 OID 5303478)
+-- TOC entry 5406 (class 2606 OID 5303478)
 -- Name: staging_gtu fk_to_import; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32401,7 +33773,7 @@ ALTER TABLE ONLY darwin2.staging_gtu
 
 
 --
--- TOC entry 5401 (class 2606 OID 5303483)
+-- TOC entry 5421 (class 2606 OID 5303483)
 -- Name: users fk_user_people_id; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32410,7 +33782,7 @@ ALTER TABLE ONLY darwin2.users
 
 
 --
--- TOC entry 5402 (class 2606 OID 5303488)
+-- TOC entry 5422 (class 2606 OID 5303488)
 -- Name: users_addresses fk_users_addresses_users; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32419,7 +33791,7 @@ ALTER TABLE ONLY darwin2.users_addresses
 
 
 --
--- TOC entry 5403 (class 2606 OID 5303493)
+-- TOC entry 5423 (class 2606 OID 5303493)
 -- Name: users_comm fk_users_comm_users; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32428,7 +33800,7 @@ ALTER TABLE ONLY darwin2.users_comm
 
 
 --
--- TOC entry 5404 (class 2606 OID 5303498)
+-- TOC entry 5424 (class 2606 OID 5303498)
 -- Name: users_login_infos fk_users_login_infos_users; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32437,7 +33809,7 @@ ALTER TABLE ONLY darwin2.users_login_infos
 
 
 --
--- TOC entry 5360 (class 2606 OID 5303503)
+-- TOC entry 5380 (class 2606 OID 5303503)
 -- Name: preferences fk_users_preferences; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32446,7 +33818,7 @@ ALTER TABLE ONLY darwin2.preferences
 
 
 --
--- TOC entry 5405 (class 2606 OID 5303508)
+-- TOC entry 5425 (class 2606 OID 5303508)
 -- Name: users_tracking fk_users_tracking_users; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32455,7 +33827,7 @@ ALTER TABLE ONLY darwin2.users_tracking
 
 
 --
--- TOC entry 5387 (class 2606 OID 5303513)
+-- TOC entry 5407 (class 2606 OID 5303513)
 -- Name: staging_gtu staging_gtu_import_ref_fkey; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32464,7 +33836,7 @@ ALTER TABLE ONLY darwin2.staging_gtu
 
 
 --
--- TOC entry 5408 (class 2606 OID 5308634)
+-- TOC entry 5428 (class 2606 OID 5308634)
 -- Name: tag_authority tag_authority_tag_group_distinct_ref_fkey; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -32473,7 +33845,7 @@ ALTER TABLE ONLY darwin2.tag_authority
 
 
 --
--- TOC entry 5773 (class 0 OID 0)
+-- TOC entry 5794 (class 0 OID 0)
 -- Dependencies: 15
 -- Name: SCHEMA darwin2; Type: ACL; Schema: -; Owner: darwin2
 --
@@ -32487,7 +33859,7 @@ GRANT USAGE ON SCHEMA darwin2 TO nagios;
 
 
 --
--- TOC entry 5774 (class 0 OID 0)
+-- TOC entry 5795 (class 0 OID 0)
 -- Dependencies: 13
 -- Name: SCHEMA public; Type: ACL; Schema: -; Owner: postgres
 --
@@ -32499,8 +33871,8 @@ GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
 --
--- TOC entry 5782 (class 0 OID 0)
--- Dependencies: 1696
+-- TOC entry 5803 (class 0 OID 0)
+-- Dependencies: 1706
 -- Name: FUNCTION check_auto_increment_code_in_spec(); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -32512,8 +33884,8 @@ GRANT ALL ON FUNCTION darwin2.check_auto_increment_code_in_spec() TO darwin2;
 
 
 --
--- TOC entry 5783 (class 0 OID 0)
--- Dependencies: 1697
+-- TOC entry 5804 (class 0 OID 0)
+-- Dependencies: 1707
 -- Name: FUNCTION chk_specimens_not_loaned(); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -32525,8 +33897,8 @@ GRANT ALL ON FUNCTION darwin2.chk_specimens_not_loaned() TO darwin2;
 
 
 --
--- TOC entry 5784 (class 0 OID 0)
--- Dependencies: 1884
+-- TOC entry 5805 (class 0 OID 0)
+-- Dependencies: 1892
 -- Name: FUNCTION convert_to_unified(property character varying, property_unit character varying); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -32538,8 +33910,8 @@ GRANT ALL ON FUNCTION darwin2.convert_to_unified(property character varying, pro
 
 
 --
--- TOC entry 5785 (class 0 OID 0)
--- Dependencies: 1703
+-- TOC entry 5806 (class 0 OID 0)
+-- Dependencies: 1713
 -- Name: FUNCTION convert_to_unified(property character varying, property_unit character varying, property_type character varying); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -32551,8 +33923,8 @@ GRANT ALL ON FUNCTION darwin2.convert_to_unified(property character varying, pro
 
 
 --
--- TOC entry 5786 (class 0 OID 0)
--- Dependencies: 1710
+-- TOC entry 5807 (class 0 OID 0)
+-- Dependencies: 1720
 -- Name: FUNCTION fct_after_save_add_code(collectionid integer, specimenid integer); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -32564,8 +33936,8 @@ GRANT ALL ON FUNCTION darwin2.fct_after_save_add_code(collectionid integer, spec
 
 
 --
--- TOC entry 5787 (class 0 OID 0)
--- Dependencies: 1715
+-- TOC entry 5808 (class 0 OID 0)
+-- Dependencies: 1725
 -- Name: FUNCTION fct_catalogue_import_keywords_update(); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -32577,8 +33949,8 @@ GRANT ALL ON FUNCTION darwin2.fct_catalogue_import_keywords_update() TO darwin2;
 
 
 --
--- TOC entry 5788 (class 0 OID 0)
--- Dependencies: 1725
+-- TOC entry 5809 (class 0 OID 0)
+-- Dependencies: 1735
 -- Name: FUNCTION fct_clean_staging_catalogue(importref integer); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -32590,8 +33962,8 @@ GRANT ALL ON FUNCTION darwin2.fct_clean_staging_catalogue(importref integer) TO 
 
 
 --
--- TOC entry 5789 (class 0 OID 0)
--- Dependencies: 1737
+-- TOC entry 5810 (class 0 OID 0)
+-- Dependencies: 1747
 -- Name: FUNCTION fct_cpy_length_conversion(property real, property_unit text); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -32603,8 +33975,8 @@ GRANT ALL ON FUNCTION darwin2.fct_cpy_length_conversion(property real, property_
 
 
 --
--- TOC entry 5790 (class 0 OID 0)
--- Dependencies: 1885
+-- TOC entry 5811 (class 0 OID 0)
+-- Dependencies: 1893
 -- Name: FUNCTION fct_cpy_speed_conversion(property real, property_unit text); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -32616,8 +33988,8 @@ GRANT ALL ON FUNCTION darwin2.fct_cpy_speed_conversion(property real, property_u
 
 
 --
--- TOC entry 5791 (class 0 OID 0)
--- Dependencies: 1908
+-- TOC entry 5812 (class 0 OID 0)
+-- Dependencies: 1934
 -- Name: FUNCTION fct_cpy_tags_to_distinct_bedic(); Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -32628,8 +34000,8 @@ GRANT ALL ON FUNCTION darwin2.fct_cpy_tags_to_distinct_bedic() TO PUBLIC;
 
 
 --
--- TOC entry 5792 (class 0 OID 0)
--- Dependencies: 1742
+-- TOC entry 5813 (class 0 OID 0)
+-- Dependencies: 1752
 -- Name: FUNCTION fct_cpy_temperature_conversion(property real, property_unit text); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -32641,8 +34013,8 @@ GRANT ALL ON FUNCTION darwin2.fct_cpy_temperature_conversion(property real, prop
 
 
 --
--- TOC entry 5793 (class 0 OID 0)
--- Dependencies: 1749
+-- TOC entry 5814 (class 0 OID 0)
+-- Dependencies: 1759
 -- Name: FUNCTION fct_cpy_time_conversion(property real, property_unit text); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -32654,8 +34026,8 @@ GRANT ALL ON FUNCTION darwin2.fct_cpy_time_conversion(property real, property_un
 
 
 --
--- TOC entry 5794 (class 0 OID 0)
--- Dependencies: 1756
+-- TOC entry 5815 (class 0 OID 0)
+-- Dependencies: 1766
 -- Name: FUNCTION fct_cpy_volume_conversion(property real, property_unit text); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -32667,8 +34039,8 @@ GRANT ALL ON FUNCTION darwin2.fct_cpy_volume_conversion(property real, property_
 
 
 --
--- TOC entry 5795 (class 0 OID 0)
--- Dependencies: 1757
+-- TOC entry 5816 (class 0 OID 0)
+-- Dependencies: 1767
 -- Name: FUNCTION fct_cpy_weight_conversion(property real, property_unit text); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -32680,8 +34052,8 @@ GRANT ALL ON FUNCTION darwin2.fct_cpy_weight_conversion(property real, property_
 
 
 --
--- TOC entry 5796 (class 0 OID 0)
--- Dependencies: 1763
+-- TOC entry 5817 (class 0 OID 0)
+-- Dependencies: 1773
 -- Name: FUNCTION fct_duplicate_loans(loan_id integer); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -32693,8 +34065,8 @@ GRANT ALL ON FUNCTION darwin2.fct_duplicate_loans(loan_id integer) TO darwin2;
 
 
 --
--- TOC entry 5797 (class 0 OID 0)
--- Dependencies: 1909
+-- TOC entry 5818 (class 0 OID 0)
+-- Dependencies: 1914
 -- Name: FUNCTION fct_get_tax_hierarchy(start_id integer, levels integer[]); Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -32705,8 +34077,8 @@ GRANT ALL ON FUNCTION darwin2.fct_get_tax_hierarchy(start_id integer, levels int
 
 
 --
--- TOC entry 5798 (class 0 OID 0)
--- Dependencies: 226
+-- TOC entry 5819 (class 0 OID 0)
+-- Dependencies: 236
 -- Name: TABLE staging; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -32717,8 +34089,8 @@ GRANT SELECT ON TABLE darwin2.staging TO d2viewer;
 
 
 --
--- TOC entry 5799 (class 0 OID 0)
--- Dependencies: 1876
+-- TOC entry 5820 (class 0 OID 0)
+-- Dependencies: 1884
 -- Name: FUNCTION fct_imp_checker_staging_info(line darwin2.staging, st_type text); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -32730,8 +34102,8 @@ GRANT ALL ON FUNCTION darwin2.fct_imp_checker_staging_info(line darwin2.staging,
 
 
 --
--- TOC entry 5800 (class 0 OID 0)
--- Dependencies: 1774
+-- TOC entry 5821 (class 0 OID 0)
+-- Dependencies: 1783
 -- Name: FUNCTION fct_imp_checker_staging_info_comments(targeted_referenced_relation character varying, targeted_record_id integer, new_referenced_relation character varying, new_record_id integer); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -32743,8 +34115,8 @@ GRANT ALL ON FUNCTION darwin2.fct_imp_checker_staging_info_comments(targeted_ref
 
 
 --
--- TOC entry 5801 (class 0 OID 0)
--- Dependencies: 1775
+-- TOC entry 5822 (class 0 OID 0)
+-- Dependencies: 1784
 -- Name: FUNCTION fct_imp_checker_staging_info_ext_links(targeted_referenced_relation character varying, targeted_record_id integer, new_referenced_relation character varying, new_record_id integer); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -32756,8 +34128,8 @@ GRANT ALL ON FUNCTION darwin2.fct_imp_checker_staging_info_ext_links(targeted_re
 
 
 --
--- TOC entry 5802 (class 0 OID 0)
--- Dependencies: 1776
+-- TOC entry 5823 (class 0 OID 0)
+-- Dependencies: 1785
 -- Name: FUNCTION fct_imp_checker_staging_info_insurances(targeted_referenced_relation character varying, targeted_record_id integer, new_referenced_relation character varying, new_record_id integer); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -32769,8 +34141,8 @@ GRANT ALL ON FUNCTION darwin2.fct_imp_checker_staging_info_insurances(targeted_r
 
 
 --
--- TOC entry 5803 (class 0 OID 0)
--- Dependencies: 1777
+-- TOC entry 5824 (class 0 OID 0)
+-- Dependencies: 1786
 -- Name: FUNCTION fct_imp_checker_staging_info_multimedia(targeted_referenced_relation character varying, targeted_record_id integer, new_referenced_relation character varying, new_record_id integer); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -32782,8 +34154,8 @@ GRANT ALL ON FUNCTION darwin2.fct_imp_checker_staging_info_multimedia(targeted_r
 
 
 --
--- TOC entry 5804 (class 0 OID 0)
--- Dependencies: 1778
+-- TOC entry 5825 (class 0 OID 0)
+-- Dependencies: 1787
 -- Name: FUNCTION fct_imp_checker_staging_info_properties(targeted_referenced_relation character varying, targeted_record_id integer, new_referenced_relation character varying, new_record_id integer); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -32795,8 +34167,8 @@ GRANT ALL ON FUNCTION darwin2.fct_imp_checker_staging_info_properties(targeted_r
 
 
 --
--- TOC entry 5805 (class 0 OID 0)
--- Dependencies: 1886
+-- TOC entry 5826 (class 0 OID 0)
+-- Dependencies: 1894
 -- Name: FUNCTION fct_imp_checker_staging_relationship(); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -32808,8 +34180,8 @@ GRANT ALL ON FUNCTION darwin2.fct_imp_checker_staging_relationship() TO darwin2;
 
 
 --
--- TOC entry 5806 (class 0 OID 0)
--- Dependencies: 1782
+-- TOC entry 5827 (class 0 OID 0)
+-- Dependencies: 1790
 -- Name: FUNCTION fct_imp_create_catalogues_and_parents(line darwin2.staging, catalogue_table text, prefix text); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -32821,8 +34193,8 @@ GRANT ALL ON FUNCTION darwin2.fct_imp_create_catalogues_and_parents(line darwin2
 
 
 --
--- TOC entry 5807 (class 0 OID 0)
--- Dependencies: 1918
+-- TOC entry 5828 (class 0 OID 0)
+-- Dependencies: 1923
 -- Name: FUNCTION fct_importer_catalogue(req_import_ref integer, referenced_relation text, exclude_invalid_entries boolean); Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -32834,8 +34206,20 @@ GRANT ALL ON FUNCTION darwin2.fct_importer_catalogue(req_import_ref integer, ref
 
 
 --
--- TOC entry 5808 (class 0 OID 0)
--- Dependencies: 1887
+-- TOC entry 5829 (class 0 OID 0)
+-- Dependencies: 1933
+-- Name: FUNCTION fct_importer_catalogue_reference_taxonomy_logic_reference(req_import_ref integer, var_metadata_ref integer, exclude_invalid_entries boolean); Type: ACL; Schema: darwin2; Owner: darwin2
+--
+
+REVOKE ALL ON FUNCTION darwin2.fct_importer_catalogue_reference_taxonomy_logic_reference(req_import_ref integer, var_metadata_ref integer, exclude_invalid_entries boolean) FROM PUBLIC;
+REVOKE ALL ON FUNCTION darwin2.fct_importer_catalogue_reference_taxonomy_logic_reference(req_import_ref integer, var_metadata_ref integer, exclude_invalid_entries boolean) FROM darwin2;
+GRANT ALL ON FUNCTION darwin2.fct_importer_catalogue_reference_taxonomy_logic_reference(req_import_ref integer, var_metadata_ref integer, exclude_invalid_entries boolean) TO darwin2;
+GRANT ALL ON FUNCTION darwin2.fct_importer_catalogue_reference_taxonomy_logic_reference(req_import_ref integer, var_metadata_ref integer, exclude_invalid_entries boolean) TO PUBLIC;
+
+
+--
+-- TOC entry 5830 (class 0 OID 0)
+-- Dependencies: 1895
 -- Name: FUNCTION fct_listing_botany(nbr_records integer, VARIADIC taxon_ids integer[]); Type: ACL; Schema: darwin2; Owner: cebmpad
 --
 
@@ -32847,8 +34231,8 @@ GRANT ALL ON FUNCTION darwin2.fct_listing_botany(nbr_records integer, VARIADIC t
 
 
 --
--- TOC entry 5809 (class 0 OID 0)
--- Dependencies: 1783
+-- TOC entry 5831 (class 0 OID 0)
+-- Dependencies: 1792
 -- Name: FUNCTION fct_listing_chronostratigraphy(nbr_records integer, VARIADIC chrono_unit_ids integer[]); Type: ACL; Schema: darwin2; Owner: cebmpad
 --
 
@@ -32860,8 +34244,8 @@ GRANT ALL ON FUNCTION darwin2.fct_listing_chronostratigraphy(nbr_records integer
 
 
 --
--- TOC entry 5810 (class 0 OID 0)
--- Dependencies: 1784
+-- TOC entry 5832 (class 0 OID 0)
+-- Dependencies: 1793
 -- Name: FUNCTION fct_listing_lithology(nbr_records integer, VARIADIC litholo_unit_ids integer[]); Type: ACL; Schema: darwin2; Owner: cebmpad
 --
 
@@ -32873,8 +34257,8 @@ GRANT ALL ON FUNCTION darwin2.fct_listing_lithology(nbr_records integer, VARIADI
 
 
 --
--- TOC entry 5811 (class 0 OID 0)
--- Dependencies: 1785
+-- TOC entry 5833 (class 0 OID 0)
+-- Dependencies: 1794
 -- Name: FUNCTION fct_listing_lithostratigraphy(nbr_records integer, VARIADIC litho_unit_ids integer[]); Type: ACL; Schema: darwin2; Owner: cebmpad
 --
 
@@ -32886,8 +34270,8 @@ GRANT ALL ON FUNCTION darwin2.fct_listing_lithostratigraphy(nbr_records integer,
 
 
 --
--- TOC entry 5812 (class 0 OID 0)
--- Dependencies: 1786
+-- TOC entry 5834 (class 0 OID 0)
+-- Dependencies: 1795
 -- Name: FUNCTION fct_listing_mineralogy(nbr_records integer, VARIADIC mineralo_unit_ids integer[]); Type: ACL; Schema: darwin2; Owner: cebmpad
 --
 
@@ -32899,8 +34283,8 @@ GRANT ALL ON FUNCTION darwin2.fct_listing_mineralogy(nbr_records integer, VARIAD
 
 
 --
--- TOC entry 5813 (class 0 OID 0)
--- Dependencies: 1780
+-- TOC entry 5835 (class 0 OID 0)
+-- Dependencies: 1788
 -- Name: FUNCTION fct_listing_taxonomy(nbr_records integer, VARIADIC taxon_ids integer[]); Type: ACL; Schema: darwin2; Owner: cebmpad
 --
 
@@ -32912,8 +34296,8 @@ GRANT ALL ON FUNCTION darwin2.fct_listing_taxonomy(nbr_records integer, VARIADIC
 
 
 --
--- TOC entry 5814 (class 0 OID 0)
--- Dependencies: 1790
+-- TOC entry 5836 (class 0 OID 0)
+-- Dependencies: 1799
 -- Name: FUNCTION fct_listing_zoology(nbr_records integer, VARIADIC taxon_ids integer[]); Type: ACL; Schema: darwin2; Owner: cebmpad
 --
 
@@ -32925,8 +34309,8 @@ GRANT ALL ON FUNCTION darwin2.fct_listing_zoology(nbr_records integer, VARIADIC 
 
 
 --
--- TOC entry 5815 (class 0 OID 0)
--- Dependencies: 1888
+-- TOC entry 5837 (class 0 OID 0)
+-- Dependencies: 1896
 -- Name: FUNCTION fct_rmca_abbreviate_names(given_name character varying); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -32938,21 +34322,34 @@ GRANT ALL ON FUNCTION darwin2.fct_rmca_abbreviate_names(given_name character var
 
 
 --
--- TOC entry 5816 (class 0 OID 0)
--- Dependencies: 1903
--- Name: FUNCTION fct_rmca_imp_checker_gtu_search_code(line darwin2.staging, import boolean); Type: ACL; Schema: darwin2; Owner: postgres
+-- TOC entry 5838 (class 0 OID 0)
+-- Dependencies: 1928
+-- Name: FUNCTION fct_rmca_document_taxonomy_staging_darwin_reference(req_import_ref integer, with_rank boolean, is_indexed boolean, match_invalid_taxonomies boolean); Type: ACL; Schema: darwin2; Owner: darwin2
+--
+
+REVOKE ALL ON FUNCTION darwin2.fct_rmca_document_taxonomy_staging_darwin_reference(req_import_ref integer, with_rank boolean, is_indexed boolean, match_invalid_taxonomies boolean) FROM PUBLIC;
+REVOKE ALL ON FUNCTION darwin2.fct_rmca_document_taxonomy_staging_darwin_reference(req_import_ref integer, with_rank boolean, is_indexed boolean, match_invalid_taxonomies boolean) FROM darwin2;
+GRANT ALL ON FUNCTION darwin2.fct_rmca_document_taxonomy_staging_darwin_reference(req_import_ref integer, with_rank boolean, is_indexed boolean, match_invalid_taxonomies boolean) TO darwin2;
+GRANT ALL ON FUNCTION darwin2.fct_rmca_document_taxonomy_staging_darwin_reference(req_import_ref integer, with_rank boolean, is_indexed boolean, match_invalid_taxonomies boolean) TO PUBLIC;
+GRANT ALL ON FUNCTION darwin2.fct_rmca_document_taxonomy_staging_darwin_reference(req_import_ref integer, with_rank boolean, is_indexed boolean, match_invalid_taxonomies boolean) TO postgres;
+
+
+--
+-- TOC entry 5839 (class 0 OID 0)
+-- Dependencies: 1929
+-- Name: FUNCTION fct_rmca_imp_checker_gtu_search_code(line darwin2.staging, import boolean); Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
 REVOKE ALL ON FUNCTION darwin2.fct_rmca_imp_checker_gtu_search_code(line darwin2.staging, import boolean) FROM PUBLIC;
-REVOKE ALL ON FUNCTION darwin2.fct_rmca_imp_checker_gtu_search_code(line darwin2.staging, import boolean) FROM postgres;
-GRANT ALL ON FUNCTION darwin2.fct_rmca_imp_checker_gtu_search_code(line darwin2.staging, import boolean) TO postgres;
-GRANT ALL ON FUNCTION darwin2.fct_rmca_imp_checker_gtu_search_code(line darwin2.staging, import boolean) TO PUBLIC;
+REVOKE ALL ON FUNCTION darwin2.fct_rmca_imp_checker_gtu_search_code(line darwin2.staging, import boolean) FROM darwin2;
 GRANT ALL ON FUNCTION darwin2.fct_rmca_imp_checker_gtu_search_code(line darwin2.staging, import boolean) TO darwin2;
+GRANT ALL ON FUNCTION darwin2.fct_rmca_imp_checker_gtu_search_code(line darwin2.staging, import boolean) TO PUBLIC;
+GRANT ALL ON FUNCTION darwin2.fct_rmca_imp_checker_gtu_search_code(line darwin2.staging, import boolean) TO postgres;
 
 
 --
--- TOC entry 5817 (class 0 OID 0)
--- Dependencies: 1815
+-- TOC entry 5840 (class 0 OID 0)
+-- Dependencies: 1824
 -- Name: FUNCTION fct_upd_institution_staging_relationship(); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -32964,8 +34361,8 @@ GRANT ALL ON FUNCTION darwin2.fct_upd_institution_staging_relationship() TO darw
 
 
 --
--- TOC entry 5818 (class 0 OID 0)
--- Dependencies: 1833
+-- TOC entry 5841 (class 0 OID 0)
+-- Dependencies: 1842
 -- Name: FUNCTION fct_update_import(); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -32977,8 +34374,8 @@ GRANT ALL ON FUNCTION darwin2.fct_update_import() TO darwin2;
 
 
 --
--- TOC entry 5819 (class 0 OID 0)
--- Dependencies: 1889
+-- TOC entry 5842 (class 0 OID 0)
+-- Dependencies: 1897
 -- Name: FUNCTION is_property_unit_in_group(searched_unit text, property_unit text); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -32990,8 +34387,8 @@ GRANT ALL ON FUNCTION darwin2.is_property_unit_in_group(searched_unit text, prop
 
 
 --
--- TOC entry 5820 (class 0 OID 0)
--- Dependencies: 1845
+-- TOC entry 5843 (class 0 OID 0)
+-- Dependencies: 1854
 -- Name: FUNCTION isnumeric(text); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -33003,8 +34400,8 @@ GRANT ALL ON FUNCTION darwin2.isnumeric(text) TO darwin2;
 
 
 --
--- TOC entry 5821 (class 0 OID 0)
--- Dependencies: 1847
+-- TOC entry 5844 (class 0 OID 0)
+-- Dependencies: 1856
 -- Name: FUNCTION labeling_code_for_indexation(part_ref integer); Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33017,8 +34414,8 @@ GRANT ALL ON FUNCTION darwin2.labeling_code_for_indexation(part_ref integer) TO 
 
 
 --
--- TOC entry 5822 (class 0 OID 0)
--- Dependencies: 1846
+-- TOC entry 5845 (class 0 OID 0)
+-- Dependencies: 1855
 -- Name: FUNCTION labeling_individual_type_for_indexation(individual_type character varying); Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33031,8 +34428,8 @@ GRANT ALL ON FUNCTION darwin2.labeling_individual_type_for_indexation(individual
 
 
 --
--- TOC entry 5823 (class 0 OID 0)
--- Dependencies: 1848
+-- TOC entry 5846 (class 0 OID 0)
+-- Dependencies: 1857
 -- Name: FUNCTION labeling_part_for_indexation(part character varying); Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33045,8 +34442,8 @@ GRANT ALL ON FUNCTION darwin2.labeling_part_for_indexation(part character varyin
 
 
 --
--- TOC entry 5824 (class 0 OID 0)
--- Dependencies: 1840
+-- TOC entry 5847 (class 0 OID 0)
+-- Dependencies: 1849
 -- Name: FUNCTION labeling_type_for_indexation(individual_type character varying); Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33059,8 +34456,8 @@ GRANT ALL ON FUNCTION darwin2.labeling_type_for_indexation(individual_type chara
 
 
 --
--- TOC entry 5825 (class 0 OID 0)
--- Dependencies: 1841
+-- TOC entry 5848 (class 0 OID 0)
+-- Dependencies: 1850
 -- Name: FUNCTION point_equal(point, point); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -33072,21 +34469,21 @@ GRANT ALL ON FUNCTION darwin2.point_equal(point, point) TO darwin2;
 
 
 --
--- TOC entry 5826 (class 0 OID 0)
--- Dependencies: 1904
--- Name: FUNCTION rmca_dmscheck_syntax(coord_dms character varying); Type: ACL; Schema: darwin2; Owner: postgres
+-- TOC entry 5849 (class 0 OID 0)
+-- Dependencies: 1930
+-- Name: FUNCTION rmca_dmscheck_syntax(coord_dms character varying); Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
 REVOKE ALL ON FUNCTION darwin2.rmca_dmscheck_syntax(coord_dms character varying) FROM PUBLIC;
-REVOKE ALL ON FUNCTION darwin2.rmca_dmscheck_syntax(coord_dms character varying) FROM postgres;
-GRANT ALL ON FUNCTION darwin2.rmca_dmscheck_syntax(coord_dms character varying) TO postgres;
-GRANT ALL ON FUNCTION darwin2.rmca_dmscheck_syntax(coord_dms character varying) TO PUBLIC;
+REVOKE ALL ON FUNCTION darwin2.rmca_dmscheck_syntax(coord_dms character varying) FROM darwin2;
 GRANT ALL ON FUNCTION darwin2.rmca_dmscheck_syntax(coord_dms character varying) TO darwin2;
+GRANT ALL ON FUNCTION darwin2.rmca_dmscheck_syntax(coord_dms character varying) TO PUBLIC;
+GRANT ALL ON FUNCTION darwin2.rmca_dmscheck_syntax(coord_dms character varying) TO postgres;
 
 
 --
--- TOC entry 5827 (class 0 OID 0)
--- Dependencies: 1893
+-- TOC entry 5850 (class 0 OID 0)
+-- Dependencies: 1901
 -- Name: FUNCTION rmca_fct_clear_gtu_date(); Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33097,8 +34494,8 @@ GRANT ALL ON FUNCTION darwin2.rmca_fct_clear_gtu_date() TO PUBLIC;
 
 
 --
--- TOC entry 5828 (class 0 OID 0)
--- Dependencies: 1894
+-- TOC entry 5851 (class 0 OID 0)
+-- Dependencies: 1902
 -- Name: FUNCTION rmca_fct_clear_specimen_date(); Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33109,8 +34506,8 @@ GRANT ALL ON FUNCTION darwin2.rmca_fct_clear_specimen_date() TO PUBLIC;
 
 
 --
--- TOC entry 5829 (class 0 OID 0)
--- Dependencies: 1895
+-- TOC entry 5852 (class 0 OID 0)
+-- Dependencies: 1903
 -- Name: FUNCTION rmca_fct_update_specimen_date(); Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33121,8 +34518,8 @@ GRANT ALL ON FUNCTION darwin2.rmca_fct_update_specimen_date() TO PUBLIC;
 
 
 --
--- TOC entry 5830 (class 0 OID 0)
--- Dependencies: 1859
+-- TOC entry 5853 (class 0 OID 0)
+-- Dependencies: 1866
 -- Name: FUNCTION rmca_import_gtu_in_darwin_fast(p_import_ref integer); Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33134,8 +34531,8 @@ GRANT ALL ON FUNCTION darwin2.rmca_import_gtu_in_darwin_fast(p_import_ref intege
 
 
 --
--- TOC entry 5832 (class 0 OID 0)
--- Dependencies: 1860
+-- TOC entry 5855 (class 0 OID 0)
+-- Dependencies: 1867
 -- Name: FUNCTION stats_collections_encoding(integer, text, text); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -33148,8 +34545,8 @@ GRANT ALL ON FUNCTION darwin2.stats_collections_encoding(integer, text, text) TO
 
 
 --
--- TOC entry 5834 (class 0 OID 0)
--- Dependencies: 1855
+-- TOC entry 5857 (class 0 OID 0)
+-- Dependencies: 1862
 -- Name: FUNCTION stats_collections_encoding(integer, timestamp without time zone, timestamp without time zone); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -33161,8 +34558,8 @@ GRANT ALL ON FUNCTION darwin2.stats_collections_encoding(integer, timestamp with
 
 
 --
--- TOC entry 5836 (class 0 OID 0)
--- Dependencies: 1861
+-- TOC entry 5859 (class 0 OID 0)
+-- Dependencies: 1868
 -- Name: FUNCTION stats_collections_encoding_optimistics(integer, text, text); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -33175,8 +34572,8 @@ GRANT ALL ON FUNCTION darwin2.stats_collections_encoding_optimistics(integer, te
 
 
 --
--- TOC entry 5838 (class 0 OID 0)
--- Dependencies: 1877
+-- TOC entry 5861 (class 0 OID 0)
+-- Dependencies: 1885
 -- Name: FUNCTION stats_collections_encoding_optimistics(integer, timestamp without time zone, timestamp without time zone); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -33189,8 +34586,8 @@ GRANT ALL ON FUNCTION darwin2.stats_collections_encoding_optimistics(integer, ti
 
 
 --
--- TOC entry 5840 (class 0 OID 0)
--- Dependencies: 1862
+-- TOC entry 5863 (class 0 OID 0)
+-- Dependencies: 1869
 -- Name: FUNCTION stats_encoders_encoding(top_collection integer, users_array text, from_date text, to_date text); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -33203,8 +34600,8 @@ GRANT ALL ON FUNCTION darwin2.stats_encoders_encoding(top_collection integer, us
 
 
 --
--- TOC entry 5842 (class 0 OID 0)
--- Dependencies: 1890
+-- TOC entry 5865 (class 0 OID 0)
+-- Dependencies: 1898
 -- Name: FUNCTION stats_encoders_encoding(top_collection integer, users_array text, from_date timestamp without time zone, to_date timestamp without time zone); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -33217,8 +34614,8 @@ GRANT ALL ON FUNCTION darwin2.stats_encoders_encoding(top_collection integer, us
 
 
 --
--- TOC entry 5844 (class 0 OID 0)
--- Dependencies: 1865
+-- TOC entry 5867 (class 0 OID 0)
+-- Dependencies: 1873
 -- Name: FUNCTION stats_encoders_encoding_optimistics(top_collection integer, users_array text, from_date text, to_date text); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -33231,8 +34628,8 @@ GRANT ALL ON FUNCTION darwin2.stats_encoders_encoding_optimistics(top_collection
 
 
 --
--- TOC entry 5846 (class 0 OID 0)
--- Dependencies: 1891
+-- TOC entry 5869 (class 0 OID 0)
+-- Dependencies: 1899
 -- Name: FUNCTION stats_encoders_encoding_optimistics(top_collection integer, users_array text, from_date timestamp without time zone, to_date timestamp without time zone); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -33245,8 +34642,8 @@ GRANT ALL ON FUNCTION darwin2.stats_encoders_encoding_optimistics(top_collection
 
 
 --
--- TOC entry 5847 (class 0 OID 0)
--- Dependencies: 1870
+-- TOC entry 5870 (class 0 OID 0)
+-- Dependencies: 1877
 -- Name: FUNCTION update_collections_code_last_val(); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -33258,8 +34655,8 @@ GRANT ALL ON FUNCTION darwin2.update_collections_code_last_val() TO darwin2;
 
 
 --
--- TOC entry 5848 (class 0 OID 0)
--- Dependencies: 1892
+-- TOC entry 5871 (class 0 OID 0)
+-- Dependencies: 1900
 -- Name: FUNCTION update_collections_code_last_val_after_spec_del(); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -33271,8 +34668,8 @@ GRANT ALL ON FUNCTION darwin2.update_collections_code_last_val_after_spec_del() 
 
 
 --
--- TOC entry 5855 (class 0 OID 0)
--- Dependencies: 425
+-- TOC entry 5878 (class 0 OID 0)
+-- Dependencies: 435
 -- Name: TABLE authority_domain; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33282,8 +34679,8 @@ GRANT ALL ON TABLE darwin2.authority_domain TO darwin2;
 
 
 --
--- TOC entry 5857 (class 0 OID 0)
--- Dependencies: 424
+-- TOC entry 5880 (class 0 OID 0)
+-- Dependencies: 434
 -- Name: SEQUENCE authority_domain_id_seq; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33293,8 +34690,8 @@ GRANT ALL ON SEQUENCE darwin2.authority_domain_id_seq TO darwin2;
 
 
 --
--- TOC entry 5865 (class 0 OID 0)
--- Dependencies: 227
+-- TOC entry 5888 (class 0 OID 0)
+-- Dependencies: 237
 -- Name: TABLE bibliography; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33305,8 +34702,8 @@ GRANT SELECT ON TABLE darwin2.bibliography TO d2viewer;
 
 
 --
--- TOC entry 5870 (class 0 OID 0)
--- Dependencies: 229
+-- TOC entry 5893 (class 0 OID 0)
+-- Dependencies: 239
 -- Name: TABLE template_table_record_ref; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33317,8 +34714,8 @@ GRANT SELECT ON TABLE darwin2.template_table_record_ref TO d2viewer;
 
 
 --
--- TOC entry 5876 (class 0 OID 0)
--- Dependencies: 230
+-- TOC entry 5899 (class 0 OID 0)
+-- Dependencies: 240
 -- Name: TABLE catalogue_bibliography; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33329,8 +34726,8 @@ GRANT SELECT ON TABLE darwin2.catalogue_bibliography TO d2viewer;
 
 
 --
--- TOC entry 5884 (class 0 OID 0)
--- Dependencies: 233
+-- TOC entry 5907 (class 0 OID 0)
+-- Dependencies: 243
 -- Name: TABLE catalogue_levels; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33341,8 +34738,8 @@ GRANT SELECT ON TABLE darwin2.catalogue_levels TO d2viewer;
 
 
 --
--- TOC entry 5893 (class 0 OID 0)
--- Dependencies: 235
+-- TOC entry 5916 (class 0 OID 0)
+-- Dependencies: 245
 -- Name: TABLE catalogue_people; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33353,8 +34750,8 @@ GRANT SELECT ON TABLE darwin2.catalogue_people TO d2viewer;
 
 
 --
--- TOC entry 5899 (class 0 OID 0)
--- Dependencies: 238
+-- TOC entry 5922 (class 0 OID 0)
+-- Dependencies: 248
 -- Name: TABLE catalogue_relationships; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33365,8 +34762,8 @@ GRANT SELECT ON TABLE darwin2.catalogue_relationships TO d2viewer;
 
 
 --
--- TOC entry 5909 (class 0 OID 0)
--- Dependencies: 240
+-- TOC entry 5932 (class 0 OID 0)
+-- Dependencies: 250
 -- Name: TABLE template_classifications; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33377,8 +34774,8 @@ GRANT SELECT ON TABLE darwin2.template_classifications TO d2viewer;
 
 
 --
--- TOC entry 5920 (class 0 OID 0)
--- Dependencies: 241
+-- TOC entry 5943 (class 0 OID 0)
+-- Dependencies: 251
 -- Name: TABLE chronostratigraphy; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33389,8 +34786,8 @@ GRANT SELECT ON TABLE darwin2.chronostratigraphy TO d2viewer;
 
 
 --
--- TOC entry 5926 (class 0 OID 0)
--- Dependencies: 244
+-- TOC entry 5949 (class 0 OID 0)
+-- Dependencies: 254
 -- Name: TABLE classification_keywords; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33401,8 +34798,8 @@ GRANT SELECT ON TABLE darwin2.classification_keywords TO d2viewer;
 
 
 --
--- TOC entry 5934 (class 0 OID 0)
--- Dependencies: 246
+-- TOC entry 5957 (class 0 OID 0)
+-- Dependencies: 256
 -- Name: TABLE classification_synonymies; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33413,8 +34810,8 @@ GRANT SELECT ON TABLE darwin2.classification_synonymies TO d2viewer;
 
 
 --
--- TOC entry 5948 (class 0 OID 0)
--- Dependencies: 249
+-- TOC entry 5971 (class 0 OID 0)
+-- Dependencies: 259
 -- Name: TABLE codes; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33425,8 +34822,8 @@ GRANT SELECT ON TABLE darwin2.codes TO d2viewer;
 
 
 --
--- TOC entry 5953 (class 0 OID 0)
--- Dependencies: 251
+-- TOC entry 5976 (class 0 OID 0)
+-- Dependencies: 261
 -- Name: TABLE collecting_methods; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33437,8 +34834,8 @@ GRANT SELECT ON TABLE darwin2.collecting_methods TO d2viewer;
 
 
 --
--- TOC entry 5958 (class 0 OID 0)
--- Dependencies: 253
+-- TOC entry 5981 (class 0 OID 0)
+-- Dependencies: 263
 -- Name: TABLE collecting_tools; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33449,8 +34846,8 @@ GRANT SELECT ON TABLE darwin2.collecting_tools TO d2viewer;
 
 
 --
--- TOC entry 5969 (class 0 OID 0)
--- Dependencies: 255
+-- TOC entry 5992 (class 0 OID 0)
+-- Dependencies: 265
 -- Name: TABLE collection_maintenance; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33461,8 +34858,8 @@ GRANT SELECT ON TABLE darwin2.collection_maintenance TO d2viewer;
 
 
 --
--- TOC entry 5991 (class 0 OID 0)
--- Dependencies: 257
+-- TOC entry 6014 (class 0 OID 0)
+-- Dependencies: 267
 -- Name: TABLE collections; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33473,8 +34870,8 @@ GRANT SELECT ON TABLE darwin2.collections TO d2viewer;
 
 
 --
--- TOC entry 5997 (class 0 OID 0)
--- Dependencies: 259
+-- TOC entry 6020 (class 0 OID 0)
+-- Dependencies: 269
 -- Name: TABLE collections_rights; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33485,8 +34882,8 @@ GRANT SELECT ON TABLE darwin2.collections_rights TO d2viewer;
 
 
 --
--- TOC entry 6005 (class 0 OID 0)
--- Dependencies: 261
+-- TOC entry 6028 (class 0 OID 0)
+-- Dependencies: 271
 -- Name: TABLE comments; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33497,8 +34894,8 @@ GRANT SELECT ON TABLE darwin2.comments TO d2viewer;
 
 
 --
--- TOC entry 6025 (class 0 OID 0)
--- Dependencies: 264
+-- TOC entry 6048 (class 0 OID 0)
+-- Dependencies: 274
 -- Name: TABLE properties; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33510,8 +34907,8 @@ GRANT SELECT ON TABLE darwin2.properties TO d2viewer;
 
 
 --
--- TOC entry 6037 (class 0 OID 0)
--- Dependencies: 267
+-- TOC entry 6060 (class 0 OID 0)
+-- Dependencies: 277
 -- Name: TABLE identifications; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33522,8 +34919,8 @@ GRANT SELECT ON TABLE darwin2.identifications TO d2viewer;
 
 
 --
--- TOC entry 6051 (class 0 OID 0)
--- Dependencies: 276
+-- TOC entry 6074 (class 0 OID 0)
+-- Dependencies: 286
 -- Name: TABLE gtu; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33534,8 +34931,8 @@ GRANT SELECT ON TABLE darwin2.gtu TO d2viewer;
 
 
 --
--- TOC entry 6056 (class 0 OID 0)
--- Dependencies: 417
+-- TOC entry 6079 (class 0 OID 0)
+-- Dependencies: 427
 -- Name: TABLE temporal_information; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33545,8 +34942,8 @@ GRANT ALL ON TABLE darwin2.temporal_information TO darwin2;
 
 
 --
--- TOC entry 6065 (class 0 OID 0)
--- Dependencies: 270
+-- TOC entry 6088 (class 0 OID 0)
+-- Dependencies: 280
 -- Name: TABLE expeditions; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33557,8 +34954,8 @@ GRANT SELECT ON TABLE darwin2.expeditions TO d2viewer;
 
 
 --
--- TOC entry 6074 (class 0 OID 0)
--- Dependencies: 272
+-- TOC entry 6097 (class 0 OID 0)
+-- Dependencies: 282
 -- Name: TABLE ext_links; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33569,8 +34966,8 @@ GRANT SELECT ON TABLE darwin2.ext_links TO d2viewer;
 
 
 --
--- TOC entry 6079 (class 0 OID 0)
--- Dependencies: 274
+-- TOC entry 6102 (class 0 OID 0)
+-- Dependencies: 284
 -- Name: TABLE flat_dict; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33581,8 +34978,8 @@ GRANT SELECT,INSERT ON TABLE darwin2.flat_dict TO d2viewer;
 
 
 --
--- TOC entry 6085 (class 0 OID 0)
--- Dependencies: 281
+-- TOC entry 6108 (class 0 OID 0)
+-- Dependencies: 291
 -- Name: TABLE igs; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33593,8 +34990,8 @@ GRANT SELECT ON TABLE darwin2.igs TO d2viewer;
 
 
 --
--- TOC entry 6097 (class 0 OID 0)
--- Dependencies: 284
+-- TOC entry 6120 (class 0 OID 0)
+-- Dependencies: 294
 -- Name: SEQUENCE informative_workflow_id_seq; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33605,8 +35002,8 @@ GRANT SELECT,USAGE ON SEQUENCE darwin2.informative_workflow_id_seq TO d2viewer;
 
 
 --
--- TOC entry 6107 (class 0 OID 0)
--- Dependencies: 285
+-- TOC entry 6130 (class 0 OID 0)
+-- Dependencies: 295
 -- Name: TABLE informative_workflow; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33617,8 +35014,8 @@ GRANT SELECT,INSERT,UPDATE ON TABLE darwin2.informative_workflow TO d2viewer;
 
 
 --
--- TOC entry 6114 (class 0 OID 0)
--- Dependencies: 287
+-- TOC entry 6137 (class 0 OID 0)
+-- Dependencies: 297
 -- Name: TABLE insurances; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33629,8 +35026,8 @@ GRANT SELECT ON TABLE darwin2.insurances TO d2viewer;
 
 
 --
--- TOC entry 6123 (class 0 OID 0)
--- Dependencies: 289
+-- TOC entry 6146 (class 0 OID 0)
+-- Dependencies: 299
 -- Name: TABLE lithology; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33641,8 +35038,8 @@ GRANT SELECT ON TABLE darwin2.lithology TO d2viewer;
 
 
 --
--- TOC entry 6132 (class 0 OID 0)
--- Dependencies: 291
+-- TOC entry 6155 (class 0 OID 0)
+-- Dependencies: 301
 -- Name: TABLE lithostratigraphy; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33653,8 +35050,8 @@ GRANT SELECT ON TABLE darwin2.lithostratigraphy TO d2viewer;
 
 
 --
--- TOC entry 6138 (class 0 OID 0)
--- Dependencies: 292
+-- TOC entry 6161 (class 0 OID 0)
+-- Dependencies: 302
 -- Name: TABLE loan_history; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33666,8 +35063,8 @@ GRANT SELECT ON TABLE darwin2.loan_history TO d2viewer;
 
 
 --
--- TOC entry 6140 (class 0 OID 0)
--- Dependencies: 293
+-- TOC entry 6163 (class 0 OID 0)
+-- Dependencies: 303
 -- Name: SEQUENCE loan_history_id_seq; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33678,8 +35075,8 @@ GRANT USAGE ON SEQUENCE darwin2.loan_history_id_seq TO cebmpad;
 
 
 --
--- TOC entry 6141 (class 0 OID 0)
--- Dependencies: 294
+-- TOC entry 6164 (class 0 OID 0)
+-- Dependencies: 304
 -- Name: SEQUENCE loan_items_id_seq; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33690,8 +35087,8 @@ GRANT USAGE ON SEQUENCE darwin2.loan_items_id_seq TO cebmpad;
 
 
 --
--- TOC entry 6150 (class 0 OID 0)
--- Dependencies: 295
+-- TOC entry 6173 (class 0 OID 0)
+-- Dependencies: 305
 -- Name: TABLE loan_items; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33703,8 +35100,8 @@ GRANT SELECT ON TABLE darwin2.loan_items TO d2viewer;
 
 
 --
--- TOC entry 6151 (class 0 OID 0)
--- Dependencies: 296
+-- TOC entry 6174 (class 0 OID 0)
+-- Dependencies: 306
 -- Name: SEQUENCE loan_rights_id_seq; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33715,8 +35112,8 @@ GRANT USAGE ON SEQUENCE darwin2.loan_rights_id_seq TO cebmpad;
 
 
 --
--- TOC entry 6157 (class 0 OID 0)
--- Dependencies: 297
+-- TOC entry 6180 (class 0 OID 0)
+-- Dependencies: 307
 -- Name: TABLE loan_rights; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33728,8 +35125,8 @@ GRANT SELECT ON TABLE darwin2.loan_rights TO d2viewer;
 
 
 --
--- TOC entry 6158 (class 0 OID 0)
--- Dependencies: 298
+-- TOC entry 6181 (class 0 OID 0)
+-- Dependencies: 308
 -- Name: SEQUENCE loan_status_id_seq; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33740,8 +35137,8 @@ GRANT USAGE ON SEQUENCE darwin2.loan_status_id_seq TO cebmpad;
 
 
 --
--- TOC entry 6167 (class 0 OID 0)
--- Dependencies: 299
+-- TOC entry 6190 (class 0 OID 0)
+-- Dependencies: 309
 -- Name: TABLE loan_status; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33753,8 +35150,8 @@ GRANT SELECT ON TABLE darwin2.loan_status TO d2viewer;
 
 
 --
--- TOC entry 6168 (class 0 OID 0)
--- Dependencies: 300
+-- TOC entry 6191 (class 0 OID 0)
+-- Dependencies: 310
 -- Name: SEQUENCE loans_id_seq; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33765,8 +35162,8 @@ GRANT USAGE ON SEQUENCE darwin2.loans_id_seq TO cebmpad;
 
 
 --
--- TOC entry 6176 (class 0 OID 0)
--- Dependencies: 301
+-- TOC entry 6199 (class 0 OID 0)
+-- Dependencies: 311
 -- Name: TABLE loans; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33778,8 +35175,8 @@ GRANT SELECT ON TABLE darwin2.loans TO d2viewer;
 
 
 --
--- TOC entry 6190 (class 0 OID 0)
--- Dependencies: 303
+-- TOC entry 6213 (class 0 OID 0)
+-- Dependencies: 313
 -- Name: TABLE mineralogy; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33790,8 +35187,8 @@ GRANT SELECT ON TABLE darwin2.mineralogy TO d2viewer;
 
 
 --
--- TOC entry 6191 (class 0 OID 0)
--- Dependencies: 304
+-- TOC entry 6214 (class 0 OID 0)
+-- Dependencies: 314
 -- Name: SEQUENCE multimedia_id_seq; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33802,8 +35199,8 @@ GRANT USAGE ON SEQUENCE darwin2.multimedia_id_seq TO cebmpad;
 
 
 --
--- TOC entry 6209 (class 0 OID 0)
--- Dependencies: 305
+-- TOC entry 6232 (class 0 OID 0)
+-- Dependencies: 315
 -- Name: TABLE multimedia; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33815,8 +35212,8 @@ GRANT SELECT ON TABLE darwin2.multimedia TO d2viewer;
 
 
 --
--- TOC entry 6212 (class 0 OID 0)
--- Dependencies: 306
+-- TOC entry 6235 (class 0 OID 0)
+-- Dependencies: 316
 -- Name: TABLE multimedia_todelete; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33827,8 +35224,8 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE darwin2.multimedia_todelete TO cebmpa
 
 
 --
--- TOC entry 6214 (class 0 OID 0)
--- Dependencies: 307
+-- TOC entry 6237 (class 0 OID 0)
+-- Dependencies: 317
 -- Name: SEQUENCE multimedia_todelete_id_seq; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33839,8 +35236,8 @@ GRANT USAGE ON SEQUENCE darwin2.multimedia_todelete_id_seq TO cebmpad;
 
 
 --
--- TOC entry 6228 (class 0 OID 0)
--- Dependencies: 427
+-- TOC entry 6251 (class 0 OID 0)
+-- Dependencies: 437
 -- Name: TABLE tag_authority; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33850,8 +35247,8 @@ GRANT ALL ON TABLE darwin2.tag_authority TO darwin2;
 
 
 --
--- TOC entry 6234 (class 0 OID 0)
--- Dependencies: 423
+-- TOC entry 6257 (class 0 OID 0)
+-- Dependencies: 433
 -- Name: TABLE tag_group_distinct; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33861,8 +35258,8 @@ GRANT ALL ON TABLE darwin2.tag_group_distinct TO darwin2;
 
 
 --
--- TOC entry 6245 (class 0 OID 0)
--- Dependencies: 366
+-- TOC entry 6268 (class 0 OID 0)
+-- Dependencies: 376
 -- Name: TABLE tag_groups; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33873,8 +35270,8 @@ GRANT SELECT ON TABLE darwin2.tag_groups TO d2viewer;
 
 
 --
--- TOC entry 6250 (class 0 OID 0)
--- Dependencies: 428
+-- TOC entry 6273 (class 0 OID 0)
+-- Dependencies: 438
 -- Name: TABLE tag_tag_authority; Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -33885,8 +35282,8 @@ GRANT ALL ON TABLE darwin2.tag_tag_authority TO darwin2;
 
 
 --
--- TOC entry 6251 (class 0 OID 0)
--- Dependencies: 429
+-- TOC entry 6274 (class 0 OID 0)
+-- Dependencies: 439
 -- Name: TABLE mv_tag_to_country; Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -33897,8 +35294,8 @@ GRANT ALL ON TABLE darwin2.mv_tag_to_country TO darwin2;
 
 
 --
--- TOC entry 6297 (class 0 OID 0)
--- Dependencies: 341
+-- TOC entry 6320 (class 0 OID 0)
+-- Dependencies: 351
 -- Name: TABLE specimens; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33910,8 +35307,8 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE darwin2.specimens TO cebmpad;
 
 
 --
--- TOC entry 6311 (class 0 OID 0)
--- Dependencies: 314
+-- TOC entry 6334 (class 0 OID 0)
+-- Dependencies: 324
 -- Name: TABLE template_people; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33922,8 +35319,8 @@ GRANT SELECT ON TABLE darwin2.template_people TO d2viewer;
 
 
 --
--- TOC entry 6315 (class 0 OID 0)
--- Dependencies: 318
+-- TOC entry 6338 (class 0 OID 0)
+-- Dependencies: 328
 -- Name: TABLE template_people_users_comm_common; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33934,8 +35331,8 @@ GRANT SELECT ON TABLE darwin2.template_people_users_comm_common TO d2viewer;
 
 
 --
--- TOC entry 6316 (class 0 OID 0)
--- Dependencies: 377
+-- TOC entry 6339 (class 0 OID 0)
+-- Dependencies: 387
 -- Name: SEQUENCE users_id_seq; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33946,8 +35343,8 @@ GRANT USAGE ON SEQUENCE darwin2.users_id_seq TO d2viewer;
 
 
 --
--- TOC entry 6334 (class 0 OID 0)
--- Dependencies: 378
+-- TOC entry 6357 (class 0 OID 0)
+-- Dependencies: 388
 -- Name: TABLE users; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33958,8 +35355,8 @@ GRANT SELECT,INSERT ON TABLE darwin2.users TO d2viewer;
 
 
 --
--- TOC entry 6335 (class 0 OID 0)
--- Dependencies: 381
+-- TOC entry 6358 (class 0 OID 0)
+-- Dependencies: 391
 -- Name: SEQUENCE users_comm_id_seq; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33970,8 +35367,8 @@ GRANT USAGE ON SEQUENCE darwin2.users_comm_id_seq TO d2viewer;
 
 
 --
--- TOC entry 6342 (class 0 OID 0)
--- Dependencies: 382
+-- TOC entry 6365 (class 0 OID 0)
+-- Dependencies: 392
 -- Name: TABLE users_comm; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -33982,8 +35379,8 @@ GRANT SELECT,INSERT ON TABLE darwin2.users_comm TO d2viewer;
 
 
 --
--- TOC entry 6343 (class 0 OID 0)
--- Dependencies: 431
+-- TOC entry 6366 (class 0 OID 0)
+-- Dependencies: 441
 -- Name: TABLE mv_eml; Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -33994,8 +35391,8 @@ GRANT ALL ON TABLE darwin2.mv_eml TO darwin2;
 
 
 --
--- TOC entry 6344 (class 0 OID 0)
--- Dependencies: 432
+-- TOC entry 6367 (class 0 OID 0)
+-- Dependencies: 442
 -- Name: TABLE mv_eml_marine; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34005,8 +35402,8 @@ GRANT ALL ON TABLE darwin2.mv_eml_marine TO darwin2;
 
 
 --
--- TOC entry 6345 (class 0 OID 0)
--- Dependencies: 433
+-- TOC entry 6368 (class 0 OID 0)
+-- Dependencies: 443
 -- Name: TABLE mv_spatial; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34016,8 +35413,8 @@ GRANT ALL ON TABLE darwin2.mv_spatial TO darwin2;
 
 
 --
--- TOC entry 6346 (class 0 OID 0)
--- Dependencies: 430
+-- TOC entry 6369 (class 0 OID 0)
+-- Dependencies: 440
 -- Name: TABLE mv_tag_to_locations; Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -34028,8 +35425,8 @@ GRANT ALL ON TABLE darwin2.mv_tag_to_locations TO darwin2;
 
 
 --
--- TOC entry 6355 (class 0 OID 0)
--- Dependencies: 309
+-- TOC entry 6378 (class 0 OID 0)
+-- Dependencies: 319
 -- Name: TABLE my_saved_searches; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34040,8 +35437,8 @@ GRANT SELECT ON TABLE darwin2.my_saved_searches TO d2viewer;
 
 
 --
--- TOC entry 6356 (class 0 OID 0)
--- Dependencies: 310
+-- TOC entry 6379 (class 0 OID 0)
+-- Dependencies: 320
 -- Name: SEQUENCE my_widgets_id_seq; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34052,8 +35449,8 @@ GRANT USAGE ON SEQUENCE darwin2.my_widgets_id_seq TO d2viewer;
 
 
 --
--- TOC entry 6372 (class 0 OID 0)
--- Dependencies: 311
+-- TOC entry 6395 (class 0 OID 0)
+-- Dependencies: 321
 -- Name: TABLE my_widgets; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34064,8 +35461,8 @@ GRANT SELECT,INSERT ON TABLE darwin2.my_widgets TO d2viewer;
 
 
 --
--- TOC entry 6397 (class 0 OID 0)
--- Dependencies: 312
+-- TOC entry 6420 (class 0 OID 0)
+-- Dependencies: 322
 -- Name: TABLE old_multimedia; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34076,8 +35473,8 @@ GRANT SELECT ON TABLE darwin2.old_multimedia TO d2viewer;
 
 
 --
--- TOC entry 6418 (class 0 OID 0)
--- Dependencies: 315
+-- TOC entry 6441 (class 0 OID 0)
+-- Dependencies: 325
 -- Name: TABLE people; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34088,8 +35485,8 @@ GRANT SELECT ON TABLE darwin2.people TO d2viewer;
 
 
 --
--- TOC entry 6426 (class 0 OID 0)
--- Dependencies: 317
+-- TOC entry 6449 (class 0 OID 0)
+-- Dependencies: 327
 -- Name: TABLE template_people_users_addr_common; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34100,8 +35497,8 @@ GRANT SELECT ON TABLE darwin2.template_people_users_addr_common TO d2viewer;
 
 
 --
--- TOC entry 6438 (class 0 OID 0)
--- Dependencies: 319
+-- TOC entry 6461 (class 0 OID 0)
+-- Dependencies: 329
 -- Name: TABLE people_addresses; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34112,8 +35509,8 @@ GRANT SELECT ON TABLE darwin2.people_addresses TO d2viewer;
 
 
 --
--- TOC entry 6445 (class 0 OID 0)
--- Dependencies: 321
+-- TOC entry 6468 (class 0 OID 0)
+-- Dependencies: 331
 -- Name: TABLE people_comm; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34124,8 +35521,8 @@ GRANT SELECT ON TABLE darwin2.people_comm TO d2viewer;
 
 
 --
--- TOC entry 6451 (class 0 OID 0)
--- Dependencies: 323
+-- TOC entry 6474 (class 0 OID 0)
+-- Dependencies: 333
 -- Name: TABLE people_languages; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34136,8 +35533,8 @@ GRANT SELECT ON TABLE darwin2.people_languages TO d2viewer;
 
 
 --
--- TOC entry 6462 (class 0 OID 0)
--- Dependencies: 325
+-- TOC entry 6485 (class 0 OID 0)
+-- Dependencies: 335
 -- Name: TABLE people_relationships; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34148,8 +35545,8 @@ GRANT SELECT ON TABLE darwin2.people_relationships TO d2viewer;
 
 
 --
--- TOC entry 6466 (class 0 OID 0)
--- Dependencies: 326
+-- TOC entry 6489 (class 0 OID 0)
+-- Dependencies: 336
 -- Name: TABLE possible_upper_levels; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34160,8 +35557,8 @@ GRANT SELECT ON TABLE darwin2.possible_upper_levels TO d2viewer;
 
 
 --
--- TOC entry 6471 (class 0 OID 0)
--- Dependencies: 329
+-- TOC entry 6494 (class 0 OID 0)
+-- Dependencies: 339
 -- Name: TABLE preferences; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34172,8 +35569,8 @@ GRANT SELECT ON TABLE darwin2.preferences TO d2viewer;
 
 
 --
--- TOC entry 6473 (class 0 OID 0)
--- Dependencies: 332
+-- TOC entry 6496 (class 0 OID 0)
+-- Dependencies: 342
 -- Name: SEQUENCE properties_id_seq; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34185,8 +35582,8 @@ GRANT USAGE ON SEQUENCE darwin2.properties_id_seq TO d2viewer;
 
 
 --
--- TOC entry 6482 (class 0 OID 0)
--- Dependencies: 335
+-- TOC entry 6505 (class 0 OID 0)
+-- Dependencies: 345
 -- Name: TABLE reports; Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -34197,8 +35594,8 @@ GRANT ALL ON TABLE darwin2.reports TO darwin2;
 
 
 --
--- TOC entry 6484 (class 0 OID 0)
--- Dependencies: 336
+-- TOC entry 6507 (class 0 OID 0)
+-- Dependencies: 346
 -- Name: SEQUENCE reports_id_seq; Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -34209,8 +35606,8 @@ GRANT ALL ON SEQUENCE darwin2.reports_id_seq TO darwin2;
 
 
 --
--- TOC entry 6489 (class 0 OID 0)
--- Dependencies: 338
+-- TOC entry 6512 (class 0 OID 0)
+-- Dependencies: 348
 -- Name: TABLE specimen_collecting_methods; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34221,8 +35618,8 @@ GRANT SELECT ON TABLE darwin2.specimen_collecting_methods TO d2viewer;
 
 
 --
--- TOC entry 6494 (class 0 OID 0)
--- Dependencies: 340
+-- TOC entry 6517 (class 0 OID 0)
+-- Dependencies: 350
 -- Name: TABLE specimen_collecting_tools; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34233,8 +35630,8 @@ GRANT SELECT ON TABLE darwin2.specimen_collecting_tools TO d2viewer;
 
 
 --
--- TOC entry 6496 (class 0 OID 0)
--- Dependencies: 344
+-- TOC entry 6519 (class 0 OID 0)
+-- Dependencies: 354
 -- Name: SEQUENCE specimens_id_seq; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34245,8 +35642,8 @@ GRANT SELECT,USAGE ON SEQUENCE darwin2.specimens_id_seq TO cebmpad;
 
 
 --
--- TOC entry 6507 (class 0 OID 0)
--- Dependencies: 346
+-- TOC entry 6530 (class 0 OID 0)
+-- Dependencies: 356
 -- Name: TABLE specimens_relationships; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34258,8 +35655,8 @@ GRANT SELECT ON TABLE darwin2.specimens_relationships TO d2viewer;
 
 
 --
--- TOC entry 6509 (class 0 OID 0)
--- Dependencies: 347
+-- TOC entry 6532 (class 0 OID 0)
+-- Dependencies: 357
 -- Name: SEQUENCE specimens_relationships_id_seq; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34271,8 +35668,8 @@ GRANT USAGE ON SEQUENCE darwin2.specimens_relationships_id_seq TO d2viewer;
 
 
 --
--- TOC entry 6518 (class 0 OID 0)
--- Dependencies: 348
+-- TOC entry 6541 (class 0 OID 0)
+-- Dependencies: 358
 -- Name: TABLE staging_catalogue; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34282,8 +35679,8 @@ GRANT ALL ON TABLE darwin2.staging_catalogue TO darwin2;
 
 
 --
--- TOC entry 6520 (class 0 OID 0)
--- Dependencies: 349
+-- TOC entry 6543 (class 0 OID 0)
+-- Dependencies: 359
 -- Name: SEQUENCE staging_catalogue_id_seq; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34293,8 +35690,8 @@ GRANT ALL ON SEQUENCE darwin2.staging_catalogue_id_seq TO darwin2;
 
 
 --
--- TOC entry 6525 (class 0 OID 0)
--- Dependencies: 350
+-- TOC entry 6548 (class 0 OID 0)
+-- Dependencies: 360
 -- Name: TABLE staging_collecting_methods; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34305,8 +35702,8 @@ GRANT SELECT ON TABLE darwin2.staging_collecting_methods TO d2viewer;
 
 
 --
--- TOC entry 6534 (class 0 OID 0)
--- Dependencies: 355
+-- TOC entry 6557 (class 0 OID 0)
+-- Dependencies: 365
 -- Name: TABLE staging_gtu_tag_groups; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34317,8 +35714,8 @@ GRANT SELECT ON TABLE darwin2.staging_gtu_tag_groups TO d2viewer;
 
 
 --
--- TOC entry 6536 (class 0 OID 0)
--- Dependencies: 357
+-- TOC entry 6559 (class 0 OID 0)
+-- Dependencies: 367
 -- Name: TABLE staging_info; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34329,8 +35726,8 @@ GRANT SELECT ON TABLE darwin2.staging_info TO d2viewer;
 
 
 --
--- TOC entry 6555 (class 0 OID 0)
--- Dependencies: 361
+-- TOC entry 6578 (class 0 OID 0)
+-- Dependencies: 371
 -- Name: TABLE staging_relationship; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34341,8 +35738,8 @@ GRANT SELECT ON TABLE darwin2.staging_relationship TO d2viewer;
 
 
 --
--- TOC entry 6564 (class 0 OID 0)
--- Dependencies: 426
+-- TOC entry 6587 (class 0 OID 0)
+-- Dependencies: 436
 -- Name: SEQUENCE tag_authority_id_seq; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34352,8 +35749,8 @@ GRANT ALL ON SEQUENCE darwin2.tag_authority_id_seq TO darwin2;
 
 
 --
--- TOC entry 6566 (class 0 OID 0)
--- Dependencies: 422
+-- TOC entry 6589 (class 0 OID 0)
+-- Dependencies: 432
 -- Name: SEQUENCE tag_group_distinct_id_seq; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34363,8 +35760,8 @@ GRANT ALL ON SEQUENCE darwin2.tag_group_distinct_id_seq TO darwin2;
 
 
 --
--- TOC entry 6574 (class 0 OID 0)
--- Dependencies: 367
+-- TOC entry 6597 (class 0 OID 0)
+-- Dependencies: 377
 -- Name: TABLE tags; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34375,8 +35772,8 @@ GRANT SELECT ON TABLE darwin2.tags TO d2viewer;
 
 
 --
--- TOC entry 6585 (class 0 OID 0)
--- Dependencies: 370
+-- TOC entry 6608 (class 0 OID 0)
+-- Dependencies: 380
 -- Name: TABLE taxonomy; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34387,8 +35784,8 @@ GRANT SELECT ON TABLE darwin2.taxonomy TO d2viewer;
 
 
 --
--- TOC entry 6586 (class 0 OID 0)
--- Dependencies: 435
+-- TOC entry 6609 (class 0 OID 0)
+-- Dependencies: 445
 -- Name: TABLE taxonomy_authority; Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -34399,8 +35796,8 @@ GRANT ALL ON TABLE darwin2.taxonomy_authority TO darwin2;
 
 
 --
--- TOC entry 6588 (class 0 OID 0)
--- Dependencies: 434
+-- TOC entry 6611 (class 0 OID 0)
+-- Dependencies: 444
 -- Name: SEQUENCE taxonomy_authority_id_seq; Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -34411,8 +35808,8 @@ GRANT ALL ON SEQUENCE darwin2.taxonomy_authority_id_seq TO darwin2;
 
 
 --
--- TOC entry 6591 (class 0 OID 0)
--- Dependencies: 416
+-- TOC entry 6614 (class 0 OID 0)
+-- Dependencies: 426
 -- Name: SEQUENCE temporal_information_id_seq; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34422,8 +35819,8 @@ GRANT ALL ON SEQUENCE darwin2.temporal_information_id_seq TO darwin2;
 
 
 --
--- TOC entry 6592 (class 0 OID 0)
--- Dependencies: 374
+-- TOC entry 6615 (class 0 OID 0)
+-- Dependencies: 384
 -- Name: TABLE tv_reporting_count_all_specimens_by_collection_year_ig; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34434,8 +35831,8 @@ GRANT SELECT ON TABLE darwin2.tv_reporting_count_all_specimens_by_collection_yea
 
 
 --
--- TOC entry 6593 (class 0 OID 0)
--- Dependencies: 375
+-- TOC entry 6616 (class 0 OID 0)
+-- Dependencies: 385
 -- Name: TABLE tv_reporting_count_all_specimens_type_by_collection_ref_year_ig; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34446,8 +35843,8 @@ GRANT SELECT ON TABLE darwin2.tv_reporting_count_all_specimens_type_by_collectio
 
 
 --
--- TOC entry 6594 (class 0 OID 0)
--- Dependencies: 376
+-- TOC entry 6617 (class 0 OID 0)
+-- Dependencies: 386
 -- Name: TABLE tv_reporting_taxa_in_specimen_per_rank_collection_ref_year_ig; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34458,8 +35855,8 @@ GRANT SELECT ON TABLE darwin2.tv_reporting_taxa_in_specimen_per_rank_collection_
 
 
 --
--- TOC entry 6595 (class 0 OID 0)
--- Dependencies: 379
+-- TOC entry 6618 (class 0 OID 0)
+-- Dependencies: 389
 -- Name: SEQUENCE users_addresses_id_seq; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34470,8 +35867,8 @@ GRANT USAGE ON SEQUENCE darwin2.users_addresses_id_seq TO d2viewer;
 
 
 --
--- TOC entry 6609 (class 0 OID 0)
--- Dependencies: 380
+-- TOC entry 6632 (class 0 OID 0)
+-- Dependencies: 390
 -- Name: TABLE users_addresses; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34482,8 +35879,8 @@ GRANT SELECT,INSERT ON TABLE darwin2.users_addresses TO d2viewer;
 
 
 --
--- TOC entry 6610 (class 0 OID 0)
--- Dependencies: 384
+-- TOC entry 6633 (class 0 OID 0)
+-- Dependencies: 394
 -- Name: SEQUENCE users_login_info_id_seq; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34494,8 +35891,8 @@ GRANT USAGE ON SEQUENCE darwin2.users_login_info_id_seq TO d2viewer;
 
 
 --
--- TOC entry 6618 (class 0 OID 0)
--- Dependencies: 385
+-- TOC entry 6641 (class 0 OID 0)
+-- Dependencies: 395
 -- Name: TABLE users_login_infos; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34506,8 +35903,8 @@ GRANT SELECT,INSERT ON TABLE darwin2.users_login_infos TO d2viewer;
 
 
 --
--- TOC entry 6626 (class 0 OID 0)
--- Dependencies: 387
+-- TOC entry 6649 (class 0 OID 0)
+-- Dependencies: 397
 -- Name: TABLE users_tracking; Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -34518,8 +35915,8 @@ GRANT SELECT ON TABLE darwin2.users_tracking TO d2viewer;
 
 
 --
--- TOC entry 6634 (class 0 OID 0)
--- Dependencies: 390
+-- TOC entry 6657 (class 0 OID 0)
+-- Dependencies: 400
 -- Name: TABLE vernacular_names; Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -34532,8 +35929,8 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE darwin2.vernacular_names TO darwin2;
 
 
 --
--- TOC entry 6636 (class 0 OID 0)
--- Dependencies: 409
+-- TOC entry 6659 (class 0 OID 0)
+-- Dependencies: 419
 -- Name: SEQUENCE vernacular_names_id_seq; Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -34545,8 +35942,8 @@ GRANT SELECT,USAGE ON SEQUENCE darwin2.vernacular_names_id_seq TO darwin2;
 
 
 --
--- TOC entry 6637 (class 0 OID 0)
--- Dependencies: 415
+-- TOC entry 6660 (class 0 OID 0)
+-- Dependencies: 425
 -- Name: TABLE labeling; Type: ACL; Schema: public; Owner: darwin2
 --
 
@@ -34557,7 +35954,7 @@ GRANT SELECT ON TABLE public.labeling TO d2viewer;
 
 
 --
--- TOC entry 4166 (class 826 OID 5303521)
+-- TOC entry 4186 (class 826 OID 5303521)
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -34567,7 +35964,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA darwin2 GRANT ALL ON SEQUEN
 
 
 --
--- TOC entry 4167 (class 826 OID 5303522)
+-- TOC entry 4187 (class 826 OID 5303522)
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -34577,7 +35974,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA darwin2 GRANT ALL ON FUNCTI
 
 
 --
--- TOC entry 4168 (class 826 OID 5303523)
+-- TOC entry 4188 (class 826 OID 5303523)
 -- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -34586,7 +35983,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA darwin2 REVOKE ALL ON TABLE
 ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA darwin2 GRANT ALL ON TABLES  TO darwin2;
 
 
--- Completed on 2019-02-20 16:01:14
+-- Completed on 2019-03-07 17:52:16
 
 --
 -- PostgreSQL database dump complete
