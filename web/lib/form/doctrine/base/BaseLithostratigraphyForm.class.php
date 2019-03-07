@@ -24,6 +24,7 @@ abstract class BaseLithostratigraphyForm extends BaseFormDoctrine
       'color'        => new sfWidgetFormTextarea(),
       'path'         => new sfWidgetFormTextarea(),
       'parent_ref'   => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'add_empty' => true)),
+      'import_ref'   => new sfWidgetFormInputText(),
     ));
 
     $this->setValidators(array(
@@ -36,6 +37,7 @@ abstract class BaseLithostratigraphyForm extends BaseFormDoctrine
       'color'        => new sfValidatorString(array('required' => false)),
       'path'         => new sfValidatorString(array('required' => false)),
       'parent_ref'   => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'required' => false)),
+      'import_ref'   => new sfValidatorInteger(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('lithostratigraphy[%s]');

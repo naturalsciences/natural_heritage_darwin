@@ -170,6 +170,7 @@ if(array_key_exists("menu", $_SESSION))
                     <ul class="submenu lvl_2">
                         <li><?php echo link_to(__('Specimens'),'import/index');?></li>
                         <li><?php echo link_to(__('Taxonomy'),'import/indexTaxon');?></li>
+                        <li><?php echo link_to(__('Lithostratigraphy'),'import/indexLithostratigraphy');?></li>
 						<li><?php echo link_to(__('Localities'),'import/indexLocalities');?></li>
                     </ul>
                 </li>

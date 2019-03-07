@@ -11,6 +11,11 @@
 		echo __('Locality') ;
 		
 	}
+    elseif($type=='lithostratigraphy')
+	{
+		echo __('Lithostratigraphy') ;
+		
+	}
 	elseif($type=='taxon')
 	{	
 		echo __('Taxonomy') ;

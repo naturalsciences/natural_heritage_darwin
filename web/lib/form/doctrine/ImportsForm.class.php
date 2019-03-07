@@ -42,6 +42,15 @@ class ImportsForm extends BaseImportsForm
         ));
       $this->validatorSchema['taxonomy_kingdom'] = new sfValidatorInteger(array('required'=>false));
     }
+    //ftheeten 2019 03 04
+    elseif($this->options['format'] == 'lithostratigraphy')
+    {
+      $this->useFields(array('format', 'exclude_invalid_entries')) ;
+      $category = array('lithostratigraphy'=>$this->getI18N()->__('Lithostratigraphy')) ;
+
+      
+     
+    }
 	elseif($this->options['format'] == 'locality')
 	{
 		//ftheeten 2018 07 15
@@ -116,7 +125,7 @@ class ImportsForm extends BaseImportsForm
     }
     
         //ftheeten 2018 12 14 collection also optional for taxon
-    if($this->options['format'] == 'locality' || $this->options['format'] == 'taxon' )
+    if($this->options['format'] == 'locality' || $this->options['format'] == 'taxon' || $this->options['format'] == 'lithostratigraphy'  )
       {
          $this->validatorSchema['collection_ref'] = new sfValidatorInteger(array('required'=>false));
       }

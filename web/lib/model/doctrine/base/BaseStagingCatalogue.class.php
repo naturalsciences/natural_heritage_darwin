@@ -18,6 +18,8 @@
  * @property string $import_exception
  * @property string $staging_hierarchy
  * @property string $darwin_hierarchy
+ * @property integer $parent_ref_internal
+ * @property boolean $parent_updated
  * @property StagingCatalogue $Parent
  * @property Imports $Import
  * @property Doctrine_Collection $StagingCatalogue
@@ -35,6 +37,8 @@
  * @method string              getImportException()       Returns the current record's "import_exception" value
  * @method string              getStagingHierarchy()      Returns the current record's "staging_hierarchy" value
  * @method string              getDarwinHierarchy()       Returns the current record's "darwin_hierarchy" value
+ * @method integer             getParentRefInternal()     Returns the current record's "parent_ref_internal" value
+ * @method boolean             getParentUpdated()         Returns the current record's "parent_updated" value
  * @method StagingCatalogue    getParent()                Returns the current record's "Parent" value
  * @method Imports             getImport()                Returns the current record's "Import" value
  * @method Doctrine_Collection getStagingCatalogue()      Returns the current record's "StagingCatalogue" collection
@@ -51,6 +55,8 @@
  * @method StagingCatalogue    setImportException()       Sets the current record's "import_exception" value
  * @method StagingCatalogue    setStagingHierarchy()      Sets the current record's "staging_hierarchy" value
  * @method StagingCatalogue    setDarwinHierarchy()       Sets the current record's "darwin_hierarchy" value
+ * @method StagingCatalogue    setParentRefInternal()     Sets the current record's "parent_ref_internal" value
+ * @method StagingCatalogue    setParentUpdated()         Sets the current record's "parent_updated" value
  * @method StagingCatalogue    setParent()                Sets the current record's "Parent" value
  * @method StagingCatalogue    setImport()                Sets the current record's "Import" value
  * @method StagingCatalogue    setStagingCatalogue()      Sets the current record's "StagingCatalogue" collection
@@ -113,6 +119,12 @@ abstract class BaseStagingCatalogue extends DarwinModel
              ));
         $this->hasColumn('darwin_hierarchy', 'string', null, array(
              'type' => 'string',
+             ));
+        $this->hasColumn('parent_ref_internal', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('parent_updated', 'boolean', null, array(
+             'type' => 'boolean',
              ));
     }
 

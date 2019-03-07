@@ -28,6 +28,8 @@ abstract class BaseStagingCatalogueForm extends BaseFormDoctrine
       'import_exception'      => new sfWidgetFormTextarea(),
       'staging_hierarchy'     => new sfWidgetFormTextarea(),
       'darwin_hierarchy'      => new sfWidgetFormTextarea(),
+      'parent_ref_internal'   => new sfWidgetFormInputText(),
+      'parent_updated'        => new sfWidgetFormInputCheckbox(),
     ));
 
     $this->setValidators(array(
@@ -44,6 +46,8 @@ abstract class BaseStagingCatalogueForm extends BaseFormDoctrine
       'import_exception'      => new sfValidatorString(array('required' => false)),
       'staging_hierarchy'     => new sfValidatorString(array('required' => false)),
       'darwin_hierarchy'      => new sfValidatorString(array('required' => false)),
+      'parent_ref_internal'   => new sfValidatorInteger(array('required' => false)),
+      'parent_updated'        => new sfValidatorBoolean(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('staging_catalogue[%s]');

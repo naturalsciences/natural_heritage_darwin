@@ -153,6 +153,14 @@ class RMCATabToABCDXml
         $fields[] = "GeologicalAge";
         $fields[] = "GeologicalAge2";
         
+      //2019 03 05 lithostratigraphy
+        
+        $fields[] = "lithostratigraphyGroup";
+        $fields[] = "lithostratigraphyFormation";
+        $fields[] = "lithostratigraphyMember";
+        $fields[] = "lithostratigraphyBed";
+        $fields[] = "lithostratigraphyInformalName";
+        
         return $fields;
     }
     
@@ -903,6 +911,46 @@ class RMCATabToABCDXml
         }
     }
     
+    //ftheeten 2019 03 05
+    public function addLithostratigraphy($p_parentElement, $p_valueArray)
+    {
+        if (array_key_exists(strtolower("lithostratigraphyGroup"), $this->headers_inverted)||array_key_exists(strtolower("lithostratigraphyFormation"), $this->headers_inverted)||array_key_exists(strtolower("lithostratigraphyMember"), $this->headers_inverted )||array_key_exists(strtolower("lithostratigraphyBed"), $this->headers_inverted )||array_key_exists(strtolower("lithostratigraphyInformalName"), $this->headers_inverted )) 
+        {
+             $namespace_efg= "http://www.synthesys.info/ABCDEFG/1.0";
+            $extensionForPaleontology         = $this->testAndAppendTag($p_parentElement, null, "UnitExtension", null, null, true);
+            $paleoNode         = $this->testAndAppendTag($extensionForPaleontology, null, "efg:EarthScienceSpecimen", null, null, true, $namespace_efg);
+            $lithoGroupNode         = $this->testAndAppendTag($paleoNode, null,"efg:UnitStratigraphicDetermination", null, null, true, $namespace_efg); 
+            $lithoGroupNode2         = $this->testAndAppendTag($lithoGroupNode, null,"efg:LithostratigraphicAttributions", null, null, true, $namespace_efg);
+            $lithoGroupNode3         = $this->testAndAppendTag($lithoGroupNode2, null,"efg:LithostratigraphicAttribution", null, null, true, $namespace_efg);
+            if (array_key_exists(strtolower("lithostratigraphyGroup") , $this->headers_inverted))
+            {
+                $this->testAndAppendTag($lithoGroupNode3, "lithostratigraphyGroup", "efg:Group", $p_valueArray, null, false, $namespace_efg);
+            }
+            
+             if (array_key_exists(strtolower("lithostratigraphyFormation") , $this->headers_inverted))
+            {
+                $this->testAndAppendTag($lithoGroupNode3, "lithostratigraphyFormation", "efg:Formation", $p_valueArray, null, false, $namespace_efg);
+            }
+            
+            if (array_key_exists(strtolower("lithostratigraphyMember") , $this->headers_inverted))
+            {
+                $this->testAndAppendTag($lithoGroupNode3, "lithostratigraphyMember", "efg:Member", $p_valueArray, null, false, $namespace_efg);
+            }
+            
+            if (array_key_exists(strtolower("lithostratigraphyBed") , $this->headers_inverted))
+            {
+                $this->testAndAppendTag($lithoGroupNode3, "lithostratigraphyBed", "efg:Bed", $p_valueArray, null, false, $namespace_efg);
+            }
+            
+            if (array_key_exists(strtolower("lithostratigraphyInformalName") , $this->headers_inverted))
+            {
+                $this->testAndAppendTag($lithoGroupNode3, "lithostratigraphyInformalName", "efg:InformalLithostratigraphicName", $p_valueArray, null, false, $namespace_efg);
+            }
+            
+            
+        }
+    }
+    
     public function identifyHeader($p_handle)
     {
         
@@ -1047,6 +1095,7 @@ class RMCATabToABCDXml
         
         //2019 03 01
         $this->addPaleontology($unit, $p_row);
+        $this->addLithostratigraphy($unit, $p_row);
         
        //ftheeten 2018 10 31
        $xpath = new DOMXPath($dom);

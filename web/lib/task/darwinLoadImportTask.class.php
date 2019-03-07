@@ -61,8 +61,14 @@ EOF;
 				 //fwrite($myfile, "\n!!!!!!!!!!!!!!!!!GTU detected!!!!!!!!!!!!!!!!!!");
 				$import = new ImportGtuCSV() ;
 				$result = $import->parseFile($file,$id) ;
-                $count_line = "(select count(*) from staging where import_ref = $id )" ;
-                break;				
+                $count_line = "(select count(*) from staging_gtu where import_ref = $id )" ;
+                break;
+              //2019 03 05
+              case 'lithostratigraphy': 
+                $import = new RMCATabLithostratigraphy($id) ;
+				$result = $import->parseFile($file,$id) ;
+                $count_line = "(select count(*) from staging_catalogue where import_ref = $id )" ;
+                break;              
               case 'abcd':
               default:
                     /*$import_obj = Doctrine::getTable('Imports')->find($id);
