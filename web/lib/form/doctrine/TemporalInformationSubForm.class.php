@@ -22,7 +22,7 @@ class TemporalInformationSubForm extends BaseTemporalInformationForm
     $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')), intval(sfConfig::get('dw_yearRangeMin')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
     $dateText = array('year'=>'yyyy', 'month'=>'mm', 'day'=>'dd', 'hour'=>'hh', 'minute'=>'mm', 'second'=>'ss');
-    $minDate = new FuzzyDateTime(strval(min($yearsKeyVal).'/01/01'));
+    $minDate = new FuzzyDateTime(strval('0001/01/01'));
     $maxDate = new FuzzyDateTime(strval(max($yearsKeyVal).'/12/31'));
     $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
     $dateUpperBound = new FuzzyDateTime(sfConfig::get('dw_dateUpperBound'));
@@ -51,7 +51,7 @@ class TemporalInformationSubForm extends BaseTemporalInformationForm
       array('class' => 'to_date')
     );
 
-    $this->validatorSchema['from_date'] = new fuzzyDateValidator(array(
+    $this->validatorSchema['from_date'] = new fuzzyNullableDateValidator(array(
       'required' => false,
       'from_date' => true,
       'min' => $minDate,
@@ -62,7 +62,7 @@ class TemporalInformationSubForm extends BaseTemporalInformationForm
       array('invalid' => 'Date provided is not valid',)
     );
 
-    $this->validatorSchema['to_date'] = new fuzzyDateValidator(array(
+    $this->validatorSchema['to_date'] = new fuzzyNullableDateValidator(array(
       'required' => false,
       'from_date' => false,
       'min' => $minDate,

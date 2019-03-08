@@ -21,6 +21,7 @@ abstract class BaseLithostratigraphyFormFilter extends BaseFormFilterDoctrine
       'color'        => new sfWidgetFormFilterInput(),
       'path'         => new sfWidgetFormFilterInput(),
       'parent_ref'   => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'add_empty' => true)),
+      'import_ref'   => new sfWidgetFormFilterInput(),
     ));
 
     $this->setValidators(array(
@@ -32,6 +33,7 @@ abstract class BaseLithostratigraphyFormFilter extends BaseFormFilterDoctrine
       'color'        => new sfValidatorPass(array('required' => false)),
       'path'         => new sfValidatorPass(array('required' => false)),
       'parent_ref'   => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Parent'), 'column' => 'id')),
+      'import_ref'   => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
     ));
 
     $this->widgetSchema->setNameFormat('lithostratigraphy_filters[%s]');
@@ -60,6 +62,7 @@ abstract class BaseLithostratigraphyFormFilter extends BaseFormFilterDoctrine
       'color'        => 'Text',
       'path'         => 'Text',
       'parent_ref'   => 'ForeignKey',
+      'import_ref'   => 'Number',
     );
   }
 }

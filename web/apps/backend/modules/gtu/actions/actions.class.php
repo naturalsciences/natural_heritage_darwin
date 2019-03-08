@@ -163,7 +163,7 @@ class gtuActions extends DarwinActions
     $this->form = new GtuForm($gtu);
     $this->loadWidgets();
     //ftheeten 2018 11 29
-     $this->form->loadEmbedTemporalInformation();//loadEmbed('TemporalInformation');
+     //$this->form->loadEmbedTemporalInformation();//loadEmbed('TemporalInformation');
   }
 
   public function executeView(sfWebRequest $request)
@@ -175,16 +175,19 @@ class gtuActions extends DarwinActions
   
   public function executeUpdate(sfWebRequest $request)
   {
+  print("try update");
     $this->forward404Unless($request->isMethod(sfRequest::POST) || $request->isMethod(sfRequest::PUT));
     $this->forward404Unless($gtu = Doctrine::getTable('Gtu')->find($request->getParameter('id')), sprintf('Object gtu does not exist (%s).', $request->getParameter('id')));
     $this->no_right_col = Doctrine::getTable('Gtu')->testNoRightsCollections('gtu_ref',$request->getParameter('id'), $this->getUser()->getId());
     $this->form = new GtuForm($gtu);
-
+  print("try process");
     $this->processForm($request, $this->form, 'update');
     $this->no_right_col = Doctrine::getTable('Gtu')->testNoRightsCollections('gtu_ref',$request->getParameter('id'), $this->getUser()->getId());
 
     $this->loadWidgets();
     $this->setTemplate('edit');
+      print("end update");
+    
   }
 
   public function executeDelete(sfWebRequest $request)
@@ -217,11 +220,15 @@ class gtuActions extends DarwinActions
     {
       try
       {
+       print("valid");
         $item = $form->save();
+        print("redirect");
         $this->redirect('gtu/edit?id='.$item->getId());
+        
       }
       catch(Doctrine_Exception $ne)
       {
+      print("error");
         if($action == 'create') {
           //If Problem in saving embed forms set dirty state
           $form->getObject()->state('TDIRTY');
@@ -230,6 +237,10 @@ class gtuActions extends DarwinActions
         $error = new sfValidatorError(new savedValidator(),$e->getMessage());
         $form->getErrorSchema()->addError($error);
       }
+    }
+    else
+    {
+        print("invalid");
     }
   }
 
@@ -313,12 +324,12 @@ class gtuActions extends DarwinActions
     return $form;
   }
   //ftheeten 2018 11 29
-   public function executeAddTemporalInformation(sfWebRequest $request)
+  /* public function executeAddTemporalInformation(sfWebRequest $request)
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     $number = intval($request->getParameter('num'));
     $form = $this->getGtuForm($request);
     $form->addTemporalInformation($number, array());
     return $this->renderPartial('gtu_temporal_information',array('form' => $form['newGtuTemporalInformationForm'][$number], 'rownum'=>$number));
-  }
+  }*/
 }

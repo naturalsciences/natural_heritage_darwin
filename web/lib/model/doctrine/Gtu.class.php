@@ -123,14 +123,17 @@ class Gtu extends BaseGtu
   
   //ftheeten 2018 12 12
   public function getRelatedTemporalInformationMasked()
-  { return("GTU");
+  {
 	  $returned=Array();
-	  foreach(Doctrine::getTable('TemporalInformation')->findByGtuRef($this->getId()) as $key=>$item)
+	  
+      foreach(Doctrine::getTable('TemporalInformation')->getDistinctTemporalInformation($this->getId()) as $key=>$array)
       {
+            $item = new TemporalInformation();
+            $item->fromArray($array);
 		    if((int)$item->getFromDateMask()>0||(int)$item->getToDateMask()>0)
 			{
 				$tmp=Array();
-                //$tmp['id']=$item->getId();
+                $tmp['id']=$item->getId();
                 $tmp['from_raw']=$item->getFromDate();
 				$tmp['to_raw']=$item->getToDate();
 				$tmp["from"]=$item->getFromDateString();//getFromDateMasked(ESC_RAW);
@@ -157,14 +160,87 @@ class Gtu extends BaseGtu
 				$returned[]=$tmp;
 			}
 	  }
-      usort($returned, function($a, $b) {
-        return ($a['from_masked'].$a['to_masked']) - ($b['from_masked'].$b['to_masked']);
-        });
-	  $returned= array_unique($returned, SORT_REGULAR);
-	  
-	  
+    
 	  return $returned;
   }
+  
+  
+    //ftheeten 2018 12 12
+  public function getRelatedTemporalInformationMaskedList()
+  {
+	  $returned=Array();
+      $tmp=$this->getRelatedTemporalInformationMasked();
+      foreach($tmp as $date)
+      {
+        if($date["to_mask"]>0)
+        {
+            $returned[$date["id"]]="From : ".$date["from"]. " - To : " .$date["to"];
+        }
+        else
+        {
+            $returned[$date["id"]]="From : ".$date["from"];
+        }
+      }
+      
+      /*usort($returned, function($a, $b) {
+        return ($a - $b);
+        });*/
+      return $returned;
+  }
+  
+  
+  //2019 03 08
+  public function addNewTemporalInformation($fd_from, $fd_to=null)
+  {   
+    $temporalInformation=null;
+    $set=false;
+    if ($fd_from instanceof FuzzyDateTime)
+    {       
+      $temporalInformation= new TemporalInformation();
+      $temporalInformation->setGtuRef($this->getId());
+      $temporalInformation->setFromDate($fd_from->format('Y/m/d H:i:s'));
+      $temporalInformation->setFromDateMask($fd_from->getMask());
+      $set = True;
+    }
+    else
+    {
+     
+      $dateTime = new FuzzyDateTime($fd_from, 56, true,true);
+      if(is_array($fd_from))
+      {
+        $dateTime->setMask(FuzzyDateTime::getMaskFromDate($fd_from));
+      }
+      $temporalInformation= new TemporalInformation();      
+      $temporalInformation->setGtuRef($this->getId());
+      $temporalInformation->setFromDate($dateTime->format('Y/m/d H:i:s'));
+      $temporalInformation->setFromDateMask($dateTime->getMask());
+      $set = True;
+    }
+    if(isset($fd_from)&&isset($fd_to)&&isset($temporalInformation))
+    {
+        if ($fd_to instanceof FuzzyDateTime)
+        {          
+          $temporalInformation->setFromDate($fd_to->format('Y/m/d H:i:s'));
+          $temporalInformation->setFromDateMask($fd_to->getMask());
+          $set = True;
+        }
+        else
+        {
+          $dateTime = new FuzzyDateTime($fd_to, 56, false,true);
+          if(is_array($fd_from))
+            $dateTime->setMask(FuzzyDateTime::getMaskFromDate($fd_to));        
+          $temporalInformation->setToDate($dateTime->format('Y/m/d H:i:s'));
+          $temporalInformation->setToDateMask($dateTime->getMask());
+          $set = True;
+        }
+    }
+    if($set)
+    {
+        $temporalInformation->save();
+    }
+  }
+
+
   
   
   

@@ -18,6 +18,11 @@
 			$path='import/searchLocality';
 			
 		}
+        elseif($format=="lithostratigraphy")
+		{
+			$path='import/searchLithostratigraphy';
+			
+		}
 		print(form_tag($path, array('class'=>'search_form','id'=>'import_filter')));?>
   <div class="container">
     <table class="search" id="search">
@@ -49,6 +54,8 @@
       <div class="new_link"><a href="<?php echo url_for('import/upload?format=taxon') ?>"><?php echo __('Import Taxons');?></a>
 	<?php elseif($format == 'locality') : ?>    
       <div class="new_link"><a href="<?php echo url_for('import/upload?format=locality') ?>"><?php echo __('Import Localities');?></a>
+      <?php elseif($format == 'lithostratigraphy') : ?>    
+      <div class="new_link"><a href="<?php echo url_for('import/upload?format=lithostratigraphy') ?>"><?php echo __('Import Lithostratigraphy');?></a>
     <?php else : ?>
       <div class="new_link"><a href="<?php echo url_for('import/upload?format=abcd') ?>"><?php echo __('Import Specimens');?></a></div>
     <?php endif ; ?>
