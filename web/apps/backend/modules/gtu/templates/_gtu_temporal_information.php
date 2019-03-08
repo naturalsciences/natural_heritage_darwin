@@ -1,5 +1,5 @@
  <!--ftheeten 2018 11 29-->
-<div class="display_temporal_information_<?php echo $rownum;?>">
+<div style="<?php echo $visibility;?>" class="display_temporal_information_<?php echo $rownum;?>">
 <?php if($form->hasError()): ?>
 	<div><?php echo $form->renderError();?></div>
 

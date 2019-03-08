@@ -18,19 +18,22 @@
     </tr>
     <tr id="litho_precise_line">
       <td id="litho_relation"><?php echo $form['litho_relation'];?></td>
-      <td><?php echo $form['litho_item_ref'];?></td>
-      <td>
-        <ul id="litho_child_syn_included">
-          <li><?php echo $form['litho_child_syn_included']->renderLabel();?></li>
-          <li><?php echo $form['litho_child_syn_included'];?></li>
-        </ul>
-      </td>
+      <td><?php echo $form['litho_item_ref'];?></td>     
     </tr>
   </tbody>
 </table>
 
 <script type="text/javascript">
 $(document).ready(function () {
+
+  //ftheeten 20190307
+  $('#litho_precise_line :checkbox').each(
+    function()
+    {
+           $(this).prop('checked', true);
+    }
+    );
+
   $('#litho_precise').click(function() {
     $('#litho_precise').attr('disabled','disabled') ;
     $('#litho_full_text').removeAttr('disabled') ;

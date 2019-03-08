@@ -18,19 +18,21 @@
     </tr>
     <tr id="chrono_precise_line">
       <td id="chrono_relation"><?php echo $form['chrono_relation'];?></td>
-      <td><?php echo $form['chrono_item_ref'];?></td>
-      <td>
-        <ul id="chrono_child_syn_included">
-          <li><?php echo $form['chrono_child_syn_included']->renderLabel();?></li>
-          <li><?php echo $form['chrono_child_syn_included'];?></li>
-        </ul>
-      </td>
+      <td><?php echo $form['chrono_item_ref'];?></td>     
     </tr>
   </tbody>
 </table>
 
 <script type="text/javascript">
 $(document).ready(function () {
+  //ftheeten 20190307
+  $('#chrono_precise_line :checkbox').each(
+    function()
+    {
+           $(this).prop('checked', true);
+    }
+    );
+
   $('#chrono_precise').click(function() {
     $('#chrono_precise').attr('disabled','disabled') ;
     $('#chrono_full_text').removeAttr('disabled') ;

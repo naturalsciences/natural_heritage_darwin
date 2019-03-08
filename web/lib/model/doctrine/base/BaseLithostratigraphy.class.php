@@ -14,6 +14,7 @@
  * @property string $color
  * @property string $path
  * @property integer $parent_ref
+ * @property integer $import_ref
  * @property Lithostratigraphy $Parent
  * @property CatalogueLevels $Level
  * @property Doctrine_Collection $Lithostratigraphy
@@ -29,6 +30,7 @@
  * @method string              getColor()              Returns the current record's "color" value
  * @method string              getPath()               Returns the current record's "path" value
  * @method integer             getParentRef()          Returns the current record's "parent_ref" value
+ * @method integer             getImportRef()          Returns the current record's "import_ref" value
  * @method Lithostratigraphy   getParent()             Returns the current record's "Parent" value
  * @method CatalogueLevels     getLevel()              Returns the current record's "Level" value
  * @method Doctrine_Collection getLithostratigraphy()  Returns the current record's "Lithostratigraphy" collection
@@ -43,6 +45,7 @@
  * @method Lithostratigraphy   setColor()              Sets the current record's "color" value
  * @method Lithostratigraphy   setPath()               Sets the current record's "path" value
  * @method Lithostratigraphy   setParentRef()          Sets the current record's "parent_ref" value
+ * @method Lithostratigraphy   setImportRef()          Sets the current record's "import_ref" value
  * @method Lithostratigraphy   setParent()             Sets the current record's "Parent" value
  * @method Lithostratigraphy   setLevel()              Sets the current record's "Level" value
  * @method Lithostratigraphy   setLithostratigraphy()  Sets the current record's "Lithostratigraphy" collection
@@ -94,6 +97,9 @@ abstract class BaseLithostratigraphy extends DarwinModel
              'default' => '/',
              ));
         $this->hasColumn('parent_ref', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('import_ref', 'integer', null, array(
              'type' => 'integer',
              ));
     }

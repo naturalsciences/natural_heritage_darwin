@@ -100,17 +100,25 @@ class xmlFileValidator extends sfValidatorFile
   function getFileDelimiter($file, $checkLines = 2)
   {
         $file = new SplFileObject($file);
-        $delimiters = array(
-          ',',
-          '\t',
+        $delimiters = array(         
+          ',',          
           ';',
           '|',
-          ':'
+          ':', 
+          '\t',
         );
         $results = array();
         $i = 0;
          while($file->valid() && $i <= $checkLines){
             $line = $file->fgets();
+            if($i==0)
+            {
+                //workaround to allow one column-file
+                if(str_word_count($line)==1)
+                {
+                    return '\t';
+                }
+            }
             foreach ($delimiters as $delimiter){
                 $regExp = '/['.$delimiter.']/';
                 $fields = preg_split($regExp, $line);

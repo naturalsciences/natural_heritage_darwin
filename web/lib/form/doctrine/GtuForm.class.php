@@ -264,19 +264,88 @@ class GtuForm extends BaseGtuForm
         ),
         new sfValidatorCallback(array('callback'=> array($this, 'checkLatLong'))),
         new sfValidatorCallback(array('callback'=> array($this, 'checkElevation'))),
+        new sfValidatorCallback(array('callback' => array($this, 'checkDateNoBound')))
       )
     ));
     
     //ftheeten 2018 11 29
 	//MUST NOT HAVE THE SAME NAME AS THE TABLE OTHERWISE EXTRA RECORDS ADDED
-    $this->widgetSchema['GtuTemporalInformationForm_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
-    $this->validatorSchema['GtuTemporalInformationForm_holder'] = new sfValidatorPass();
+    //$this->widgetSchema['GtuTemporalInformationForm_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
+    //$this->validatorSchema['GtuTemporalInformationForm_holder'] = new sfValidatorPass();
 
+     $this->widgetSchema['temporal_information'] =  new sfWidgetFormChoice(array(
+      'choices' =>  $this->getObject()->getRelatedTemporalInformationMaskedList()  
+    ));
+    
+    $this->validatorSchema['temporal_information'] = new sfValidatorPass();
+    
+    
+    $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')), intval(sfConfig::get('dw_yearRangeMin')));
+    $years = array_combine($yearsKeyVal, $yearsKeyVal);
+    $dateText = array('year'=>'yyyy', 'month'=>'mm', 'day'=>'dd', 'hour'=>'hh', 'minute'=>'mm', 'second'=>'ss');
+    $minDate = new FuzzyDateTime(strval('0001/01/01'));
+    $maxDate = new FuzzyDateTime(strval(max($yearsKeyVal).'/12/31'));
+    $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
+    $dateUpperBound = new FuzzyDateTime(sfConfig::get('dw_dateUpperBound'));
+    $this->widgetSchema['new_from_date'] = new widgetFormJQueryFuzzyDate(array(
+      'culture'=>$this->getCurrentCulture(),
+      'image'=>'/images/calendar.gif',
+      'format' => '%day%/%month%/%year%',
+      'years' => $years,
+      'empty_values' => $dateText,
+      'with_time' => true
+      ),
+      array('class' => 'from_date')
+    );
+
+    $this->widgetSchema['new_to_date'] = new widgetFormJQueryFuzzyDate(array(
+      'culture'=>$this->getCurrentCulture(),
+      'image'=>'/images/calendar.gif',
+      'format' => '%day%/%month%/%year%',
+      'years' => $years,
+      'empty_values' => $dateText,
+      'with_time' => true
+      ),
+      array('class' => 'to_date')
+    );
+
+    $this->validatorSchema['new_from_date'] = new fuzzyNullableDateValidator(array(
+      'required' => false,
+      'from_date' => true,
+      'min' => $minDate,
+      'max' => $maxDate,
+      'empty_value' => $dateLowerBound,
+      'with_time' => true
+      ),
+      array('invalid' => 'Date provided is not valid',)
+    );
+
+    $this->validatorSchema['new_to_date'] = new fuzzyNullableDateValidator(array(
+      'required' => false,
+      'from_date' => false,
+      'min' => $minDate,
+      'max' => $maxDate,
+      'empty_value' => $dateUpperBound,
+      'with_time' => true
+      ),
+      array('invalid' => 'Date provided is not valid',)
+    );
+    
+    
+    $this->widgetSchema['delete_mode'] = new sfWidgetFormInputCheckbox();
+
+    $this->validatorSchema['delete_mode'] = new sfValidatorPass();
 
 
     $subForm = new sfForm();
     $this->embedForm('newVal',$subForm);
     $this->embedRelation('TagGroups');
+    
+   
+   // $this->mergePostValidator(new sfValidatorCallback(
+		//	array('callback' => array($this, 'checkDateNoBound'))));
+            
+         
   }
 
   public function checkElevation($validator, $values)
@@ -340,6 +409,7 @@ class GtuForm extends BaseGtuForm
   }*/
     public function bind(array $taintedValues = null, array $taintedFiles = null)
     {
+
       if(isset($taintedValues['newVal']))
       {
         foreach($taintedValues['newVal'] as $key=>$newVal)
@@ -352,61 +422,15 @@ class GtuForm extends BaseGtuForm
       }
 	  
 
-      
+       //ftheeten 2019 03 08
+      $this->saveDate($taintedValues, $taintedFiles);
+      $this->deleteDate($taintedValues, $taintedFiles);
       //ftheeten 2018 11 29
-	   $this->bindEmbed('GtuTemporalInformationForm', 'addTemporalInformation' , $taintedValues);
-	  //$value = $this->getValue('newTemporalInformation');
-	  //if(is_object($this->embeddedForms['newTemporalInformation']))
-      //{
-		  //foreach($this->embeddedForms['newTemporalInformation']->getEmbeddedForms() as $name => $form)
-		  //{
-			//if((int)($value[$name]['from_date_mask'])==0)
-			//{
-			  //unset($this->embeddedForms['newTemporalInformation'][$name]);
-			   //$form->getObject()->delete();
-			//}
-			
-		  //}
-	  //}
-	   //$value = $this->getValue('TemporalInformation');
-	  //foreach($this->embeddedForms['TemporalInformation']->getEmbeddedForms() as $name => $form)
-      //{
-			
-        //if((int)($value[$name]['from_date_mask'])==0)
-		//{
-          //unset($this->embeddedForms['TemporalInformation'][$name]);
-		  // $form->getObject()->delete();
-        //}
-		
-      //}
-     
-	  //unset($taintedValues['newTemporalInformation']);
-	    /*if(!isset($taintedValues['TemporalInformation_holder']))
-		{
-		  $this->offsetUnset('TemporalInformation');
-		  unset($taintedValues['TemporalInformation']);
-		  $this->offsetUnset('TemporalInformation');
-		  unset($taintedValues['TemporalInformation']);
-		}
-		else
-		{
-		  $this->loadEmbedTemporalInformation();
-		  if(isset($taintedValues['newTemporalInformation']))
-		  {
-			foreach($taintedValues['newTemporalInformation'] as $key=>$newVal)
-			{
-				if((int)$newVal['from_date_mask']!=0||(int)$newVal['to_date_mask']!=0)
-				{
-				  if (!isset($this['newTemporalInformation'][$key]))
-				  {
-					//Call the add function of the embeddedForm
-					$this->addTemporalInformation($key, $newVal, $key);
-				  }
-				}	
-			}
-		  }
-		}*/
+
+
       parent::bind($taintedValues, $taintedFiles);
+     
+      
     }
 
     public function saveEmbeddedForms($con = null, $forms = null)
@@ -433,55 +457,21 @@ class GtuForm extends BaseGtuForm
             unset($this->embeddedForms['TagGroups'][$name]);
           }
         }
-		/*
-		if($this->getValue("newGtuTemporalInformationForm"))
-		{
-			$value = $this->getValue('newGtuTemporalInformationForm');
-			  foreach($this->embeddedForms['newGtuTemporalInformationForm']->getEmbeddedForms() as $name => $form)
-			  {
-				if (((int)$value[$name]['from_date_mask']==0&&(int)$value[$name]['to_date_mask']==0))
-				{
-				  unset($this->embeddedForms['newGtuTemporalInformationForm'][$name]);
-				}
-				else
-				{
-				  $form->getObject()->setGtuRef($this->getObject()->getId());
-				  $form->getObject()->save();
-				}
-				unset($this->embeddedForms['newGtuTemporalInformationForm'][$name]);
-			  }
-		}
-      
-	  
-		if($this->getValue("GtuTemporalInformationForm"))
-		{
-			$value = $this->getValue('TemporalInformation');
-			  foreach($this->embeddedForms['GtuTemporalInformationForm']->getEmbeddedForms() as $name => $form)
-			  {
-				if (((int)$value[$name]['from_date_mask']==0&&(int)$value[$name]['to_date_mask']==0))
-				{
-				  unset($this->embeddedForms['GtuTemporalInformationForm'][$name]);
-				}
-				else
-				{
-				  $form->getObject()->setGtuRef($this->getObject()->getId());
-				  $form->getObject()->save();
-				}
-			  }
-		}*/
+		
       }
       //ftheeten 2018 11 29
-      $this->saveEmbed('GtuTemporalInformationForm', 'from_date' ,$forms, array('gtu_ref' => $this->getObject()->getId()));
+     // $this->saveEmbed('GtuTemporalInformationForm', 'from_date' ,$forms, array('gtu_ref' => $this->getObject()->getId()));
+     
       return parent::saveEmbeddedForms($con, $forms);
     }
     
   //ftheeten 2018 11 29
-  public function addTemporalInformation($num, $values, $order_by=0)
+  /*public function addTemporalInformation($num, $values, $order_by=0)
   {
     $options = array("gtu_ref"=>$this->getObject()->getId());
     $options = array_merge($values, $options);
     $this->attachEmbedRecord('GtuTemporalInformationForm', new TemporalInformationSubForm(DarwinTable::newObjectFromArray('TemporalInformation',$options)), $num);
-  }
+  }*/
   
   //ftheeten 2018 11 29
   public function getEmbedRecords($emFieldName, $record_id = false)
@@ -492,33 +482,32 @@ class GtuForm extends BaseGtuForm
         $record_id = $this->getObject()->getId();
      }
 	 
-     if( $emFieldName =='GtuTemporalInformationForm' )
+     /*if( $emFieldName =='GtuTemporalInformationForm' )
      {
-      $res= Doctrine::getTable('TemporalInformation')->findByGtuRef($record_id);
+      $res= Doctrine::getTable('TemporalInformation')->getSortedTemporalInformation($record_id);
       return $res;
-    }
+    }*/
   }
   
     //ftheeten 2018 11 29
   
   public function getEmbedRelationForm($emFieldName, $values)
   {   
-    if( $emFieldName =='GtuTemporalInformationForm' )
+    /*if( $emFieldName =='GtuTemporalInformationForm' )
     {
       return new TemporalInformationSubForm($values);
-    }
+    }*/
   }
   
    //ftheeten 2018 11 29
-   public function loadEmbedTemporalInformation()
+  /* public function loadEmbedTemporalInformation()
   {
-    /* Identifications sub form */
     if($this->isBound()) return;
     $subForm = new sfForm();
     $this->embedForm('GtuTemporalInformationForm',$subForm);
     if($this->getObject()->getId() !='')
     {
-      foreach(Doctrine::getTable('TemporalInformation')->findByGtuRef($this->getObject()->getId()) as $key=>$vals)
+      foreach(Doctrine::getTable('TemporalInformation')->getSortedTemporalInformation($this->getObject()->getId()) as $key=>$vals)
       {
         $form = new TemporalInformationSubForm($vals);
         $this->embeddedForms['GtuTemporalInformationForm']->embedForm($key, $form);
@@ -528,7 +517,7 @@ class GtuForm extends BaseGtuForm
     }
     $subForm = new sfForm();
     $this->embedForm('newGtuTemporalInformationForm',$subForm);
-  }
+  }*/
 
   
     //ftheeten 2018 11 29
@@ -539,6 +528,44 @@ class GtuForm extends BaseGtuForm
     return parent::saveEmbeddedForms($con, $forms);
   }*/
 
+  public function saveDate(array $taintedValues = null, array $taintedFiles = null)
+  {
+    $this->getObject()->addNewTemporalInformation($taintedValues["new_from_date"], $taintedValues["new_to_date"]);
+  }
+  
+  public function deleteDate(array $taintedValues = null, array $taintedFiles = null)
+  {
+    if(isset($taintedValues["delete_mode"])&&is_numeric($taintedValues["temporal_information"]))
+    {
+        if(strtolower($taintedValues["delete_mode"])=="on")
+        {   
+            Doctrine::getTable('TemporalInformation')->deleteTemporalInformation($taintedValues["temporal_information"]);
+        }
+    }
+  }
+  
+  public function checkDateNoBound($validator, $taintedValues, $arguments)
+  {
+     print("test not bound");
+    if(isset($taintedValues["delete_mode"])&&is_numeric($taintedValues["temporal_information"]))
+    {
+     print("go 1");
+        if(strtolower($taintedValues["delete_mode"])=="on")        {
+           
+            $cpt=Doctrine::getTable('TemporalInformation')->countTemporalInformationBoundtoSpecimen($taintedValues["temporal_information"]);
+            print_r($cpt);
+            if($cpt>0)
+            {
+                
+                throw new sfValidatorError($validator, "Cannot delete date as it is linked to specimens");
+            }
+           
+        }
+	}
+    print("returned");
+     return $taintedValues;;
+  }
+  
   public function getJavaScripts()
   {
     $javascripts=parent::getJavascripts();

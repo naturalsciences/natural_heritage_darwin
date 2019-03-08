@@ -1193,10 +1193,10 @@ class SpecimensForm extends BaseSpecimensForm
      //ftheeten 2019 01 18
     $form_vals = $this->getTaintedValues();
     
-    print("try to save");
+    //print("try to save");
     if(array_key_exists('timestamp', $form_vals))
     {
-        print("TIMESTAMP !!!!");
+        //print("TIMESTAMP !!!!");
         if(isset($_SESSION["TEMP_DARWIN_PROPERTY_".$form_vals['timestamp']]))
         {
              $tmp_array=$_SESSION["TEMP_DARWIN_PROPERTY_".$form_vals['timestamp']];

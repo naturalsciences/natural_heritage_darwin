@@ -26,14 +26,35 @@ $(document).ready(function ()
           <?php echo $form['code'] ?>
         </td>
       </tr>
+      <tr>
+        <th class="top_aligned"><?php echo __("Dates") ?></th>
+        <td>
+         <div style="display:None"><?php echo $form['delete_mode'] ?></div>
+          <?php echo $form['temporal_information']->renderError() ?>
+          <?php echo $form['temporal_information'] ?>          
+        </td>
+        <td>
+            <div id="counter_date" class="counter_date">Value(s)</div>
+        </td>
+      </tr>
+      <tr>
+        <td><a class='remove_date' id='remove_date' href="" >Remove date</a></td>
+      </tr>
+      <tr>
+        <td colspan="3">            
+            <div><?php echo $form['new_from_date']->renderLabel(); ?></div>
+			<div><?php echo $form['new_from_date']->renderError(); ?></div>
+            <div><?php echo $form['new_from_date']; ?></div>
+            <div><?php echo $form['new_to_date']->renderLabel(); ?></div>
+            <div><?php echo $form['new_to_date']->renderError(); ?></div>
+            <div><?php echo $form['new_to_date']; ?></div>
+            <input class='add_date' id='add_date' value="Add date" type="submit" />
+        </td>
+      </tr>
     </tbody>
 </table>
 <br/>
-<table>    
-    <tr>
-       <?php include_partial('gtuwidget/refTemporalInformation', array('form' => $form)) ?>
-    </tr>
-</table>
+
 <?php
 $tag_grouped = array();
 $avail_groups = TagGroups::getGroups(); 
@@ -227,6 +248,28 @@ $(document).ready(function () {
 
 $(document).ready(function () {
 
+
+    $('.counter_date').text($('#gtu_temporal_information option').size()+" Value(s)");
+    /*$('.add_date').live('click', function(event)
+        {
+            //document.forms[0].submit();
+           //$("#submit").click();
+            //$("#submit").click();
+          // event.preventDefault();
+        }
+    );*/
+    
+     $('.remove_date').live('click', function(event)
+        {
+            
+             
+            $('#gtu_delete_mode').prop('checked', true);            
+            $("#submit").click();
+            //document.forms[0].submit();
+            event.preventDefault();
+        }
+    );
+    
     //ftheeten 2016 02 05
 
 	showDMSCoordinates=false;

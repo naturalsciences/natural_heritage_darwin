@@ -1,19 +1,26 @@
 <div id="gtu_temporal_information">    
          <?php $retainedKey = 0;?>
          <?php $existing_key = 0;?>
+         <?php $distinct_dates=Array(); ?>
          <?php if($form->getWidgetSchema()->offsetExists('GtuTemporalInformationForm')):?>
             
              <?php foreach($form['GtuTemporalInformationForm'] as $form_value):?>
-               
-                <?php include_partial('gtu/gtu_temporal_information', array('form' => $form_value, 'rownum'=>$retainedKey,"edit"=>"true"));?>
+                <?php $tmp_date=$form_value->getValue() ;?>              
+                <?php if(!isset($distinct_dates[$tmp_date['from_date']['year']][$tmp_date['from_date']['month']][$tmp_date['from_date']['day']][$tmp_date['from_date']['hour']][$tmp_date['from_date']['minute']][$tmp_date['from_date']['second']][$tmp_date['to_date']['year']][$tmp_date['to_date']['month']][$tmp_date['to_date']['day']][$tmp_date['to_date']['hour']][$tmp_date['to_date']['minute']][$tmp_date['to_date']['second']][$tmp_date['from_date_mask']][$tmp_date['to_date_mask']]) ):?>
+                    <?php $style="display:block"; ?>
+                    <?php $distinct_dates[$tmp_date['from_date']['year']][$tmp_date['from_date']['month']][$tmp_date['from_date']['day']][$tmp_date['from_date']['hour']][$tmp_date['from_date']['minute']][$tmp_date['from_date']['second']][$tmp_date['to_date']['year']][$tmp_date['to_date']['month']][$tmp_date['to_date']['day']][$tmp_date['to_date']['hour']][$tmp_date['to_date']['minute']][$tmp_date['to_date']['second']][$tmp_date['from_date_mask']][$tmp_date['to_date_mask']]=true ;?>
+                 <?php else: ?>
+                    <?php $style="display:none"; ?>
+                 <?php endif;?>
+                  <div><?php include_partial('gtu/gtu_temporal_information', array('form' => $form_value, 'rownum'=>$retainedKey,"edit"=>"true", "visibility"=> $style));?></div>             
+                
                 <?php $retainedKey = $retainedKey+1;?>
              <?php endforeach;?>
          <?php endif;?>
          <?php $existing_key=$retainedKey;?>
          <?php if($form->getWidgetSchema()->offsetExists('newGtuTemporalInformationForm')):?>
         
-             <?php foreach($form['newGtuTemporalInformationForm'] as $form_value):?>
-			
+             <?php foreach($form['newGtuTemporalInformationForm'] as $form_value):?>               
                <?php include_partial('gtu/gtu_temporal_information', array('form' => $form_value, 'rownum'=>$retainedKey));?>
                        <?php $retainedKey = $retainedKey+1;?>
              <?php endforeach;?>
