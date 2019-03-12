@@ -123,7 +123,7 @@
                                  <br/><div  name="date_choose" class="result_choose"><?php echo __('Choose place and date');?></div>                                   
                             <?php endif;?>
                             </li>                   
-                   <?php else:?>
+                   <?php elseif($is_choose):?>
                     <br/><div name="gtu_choose" class="result_choose"><?php echo __('Choose place without date');?></div>  
                    <?php endif;?>
                    <?php if(strpos($referer,"/staging/edit/id")):?>

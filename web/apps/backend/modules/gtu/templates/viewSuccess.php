@@ -54,13 +54,15 @@
           <td><?php echo $gtu->getElevation().' +- '.$gtu->getElevationAccuracy().' m'; ?></td>
         </tr>
       <?php endif;?>
-      <tr>
-        <th><?php echo $form['gtu_from_date']->renderLabel().":";?></th>
-        <td class="datesNum"><?php echo $gtu->getGtuFromDateMasked(ESC_RAW);?></td>
-      </tr>
-      <tr>
-        <th><?php echo $form['gtu_to_date']->renderLabel().":";?></th>
-        <td class="datesNum"><?php echo $gtu->getGtuToDateMasked(ESC_RAW);?></td>
+      <tr class="date_row">
+        <th class="top_aligned"><?php echo __("Dates") ?></th>
+        <td>         
+          <?php echo $form['temporal_information']->renderError() ?>
+          <?php echo $form['temporal_information'] ?>          
+        </td>
+        <td>
+            <div id="counter_date" class="counter_date">Value(s)</div>
+        </td>
       </tr>
       <tr>
         <th class="top_aligned">
@@ -100,6 +102,17 @@
 		<td><?php echo image_tag('magnifier.gif');?> <?php echo link_to(__('Search related specimens'),'specimensearch/search', array('class'=>'link_to_search'));?>
 <script type="text/javascript">
   $(document).ready(function (){
+   
+   
+   if($('#gtu_temporal_information option').size()>0)
+   {
+        $('.counter_date').text($('#gtu_temporal_information option').size()+" Value(s)");
+   }
+   else
+   {
+         $(".date_row").hide();
+   }
+  
     search_data = <?php echo json_encode(array('specimen_search_filters[gtu_ref]' => $gtu->getId()));?>;
     $('.link_to_search').click(function (event){
       event.preventDefault();
