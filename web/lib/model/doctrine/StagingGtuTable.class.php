@@ -23,29 +23,37 @@ class StagingGtuTable extends DarwinTable
     
     }
     
-    public function getImportData($import_ref)
+    public function getImportData($import_ref, $offset="0", $limit="1000")
     {
-        $response = Doctrine_Query::create()
-               ->select()
-               ->from('StagingGtu')
-               ->where('import_ref= ?', $import_ref)              
-				->orderBy('id')			   
-               ->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
-
-    return $response;     
+        $conn_MGR = Doctrine_Manager::connection();
+		$conn = $conn_MGR->getDbh();
+			
+			
+		$params[':import_ref'] = $import_ref;
+		$params[':offset'] = $offset;
+	    $params[':limit'] = $limit;
+		$sql =" SELECT * FROM staging_gtu WHERE import_ref=:import_ref ORDER BY id OFFSET :offset LIMIT :limit;";
+		$statement = $conn->prepare($sql);
+		$statement->execute($params);
+		$items = $statement->fetchAll(PDO::FETCH_ASSOC);
+        return $items;
+ 
     
     }
     
     
     //2019 02 27
-    public function countExceptionMessages($import_ref)
+    public function countExceptionMessages($import_ref, $offset="0", $limit="1000")
 	{
 		$conn_MGR = Doctrine_Manager::connection();
 		$conn = $conn_MGR->getDbh();
 			
 			
 		$params[':import_ref'] = $import_ref;
-		$sql =" SELECT count(*) as count, import_exception FROM staging_gtu WHERE import_ref=:import_ref GROUP BY import_exception ORDER BY import_exception;";
+		$params[':import_ref_2'] = $import_ref;
+		$params[':offset'] = $offset;
+	    $params[':limit'] = $limit;
+		$sql =" SELECT count(*) as count, import_exception, (SELECT count(*) FROM staging_gtu WHERE import_ref=:import_ref_2   ) as count_all FROM (SELECT * FROM staging_gtu WHERE import_ref=:import_ref ORDER BY id  OFFSET :offset LIMIT :limit) a  GROUP BY import_exception ORDER BY import_exception  ;";
 		$statement = $conn->prepare($sql);
 		$statement->execute($params);
 		$results = $statement->fetchAll(PDO::FETCH_ASSOC);

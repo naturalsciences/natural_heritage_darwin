@@ -11,12 +11,44 @@ th, td {
 <div class="page">
 <div>
 
+<form action="<?php print(url_for("import/viewUnimportedGtu"));?>/id/<?php print($id);?>">
+Count all : <?php print($size_data);?><br/>
+Current page : <?php print($page);?> / <?php print($max_page);?> <br/>
+Page : 
+<?php if($page>1):?><a href="<?php print(url_for("import/viewUnimportedGtu"));?>?id=<?php print($id);?>&page=<?php print($page-1);?>"><?php print(__("<"));?></a><?php endif;?>
+<select id="page" name="page">
+ <?php for($i=0;$i<ceil((int)$size_data/(int)$size_catalogue);$i++):?>
+ 
+ <option <?php print($i+1==$page?'selected="selected"':"");?> value="<?php print($i+1);?>"><?php print($i+1);?></option>
+ <?php endfor;?>
+</select>
+<?php if($page<$max_page):?><a href="<?php print(url_for("import/viewUnimportedGtu"));?>?id=<?php print($id);?>&page=<?php print($page+1);?>"><?php print(__(">"));?></a><?php endif;?>
+<br/>
+<input type="submit" value = "go"></submit>
+</form>
+
 <table>
 <tr>
 <th>Message</th>
 <th>Count</th>
 </tr>
-<?php $sum=0; $i=0; foreach($stats as $stat):?>
+ <?php $sum=0; $i=0; foreach($stats as $stat):?>
+    <tr>
+		<?php $text; $text = $stat['import_exception'] ?: "None" ?>
+         <td><a  href="javascript:filter_stats('<?php print($text);?>')" ><?php print($text);?></a></td>
+         <td><?php $sum+=(int)$stat['count'];  print($stat['count']);?></td>           
+    </tr>
+ <?php endforeach;?>
+ <tr><td><a href="javascript:reinit_stats();" >Total : </a></td><td><?php print($sum);?></td>
+</table>
+
+All data:<br/>
+<table>
+<tr>
+<th>Message</th>
+<th>Count</th>
+</tr>
+ <?php $sum=0; $i=0; foreach($stats_all as $stat):?>
     <tr>
 		<?php $text; $text = $stat['import_exception'] ?: "None" ?>
          <td><a  href="javascript:filter_stats('<?php print($text);?>')" ><?php print($text);?></a></td>
@@ -97,7 +129,7 @@ th, td {
     <tr>
         <td><?php print($item['pos_in_file']);?></td>
         <td><?php print($item['id']);?></td> 
-		<td><?php print($item['imported']);?></td>
+		<td><?php print($item['imported']? "YES" : "NO");?></td>
         <td><?php print($item['import_exception']);?></td>
 		<td><?php foreach( hstore2array($item['status']) as $key=>$var):?>
                 <?php if($key=="gtu_id"): ?>
@@ -116,22 +148,23 @@ th, td {
             <?php endif; ?>
         </td>
         <td>          
-            <?php if($item['import_exception']=="duplicate_code"):?>
-                    <?php print(form_tag('import/loadSingleGtuInDB', array("method"=>"GET") ));?>
-                    <input type="hidden" id="input_gtu_id_<?php print($item['id']);?>" name="staging_gtu_id" value="<?php print($item['id']);?>" />                    
-                    <input type="submit"  value="Force import" />    
-                    </form>            
+            <?php if(strpos($item['import_exception'],"duplicate_code")!==FALSE || strpos($item['import_exception'],"code_already_in_file_with_other_data")!==FALSE):?>
+                           
             <?php endif;?>       
         </td>
         <td><?php print($item['station_type']);?></td>
         <td>
-            <?php if($item['import_exception']=="duplicate_code"):?>
+            <?php if(strpos($item['import_exception'],"duplicate_code")!==FALSE || strpos($item['import_exception'],"code_already_in_file_with_other_data")!==FALSE):?>
                     <?php print(form_tag('import/changeStagingGtuCode', array("method"=>"GET") ));?>
                     <input type="hidden" id="input_gtu_id_<?php print($item['id']);?>" name="staging_gtu_id" value="<?php print($item['id']);?>" />
                     <input id="input_gtu_code_<?php print($item['id']);?>" name="sampling_code" class="editable_gtu_code"  style="width:250px" type="texte" value="<?php print($item['sampling_code']);?>"></input>
                     <br/>
-                    <input type="submit"  value="change code" />    
+                    <input type="submit"  value="change code and import" />    
                     </form>
+					 <?php print(form_tag('import/loadSingleGtuInDB', array("method"=>"GET") ));?>
+                    <input type="hidden" id="input_gtu_id_<?php print($item['id']);?>" name="staging_gtu_id" value="<?php print($item['id']);?>" />                    
+                    <input type="submit"  value="Force import with current code" />    
+                    </form>    
             <?php else:?>
                 <?php print($item['sampling_code']);?></td>
             <?php endif;?>

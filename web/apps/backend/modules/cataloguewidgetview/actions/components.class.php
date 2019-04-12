@@ -76,4 +76,16 @@ class cataloguewidgetViewComponents extends sfComponents
       $this->atLeastOneFileVisible = ($this->files->count()>0);
     }
   }
+  
+    public function executeGtuTemporalInformation()
+  {  
+	if(isset($this->eid) && $this->eid !== null)
+      {
+        $gtu = Doctrine::getTable('Gtu')->find($this->eid);
+        $this->form = new GtuForm($gtu);
+        $this->gtu_id = $this->eid;
+	  }
+    
+	
+  }
 }

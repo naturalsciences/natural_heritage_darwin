@@ -13,10 +13,14 @@ class StagingForm extends BaseStagingForm
   public function configure()
   {
     $array_of_field = $this->options['fields'] ;
+    //$array_of_field[]="gtu_ref";
+	array_push($array_of_field, "gtu_ref");
     if (in_array('identifiers',$array_of_field)) unset($array_of_field[array_search('identifiers', $array_of_field)]);
     if (in_array('people',$array_of_field)) unset($array_of_field[array_search('people', $array_of_field)]);
     if (in_array('operator',$array_of_field)) unset($array_of_field[array_search('operator', $array_of_field)]);
     if (in_array('relation_institution_ref',$array_of_field)) unset($array_of_field[array_search('relation_institution_ref', $array_of_field)]);
+	//gtu_ref 2019 03 21
+	if (in_array('gtu_ref',$array_of_field)) unset($array_of_field[array_search('gtu_ref', $array_of_field)]);
     $this->useFields($array_of_field) ;
     /* Taxonomy Reference */
     if(in_array('taxon_ref',$this->options['fields']))
@@ -309,6 +313,11 @@ class StagingForm extends BaseStagingForm
     
     if(is_numeric($this->getValue('taxon_ref'))) $status['taxon'] = 'done' ;
     else unset($this['taxon_ref']) ;
+    
+    //2019 03 14
+    if(is_numeric($this->getValue('gtu_ref'))) $status['done'] = 'done' ;
+    else unset($this['gtu_ref']) ; 
+    
     if(is_numeric($this->getValue('chrono_ref'))) $status['chrono'] = 'done' ;
     else unset($this['chrono_ref']) ;
     if(is_numeric($this->getValue('mineral_ref'))) $status['mineral'] = 'done' ;

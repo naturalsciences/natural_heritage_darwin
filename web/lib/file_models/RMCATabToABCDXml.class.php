@@ -161,6 +161,7 @@ class RMCATabToABCDXml
         $fields[] = "lithostratigraphyBed";
         $fields[] = "lithostratigraphyInformalName";
         
+		$fields[] = "Notes";
         return $fields;
     }
     

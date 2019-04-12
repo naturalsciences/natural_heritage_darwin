@@ -64,12 +64,24 @@ EOF;
       $state_to_check = array('loaded','processing');
     else
       $state_to_check = array('loaded','pending','processing');
-
-    // let's 'lock' all imports checkable to avoid an other check from the next check task
-    $catalogues = Doctrine::getTable('Imports')->tagProcessing('taxon', $options['id']);
-    // Get back here the list of imports id that could be treated
-    $imports = Doctrine::getTable('Imports')->tagProcessing($state_to_check, $options['id']);
-    $imports_ids = $imports->toKeyValueArray("id", "id");
+      
+      
+    if(!empty($options['id']))
+    {
+       //2019 03 25
+        $catalogues = Doctrine::getTable('Imports')->tagProcessing('taxon', $options['id']);
+        $imports = Doctrine::getTable('Imports')->tagProcessing($state_to_check, $options['id']);
+        $imports_ids[]=$options['id'];
+    }
+    else
+    {
+        // let's 'lock' all imports checkable to avoid an other check from the next check task
+        $catalogues = Doctrine::getTable('Imports')->tagProcessing('taxon', $options['id']);
+        // Get back here the list of imports id that could be treated
+        $imports = Doctrine::getTable('Imports')->tagProcessing($state_to_check, $options['id']);
+        $imports_ids = $imports->toKeyValueArray("id", "id");
+     }   
+        
     // let's begin with import catalogue
     foreach($catalogues as $catalogue)
     {
@@ -123,7 +135,7 @@ EOF;
               ->execute();
 
       // if followed by process of do-import...
-      if(!empty($options['do-import']))
+      if(!empty($options['do-import'])&&!empty($options['id']))
       {
         // Initialize the variable that will hold all the imports id to be processed for
         // changing the state from aprocessing to pending
@@ -133,14 +145,29 @@ EOF;
 
           $this->logSection('fetch', sprintf('Check %d : (%s) Load Imports file in processing state',$randnum,date('G:i:s')));
           
-          $imports  = Doctrine::getTable('Imports')->getWithImports($options['id']); 
-
+          //$imports  = Doctrine::getTable('Imports')->getWithImports($options['id']); 
+        if(!empty($options['id']))
+        {
+               //2019 03 25
+                $import  = Doctrine::getTable('Imports')->find($options['id']); 
+                $imports=Array();
+                $imports[]=$import;
+        }
+        else
+        {
+            $imports  = Doctrine::getTable('Imports')->getWithImports($options['id']); 
+        }   
+          
+          
           foreach($imports as $import)
           {
+			  
+			print("ID=".$import->getId());
             $processed_ids[] = $import->getId();
             $date_start = date('G:i:s') ;
             $sql_prepared = $conn->prepare("select fct_importer_abcd(?)");
-            $sql_prepared->execute(array($import->getId()));
+            $sql_prepared->execute(array( $import->getId()));
+			print("DONE");
             $this->logSection('Processing', sprintf('Check %d : Processing import %d (start: %s - end: %s) done',$randnum,$import->getId(),$date_start,date('G:i:s')));
           }
         // Work done, we need to release hand by a commit
@@ -151,7 +178,7 @@ EOF;
                 ->update('imports p')
                 ->set('p.state','?','pending')
                 ->andWhere('p.state = ?','aprocessing')
-                ->andWhereIn('p.id', $processed_ids)
+                //->andWhereIn('p.id', $processed_ids)
                 ->execute();
       }
     }

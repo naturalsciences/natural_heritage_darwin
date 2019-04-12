@@ -138,4 +138,25 @@ class ImportsTable extends Doctrine_Table
       ->andwhere('id = ? ',$id)
       ->execute() ;
   }
+  
+      //2019 03 14
+    public function updateGtuInStaging($import_ref, $old_gtu_code, $new_gtu_id)
+    {
+        
+        Doctrine_Query::create()
+              ->update('imports p')
+              ->set('p.state','?','aprocessing')
+               ->where('p.id = ? ', $import_ref)
+              ->execute();     
+        $conn = Doctrine_Manager::connection();
+        $sql = "UPDATE staging set gtu_ref=:new, status = status - 'gtu'::text  WHERE import_ref =:import AND gtu_code= :old;";
+        $q = $conn->prepare($sql);
+		$q->execute(array(':import'=> $import_ref, ':old' => $old_gtu_code, ':new' => $new_gtu_id ));
+        
+        Doctrine_Query::create()
+              ->update('imports p')
+              ->set('p.state','?','pending')
+               ->where('p.id = ? ', $import_ref)
+              ->execute();
+    }
 }

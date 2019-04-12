@@ -72,7 +72,8 @@ class Imports extends BaseImports
   public function isEditableState()
   {
     if($this->getState() == 'error') return true ;
-    if($this->getFormat() == 'taxon') return false ;
+	//2019 03 21
+    //if($this->getFormat() == 'taxon') return false ;
     if(($this->getState() == 'pending') && ! $this->getIsFinished()) return true ;
     return false ;
   }   

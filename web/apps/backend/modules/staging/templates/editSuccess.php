@@ -2,7 +2,7 @@
 <?php include_stylesheets_for_form($form) ?>
 <?php include_javascripts_for_form($form) ?>
 <div class="page">
-
+  <?php $has_gtu=false ?>
   <?php echo form_tag('staging/update?id='.$form->getObject()->getId(), array('class'=>'edition','method'=>'post'));?>
   <?php if($form->hasGlobalErrors()):?>
     <ul class="spec_error_list">
@@ -18,6 +18,7 @@
     </p>
   <?php else : ?>
     <?php foreach($fields as $key => $array) : ?>
+    <?php if($key=="gtu") { $has_gtu=true ;} ;?>
       <?php if($key == 'duplicate') : ?>
       <fieldset>
         <ul class="error_list">
@@ -93,6 +94,9 @@
     </div>
     <p class="form_buttons right_aligned error">
       <a href="<?php echo url_for('staging/index?import='.$form->getObject()->getImportRef()) ?>" id="spec_cancel"><?php echo __('Back');?></a>
+      <?php if($has_gtu):?>
+        <a  id="align_all_gtu"><?php echo __('Update all similar GTUs');?></a>
+      <?php endif;?>
       <input type="submit" value="<?php echo __('Update');?>" id="submit"/>
     </p>
   <?php endif ; ?>
@@ -127,5 +131,17 @@ $(document).ready(function () {
             
         });
    <?php endif;?>
+   
+   //2019 03 14
+   $("#align_all_gtu").on("click", function (e) {
+            //$('#contactsFrom').attr('action', "/test1");
+            //$("#contactsFrom").submit();
+            var target=document.forms[0].action;
+            target=target.replace('/update/', '/updateallgtus/');            
+            document.forms[0].action=target;
+            var tmpForm=document.forms[0];
+            $("#submit").click();
+            e.preventDefault();
+        });
 });
 </script>

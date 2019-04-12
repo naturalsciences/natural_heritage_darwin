@@ -14,7 +14,8 @@ class stagingActions extends DarwinActions
    public function executeRecheck(sfWebRequest $request)
   {
     $this->forward404Unless($request->hasParameter('import'));
-    $this->import = Doctrine::getTable('Imports')->find($request->getParameter('import'));
+	$tmp_id=$request->getParameter('import');
+    $this->import = Doctrine::getTable('Imports')->find($tmp_id);
     //ftheeten 2018 09 24
      $format_import = $this->import->getFormat();
     //ftheeten 2018 09 02
@@ -36,7 +37,7 @@ class stagingActions extends DarwinActions
        $this->forwardToSecureAction();
     
    //ftheeten 2018 09 02
-   $cmd='darwin:check-import --id='.$tmp_id." --full-check";
+   $cmd='darwin:check-import --id='.$tmp_id;
    $currentDir=getcwd();
     chdir(sfconfig::get('sf_root_dir'));    
     //print('nohup php symfony '.$cmd.'  >/dev/null &' );
@@ -63,7 +64,8 @@ class stagingActions extends DarwinActions
   public function executeMarkok(sfWebRequest $request)
   {
     $this->forward404Unless($request->hasParameter('import'));
-    $this->import = Doctrine::getTable('Imports')->find($request->getParameter('import'));
+	$tmp_id=$request->getParameter('import');
+    $this->import = Doctrine::getTable('Imports')->find($tmp_id);
     //ftheeten 2018 09 24
      $format_import = $this->import->getFormat();
     //ftheeten 2018 09 02
@@ -86,7 +88,7 @@ class stagingActions extends DarwinActions
     $this->import = Doctrine::getTable('Imports')->markOk($this->import->getId());
     
    //ftheeten 2018 09 02
-   $cmd='darwin:check-import --do-import --id='.$tmp_id." --full-check";
+   $cmd='darwin:check-import --do-import --id='.$tmp_id;
    $currentDir=getcwd();
     chdir(sfconfig::get('sf_root_dir'));    
     //print('nohup php symfony '.$cmd.'  >/dev/null &' );
@@ -318,23 +320,75 @@ class stagingActions extends DarwinActions
   {
     $staging = Doctrine::getTable('Staging')->findOneById($request->getParameter('id'));
 
+    //2019 03 14
+    if($request->hasParameter('staging'))
+    {
+        $tmpParam=$request->getParameter('staging');
+        if(array_key_exists("gtu_ref", $tmpParam))
+        {
+            $gtu_ref=$tmpParam['gtu_ref'];
+            $status= $staging->getStatus();
+            if(array_key_exists("gtu", $status))
+            {
+                unset($status['gtu']);
+                $staging->setStatus($status);
+                $staging->save();
+            }
+        }
+    }
+    
     $this->import = Doctrine::getTable('Imports')->find($staging->getImportRef());
 
     if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$this->import->getCollectionRef()))
        $this->forwardToSecureAction();
-
+print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     $this->fields = $staging->getFields() ;
     $form_fields = array() ;
     if($this->fields)
     {
       foreach($this->fields as $key => $values)
+      {
+		print($values['fields'] );
         $form_fields[] = $values['fields'] ;
+      }
     }
     $this->form = new StagingForm($staging, array('fields' => $form_fields));
 
     $this->processForm($request,$this->form, $form_fields);
 
     $this->setTemplate('edit');
+  }
+  
+  //2019 03 14
+  public function executeUpdateallgtus(sfWebRequest $request)
+  {
+    $staging = Doctrine::getTable('Staging')->findOneById($request->getParameter('id'));
+
+   
+    
+    $this->import = Doctrine::getTable('Imports')->find($staging->getImportRef());
+
+    if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$this->import->getCollectionRef()))
+       $this->forwardToSecureAction();
+
+        //2019 03 14
+    if($request->hasParameter('staging'))
+    {
+        $tmpParam=$request->getParameter('staging');
+        if(array_key_exists("gtu_ref", $tmpParam))
+        {
+            $new_gtu_ref=$tmpParam['gtu_ref'];
+            if(strlen($new_gtu_ref)>0)
+            {
+               
+                Doctrine::getTable('Imports')->updateGtuInStaging($staging->getImportRef(), $staging->getGtuCode(), $new_gtu_ref);  
+                
+          
+            }
+        }
+    }
+     $this->forward('import', 'index');         
+   
   }
 
   protected function processForm(sfWebRequest $request, sfForm $form, array $fields)

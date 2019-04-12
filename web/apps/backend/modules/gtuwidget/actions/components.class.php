@@ -64,6 +64,7 @@ class gtuwidgetComponents extends sfComponents
     {
       $this->form->loadEmbed('GtuTemporalInformationForm');
     }
+	
   }
  }
  ?>

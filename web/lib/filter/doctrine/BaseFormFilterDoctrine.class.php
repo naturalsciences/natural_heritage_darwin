@@ -612,7 +612,14 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
                  $queryTmpGlobal[]="(".$queryTmp." ) ";
             }
         }
-        $query->andWhere(implode(" OR ", $queryTmpGlobal));
+        if(count($queryTmpGlobal)>0)
+		{
+			$query->andWhere(implode(" OR ", $queryTmpGlobal));
+		}
+		else
+		{
+			$query->andWhere($field_prefix."_ref = -1 ");
+		}
     }
    
     return $query ;

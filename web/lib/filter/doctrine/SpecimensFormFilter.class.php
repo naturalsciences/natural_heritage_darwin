@@ -605,6 +605,13 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 
     $this->widgetSchema['property_value_to'] = new sfWidgetFormInput();
     $this->validatorSchema['property_value_to'] = new sfValidatorString(array('required' => false));
+    
+    
+    //2019 03 29
+	$this->widgetSchema['property_fuzzy'] = new sfWidgetFormInputCheckbox();//array('default' => FALSE));
+  	////ftheeten 2015 09 09
+	$this->validatorSchema['property_fuzzy'] = new sfValidatorPass();
+
 
 
     $this->widgetSchema['property_units'] = new sfWidgetFormDarwinDoctrineChoice(array(
@@ -1489,7 +1496,20 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     return $query ;
   }
 
-  public function addPropertiesQuery($query, $type , $applies_to, $value_from, $value_to, $unit) {
+   public function addPropertiesQuery($query, $type , $applies_to, $value_from, $value_to, $unit, $taintedValues=Array()) 
+  {
+  
+    $property_fuzzy=FALSE;
+    $str_like = " ILIKE ? ";
+    if(isset($taintedValues['property_fuzzy'])) 
+	{
+		if($taintedValues['property_fuzzy']==TRUE)
+		{
+			$this->property_fuzzy=TRUE;
+            $str_like = "  ILIKE '%'||?||'%' ";
+		}
+	}
+    
     $sql_part = array();
     $sql_params = array();
     if(trim($type) != '') {
@@ -1511,45 +1531,43 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     // We have only 1 Value
     if($value_from != '' && $value_to == '') {
       if($unit == '') {
-        $sql_part[] = '  ( p.lower_value = ? OR  p.upper_value = ?) ';
+        $sql_part[] = '  ( p.lower_value '.$str_like.' OR  p.upper_value '.$str_like.') ';
         $sql_params[] = $value_from;
         $sql_params[] = $value_from;
       //We don't know the filed unit
-      }
-      elseif(Properties::searchRecognizedUnitsGroups($unit) === false) {
-        $sql_part[] = '  ( p.lower_value = ? OR  p.upper_value = ?) AND property_unit = ? ';
+      } elseif(Properties::searchRecognizedUnitsGroups($unit) === false) {
+        $sql_part[] = '  ( p.lower_value '.$str_like.' OR  p.upper_value ILIKE '.$str_like.') AND property_unit = ? ';
         $sql_params[] = $value_from;
         $sql_params[] = $value_from;
         $sql_params[] = $unit;
 
-      }
-      else { // Recognized unit
+      } else { // Recognized unit
         $sql_params[] = $value_from;
         $sql_params[] = $unit;
         $sql_params[] = $unit;
+
+        $unitGroupStr =  implode(',',array_fill(0,count($unitGroup),'?'));
         $sql_part[] = ' ( convert_to_unified ( ?,  ? ) BETWEEN p.lower_value_unified AND  p.upper_value_unified) AND is_property_unit_in_group(property_unit, ?)  ';
       }
     }
     // We have 2 Values
     elseif($value_from != '' && $value_to != '') {
       if($unit == '') {
-        $sql_part[] = ' ( ( p.lower_value = ? OR  p.upper_value = ?) OR ( p.lower_value = ? OR  p.upper_value = ?) )';
+        $sql_part[] = ' ( ( p.lower_value '.$str_like.' OR  p.upper_value ILIKE ?) OR ( p.lower_value ILIKE ? OR  p.upper_value ILIKE ?) )';
         $sql_params[] = $value_from;
         $sql_params[] = $value_from;
         $sql_params[] = $value_to;
         $sql_params[] = $value_to;
       //We don't know the filed unit
-      }
-      elseif(Properties::searchRecognizedUnitsGroups($unit) === false) {
-        $sql_part[] = ' ( ( p.lower_value = ? OR  p.upper_value = ?) OR ( p.lower_value = ? OR  p.upper_value = ?) )  AND property_unit = ? ';
+      } elseif(Properties::searchRecognizedUnitsGroups($unit) === false) {
+        $sql_part[] = ' ( ( p.lower_value '.$str_like.' OR  p.upper_value = ?) OR ( p.lower_value '.$str_like.' OR  p.upper_value '.$str_like.') )  AND property_unit = ? ';
         $sql_params[] = $value_from;
         $sql_params[] = $value_from;
         $sql_params[] = $value_to;
         $sql_params[] = $value_to;
         $sql_params[] = $unit;
 
-      }
-      else { // Recognized unit
+      } else { // Recognized unit
         $conn_MGR = Doctrine_Manager::connection();
         $lv = $conn_MGR->quote($value_from, 'string');
         $uv = $conn_MGR->quote($value_to, 'string');
@@ -1567,7 +1585,9 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
               p.upper_value_unified BETWEEN convert_to_unified($uv,$unit) AND 'Infinity'
         )";
         $query->andWhere("is_property_unit_in_group(property_unit,$unit)") ;
+        //OR ( convert_to_unified ( ?::text,  ?::text ) < p.lower_value_unified AND convert_to_unified ( ?::text,  ?::text ) > p.upper_value_unified)
       }
+
     }
     elseif($unit != '') {
       $sql_part[] = ' property_unit = ? ';
@@ -1576,7 +1596,8 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 
     if(!empty($sql_part) ) {
       $query->innerJoin('s.SubProperties p');
-      $query->groupBy("s.id");
+      $query->andWhere("p.referenced_relation = ? ",'specimens');
+      //$query->groupBy("s.id");
 
       $query->andWhere(implode(' AND ', $sql_part), $sql_params ) ;
       $this->with_group = true;
@@ -1775,7 +1796,7 @@ $query = DQ::create()
     //ftheeten 2018 09 19
     $this->addTaxonomicMetadataRef($query, $values["taxonomy_metadata_ref"]);
     
-    $this->addPropertiesQuery($query, $values['property_type'] , $values['property_applies_to'], $values['property_value_from'], $values['property_value_to'], $values['property_units']);
+    $this->addPropertiesQuery($query, $values['property_type'] , $values['property_applies_to'], $values['property_value_from'], $values['property_value_to'], $values['property_units'], $values);
 
     $this->addCommentsQuery($query, $values['comment_notion_concerned'] , $values['comment']);
 

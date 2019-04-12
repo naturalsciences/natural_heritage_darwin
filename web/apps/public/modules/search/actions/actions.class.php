@@ -197,10 +197,14 @@ class searchActions extends DarwinActions
     }
   }
 
+  //madam 2019 04 09
+  /*
   public function executeGetTaxon (sfWebRequest $request)
   {
-  
-	$taxa = Doctrine::getTable('Taxonomy')->getOneTaxon($request->getParameter('taxon-name'));
+	  $taxa = Doctrine::getTable('Taxonomy')->getOneTaxon($request->getParameter('taxon-name'));
+	$taxaCount = count($taxa);
+	
+	
 	$taxaCount = count($taxa);
     if ($taxaCount==1) {
 	  return $this->renderText($taxa[0]['name']." (".$taxa[0]['Level']['level_name'].")");
@@ -209,9 +213,30 @@ class searchActions extends DarwinActions
 	   return $this->renderText('multiple match');
 	}
 	return $this->renderText('taxon not found');
-  
+  }
+  */
+  public function executeGetTaxon (sfWebRequest $request)
+  {
+	$this->getResponse()->setHttpHeader('Content-type','application/json');
+    $this->setLayout('json');
+	
+	$taxa = Doctrine::getTable('Taxonomy')->getOneTaxon($request->getParameter('taxon-name'),$request->getParameter('taxon-level'));
+	$taxaCount = count($taxa);
+	
+    if ($taxaCount==1) {
+		$response = array_merge(array(array("response" => "unique match","count" => $taxaCount)), $taxa);
+		return $this->renderText(json_encode($response));
+	}
+	elseif($taxaCount>1) {
+		$response = array_merge(array(array("response" => "multiple match","count" => $taxaCount)), $taxa);
+		return $this->renderText(json_encode($response));
+	}
+	return $this->renderText(json_encode(array(array("response" => "not found","count" => $taxaCount))));
+	
   }
 
+  
+  
   /**
    * @param \sfWebRequest $request
    */

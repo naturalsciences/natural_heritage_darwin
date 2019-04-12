@@ -11,12 +11,44 @@ th, td {
 <div class="page">
 <div>
 
+<form action="<?php print(url_for("import/viewUnimportedLitho"));?>/id/<?php print($id);?>">
+Count all : <?php print($size_data);?><br/>
+Current page : <?php print($page);?> / <?php print($max_page);?> <br/>
+Page : 
+<?php if($page>1):?><a href="<?php print(url_for("import/viewUnimportedLitho"));?>?id=<?php print($id);?>&page=<?php print($page-1);?>"><?php print(__("<"));?></a><?php endif;?>
+<select id="page" name="page">
+ <?php for($i=0;$i<ceil((int)$size_data/(int)$size_catalogue);$i++):?>
+ 
+ <option <?php print($i+1==$page?'selected="selected"':"");?> value="<?php print($i+1);?>"><?php print($i+1);?></option>
+ <?php endfor;?>
+</select>
+<?php if($page<$max_page):?><a href="<?php print(url_for("import/viewUnimportedLitho"));?>?id=<?php print($id);?>&page=<?php print($page+1);?>"><?php print(__(">"));?></a><?php endif;?>
+<br/>
+<input type="submit" value = "go"></submit>
+</form>
+
 <table>
 <tr>
 <th>Message</th>
 <th>Count</th>
 </tr>
  <?php $sum=0; $i=0; foreach($stats as $stat):?>
+    <tr>
+		<?php $text; $text = $stat['import_exception'] ?: "None" ?>
+         <td><a  href="javascript:filter_stats('<?php print($text);?>')" ><?php print($text);?></a></td>
+         <td><?php $sum+=(int)$stat['count'];  print($stat['count']);?></td>           
+    </tr>
+ <?php endforeach;?>
+ <tr><td><a href="javascript:reinit_stats();" >Total : </a></td><td><?php print($sum);?></td>
+</table>
+
+All data:<br/>
+<table>
+<tr>
+<th>Message</th>
+<th>Count</th>
+</tr>
+ <?php $sum=0; $i=0; foreach($stats_all as $stat):?>
     <tr>
 		<?php $text; $text = $stat['import_exception'] ?: "None" ?>
          <td><a  href="javascript:filter_stats('<?php print($text);?>')" ><?php print($text);?></a></td>

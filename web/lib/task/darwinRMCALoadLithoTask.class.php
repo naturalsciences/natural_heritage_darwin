@@ -1,6 +1,6 @@
 <?php
 
-class darwinRMCALoadGtuTask extends sfBaseTask
+class darwinRMCALoadLithoTask extends sfBaseTask
 {
 
   protected function configure()

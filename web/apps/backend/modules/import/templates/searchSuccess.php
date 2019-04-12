@@ -12,6 +12,10 @@
       <table class="results">
         <thead>
           <tr>
+            <th><a class="sort" href="<?php echo url_for($s_url.'&orderby=id'.( ($orderBy=='id' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
+                <?php echo __("id");?>
+                <?php  echo $orderSign ?>
+              </a></th>
             <th></th>
             <?php if($format != 'taxon'&&$format != 'lithostratigraphy') : ?>
             <th>
@@ -51,6 +55,8 @@
         <tbody>
           <?php foreach($imports as $import):?>
             <tr class="rid_<?php echo $import->getId(); ?>">
+              
+              <td><?php echo __($import->getId());?></td>
               <td></td>
               <?php if($format != 'taxon'&&$format != 'lithostratigraphy') : ?><td><?php echo $import->Collections->getName();?></td><?php endif ; ?>
               <td><?php echo $import->getFilename();?></td>
@@ -88,9 +94,9 @@
               <?php else : ?>
               <td>
 			   <!--ftheeten 2018 09 25 update for locality-->
-                <?php if ($import->isEditableState()&&$format != 'locality') : ?>
+                <?php if ($import->isEditableState()&&$format == 'abcd') : ?>
                   <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit import'))),'staging/index?import='.$import->getId());?>
-				<?php elseif ($format == 'locality'&& $import->getState() != 'finished'&& $import->getState() != 'processing'&& $import->getState() != 'aloaded') : ?>
+				<?php elseif ($format == 'locality'&& $import->getState() != 'processing'&& $import->getState() != 'aloaded') : ?>
 				<?php echo link_to(image_tag('edit.png',array('title'=>__('Edit import'))),'import/viewUnimportedGtu?id='.$import->getId()); ?>
                 <?php elseif ($format == 'taxon'&& ($import->getState() == 'finished')||$import->isEditableState()) : ?>
                    <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit import'))),'import/viewUnimportedTaxa?id='.$import->getId()); ?>

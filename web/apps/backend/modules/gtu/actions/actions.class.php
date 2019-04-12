@@ -129,11 +129,15 @@ class gtuActions extends DarwinActions
     $this->form = new GtuForm($gtu);
     if ($duplic)
     {
+    print("!!!!!!!!!!!!!!!!!!");
+    print($duplic);
       $Tag = Doctrine::getTable('TagGroups')->fetchTag($duplic) ;
       if(count($Tag))
       {
+        print("xxxxxxxxxxxx");
         foreach ($Tag[$duplic] as $key=>$val)
         {
+        print("°°°°°°°°°°°°---");
            $tag = new TagGroups() ;
            $tag = $this->getRecordIfDuplicate($val->getId(), $tag);
            $this->form->addValue($key, $val->getGroupName(), $tag);
@@ -175,19 +179,17 @@ class gtuActions extends DarwinActions
   
   public function executeUpdate(sfWebRequest $request)
   {
-  print("try update");
     $this->forward404Unless($request->isMethod(sfRequest::POST) || $request->isMethod(sfRequest::PUT));
     $this->forward404Unless($gtu = Doctrine::getTable('Gtu')->find($request->getParameter('id')), sprintf('Object gtu does not exist (%s).', $request->getParameter('id')));
     $this->no_right_col = Doctrine::getTable('Gtu')->testNoRightsCollections('gtu_ref',$request->getParameter('id'), $this->getUser()->getId());
     $this->form = new GtuForm($gtu);
-  print("try process");
+
     $this->processForm($request, $this->form, 'update');
     $this->no_right_col = Doctrine::getTable('Gtu')->testNoRightsCollections('gtu_ref',$request->getParameter('id'), $this->getUser()->getId());
 
     $this->loadWidgets();
     $this->setTemplate('edit');
-      print("end update");
-    
+  
   }
 
   public function executeDelete(sfWebRequest $request)
