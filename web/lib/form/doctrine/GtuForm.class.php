@@ -535,10 +535,13 @@ class GtuForm extends BaseGtuForm
   
   public function deleteDate(array $taintedValues = null, array $taintedFiles = null)
   {
+	  print("DELETE");
     if(isset($taintedValues["delete_mode"])&&is_numeric($taintedValues["temporal_information"]))
     {
+		print("enter");
         if(strtolower($taintedValues["delete_mode"])=="on")
         {   
+	print("on");
             Doctrine::getTable('TemporalInformation')->deleteTemporalInformation($taintedValues["temporal_information"]);
         }
     }

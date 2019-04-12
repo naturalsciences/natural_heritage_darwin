@@ -114,20 +114,21 @@
                             </td ></tr>
                              <?php $iRow++;?>
                             <?php endforeach;?>
-                            </table>                            
-                              <?php if($is_choose):?>                              
+                            </table>   
+                            <?php if($is_choose && !strpos($referer,"/staging/edit/id")):?>                             
+                                 <br/><div  name="date_choose" class="result_choose"><?php echo __('Choose place and date');?></div>                                   
+                             <?php endif;?>                            
+                              <?php if($is_choose && !strpos($referer,"/staging/edit/id")):?>                              
                                <br/><div name="gtu_choose" class="result_choose"><?php echo __('Choose place without date');?></div>               
                               <?php endif;?>
                             
-                            <?php if($is_choose):?>                             
-                                 <br/><div  name="date_choose" class="result_choose"><?php echo __('Choose place and date');?></div>                                   
-                            <?php endif;?>
+                            
                             </li>                   
-                   <?php elseif($is_choose):?>
+                   <?php elseif($is_choose && !strpos($referer,"/staging/edit/id")):?>
                     <br/><div name="gtu_choose" class="result_choose"><?php echo __('Choose place without date');?></div>  
                    <?php endif;?>
                    <?php if(strpos($referer,"/staging/edit/id")):?>
-                    <br/><div name="gtu_choose" class="result_choose"><?php echo __('Choose place id');?></div>  
+                    <br/><div name="gtu_choose" class="result_choose update_staging"><?php echo __('Choose place id');?></div>  
                    <?php endif;?>
 			</td>
 			</td>

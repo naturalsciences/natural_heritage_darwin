@@ -213,6 +213,12 @@ $(document).ready(function () {
 							}
 			}
 	   );
+       if ($('.main_error_list')[0]){
+            if($('.main_error_list').css('display').toLowerCase()!="none")
+            {
+                 alert("Error, data not recorded in database ! Check submitted data");
+            }
+        }
 	   
    }
    

@@ -11,6 +11,8 @@
  */
 class importActions extends DarwinActions
 {
+  public $size_staging_catalogue=1000;
+  
   public function preExecute()
   {
     if(! $this->getUser()->isAtLeast(Users::ENCODER))
@@ -261,10 +263,18 @@ class importActions extends DarwinActions
     $this->setCommonValues('import', 'updated_at', $request);
     if( $request->getParameter('orderby', '') == '' && $request->getParameter('orderdir', '') == '')
       $this->orderDir = 'desc';
-    if($this->format != 'abcd')
+    if($this->format == 'taxon'||$this->format == 'lithostratigraphy')
+    {
       $this->s_url = 'import/searchCatalogue'.'?is_choose='.$this->is_choose;
-    else
+    }
+    elseif($this->format == 'locality')
+    {
+      $this->s_url = 'import/searchLocality'.'?is_choose='.$this->is_choose;
+    }
+    elseif($this->format == 'abcd')
+    {
       $this->s_url = 'import/search'.'?is_choose='.$this->is_choose;
+    }
     $this->o_url = '&orderby='.$this->orderBy.'&orderdir='.$this->orderDir;
     if($request->getParameter('imports_filters','') !== '')
     {
@@ -435,7 +445,7 @@ class importActions extends DarwinActions
                         $this->setImportAsWorking($conn, array($request->getParameter('id')), true);
                         $currentDir=getcwd();
                         chdir(sfconfig::get('sf_root_dir'));
- //print( 'nohup php symfony '.$cmd.'  >/dev/null &' );                        
+ print( 'nohup php symfony '.$cmd.'  >/dev/null &' );                        
                         exec('nohup php symfony '.$cmd.'  >/dev/null &' );
                        
                         
@@ -619,17 +629,35 @@ EOF
             $staging_gtu->setSamplingCode($sampling_code);
             $staging_gtu->save();
         }
+	    chdir(sfconfig::get('sf_root_dir'));   
+        $cmd='darwin:import-gtu --id='.$staging_gtu->getImportRef();          
+        exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+		chdir($currentDir);	 
     }
+	  
      $this->redirect('import/indexLocalities');
   }
   
    public function executeViewUnimportedGtu(sfWebRequest $request)
   {
-     $idImport=$request->getParameter("id");
-     $this->id= $idImport;
-     $this->items = Doctrine::getTable("StagingGtu")->getImportData($idImport);
-      $this->stats= Doctrine::getTable("StagingGtu")->countExceptionMessages($idImport);
+    $idImport=$request->getParameter("id");
+    $this->id= $idImport;
+    $this->size_catalogue= (int)$this->size_staging_catalogue;
+	 
+	$this->page=$request->getParameter("page",1);
+	$offset=((int)$this->page-1)*$this->size_catalogue;
+	$this->items = Doctrine::getTable("StagingGtu")->getImportData($idImport, $offset, $this->size_catalogue);	 
+	$this->stats= Doctrine::getTable("StagingGtu")->countExceptionMessages($idImport, $offset, $this->size_catalogue);
+    	
+	 foreach($this->stats as $stat)
+	 {
+		$this->size_data=(int)$stat["count_all"];
+		$this->max_page= ceil((int)$this->size_data/(int)$this->size_catalogue);
+		 break;
+	 }
+	 $this->stats_all= Doctrine::getTable("StagingGtu")->countExceptionMessages($idImport,0, $this->size_data);
      $this->form = new ImportsLocalityForm(null,array('items' =>$this->items));
+	 
        
   } 
   
@@ -638,10 +666,22 @@ EOF
   {
      $idImport=$request->getParameter("id");
      $this->id= $idImport;
-     $this->items = Doctrine::getTable("StagingCatalogue")->getByImportRef($idImport);	 
-	 $this->stats= Doctrine::getTable("StagingCatalogue")->countExceptionMessages($idImport);
+	 $this->size_catalogue= (int)$this->size_staging_catalogue;
+	 
+	$this->page=$request->getParameter("page",1);
+	$offset=((int)$this->page-1)*$this->size_catalogue;
+	$this->items = Doctrine::getTable("StagingCatalogue")->getByImportRef($idImport, $offset, $this->size_catalogue);	 
+	$this->stats= Doctrine::getTable("StagingCatalogue")->countExceptionMessages($idImport, $offset, $this->size_catalogue);
+    	
+	 foreach($this->stats as $stat)
+	 {
+		$this->size_data=(int)$stat["count_all"];
+		$this->max_page= ceil((int)$this->size_data/(int)$this->size_catalogue);
+		 break;
+	 }
      $this->import=Doctrine::getTable("Imports")->find($idImport);
      $this->metadata_ref=$this->import->getSpecimenTaxonomyRef();
+	$this->stats_all= Doctrine::getTable("StagingCatalogue")->countExceptionMessages($idImport,0, $this->size_data);
      
        
   } 
@@ -651,10 +691,22 @@ EOF
   {
      $idImport=$request->getParameter("id");
      $this->id= $idImport;
-     $this->items = Doctrine::getTable("StagingCatalogue")->getByImportRef($idImport);	 
-	 $this->stats= Doctrine::getTable("StagingCatalogue")->countExceptionMessages($idImport);
+	 $this->size_catalogue= (int)$this->size_staging_catalogue;
+	 
+	$this->page=$request->getParameter("page",1);
+	$offset=((int)$this->page-1)*$this->size_catalogue;
+	$this->items = Doctrine::getTable("StagingCatalogue")->getByImportRef($idImport, $offset, $this->size_catalogue);	 
+	$this->stats= Doctrine::getTable("StagingCatalogue")->countExceptionMessages($idImport, $offset, $this->size_catalogue);
+    	
+	 foreach($this->stats as $stat)
+	 {
+		$this->size_data=(int)$stat["count_all"];
+		$this->max_page= ceil((int)$this->size_data/(int)$this->size_catalogue);
+		 break;
+	 }
      $this->import=Doctrine::getTable("Imports")->find($idImport);
      $this->metadata_ref=$this->import->getSpecimenTaxonomyRef();
+	$this->stats_all= Doctrine::getTable("StagingCatalogue")->countExceptionMessages($idImport,0, $this->size_data);
      
        
   }    

@@ -46,7 +46,7 @@ class ImportCatalogueXml implements ImportModelsInterface
     //ftheeten 2019 02 05
 	if(strpos(strtolower($mime_type),"text/")==0&&strtolower($mime_type)!="text/xml")
     {
-        print("GO_CSV");
+        //print("GO_CSV");
         if (!($fp = fopen($file, "r"))) {
             return("could not open input file");
         }
@@ -200,7 +200,7 @@ class ImportCatalogueXml implements ImportModelsInterface
   
   private function saveUnit()
   {
-    print("SAVE");
+    //print("SAVE");
     $this->staging_catalogue->fromArray(array("import_ref" => $this->import_id, "parent_ref" => $this->parent
     //ftheeten 2017 07 06
     ,"taxonomy_name"=> $this->taxonomy_name, "creation_date"=> $this->creation_date
@@ -220,19 +220,19 @@ class ImportCatalogueXml implements ImportModelsInterface
 	print($this->staging_catalogue->getName());*/
     try
     {
-        print("try");
+      //  print("try");
       $result = $this->staging_catalogue->save() ;
 	  //print("\r\nSave\r\n");
       foreach($result as $key => $error)
       {
-        print("debug");
+        //print("debug");
         $this->errors_reported .= $error ;
       }
       $this->parent = $this->staging_catalogue->getId() ;
     }
     catch(Doctrine_Exception $ne)
     {
-      print("debug 2");
+      //print("debug 2");
       $e = new DarwinPgErrorParser($ne);
       $this->errors_reported .= "Unit ".$this->staging_catalogue->getName()." object were not saved: ".$e->getMessage().";";
     }

@@ -4,4 +4,48 @@
  */
 class GtuTable extends DarwinTable
 {
+
+      //ftheeten 2018 12 12
+  public function getRelatedTemporalInformationMaskedGtuId($p_gtu_id)
+  {
+	  $returned=Array();
+	  
+      foreach(Doctrine::getTable('TemporalInformation')->getDistinctTemporalInformation($p_gtu_id) as $key=>$array)
+      {
+            $item = new TemporalInformation();
+            $item->fromArray($array);
+		    if((int)$item->getFromDateMask()>0||(int)$item->getToDateMask()>0)
+			{
+				$tmp=Array();
+                $tmp['id']=$item->getId();
+                $tmp['from_raw']=$item->getFromDate();
+				$tmp['to_raw']=$item->getToDate();
+				$tmp["from"]=$item->getFromDateString();//getFromDateMasked(ESC_RAW);
+				$tmp["to"]=$item->getToDateString(); //getToDateMasked(ESC_RAW);
+                $tmp["from_masked"]=$item->getFromDateMasked(ESC_RAW);
+                $tmp["to_masked"]=$item->getToDateMasked(ESC_RAW);
+                $tmp["from_mask"]=(int)$item->getFromDateMask();
+                $tmp["to_mask"]=(int)$item->getToDateMask();
+                
+                $tmp['from_year']=$item->getFromDate()['year'];
+                $tmp['from_month']=$item->getFromDate()['month'];
+                $tmp['from_day']=$item->getFromDate()['day'];
+                $tmp['from_hour']=$item->getFromDate()['hour'];
+                $tmp['from_minute']=$item->getFromDate()['minute'];
+                $tmp['from_second']=$item->getFromDate()['second'];
+                $tmp['to_year']=$item->getToDate()['year'];
+                $tmp['to_month']=$item->getToDate()['month'];
+                $tmp['to_day']=$item->getToDate()['day'];
+                $tmp['to_hour']=$item->getToDate()['hour'];
+                $tmp['to_minute']=$item->getToDate()['minute'];
+                $tmp['to_second']=$item->getToDate()['second'];
+                
+
+				$returned[]=$tmp;
+			}
+	  }
+    
+	  return $returned;
+  }
+  
 }

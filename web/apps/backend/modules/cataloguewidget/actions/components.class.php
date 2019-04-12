@@ -102,4 +102,16 @@ class cataloguewidgetComponents extends sfComponents
   {
     $this->Biblios = Doctrine::getTable('CatalogueBibliography')->findForTable($this->table, $this->eid);
   }
+  
+   public function executeGtuTemporalInformation()
+  {  
+	if(isset($this->eid) && $this->eid !== null)
+      {
+        $gtu = Doctrine::getTable('Gtu')->find($this->eid);
+        $this->form = new GtuForm($gtu);
+        $this->gtu_id = $this->eid;
+	  }
+    
+	
+  }
 }

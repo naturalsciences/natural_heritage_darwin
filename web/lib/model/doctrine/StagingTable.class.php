@@ -59,4 +59,6 @@ class StagingTable extends DarwinTable
       ->set('state', '?','processing')
       ->execute();
   }
+  
+
 }

@@ -150,9 +150,11 @@ class ImportABCDXml implements ImportModelsInterface
     $this->tag = $name ;
     $this->path .= "/$name" ;
     $this->cdata = '' ;
-    $this->inside_data = false ;
+    $this->inside_data = false ;    
+    //$this->people_type_tmp=null;
     switch ($name) {
       case "Accessions" : $this->object = new parsingTag() ; break;
+      case "Acquisition" : $this->object->setPeopleType("donator"); break;
       case "efg:ChronostratigraphicAttributions" : //SAME AS BELOW
       case "ChronostratigraphicAttributions" : $this->object = new ParsingCatalogue('chronostratigraphy') ; break;
       case "Country" : $this->object->tag_group_name="country" ; break;
@@ -162,6 +164,7 @@ class ImportABCDXml implements ImportModelsInterface
       case "LithostratigraphicAttribution" : //SAME AS BELOW
       case "efg:LithostratigraphicAttribution" : $this->object = new ParsingCatalogue('lithostratigraphy') ; break;
       case "Gathering" : $this->object = new ParsingTag("gtu") ; $this->comment_notion = 'general comments'  ; break;
+      case "GatheringAgent" : $this->object->setPeopleType("collector"); break;
       case "efg:MineralRockIdentified" : break;
       case "HigherTaxa" : $this->object->catalogue_parent = new Hstore() ;break;
       case "Identification" : $this->object = new ParsingIdentifications() ; break;
@@ -170,6 +173,7 @@ class ImportABCDXml implements ImportModelsInterface
       case "Petrology" : $this->object = new ParsingTag("lithology") ; break;
       case "efg:RockUnit" : //SAME AS BELOW
       case "RockUnit" : $this->object = new ParsingCatalogue('lithology') ; break;
+      case "Sequence" : $this->object = new ParsingMaintenance('Sequencing') ; break;
       case "Sequence" : $this->object = new ParsingMaintenance('Sequencing') ; break;
       case "SpecimenUnit" : $this->object = new ParsingTag("unit") ; break;
       case "Unit" : $this->staging = new Staging(); $this->name = ""; $this->staging->setId($this->getStagingId()); $this->object = null;
@@ -196,6 +200,7 @@ class ImportABCDXml implements ImportModelsInterface
         case "Accuracy" : $this->getPreviousTag()=='Altitude'?$this->staging['gtu_elevation_accuracy']=$this->cdata:$this->property->property->property_accuracy=$this->cdata ; break;
         case "AcquisitionDate" : $dt =  FuzzyDateTime::getValidDate($this->cdata); if (!is_null($dt)) { $this->staging['acquisition_date'] = $dt->getDateTime(); $this->staging['acquisition_date_mask'] = $dt->getMask();} break;
         case "AcquisitionType" : $this->staging['acquisition_category'] = in_array($this->cdata,SpecimensTable::$acquisition_category)?array_search($this->cdata,SpecimensTable::$acquisition_category):'undefined' ; break;
+       // case "Acquisition" : $this->people_type_tmp=NULL; break;
         case "AppliesTo" : $this->property->setAppliesTo($this->cdata); break;
         case "AreaClass" : $this->object->tag_group_name = $this->cdata ; break;
         case "AreaName" : $this->object->tag_value = $this->cdata ; break;
@@ -236,6 +241,7 @@ class ImportABCDXml implements ImportModelsInterface
         case "dna:ExtractionDate" : $dt =  FuzzyDateTime::getValidDate($this->cdata); if (!is_null($dt)) {$this->object->maintenance->setModificationDateTime($dt->getDateTime()); $this->object->maintenance->setModificationDateMask($dt->getMask());} break;
         case "dna:ExtractionMethod" : $this->object->maintenance->setDescription($this->cdata) ; break;
         case "dna:ExtractionStaff" : $this->handlePeople($this->object->people_type,$this->cdata) ; break;
+        //case "GatheringAgent" : $this->people_type_tmp=NULL; break;
         case "dna:GenBankNumber" : $this->handleGenbankNumber($this->cdata); break;
         case "dna:RatioOfAbsorbance260_280" : $this->property = new ParsingProperties("Ratio of absorbance 260/280","DNA") ; $this->property->property->setLowerValue($this->cdata) ; $this->addProperty(true) ; break;
         case "dna:Tissue" : $this->property = new ParsingProperties("Tissue","DNA") ; $this->property->property->setLowerValue($this->cdata) ; $this->addProperty(true) ; break;
@@ -260,7 +266,7 @@ class ImportABCDXml implements ImportModelsInterface
           }
           break;
         case "HigherTaxa" : $this->object->getCatalogueParent($this->staging) ; break;
-        case "HigherTaxon" : $this->object->handleParent() ;break;;
+        case "HigherTaxon" : $this->object->handleParent() ;break;
         case "HigherTaxonName" : $this->object->higher_name = $this->cdata ;  break;
         case "HigherTaxonRank" : $this->object->higher_level = strtolower($this->cdata) ;  break;
         case "TaxonIdentified":  
@@ -339,10 +345,24 @@ class ImportABCDXml implements ImportModelsInterface
           }
           break;
         case "NamedArea" : $this->staging_tags[] = $this->object->addTagGroups(); break;
-        case "Notes" : if($this->getPreviousTag() == "Identification") $this->addComment(true,"identifications") ; else $this->addComment() ;  break ;
+        case "Notes" : 
+						if($this->getPreviousTag() == "Identification") 
+						{
+							$this->addComment(true,"identifications") ; 
+						}
+						elseif($this->getPreviousTag() == "Gathering") 
+						{
+							$this->addComment(true,"sampling_locations") ; 
+						}
+						else
+						{
+							$this->addComment() ; 							
+						}
+						break ;
         case "Parameter" : $this->property->property->setPropertyType($this->cdata); if($this->cdata == 'DNA size') $this->property->property->setAppliesTo('DNA'); break;
         case "PersonName" : $this->handlePeople($this->object->people_type,$this->people_name) ; break;
-        case "Person" : $this->handlePeople($this->object->people_type,$this->people_name) ; break;
+        case "Person" :                 
+                $this->handlePeople($this->object->people_type,$this->people_name) ; break;
         case "efg:MineralDescriptionText" : $this->addComment(true, 'mineralogy') ; break;
         case "PetrologyDescriptiveText" : //SAME AS BELOW
         case "efg:PetrologyDescriptiveText" : $this->addComment(true, 'description') ; break;
@@ -700,12 +720,20 @@ class ImportABCDXml implements ImportModelsInterface
 
   private function handlePeople($type,$names)
   {
+
     foreach(explode(";",$names) as $name)
     {
-      $people = new StagingPeople() ;
-      $people->setPeopleType($type) ;
-      $people->setFormatedName($name) ;
-      $this->object->handleRelation($people,$this->staging) ;
+      $name=trim($name);
+      if(isset($name))
+      {
+          if(strlen($name)>0)
+          {
+            $people = new StagingPeople() ;
+            $people->setPeopleType($type) ;
+            $people->setFormatedName($name) ;
+            $this->object->handleRelation($people,$this->staging) ;
+           }
+       }     
     }
   }
   

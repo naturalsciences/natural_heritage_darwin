@@ -14,6 +14,10 @@
       <td colspan="2"><?php echo $form['property_applies_to'];?></td>
     </tr>
     <tr>
+    <th><?php echo $form['property_fuzzy']->renderLabel(); ?>
+        <?php echo $form['property_fuzzy']->renderError();?>: <?php echo $form['property_fuzzy'];?></td>
+    </tr>
+    <tr>
       <th><?php echo $form['property_value_from']->renderLabel(); ?>
         <?php echo $form['property_value_from']->renderError();?></th>
       <th><?php echo $form['property_value_to']->renderLabel(); ?>

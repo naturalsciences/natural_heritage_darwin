@@ -24,6 +24,9 @@ class TaxonomyTable extends DarwinTable
       return $q->execute() ;
   }
   
+    
+  //madam 2019 04 09 
+  /*
   public function getOneTaxon($taxonName) 
   {
     $response = Doctrine_Query::create()
@@ -35,6 +38,42 @@ class TaxonomyTable extends DarwinTable
                ->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
 
     return $response;
+  }
+  */
+  
+  public function getOneTaxon($taxonName, $taxonLevel)
+  {	  
+	$conn = Doctrine_Manager::connection();
+	//$taxonName=$conn->quote($taxonName);
+	if($taxonLevel=='')
+	{
+		$sql = "SELECT t.id as id, t.name as name, l.level_name as level, fct_rmca_sort_taxon_path_alphabetically_not_indexed(t.path) as hierarchy
+			FROM taxonomy t
+			LEFT JOIN catalogue_levels l
+			ON t.level_ref=l.id
+			WHERE t.name_indexed LIKE CONCAT(fulltoindex(:taxon_name),'%') AND l.level_type='taxonomy'";  
+	}
+	else
+	{	
+		$sql = "SELECT t.id as id, t.name as name, l.level_name as level, fct_rmca_sort_taxon_path_alphabetically_not_indexed(t.path) as hierarchy
+			FROM taxonomy t
+			LEFT JOIN catalogue_levels l
+			ON t.level_ref=l.id
+			WHERE t.name_indexed LIKE CONCAT(fulltoindex(:taxon_name),'%') AND l.level_sys_name=:taxon_level AND l.level_type='taxonomy'";  
+	}
+	
+	$q = $conn->prepare($sql);
+	if($taxonLevel=='')
+	{
+		$q->execute(array(':taxon_name'=> $taxonName));
+	}
+	else 
+	{
+		$q->execute(array(':taxon_name'=> $taxonName, ':taxon_level'=>$taxonLevel));
+	}
+	$response = $q->fetchAll(PDO::FETCH_ASSOC);
+	return $response;
+	
   }
   
   

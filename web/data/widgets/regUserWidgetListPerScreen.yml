@@ -172,7 +172,7 @@ sps9:
    order_by: 5
    opened: false
    visible: false
-   title_perso: Advanced: Search By ID
+   title_perso: Search by ID and creation date
    all_public: true
 
 sps10:
@@ -684,7 +684,19 @@ sw33:
    title_perso: Historic
    all_public: true
 
-   
+#2019 03 31
+sw34:
+   col_num: 1
+   category: specimen_widget
+   group_name: gtuDate
+   mandatory: false
+   order_by: 2
+   opened: false
+   visible: false
+   title_perso: Date
+   all_public: true
+
+      
 
    
 
@@ -1765,6 +1777,18 @@ gtu5:
    opened: true
    visible: true
    title_perso: Related Files
+   all_public: true
+ 
+#ftheeten 2019 03 31
+gtu6:
+   col_num: 1
+   category: catalogue_gtu_widget
+   group_name: gtuTemporalInformation
+   mandatory: false
+   order_by: 6
+   opened: true
+   visible: true
+   title_perso: Collecting dates
    all_public: true
 
 u1wmetto1:

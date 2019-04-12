@@ -1,3 +1,5 @@
+<!--link to OpenLayers 3 ftheeten 2018 06 04-->
+ <?php if(isset($gtu)):?>
 <script language="JavaScript" type="text/javascript" src="<?php print(public_path('/openlayers/v5.2.0-dist/ol.js'));?>"></script>
 <link rel="stylesheet" href="<?php print(public_path('/openlayers/v5.2.0-dist/ol.css'));?>">
 <table class="catalogue_table_view">
@@ -239,3 +241,4 @@ var mousePositionControl;
     <?php endif;?>
   </script>
 </table>
+ <?php endif;?>

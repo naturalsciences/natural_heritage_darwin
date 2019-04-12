@@ -861,7 +861,7 @@ class ImportGtuCSV
                 else if(in_array(strtolower($name_field),array("ecology", "natural_site", "ecology_text", "habitat", "habitat_text")))
                 {
                     $tag_obj->setGroupName("habitat");
-                    //$tag_obj->setSubGroupName(str_replace($name_field,'_text','')) ;
+
                 }
                 else if(in_array(strtolower($name_field),array("populated_place")))
                 {
@@ -870,11 +870,11 @@ class ImportGtuCSV
                 else
                 {
                     $tag_obj->setGroupName("other") ;
-                  //$tag_obj->setSubGroupName(str_replace('_text','', $name_field)) ;
                 }
                 //print($val_tag);                
                  
-                  $tag_obj->setSubGroupName(str_replace('_text','', $name_field)) ;
+                  //$tag_obj->setSubGroupName(str_replace('_text','', $name_field)) ;
+                $tag_obj->setSubGroupName($name_field) ;
                 $tag_obj->setTagValue($val_tag) ;
                 
                 $tag_obj->setStagingGtuRef($p_id) ;

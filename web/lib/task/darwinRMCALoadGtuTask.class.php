@@ -66,6 +66,8 @@ EOF;
              if($conn->inTransaction())
              {
                 $conn->rollback();
+				$import_obj->setState("pending");
+				$import_obj->save();
              }
              
           }

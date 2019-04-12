@@ -137,4 +137,9 @@ class ParsingTag extends ImportABCDXml
   {
     $staging->addRelated($object) ;
   }
+  
+  public function setPeopleType($value)
+  {
+     $this->people_type = $value;
+  }
 }
