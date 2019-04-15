@@ -20,6 +20,8 @@ class ImportABCDXml implements ImportModelsInterface
   private $code_suffix;
   private $code_suffix_separator;
   
+  private $max_xml_levels=20;
+  
   //ftheeten 2018 09 24
   protected function csvLineIsNotEmpty($p_row)
   {
@@ -34,6 +36,86 @@ class ImportABCDXml implements ImportModelsInterface
     return $returned;
   }
   
+  
+  protected function removeEmptyTagFile( $filepath)
+  {
+     $last_doc = null;  
+     //2019 04 15 flush empty tags
+     $doc = new DOMDocument();
+     $doc->preserveWhiteSpace = false;
+     $doc->formatOutput = true;
+     $doc->load($filepath);
+     $xpath = new DOMXPath($doc); 
+     print("TRY");
+     
+     
+     $tmp_xml_str="";
+     $i=0;
+     $xml_str=$doc->saveXML();  
+     while($i<$this->max_xml_levels && strlen($xml_str)!=strlen($tmp_xml_str))
+     {
+         $doc = new DOMDocument();
+         $doc->preserveWhiteSpace = false;
+         $doc->formatOutput = true;
+         $doc->loadXML($xml_str);
+         $xpath = new DOMXPath($doc); 
+         $tmp_xml_str=$xml_str;
+         while(($nodeList = $xpath->query('//*[not(text()) and not(node())]')) && $nodeList->length > 0 ) 
+         {
+                foreach($nodeList as $node)
+                {
+                    print("REMOVE");
+                    $node->parentNode->removeChild($node);
+                }
+               
+          }
+           
+           $xml_str=$doc->saveXML();
+           $last_doc=$doc;
+           $i++;          
+     }
+   
+    print($last_doc->saveXML());     
+    $last_doc->save($filepath);
+     
+     
+  }
+  
+    protected function removeEmptyTagString($xml_str)
+  {
+      $last_doc = null;    
+     //2019 04 15 flush empty tags           
+     $tmp_xml_str="";
+     $i=0;
+     print("TEST");
+     while($i<$this->max_xml_levels && strlen($xml_str)!=strlen($tmp_xml_str))
+     {
+         $doc = new DOMDocument();
+         $doc->preserveWhiteSpace = false;
+         $doc->formatOutput = true;
+         $doc->loadXML($xml_str);
+         $xpath = new DOMXPath($doc); 
+         print("TRY");
+         $tmp_xml_str=$xml_str;
+         while(($nodeList = $xpath->query('//*[not(text()) and not(node())]')) && $nodeList->length > 0 ) 
+         {
+                foreach($nodeList as $node)
+                {
+                    print("REMOVE");
+                    $node->parentNode->removeChild($node);
+                }
+               
+          }
+           $doc->formatOutput = true;
+           $xml_str=$doc->saveXML();
+           $last_doc=$doc;
+           $i++;          
+     }
+   
+    print($last_doc->saveXML());  
+    return $last_doc->saveXML();
+     
+  }
   
   /**
   * @function parseFile() read a 'to_be_loaded' xml file and import it, if possible in staging table
@@ -71,13 +153,17 @@ class ImportABCDXml implements ImportModelsInterface
 	}	
     if($mime_type==="text/plain")
     {  
+    
          //      fwrite($myfile, "\n!!!!!!!!!!!!!!!!!TEXT PLAIN MODE!!!!!!!!!!!!!!!!!!");
         if (!($fp = fopen($file, "r"))) {
             return("could not open input file");
-        }
-       
-    
+        }       
+      
+        
         $tabParser=new RMCATabToABCDXml();
+        fclose($fp);
+        //$this->removeEmptyTag($file);
+        $fp = fopen($file, "r");
         $options["tab_file"] = $file;
         $tabParser->configure($options);
         $tabParser->identifyHeader($fp);
@@ -96,6 +182,7 @@ class ImportABCDXml implements ImportModelsInterface
                     xml_set_character_data_handler($xml_parser, "characterData");
                     $xml_conv= $tabParser->parseLineAndGetString($row);
                     //print($xml_conv);
+                    $xml_conv=$this->removeEmptyTagString($xml_conv);
                     if (!xml_parse($xml_parser, $xml_conv, feof($fp))) {
                         return (sprintf("XML error: %s at line %d for record $i",
                                     xml_error_string(xml_get_error_code($xml_parser)),
@@ -110,6 +197,7 @@ class ImportABCDXml implements ImportModelsInterface
          
         //if(! $this->version_defined)
         //  $this->errors_reported = $this->version_error_msg.$this->errors_reported;
+        fclose($fp);
         return $this->errors_reported ;
     }
     else //old xml parser
@@ -122,6 +210,7 @@ class ImportABCDXml implements ImportModelsInterface
         if (!($fp = fopen($file, "r"))) {
             return("could not open XML input");
         }
+         $this->removeEmptyTagFile($file); 
         while ($this->data = fread($fp, 4096)) {
             if (!xml_parse($xml_parser, $this->data, feof($fp))) {
                 return (sprintf("XML error: %s at line %d",
@@ -132,6 +221,7 @@ class ImportABCDXml implements ImportModelsInterface
         xml_parser_free($xml_parser);
         if(! $this->version_defined)
           $this->errors_reported = $this->version_error_msg.$this->errors_reported;
+        fclose($fp);
         return $this->errors_reported ;
     }
   }
