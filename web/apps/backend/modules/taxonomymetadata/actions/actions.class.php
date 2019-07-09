@@ -22,7 +22,7 @@ class taxonomyMetadataActions extends DarwinActions
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     $this->forward404Unless(
-      $taxon = Doctrine::getTable('TaxonomyMetadata')->find($request->getParameter('id')),
+      $taxon = Doctrine_Core::getTable('TaxonomyMetadata')->find($request->getParameter('id')),
       sprintf('Object taxonomy does not exist (%s).',$request->getParameter('id'))
     );
 
@@ -80,9 +80,9 @@ class taxonomyMetadataActions extends DarwinActions
   public function executeEdit(sfWebRequest $request)
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
-    $taxa = Doctrine::getTable('TaxonomyMetadata')->find($request->getParameter('id'));
+    $taxa = Doctrine_Core::getTable('TaxonomyMetadata')->find($request->getParameter('id'));
 
-    /*$this->no_right_col = Doctrine::getTable('Taxonomy')->testNoRightsCollections('taxon_ref',$request->getParameter('id'), $this->getUser()->getId());
+    /*$this->no_right_col = Doctrine_Core::getTable('Taxonomy')->testNoRightsCollections('taxon_ref',$request->getParameter('id'), $this->getUser()->getId());
 **/
     $this->forward404Unless($taxa,'Taxa not Found');
     $this->form = new TaxonomyMetadataForm($taxa);
@@ -92,10 +92,10 @@ class taxonomyMetadataActions extends DarwinActions
   public function executeUpdate(sfWebRequest $request)
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
-    $taxa = Doctrine::getTable('TaxonomyMetadata')->find($request->getParameter('id'));
+    $taxa = Doctrine_Core::getTable('TaxonomyMetadata')->find($request->getParameter('id'));
 
     $this->forward404Unless($taxa,'Taxa not Found');
-    //$this->no_right_col = Doctrine::getTable('REGISTERED_USER')->testNoRightsCollections('taxon_ref',$request->getParameter('id'), $this->getUser()->getId());
+    //$this->no_right_col = Doctrine_Core::getTable('REGISTERED_USER')->testNoRightsCollections('taxon_ref',$request->getParameter('id'), $this->getUser()->getId());
     $this->form = new TaxonomyMetadataForm($taxa);
 
     $this->processForm($request,$this->form);
@@ -135,7 +135,7 @@ class taxonomyMetadataActions extends DarwinActions
 
   public function executeView(sfWebRequest $request)
   {
-    $this->taxonomy = Doctrine::getTable('TaxonomyMetadata')->find($request->getParameter('id'));
+    $this->taxonomy = Doctrine_Core::getTable('TaxonomyMetadata')->find($request->getParameter('id'));
     //$this->setLevelAndCaller($request);
    $this->searchForm = new TaxonomyFormFilter(array('table' => 'taxonomy'));
     $this->forward404Unless($this->taxonomy,'Taxa not Found');

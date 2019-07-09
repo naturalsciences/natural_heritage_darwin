@@ -6,37 +6,36 @@
  * @package    darwin
  * @subpackage filter
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
+ * @version    SVN: $Id$
  */
-abstract class BaseIgsSearchFormFilter extends BaseFormFilterDoctrine
+abstract class BaseIgsSearchFormFilter extends DarwinModelFormFilter
 {
-  public function setup()
+  protected function setupInheritance()
   {
-    $this->setWidgets(array(
-      'ig_num'                  => new sfWidgetFormFilterInput(),
-      'ig_num_indexed'          => new sfWidgetFormFilterInput(),
-      'ig_date_mask'            => new sfWidgetFormFilterInput(),
-      'expedition_name'         => new sfWidgetFormFilterInput(),
-      'expedition_name_indexed' => new sfWidgetFormFilterInput(),
-      'expedition_ref'          => new sfWidgetFormFilterInput(),
-    ));
+    parent::setupInheritance();
 
-    $this->setValidators(array(
-      'ig_num'                  => new sfValidatorPass(array('required' => false)),
-      'ig_num_indexed'          => new sfValidatorPass(array('required' => false)),
-      'ig_date_mask'            => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
-      'expedition_name'         => new sfValidatorPass(array('required' => false)),
-      'expedition_name_indexed' => new sfValidatorPass(array('required' => false)),
-      'expedition_ref'          => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
-    ));
+    $this->widgetSchema   ['ig_num'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['ig_num'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['ig_num_indexed'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['ig_num_indexed'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['ig_date_mask'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['ig_date_mask'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
+
+    $this->widgetSchema   ['ig_ref'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['ig_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => 'IgsSearch', 'column' => 'ig_ref'));
+
+    $this->widgetSchema   ['expedition_name'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['expedition_name'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['expedition_name_indexed'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['expedition_name_indexed'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['expedition_ref'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['expedition_ref'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
 
     $this->widgetSchema->setNameFormat('igs_search_filters[%s]');
-
-    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
-
-    $this->setupInheritance();
-
-    parent::setup();
   }
 
   public function getModelName()
@@ -46,14 +45,14 @@ abstract class BaseIgsSearchFormFilter extends BaseFormFilterDoctrine
 
   public function getFields()
   {
-    return array(
-      'ig_num'                  => 'Text',
-      'ig_num_indexed'          => 'Text',
-      'ig_date_mask'            => 'Number',
-      'ig_ref'                  => 'Number',
-      'expedition_name'         => 'Text',
+    return array_merge(parent::getFields(), array(
+      'ig_num' => 'Text',
+      'ig_num_indexed' => 'Text',
+      'ig_date_mask' => 'Number',
+      'ig_ref' => 'Number',
+      'expedition_name' => 'Text',
       'expedition_name_indexed' => 'Text',
-      'expedition_ref'          => 'Number',
-    );
+      'expedition_ref' => 'Number',
+    ));
   }
 }

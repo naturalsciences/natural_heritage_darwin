@@ -1,7 +1,0 @@
-autoload:
-    simple_ldap:
-        path: %SF_LIB_DIR%/vendor/upSimpleLdapPlugin-1.0.0
-        recursive: on
-    pdf2text:
-        path: %SF_LIB_DIR%/vendor/PDF2Text
-        recursive: on

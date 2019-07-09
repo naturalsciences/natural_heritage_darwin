@@ -11,7 +11,7 @@ default:
 
   stylesheets:    [reset.css, main.css?version=20190127, menu.css, /qtip2/dist/jquery.qtip.min.css, ui.datepicker.css, superfish.css]
 
-  javascripts:    [jquery-1.7.1.min.js, jquery-ui-1.8.17.custom.min.js, core.js?version=20190204, /qtip2/dist/jquery.qtip.min.js , catalogue.js?version=4, superclick.js, /js/mousetrap/mousetrap.min.js ]
+  javascripts:    [jquery-1.7.1.min.js, jquery-ui-1.8.17.custom.min.js, core.js?version=20190709, /qtip2/dist/jquery.qtip.min.js , catalogue.js?version=4, superclick.js,  /mousetrap/mousetrap.js?v=20190624 , /leaflet/leaflet.js,/Leaflet.draw/dist/leaflet.draw.js,]
 
   has_layout:     true
   layout:         layout

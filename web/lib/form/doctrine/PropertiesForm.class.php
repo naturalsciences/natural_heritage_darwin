@@ -106,7 +106,7 @@ class PropertiesForm extends BasePropertiesForm
     ));
 
     if(! $this->getObject()->isNew() || isset($this->options['hasmodel']))
-      $this->widgetSchema['applies_to']->setOption('forced_choices', Doctrine::getTable('Properties')->getDistinctApplies($this->getObject()->getPropertyType()) );
+      $this->widgetSchema['applies_to']->setOption('forced_choices', Doctrine_Core::getTable('Properties')->getDistinctApplies($this->getObject()->getPropertyType()) );
     else
       $this->widgetSchema['applies_to']->setOption('forced_choices',array(''=>''));
 
@@ -117,7 +117,7 @@ class PropertiesForm extends BasePropertiesForm
     ));
 
     if(! $this->getObject()->isNew() || isset($this->options['hasmodel']))
-      $this->widgetSchema['property_unit']->setOption('forced_choices', Doctrine::getTable('Properties')->getDistinctUnit($this->getObject()->getPropertyType()) );
+      $this->widgetSchema['property_unit']->setOption('forced_choices', Doctrine_Core::getTable('Properties')->getDistinctUnit($this->getObject()->getPropertyType()) );
     else
       $this->widgetSchema['property_unit']->setOption('forced_choices',array(''=>''));
 

@@ -7,6 +7,10 @@
       <th><?php echo __('Code suffix');?></th>
       <th class="centered"><?php echo __('Auto incremented ?');?></th>
       <th class="centered"><?php echo __('...for new spec. only ?');?></th>
+            <!--ftheeten 2018 04 26-->
+      <th class="centered"><?php echo __('Last value');?></th>
+      <!--ftheeten 2018 04 26-->
+      <th class="centered"><?php echo __('Inherits autoincrement from parent');?></th>
       <th class="centered"><?php echo __('Duplicate specimen codes');?></th>
       <th class="centered"><?php echo __('Code mask');?></th>
       <th></th>
@@ -32,6 +36,23 @@
       </td>
       <td class="centered">
         <?php echo ($collCodes->getCodeAutoIncrementForInsertOnly())?image_tag('checkbox_checked_green.png'):image_tag('checkbox_unchecked_green.png'); ?>
+      </td>
+       <!--ftheeten 2018 04 26-->
+      <td class="centered">
+        <?php 
+			if($collCodes->getCodeAutoIncrement()&&$collCodes->getCodeAiInherit())
+			{
+				echo($collCodes->getAutoIncrementFromParent()." (parent value) <br/>".$collCodes->getCodeLastValue(). " (in collection)");
+			}
+			else
+			{
+				echo $collCodes->getCodeLastValue();
+			}
+		?>
+      </td>
+       <!--ftheeten 2018 04 26-->
+      <td class="centered">
+        <?php echo $collCodes->getCodeAiInherit()?image_tag('checkbox_checked_green.png'):image_tag('checkbox_unchecked_green.png');?>
       </td>
       <td class="centered">
         <?php echo ($collCodes->getCodeSpecimenDuplicate())?image_tag('checkbox_checked_green.png'):image_tag('checkbox_unchecked_green.png'); ?>

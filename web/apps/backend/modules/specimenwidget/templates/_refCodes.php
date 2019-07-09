@@ -130,12 +130,9 @@ $(document).ready(function () {
         var parent_el = $(this).closest('table.property_values');
         var num_pos = 0+$(parent_el).find('tbody').length;
         var url = $(this).attr('href')+(num_pos);
-        <?php
-          $object_arr = $form->getObject()->toArray();
-          if( !empty( $object_arr['collection_ref'] ) ):
-        ?>
-          url += '/collection_id/' + $('input#specimen_collection_ref').val();
-        <?php endif; ?>
+        <?php if($module == 'specimen'):?>
+            url += '/collection_id/' + $('input#specimen_collection_ref').val();
+        <?php endif;?>
         $.ajax(
         {
           type: "GET",

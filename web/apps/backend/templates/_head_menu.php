@@ -149,10 +149,7 @@ if(array_key_exists("menu", $_SESSION))
                         <li><?php echo link_to(__('Bibliography'),'bibliography/new');?></li>
                     </ul>
                 </li>
-                <li><?php echo link_to(__('Specimens'),'specimen/new', 
-                            //ftheeten 2019 02 04
-                            array("class"=>"timestamp_specimen")
-                            );?></li>
+                <li><?php echo link_to(__('Specimens'),'specimen/new');?></li>
                 <?php if($sf_user->isAtLeast(Users::MANAGER)) : ?>
                 <li><?php echo link_to(__('Collections'),'collection/new');?></li>
                 <?php endif ?>
@@ -224,15 +221,7 @@ if(array_key_exists("menu", $_SESSION))
         });
         $('.lvl_2').hide();
        
-       //ftheeten 2019 02 04
-       $(".timestamp_specimen").click(
-            function()
-            {
-                 $(this).attr('href', function(i, h) {
-                     return h + (h.indexOf('?') != -1 ? "&timestamp="+Date.now() : "?timestamp="+Date.now());
-                   });
-            }
-       );       
+ 
         
         
       });

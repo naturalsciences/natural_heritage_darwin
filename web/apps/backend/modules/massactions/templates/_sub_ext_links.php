@@ -21,6 +21,13 @@
       <?php echo $form['MassActionForm']['ext_links']['type'];?>
     </td>
   </tr>
+  <tr>
+    <th><?php echo $form['MassActionForm']['ext_links']['replace_existing']->renderLabel();?></th>
+    <td>
+      <?php echo $form['MassActionForm']['ext_links']['replace_existing']->renderError() ?>
+      <?php echo $form['MassActionForm']['ext_links']['replace_existing'];?>
+    </td>
+  </tr>
   </tbody>
 </table>
 <script  type="text/javascript">

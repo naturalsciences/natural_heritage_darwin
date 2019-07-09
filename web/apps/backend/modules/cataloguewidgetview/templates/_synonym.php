@@ -10,7 +10,7 @@
     <?php foreach($synonyms as $group_name => $group):?>
     <tr>
       <td>
-        <?php $groups=Doctrine::getTable('ClassificationSynonymies')->findGroupnames() ; echo $groups[$group_name];?>
+        <?php $groups=Doctrine_Core::getTable('ClassificationSynonymies')->findGroupnames() ; echo $groups[$group_name];?>
       </td>
       <td>
         <table class="grp_id_<?php echo $group[0]['group_id'];?> widget_sub_table" alt="<?php echo $group_name;?>">

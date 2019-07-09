@@ -70,7 +70,7 @@ class Specimens extends BaseSpecimens
     $name = '-';
     if(! $this->isNew() && $this->_get('id')==0)
       return $name;
-    $codes = Doctrine::getTable('Codes')->getCodesRelated('specimens', $this->_get('id'));
+    $codes = Doctrine_Core::getTable('Codes')->getCodesRelated('specimens', $this->_get('id'));
     if (!$codes->count())
       return $name;
     $name = '';
@@ -300,6 +300,12 @@ class Specimens extends BaseSpecimens
   {
     return $this->_get('gtu_from_date');
   }
+
+  
+    public function getMainCode()
+   {
+		return Doctrine_Core::getTable('Specimens')->getMainCode($this->getId());
+   }
 
 // end group date  
 

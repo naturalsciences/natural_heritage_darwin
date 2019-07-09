@@ -21,7 +21,9 @@ class CollectionsForm extends BaseCollectionsForm
       'parent_ref',
       'collection_type',
       //ftheeten 2018 08 08
-      'allow_duplicates'
+      'allow_duplicates',
+	  //JMHerpers 2019 05 20
+	   'nagoya'
     ));
 
     $this->widgetSchema['is_public'] = new sfWidgetFormInputCheckbox(array ('default' => 'true'), array('title' => 'checked = public'));
@@ -72,9 +74,9 @@ class CollectionsForm extends BaseCollectionsForm
     $this->validatorSchema['collection_type'] = new sfValidatorChoice(array('choices' => array('mix' => 'mix', 'observation' => 'observation', 'physical' => 'physical'), 'required' => true));
 
     if(! $this->getObject()->isNew() || isset($this->options['duplicate']))
-      $this->widgetSchema['parent_ref']->setOption('choices', Doctrine::getTable('Collections')->getDistinctCollectionByInstitution($this->getObject()->getInstitutionRef()) );
+      $this->widgetSchema['parent_ref']->setOption('choices', Doctrine_Core::getTable('Collections')->getDistinctCollectionByInstitution($this->getObject()->getInstitutionRef()) );
     elseif(isset($this->options['new_with_error']))
-      $this->widgetSchema['parent_ref']->setOption('choices', Doctrine::getTable('Collections')->getDistinctCollectionByInstitution($this->options['institution']));
+      $this->widgetSchema['parent_ref']->setOption('choices', Doctrine_Core::getTable('Collections')->getDistinctCollectionByInstitution($this->options['institution']));
 
     $this->validatorSchema->setPostValidator(
       new sfValidatorCallback(array('callback' => array($this, 'checkSelfAttached')))
@@ -86,7 +88,7 @@ class CollectionsForm extends BaseCollectionsForm
 
     $subForm = new sfForm();
     $this->embedForm('CollectionsRights',$subForm);
-    foreach(Doctrine::getTable('CollectionsRights')->getAllUserRef($this->getObject()->getId()) as $key=>$vals)
+    foreach(Doctrine_Core::getTable('CollectionsRights')->getAllUserRef($this->getObject()->getId()) as $key=>$vals)
     {
       $form = new CollectionsRightsForm($vals);
       $this->embeddedForms['CollectionsRights']->embedForm($key, $form);
@@ -94,6 +96,10 @@ class CollectionsForm extends BaseCollectionsForm
     //Re-embedding the container
     $this->embedForm('CollectionsRights', $this->embeddedForms['CollectionsRights']);
 
+	//jmherpers 20190506
+	$this->widgetSchema['nagoya'] = new sfWidgetFormInputCheckbox(array ('default' => 'false'));
+    $this->validatorSchema['nagoya'] = new sfValidatorBoolean() ;
+	
     $subForm = new sfForm();
     $this->embedForm('newVal',$subForm);
   }
@@ -138,7 +144,7 @@ class CollectionsForm extends BaseCollectionsForm
     parent::bind($taintedValues, $taintedFiles);
   }
 
-  public function saveEmbeddedForms($con = null, $forms = null)
+  public function saveObjectEmbeddedForms($con = null, $forms = null)
   {
     if (null === $forms) {
       $value = $this->getValue('CollectionsRights');
@@ -160,6 +166,6 @@ class CollectionsForm extends BaseCollectionsForm
         }
       }
     }
-    return parent::saveEmbeddedForms($con, $forms);
+    return parent::saveObjectEmbeddedForms($con, $forms);
   }
 }

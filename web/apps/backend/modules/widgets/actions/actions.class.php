@@ -17,7 +17,7 @@ class widgetsActions extends DarwinActions
  */
   public function executeGetWidgetPosition(sfWebRequest $request)
   {
-    $widget = Doctrine::getTable('MyWidgets')->getWidget(
+    $widget = Doctrine_Core::getTable('MyWidgets')->getWidget(
       $this->getUser()->getAttribute('db_user_id'),
       $request->getParameter('widget',false),
       $request->getParameter('category')."_widget"
@@ -30,7 +30,7 @@ class widgetsActions extends DarwinActions
 
   public function executeAddWidget(sfWebRequest $request)
   {
-    $widget = Doctrine::getTable('MyWidgets')->getWidget($this->getUser()->getAttribute('db_user_id'),
+    $widget = Doctrine_Core::getTable('MyWidgets')->getWidget($this->getUser()->getAttribute('db_user_id'),
                                                              $request->getParameter('widget',false),
                                                              $request->getParameter('category')."_widget");
     $this->forward404unless($widget);
@@ -42,7 +42,7 @@ class widgetsActions extends DarwinActions
     $widget->setOrderBy($positions[$widget->getColNum()-1]);
     $widget->save();
 
-    Doctrine::getTable('MyWidgets')->incrementOrder(
+    Doctrine_Core::getTable('MyWidgets')->incrementOrder(
       $this->getUser()->getAttribute('db_user_id'),
       $request->getParameter('category')."_widget",
       $widget->getColNum(),
@@ -67,7 +67,7 @@ class widgetsActions extends DarwinActions
 
   public function executeChangeStatus(sfWebRequest $request)
   {
-    Doctrine::getTable('MyWidgets')
+    Doctrine_Core::getTable('MyWidgets')
       ->setUserRef($this->getUser()->getAttribute('db_user_id'))
       ->changeWidgetStatus($request->getParameter('category')."_widget", $request->getParameter('widget'), $request->getParameter('status'));
     return $this->renderText("ok");
@@ -77,7 +77,7 @@ class widgetsActions extends DarwinActions
   {
     $col1 = explode(',', $request->getParameter('col1'));
     $col2 = explode(',', $request->getParameter('col2'));
-    Doctrine::getTable('MyWidgets')
+    Doctrine_Core::getTable('MyWidgets')
       ->setUserRef($this->getUser()->getAttribute('db_user_id'))
       ->changeOrder($request->getParameter('category')."_widget", $col1, $col2);
     return $this->renderText(var_export($col1,true).var_export($col2,true));

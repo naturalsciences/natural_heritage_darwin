@@ -49,7 +49,7 @@ class storageActions extends DarwinActions
   }
 
   public function fetchPossibilies($el) {
-    $results = Doctrine::getTable('Specimens')->findConservatories($this->getUser(), $el, $this->to_query);
+    $results = Doctrine_Core::getTable('Specimens')->findConservatories($this->getUser(), $el, $this->to_query);
     foreach($results as $k=>$r) {
       $results[$k]['link'] = array('module' => 'storage',  'action'  => 'index' , $el => $r['item']) + $this->to_query;
       $results[$k]['search'] = array();

@@ -8,31 +8,21 @@
  * @package    darwin
  * @subpackage form
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
+ * @version    SVN: $Id$
  */
-abstract class BaseTemplatePeopleUsersCommCommonForm extends BaseFormDoctrine
+abstract class BaseTemplatePeopleUsersCommCommonForm extends DarwinModelForm
 {
-  public function setup()
+  protected function setupInheritance()
   {
-    $this->setWidgets(array(
-      'id'              => new sfWidgetFormInputHidden(),
-      'person_user_ref' => new sfWidgetFormInputText(),
-      'entry'           => new sfWidgetFormTextarea(),
-    ));
+    parent::setupInheritance();
 
-    $this->setValidators(array(
-      'id'              => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
-      'person_user_ref' => new sfValidatorInteger(),
-      'entry'           => new sfValidatorString(),
-    ));
+    $this->widgetSchema   ['person_user_ref'] = new sfWidgetFormInputText();
+    $this->validatorSchema['person_user_ref'] = new sfValidatorInteger();
+
+    $this->widgetSchema   ['entry'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['entry'] = new sfValidatorString();
 
     $this->widgetSchema->setNameFormat('template_people_users_comm_common[%s]');
-
-    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
-
-    $this->setupInheritance();
-
-    parent::setup();
   }
 
   public function getModelName()

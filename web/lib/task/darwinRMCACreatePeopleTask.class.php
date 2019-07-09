@@ -31,7 +31,7 @@ EOF;
                 print("GO");
 				$id_import=$options['id'];
                 print($id_import);
-                $import_obj = Doctrine::getTable('Imports')->find($id_import);
+                $import_obj = Doctrine_Core::getTable('Imports')->find($id_import);
 				
    				// $import_obj->setState("aprocessing");
 				$conn->beginTransaction();

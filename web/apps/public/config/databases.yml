@@ -10,6 +10,6 @@ prod:
   doctrine:
     class: sfDoctrineDatabase
     param:
-      dsn: 'pgsql:host=localhost;dbname=darwin2_rbins_test'
+      dsn: 'pgsql:host=salmoneus;dbname=darwin2_migration_2019'
       username: darwin2
-      password: darwin@123
+      password: CeBmPadYc

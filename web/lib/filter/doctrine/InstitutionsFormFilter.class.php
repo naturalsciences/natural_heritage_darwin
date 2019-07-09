@@ -24,6 +24,12 @@ class InstitutionsFormFilter extends BaseInstitutionsFormFilter
 
   public function addFamilyNameColumnQuery($query, $field, $val)
   {
-    return $this->addNamingColumnQuery($query, 'people', 'formated_name_indexed', $val);
+    //return $this->addNamingColumnQuery($query, 'people', 'formated_name_indexed', $val);
+    if($val != '')
+    {
+      //$alias = $query->getRootAlias() ;
+      $query->andWhere("LOWER(formated_name_indexed) LIKE '%'||LOWER(fulltoindex(?))||'%' ",$val);
+    }
+    return $query;
   }
 }

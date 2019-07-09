@@ -32,7 +32,7 @@ EOF;
     $connection = $databaseManager->getDatabase($options['connection'])->getConnection();
     $conn = Doctrine_Manager::connection();
     // get the list of report to execute
-    $reports = Doctrine::getTable('Reports')->getTaskReports();
+    $reports = Doctrine_Core::getTable('Reports')->getTaskReports();
     $this->log("Import Reports on ".date('G:i:s'));
     foreach ($reports as $report) {
       set_time_limit(0) ;
@@ -42,7 +42,7 @@ EOF;
         if ($content) {
           $uri = '/report/' . sha1($report->getName() . rand());
           file_put_contents(sfConfig::get('sf_upload_dir') . $uri, $content);
-          Doctrine::getTable('Reports')->updateUri($report->getId(), $uri);
+          Doctrine_Core::getTable('Reports')->updateUri($report->getId(), $uri);
         }
         else {
           $this->log("Problem with import of report ".$report->getName()." on ".date('G:i:s'));

@@ -47,39 +47,38 @@ class propertyActions extends DarwinActions
       }
     }
   }
-
+ /*
   public function executeAdd(sfWebRequest $request)
   {
     if(!$this->getUser()->isA(Users::ADMIN)) 
     {
       if($request->getParameter('table') == 'loans' || $request->getParameter('table') == 'loan_items')
       {
-        $loan = Doctrine::getTable($request->getParameter('table')=='loans'?'Loans':'LoanItems')->find($request->getParameter('id')) ;
-        if(!Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$request->getParameter('table')=='loans'?$loan->getId():$loan->getLoanRef()))
+        $loan = Doctrine_Core::getTable($request->getParameter('table')=='loans'?'Loans':'LoanItems')->find($request->getParameter('id')) ;
+        if(!Doctrine_Core::getTable('loanRights')->isAllowed($this->getUser()->getId(),$request->getParameter('table')=='loans'?$loan->getId():$loan->getLoanRef()))
           $this->forwardToSecureAction();
       }
       elseif($this->getUser()->isA(Users::REGISTERED_USER)) 
         $this->forwardToSecureAction();
     }  
-	if($request->hasParameter('id'))
+    if($request->hasParameter('id'))
     {  
       //ftheeten 2019 01 18
-      if((!is_numeric($request->getParameter('id'))|| (string)$request->getParameter('id') =="-1")&& $request->hasParameter("timestamp"))
+      if(!is_numeric($request->getParameter('id')))
       {
         $request->setParameter('id', -1);
-        $this->timestamp = $request->getParameter("timestamp");
       }
       else
       {      
 		  if((int)$request->getParameter('id')!=-1)
 		  {
-			  $r = Doctrine::getTable( DarwinTable::getModelForTable($request->getParameter('table')) )->find($request->getParameter('id'));
+			  $r = Doctrine_Core::getTable( DarwinTable::getModelForTable($request->getParameter('table')) )->find($request->getParameter('id'));
 			  $this->forward404Unless($r,'No such item');     
 			  if(!$this->getUser()->isA(Users::ADMIN))   
 			  {
 				if( $request->getParameter('table') == 'specimens' )
 				{
-				  if(! Doctrine::getTable('Specimens')->hasRights('spec_ref', $request->getParameter('id'), $this->getUser()->getId()))
+				  if(! Doctrine_Core::getTable('Specimens')->hasRights('spec_ref', $request->getParameter('id'), $this->getUser()->getId()))
 					$this->forwardToSecureAction();    
 				}
 			  }
@@ -89,7 +88,84 @@ class propertyActions extends DarwinActions
     $this->property = null;
     if($request->hasParameter('rid'))
     {
-      $this->property = Doctrine::getTable('Properties')->find($request->getParameter('rid'));
+      $this->property = Doctrine_Core::getTable('Properties')->find($request->getParameter('rid'));
+    }
+
+    if(! $this->property)
+    {
+     $this->property = new Properties();
+     $this->property->setRecordId($request->getParameter('id'));
+     $this->property->setReferencedRelation($request->getParameter('table'));
+     if($request->hasParameter('model'))
+       $this->property->setPropertyTemplate($request->getParameter('model'));     
+    }
+    $this->form = new PropertiesForm($this->property,array('ref_relation' => $request->getParameter('table'),'hasmodel' => $request->getParameter('model')?true:false));
+    
+    if($request->isMethod('post'))
+    {
+	    $this->form->bind($request->getParameter('properties'));
+	    if($this->form->isValid())
+	    {
+	      try{
+	        $this->form->save();
+            //ftheeten 2019 01 18
+            if($this->form->getObject()->getRecordId()==-1)
+            {
+               
+                if(!isset($_SESSION["TEMP_DARWIN_PROPERTY"]))
+                {                  
+                    $temp_array=array();
+                }
+                else
+                {
+                    $temp_array=$_SESSION["TEMP_DARWIN_PROPERTY"];
+                }
+                
+               $temp_array[]=$this->form->getObject()->getId();
+                $_SESSION["TEMP_DARWIN_PROPERTY"]=$temp_array;
+            }
+	        return $this->renderText('ok');
+	      }
+	      catch(Exception $ne)
+	      {
+	              $e = new DarwinPgErrorParser($ne);
+                $error = new sfValidatorError(new savedValidator(),$e->getMessage());
+                $this->form->getErrorSchema()->addError($error); 
+	      }
+	    }
+    }
+  }
+  */
+   public function executeAdd(sfWebRequest $request)
+  {
+    if(!$this->getUser()->isA(Users::ADMIN)) 
+    {
+      if($request->getParameter('table') == 'loans' || $request->getParameter('table') == 'loan_items')
+      {
+        $loan = Doctrine_Core::getTable($request->getParameter('table')=='loans'?'Loans':'LoanItems')->find($request->getParameter('id')) ;
+        if(!Doctrine_Core::getTable('loanRights')->isAllowed($this->getUser()->getId(),$request->getParameter('table')=='loans'?$loan->getId():$loan->getLoanRef()))
+          $this->forwardToSecureAction();
+      }
+      elseif($this->getUser()->isA(Users::REGISTERED_USER)) 
+        $this->forwardToSecureAction();
+    }  
+    if($request->hasParameter('id'))
+    {  
+      $r = Doctrine_Core::getTable( DarwinTable::getModelForTable($request->getParameter('table')) )->find($request->getParameter('id'));
+      $this->forward404Unless($r,'No such item');     
+      if(!$this->getUser()->isA(Users::ADMIN))   
+      {
+        if( $request->getParameter('table') == 'specimens' )
+        {
+          if(! Doctrine_Core::getTable('Specimens')->hasRights('spec_ref', $request->getParameter('id'), $this->getUser()->getId()))
+            $this->forwardToSecureAction();    
+        }
+      }
+    }
+    $this->property = null;
+    if($request->hasParameter('rid'))
+    {
+      $this->property = Doctrine_Core::getTable('Properties')->find($request->getParameter('rid'));
     }
 
     if(! $this->property)
@@ -116,23 +192,9 @@ class propertyActions extends DarwinActions
 	    {
 	      try{
 	        $this->form->save();
-            //ftheeten 2019 01 18
-            if($this->form->getObject()->getRecordId()==-1)
-            {
-               
-                if(!isset($_SESSION["TEMP_DARWIN_PROPERTY_".$this->timestamp]))
-                {                  
-                    $temp_array=array();
-                }
-                else
-                {
-                    $temp_array=$_SESSION["TEMP_DARWIN_PROPERTY_".$this->timestamp];
-                }
-                
-               $temp_array[]=$this->form->getObject()->getId();
-                $_SESSION["TEMP_DARWIN_PROPERTY_".$this->timestamp]=$temp_array;
-            }
 	        return $this->renderText('ok');
+			//jm herpers ftheeten 2018 03 13
+			//return $this->renderText('');
 	      }
 	      catch(Exception $ne)
 	      {
@@ -146,13 +208,13 @@ class propertyActions extends DarwinActions
   
   public function executeGetUnit(sfWebRequest $request)
   {
-    $this->items = Doctrine::getTable('Properties')->getDistinctUnit($request->getParameter('type'));
+    $this->items = Doctrine_Core::getTable('Properties')->getDistinctUnit($request->getParameter('type'));
     $this->setTemplate('options');
   }
 
   public function executeGetApplies(sfWebRequest $request)
   {
-    $this->items = Doctrine::getTable('Properties')->getDistinctApplies($request->getParameter('type'));
+    $this->items = Doctrine_Core::getTable('Properties')->getDistinctApplies($request->getParameter('type'));
     $this->setTemplate('options');
   }
 
@@ -162,7 +224,7 @@ class propertyActions extends DarwinActions
     $prop = null;
 
     if($request->hasParameter('id') && $request->getParameter('id'))
-      $prop = Doctrine::getTable('Properties')->find($request->getParameter('id') );
+      $prop = Doctrine_Core::getTable('Properties')->find($request->getParameter('id') );
 
     $form = new PropertiesForm($prop, array('ref_relation' => $request->getParameter('table')));
     $form->addValue($number);

@@ -31,10 +31,10 @@ class ImportCatalogueXml implements ImportModelsInterface
   {
     $this->import_id = $id ;
 	    //ftheeten 2017 07026
-	$importTmp=Doctrine::getTable('Imports')->find($this->import_id);
-	$taxonomyMetadataTmp=Doctrine::getTable('TaxonomyMetadata')->find($importTmp->getSpecimenTaxonomyRef());
+	$importTmp=Doctrine_Core::getTable('Imports')->find($this->import_id);
+	$taxonomyMetadataTmp=Doctrine_Core::getTable('TaxonomyMetadata')->find($importTmp->getSpecimenTaxonomyRef());
     //ftheeten 2018 03 22
-    $mime_type=Doctrine::getTable('Imports')->find($this->import_id)->getMimeType();
+    $mime_type=Doctrine_Core::getTable('Imports')->find($this->import_id)->getMimeType();
     $this->taxonomy_name=$taxonomyMetadataTmp->getTaxonomyName();
     $this->creation_date=$taxonomyMetadataTmp->getCreationDate();
     $this->creation_date_mask=$taxonomyMetadataTmp->getCreationDateMask();
@@ -152,7 +152,7 @@ class ImportCatalogueXml implements ImportModelsInterface
         case "Version":
           $this->version_defined = true;
           $authorized = sfConfig::get('tpl_authorizedversion');
-          Doctrine::getTable('Imports')->find($this->import_id)->setTemplateVersion(trim($this->version))->save();
+          Doctrine_Core::getTable('Imports')->find($this->import_id)->setTemplateVersion(trim($this->version))->save();
           if(
               !isset( $authorized['taxonomy'] ) ||
               empty( $authorized['taxonomy'] ) ||

@@ -8,33 +8,24 @@
  * @package    darwin
  * @subpackage form
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
+ * @version    SVN: $Id$
  */
-abstract class BaseFlatDictForm extends BaseFormDoctrine
+abstract class BaseFlatDictForm extends DarwinModelForm
 {
-  public function setup()
+  protected function setupInheritance()
   {
-    $this->setWidgets(array(
-      'id'                  => new sfWidgetFormInputHidden(),
-      'referenced_relation' => new sfWidgetFormTextarea(),
-      'dict_field'          => new sfWidgetFormTextarea(),
-      'dict_value'          => new sfWidgetFormTextarea(),
-    ));
+    parent::setupInheritance();
 
-    $this->setValidators(array(
-      'id'                  => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
-      'referenced_relation' => new sfValidatorString(),
-      'dict_field'          => new sfValidatorString(),
-      'dict_value'          => new sfValidatorString(),
-    ));
+    $this->widgetSchema   ['referenced_relation'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['referenced_relation'] = new sfValidatorString();
+
+    $this->widgetSchema   ['dict_field'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['dict_field'] = new sfValidatorString();
+
+    $this->widgetSchema   ['dict_value'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['dict_value'] = new sfValidatorString();
 
     $this->widgetSchema->setNameFormat('flat_dict[%s]');
-
-    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
-
-    $this->setupInheritance();
-
-    parent::setup();
   }
 
   public function getModelName()

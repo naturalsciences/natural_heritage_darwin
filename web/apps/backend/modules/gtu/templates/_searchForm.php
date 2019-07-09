@@ -142,8 +142,8 @@
           $('.catalogue_gtu').choose_form({});
 
           $(".new_link").click( function() {
-            url = $(this).find('a').attr('href'),
-            data= $('.search_form').serialize(),
+            url = $(this).find('a').attr('href');			
+			data= $(".gtu_code_callback[value!='']").serialize();			
             reg=new RegExp("(<?php echo $form->getName() ; ?>)", "g");
             open(url+'?'+data.replace(reg,'gtu'));
             return false;

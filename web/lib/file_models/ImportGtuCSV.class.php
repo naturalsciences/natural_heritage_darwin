@@ -29,7 +29,7 @@ class ImportGtuCSV
 		//print("parseFile");
 		$this->import_id = $id ;
 		$this->configure();
-		$this->import = Doctrine::getTable('Imports')->find($this->import_id);
+		$this->import = Doctrine_Core::getTable('Imports')->find($this->import_id);
 		$mime_type= $this->import->getMimeType();
 		if($mime_type==="text/plain")
 		{  
@@ -891,7 +891,7 @@ class ImportGtuCSV
                     //$this->import->setErrorsInImport($errors_reported);
                     //$this->import->setState("aborted");
                     //print( $errors_reported);
-                    throw($ne);
+                    
                     
                   }
             }

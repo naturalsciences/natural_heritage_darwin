@@ -14,9 +14,9 @@ class PreferencesForm extends BaseForm
   {
     $pref_keys = array('search_cols_specimen', 'board_search_rec_pp',
       'board_spec_rec_pp','help_message_activated','default_search_rec_pp');
-    $this->db_keys = Doctrine::getTable('Preferences')->getAllPreferences($this->options['user']->getId(), $pref_keys);
+    $this->db_keys = Doctrine_Core::getTable('Preferences')->getAllPreferences($this->options['user']->getId(), $pref_keys);
     $is_reg_user = $this->options['user']->isA(Users::REGISTERED_USER) ;
-    $choices = Doctrine::getTable('MySavedSearches')->getAllFields('specimen') ;
+    $choices = Doctrine_Core::getTable('MySavedSearches')->getAllFields('specimen') ;
     $choices = $this->translateValues($choices);
 
     $this->widgetSchema['search_cols_specimen'] = new sfWidgetFormChoice(array(
@@ -28,7 +28,7 @@ class PreferencesForm extends BaseForm
     $this->widgetSchema['search_cols_specimen']->setLabel('Specimens default visible columns');
     $default = $this->db_keys['search_cols_specimen'];
     if($default == '')
-      $default = Doctrine::getTable('Preferences')->getDefaultValue('search_cols_specimen');
+      $default = Doctrine_Core::getTable('Preferences')->getDefaultValue('search_cols_specimen');
     $this->widgetSchema['search_cols_specimen']->setDefault(explode('|',$default));
     $this->widgetSchema->setHelp('search_cols_specimen', 'Define which field will be available by default into the specimen search');
     $this->validatorSchema['search_cols_specimen'] = new sfValidatorChoice(array('choices' => array_keys($choices), 'multiple' => true));
@@ -38,19 +38,19 @@ class PreferencesForm extends BaseForm
     $this->validatorSchema['board_search_rec_pp'] = new sfValidatorChoice(array('choices' => array_keys($choices) ));
     $this->widgetSchema['board_search_rec_pp']->setLabel('Number of saved searches');
     $this->widgetSchema->setHelp('board_search_rec_pp',"Number of Saved searches showed on the board widget. (You browse every searches on the dedicated page)");
-    $this->widgetSchema['board_search_rec_pp']->setDefault($this->db_keys['board_search_rec_pp']? $this->db_keys['board_search_rec_pp'] : Doctrine::getTable('Preferences')->getDefaultValue('board_search_rec_pp'));
+    $this->widgetSchema['board_search_rec_pp']->setDefault($this->db_keys['board_search_rec_pp']? $this->db_keys['board_search_rec_pp'] : Doctrine_Core::getTable('Preferences')->getDefaultValue('board_search_rec_pp'));
 
     $this->widgetSchema['board_spec_rec_pp'] = new sfWidgetFormChoice(array('choices' => $choices));
     $this->validatorSchema['board_spec_rec_pp'] = new sfValidatorChoice(array('choices' => array_keys($choices) ));
     $this->widgetSchema['board_spec_rec_pp']->setLabel('Number of saved specimens');
     $this->widgetSchema->setHelp('board_spec_rec_pp',"Number of saved specimens list showed on the board widget. (You browse every specimen lists on the dedicated page)");
-    $this->widgetSchema['board_spec_rec_pp']->setDefault($this->db_keys['board_spec_rec_pp']? $this->db_keys['board_spec_rec_pp'] : Doctrine::getTable('Preferences')->getDefaultValue('board_spec_rec_pp'));
+    $this->widgetSchema['board_spec_rec_pp']->setDefault($this->db_keys['board_spec_rec_pp']? $this->db_keys['board_spec_rec_pp'] : Doctrine_Core::getTable('Preferences')->getDefaultValue('board_spec_rec_pp'));
 
 
     $this->widgetSchema['default_search_rec_pp'] = new sfWidgetFormChoice(array('choices' => $choices));
     $this->validatorSchema['default_search_rec_pp'] = new sfValidatorChoice(array('choices' => array_keys($choices) ));
     $this->widgetSchema['default_search_rec_pp']->setLabel('Number of records per pages');
-    $this->widgetSchema['default_search_rec_pp']->setDefault($this->db_keys['default_search_rec_pp']? $this->db_keys['default_search_rec_pp'] : Doctrine::getTable('Preferences')->getDefaultValue('default_search_rec_pp'));
+    $this->widgetSchema['default_search_rec_pp']->setDefault($this->db_keys['default_search_rec_pp']? $this->db_keys['default_search_rec_pp'] : Doctrine_Core::getTable('Preferences')->getDefaultValue('default_search_rec_pp'));
 
 
     $this->widgetSchema['help_message_activated'] = new sfWidgetFormInputCheckbox() ;
@@ -84,6 +84,6 @@ class PreferencesForm extends BaseForm
       'default_search_rec_pp'=> $this->getValue('default_search_rec_pp'),
       'help_message_activated' => intval($this->getValue('help_message_activated')),
     );
-    Doctrine::getTable('Preferences')->saveAllPreferences($this->options['user']->getId(),$results);
+    Doctrine_Core::getTable('Preferences')->saveAllPreferences($this->options['user']->getId(),$results);
   }
 }

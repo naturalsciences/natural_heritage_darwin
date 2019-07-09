@@ -87,11 +87,11 @@ class bibliographyActions extends DarwinActions
     */
   public function executeEdit(sfWebRequest $request)
   {
-    $bibliography = Doctrine::getTable('Bibliography')->find($request->getParameter('id'));
+    $bibliography = Doctrine_Core::getTable('Bibliography')->find($request->getParameter('id'));
     // Forward to a 404 page if the requested bibliography id is not found
     $this->forward404Unless($bibliography, sprintf('Object bibliography does not exist (%s).', $request->getParameter('id')));
     // Otherwise initialize the bibliography encoding form
-    $this->no_right_col = Doctrine::getTable('Bibliography')->testNoRightsCollections('bibliography_ref',$request->getParameter('id'), $this->getUser()->getId());
+    $this->no_right_col = Doctrine_Core::getTable('Bibliography')->testNoRightsCollections('bibliography_ref',$request->getParameter('id'), $this->getUser()->getId());
     $this->form = new BibliographyForm($bibliography);
     $this->loadWidgets();
   }
@@ -105,11 +105,11 @@ class bibliographyActions extends DarwinActions
     // Trigger the protection against the XSS attack
     $request->checkCSRFProtection();
     // If method is <> from post or put and if the id edited and to be saved doesn't exist anymore... forward to a 404 page
-    $bibliography = Doctrine::getTable('Bibliography')->find($request->getParameter('id'));
+    $bibliography = Doctrine_Core::getTable('Bibliography')->find($request->getParameter('id'));
 
     $this->forward404Unless($request->isMethod('post') || $request->isMethod('put'));
     $this->forward404Unless($bibliography, sprintf('Object bibliography does not exist (%s).', $request->getParameter('id')));
-    $this->no_right_col = Doctrine::getTable('Bibliography')->testNoRightsCollections('bibliography_ref',$request->getParameter('id'), $this->getUser()->getId());
+    $this->no_right_col = Doctrine_Core::getTable('Bibliography')->testNoRightsCollections('bibliography_ref',$request->getParameter('id'), $this->getUser()->getId());
     // Instantiate a new bibliography form
     $this->form = new BibliographyForm($bibliography);
     // Process the form for saving informations
@@ -128,7 +128,7 @@ class bibliographyActions extends DarwinActions
     // Trigger the protection against the XSS attack
     $request->checkCSRFProtection();
     // Forward to a 404 page if the bibliography to be deleted has not been found
-    $bibliography = Doctrine::getTable('Bibliography')->find(array($request->getParameter('id')));
+    $bibliography = Doctrine_Core::getTable('Bibliography')->find(array($request->getParameter('id')));
     $this->forward404Unless($bibliography, sprintf('Object bibliography does not exist (%s).', $request->getParameter('id')));
     // Effectively triggers the delete method of the bibliography table
     try
@@ -233,7 +233,7 @@ class bibliographyActions extends DarwinActions
   }
   public function executeView(sfWebRequest $request)
   {
-    $this->bibliography = Doctrine::getTable('Bibliography')->find($request->getParameter('id'));
+    $this->bibliography = Doctrine_Core::getTable('Bibliography')->find($request->getParameter('id'));
     $this->forward404Unless($this->bibliography,'Bibliography not Found');
     $this->form = new BibliographyForm($this->bibliography);
     $this->loadWidgets();

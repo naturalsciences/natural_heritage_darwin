@@ -8,53 +8,60 @@
  * @package    darwin
  * @subpackage form
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
+ * @version    SVN: $Id$
  */
-abstract class BaseMineralogyForm extends BaseFormDoctrine
+abstract class BaseMineralogyForm extends DarwinModelForm
 {
-  public function setup()
+  protected function setupInheritance()
   {
-    $this->setWidgets(array(
-      'id'              => new sfWidgetFormInputHidden(),
-      'name'            => new sfWidgetFormTextarea(),
-      'name_indexed'    => new sfWidgetFormTextarea(),
-      'level_ref'       => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Level'), 'add_empty' => false)),
-      'status'          => new sfWidgetFormTextarea(),
-      'local_naming'    => new sfWidgetFormInputCheckbox(),
-      'color'           => new sfWidgetFormTextarea(),
-      'path'            => new sfWidgetFormTextarea(),
-      'parent_ref'      => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'add_empty' => true)),
-      'code'            => new sfWidgetFormTextarea(),
-      'classification'  => new sfWidgetFormTextarea(),
-      'formule'         => new sfWidgetFormTextarea(),
-      'formule_indexed' => new sfWidgetFormTextarea(),
-      'cristal_system'  => new sfWidgetFormTextarea(),
-    ));
+    parent::setupInheritance();
 
-    $this->setValidators(array(
-      'id'              => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
-      'name'            => new sfValidatorString(),
-      'name_indexed'    => new sfValidatorString(array('required' => false)),
-      'level_ref'       => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Level'))),
-      'status'          => new sfValidatorString(array('required' => false)),
-      'local_naming'    => new sfValidatorBoolean(array('required' => false)),
-      'color'           => new sfValidatorString(array('required' => false)),
-      'path'            => new sfValidatorString(array('required' => false)),
-      'parent_ref'      => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'required' => false)),
-      'code'            => new sfValidatorString(),
-      'classification'  => new sfValidatorString(array('required' => false)),
-      'formule'         => new sfValidatorString(array('required' => false)),
-      'formule_indexed' => new sfValidatorString(array('required' => false)),
-      'cristal_system'  => new sfValidatorString(array('required' => false)),
-    ));
+    $this->widgetSchema   ['name'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['name'] = new sfValidatorString();
+
+    $this->widgetSchema   ['name_indexed'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['name_indexed'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['level_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Level'), 'add_empty' => false));
+    $this->validatorSchema['level_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Level'), 'column' => 'id'));
+
+    $this->widgetSchema   ['status'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['status'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['local_naming'] = new sfWidgetFormInputCheckbox();
+    $this->validatorSchema['local_naming'] = new sfValidatorBoolean(array('required' => false));
+
+    $this->widgetSchema   ['color'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['color'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['path'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['path'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['parent_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'add_empty' => true));
+    $this->validatorSchema['parent_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'column' => 'id', 'required' => false));
+
+    $this->widgetSchema   ['code'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['code'] = new sfValidatorString();
+
+    $this->widgetSchema   ['classification'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['classification'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['formule'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['formule'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['formule_indexed'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['formule_indexed'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['cristal_system'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['cristal_system'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['parent_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'add_empty' => true));
+    $this->validatorSchema['parent_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'column' => 'id', 'required' => false));
+
+    $this->widgetSchema   ['level_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Level'), 'add_empty' => false));
+    $this->validatorSchema['level_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Level'), 'column' => 'id'));
 
     $this->widgetSchema->setNameFormat('mineralogy[%s]');
-
-    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
-
-    $this->setupInheritance();
-
-    parent::setup();
   }
 
   public function getModelName()

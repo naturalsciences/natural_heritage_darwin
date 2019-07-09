@@ -12,7 +12,8 @@ class TaxonomyFormFilter extends BaseTaxonomyFormFilter
 {
   public function configure()
   {
-    $this->useFields(array('name', 'level_ref'));
+	 //JMHerpers 2019 04 29 added cites
+    $this->useFields(array('name', 'level_ref','cites'));
     $this->addPagerItems();
     $this->widgetSchema['name'] = new sfWidgetFormInputText();
     $this->widgetSchema['level_ref'] = new sfWidgetFormDarwinDoctrineChoice(array(
@@ -100,6 +101,13 @@ class TaxonomyFormFilter extends BaseTaxonomyFormFilter
 	 $this->widgetSchema['metadata_ref']->setAttributes(array('class'=>'col_check_metadata_ref col_check_metadata_callback'));
 	$this->validatorSchema['metadata_ref'] = new sfValidatorInteger(array('required'=>false));
      
+	//JM herpers 2019 04 29
+	$this->widgetSchema['cites'] = new sfWidgetFormChoice(array(
+        'expanded' => true,
+        'choices'  => array(True => 'Yes', False => 'No', NULL=>'Yes or No'),
+       
+        ), array( 'style' => "display: inline-block;text-align:center"));
+    $this->validatorSchema['cites'] = new sfValidatorString(array('required' => false));
   }
 
   public function doBuildQuery(array $values)
@@ -151,6 +159,11 @@ class TaxonomyFormFilter extends BaseTaxonomyFormFilter
      $query->andWhere("  name_indexed LIKE  fulltoindex(?)||'%' ", $values['name']);
     }
 
+	//JMHerpers 2019 04 29
+	if ($values['cites'] != ''){
+     $query->andWhere("  cites = ? ", $values['cites']);
+    }
+	
     //2018 03 06
 	if (isset($values['metadata_ref']))
     {

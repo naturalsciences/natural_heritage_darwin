@@ -66,20 +66,20 @@ class igsActions extends DarwinActions
 
   public function executeEdit(sfWebRequest $request)
   {
-    $igs = Doctrine::getTable('Igs')->find(array($request->getParameter('id')));
+    $igs = Doctrine_Core::getTable('Igs')->find(array($request->getParameter('id')));
     $this->forward404Unless($igs, sprintf('Object I.G. does not exist (%s).', $request->getParameter('id')));
-    $this->no_right_col = Doctrine::getTable('Igs')->testNoRightsCollections('ig_ref',$request->getParameter('id'), $this->getUser()->getId());
+    $this->no_right_col = Doctrine_Core::getTable('Igs')->testNoRightsCollections('ig_ref',$request->getParameter('id'), $this->getUser()->getId());
     $this->form = new igsForm($igs);
     $this->loadWidgets();
   }
 
   public function executeUpdate(sfWebRequest $request)
   {
-    $igs = Doctrine::getTable('Igs')->find(array($request->getParameter('id')));
+    $igs = Doctrine_Core::getTable('Igs')->find(array($request->getParameter('id')));
 
     $this->forward404Unless($request->isMethod(sfRequest::POST) || $request->isMethod(sfRequest::PUT));
     $this->forward404Unless($igs, sprintf('Object I.G. does not exist (%s).', $request->getParameter('id')));
-    $this->no_right_col = Doctrine::getTable('Igs')->testNoRightsCollections('ig_ref',$request->getParameter('id'), $this->getUser()->getId());
+    $this->no_right_col = Doctrine_Core::getTable('Igs')->testNoRightsCollections('ig_ref',$request->getParameter('id'), $this->getUser()->getId());
     $this->form = new igsForm($igs);
 
     $this->processForm($request, $this->form);
@@ -90,7 +90,7 @@ class igsActions extends DarwinActions
   public function executeDelete(sfWebRequest $request)
   {
     $request->checkCSRFProtection();
-    $igs = Doctrine::getTable('igs')->find(array($request->getParameter('id')));
+    $igs = Doctrine_Core::getTable('igs')->find(array($request->getParameter('id')));
     $this->forward404Unless($igs, sprintf('Object I.G. does not exist (%s).', $request->getParameter('id')));
     try
     {
@@ -126,7 +126,7 @@ class igsActions extends DarwinActions
     // Triggers the search ID function
     if( $ig_num !== '')
     {
-      $igId = Doctrine::getTable('Igs')->findOneByIgNum($ig_num);
+      $igId = Doctrine_Core::getTable('Igs')->findOneByIgNum($ig_num);
       if ($igId)
         return $this->renderText($igId->getId());
       else
@@ -142,7 +142,7 @@ class igsActions extends DarwinActions
     // Triggers the search ID function
     if($request->getParameter('q', '') !== '' && $request->getParameter('limit', '') !== '')
     {
-      $igIds = Doctrine::getTable('Igs')->fetchByIgNumLimited($request->getParameter('q'), $request->getParameter('limit'));
+      $igIds = Doctrine_Core::getTable('Igs')->fetchByIgNumLimited($request->getParameter('q'), $request->getParameter('limit'));
       if ($igIds)
       {
         $values=array();
@@ -191,7 +191,7 @@ class igsActions extends DarwinActions
         $this->comments = array() ;
         foreach($this->igss as $i)
           $comment_ids[] = $i->getId();
-        $comments_groups  = Doctrine::getTable('Comments')->getRelatedComment('igs',$comment_ids);
+        $comments_groups  = Doctrine_Core::getTable('Comments')->getRelatedComment('igs',$comment_ids);
         foreach($comments_groups as $comment)
         {
           if(isset($this->comments[$comment->getRecordId()])) $this->comments[$comment->getRecordId()] .= '/'.$comment->getComment() ;
@@ -222,7 +222,7 @@ class igsActions extends DarwinActions
         $e = new DarwinPgErrorParser($ne);
         $extd_message = '';
         if(preg_match('/unique constraint "unq_igs"/i',$ne->getMessage())) {
-          $dup_igs = Doctrine::getTable('Igs')->findDuplicate($form->getObject());
+          $dup_igs = Doctrine_Core::getTable('Igs')->findDuplicate($form->getObject());
           if(!$dup_igs) {
             $this->logMessage('Duplicate Igs not found: '. json_encode($form->getObject()->toArray()), 'err');
           }
@@ -243,7 +243,7 @@ class igsActions extends DarwinActions
   }
   public function executeView(sfWebRequest $request)
   {
-    $this->igs = Doctrine::getTable('igs')->find($request->getParameter('id'));
+    $this->igs = Doctrine_Core::getTable('igs')->find($request->getParameter('id'));
     $this->forward404Unless($this->igs,'IG not Found');
     $this->form = new igsForm($this->igs);
     $this->loadWidgets();

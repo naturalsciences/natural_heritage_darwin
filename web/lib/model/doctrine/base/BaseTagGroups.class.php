@@ -16,32 +16,41 @@
  * @property string $international_name
  * @property Gtu $Gtu
  * @property DoctrineTemporalInformationGtuGroup $DoctrineTemporalInformationGtuGroup
+ * @property DoctrineTemporalInformationGtuGroupUnnest $DoctrineTemporalInformationGtuGroupUnnest
+ * @property DoctrineTemporalInformationGtuGroupTags $DoctrineTemporalInformationGtuGroupTags
+ * @property DoctrineTemporalInformationGtuGroupUnnestTags $DoctrineTemporalInformationGtuGroupUnnestTags
  * @property Doctrine_Collection $Tags
  * 
- * @method integer                             getId()                                  Returns the current record's "id" value
- * @method integer                             getGtuRef()                              Returns the current record's "gtu_ref" value
- * @method string                              getGroupName()                           Returns the current record's "group_name" value
- * @method string                              getGroupNameIndexed()                    Returns the current record's "group_name_indexed" value
- * @method string                              getSubGroupName()                        Returns the current record's "sub_group_name" value
- * @method string                              getSubGroupNameIndexed()                 Returns the current record's "sub_group_name_indexed" value
- * @method string                              getColor()                               Returns the current record's "color" value
- * @method string                              getTagValue()                            Returns the current record's "tag_value" value
- * @method string                              getInternationalName()                   Returns the current record's "international_name" value
- * @method Gtu                                 getGtu()                                 Returns the current record's "Gtu" value
- * @method DoctrineTemporalInformationGtuGroup getDoctrineTemporalInformationGtuGroup() Returns the current record's "DoctrineTemporalInformationGtuGroup" value
- * @method Doctrine_Collection                 getTags()                                Returns the current record's "Tags" collection
- * @method TagGroups                           setId()                                  Sets the current record's "id" value
- * @method TagGroups                           setGtuRef()                              Sets the current record's "gtu_ref" value
- * @method TagGroups                           setGroupName()                           Sets the current record's "group_name" value
- * @method TagGroups                           setGroupNameIndexed()                    Sets the current record's "group_name_indexed" value
- * @method TagGroups                           setSubGroupName()                        Sets the current record's "sub_group_name" value
- * @method TagGroups                           setSubGroupNameIndexed()                 Sets the current record's "sub_group_name_indexed" value
- * @method TagGroups                           setColor()                               Sets the current record's "color" value
- * @method TagGroups                           setTagValue()                            Sets the current record's "tag_value" value
- * @method TagGroups                           setInternationalName()                   Sets the current record's "international_name" value
- * @method TagGroups                           setGtu()                                 Sets the current record's "Gtu" value
- * @method TagGroups                           setDoctrineTemporalInformationGtuGroup() Sets the current record's "DoctrineTemporalInformationGtuGroup" value
- * @method TagGroups                           setTags()                                Sets the current record's "Tags" collection
+ * @method integer                                       getId()                                            Returns the current record's "id" value
+ * @method integer                                       getGtuRef()                                        Returns the current record's "gtu_ref" value
+ * @method string                                        getGroupName()                                     Returns the current record's "group_name" value
+ * @method string                                        getGroupNameIndexed()                              Returns the current record's "group_name_indexed" value
+ * @method string                                        getSubGroupName()                                  Returns the current record's "sub_group_name" value
+ * @method string                                        getSubGroupNameIndexed()                           Returns the current record's "sub_group_name_indexed" value
+ * @method string                                        getColor()                                         Returns the current record's "color" value
+ * @method string                                        getTagValue()                                      Returns the current record's "tag_value" value
+ * @method string                                        getInternationalName()                             Returns the current record's "international_name" value
+ * @method Gtu                                           getGtu()                                           Returns the current record's "Gtu" value
+ * @method DoctrineTemporalInformationGtuGroup           getDoctrineTemporalInformationGtuGroup()           Returns the current record's "DoctrineTemporalInformationGtuGroup" value
+ * @method DoctrineTemporalInformationGtuGroupUnnest     getDoctrineTemporalInformationGtuGroupUnnest()     Returns the current record's "DoctrineTemporalInformationGtuGroupUnnest" value
+ * @method DoctrineTemporalInformationGtuGroupTags       getDoctrineTemporalInformationGtuGroupTags()       Returns the current record's "DoctrineTemporalInformationGtuGroupTags" value
+ * @method DoctrineTemporalInformationGtuGroupUnnestTags getDoctrineTemporalInformationGtuGroupUnnestTags() Returns the current record's "DoctrineTemporalInformationGtuGroupUnnestTags" value
+ * @method Doctrine_Collection                           getTags()                                          Returns the current record's "Tags" collection
+ * @method TagGroups                                     setId()                                            Sets the current record's "id" value
+ * @method TagGroups                                     setGtuRef()                                        Sets the current record's "gtu_ref" value
+ * @method TagGroups                                     setGroupName()                                     Sets the current record's "group_name" value
+ * @method TagGroups                                     setGroupNameIndexed()                              Sets the current record's "group_name_indexed" value
+ * @method TagGroups                                     setSubGroupName()                                  Sets the current record's "sub_group_name" value
+ * @method TagGroups                                     setSubGroupNameIndexed()                           Sets the current record's "sub_group_name_indexed" value
+ * @method TagGroups                                     setColor()                                         Sets the current record's "color" value
+ * @method TagGroups                                     setTagValue()                                      Sets the current record's "tag_value" value
+ * @method TagGroups                                     setInternationalName()                             Sets the current record's "international_name" value
+ * @method TagGroups                                     setGtu()                                           Sets the current record's "Gtu" value
+ * @method TagGroups                                     setDoctrineTemporalInformationGtuGroup()           Sets the current record's "DoctrineTemporalInformationGtuGroup" value
+ * @method TagGroups                                     setDoctrineTemporalInformationGtuGroupUnnest()     Sets the current record's "DoctrineTemporalInformationGtuGroupUnnest" value
+ * @method TagGroups                                     setDoctrineTemporalInformationGtuGroupTags()       Sets the current record's "DoctrineTemporalInformationGtuGroupTags" value
+ * @method TagGroups                                     setDoctrineTemporalInformationGtuGroupUnnestTags() Sets the current record's "DoctrineTemporalInformationGtuGroupUnnestTags" value
+ * @method TagGroups                                     setTags()                                          Sets the current record's "Tags" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -99,6 +108,18 @@ abstract class BaseTagGroups extends DarwinModel
              'foreign' => 'id'));
 
         $this->hasOne('DoctrineTemporalInformationGtuGroup', array(
+             'local' => 'gtu_ref',
+             'foreign' => 'id'));
+
+        $this->hasOne('DoctrineTemporalInformationGtuGroupUnnest', array(
+             'local' => 'gtu_ref',
+             'foreign' => 'id'));
+
+        $this->hasOne('DoctrineTemporalInformationGtuGroupTags', array(
+             'local' => 'gtu_ref',
+             'foreign' => 'id'));
+
+        $this->hasOne('DoctrineTemporalInformationGtuGroupUnnestTags', array(
              'local' => 'gtu_ref',
              'foreign' => 'id'));
 

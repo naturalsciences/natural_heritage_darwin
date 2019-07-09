@@ -38,11 +38,11 @@
     <?php endif;?>
     <tr>
       <th><label><?php echo __('Date from');?></label></th>
-      <td id="specimen_gtu_date_from" class="datesNum"><?php echo $gtu->getGtuFromDateMasked(ESC_RAW);?></td>
+      <td id="specimen_gtu_date_from" class="datesNum"><?php echo $spec->getTemporalInformation()->getFromDateMasked(ESC_RAW);?></td>
     </tr>
     <tr>
       <th><label><?php echo __('Date to');?></label></th>
-      <td id="specimen_gtu_date_to" class="datesNum"><?php echo $gtu->getGtuToDateMasked(ESC_RAW);?></td>
+      <td id="specimen_gtu_date_to" class="datesNum"><?php echo $spec->getTemporalInformation()->getToDateMasked(ESC_RAW);?></td>
     </tr>
     <tr>
       <th class="top_aligned">
@@ -241,4 +241,16 @@ var mousePositionControl;
     <?php endif;?>
   </script>
 </table>
+  <?php elseif(is_numeric($spec->getTemporalInformation()->getId())): ?>
+  <?php $dateTmp=$spec->getTemporalInformation();?>
+  <table>
+   <tr>
+      <th><label><?php echo __('Date from');?></label></th>
+      <td id="specimen_gtu_date_from" class="datesNum"><?php echo $dateTmp->getFromDateMasked(ESC_RAW);?></td>
+    </tr>
+    <tr>
+      <th><label><?php echo __('Date to');?></label></th>
+      <td id="specimen_gtu_date_to" class="datesNum"><?php echo $dateTmp->getToDateMasked(ESC_RAW);?></td>
+    </tr>
+  </table>
  <?php endif;?>

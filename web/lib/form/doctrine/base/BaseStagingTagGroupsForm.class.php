@@ -8,35 +8,30 @@
  * @package    darwin
  * @subpackage form
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
+ * @version    SVN: $Id$
  */
-abstract class BaseStagingTagGroupsForm extends BaseFormDoctrine
+abstract class BaseStagingTagGroupsForm extends DarwinModelForm
 {
-  public function setup()
+  protected function setupInheritance()
   {
-    $this->setWidgets(array(
-      'id'             => new sfWidgetFormInputHidden(),
-      'staging_ref'    => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Staging'), 'add_empty' => false)),
-      'group_name'     => new sfWidgetFormTextarea(),
-      'sub_group_name' => new sfWidgetFormTextarea(),
-      'tag_value'      => new sfWidgetFormTextarea(),
-    ));
+    parent::setupInheritance();
 
-    $this->setValidators(array(
-      'id'             => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
-      'staging_ref'    => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Staging'))),
-      'group_name'     => new sfValidatorString(),
-      'sub_group_name' => new sfValidatorString(),
-      'tag_value'      => new sfValidatorString(),
-    ));
+    $this->widgetSchema   ['staging_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Staging'), 'add_empty' => false));
+    $this->validatorSchema['staging_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Staging'), 'column' => 'id'));
+
+    $this->widgetSchema   ['group_name'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['group_name'] = new sfValidatorString();
+
+    $this->widgetSchema   ['sub_group_name'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['sub_group_name'] = new sfValidatorString();
+
+    $this->widgetSchema   ['tag_value'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['tag_value'] = new sfValidatorString();
+
+    $this->widgetSchema   ['staging_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Staging'), 'add_empty' => false));
+    $this->validatorSchema['staging_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Staging'), 'column' => 'id'));
 
     $this->widgetSchema->setNameFormat('staging_tag_groups[%s]');
-
-    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
-
-    $this->setupInheritance();
-
-    parent::setup();
   }
 
   public function getModelName()

@@ -6,27 +6,18 @@
  * @package    darwin
  * @subpackage filter
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
+ * @version    SVN: $Id$
  */
-abstract class BaseMultimediaTodeleteFormFilter extends BaseFormFilterDoctrine
+abstract class BaseMultimediaTodeleteFormFilter extends DarwinModelFormFilter
 {
-  public function setup()
+  protected function setupInheritance()
   {
-    $this->setWidgets(array(
-      'uri' => new sfWidgetFormFilterInput(array('with_empty' => false)),
-    ));
+    parent::setupInheritance();
 
-    $this->setValidators(array(
-      'uri' => new sfValidatorPass(array('required' => false)),
-    ));
+    $this->widgetSchema   ['uri'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['uri'] = new sfValidatorPass(array('required' => false));
 
     $this->widgetSchema->setNameFormat('multimedia_todelete_filters[%s]');
-
-    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
-
-    $this->setupInheritance();
-
-    parent::setup();
   }
 
   public function getModelName()
@@ -36,9 +27,8 @@ abstract class BaseMultimediaTodeleteFormFilter extends BaseFormFilterDoctrine
 
   public function getFields()
   {
-    return array(
-      'id'  => 'Number',
+    return array_merge(parent::getFields(), array(
       'uri' => 'Text',
-    );
+    ));
   }
 }

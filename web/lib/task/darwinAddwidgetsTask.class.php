@@ -54,7 +54,7 @@ EOF;
 
     foreach($userIds as $key=>$value)
     {
-      $user = Doctrine::getTable('Users')->find($value);
+      $user = Doctrine_Core::getTable('Users')->find($value);
       if(! $user) {
         $this->logSection('Not Found', sprintf('User %d not found, are you in the right env?',$value));
         continue;

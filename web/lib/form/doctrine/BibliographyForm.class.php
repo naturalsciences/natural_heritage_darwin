@@ -50,7 +50,7 @@ class BibliographyForm extends BaseBibliographyForm
     if($record_id === false)
       $record_id = $this->getObject()->getId();
     if( $emFieldName =='Authors' )
-      return Doctrine::getTable('CataloguePeople')->getPeopleRelated('bibliography','author', $record_id);
+      return Doctrine_Core::getTable('CataloguePeople')->getPeopleRelated('bibliography','author', $record_id);
   }
 
   public function getEmbedRelationForm($emFieldName, $values)
@@ -62,7 +62,7 @@ class BibliographyForm extends BaseBibliographyForm
   public function duplicate($id)
   {
     // reembed duplicated authro
-    $Catalogue = Doctrine::getTable('CataloguePeople')->findForTableByType('bibliography',$id) ;
+    $Catalogue = Doctrine_Core::getTable('CataloguePeople')->findForTableByType('bibliography',$id) ;
     if(isset($Catalogue['author'])) {
       foreach ($Catalogue['author'] as $key=>$val) {
         $this->addAuthors($key, array('people_ref' => $val->getPeopleRef()),$val->getOrderBy());
@@ -70,9 +70,9 @@ class BibliographyForm extends BaseBibliographyForm
     }
   }
 
-  public function saveEmbeddedForms($con = null, $forms = null)
+  public function saveObjectEmbeddedForms($con = null, $forms = null)
   {
     $this->saveEmbed('Authors', 'people_ref', $forms, array('people_type'=>'author','referenced_relation'=>'bibliography', 'record_id' => $this->getObject()->getId()));
-    return parent::saveEmbeddedForms($con, $forms);
+    return parent::saveObjectEmbeddedForms($con, $forms);
   }
 }

@@ -15,7 +15,7 @@ class ImportsLocalityFormFilter extends BaseImportsFormFilter
     	
 	$this->useFields(array('collection_ref', 'state','filename')) ;
     $this->addPagerItems();    
-    $collection_list = Doctrine::getTable('Collections')->getAllAvailableCollectionsFor($this->options['user']) ;
+    $collection_list = Doctrine_Core::getTable('Collections')->getAllAvailableCollectionsFor($this->options['user']) ;
     $state_list = Imports::getStateList() ;
     /* Widgets */
     $this->widgetSchema['collection_ref'] = new sfWidgetFormChoice(
@@ -77,7 +77,7 @@ class ImportsLocalityFormFilter extends BaseImportsFormFilter
     if($values['collection_ref'] == 0) 
     {
         $query->andWhereIn('collection_ref',array_keys(
-          Doctrine::getTable('Collections')->getAllAvailableCollectionsFor($this->options['user']))
+          Doctrine_Core::getTable('Collections')->getAllAvailableCollectionsFor($this->options['user']))
         );
     }    
 

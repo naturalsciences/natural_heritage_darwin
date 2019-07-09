@@ -154,6 +154,38 @@ function constructReportBaseUrl($name, $lang, $format){
 
   return $url;
 }
+
+
+    function startsWith($string, $test) 
+    { 
+        print("test $string $test");
+        $strlen = strlen($string);
+        $testlen = strlen($test);
+        if ($testlen > $strlen) return false;
+            return substr_compare($string, $test, 0, $testlen) === 0;
+    }
+    
+    function endsWith($string, $test) 
+    {
+        $strlen = strlen($string);
+        $testlen = strlen($test);
+        if ($testlen > $strlen) return false;
+            return substr_compare($string, $test, $strlen - $testlen, $testlen) === 0;
+    }
+    
+    function string_isset($str)
+    {
+        if(isset($str))
+        {
+            if(strlen($str)>0)
+            {
+                return TRUE;
+            }
+        }
+        return FALSE;
+        
+    }
+
   //ftheeten 2018 08 06
     class CustomDarwinError extends Exception
     {

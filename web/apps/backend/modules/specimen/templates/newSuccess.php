@@ -67,6 +67,11 @@ $(document).ready(function ()
   <?php use_javascript('double_list.js');?>
   <div>
   <!--new  control to catch error list of widgets RMCA 2018 02 13-->
+    <div class="encod_screen edition" id="intro">
+  <?php if($count>1):?>
+    <div><ul style="background-color: #ec9593;border: 3px solid #c36b70;margin-bottom: 1em;padding: 1em"><?php print($count);?> Specimen with same collection number</ul></div>
+  <?php endif;?> 
+   <div>
     <ul id="main_error_list" class="error_list main_error_list" style="display:none">
     <ul id="error_list" class="error_list" style="display:none">
       <li></li>
@@ -75,10 +80,6 @@ $(document).ready(function ()
 
   <?php echo form_tag('specimen/'.($form->getObject()->isNew() ? 'create' : 'update?id='.$form->getObject()->getId()), array('class'=>'edition no_border','enctype'=>'multipart/form-data'));?>
     <div>
-       <?php 
-        //ftheeten 2019 02 04
-       echo $form['timestamp']->renderError(); ?>
-       <?php echo $form['timestamp'];?>
       <?php if($form->hasGlobalErrors()):?>
         <ul class="spec_error_list">
           <?php foreach ($form->getErrorSchema()->getErrors() as $name => $error): ?>
@@ -140,25 +141,6 @@ function removeError()
 $(document).ready(function () {
   $('body').duplicatable({duplicate_href: '<?php echo url_for('specimen/confirm');?>'});
   $('body').catalogue({});
-  
-  //ftheeten 2019 02 04
-  if(getUrlParameter("timestamp"))
-  {
-    $("#specimen_timestamp").val(getUrlParameter("timestamp"));
-  }
-  
-  
-    //ftheeten 2019 02 05
-    $('a').click(function(event) {
-   
-        if(this.href.includes("\/new\/duplicate_id\/"))
-        {
-            alert("timestamp");
-            $(this).attr('href', function(i, h) {
-                     return h + (h.indexOf('?') != -1 ? "&timestamp="+Date.now() : "?timestamp="+Date.now());
-            });
-         }
-    });
 
 
 

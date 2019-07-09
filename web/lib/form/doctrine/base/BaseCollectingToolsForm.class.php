@@ -8,35 +8,27 @@
  * @package    darwin
  * @subpackage form
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
+ * @version    SVN: $Id$
  */
-abstract class BaseCollectingToolsForm extends BaseFormDoctrine
+abstract class BaseCollectingToolsForm extends DarwinModelForm
 {
-  public function setup()
+  protected function setupInheritance()
   {
-    $this->setWidgets(array(
-      'id'                       => new sfWidgetFormInputHidden(),
-      'tool'                     => new sfWidgetFormTextarea(),
-      'tool_indexed'             => new sfWidgetFormTextarea(),
-      'specimens_list'           => new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => 'Specimens')),
-      'specimens_maincodes_list' => new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => 'SpecimensMaincodes')),
-    ));
+    parent::setupInheritance();
 
-    $this->setValidators(array(
-      'id'                       => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
-      'tool'                     => new sfValidatorString(),
-      'tool_indexed'             => new sfValidatorString(array('required' => false)),
-      'specimens_list'           => new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'Specimens', 'required' => false)),
-      'specimens_maincodes_list' => new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'SpecimensMaincodes', 'required' => false)),
-    ));
+    $this->widgetSchema   ['tool'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['tool'] = new sfValidatorString();
+
+    $this->widgetSchema   ['tool_indexed'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['tool_indexed'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['specimens_list'] = new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => 'Specimens'));
+    $this->validatorSchema['specimens_list'] = new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'Specimens', 'required' => false));
+
+    $this->widgetSchema   ['specimens_maincodes_list'] = new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => 'SpecimensMaincodes'));
+    $this->validatorSchema['specimens_maincodes_list'] = new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'SpecimensMaincodes', 'required' => false));
 
     $this->widgetSchema->setNameFormat('collecting_tools[%s]');
-
-    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
-
-    $this->setupInheritance();
-
-    parent::setup();
   }
 
   public function getModelName()
@@ -60,34 +52,30 @@ abstract class BaseCollectingToolsForm extends BaseFormDoctrine
 
   }
 
-  protected function doSave($con = null)
+  protected function doUpdateObject($values)
   {
-    $this->saveSpecimensList($con);
-    $this->saveSpecimensMaincodesList($con);
+    $this->updateSpecimensList($values);
+    $this->updateSpecimensMaincodesList($values);
 
-    parent::doSave($con);
+    parent::doUpdateObject($values);
   }
 
-  public function saveSpecimensList($con = null)
+  public function updateSpecimensList($values)
   {
-    if (!$this->isValid())
-    {
-      throw $this->getErrorSchema();
-    }
-
     if (!isset($this->widgetSchema['specimens_list']))
     {
       // somebody has unset this widget
       return;
     }
 
-    if (null === $con)
+    if (!array_key_exists('specimens_list', $values))
     {
-      $con = $this->getConnection();
+      // no values for this widget
+      return;
     }
 
     $existing = $this->object->Specimens->getPrimaryKeys();
-    $values = $this->getValue('specimens_list');
+    $values = $values['specimens_list'];
     if (!is_array($values))
     {
       $values = array();
@@ -106,26 +94,22 @@ abstract class BaseCollectingToolsForm extends BaseFormDoctrine
     }
   }
 
-  public function saveSpecimensMaincodesList($con = null)
+  public function updateSpecimensMaincodesList($values)
   {
-    if (!$this->isValid())
-    {
-      throw $this->getErrorSchema();
-    }
-
     if (!isset($this->widgetSchema['specimens_maincodes_list']))
     {
       // somebody has unset this widget
       return;
     }
 
-    if (null === $con)
+    if (!array_key_exists('specimens_maincodes_list', $values))
     {
-      $con = $this->getConnection();
+      // no values for this widget
+      return;
     }
 
     $existing = $this->object->SpecimensMaincodes->getPrimaryKeys();
-    $values = $this->getValue('specimens_maincodes_list');
+    $values = $values['specimens_maincodes_list'];
     if (!is_array($values))
     {
       $values = array();

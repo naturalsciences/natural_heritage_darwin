@@ -49,6 +49,9 @@
               </a>
             </th>
             <th><?php echo __("Progression") ; ?></th>
+            <?php if($format == 'abcd') : ?>
+                <th ><?php echo __("View data") ; ?></th>
+            <?php endif;?>
             <th colspan="4"><?php echo __("Actions") ; ?></th>
           </tr>
         </thead>
@@ -62,7 +65,7 @@
               <td><?php echo $import->getFilename();?></td>
 			  <?php if($format == 'taxon') : ?>
 				<td>
-					<?php echo __(Doctrine::getTable("TaxonomyMetadata")->find($import->getSpecimenTaxonomyRef()) ? Doctrine::getTable("TaxonomyMetadata")->find($import->getSpecimenTaxonomyRef())->getTaxonomyName() : "Not Found");?>
+					<?php echo __(Doctrine_Core::getTable("TaxonomyMetadata")->find($import->getSpecimenTaxonomyRef()) ? Doctrine_Core::getTable("TaxonomyMetadata")->find($import->getSpecimenTaxonomyRef())->getTaxonomyName() : "Not Found");?>
 				</td>
 			 <?php endif ?>
               <td><?php echo __($import->getStateName());?>
@@ -79,6 +82,9 @@
                   <?php echo __('n/a');?>
                 <?php endif;?>
               </td>
+              <?php if($format == 'abcd') : ?>
+                <td><a href="<?php print(url_for("specimensearch/search/1"))."?specimen_search_filters[import_ref]=".$import->getId()."&specimen_search_filters[rec_per_page]=50";?>" target="_blank">import n° <?php print($import->getId());?></a><td>
+              <?php endif;?>
 			  <!--ftheeten 2018 08 06-->
              
 			   <?php if($format == 'locality'&& $import->getState() == 'loaded') : ?>

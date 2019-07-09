@@ -8,55 +8,60 @@
  * @package    darwin
  * @subpackage form
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
+ * @version    SVN: $Id$
  */
-abstract class BaseMyWidgetsForm extends BaseFormDoctrine
+abstract class BaseMyWidgetsForm extends DarwinModelForm
 {
-  public function setup()
+  protected function setupInheritance()
   {
-    $this->setWidgets(array(
-      'id'           => new sfWidgetFormInputHidden(),
-      'user_ref'     => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('User'), 'add_empty' => false)),
-      'category'     => new sfWidgetFormTextarea(),
-      'group_name'   => new sfWidgetFormTextarea(),
-      'order_by'     => new sfWidgetFormInputText(),
-      'col_num'      => new sfWidgetFormInputText(),
-      'mandatory'    => new sfWidgetFormInputCheckbox(),
-      'visible'      => new sfWidgetFormInputCheckbox(),
-      'is_available' => new sfWidgetFormInputCheckbox(),
-      'opened'       => new sfWidgetFormInputCheckbox(),
-      'color'        => new sfWidgetFormTextarea(),
-      'icon_ref'     => new sfWidgetFormInputText(),
-      'title_perso'  => new sfWidgetFormTextarea(),
-      'collections'  => new sfWidgetFormTextarea(),
-      'all_public'   => new sfWidgetFormInputCheckbox(),
-    ));
+    parent::setupInheritance();
 
-    $this->setValidators(array(
-      'id'           => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
-      'user_ref'     => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('User'))),
-      'category'     => new sfValidatorString(array('required' => false)),
-      'group_name'   => new sfValidatorString(),
-      'order_by'     => new sfValidatorInteger(array('required' => false)),
-      'col_num'      => new sfValidatorInteger(array('required' => false)),
-      'mandatory'    => new sfValidatorBoolean(array('required' => false)),
-      'visible'      => new sfValidatorBoolean(array('required' => false)),
-      'is_available' => new sfValidatorBoolean(array('required' => false)),
-      'opened'       => new sfValidatorBoolean(array('required' => false)),
-      'color'        => new sfValidatorString(array('required' => false)),
-      'icon_ref'     => new sfValidatorInteger(array('required' => false)),
-      'title_perso'  => new sfValidatorString(array('required' => false)),
-      'collections'  => new sfValidatorString(array('required' => false)),
-      'all_public'   => new sfValidatorBoolean(array('required' => false)),
-    ));
+    $this->widgetSchema   ['user_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('User'), 'add_empty' => false));
+    $this->validatorSchema['user_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('User'), 'column' => 'id'));
+
+    $this->widgetSchema   ['category'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['category'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['group_name'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['group_name'] = new sfValidatorString();
+
+    $this->widgetSchema   ['order_by'] = new sfWidgetFormInputText();
+    $this->validatorSchema['order_by'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['col_num'] = new sfWidgetFormInputText();
+    $this->validatorSchema['col_num'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['mandatory'] = new sfWidgetFormInputCheckbox();
+    $this->validatorSchema['mandatory'] = new sfValidatorBoolean(array('required' => false));
+
+    $this->widgetSchema   ['visible'] = new sfWidgetFormInputCheckbox();
+    $this->validatorSchema['visible'] = new sfValidatorBoolean(array('required' => false));
+
+    $this->widgetSchema   ['is_available'] = new sfWidgetFormInputCheckbox();
+    $this->validatorSchema['is_available'] = new sfValidatorBoolean(array('required' => false));
+
+    $this->widgetSchema   ['opened'] = new sfWidgetFormInputCheckbox();
+    $this->validatorSchema['opened'] = new sfValidatorBoolean(array('required' => false));
+
+    $this->widgetSchema   ['color'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['color'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['icon_ref'] = new sfWidgetFormInputText();
+    $this->validatorSchema['icon_ref'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['title_perso'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['title_perso'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['collections'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['collections'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['all_public'] = new sfWidgetFormInputCheckbox();
+    $this->validatorSchema['all_public'] = new sfValidatorBoolean(array('required' => false));
+
+    $this->widgetSchema   ['user_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('User'), 'add_empty' => false));
+    $this->validatorSchema['user_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('User'), 'column' => 'id'));
 
     $this->widgetSchema->setNameFormat('my_widgets[%s]');
-
-    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
-
-    $this->setupInheritance();
-
-    parent::setup();
   }
 
   public function getModelName()

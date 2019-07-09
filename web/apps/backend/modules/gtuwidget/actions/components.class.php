@@ -22,12 +22,12 @@ class gtuwidgetComponents extends sfComponents
     {
       if(isset($this->eid) && $this->eid !== null)
       {
-        $gtu = Doctrine::getTable('Gtu')->find($this->eid);
+        $gtu = Doctrine_Core::getTable('Gtu')->find($this->eid);
         $this->form = new GtuForm($gtu);
         $this->gtu_id = $this->eid;
         /*if(!$this->getUser()->isA(Users::ADMIN))
         {
-          if(! Doctrine::getTable('Specimens')->hasRights('spec_ref', $this->eid, $this->getUser()->getId())) {
+          if(! Doctrine_Core::getTable('Specimens')->hasRights('spec_ref', $this->eid, $this->getUser()->getId())) {
             print("<div class='warn_message'>".__("You don't have rights to edit these informations !")."</div>");
           }
         }*/

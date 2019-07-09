@@ -12,20 +12,20 @@ class boardwidgetComponents extends sfComponents
 {
   public function executeSavedSearch()
   {        
-    $this->searches = Doctrine::getTable('MySavedSearches')
+    $this->searches = Doctrine_Core::getTable('MySavedSearches')
       ->fetchSearch(
         $this->getUser()->getId(),
-        Doctrine::getTable('Preferences')->getPreference(
+        Doctrine_Core::getTable('Preferences')->getPreference(
           $this->getUser()->getId(),'board_search_rec_pp')
       );
   }
 
   public function executeSavedSpecimens()
   {
-    $this->specimens = Doctrine::getTable('MySavedSearches')
+    $this->specimens = Doctrine_Core::getTable('MySavedSearches')
       ->fetchSpecimens(
         $this->getUser()->getId(),
-        Doctrine::getTable('Preferences')->getPreference(
+        Doctrine_Core::getTable('Preferences')->getPreference(
           $this->getUser()->getId(),'board_spec_rec_pp')
       );
   }
@@ -45,7 +45,7 @@ class boardwidgetComponents extends sfComponents
   public function executeMyLastsItems()
   {
     $this->pagerSlidingSize = intval(sfConfig::get('dw_pagerSlidingSize'));
-    $query = Doctrine::getTable('UsersTracking')->getMyItems($this->getUser()->getId());
+    $query = Doctrine_Core::getTable('UsersTracking')->getMyItems($this->getUser()->getId());
     $this->pagerLayout = new PagerLayoutWithArrows(
       new DarwinPager(
         $query,
@@ -69,7 +69,7 @@ class boardwidgetComponents extends sfComponents
 
   public function executeMyChangesPlotted()
   {
-	$this->items = Doctrine::getTable('UsersTracking')->getMyItemsForPlot($this->getUser()->getId(),$this->getRequestParameter('range','week'));
+	$this->items = Doctrine_Core::getTable('UsersTracking')->getMyItemsForPlot($this->getUser()->getId(),$this->getRequestParameter('range','week'));
   }
   
   public function executeStats()
@@ -99,7 +99,7 @@ class boardwidgetComponents extends sfComponents
   {
     /**/
     $this->pagerSlidingSize = intval(sfConfig::get('dw_pagerSlidingSize'));
-    $query = Doctrine::getTable('Loans')->getMyLoans($this->getUser()->getId());
+    $query = Doctrine_Core::getTable('Loans')->getMyLoans($this->getUser()->getId());
 
 
     $count_q = clone $query;
@@ -128,7 +128,7 @@ class boardwidgetComponents extends sfComponents
       $this->loans = $this->pagerLayout->execute();  
 
     $this->myTotalLoans = $this->pagerLayout->getPager()->getNumResults();
-    $this->rights = Doctrine::getTable('LoanRights')->getEncodingRightsForUser($this->getUser()->getId());
+    $this->rights = Doctrine_Core::getTable('LoanRights')->getEncodingRightsForUser($this->getUser()->getId());
 
     if( count($this->loans) )
     {
@@ -137,7 +137,7 @@ class boardwidgetComponents extends sfComponents
  	$ids[] = $loan->getId();
       
       if( !empty($ids) )
-	$this->status = Doctrine::getTable('LoanStatus')->getFromLoans($ids);
+	$this->status = Doctrine_Core::getTable('LoanStatus')->getFromLoans($ids);
     }
 
   }

@@ -6,29 +6,27 @@
  * @package    darwin
  * @subpackage filter
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
+ * @version    SVN: $Id$
  */
-abstract class BaseSpecimenCollectingToolsFormFilter extends BaseFormFilterDoctrine
+abstract class BaseSpecimenCollectingToolsFormFilter extends DarwinModelFormFilter
 {
-  public function setup()
+  protected function setupInheritance()
   {
-    $this->setWidgets(array(
-      'specimen_ref'        => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Specimens'), 'add_empty' => true)),
-      'collecting_tool_ref' => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('CollectingTools'), 'add_empty' => true)),
-    ));
+    parent::setupInheritance();
 
-    $this->setValidators(array(
-      'specimen_ref'        => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Specimens'), 'column' => 'id')),
-      'collecting_tool_ref' => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('CollectingTools'), 'column' => 'id')),
-    ));
+    $this->widgetSchema   ['specimen_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Specimens'), 'add_empty' => true));
+    $this->validatorSchema['specimen_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Specimens'), 'column' => 'id'));
+
+    $this->widgetSchema   ['collecting_tool_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('CollectingTools'), 'add_empty' => true));
+    $this->validatorSchema['collecting_tool_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('CollectingTools'), 'column' => 'id'));
+
+    $this->widgetSchema   ['specimen_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Specimens'), 'add_empty' => true));
+    $this->validatorSchema['specimen_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Specimens'), 'column' => 'id'));
+
+    $this->widgetSchema   ['collecting_tool_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('CollectingTools'), 'add_empty' => true));
+    $this->validatorSchema['collecting_tool_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('CollectingTools'), 'column' => 'id'));
 
     $this->widgetSchema->setNameFormat('specimen_collecting_tools_filters[%s]');
-
-    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
-
-    $this->setupInheritance();
-
-    parent::setup();
   }
 
   public function getModelName()
@@ -38,10 +36,11 @@ abstract class BaseSpecimenCollectingToolsFormFilter extends BaseFormFilterDoctr
 
   public function getFields()
   {
-    return array(
-      'id'                  => 'Number',
-      'specimen_ref'        => 'ForeignKey',
+    return array_merge(parent::getFields(), array(
+      'specimen_ref' => 'ForeignKey',
       'collecting_tool_ref' => 'ForeignKey',
-    );
+      'specimen_ref' => 'ForeignKey',
+      'collecting_tool_ref' => 'ForeignKey',
+    ));
   }
 }

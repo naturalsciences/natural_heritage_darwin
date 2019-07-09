@@ -8,37 +8,30 @@
  * @package    darwin
  * @subpackage form
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
+ * @version    SVN: $Id$
  */
-abstract class BaseBibliographyForm extends BaseFormDoctrine
+abstract class BaseBibliographyForm extends DarwinModelForm
 {
-  public function setup()
+  protected function setupInheritance()
   {
-    $this->setWidgets(array(
-      'id'            => new sfWidgetFormInputHidden(),
-      'title'         => new sfWidgetFormTextarea(),
-      'title_indexed' => new sfWidgetFormTextarea(),
-      'type'          => new sfWidgetFormTextarea(),
-      'abstract'      => new sfWidgetFormTextarea(),
-      'year'          => new sfWidgetFormInputText(),
-    ));
+    parent::setupInheritance();
 
-    $this->setValidators(array(
-      'id'            => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
-      'title'         => new sfValidatorString(),
-      'title_indexed' => new sfValidatorString(array('required' => false)),
-      'type'          => new sfValidatorString(),
-      'abstract'      => new sfValidatorString(array('required' => false)),
-      'year'          => new sfValidatorInteger(array('required' => false)),
-    ));
+    $this->widgetSchema   ['title'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['title'] = new sfValidatorString();
+
+    $this->widgetSchema   ['title_indexed'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['title_indexed'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['type'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['type'] = new sfValidatorString();
+
+    $this->widgetSchema   ['abstract'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['abstract'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['year'] = new sfWidgetFormInputText();
+    $this->validatorSchema['year'] = new sfValidatorInteger(array('required' => false));
 
     $this->widgetSchema->setNameFormat('bibliography[%s]');
-
-    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
-
-    $this->setupInheritance();
-
-    parent::setup();
   }
 
   public function getModelName()

@@ -22,7 +22,7 @@ function chooseGtu(event)
   cell=el.find('td.item_name');
   //2019 02 28
   var referer = $("#http_referer").val();
-  if(referer.includes("/staging/edit/"))
+  if(referer.indexOf("/staging/edit/")!=-1)
   {   
     ref_element_name = el.find(".gtu_code").html();   
   }

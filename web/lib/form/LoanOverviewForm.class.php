@@ -8,7 +8,7 @@ class LoanOverviewForm extends sfForm
     if(isset($this->options['no_load']))
       $items = array();
     else
-      $items = Doctrine::getTable('LoanItems')->findForLoan($this->options['loan']->getId());
+      $items = Doctrine_Core::getTable('LoanItems')->findForLoan($this->options['loan']->getId());
     foreach ($items as $index => $childObject)
     {
       $form = new LoanItemsForm($childObject);
@@ -28,7 +28,7 @@ class LoanOverviewForm extends sfForm
   {
     $item = new LoanItems() ;
     if($spec_ref){
-      $spec = Doctrine::getTable('Specimens')->find($spec_ref);
+      $spec = Doctrine_Core::getTable('Specimens')->find($spec_ref);
       if($spec) {
         $item->setSpecimenRef($spec->getId()) ;
         $item->setIgRef($spec->getIgRef()) ;

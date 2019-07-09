@@ -16,7 +16,8 @@ class GtuForm extends BaseGtuForm
         //ftheeten 2018 08 08
       'coordinates_source',
 	  'latitude_dms_degree', 'latitude_dms_minutes', 'latitude_dms_seconds','longitude_dms_degree', 'longitude_dms_minutes', 
-	  'longitude_dms_seconds', 'latitude_utm', 'longitude_utm', 'utm_zone', 'latitude_dms_direction', 'longitude_dms_direction'));
+	  'longitude_dms_seconds', 'latitude_utm', 'longitude_utm', 'utm_zone', 'latitude_dms_direction', 'longitude_dms_direction',
+	  'nagoya' ));
 
     $this->widgetSchema['code'] = new sfWidgetFormInput();
     $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')), intval(sfConfig::get('dw_yearRangeMin')));
@@ -331,7 +332,9 @@ class GtuForm extends BaseGtuForm
       array('invalid' => 'Date provided is not valid',)
     );
     
-    
+	//jmherpers 20190508
+    $this->validatorSchema['nagoya'] = new sfValidatorBoolean() ;
+	
     $this->widgetSchema['delete_mode'] = new sfWidgetFormInputCheckbox();
 
     $this->validatorSchema['delete_mode'] = new sfValidatorPass();
@@ -433,7 +436,7 @@ class GtuForm extends BaseGtuForm
       
     }
 
-    public function saveEmbeddedForms($con = null, $forms = null)
+    public function saveObjectEmbeddedForms($con = null, $forms = null)
     {
 
       if (null === $forms)
@@ -462,7 +465,7 @@ class GtuForm extends BaseGtuForm
       //ftheeten 2018 11 29
      // $this->saveEmbed('GtuTemporalInformationForm', 'from_date' ,$forms, array('gtu_ref' => $this->getObject()->getId()));
      
-      return parent::saveEmbeddedForms($con, $forms);
+      return parent::saveObjectEmbeddedForms($con, $forms);
     }
     
   //ftheeten 2018 11 29
@@ -484,7 +487,7 @@ class GtuForm extends BaseGtuForm
 	 
      /*if( $emFieldName =='GtuTemporalInformationForm' )
      {
-      $res= Doctrine::getTable('TemporalInformation')->getSortedTemporalInformation($record_id);
+      $res= Doctrine_Core::getTable('TemporalInformation')->getSortedTemporalInformation($record_id);
       return $res;
     }*/
   }
@@ -507,7 +510,7 @@ class GtuForm extends BaseGtuForm
     $this->embedForm('GtuTemporalInformationForm',$subForm);
     if($this->getObject()->getId() !='')
     {
-      foreach(Doctrine::getTable('TemporalInformation')->getSortedTemporalInformation($this->getObject()->getId()) as $key=>$vals)
+      foreach(Doctrine_Core::getTable('TemporalInformation')->getSortedTemporalInformation($this->getObject()->getId()) as $key=>$vals)
       {
         $form = new TemporalInformationSubForm($vals);
         $this->embeddedForms['GtuTemporalInformationForm']->embedForm($key, $form);
@@ -522,10 +525,10 @@ class GtuForm extends BaseGtuForm
   
     //ftheeten 2018 11 29
     
-  /* public function saveEmbeddedForms($con = null, $forms = null)
+  /* public function saveObjectEmbeddedForms($con = null, $forms = null)
   {
      //$this->saveEmbed('TemporalInformation', 'from_date' ,$forms, array('gtu_ref' => $this->getObject()->getId()));
-    return parent::saveEmbeddedForms($con, $forms);
+    return parent::saveObjectEmbeddedForms($con, $forms);
   }*/
 
   public function saveDate(array $taintedValues = null, array $taintedFiles = null)
@@ -542,7 +545,7 @@ class GtuForm extends BaseGtuForm
         if(strtolower($taintedValues["delete_mode"])=="on")
         {   
 	print("on");
-            Doctrine::getTable('TemporalInformation')->deleteTemporalInformation($taintedValues["temporal_information"]);
+            Doctrine_Core::getTable('TemporalInformation')->deleteTemporalInformation($taintedValues["temporal_information"]);
         }
     }
   }
@@ -555,7 +558,7 @@ class GtuForm extends BaseGtuForm
      print("go 1");
         if(strtolower($taintedValues["delete_mode"])=="on")        {
            
-            $cpt=Doctrine::getTable('TemporalInformation')->countTemporalInformationBoundtoSpecimen($taintedValues["temporal_information"]);
+            $cpt=Doctrine_Core::getTable('TemporalInformation')->countTemporalInformationBoundtoSpecimen($taintedValues["temporal_information"]);
             print_r($cpt);
             if($cpt>0)
             {

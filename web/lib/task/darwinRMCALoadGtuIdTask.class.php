@@ -32,9 +32,9 @@ EOF;
 		  {
 			    try
 				{
-					$staging_obj= Doctrine::getTable('StagingGtu')->find($options['id']);
+					$staging_obj= Doctrine_Core::getTable('StagingGtu')->find($options['id']);
 					print("staging_found");
-					$import_obj=Doctrine::getTable('Imports')->find($staging_obj->getImportRef());
+					$import_obj=Doctrine_Core::getTable('Imports')->find($staging_obj->getImportRef());
 					print("import found");
 					$import_obj->setState("aloaded");
 					$import_obj->save();

@@ -76,11 +76,13 @@ sfContext::getInstance()->getActionName()=="addIdentification"||sfContext::getIn
       $(parent_el).find('select').append("<option value=''></option>").val('');
 
       $(parent_el).hide();
+	  $(parent_el).remove();
       reOrderIdent();
       visibles = $('table#identifications tbody.spec_ident_data:visible').size();
       if(!visibles)
       {
         $(this).closest('table#identifications').find('thead.spec_ident_head').hide();
+		$(this).closest('table#identifications').find('thead.spec_ident_head').remove();
       }
     });
 

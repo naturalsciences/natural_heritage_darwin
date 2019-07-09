@@ -38,7 +38,11 @@
       <?php if($specimen->getTaxonRef() > 0) : ?>
         <?php echo image_tag('info.png',"title=info class=info id=taxon_".$specimen->getId()."_info");?>
         <a href="<?php echo url_for('taxonomy/'.$action.'?id='.$specimen->getTaxonRef());?>"><?php echo $specimen->getTaxonName();?></a>
-        <div id="taxon_<?php echo $specimen->getId();?>_tree" class="tree"></div>
+		<!--JMHerpers 2019 05 29-->
+		<!-- ?php if($specimen->getCites() == TRUE ) : ?> 
+			&nbsp;<B><font size="4" color="red">(CITES!!)</font></B>
+		 < ?php endif ; ? -->
+	   <div id="taxon_<?php echo $specimen->getId();?>_tree" class="tree"></div>
         <script type="text/javascript">
             $('#taxon_<?php echo $specimen->getId();?>_info').click(function() 
             {
@@ -120,23 +124,23 @@
     <!--ftheeten 2018 11 30-->
     <td class="col_collecting_dates">
 			<!--jmherpers 2018 01 29-->
-			<?php if(null !==$specimen->getGtuFromDateMasked() && $specimen->getGtuFromDateMask()):?>
-				<?php if($specimen->getGtuFromDateMask() == 56):?>
-					<b>From: </b><?php echo substr($specimen->getGtuFromDateMasked(ESC_RAW),0,14);?>
-					<?php elseif($specimen->getGtuFromDateMask() == 48):?>
-						<b>From: </b><?php echo substr($specimen->getGtuFromDateMasked(ESC_RAW),12,10);?>
-						<?php elseif($specimen->getGtuFromDateMask() == 32):?>
-							<b>From: </b><?php echo substr($specimen->getGtuFromDateMasked(ESC_RAW),15,8);?>
+			<?php if(null !==$specimen->getTemporalInformation()->getFromDateMasked() && $specimen->getTemporalInformation()->getFromDateMask()):?>
+				<?php if($specimen->getTemporalInformation()->getFromDateMask() >= 56):?>
+					<b>From: </b><?php echo $specimen->getTemporalInformation()->getFromDateMasked(ESC_RAW);?>
+					<?php elseif($specimen->getTemporalInformation()->getFromDateMask() == 48):?>
+						<b>From: </b><?php echo substr($specimen->getTemporalInformation()->getFromDateMasked(ESC_RAW),12,10);?>
+						<?php elseif($specimen->getTemporalInformation()->getFromDateMask() == 32):?>
+							<b>From: </b><?php echo substr($specimen->getTemporalInformation()->getFromDateMasked(ESC_RAW),15,8);?>
 				<?php endif ; ?>
             <?php endif ; ?>
-            <?php if(null !==$specimen->getGtuToDateMasked() && $specimen->getGtuToDateMask()):?>
+            <?php if(null !==$specimen->getTemporalInformation()->getToDateMasked() && $specimen->getTemporalInformation()->getToDateMask()):?>
 				<br/>
-				<?php if($specimen->getGtuToDateMask() == 56):?>
-					<b>To: </b><?php echo substr($specimen->getGtuToDateMasked(ESC_RAW),0,14);?>
-					<?php elseif($specimen->getGtuToDateMask() == 48):?>
-						<b>To: </b><?php echo substr($specimen->getGtuToDateMasked(ESC_RAW),12,10);?>
-						<?php elseif($specimen->getGtuToDateMask() == 32):?>
-							<b>To: </b><?php echo substr($specimen->getGtuToDateMasked(ESC_RAW),15,8);?>
+				<?php if($specimen->getTemporalInformation()->getToDateMask() >= 56):?>
+					<b>To: </b><?php echo $specimen->getTemporalInformation()->getToDateMasked(ESC_RAW);;?>
+					<?php elseif($specimen->getTemporalInformation()->getToDateMask() == 48):?>
+						<b>To: </b><?php echo substr($specimen->getTemporalInformation()->getToDateMasked(ESC_RAW),12,10);?>
+						<?php elseif($specimen->getTemporalInformation()->getToDateMask() == 32):?>
+							<b>To: </b><?php echo substr($specimen->getTemporalInformation()->getToDateMasked(ESC_RAW),15,8);?>
 				<?php endif ; ?>
             <?php endif ; ?>
 			<!--end jmherpers 2018 01 29-->

@@ -13,7 +13,7 @@ class CatalogueRelationshipsTable extends DarwinTable
       ->andwhere('r.referenced_relation = ?', $table)
       ->andWhere('r.record_id_1=?', $id)
       ->andWhere('t.id=r.record_id_2')
-      ->setHydrationMode(Doctrine::HYDRATE_NONE);
+      ->setHydrationMode(Doctrine_Core::HYDRATE_NONE);
 
     if($type !== null)
       $q->andWhere('r.relationship_type = ?',$type);

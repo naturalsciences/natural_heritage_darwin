@@ -85,7 +85,7 @@ class ClassificationSynonymiesTable extends DarwinTable
       ->andWhere('s.record_id=t.id')
       ->andwhereIn('s.group_id', $groups)
       ->orderBy('s.group_name ASC, s.order_by ASC')
-      ->setHydrationMode(Doctrine::HYDRATE_NONE);
+      ->setHydrationMode(Doctrine_Core::HYDRATE_NONE);
     $items = $q->execute();
 
     $results = array();
@@ -280,7 +280,7 @@ class ClassificationSynonymiesTable extends DarwinTable
       ->andWhere('s.group_id = ?', $group1)
       ->andWhere('s.is_basionym = ?',true);
 
-    $res = $q->execute(array(), Doctrine::HYDRATE_SINGLE_SCALAR);
+    $res = $q->execute(array(), Doctrine_Core::HYDRATE_SINGLE_SCALAR);
 
     // Set No Basionym If more than 1
     if($res > 1)

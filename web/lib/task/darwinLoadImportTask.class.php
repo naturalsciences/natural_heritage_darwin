@@ -23,6 +23,7 @@ EOF;
 
      // initialize the database connection
     $result = null ;
+	$import=null;
     $databaseManager = new sfDatabaseManager($this->configuration);
     $environment = $this->configuration instanceof sfApplicationConfiguration ? $this->configuration->getEnvironment() : $options['env'];
     $connection = $databaseManager->getDatabase($options['connection'])->getConnection();
@@ -71,10 +72,10 @@ EOF;
                 break;              
               case 'abcd':
               default:
-                    /*$import_obj = Doctrine::getTable('Imports')->find($id);
+                    /*$import_obj = Doctrine_Core::getTable('Imports')->find($id);
                     $import_obj->setWorking(TRUE);
                     $import_obj->save();*/
-                    $import = new importABCDXml() ;
+                    $import = new importABCDXml($this->configuration ) ;
                     $result = $import->parseFile($file,$id) ;
                     $count_line = "(select count(*) from staging where import_ref = $id )" ;
                     /*$import_obj->setWorking(FALSE);
@@ -94,10 +95,18 @@ EOF;
           {
             echo $e->getMessage()."\n";
             $conn->rollback();
-            print_r($res);
+           // print_r($res);
             //ftheeten 2018 08 06
-            $import_obj = Doctrine::getTable('Imports')->find($q->getId());
-             $import_obj->setErrorsInImport($e->getMessage());
+            $import_obj = Doctrine_Core::getTable('Imports')->find($q->getId());
+			/*if(property_exists($import,'imported_table'))
+			{
+				$current_table = $import->imported_table.".";
+			}
+			else
+			{
+				$current_table = "";
+			}*/
+             $import_obj->setErrorsInImport($e->getMessage(). " ". $e->getFile(). " ". (string)$e->getLine(). " ".$e->getTraceAsString());
              $import_obj->setState("error");
               $import_obj->setWorking(FALSE);
              $import_obj->save();

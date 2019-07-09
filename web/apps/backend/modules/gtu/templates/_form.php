@@ -14,9 +14,9 @@ $(document).ready(function ()
 <?php echo form_tag('gtu/'.($form->getObject()->isNew() ? 'create' : 'update?id='.$form->getObject()->getId()), array('class'=>'edition'));?>
 
 <?php if (!$form->getObject()->isNew()): ?>
-<input type="hidden" name="sf_method" value="put" />
+	<input type="hidden" name="sf_method" value="put" />
 <?php endif; ?>
-  <table>
+<table>
     <tbody>
       <?php echo $form->renderGlobalErrors() ?>
       <tr>
@@ -28,7 +28,20 @@ $(document).ready(function ()
       </tr>
     </tbody>
 </table>
-<br/>
+<!--JMHerpers 2019 05 29-->
+<table style="margin-top:20px; margin-bottom: 20px">
+	<tr>
+        <th><?php echo $form['nagoya']->renderLabel() ?></th>
+        <td>
+			<?php echo $form['nagoya']->renderError() ?>
+			<?php echo $form['nagoya'] ?>
+			
+			<a href=location.protocol + '//' + location.host + "/"+ location.pathname.split("/")[1] + "/"+ location.pathname.split("/")[2] +"/help/nagoya_countries.html" target="popup" onclick="window.open(location.protocol + '//' + location.host + '/'+ location.pathname.split('/')[1] +'/help/nagoya_countries.html','popup','width=1150,height=800'); return false;" style="display: inline-block;">
+				<?php echo image_tag('info.png',"title=nagoya_info class=nagoya_info id=nagoya");?>
+			</a>
+        </td>
+	</tr>
+</table>
 
 <?php
 $tag_grouped = array();

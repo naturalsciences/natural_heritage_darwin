@@ -8,39 +8,33 @@
  * @package    darwin
  * @subpackage form
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
+ * @version    SVN: $Id$
  */
-abstract class BaseLoansForm extends BaseFormDoctrine
+abstract class BaseLoansForm extends DarwinModelForm
 {
-  public function setup()
+  protected function setupInheritance()
   {
-    $this->setWidgets(array(
-      'id'               => new sfWidgetFormInputHidden(),
-      'name'             => new sfWidgetFormTextarea(),
-      'description'      => new sfWidgetFormTextarea(),
-      'search_indexed'   => new sfWidgetFormTextarea(),
-      'from_date'        => new sfWidgetFormTextarea(),
-      'to_date'          => new sfWidgetFormTextarea(),
-      'extended_to_date' => new sfWidgetFormTextarea(),
-    ));
+    parent::setupInheritance();
 
-    $this->setValidators(array(
-      'id'               => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
-      'name'             => new sfValidatorString(array('required' => false)),
-      'description'      => new sfValidatorString(array('required' => false)),
-      'search_indexed'   => new sfValidatorString(array('required' => false)),
-      'from_date'        => new sfValidatorString(array('required' => false)),
-      'to_date'          => new sfValidatorString(array('required' => false)),
-      'extended_to_date' => new sfValidatorString(array('required' => false)),
-    ));
+    $this->widgetSchema   ['name'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['name'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['description'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['description'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['search_indexed'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['search_indexed'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['from_date'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['from_date'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['to_date'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['to_date'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['extended_to_date'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['extended_to_date'] = new sfValidatorString(array('required' => false));
 
     $this->widgetSchema->setNameFormat('loans[%s]');
-
-    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
-
-    $this->setupInheritance();
-
-    parent::setup();
   }
 
   public function getModelName()

@@ -66,6 +66,6 @@ class bigbroActions extends DarwinActions
 
   public function executeManageTrackedFields(sfWebRequest $request)
   {
-    $this->fields =  Doctrine::getTable('UsersTablesFieldsTrackedTable')->getFieldsForUser($request->getParameter('id'));
+    $this->fields =  Doctrine_Core::getTable('UsersTablesFieldsTrackedTable')->getFieldsForUser($request->getParameter('id'));
   }
 }

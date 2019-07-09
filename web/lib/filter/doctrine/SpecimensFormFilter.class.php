@@ -15,7 +15,10 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->with_group = false;
     $this->useFields(array('gtu_ref','gtu_code','gtu_from_date','gtu_to_date', 'taxon_level_ref', 'litho_name', 'litho_level_ref', 'litho_level_name', 'chrono_name', 'chrono_level_ref',
         'chrono_level_name', 'lithology_name', 'lithology_level_ref', 'lithology_level_name', 'mineral_name', 'mineral_level_ref',
-        'mineral_level_name','ig_num','acquisition_category','acquisition_date'));
+        'mineral_level_name','ig_num','acquisition_category','acquisition_date',
+        'import_ref',
+		//JMherpers 2019 04 25
+		'nagoya'));
 
     $this->addPagerItems();
 
@@ -234,6 +237,12 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       ),
       array('invalid' => 'Date provided is not valid',)
     );
+	
+	    //ftheeten 2018 05 29
+	$this->widgetSchema['ig_num_contains'] = new sfWidgetFormInputCheckbox();
+  	////ftheeten 2018 05 29
+	$this->validatorSchema['ig_num_contains'] = new sfValidatorPass();
+	
 
     $this->validatorSchema['ig_to_date'] = new fuzzyDateValidator(array(
       'required' => false,
@@ -377,13 +386,13 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->embedForm('Tags',$subForm);
 
     $this->widgetSchema['tools'] = new widgetFormSelectDoubleListFilterable(array(
-      'choices' => new sfCallable(array(Doctrine::getTable('CollectingTools'),'fetchTools')),
+      'choices' => new sfCallable(array(Doctrine_Core::getTable('CollectingTools'),'fetchTools')),
       'label_associated'=>$this->getI18N()->__('Selected'),
       'label_unassociated'=>$this->getI18N()->__('Available')
     ));
 
     $this->widgetSchema['methods'] = new widgetFormSelectDoubleListFilterable(array(
-      'choices' => new sfCallable(array(Doctrine::getTable('CollectingMethods'),'fetchMethods')),
+      'choices' => new sfCallable(array(Doctrine_Core::getTable('CollectingMethods'),'fetchMethods')),
       'label_associated'=>$this->getI18N()->__('Selected'),
       'label_unassociated'=>$this->getI18N()->__('Available')
     ));
@@ -460,7 +469,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 
 
     $this->widgetSchema['stage'] = new widgetFormSelectDoubleListFilterable(array(
-      'choices' => new sfCallable(array(Doctrine::getTable('Specimens'),'getDistinctStages')),
+      'choices' => new sfCallable(array(Doctrine_Core::getTable('Specimens'),'getDistinctStages')),
       'label_associated'=>$this->getI18N()->__('Selected'),
       'label_unassociated'=>$this->getI18N()->__('Available')
     ));
@@ -502,14 +511,79 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       'add_empty' => false,
     ));
     $this->validatorSchema['rockform'] = new sfValidatorPass();
+	
+	/*2019 06 22*/
+	 $this->widgetSchema['mineralogical_identification'] = new sfWidgetForminput();
+	 $this->widgetSchema['mineralogical_identification']->setAttributes(array('class'=>'autocomplete_mineralogy'));
+	 $this->validatorSchema['mineralogical_identification'] = new sfValidatorPass();
+	 $identification_choices = array('all'=>'All', 'taxonomy'=> 'Taxon.', 'mineralogy' => 'Miner.', 'chronostratigraphy' => 'Chron.',
+      'lithostratigraphy' => 'Litho.', 'lithology' => 'Lithology', 'type'=> 'Type', 
+      'sex' => 'Sex', 'stage' => 'Stage', 'social_status' => 'Social', 'rock_form' => 'Rock') ;
+	   $this->widgetSchema['identification_notion_concerned'] = new sfWidgetFormChoice(array(
+        'choices' => $identification_choices
+      ));
+    $this->validatorSchema['identification_notion_concerned'] = new sfValidatorChoice(array('required' => false, 'choices'=>array_keys($identification_choices)));
+	 $this->widgetSchema['identification_value_defined'] = new sfWidgetFormInput();
+    //ftheeten 2018 09 18 new class identification_subject
+    $this->widgetSchema['identification_value_defined']->setAttributes(array('class'=>'xlsmall_size identification_subject, autocomplete_identification_value'));
+    $this->validatorSchema['identification_value_defined'] = new sfValidatorString(array('required' => false, 'trim'=>true));
 
-    $this->widgetSchema['count'] = new sfWidgetFormInput();
-    $this->widgetSchema['count']->setAttributes(array('class'=>'vsmall_size'));
-    $this->validatorSchema['count'] = new sfValidatorString(array('required' => false));
+/*ftheeten 2016 06 22*/
+ $this->widgetSchema['specimen_count_min'] = new sfWidgetForminput();
+ $this->widgetSchema['specimen_count_min']->setAttributes(array('class'=>'vvsmall_size'));
+ $this->widgetSchema['specimen_count_min']->setLabel('Count (min)');
+ $this->validatorSchema['specimen_count_min'] = new sfValidatorNumber(array('required'=>false,'min' => '0'));
+ 
+  $this->widgetSchema['specimen_count_males_min'] = new sfWidgetForminput();
+   $this->widgetSchema['specimen_count_males_min']->setAttributes(array('class'=>'vvsmall_size'));
+ $this->widgetSchema['specimen_count_males_min']->setLabel('Count males (min)');
+ $this->validatorSchema['specimen_count_males_min'] = new sfValidatorNumber(array('required'=>false,'min' => '0'));
+ 
+   $this->widgetSchema['specimen_count_females_min'] = new sfWidgetForminput();
+      $this->widgetSchema['specimen_count_females_min']->setAttributes(array('class'=>'vvsmall_size'));
+ $this->widgetSchema['specimen_count_females_min']->setLabel('Count females (min)');
+ $this->validatorSchema['specimen_count_females_min'] = new sfValidatorNumber(array('required'=>false,'min' => '0'));
 
-    $operators = array(''=>'','e'=>'=','l'=>'<=','g'=>'>=') ;
+   $this->widgetSchema['specimen_count_juveniles_min'] = new sfWidgetForminput();
+      $this->widgetSchema['specimen_count_juveniles_min']->setAttributes(array('class'=>'vvsmall_size'));
+ $this->widgetSchema['specimen_count_juveniles_min']->setLabel('Count juveniles (min)');
+ $this->validatorSchema['specimen_count_juveniles_min'] = new sfValidatorNumber(array('required'=>false,'min' => '0'));
+ 
+  $this->widgetSchema['specimen_count_max'] = new sfWidgetForminput();
+ $this->widgetSchema['specimen_count_max']->setAttributes(array('class'=>'vvsmall_size'));
+ $this->widgetSchema['specimen_count_max']->setLabel('Count (max)');
+ $this->validatorSchema['specimen_count_max'] = new sfValidatorNumber(array('required'=>false,'min' => '0'));
+ 
+  $this->widgetSchema['specimen_count_males_max'] = new sfWidgetForminput();
+   $this->widgetSchema['specimen_count_males_max']->setAttributes(array('class'=>'vvsmall_size'));
+ $this->widgetSchema['specimen_count_males_max']->setLabel('Count males (max)');
+ $this->validatorSchema['specimen_count_males_max'] = new sfValidatorNumber(array('required'=>false,'min' => '0'));
+ 
+   $this->widgetSchema['specimen_count_females_max'] = new sfWidgetForminput();
+      $this->widgetSchema['specimen_count_females_max']->setAttributes(array('class'=>'vvsmall_size'));
+ $this->widgetSchema['specimen_count_females_max']->setLabel('Count females (max)');
+ $this->validatorSchema['specimen_count_females_max'] = new sfValidatorNumber(array('required'=>false,'min' => '0'));
+ 
+    $this->widgetSchema['specimen_count_juveniles_max'] = new sfWidgetForminput();
+      $this->widgetSchema['specimen_count_juveniles_max']->setAttributes(array('class'=>'vvsmall_size'));
+ $this->widgetSchema['specimen_count_juveniles_max']->setLabel('Count juveniles (max)');
+ $this->validatorSchema['specimen_count_juveniles_max'] = new sfValidatorNumber(array('required'=>false,'min' => '0'));
+ //end group count
+
+    /*$operators = array(''=>'','e'=>'=','l'=>'<=','g'=>'>=') ;
     $this->widgetSchema['count_operator'] = new sfWidgetFormChoice(array('choices'=> $operators));
-    $this->validatorSchema['count_operator'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($operators)));
+    $this->validatorSchema['count_operator'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($operators)));*/
+    
+        //ftheeten 2016 06 08 t disable warning when saving saved search in the DB
+    if(isset($values['count_operator']))
+    {
+        if ($values['count_operator'] != '' && $values['count'] != '')
+        {
+          if($values['count_operator'] == 'e') $query->andwhere('specimen_count_max = ?',$values['count']) ;
+          if($values['count_operator'] == 'l') $query->andwhere('specimen_count_max <= ?',$values['count']) ;
+          if($values['count_operator'] == 'g') $query->andwhere('specimen_count_min >= ?',$values['count']) ;
+        }
+    }
     
     $this->widgetSchema['container'] = new sfWidgetFormInput();
     $this->validatorSchema['container'] = new sfValidatorString(array('required' => false));
@@ -661,6 +735,8 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       ),
       array('invalid' => 'Date provided is not valid',)
     );
+	
+
     
     $subForm = new sfForm();
     $this->embedForm('Codes',$subForm);
@@ -761,6 +837,29 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->widgetSchema['taxa_list_placeholder']->setAttributes(Array("class"=>"select2_taxa_list_placeholder"));
     $this->validatorSchema['taxa_list_placeholder'] = new sfValidatorString(array('required' => false));
     
+	//jmherpers 2019 04 26
+	$this->widgetSchema['taxonomy_cites'] = new sfWidgetFormChoice(
+		array(
+			'expanded' => true,
+			'choices'  => array(True => 'yes', False => 'no', NULL=>'yes or no')
+		),
+		array( 'style' => "display: inline-block;text-align:center")
+	);
+
+    $this->validatorSchema['taxonomy_cites'] = new sfValidatorString(array('required' => false));
+	
+	//jmherpers 2019 04 26
+    $this->widgetSchema['nagoya'] = new sfWidgetFormChoice(array(
+        'expanded' => true,
+        'choices'  => array(True => 'yes', False => 'no', NULL=>'yes or no'),
+       
+        ), array( 'style' => "display: inline-block;text-align:center"));
+    $this->validatorSchema['nagoya'] = new sfValidatorString(array('required' => false));
+	
+	//ftheeten 2019 06 02
+	 $this->widgetSchema['import_ref'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
+	 $this->validatorSchema['import_ref'] = new sfValidatorString(array('required' => false));
+  
   }
 
   public function addGtuTagValue($num)
@@ -801,7 +900,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     return $query ;
   }
 
-     //ftheeten 2018 11 22
+ //ftheeten 2018 11 22
   public function addCodesListColumnQuery($query, $fields, $val)
   {
         
@@ -817,11 +916,11 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
                     if($this->is_fuzzy_codes_list)
                     {
                         $to_search="%".BaseSpecimensFormFilter::fulltoindex_sql($to_search)."%";
-                        $sql_parts[]= "EXISTS(select 1 from codes where referenced_relation='specimens' and record_id = s.id AND full_code_indexed LIKE ? ) ";
+                        $sql_parts[]= "EXISTS(select 1 from codes where referenced_relation='specimens' and code_category='main' and record_id = s.id AND full_code_indexed LIKE ? ) ";
                     }
                     else
                     {
-                        $sql_parts[]= "EXISTS(select 1 from codes where referenced_relation='specimens' and record_id = s.id AND LOWER(TRIM(COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,''))) ilike  LOWER(?) ) ";
+                        $sql_parts[]= "EXISTS(select 1 from codes where referenced_relation='specimens' and code_category='main' and record_id = s.id AND full_code_indexed like (SELECT  fulltoindex(?) )) ";
                     }
                     $sql_params[] =trim($to_search);
                 }
@@ -902,12 +1001,19 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
   }
 
 
-  public function addIgNumColumnQuery(Doctrine_Query $query, $field, $values)
+  public function addIgNumQuery(Doctrine_Query $query, $field, $values, $fuzzy_mode)
   {
     if ($values != "") {
       $conn_MGR = Doctrine_Manager::connection();
-      $query->andWhere("ig_num_indexed like concat(fullToIndex(".$conn_MGR->quote($values, 'string')."), '%') ");
-    }
+	  if($fuzzy_mode=="on")
+	  {
+		  $query->andWhere("ig_num_indexed like concat(fullToIndex(".$conn_MGR->quote($values, 'string')."), '%') ");
+	  }
+	  else
+	  {
+		 $query->andWhere("ig_num_indexed like fullToIndex(".$conn_MGR->quote($values, 'string').") ");
+	  }
+	}
     return $query;
   }
 
@@ -1157,6 +1263,11 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
   public function addCodesColumnQuery($query, $field, $val)
   {
 
+    $str_params = '';
+    $str_params_part = '' ;
+    $params = array();
+    $params_part = array() ;
+    $cpt=0;
     foreach($val as $i => $code)
     {
       if(empty($code)) continue;
@@ -1170,17 +1281,62 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
         }
         if($code['code_part']  != '') {
           if($has_query) $sql .= ' AND ';
-          $sql .= " full_code_indexed ilike '%' || fulltoindex(?) || '%' ";
-          $sql_params[] = $code['code_part'];
+          //$sql .= " full_code_indexed ilike '%' || fulltoindex(?) || '%' ";
+          //ftheeten 20140922
+		    //ftheeten 20150909 (if on exact match
+		  if($this->code_exact_match==FALSE)
+		  {
+			//ftheeten 20140922
+			$sql .= " full_code_indexed like (SELECT fulltoindex(?))||'%'";
+		  }
+		  else if($this->code_exact_match==TRUE)
+		  {
+			$sql .= " full_code_indexed like (SELECT fulltoindex(?))";
+		  }
+		  
+		  $sql_params[] = $code['code_part'];
           $has_query = true;
         }
-        if($has_query)
-          $query->addWhere("EXISTS(select 1 from codes where referenced_relation='specimens' and record_id = s.id AND $sql)", $sql_params);
-    }
+		
+		//ftheeten 2018 06 14
+		if($code['category']  != '' && strtolower($code['category'])  != 'all') {
+          if($has_query) $sql .= ' AND ';
+         
+		 
+			
+		    $sql .= " code_category = ?";
+		  
+		  
+		  $sql_params[] = $code['category'];
+          $has_query = true;
+        }
+        else
+        {
+            if($has_query) $sql .= ' AND ';
+              $sql .= " code_category = 'main'";
+               $has_query = true;
+        }
+		
+		
+        //if($has_query)
+        //  $query->addWhere("EXISTS(select 1 from codes where  referenced_relation='specimens' and record_id = s.id AND $sql)", $sql_params);
+		if($has_query)
+		{
+		//ftheeten 2015 01 08
+			if($this->code_boolean=='OR'&&$cpt>0)
+			{
+				$query->orWhere("EXISTS(select 1 from codes where  referenced_relation='specimens' and record_id = s.id AND $sql)", $sql_params);
+			}
+			else
+			{
+				$query->andWhere("EXISTS(select 1 from codes where  referenced_relation='specimens' and record_id = s.id AND $sql)", $sql_params);
+			}
+		}
+        $cpt++;
+	}
 
     return $query ;
   }
-  
   //ftheeten 2019 24 01
   public function addGtuRefColumnQuery($query, $field, $val)
   {
@@ -1495,7 +1651,62 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     }
     return $query ;
   }
+  
+   public function addImportRefColumnQuery($query, $field, $val) 
+   {
+		if(strlen($val)>0)
+		{
+			if(is_numeric($val))
+			{
+				$query->andWhere( " import_ref = ? " ,$val);
+			}
+		}
+    return $query ;
+  }
+  
+   public function addMineralogicalIdentificationQuery($query, $field, $val) 
+   {
+		if(strlen($val)>0)
+		{
+			$query->andWhere( " EXISTS (SELECT i.id FROM identifications i WHERE i.referenced_relation = 'specimens' AND i.notion_concerned='mineralogy' AND i.value_defined_indexed=fulltoindex(?) AND i.record_id= s.id)" ,$val);
+		}
+    return $query ;
+  }
 
+  
+     public function addIdentificationQuery($query, $field, $val, $notion) 
+   {
+		if(strlen($val)>0)
+		{
+			if($notion=="all")
+			{
+				$query->andWhere( " EXISTS (SELECT i.id FROM identifications i WHERE i.referenced_relation = 'specimens'  AND i.value_defined_indexed=fulltoindex(?) AND i.record_id= s.id)" ,$val);
+			}
+			else
+			{
+				$query->andWhere( " EXISTS (SELECT i.id FROM identifications i WHERE i.referenced_relation = 'specimens' AND i.notion_concerned=? AND i.value_defined_indexed=fulltoindex(?) AND i.record_id= s.id)" ,array($notion,$val));
+			}
+		}
+    return $query ;
+  }
+
+
+
+    //JMHerpers 2019 04 29
+	public function addCites($query, $val) {
+		if(is_numeric($val)) {
+			if($val == 0){
+				//$query->andWhere("cites = FALSE") ;
+				$query->andWhere("EXISTS (select t.id from taxonomy t where t.cites = FALSE AND t.id = s.taxon_ref)") ;
+			}
+			if($val == 1){
+				//$query->andWhere("cites = TRUE") ;
+				$query->andWhere("EXISTS (select t.id from taxonomy t where t.cites = TRUE AND t.id = s.taxon_ref)") ;
+			}
+		}
+		return $query ;
+	}
+	
    public function addPropertiesQuery($query, $type , $applies_to, $value_from, $value_to, $unit, $taintedValues=Array()) 
   {
   
@@ -1707,7 +1918,14 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       $this->embedForm('Peoples',$subForm);
       $taintedValues['Peoples'] = array();
     }
-	
+	//see sfValidatorSchemafilter in vendor
+	/*foreach($taintedValues as $key=>$val)
+    {
+        if(!is_array($val))
+        {
+            unset($taintedValues[$key]);
+        }
+    }*/
     parent::bind($taintedValues, $taintedFiles);
   }
 
@@ -1735,7 +1953,7 @@ $query = DQ::create()
         (collection_ref in ('.implode(',',$this->encoding_collection).')) as has_encoding_rights
         '
       )
-      ->from('Specimens s');//->leftJoin("s.DoctrineTaxonomicIdentifications d")
+      ->from('Specimens s');
       
      ;
       
@@ -1756,7 +1974,7 @@ $query = DQ::create()
 
           foreach($values['collection_ref'] as $tmp_id)
           {           
-            $sub_cols = Doctrine::getTable("Collections")->fetchByCollectionParent($this->options['user'] , $this->options['user']->getId(), $tmp_id);
+            $sub_cols = Doctrine_Core::getTable("Collections")->fetchByCollectionParent($this->options['user'] , $this->options['user']->getId(), $tmp_id);
             foreach($sub_cols as $sub_col)
             {
            
@@ -1771,12 +1989,8 @@ $query = DQ::create()
     }
     $query->andwhereIn('collection_ref ', $this->cols);
     if(!empty($values['specimen_status'])) $query->andwhere('specimen_status = ?',$values['specimen_status']) ; 
-    if ($values['count_operator'] != '' && $values['count'] != '')
-    {
-      if($values['count_operator'] == 'e') $query->andwhere('specimen_count_max = ?',$values['count']) ;
-      if($values['count_operator'] == 'l') $query->andwhere('specimen_count_max <= ?',$values['count']) ;
-      if($values['count_operator'] == 'g') $query->andwhere('specimen_count_min >= ?',$values['count']) ;
-    }
+
+    
     //if ($values['people_ref'] != '') $this->addPeopleSearchColumnQuery($query, $values['people_ref'], $values['role_ref']);
     if ($values['acquisition_category'] != '' ) $query->andWhere('acquisition_category = ?',$values['acquisition_category']);
     if ($values['taxon_level_ref'] != '') $query->andWhere('taxon_level_ref = ?', intval($values['taxon_level_ref']));
@@ -1796,6 +2010,13 @@ $query = DQ::create()
     //ftheeten 2018 09 19
     $this->addTaxonomicMetadataRef($query, $values["taxonomy_metadata_ref"]);
     
+	//JMHerpers 2019 04 29
+    $this->addCites($query, $values["taxonomy_cites"]);
+	$this->addImportRefColumnQuery($query, $values["import_ref"],  $values["import_ref"]);
+	$this->addMineralogicalIdentificationQuery($query, $values["mineralogical_identification"],  $values["mineralogical_identification"] );
+	$this->addIdentificationQuery($query, $values["identification_choices"],  $values["identification_value_defined"], $values["identification_notion_concerned"] );
+	$this->addIgNumQuery($query, $values["ig_num"],  $values["ig_num"], $values["ig_num_contains"] );
+	
     $this->addPropertiesQuery($query, $values['property_type'] , $values['property_applies_to'], $values['property_value_from'], $values['property_value_to'], $values['property_units'], $values);
 
     $this->addCommentsQuery($query, $values['comment_notion_concerned'] , $values['comment']);
@@ -1807,7 +2028,7 @@ $query = DQ::create()
     //2019 02 25
     $this->addCreationDateFromToColumnQuery($query, array('modification_date_time'), $values['creation_from_date'], $values['creation_to_date']);
     
-    //$this->addCatalogueRelationColumnQuery($query, $values['taxon_item_ref'], $values['taxon_relation'],'taxonomy','taxon');
+    
     //ftheeten 2016 03 24
     $this->addCatalogueRelationColumnQueryArrayRelations($query, $values['taxa_list'], $values['taxon_relation'],'taxonomy','taxon');
     $this->addCatalogueRelationColumnQueryArrayRelations($query, $values['chrono_item_ref'], $values['chrono_relation'],'chronostratigraphy','chrono');
@@ -1871,6 +2092,86 @@ $query = DQ::create()
       }
     }
     return $query;
+  }
+  
+   //ftheeten 2016 06 22
+ public function addSpecimenCountMinColumnQuery($query, $field, $val)
+ {
+    if( $val != '' ) {
+      $conn_MGR = Doctrine_Manager::connection();
+      $query->andWhere('s.specimen_count_min  >= '.$val);
+    }
+    return $query ;
+  }
+  
+   //ftheeten 2016 06 22
+ public function addSpecimenCountMaxColumnQuery($query, $field, $val)
+ {
+    if( $val != '' ) {
+      $conn_MGR = Doctrine_Manager::connection();
+      $query->andWhere('s.specimen_count_min  <= '.$val);
+    }
+    return $query ;
+  }
+  
+  //ftheeten 2016 06 22
+ public function addSpecimenCountMalesMinColumnQuery($query, $field, $val)
+ {
+    if( $val != '' ) {
+      $conn_MGR = Doctrine_Manager::connection();
+      $query->andWhere('s.specimen_count_males_min  >= '.$val);
+    }
+    return $query ;
+  }
+  
+   //ftheeten 2016 06 22
+ public function addSpecimenCountMalesMaxColumnQuery($query, $field, $val)
+ {
+    if( $val != '' ) {
+      $conn_MGR = Doctrine_Manager::connection();
+      $query->andWhere('s.specimen_count_males_max  <= '.$val);
+    }
+    return $query ;
+  }
+  
+    //ftheeten 2016 06 22
+ public function addSpecimenCountFemalesMinColumnQuery($query, $field, $val)
+ {
+    if( $val != '' ) {
+      $conn_MGR = Doctrine_Manager::connection();
+      $query->andWhere('s.specimen_count_females_min  >= '.$val);
+    }
+    return $query ;
+  }
+  
+   //ftheeten 2016 06 22
+ public function addSpecimenCountFemalesMaxColumnQuery($query, $field, $val)
+ {
+    if( $val != '' ) {
+      $conn_MGR = Doctrine_Manager::connection();
+      $query->andWhere('s.specimen_count_females_max  <= '.$val);
+    }
+    return $query ;
+  }
+  
+      //ftheeten 2016 06 22
+ public function addSpecimenCountJuvenilesMinColumnQuery($query, $field, $val)
+ {
+    if( $val != '' ) {
+      $conn_MGR = Doctrine_Manager::connection();
+      $query->andWhere('s.specimen_count_juveniles_min  >= '.$val);
+    }
+    return $query ;
+  }
+  
+   //ftheeten 2016 06 22
+ public function addSpecimenCountJuvenilesMaxColumnQuery($query, $field, $val)
+ {
+    if( $val != '' ) {
+      $conn_MGR = Doctrine_Manager::connection();
+      $query->andWhere('s.specimen_count_juveniles_max  <= '.$val);
+    }
+    return $query ;
   }
   
 

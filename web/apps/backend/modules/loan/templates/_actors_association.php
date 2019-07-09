@@ -22,12 +22,12 @@
         </script>
       </td>
       <td><?php if($form['people_ref']->getValue()) : ?>
-      <?php echo image_tag(Doctrine::getTable('People')->find($form['people_ref']->getValue())
+      <?php echo image_tag(Doctrine_Core::getTable('People')->find($form['people_ref']->getValue())
                                ->getCorrespondingImage()) ; ?>
           <?php endif ; ?>
       </td>
       <td><?php
-                $is_physical = Doctrine::getTable('People')->find($form['people_ref']->getValue())->getIsPhysical();
+                $is_physical = Doctrine_Core::getTable('People')->find($form['people_ref']->getValue())->getIsPhysical();
                 echo link_to($form['people_ref']->renderLabel(),
                              (($is_physical)?'people':'institution').'/edit',
                              array(

@@ -1,13 +1,18 @@
 <?php slot('title', __('View Specimens') .  ( $specimen->getTaxonRef()  ? " : ".$specimen->getTaxonName() : ""));  ?>
 
-<div class="page viewer">  
-  <h1><?php echo __("Specimen Record");?><?php echo (": ".$specimen->getId());?></h1>
+<div class="page viewer">
+  <?php
+	$ig=$specimen->getIgNum(); $spec_num=$specimen->getMainCode();
+  ?>
+  <?php if(strlen($specimen->getIgNum()??'')>0||strlen($specimen->getIgNum()??'')>0):?>
+	<h1><?php echo __("I.G. Number : ");?><?php echo (strlen($specimen->getIgNum()??'')>0 ?  $specimen->getIgNum():'No I.G. Num' );?><br/><?php echo __("Collection Number : ");?><?php echo (strlen($specimen->getIgNum()??'')>0 ?  $specimen->getMainCode():'No main code' );?> </h1>
+  <?php endif;?>
   <h2 class="title"><?php echo __("Collection") ?></h2>
     <div class="borded right_padded">
       <table>
         <tbody>
           <tr>
-            <td class="line">
+            <td class="line">			
                 <span class="pager_nav"><?php echo __("Name") ; ?>: </span><span><?php echo $specimen->getCollectionName() ; ?></span>
                 <?php echo image_tag('info.png',"title=info class=info id=collection_info");?>
               <div id="collection_tree" class="tree"></div>

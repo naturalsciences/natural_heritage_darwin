@@ -65,6 +65,11 @@ class specimensearchwidgetComponents extends sfComponents
     $this->defineForm();
   }
 
+  public function executeNagoya()
+  {
+    $this->defineForm();
+  }
+  
   public function executeStage()
   {
     $this->defineForm();
@@ -167,4 +172,11 @@ class specimensearchwidgetComponents extends sfComponents
   {
     $this->defineForm();
   }
+  
+     //ftheeten 2019 06 24
+   public function executeIdentification()
+  {
+    $this->defineForm();
+  }
+  
 }

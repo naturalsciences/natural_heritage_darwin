@@ -196,7 +196,7 @@ class widgetFormButtonRefMultiple extends sfWidgetFormInputHidden
   public function getName($value, $default='')
   {
     if(is_numeric($value) && $value !=0)
-      $object = Doctrine::getTable($this->getOption('model'))->find($value);
+      $object = Doctrine_Core::getTable($this->getOption('model'))->find($value);
     else
       return $default;
     if(! $object)

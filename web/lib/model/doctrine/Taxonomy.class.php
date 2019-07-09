@@ -30,12 +30,12 @@ class Taxonomy extends BaseTaxonomy
   	//ftheeten 2017 08 07
     public function getTaxonomyMetadataName()
     {
-        return Doctrine::getTable('TaxonomyMetadata')->find($this->getMetadataRef())->getTaxonomyName();
+        return Doctrine_Core::getTable('TaxonomyMetadata')->find($this->getMetadataRef())->getTaxonomyName();
     }
     
      public function getTaxonomyMetadataReferenceStatus()
     {
-        return Doctrine::getTable('TaxonomyMetadata')->find($this->getMetadataRef())->getIsReferenceTaxonomy();
+        return Doctrine_Core::getTable('TaxonomyMetadata')->find($this->getMetadataRef())->getIsReferenceTaxonomy();
     }
 	 
 	 

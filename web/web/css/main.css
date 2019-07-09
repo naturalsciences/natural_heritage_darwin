@@ -362,6 +362,7 @@ input[type="submit"][class="search_submit"]
   color:white;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
+  float:right;
 }
 
 

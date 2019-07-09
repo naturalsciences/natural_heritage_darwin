@@ -54,19 +54,19 @@ class commentActions extends DarwinActions
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     if($request->hasParameter('id'))
     {
-      $r = Doctrine::getTable( DarwinTable::getModelForTable($request->getParameter('table')) )->find($request->getParameter('id'));
+      $r = Doctrine_Core::getTable( DarwinTable::getModelForTable($request->getParameter('table')) )->find($request->getParameter('id'));
       $this->forward404Unless($r,'No such item');
       if(!$this->getUser()->isA(Users::ADMIN))
       {
         if($request->getParameter('table') == 'specimens' )
         {
-          if(! Doctrine::getTable('Specimens')->hasRights('spec_ref',$request->getParameter('id'), $this->getUser()->getId()))
+          if(! Doctrine_Core::getTable('Specimens')->hasRights('spec_ref',$request->getParameter('id'), $this->getUser()->getId()))
             $this->forwardToSecureAction();
         }
       }
     }
     if($request->hasParameter('cid'))
-      $this->comment =  Doctrine::getTable('Comments')->find($request->getParameter('cid'));
+      $this->comment =  Doctrine_Core::getTable('Comments')->find($request->getParameter('cid'));
     else
     {
      $this->comment = new Comments();

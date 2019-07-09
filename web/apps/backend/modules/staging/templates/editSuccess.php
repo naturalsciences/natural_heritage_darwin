@@ -2,7 +2,8 @@
 <?php include_stylesheets_for_form($form) ?>
 <?php include_javascripts_for_form($form) ?>
 <div class="page">
-  <?php $has_gtu=false ?>
+  <?php $has_gtu=false; ?>
+  <?php $has_expedition=false; ?>
   <?php echo form_tag('staging/update?id='.$form->getObject()->getId(), array('class'=>'edition','method'=>'post'));?>
   <?php if($form->hasGlobalErrors()):?>
     <ul class="spec_error_list">
@@ -19,6 +20,7 @@
   <?php else : ?>
     <?php foreach($fields as $key => $array) : ?>
     <?php if($key=="gtu") { $has_gtu=true ;} ;?>
+	<?php if($key=="expedition") { $has_expedition=true ;} ;?>
       <?php if($key == 'duplicate') : ?>
       <fieldset>
         <ul class="error_list">
@@ -97,6 +99,9 @@
       <?php if($has_gtu):?>
         <a  id="align_all_gtu"><?php echo __('Update all similar GTUs');?></a>
       <?php endif;?>
+	  <?php if($has_expedition):?>
+        <a  id="align_all_expeditions"><?php echo __('Update all similar Expeditions');?></a>
+      <?php endif;?>
       <input type="submit" value="<?php echo __('Update');?>" id="submit"/>
     </p>
   <?php endif ; ?>
@@ -138,6 +143,17 @@ $(document).ready(function () {
             //$("#contactsFrom").submit();
             var target=document.forms[0].action;
             target=target.replace('/update/', '/updateallgtus/');            
+            document.forms[0].action=target;
+            var tmpForm=document.forms[0];
+            $("#submit").click();
+            e.preventDefault();
+        });
+		
+	$("#align_all_expeditions").on("click", function (e) {
+            //$('#contactsFrom').attr('action', "/test1");
+            //$("#contactsFrom").submit();
+            var target=document.forms[0].action;
+            target=target.replace('/update/', '/updateallexpeditions/');            
             document.forms[0].action=target;
             var tmpForm=document.forms[0];
             $("#submit").click();

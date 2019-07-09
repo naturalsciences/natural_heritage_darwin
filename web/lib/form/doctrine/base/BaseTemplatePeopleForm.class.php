@@ -8,51 +8,51 @@
  * @package    darwin
  * @subpackage form
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
+ * @version    SVN: $Id$
  */
-abstract class BaseTemplatePeopleForm extends BaseFormDoctrine
+abstract class BaseTemplatePeopleForm extends DarwinModelForm
 {
-  public function setup()
+  protected function setupInheritance()
   {
-    $this->setWidgets(array(
-      'id'                    => new sfWidgetFormInputHidden(),
-      'is_physical'           => new sfWidgetFormInputCheckbox(),
-      'sub_type'              => new sfWidgetFormTextarea(),
-      'formated_name'         => new sfWidgetFormTextarea(),
-      'formated_name_indexed' => new sfWidgetFormTextarea(),
-      'formated_name_unique'  => new sfWidgetFormTextarea(),
-      'title'                 => new sfWidgetFormTextarea(),
-      'family_name'           => new sfWidgetFormTextarea(),
-      'given_name'            => new sfWidgetFormTextarea(),
-      'additional_names'      => new sfWidgetFormTextarea(),
-      'birth_date_mask'       => new sfWidgetFormInputText(),
-      'birth_date'            => new sfWidgetFormDate(),
-      'gender'                => new sfWidgetFormInputText(),
-    ));
+    parent::setupInheritance();
 
-    $this->setValidators(array(
-      'id'                    => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
-      'is_physical'           => new sfValidatorBoolean(array('required' => false)),
-      'sub_type'              => new sfValidatorString(array('required' => false)),
-      'formated_name'         => new sfValidatorString(),
-      'formated_name_indexed' => new sfValidatorString(),
-      'formated_name_unique'  => new sfValidatorString(),
-      'title'                 => new sfValidatorString(array('required' => false)),
-      'family_name'           => new sfValidatorString(),
-      'given_name'            => new sfValidatorString(array('required' => false)),
-      'additional_names'      => new sfValidatorString(array('required' => false)),
-      'birth_date_mask'       => new sfValidatorInteger(array('required' => false)),
-      'birth_date'            => new sfValidatorDate(array('required' => false)),
-      'gender'                => new sfValidatorString(array('max_length' => 1, 'required' => false)),
-    ));
+    $this->widgetSchema   ['is_physical'] = new sfWidgetFormInputCheckbox();
+    $this->validatorSchema['is_physical'] = new sfValidatorBoolean(array('required' => false));
+
+    $this->widgetSchema   ['sub_type'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['sub_type'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['formated_name'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['formated_name'] = new sfValidatorString();
+
+    $this->widgetSchema   ['formated_name_indexed'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['formated_name_indexed'] = new sfValidatorString();
+
+    $this->widgetSchema   ['formated_name_unique'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['formated_name_unique'] = new sfValidatorString();
+
+    $this->widgetSchema   ['title'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['title'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['family_name'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['family_name'] = new sfValidatorString();
+
+    $this->widgetSchema   ['given_name'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['given_name'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['additional_names'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['additional_names'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['birth_date_mask'] = new sfWidgetFormInputText();
+    $this->validatorSchema['birth_date_mask'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['birth_date'] = new sfWidgetFormDate();
+    $this->validatorSchema['birth_date'] = new sfValidatorDate(array('required' => false));
+
+    $this->widgetSchema   ['gender'] = new sfWidgetFormInputText();
+    $this->validatorSchema['gender'] = new sfValidatorString(array('max_length' => 1, 'required' => false));
 
     $this->widgetSchema->setNameFormat('template_people[%s]');
-
-    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
-
-    $this->setupInheritance();
-
-    parent::setup();
   }
 
   public function getModelName()

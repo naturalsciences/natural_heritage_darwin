@@ -8,7 +8,7 @@
   </thead>
   <tbody>
     <tr>
-      <td><?php echo $form['ig_num']->render() ?></td>
+      <td><?php echo $form['ig_num']->render() ?> <?php echo $form['ig_num_contains']->render() ?><?php echo __("Contains"); ?></td>
       <td><?php echo $form['ig_from_date']->render() ?></td>
       <td><?php echo $form['ig_to_date']->render() ?></td>
     </tr>

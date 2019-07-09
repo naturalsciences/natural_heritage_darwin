@@ -41,7 +41,7 @@ class ActorsForm extends CataloguePeopleForm
     $people_id= $this->getObject()->getPeopleRef() ;
     if($people_id)
     {
-      $people = Doctrine::getTable('People')->find($this->getObject()->getPeopleRef()) ;
+      $people = Doctrine_Core::getTable('People')->find($this->getObject()->getPeopleRef()) ;
       $this->widgetSchema['people_ref']->setLabel($people->getFormatedName()) ;
     }
     else 

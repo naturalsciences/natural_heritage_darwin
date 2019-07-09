@@ -6,39 +6,39 @@
  * @package    darwin
  * @subpackage filter
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
+ * @version    SVN: $Id$
  */
-abstract class BaseReportsFormFilter extends BaseFormFilterDoctrine
+abstract class BaseReportsFormFilter extends DarwinModelFormFilter
 {
-  public function setup()
+  protected function setupInheritance()
   {
-    $this->setWidgets(array(
-      'user_ref'   => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Users'), 'add_empty' => true)),
-      'name'       => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'uri'        => new sfWidgetFormFilterInput(),
-      'lang'       => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'format'     => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'parameters' => new sfWidgetFormFilterInput(),
-      'comment'    => new sfWidgetFormFilterInput(),
-    ));
+    parent::setupInheritance();
 
-    $this->setValidators(array(
-      'user_ref'   => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Users'), 'column' => 'id')),
-      'name'       => new sfValidatorPass(array('required' => false)),
-      'uri'        => new sfValidatorPass(array('required' => false)),
-      'lang'       => new sfValidatorPass(array('required' => false)),
-      'format'     => new sfValidatorPass(array('required' => false)),
-      'parameters' => new sfValidatorPass(array('required' => false)),
-      'comment'    => new sfValidatorPass(array('required' => false)),
-    ));
+    $this->widgetSchema   ['user_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Users'), 'add_empty' => true));
+    $this->validatorSchema['user_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Users'), 'column' => 'id'));
+
+    $this->widgetSchema   ['name'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['name'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['uri'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['uri'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['lang'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['lang'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['format'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['format'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['parameters'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['parameters'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['comment'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['comment'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['user_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Users'), 'add_empty' => true));
+    $this->validatorSchema['user_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Users'), 'column' => 'id'));
 
     $this->widgetSchema->setNameFormat('reports_filters[%s]');
-
-    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
-
-    $this->setupInheritance();
-
-    parent::setup();
   }
 
   public function getModelName()
@@ -48,15 +48,15 @@ abstract class BaseReportsFormFilter extends BaseFormFilterDoctrine
 
   public function getFields()
   {
-    return array(
-      'id'         => 'Number',
-      'user_ref'   => 'ForeignKey',
-      'name'       => 'Text',
-      'uri'        => 'Text',
-      'lang'       => 'Text',
-      'format'     => 'Text',
+    return array_merge(parent::getFields(), array(
+      'user_ref' => 'ForeignKey',
+      'name' => 'Text',
+      'uri' => 'Text',
+      'lang' => 'Text',
+      'format' => 'Text',
       'parameters' => 'Text',
-      'comment'    => 'Text',
-    );
+      'comment' => 'Text',
+      'user_ref' => 'ForeignKey',
+    ));
   }
 }

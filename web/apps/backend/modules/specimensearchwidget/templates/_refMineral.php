@@ -29,6 +29,19 @@
     </tr>
   </tbody>
 </table>
+<table>
+ <thead>
+    <tr>
+      <td>
+        
+      </td>
+      <td>&nbsp;</td>
+    </tr>
+  </thead>
+  <tbody>
+		<tr><th style="width:200px"><?php echo $form['mineralogical_identification']->renderLabel();?></th><td><?php echo $form['mineralogical_identification'];?></td></tr>
+  <tbody>
+</table>
 
 <script type="text/javascript">
 $(document).ready(function () {
@@ -73,6 +86,24 @@ $(document).ready(function () {
       }
     }
   );
+  
+  var url_mineral_identification="<?php echo(url_for('catalogue/mineralogyAutocomplete?'));?>";
+          var autocomplete_rmca_array=Array();
+          $('.autocomplete_mineralogy').autocomplete({
+                source: function (request, response) {
+                    $.getJSON(url_mineral_identification, {
+                                term : request.term
+                            } , 
+                            function (data) 
+                                {
+                            response($.map(data, function (value, key) {
+                            return value;
+                            }));
+                    });
+                },
+                minLength: 2,
+                delay: 200
+    });
 
 });
 </script>

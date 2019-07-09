@@ -52,7 +52,7 @@ class reportActions extends DarwinActions
     if($request->isXmlHttpRequest())
     {
       //  retrieve all reports already asked by this user
-      $user_report = Doctrine::getTable('Reports')->getUserReport($this->getUser()->isAtLeast(Users::ADMIN)?'all':$this->getUser()->getId());
+      $user_report = Doctrine_Core::getTable('Reports')->getUserReport($this->getUser()->isAtLeast(Users::ADMIN)?'all':$this->getUser()->getId());
       return $this->renderPartial("user_report_list", array('reports' => $user_report)) ;      
     }
   }
@@ -73,7 +73,7 @@ class reportActions extends DarwinActions
     }
     $printable = true;
     if ( count( $default_vals ) != 0 && isset( $default_vals['loan_id'] ) ) {
-      $printable = ( count( Doctrine::getTable('Loans')->getPrintableLoans(array(
+      $printable = ( count( Doctrine_Core::getTable('Loans')->getPrintableLoans(array(
                                                                              $default_vals['loan_id']
                                                                            ),
                                                                            $this->getUser()
@@ -149,7 +149,7 @@ class reportActions extends DarwinActions
       {
         if (
           isset($request->getParameter('reports')['loan_id']) &&
-          count(Doctrine::getTable('Loans')->getPrintableLoans(array(
+          count(Doctrine_Core::getTable('Loans')->getPrintableLoans(array(
                                                                  $request->getParameter('reports')['loan_id']
                                                                ),
                                                                $this->getUser())) == 0
@@ -214,7 +214,7 @@ class reportActions extends DarwinActions
   public function executeDelete(sfWebRequest $request)
   {
     $this->forward404Unless($request->hasParameter('id'));
-    $this->report = Doctrine::getTable('Reports')->find($request->getParameter('id'));
+    $this->report = Doctrine_Core::getTable('Reports')->find($request->getParameter('id'));
 
     if ( !in_array( $this->report->getName(), array_keys( Reports::getGlobalReports( $this->getUser() ) ) ) ) {
       return $this->forwardToSecureAction() ;
@@ -233,7 +233,7 @@ class reportActions extends DarwinActions
   public function executeDownloadFile(sfWebRequest $request)
   {
     $this->setLayout(false);
-    $report = Doctrine::getTable('Reports')->find($request->getParameter('id'));
+    $report = Doctrine_Core::getTable('Reports')->find($request->getParameter('id'));
 
     if ( !in_array( $report->getName(), array_keys( Reports::getGlobalReports( $this->getUser() ) ) ) ) {
       return $this->forwardToSecureAction() ;

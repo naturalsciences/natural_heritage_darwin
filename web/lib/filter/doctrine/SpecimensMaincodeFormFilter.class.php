@@ -362,13 +362,13 @@ class SpecimensMaincodeFormFilter extends BaseSpecimensMaincodeFormFilter
     $this->embedForm('Tags',$subForm);
 
     $this->widgetSchema['tools'] = new widgetFormSelectDoubleListFilterable(array(
-      'choices' => new sfCallable(array(Doctrine::getTable('CollectingTools'),'fetchTools')),
+      'choices' => new sfCallable(array(Doctrine_Core::getTable('CollectingTools'),'fetchTools')),
       'label_associated'=>$this->getI18N()->__('Selected'),
       'label_unassociated'=>$this->getI18N()->__('Available')
     ));
 
     $this->widgetSchema['methods'] = new widgetFormSelectDoubleListFilterable(array(
-      'choices' => new sfCallable(array(Doctrine::getTable('CollectingMethods'),'fetchMethods')),
+      'choices' => new sfCallable(array(Doctrine_Core::getTable('CollectingMethods'),'fetchMethods')),
       'label_associated'=>$this->getI18N()->__('Selected'),
       'label_unassociated'=>$this->getI18N()->__('Available')
     ));
@@ -467,7 +467,7 @@ class SpecimensMaincodeFormFilter extends BaseSpecimensMaincodeFormFilter
 
 
     $this->widgetSchema['stage'] = new widgetFormSelectDoubleListFilterable(array(
-      'choices' => new sfCallable(array(Doctrine::getTable('Specimens'),'getDistinctStages')),
+      'choices' => new sfCallable(array(Doctrine_Core::getTable('Specimens'),'getDistinctStages')),
       'label_associated'=>$this->getI18N()->__('Selected'),
       'label_unassociated'=>$this->getI18N()->__('Available')
     ));
@@ -1222,7 +1222,7 @@ class SpecimensMaincodeFormFilter extends BaseSpecimensMaincodeFormFilter
 
           foreach($values['collection_ref'] as $tmp_id)
           {           
-            $sub_cols = Doctrine::getTable("Collections")->fetchByCollectionParent($this->options['user'] , $this->options['user']->getId(), $tmp_id);
+            $sub_cols = Doctrine_Core::getTable("Collections")->fetchByCollectionParent($this->options['user'] , $this->options['user']->getId(), $tmp_id);
             foreach($sub_cols as $sub_col)
             {
            

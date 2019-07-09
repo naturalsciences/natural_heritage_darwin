@@ -44,6 +44,6 @@ class Loans extends BaseLoans
 
   public function fetchHistories()
   {
-     return Doctrine::getTable('Loans')->fetchHistories($this->getId());
+     return Doctrine_Core::getTable('Loans')->fetchHistories($this->getId());
   }
 }

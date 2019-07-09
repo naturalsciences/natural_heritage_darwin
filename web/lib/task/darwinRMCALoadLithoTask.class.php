@@ -30,7 +30,7 @@ EOF;
 				$environment = $this->configuration instanceof sfApplicationConfiguration ? $this->configuration->getEnvironment() : $options['env'];
 				$conn = $databaseManager->getDatabase($options['connection'])->getConnection();
 				$id_import=$options['id'];
-				$import_obj = Doctrine::getTable('Imports')->find($id_import);
+				$import_obj = Doctrine_Core::getTable('Imports')->find($id_import);
 				$import_obj->setState("aloaded");
 				$import_obj->save();
 				

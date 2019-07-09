@@ -23,11 +23,11 @@ class importActions extends DarwinActions
 
   private function getRight($id)
   {
-    $import = Doctrine::getTable('Imports')->find($id);
+    $import = Doctrine_Core::getTable('Imports')->find($id);
 
     $collection_ref = $import->getCollectionRef();
     if(!empty($collection_ref)) {
-      if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$import->getCollectionRef()))
+      if(! Doctrine_Core::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$import->getCollectionRef()))
          $this->forwardToSecureAction();
     }
     elseif (! $this->getUser()->isAtLeast(Users::ENCODER)) {
@@ -67,12 +67,12 @@ class importActions extends DarwinActions
   {
     $this->forward404Unless($request->hasParameter('id'));
     $this->import = $this->getRight($request->getParameter('id')) ;
-    Doctrine::getTable('Imports')->UpdateStatus($request->getParameter('id'));
+    Doctrine_Core::getTable('Imports')->UpdateStatus($request->getParameter('id'));
     $this->redirect('import/index');
 	
 	//ftheeten 2018 06 11
 	                $mails=Array();
-                    $mailsTmp=Doctrine::getTable('UsersComm')->getProfessionalMailsByUser($this->getUser()->getId());
+                    $mailsTmp=Doctrine_Core::getTable('UsersComm')->getProfessionalMailsByUser($this->getUser()->getId());
                
                     foreach($mailsTmp as $mailRecord)
                     {
@@ -123,7 +123,7 @@ class importActions extends DarwinActions
     $this->forward404Unless($request->hasParameter('id'));
     $this->import = $this->getRight($request->getParameter('id')) ;
 
-    Doctrine::getTable('Imports')->clearImport($this->import->getId());
+    Doctrine_Core::getTable('Imports')->clearImport($this->import->getId());
     if($request->isXmlHttpRequest())
     {
       return $this->renderText('ok');
@@ -178,7 +178,7 @@ class importActions extends DarwinActions
           if($this->form->isValid())
           {
            
-            if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$this->form->getValue('collection_ref')) && $this->type != 'taxon')
+            if(! Doctrine_Core::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$this->form->getValue('collection_ref')) && $this->type != 'taxon')
             {
              
               $error = new sfValidatorError(new sfValidatorPass(),'You don\'t have right on this collection');
@@ -305,7 +305,7 @@ class importActions extends DarwinActions
         {
           $ids[] = $v->getId();
         }
-        $imp_lines = Doctrine::getTable('Imports')->getNumberOfLines($ids) ;
+        $imp_lines = Doctrine_Core::getTable('Imports')->getNumberOfLines($ids) ;
         foreach($imp_lines as $k=>$v)
         {
           foreach($this->imports as $import)
@@ -339,9 +339,9 @@ class importActions extends DarwinActions
     {
   
         $idImport=$request->getParameter("id");
-        $importTmp=Doctrine::getTable("Imports")->find($idImport);
+        $importTmp=Doctrine_Core::getTable("Imports")->find($idImport);
         //if(!$this->getUser()->isAtLeast(Users::MANAGER)) $this->forwardToSecureAction();
-        if(!Doctrine::getTable("CollectionsRights")->hasEditRightsFor($this->getUser(), $importTmp->getCollectionRef()))
+        if(!Doctrine_Core::getTable("CollectionsRights")->hasEditRightsFor($this->getUser(), $importTmp->getCollectionRef()) && $importTmp->getFormat()!="taxon")
         {
 
             $this->forwardToSecureAction();
@@ -354,7 +354,7 @@ class importActions extends DarwinActions
             {
                
                 $mails=Array();
-                    $mailsTmp=Doctrine::getTable('UsersComm')->getProfessionalMailsByUser($this->getUser()->getId());
+                    $mailsTmp=Doctrine_Core::getTable('UsersComm')->getProfessionalMailsByUser($this->getUser()->getId());
                
                     foreach($mailsTmp as $mailRecord)
                     {
@@ -407,9 +407,9 @@ class importActions extends DarwinActions
     public function executeCheckstaging(sfWebRequest $request)
     {
         $idImport=$request->getParameter("id");
-        $importTmp=Doctrine::getTable("Imports")->find($idImport);
+        $importTmp=Doctrine_Core::getTable("Imports")->find($idImport);
         
-        if(!Doctrine::getTable("CollectionsRights")->hasEditRightsFor($this->getUser(), $importTmp->getCollectionRef()))
+        if(!Doctrine_Core::getTable("CollectionsRights")->hasEditRightsFor($this->getUser(), $importTmp->getCollectionRef()) && $importTmp->getFormat()!="taxon")
         {
             
            $this->forwardToSecureAction();
@@ -419,9 +419,9 @@ class importActions extends DarwinActions
             
             try 
             {
-                 
+					
                     $mails=Array();
-                    $mailsTmp=Doctrine::getTable('UsersComm')->getProfessionalMailsByUser($this->getUser()->getId());
+                    $mailsTmp=Doctrine_Core::getTable('UsersComm')->getProfessionalMailsByUser($this->getUser()->getId());
                
                     foreach($mailsTmp as $mailRecord)
                     {
@@ -503,7 +503,9 @@ class importActions extends DarwinActions
 		$sql =" SELECT * FROM fct_rmca_handle_lithostratigraphy_import(:import_ref);";
 		$statement = $conn->prepare($sql);
 		$statement->execute($params);
-        $this->executeCheckstaging($request);
+		
+        //$this->executeCheckstaging($request);
+		
         return sfView::NONE; 
     }
 
@@ -623,7 +625,7 @@ EOF
     $sampling_code=$request->getParameter("sampling_code");
     if(is_numeric($id_staging_gtu) && strlen(trim($sampling_code))>0)
     {
-        $staging_gtu=Doctrine::getTable("StagingGtu")->find($id_staging_gtu);
+        $staging_gtu=Doctrine_Core::getTable("StagingGtu")->find($id_staging_gtu);
         if( $staging_gtu)
         {
             $staging_gtu->setSamplingCode($sampling_code);
@@ -646,8 +648,8 @@ EOF
 	 
 	$this->page=$request->getParameter("page",1);
 	$offset=((int)$this->page-1)*$this->size_catalogue;
-	$this->items = Doctrine::getTable("StagingGtu")->getImportData($idImport, $offset, $this->size_catalogue);	 
-	$this->stats= Doctrine::getTable("StagingGtu")->countExceptionMessages($idImport, $offset, $this->size_catalogue);
+	$this->items = Doctrine_Core::getTable("StagingGtu")->getImportData($idImport, $offset, $this->size_catalogue);	 
+	$this->stats= Doctrine_Core::getTable("StagingGtu")->countExceptionMessages($idImport, $offset, $this->size_catalogue);
     	
 	 foreach($this->stats as $stat)
 	 {
@@ -655,7 +657,7 @@ EOF
 		$this->max_page= ceil((int)$this->size_data/(int)$this->size_catalogue);
 		 break;
 	 }
-	 $this->stats_all= Doctrine::getTable("StagingGtu")->countExceptionMessages($idImport,0, $this->size_data);
+	 $this->stats_all= Doctrine_Core::getTable("StagingGtu")->countExceptionMessages($idImport,0, $this->size_data);
      $this->form = new ImportsLocalityForm(null,array('items' =>$this->items));
 	 
        
@@ -670,8 +672,8 @@ EOF
 	 
 	$this->page=$request->getParameter("page",1);
 	$offset=((int)$this->page-1)*$this->size_catalogue;
-	$this->items = Doctrine::getTable("StagingCatalogue")->getByImportRef($idImport, $offset, $this->size_catalogue);	 
-	$this->stats= Doctrine::getTable("StagingCatalogue")->countExceptionMessages($idImport, $offset, $this->size_catalogue);
+	$this->items = Doctrine_Core::getTable("StagingCatalogue")->getByImportRef($idImport, $offset, $this->size_catalogue);	 
+	$this->stats= Doctrine_Core::getTable("StagingCatalogue")->countExceptionMessages($idImport, $offset, $this->size_catalogue);
     	
 	 foreach($this->stats as $stat)
 	 {
@@ -679,9 +681,9 @@ EOF
 		$this->max_page= ceil((int)$this->size_data/(int)$this->size_catalogue);
 		 break;
 	 }
-     $this->import=Doctrine::getTable("Imports")->find($idImport);
+     $this->import=Doctrine_Core::getTable("Imports")->find($idImport);
      $this->metadata_ref=$this->import->getSpecimenTaxonomyRef();
-	$this->stats_all= Doctrine::getTable("StagingCatalogue")->countExceptionMessages($idImport,0, $this->size_data);
+	$this->stats_all= Doctrine_Core::getTable("StagingCatalogue")->countExceptionMessages($idImport,0, $this->size_data);
      
        
   } 
@@ -695,8 +697,8 @@ EOF
 	 
 	$this->page=$request->getParameter("page",1);
 	$offset=((int)$this->page-1)*$this->size_catalogue;
-	$this->items = Doctrine::getTable("StagingCatalogue")->getByImportRef($idImport, $offset, $this->size_catalogue);	 
-	$this->stats= Doctrine::getTable("StagingCatalogue")->countExceptionMessages($idImport, $offset, $this->size_catalogue);
+	$this->items = Doctrine_Core::getTable("StagingCatalogue")->getByImportRef($idImport, $offset, $this->size_catalogue);	 
+	$this->stats= Doctrine_Core::getTable("StagingCatalogue")->countExceptionMessages($idImport, $offset, $this->size_catalogue);
     	
 	 foreach($this->stats as $stat)
 	 {
@@ -704,9 +706,9 @@ EOF
 		$this->max_page= ceil((int)$this->size_data/(int)$this->size_catalogue);
 		 break;
 	 }
-     $this->import=Doctrine::getTable("Imports")->find($idImport);
+     $this->import=Doctrine_Core::getTable("Imports")->find($idImport);
      $this->metadata_ref=$this->import->getSpecimenTaxonomyRef();
-	$this->stats_all= Doctrine::getTable("StagingCatalogue")->countExceptionMessages($idImport,0, $this->size_data);
+	$this->stats_all= Doctrine_Core::getTable("StagingCatalogue")->countExceptionMessages($idImport,0, $this->size_data);
      
        
   }    

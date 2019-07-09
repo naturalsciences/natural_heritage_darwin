@@ -15,7 +15,7 @@ class insurancesActions extends DarwinActions
     $this->insurance = null;
     if($request->hasParameter('rid'))
     {
-      $this->insurance = Doctrine::getTable('Insurances')->find($request->getParameter('rid'));
+      $this->insurance = Doctrine_Core::getTable('Insurances')->find($request->getParameter('rid'));
     }
 
     if(! $this->insurance)

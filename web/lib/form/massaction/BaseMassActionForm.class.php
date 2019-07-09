@@ -18,6 +18,7 @@ class BaseMassActionForm extends sfFormSymfony
     $result = array(
         'collection_ref' => self::getI18N()->__('Change Collection'),
         'taxon_ref' => self::getI18N()->__('Change Taxonomy'),
+		'metadata_ref' => self::getI18N()->__('Change taxonomic metadata'),
         'lithology_ref' => self::getI18N()->__('Change Lithology'),
         'chronostratigraphy_ref' => self::getI18N()->__('Change Chronostratigraphy'),
         'lithostratigraphy_ref' => self::getI18N()->__('Change Lithostratigraphy'),
@@ -45,6 +46,8 @@ class BaseMassActionForm extends sfFormSymfony
         'ext_links' => self::getI18N()->__('Add an external link'),
         'specimen_status' => self::getI18N()->__('Change Status (lost, damaged,...)'),
         'related_files'  => self::getI18N()->__('Change Related Files visibility/publish state'),
+		//JMHerpers 2019 06 04
+		'nagoya_specimen' => self::getI18N()->__('Change Nagoya in specimens'),
     );
     return $result;
   }
@@ -118,6 +121,9 @@ class BaseMassActionForm extends sfFormSymfony
       return 'MaSpStatusForm';
     elseif($action == 'related_files')
       return 'MaRelFilesForm';
+	  //JMHerpers 2019 06 04
+	elseif($action == 'nagoya_specimen')
+      return 'MaNagoyaSpecForm';
     else
       return 'sfForm';
   }
