@@ -103,7 +103,7 @@ class RMCATabLithostratigraphy
 		//print("parseFile");
 		$this->import_id = $id ;
 		$this->configure();
-		$this->import = Doctrine::getTable('Imports')->find($this->import_id);
+		$this->import = Doctrine_Core::getTable('Imports')->find($this->import_id);
 		$mime_type= $this->import->getMimeType();
 		if($mime_type==="text/plain")
 		{  
@@ -296,7 +296,7 @@ class RMCATabLithostratigraphy
 
     public function map_levels()
     {
-        $objs=Doctrine::getTable('CatalogueLevels')->getLevelsByTypes(array("table"=>"lithostratigraphy"));
+        $objs=Doctrine_Core::getTable('CatalogueLevels')->getLevelsByTypes(array("table"=>"lithostratigraphy"));
         foreach($objs as $obj)
         {
             print("DODODODODODDO");

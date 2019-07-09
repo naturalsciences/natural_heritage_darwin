@@ -10,7 +10,7 @@ class GtuTable extends DarwinTable
   {
 	  $returned=Array();
 	  
-      foreach(Doctrine::getTable('TemporalInformation')->getDistinctTemporalInformation($p_gtu_id) as $key=>$array)
+      foreach(Doctrine_Core::getTable('TemporalInformation')->getDistinctTemporalInformation($p_gtu_id) as $key=>$array)
       {
             $item = new TemporalInformation();
             $item->fromArray($array);

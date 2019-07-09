@@ -44,7 +44,23 @@
           <?php echo $form['extinct'] ?>
         </td>
       </tr>
-      
+      	  <!-- jmherpers 2019 04 25-->
+		<tr>
+			<th><?php echo "CITES" ?></th>
+			<td>
+				<table>
+					<tr>
+						<td>
+							<?php echo $form['cites']->renderError() ?>
+							<?php echo $form['cites'] ?>
+						</td>
+						<td onclick="window.open('https://www.cites.org/eng/app/appendices.php','name','width=1150,height=800')">
+							<?php echo image_tag('info.png',"title=info class=info id=cites");?>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
         <!-- ftheeten 2017 07 03-->
       <?php if(sfContext::getInstance()->getActionName()!=="new"&&sfContext::getInstance()->getActionName()!=="edit"): ?>
       <tr>

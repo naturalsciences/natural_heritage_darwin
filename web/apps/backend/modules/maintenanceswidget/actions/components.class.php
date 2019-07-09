@@ -16,7 +16,7 @@ class maintenanceswidgetComponents extends sfComponents
     {
       if(isset($this->eid) && $this->eid !== null)
       {
-        $loan = Doctrine::getTable('CollectionMaintenance')->find($this->eid);
+        $loan = Doctrine_Core::getTable('CollectionMaintenance')->find($this->eid);
         $this->form = new MaintenanceForm($loan);
       }
       else

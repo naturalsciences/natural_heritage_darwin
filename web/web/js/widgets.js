@@ -82,16 +82,8 @@
       /** Replaced by an async query to avoid bug
       widget.find('.widget_content').load(base.options['reload_url'] + '/widget/' + widget.attr('id') );
       **/
-
-      //ftheeten 2019 02 05
-       var callback_url=base.options['reload_url'] + '/widget/' + widget.attr('id');
-      if(getUrlParameter('timestamp'))
-      {
-
-        callback_url+="?timestamp="+getUrlParameter('timestamp');
-      }
       $.ajax({
-        url: callback_url,
+        url: base.options['reload_url'] + '/widget/' + widget.attr('id'),
         async: false, //
         success: function(data) {
           widget.find('.widget_content').html(data);

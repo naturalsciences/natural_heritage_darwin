@@ -69,16 +69,16 @@ EOF;
     if(!empty($options['id']))
     {
        //2019 03 25
-        $catalogues = Doctrine::getTable('Imports')->tagProcessing('taxon', $options['id']);
-        $imports = Doctrine::getTable('Imports')->tagProcessing($state_to_check, $options['id']);
+        $catalogues = Doctrine_Core::getTable('Imports')->tagProcessing('taxon', $options['id']);
+        $imports = Doctrine_Core::getTable('Imports')->tagProcessing($state_to_check, $options['id']);
         $imports_ids[]=$options['id'];
     }
     else
     {
         // let's 'lock' all imports checkable to avoid an other check from the next check task
-        $catalogues = Doctrine::getTable('Imports')->tagProcessing('taxon', $options['id']);
+        $catalogues = Doctrine_Core::getTable('Imports')->tagProcessing('taxon', $options['id']);
         // Get back here the list of imports id that could be treated
-        $imports = Doctrine::getTable('Imports')->tagProcessing($state_to_check, $options['id']);
+        $imports = Doctrine_Core::getTable('Imports')->tagProcessing($state_to_check, $options['id']);
         $imports_ids = $imports->toKeyValueArray("id", "id");
      }   
         
@@ -145,17 +145,17 @@ EOF;
 
           $this->logSection('fetch', sprintf('Check %d : (%s) Load Imports file in processing state',$randnum,date('G:i:s')));
           
-          //$imports  = Doctrine::getTable('Imports')->getWithImports($options['id']); 
+          //$imports  = Doctrine_Core::getTable('Imports')->getWithImports($options['id']); 
         if(!empty($options['id']))
         {
                //2019 03 25
-                $import  = Doctrine::getTable('Imports')->find($options['id']); 
+                $import  = Doctrine_Core::getTable('Imports')->find($options['id']); 
                 $imports=Array();
                 $imports[]=$import;
         }
         else
         {
-            $imports  = Doctrine::getTable('Imports')->getWithImports($options['id']); 
+            $imports  = Doctrine_Core::getTable('Imports')->getWithImports($options['id']); 
         }   
           
           

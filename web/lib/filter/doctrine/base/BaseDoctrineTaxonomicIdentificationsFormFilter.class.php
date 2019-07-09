@@ -6,29 +6,24 @@
  * @package    darwin
  * @subpackage filter
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
+ * @version    SVN: $Id$
  */
-abstract class BaseDoctrineTaxonomicIdentificationsFormFilter extends BaseFormFilterDoctrine
+abstract class BaseDoctrineTaxonomicIdentificationsFormFilter extends DarwinModelFormFilter
 {
-  public function setup()
+  protected function setupInheritance()
   {
-    $this->setWidgets(array(
-      'record_id'                => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Specimens'), 'add_empty' => true)),
-      'taxonomic_identification' => new sfWidgetFormFilterInput(),
-    ));
+    parent::setupInheritance();
 
-    $this->setValidators(array(
-      'record_id'                => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Specimens'), 'column' => 'id')),
-      'taxonomic_identification' => new sfValidatorPass(array('required' => false)),
-    ));
+    $this->widgetSchema   ['record_id'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Specimens'), 'add_empty' => true));
+    $this->validatorSchema['record_id'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Specimens'), 'column' => 'id'));
+
+    $this->widgetSchema   ['taxonomic_identification'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['taxonomic_identification'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['record_id'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Specimens'), 'add_empty' => true));
+    $this->validatorSchema['record_id'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Specimens'), 'column' => 'id'));
 
     $this->widgetSchema->setNameFormat('doctrine_taxonomic_identifications_filters[%s]');
-
-    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
-
-    $this->setupInheritance();
-
-    parent::setup();
   }
 
   public function getModelName()
@@ -38,10 +33,10 @@ abstract class BaseDoctrineTaxonomicIdentificationsFormFilter extends BaseFormFi
 
   public function getFields()
   {
-    return array(
-      'id'                       => 'Number',
-      'record_id'                => 'ForeignKey',
+    return array_merge(parent::getFields(), array(
+      'record_id' => 'ForeignKey',
       'taxonomic_identification' => 'Text',
-    );
+      'record_id' => 'ForeignKey',
+    ));
   }
 }

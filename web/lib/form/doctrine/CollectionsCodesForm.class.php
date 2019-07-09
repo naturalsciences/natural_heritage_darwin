@@ -11,7 +11,8 @@ class CollectionsCodesForm extends BaseCollectionsForm
 {
   public function configure()
   {
-    $this->useFields(array('id', 'code_specimen_duplicate', 'code_auto_increment', 'code_auto_increment_for_insert_only', 'code_prefix', 'code_prefix_separator', 'code_suffix', 'code_suffix_separator'));
+    $this->useFields(array('id', 'code_specimen_duplicate', 'code_auto_increment', 'code_auto_increment_for_insert_only', 'code_prefix', 'code_prefix_separator', 'code_suffix', 'code_suffix_separator'
+     ,'code_last_value','code_ai_inherit'));
     
     $this->widgetSchema['code_prefix'] = new sfWidgetFormInputText();
     $this->widgetSchema['code_prefix_separator'] = new sfWidgetFormInputText();
@@ -38,6 +39,7 @@ class CollectionsCodesForm extends BaseCollectionsForm
 	/*f theeten 15/10/2015 mask for code  */
     $this->widgetSchema['code_mask']    = new sfWidgetFormInputText();
     $this->validatorSchema['code_mask'] = new sfValidatorString(array('required' => false, 'trim'=>true));
+    $this->widgetSchema['code_last_value']->setAttributes(array('class'=>'lsmall_size'));
 
   }
 }

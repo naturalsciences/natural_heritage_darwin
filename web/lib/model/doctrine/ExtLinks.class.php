@@ -14,7 +14,9 @@ class ExtLinks extends BaseExtLinks
 {
   private static $link_types = array(
     'ext' => 'External',
-    'vc' => 'Virtual Collection'
+    'vc' => 'Virtual Collection',
+	'nagoya'=> 'Nagoya',
+	'ltp' => 'LTP'
     ) ;
 
   static public function getLinkTypes()

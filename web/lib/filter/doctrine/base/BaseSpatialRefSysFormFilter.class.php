@@ -6,36 +6,19 @@
  * @package    darwin
  * @subpackage filter
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
+ * @version    SVN: $Id$
  */
-abstract class BaseSpatialRefSysFormFilter extends BaseFormFilterDoctrine
+abstract class BaseSpatialRefSysFormFilter extends DarwinModelFormFilter
 {
-  public function setup()
+  protected function setupInheritance()
   {
-    $this->setWidgets(array(
-    ));
-
-    $this->setValidators(array(
-    ));
+    parent::setupInheritance();
 
     $this->widgetSchema->setNameFormat('spatial_ref_sys_filters[%s]');
-
-    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
-
-    $this->setupInheritance();
-
-    parent::setup();
   }
 
   public function getModelName()
   {
     return 'SpatialRefSys';
-  }
-
-  public function getFields()
-  {
-    return array(
-      'id' => 'Number',
-    );
   }
 }

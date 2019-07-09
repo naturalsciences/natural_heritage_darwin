@@ -30,6 +30,7 @@
  * @property integer $specimen_taxonomy_ref
  * @property string $history_taxonomy
  * @property integer $collection_ref_for_gtu
+ * @property boolean $enforce_code_unicity
  * @property Collections $Collections
  * @property Users $Users
  * @property Doctrine_Collection $Staging
@@ -61,6 +62,7 @@
  * @method integer             getSpecimenTaxonomyRef()            Returns the current record's "specimen_taxonomy_ref" value
  * @method string              getHistoryTaxonomy()                Returns the current record's "history_taxonomy" value
  * @method integer             getCollectionRefForGtu()            Returns the current record's "collection_ref_for_gtu" value
+ * @method boolean             getEnforceCodeUnicity()             Returns the current record's "enforce_code_unicity" value
  * @method Collections         getCollections()                    Returns the current record's "Collections" value
  * @method Users               getUsers()                          Returns the current record's "Users" value
  * @method Doctrine_Collection getStaging()                        Returns the current record's "Staging" collection
@@ -91,6 +93,7 @@
  * @method Imports             setSpecimenTaxonomyRef()            Sets the current record's "specimen_taxonomy_ref" value
  * @method Imports             setHistoryTaxonomy()                Sets the current record's "history_taxonomy" value
  * @method Imports             setCollectionRefForGtu()            Sets the current record's "collection_ref_for_gtu" value
+ * @method Imports             setEnforceCodeUnicity()             Sets the current record's "enforce_code_unicity" value
  * @method Imports             setCollections()                    Sets the current record's "Collections" value
  * @method Imports             setUsers()                          Sets the current record's "Users" value
  * @method Imports             setStaging()                        Sets the current record's "Staging" collection
@@ -201,6 +204,9 @@ abstract class BaseImports extends DarwinModel
         $this->hasColumn('collection_ref_for_gtu', 'integer', null, array(
              'type' => 'integer',
              'notnull' => true,
+             ));
+        $this->hasColumn('enforce_code_unicity', 'boolean', null, array(
+             'type' => 'boolean',
              ));
     }
 

@@ -22,7 +22,7 @@ class PeopleComm extends BasePeopleComm
   {
     $array = explode(',',$this->_get('tag'));
     $result = array();
-    $possible_tags = Doctrine::getTable('PeopleComm')->getTags($this->_get('comm_type'));
+    $possible_tags = Doctrine_Core::getTable('PeopleComm')->getTags($this->_get('comm_type'));
     foreach($array as $tag)
     {
       $tag=trim($tag);

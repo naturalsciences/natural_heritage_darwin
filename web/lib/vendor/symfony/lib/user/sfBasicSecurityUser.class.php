@@ -16,7 +16,7 @@
  * @subpackage user
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfBasicSecurityUser.class.php 33466 2012-05-30 07:33:03Z fabien $
+ * @version    SVN: $Id$
  */
 class sfBasicSecurityUser extends sfUser implements sfSecurityUser
 {
@@ -252,10 +252,11 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
     }
 
     // force the max lifetime for session garbage collector to be greater than timeout
-    if (ini_get('session.gc_maxlifetime') < $this->options['timeout'])
+    //ftheeten 2019 06 07
+    /*if (ini_get('session.gc_maxlifetime') < $this->options['timeout'])
     {
       ini_set('session.gc_maxlifetime', $this->options['timeout']);
-    }
+    }*/
 
     // read data from storage
     $this->authenticated = $storage->read(self::AUTH_NAMESPACE);

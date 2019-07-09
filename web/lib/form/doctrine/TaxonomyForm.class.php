@@ -72,6 +72,9 @@ class TaxonomyForm extends BaseTaxonomyForm
      $this->widgetSchema['sensitive_info_withheld'] = new sfWidgetFormInputCheckbox();
     $this->validatorSchema['sensitive_info_withheld'] = new sfValidatorBoolean(array('required' => false));
 
+	//JM Herpers 2019 04 25
+	 $this->widgetSchema['cites']->setAttributes(array('class'=>'cites'));
+	 $this->validatorSchema['cites'] = new sfValidatorBoolean();
   }
 
 }

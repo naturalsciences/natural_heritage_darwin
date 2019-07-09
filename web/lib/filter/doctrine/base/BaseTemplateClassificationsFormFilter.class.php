@@ -6,41 +6,39 @@
  * @package    darwin
  * @subpackage filter
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
+ * @version    SVN: $Id$
  */
-abstract class BaseTemplateClassificationsFormFilter extends BaseFormFilterDoctrine
+abstract class BaseTemplateClassificationsFormFilter extends DarwinModelFormFilter
 {
-  public function setup()
+  protected function setupInheritance()
   {
-    $this->setWidgets(array(
-      'name'         => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'name_indexed' => new sfWidgetFormFilterInput(),
-      'level_ref'    => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'status'       => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'local_naming' => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
-      'color'        => new sfWidgetFormFilterInput(),
-      'path'         => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'parent_ref'   => new sfWidgetFormFilterInput(),
-    ));
+    parent::setupInheritance();
 
-    $this->setValidators(array(
-      'name'         => new sfValidatorPass(array('required' => false)),
-      'name_indexed' => new sfValidatorPass(array('required' => false)),
-      'level_ref'    => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
-      'status'       => new sfValidatorPass(array('required' => false)),
-      'local_naming' => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
-      'color'        => new sfValidatorPass(array('required' => false)),
-      'path'         => new sfValidatorPass(array('required' => false)),
-      'parent_ref'   => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
-    ));
+    $this->widgetSchema   ['name'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['name'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['name_indexed'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['name_indexed'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['level_ref'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['level_ref'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
+
+    $this->widgetSchema   ['status'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['status'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['local_naming'] = new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no')));
+    $this->validatorSchema['local_naming'] = new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0)));
+
+    $this->widgetSchema   ['color'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['color'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['path'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['path'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['parent_ref'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['parent_ref'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
 
     $this->widgetSchema->setNameFormat('template_classifications_filters[%s]');
-
-    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
-
-    $this->setupInheritance();
-
-    parent::setup();
   }
 
   public function getModelName()
@@ -50,16 +48,15 @@ abstract class BaseTemplateClassificationsFormFilter extends BaseFormFilterDoctr
 
   public function getFields()
   {
-    return array(
-      'id'           => 'Number',
-      'name'         => 'Text',
+    return array_merge(parent::getFields(), array(
+      'name' => 'Text',
       'name_indexed' => 'Text',
-      'level_ref'    => 'Number',
-      'status'       => 'Text',
+      'level_ref' => 'Number',
+      'status' => 'Text',
       'local_naming' => 'Boolean',
-      'color'        => 'Text',
-      'path'         => 'Text',
-      'parent_ref'   => 'Number',
-    );
+      'color' => 'Text',
+      'path' => 'Text',
+      'parent_ref' => 'Number',
+    ));
   }
 }

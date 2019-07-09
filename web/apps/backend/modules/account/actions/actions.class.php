@@ -61,7 +61,7 @@ class accountActions extends DarwinActions
           $this->getUser()->setCulture($this->form->user->getSelectedLang());
         }
 
-        $this->getUser()->setHelpIcon(Doctrine::getTable("Preferences")->getPreference($this->form->user->getId(),'help_message_activated',true));
+        $this->getUser()->setHelpIcon(Doctrine_Core::getTable("Preferences")->getPreference($this->form->user->getId(),'help_message_activated',true));
         if($request->getReferer())
           $this->redirect( $request->getReferer() );
         else
@@ -105,13 +105,13 @@ class accountActions extends DarwinActions
       {
         try
         {
-          $user = Doctrine::getTable('Users')->getUserByLoginAndEMail(
+          $user = Doctrine_Core::getTable('Users')->getUserByLoginAndEMail(
             $this->form->getValue('user_name'),
             $this->form->getValue('user_email')
           );
 
           if(! $user) {
-            $user = Doctrine::getTable('Users')->getUserByLoginWithEmailOnly($this->form->getValue('user_name'));
+            $user = Doctrine_Core::getTable('Users')->getUserByLoginWithEmailOnly($this->form->getValue('user_name'));
           }
 
           $this->getUser()->setCulture($user->getSelectedLang());
@@ -161,7 +161,7 @@ class accountActions extends DarwinActions
     if($request->hasParameter('id') && $request->hasParameter('hash'))
     {
       $this->form = new RenewPwdForm(array('id'=>$request->getParameter('id'), 'hash'=>$request->getParameter('hash')));
-      $userLogin = Doctrine::getTable('UsersLoginInfos')->findOneByUserRefAndRenewHash($request->getParameter('id'), $request->getParameter('hash'));
+      $userLogin = Doctrine_Core::getTable('UsersLoginInfos')->findOneByUserRefAndRenewHash($request->getParameter('id'), $request->getParameter('hash'));
       $this->forward404Unless($userLogin);
     }
     else
@@ -175,7 +175,7 @@ class accountActions extends DarwinActions
         $hash = $this->form->getValue('hash');
         $this->forward404If(empty($id) || empty($hash));
         if(!isset($userLogin))
-          $userLogin = Doctrine::getTable('UsersLoginInfos')->findOneByUserRefAndRenewHash($id, $hash);
+          $userLogin = Doctrine_Core::getTable('UsersLoginInfos')->findOneByUserRefAndRenewHash($id, $hash);
         $this->forward404Unless($userLogin);
         try
         {

@@ -23,12 +23,12 @@ class searchActions extends DarwinActions
   }
   public function executePurposeTag(sfWebRequest $request)
   {
-    $this->tags = Doctrine::getTable('TagGroups')->getPropositions($request->getParameter('value'), 'administrative area', 'country');
+    $this->tags = Doctrine_Core::getTable('TagGroups')->getPropositions($request->getParameter('value'), 'administrative area', 'country');
   }
 
   public function executeTree(sfWebRequest $request)
   {
-    $this->items = Doctrine::getTable( DarwinTable::getModelForTable($request->getParameter('table')) )
+    $this->items = Doctrine_Core::getTable( DarwinTable::getModelForTable($request->getParameter('table')) )
       ->findWithParents($request->getParameter('id'));
   }
 
@@ -87,7 +87,7 @@ class searchActions extends DarwinActions
       $ids = $this->FecthIdForCommonNames() ;
       //ftheeten 2018 10 29
       $this->fetchCodes();
-      $this->common_names = Doctrine::getTable('VernacularNames')->findAllCommonNames($ids) ;
+      $this->common_names = Doctrine_Core::getTable('VernacularNames')->findAllCommonNames($ids) ;
       if(!count($this->common_names))
         $this->common_names = array('taxonomy'=> array(), 'chronostratigraphy' => array(), 'lithostratigraphy' => array(),
                                     'lithology' => array(),'mineralogy' => array()) ;
@@ -129,14 +129,14 @@ class searchActions extends DarwinActions
     else $id = $request->getParameter('id') ;
 
     $this->forward404Unless(ctype_digit($request->getParameter('id')));
-    $this->specimen = Doctrine::getTable('Specimens')->find((int) $request->getParameter('id'));
-    $this->comments = Doctrine::getTable('Comments')->getRelatedComment('specimens', (int) $request->getParameter('id'));
+    $this->specimen = Doctrine_Core::getTable('Specimens')->find((int) $request->getParameter('id'));
+    $this->comments = Doctrine_Core::getTable('Comments')->getRelatedComment('specimens', (int) $request->getParameter('id'));
     $this->forward404Unless($this->specimen);
     if(!$this->specimen->getCollectionIsPublic()) $this->forwardToSecureAction();
 
-    $collection = Doctrine::getTable('Collections')->findOneById($this->specimen->getCollectionRef());
-    $this->institute = Doctrine::getTable('People')->findOneById($collection->getInstitutionRef()) ;
-    $this->files = Doctrine::getTable('Multimedia')->findForPublic($this->specimen);
+    $collection = Doctrine_Core::getTable('Collections')->findOneById($this->specimen->getCollectionRef());
+    $this->institute = Doctrine_Core::getTable('People')->findOneById($collection->getInstitutionRef()) ;
+    $this->files = Doctrine_Core::getTable('Multimedia')->findForPublic($this->specimen);
     $this->specFilesCount = $this->taxFilesCount = $this->chronoFilesCount = $this->lithoFilesCount = $this->lithologyFilesCount = $this->mineraloFilesCount = 0;
     foreach($this->files as $file) {
       switch ($file->getReferencedRelation()){
@@ -160,14 +160,14 @@ class searchActions extends DarwinActions
           break;
       }
     }
-    $this->col_manager = Doctrine::getTable('Users')->find($collection->getMainManagerRef());
-    $this->col_staff = Doctrine::getTable('Users')->find($collection->getStaffRef());
-    $this->manager = Doctrine::getTable('UsersComm')->fetchByUser($collection->getMainManagerRef());
-    $this->codes = Doctrine::getTable('Codes')->getCodesRelated('specimens', $this->specimen->getId());
-    $this->properties = Doctrine::getTable('Properties')->findForTable('specimens', $this->specimen->getId());
+    $this->col_manager = Doctrine_Core::getTable('Users')->find($collection->getMainManagerRef());
+    $this->col_staff = Doctrine_Core::getTable('Users')->find($collection->getStaffRef());
+    $this->manager = Doctrine_Core::getTable('UsersComm')->fetchByUser($collection->getMainManagerRef());
+    $this->codes = Doctrine_Core::getTable('Codes')->getCodesRelated('specimens', $this->specimen->getId());
+    $this->properties = Doctrine_Core::getTable('Properties')->findForTable('specimens', $this->specimen->getId());
 
     $ids = $this->FecthIdForCommonNames() ;
-    $this->common_names = Doctrine::getTable('VernacularNames')->findAllCommonNames($ids) ;
+    $this->common_names = Doctrine_Core::getTable('VernacularNames')->findAllCommonNames($ids) ;
 
     if ($tag = $this->specimen->getGtuCountryTagValue()) $this->tags = explode(';',$tag) ;
     else $this->tags = false ;
@@ -201,7 +201,7 @@ class searchActions extends DarwinActions
   /*
   public function executeGetTaxon (sfWebRequest $request)
   {
-	  $taxa = Doctrine::getTable('Taxonomy')->getOneTaxon($request->getParameter('taxon-name'));
+	  $taxa = Doctrine_Core::getTable('Taxonomy')->getOneTaxon($request->getParameter('taxon-name'));
 	$taxaCount = count($taxa);
 	
 	
@@ -220,18 +220,18 @@ class searchActions extends DarwinActions
 	$this->getResponse()->setHttpHeader('Content-type','application/json');
     $this->setLayout('json');
 	
-	$taxa = Doctrine::getTable('Taxonomy')->getOneTaxon($request->getParameter('taxon-name'),$request->getParameter('taxon-level'));
+	$taxa = Doctrine_Core::getTable('Taxonomy')->getOneTaxon($request->getParameter('taxon-name'),$request->getParameter('taxon-level'));
 	$taxaCount = count($taxa);
 	
     if ($taxaCount==1) {
-		$response = array_merge(array(array("response" => "unique match","count" => $taxaCount)), $taxa);
+		$response = array("response" => "unique match","count" => $taxaCount, "results" => $taxa);
 		return $this->renderText(json_encode($response));
 	}
 	elseif($taxaCount>1) {
-		$response = array_merge(array(array("response" => "multiple match","count" => $taxaCount)), $taxa);
+		$response = array("response" => "multiple match","count" => $taxaCount, "results" => $taxa);
 		return $this->renderText(json_encode($response));
 	}
-	return $this->renderText(json_encode(array(array("response" => "not found","count" => $taxaCount))));
+	return $this->renderText(json_encode((array("response" => "not found","count" => $taxaCount))));
 	
   }
 
@@ -242,8 +242,8 @@ class searchActions extends DarwinActions
    */
   public function executeFamilycontent(sfWebRequest $request) {
     $this->forward404Unless($request->getParameter('id', 0)!==0);
-    $familyContent = Doctrine::getTable('Specimens')->getFamilyContent($request->getParameter('id'));
-    $family = Doctrine::getTable('Taxonomy')->find($request->getParameter('id'));
+    $familyContent = Doctrine_Core::getTable('Specimens')->getFamilyContent($request->getParameter('id'));
+    $family = Doctrine_Core::getTable('Taxonomy')->find($request->getParameter('id'));
     return $this->renderPartial('familycontent',array('familycontent'=>$familyContent, 'family'=>$family));
   }
 
@@ -386,7 +386,7 @@ class searchActions extends DarwinActions
     }
 
     // codes retrieve and fill of a $this->codes variable (available in the specimen search result template)
-    $codes_collection = Doctrine::getTable('Codes')->getCodesRelatedMultiple('specimens',$spec_list) ;
+    $codes_collection = Doctrine_Core::getTable('Codes')->getCodesRelatedMultiple('specimens',$spec_list) ;
     $this->codes = array();
     foreach($codes_collection as $code) {
       if(! isset($this->codes[$code->getRecordId()]))
@@ -533,7 +533,7 @@ class searchActions extends DarwinActions
 				$isCanonical=true;
 			}
 		}
-		$results = Doctrine::getTable('Taxonomy')->checkTaxonExisting($request->getParameter('taxon-name'), $isCanonical);
+		$results = Doctrine_Core::getTable('Taxonomy')->checkTaxonExisting($request->getParameter('taxon-name'), $isCanonical);
 
 		$this->getResponse()->setContentType('application/json');
 		 return  $this->renderText(json_encode($results,JSON_UNESCAPED_SLASHES));

@@ -39,8 +39,8 @@
  * @property string $array_to_date
  * @property string $comments
  * @property string $properties
+ * @property Tags $Tags
  * @property Doctrine_Collection $TagGroups
- * @property Doctrine_Collection $Tags
  * 
  * @method integer                             getId()                      Returns the current record's "id" value
  * @method string                              getCode()                    Returns the current record's "code" value
@@ -76,8 +76,8 @@
  * @method string                              getArrayToDate()             Returns the current record's "array_to_date" value
  * @method string                              getComments()                Returns the current record's "comments" value
  * @method string                              getProperties()              Returns the current record's "properties" value
+ * @method Tags                                getTags()                    Returns the current record's "Tags" value
  * @method Doctrine_Collection                 getTagGroups()               Returns the current record's "TagGroups" collection
- * @method Doctrine_Collection                 getTags()                    Returns the current record's "Tags" collection
  * @method DoctrineTemporalInformationGtuGroup setId()                      Sets the current record's "id" value
  * @method DoctrineTemporalInformationGtuGroup setCode()                    Sets the current record's "code" value
  * @method DoctrineTemporalInformationGtuGroup setGtuFromDateMask()         Sets the current record's "gtu_from_date_mask" value
@@ -112,8 +112,8 @@
  * @method DoctrineTemporalInformationGtuGroup setArrayToDate()             Sets the current record's "array_to_date" value
  * @method DoctrineTemporalInformationGtuGroup setComments()                Sets the current record's "comments" value
  * @method DoctrineTemporalInformationGtuGroup setProperties()              Sets the current record's "properties" value
+ * @method DoctrineTemporalInformationGtuGroup setTags()                    Sets the current record's "Tags" value
  * @method DoctrineTemporalInformationGtuGroup setTagGroups()               Sets the current record's "TagGroups" collection
- * @method DoctrineTemporalInformationGtuGroup setTags()                    Sets the current record's "Tags" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -243,11 +243,11 @@ abstract class BaseDoctrineTemporalInformationGtuGroup extends DarwinModel
     public function setUp()
     {
         parent::setUp();
-        $this->hasMany('TagGroups', array(
+        $this->hasOne('Tags', array(
              'local' => 'id',
              'foreign' => 'gtu_ref'));
 
-        $this->hasMany('Tags', array(
+        $this->hasMany('TagGroups', array(
              'local' => 'id',
              'foreign' => 'gtu_ref'));
     }

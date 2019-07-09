@@ -15,7 +15,7 @@ class savesearchActions extends sfActions
   {
     if($request->getParameter('search') && ctype_digit($request->getParameter('search')) && $request->getParameter('ids',"") != "" )
     {
-      $saved_search = Doctrine::getTable('MySavedSearches')->getSavedSearchByKey($request->getParameter('search'), $this->getUser()->getId());
+      $saved_search = Doctrine_Core::getTable('MySavedSearches')->getSavedSearchByKey($request->getParameter('search'), $this->getUser()->getId());
       $this->forward404Unless($saved_search);
 
       $prev_req = $saved_search->getUnserialRequest();
@@ -78,7 +78,7 @@ class savesearchActions extends sfActions
   {
     if($request->getParameter('id'))
     {
-      $saved_search = Doctrine::getTable('MySavedSearches')->getSavedSearchByKey($request->getParameter('id'), $this->getUser()->getId());
+      $saved_search = Doctrine_Core::getTable('MySavedSearches')->getSavedSearchByKey($request->getParameter('id'), $this->getUser()->getId());
     }
     $this->forward404Unless($saved_search);
     if($request->getParameter('status') === '1')
@@ -96,7 +96,7 @@ class savesearchActions extends sfActions
     /// FETCH an exisiting saved search for edition
     if($request->getParameter('id'))
     {
-      $saved_search = Doctrine::getTable('MySavedSearches')->getSavedSearchByKey($request->getParameter('id'), $this->getUser()->getId());
+      $saved_search = Doctrine_Core::getTable('MySavedSearches')->getSavedSearchByKey($request->getParameter('id'), $this->getUser()->getId());
     }
     else
     {
@@ -127,7 +127,7 @@ class savesearchActions extends sfActions
         }
         else
         {
-          $saved_search = Doctrine::getTable('MySavedSearches')->getSavedSearchByKey($request->getParameter('list_nr'), $this->getUser()->getId());
+          $saved_search = Doctrine_Core::getTable('MySavedSearches')->getSavedSearchByKey($request->getParameter('list_nr'), $this->getUser()->getId());
 
           $prev_req = $saved_search->getUnserialRequest();
           $old_ids = $saved_search->getAllSearchedId();
@@ -175,7 +175,7 @@ class savesearchActions extends sfActions
 
   public function executeDeleteSavedSearch(sfWebRequest $request)
   {
-    $r = Doctrine::getTable( DarwinTable::getModelForTable($request->getParameter('table')) )->find($request->getParameter('id'));
+    $r = Doctrine_Core::getTable( DarwinTable::getModelForTable($request->getParameter('table')) )->find($request->getParameter('id'));
     $this->forward404Unless($r,'No such item');
     try{
       $is_spec_search = $r->getIsOnlyId();
@@ -198,14 +198,14 @@ class savesearchActions extends sfActions
   
   public function executeIndex(sfWebRequest $request)
   {
-    $q = Doctrine::getTable('MySavedSearches')
+    $q = Doctrine_Core::getTable('MySavedSearches')
         ->addUserOrder(null, $this->getUser()->getId());
 
     $this->is_only_spec = false;
 
     if($request->getParameter('specimen') != '')
       $this->is_only_spec = true;
-    $this->searches = Doctrine::getTable('MySavedSearches')
+    $this->searches = Doctrine_Core::getTable('MySavedSearches')
         ->addIsSearch($q, ! $this->is_only_spec) 
         //ftheeten 2018 02 16
 		 ->orderBy('modification_date_time DESC')
@@ -223,7 +223,7 @@ class savesearchActions extends sfActions
              $query_id=$request->getParameter('query_id');
              $user_id=$request->getParameter('user_id');
              $sql = "SELECT fct_rmca_dynamic_saved_search_geojson as geojson FROM fct_rmca_dynamic_saved_search_geojson(:query, :user);";
-              $saved_search = Doctrine::getTable('MySavedSearches')->getSavedSearchByKey($query_id, $user_id);
+              $saved_search = Doctrine_Core::getTable('MySavedSearches')->getSavedSearchByKey($query_id, $user_id);
               $conn = Doctrine_Manager::connection();
              $q = $conn->prepare($sql);
              
@@ -265,12 +265,12 @@ return sfView::NONE;
 			//$this->total_size= Doctrine_Core::getTable("MySavedSearches")->countRecursiveSQLRecords($this->user_id, $this->query_id);
 			$this->size=20000;
             $this->max_page =3;
-			$saved_search = Doctrine::getTable('MySavedSearches')->getSavedSearchByKey($this->query_id, $this->user_id);
+			$saved_search = Doctrine_Core::getTable('MySavedSearches')->getSavedSearchByKey($this->query_id, $this->user_id);
 			$this->name = $saved_search->getName();
             $nbpages=ceil($this->total_size/$this->size);
             
 
-             $dataset=Doctrine::getTable('MySavedSearches')->getSavedSearchData($this->user_id, $this->query_id);
+             $dataset=Doctrine_Core::getTable('MySavedSearches')->getSavedSearchData($this->user_id, $this->query_id);
                         
              $returned=Array();             
              $i=0;
@@ -315,12 +315,12 @@ return sfView::NONE;
 			//$this->total_size= Doctrine_Core::getTable("MySavedSearches")->countRecursiveSQLRecords($this->user_id, $this->query_id);
 			$this->size=20000;
             $this->max_page =3;
-			$saved_search = Doctrine::getTable('MySavedSearches')->getSavedSearchByKey($this->query_id, $this->user_id);
+			$saved_search = Doctrine_Core::getTable('MySavedSearches')->getSavedSearchByKey($this->query_id, $this->user_id);
 			$this->name = $saved_search->getName();
             $nbpages=ceil($this->total_size/$this->size);
             
 
-             $dataset=Doctrine::getTable('MySavedSearches')->getSavedSearchDataTaxonomy($this->user_id, $this->query_id);
+             $dataset=Doctrine_Core::getTable('MySavedSearches')->getSavedSearchDataTaxonomy($this->user_id, $this->query_id);
                         
              $returned=Array();             
              $i=0;

@@ -44,9 +44,22 @@
         <?php if(array_key_exists('taxonomy_metadata_name', $items[0])&&array_key_exists('metadata_ref', $items[0])): ?>
             <?php if($items[0]['taxonomy_metadata_name']&&$items[0]['metadata_ref']): ?>
                 <th> <?php echo __('Taxonomy name');?></th>
-                <th><?php echo __('Reference taxon');?></th>
+               	<!--JMHerpers 2019 04 26-->
+				<!--<th><?php echo __('Reference');?></th>
+				<th><?php echo __('Reference taxon');?></th>-->
             <?php endif;?>
         <?php endif;?>
+		
+				 <!--JMHerpers 2019 04 26-->
+		<th>
+			<?php if($table=="taxonomy"):?>
+			  <a class="sort" href="<?php echo url_for($s_url.'&orderby=cites'.( ($orderBy=='cites' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
+				<?php echo __('CITES');?>
+				<?php if($orderBy=='cites') echo $orderSign ?>
+			  </a>
+			<?php endif; ?>
+        </th>
+		
         <?php if(isset($items[0]['lower_bound']) && isset($items[0]['upper_bound'])): ?>
           <th class="datesNum">
             <a class="sort" href="<?php echo url_for($s_url.'&orderby=lower_bound'.( ($orderBy=='lower_bound' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
@@ -99,12 +112,26 @@
              <!--ftheeten 2018 07 19-->
             <?php if(isset($item['taxonomy_metadata_name'])&&isset($item['metadata_ref'])): ?>
              <td>
-              <span><?php echo $item->getTaxonomyMetadataName();?></span>
+				<span><?php echo $item->getTaxonomyMetadataName();?>
+			  		<!--JMHerpers 2019 04 26-->
+					<?php if($item->getTaxonomyMetadataReferenceStatus() == 1): ?>
+						<i>(REF.)</i>
+					<?php endif;?>
+				</span>
             </td>
-            <td>
+            <!--JMHerpers 2019 04 26-->
+			<!--<td>
               <span><?php echo $item->getTaxonomyMetadataReferenceStatus() == "1" ? "true":"false" ;?></span>
-            </td>
+            </td>-->
             <?php endif;?>
+			<!--JMHerpers 2019 04 26-->
+			<td>
+				<?php if($table=="taxonomy"):?>
+					<?php if($item->getCites() == 1): ?>
+						<span  style="margin:auto; display:table;">X</span>
+					<?php endif;?>
+				<?php endif;?>
+            </td>
             <?php if(isset($item['lower_bound']) && isset($item['upper_bound'])): ?>
               <td class="datesNum">
                 <span><?php echo $item->getLowerBound();?></span>
@@ -152,7 +179,7 @@
                 {
                     $(e).val("")
                 }
-                else if(e.type.includes("select")&&e.id!="searchCatalogue_rec_per_page")
+                else if(e.type.indexOf("select")!=-1&&e.id!="searchCatalogue_rec_per_page")
                 {                    
                     e.selectedIndex = 0;                    
                 }

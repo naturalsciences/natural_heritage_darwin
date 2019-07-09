@@ -53,7 +53,7 @@ class IdentificationsForm extends BaseIdentificationsForm
     $this->widgetSchema['value_defined'] = new sfWidgetFormInput();
     //ftheeten 2018 09 18 new class identification_subject
     $this->widgetSchema['value_defined']->setAttributes(array('class'=>'xlsmall_size identification_subject'));
-    $this->validatorSchema['value_defined'] = new sfValidatorString(array('required' => false, 'trim'=>true));
+    $this->validatorSchema['value_defined'] = new sfValidatorString(array('required' => true, 'trim'=>true), array("required"=>"Identification subjet is missing"));
     $this->widgetSchema['determination_status'] = new widgetFormSelectComplete(array(
         'model' => 'Identifications',
         'table_method' => 'getDistinctDeterminationStatus',
@@ -72,7 +72,7 @@ class IdentificationsForm extends BaseIdentificationsForm
     
     $subForm = new sfForm();
     $this->embedForm('Identifiers',$subForm);   
-    foreach(Doctrine::getTable('CataloguePeople')->getPeopleRelated('identifications', 'identifier', $this->getObject()->getId()) as $key=>$vals)
+    foreach(Doctrine_Core::getTable('CataloguePeople')->getPeopleRelated('identifications', 'identifier', $this->getObject()->getId()) as $key=>$vals)
     {
       $form = new IdentifiersForm($vals);
       $this->embeddedForms['Identifiers']->embedForm($key, $form);

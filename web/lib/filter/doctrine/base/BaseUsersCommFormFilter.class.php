@@ -6,33 +6,30 @@
  * @package    darwin
  * @subpackage filter
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
+ * @version    SVN: $Id$
  */
-abstract class BaseUsersCommFormFilter extends BaseFormFilterDoctrine
+abstract class BaseUsersCommFormFilter extends DarwinModelFormFilter
 {
-  public function setup()
+  protected function setupInheritance()
   {
-    $this->setWidgets(array(
-      'person_user_ref' => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Users'), 'add_empty' => true)),
-      'comm_type'       => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'entry'           => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'tag'             => new sfWidgetFormFilterInput(array('with_empty' => false)),
-    ));
+    parent::setupInheritance();
 
-    $this->setValidators(array(
-      'person_user_ref' => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Users'), 'column' => 'id')),
-      'comm_type'       => new sfValidatorPass(array('required' => false)),
-      'entry'           => new sfValidatorPass(array('required' => false)),
-      'tag'             => new sfValidatorPass(array('required' => false)),
-    ));
+    $this->widgetSchema   ['person_user_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Users'), 'add_empty' => true));
+    $this->validatorSchema['person_user_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Users'), 'column' => 'id'));
+
+    $this->widgetSchema   ['comm_type'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['comm_type'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['entry'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['entry'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['tag'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['tag'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['person_user_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Users'), 'add_empty' => true));
+    $this->validatorSchema['person_user_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Users'), 'column' => 'id'));
 
     $this->widgetSchema->setNameFormat('users_comm_filters[%s]');
-
-    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
-
-    $this->setupInheritance();
-
-    parent::setup();
   }
 
   public function getModelName()
@@ -42,12 +39,12 @@ abstract class BaseUsersCommFormFilter extends BaseFormFilterDoctrine
 
   public function getFields()
   {
-    return array(
-      'id'              => 'Number',
+    return array_merge(parent::getFields(), array(
       'person_user_ref' => 'ForeignKey',
-      'comm_type'       => 'Text',
-      'entry'           => 'Text',
-      'tag'             => 'Text',
-    );
+      'comm_type' => 'Text',
+      'entry' => 'Text',
+      'tag' => 'Text',
+      'person_user_ref' => 'ForeignKey',
+    ));
   }
 }

@@ -1,24 +1,24 @@
 <!--ftheeten 2019 01 28-->
 	<td class="col_col_peoples">
-		<?php $cpt = 0 ; foreach(Doctrine::getTable('CataloguePeople')->getPeopleRelated("specimens", array('collector'),$specimen->getId() ) as $key=>$people):?>
+		<?php $cpt = 0 ; foreach(Doctrine_Core::getTable('CataloguePeople')->getPeopleRelated("specimens", array('collector'),$specimen->getId() ) as $key=>$people):?>
 			<li>
-			<?php echo Doctrine::getTable('People')->findOneById($people->getPeopleRef())->getFormatedName() ; ?>
+			<?php echo Doctrine_Core::getTable('People')->findOneById($people->getPeopleRef())->getFormatedName() ; ?>
 			</li>
 		<?php endforeach; ?>		
 	</td>
 	<td class="col_ident_peoples">
-		 <?php foreach(Doctrine::getTable('Identifications')->getIdentificationsRelated("specimens", $specimen->getId() ) as $keyIdent=>$ident):?>
-			<?php $cpt = 0 ; foreach(Doctrine::getTable('CataloguePeople')->getPeopleRelated("identifications", array('identifier'), $ident->getId()) as $key=>$people):?>
+		 <?php foreach(Doctrine_Core::getTable('Identifications')->getIdentificationsRelated("specimens", $specimen->getId() ) as $keyIdent=>$ident):?>
+			<?php $cpt = 0 ; foreach(Doctrine_Core::getTable('CataloguePeople')->getPeopleRelated("identifications", array('identifier'), $ident->getId()) as $key=>$people):?>
 				<li>
-					<?php echo Doctrine::getTable('People')->findOneById($people->getPeopleRef())->getFormatedName() ; ?>
+					<?php echo Doctrine_Core::getTable('People')->findOneById($people->getPeopleRef())->getFormatedName() ; ?>
 				</li>
 			 <?php endforeach?>
 		 <?php endforeach?>
 	</td>
 	<td class="col_don_peoples">
-		<?php $cpt = 0 ; foreach(Doctrine::getTable('CataloguePeople')->getPeopleRelated("specimens", array('donator'),$specimen->getId() ) as $key=>$people):?>
+		<?php $cpt = 0 ; foreach(Doctrine_Core::getTable('CataloguePeople')->getPeopleRelated("specimens", array('donator'),$specimen->getId() ) as $key=>$people):?>
 			<li>
-			<?php echo Doctrine::getTable('People')->findOneById($people->getPeopleRef())->getFormatedName() ; ?>
+			<?php echo Doctrine_Core::getTable('People')->findOneById($people->getPeopleRef())->getFormatedName() ; ?>
 			</li>
 		<?php endforeach; ?>		
 	</td>    

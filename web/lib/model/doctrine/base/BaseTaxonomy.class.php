@@ -16,6 +16,7 @@
  * @property boolean $is_reference_taxonomy
  * @property integer $metadata_ref
  * @property boolean $sensitive_info_withheld
+ * @property boolean $cites
  * @property Taxonomy $Parent
  * @property CatalogueLevels $Level
  * @property TaxonomyMetadata $TaxonomyMetadata
@@ -35,6 +36,7 @@
  * @method boolean             getIsReferenceTaxonomy()     Returns the current record's "is_reference_taxonomy" value
  * @method integer             getMetadataRef()             Returns the current record's "metadata_ref" value
  * @method boolean             getSensitiveInfoWithheld()   Returns the current record's "sensitive_info_withheld" value
+ * @method boolean             getCites()                   Returns the current record's "cites" value
  * @method Taxonomy            getParent()                  Returns the current record's "Parent" value
  * @method CatalogueLevels     getLevel()                   Returns the current record's "Level" value
  * @method TaxonomyMetadata    getTaxonomyMetadata()        Returns the current record's "TaxonomyMetadata" value
@@ -53,6 +55,7 @@
  * @method Taxonomy            setIsReferenceTaxonomy()     Sets the current record's "is_reference_taxonomy" value
  * @method Taxonomy            setMetadataRef()             Sets the current record's "metadata_ref" value
  * @method Taxonomy            setSensitiveInfoWithheld()   Sets the current record's "sensitive_info_withheld" value
+ * @method Taxonomy            setCites()                   Sets the current record's "cites" value
  * @method Taxonomy            setParent()                  Sets the current record's "Parent" value
  * @method Taxonomy            setLevel()                   Sets the current record's "Level" value
  * @method Taxonomy            setTaxonomyMetadata()        Sets the current record's "TaxonomyMetadata" value
@@ -115,6 +118,10 @@ abstract class BaseTaxonomy extends DarwinModel
              ));
         $this->hasColumn('sensitive_info_withheld', 'boolean', null, array(
              'type' => 'boolean',
+             ));
+        $this->hasColumn('cites', 'boolean', null, array(
+             'type' => 'boolean',
+             'notnull' => false,
              ));
     }
 

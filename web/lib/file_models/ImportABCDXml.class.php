@@ -22,6 +22,18 @@ class ImportABCDXml implements ImportModelsInterface
   
   private $max_xml_levels=20;
   
+
+  
+  //private m_conn;
+  
+  protected $configuration;
+  
+  
+  public function __construct($p_configuration)
+  {
+    $this->configuration=$p_configuration;
+  }
+  
   //ftheeten 2018 09 24
   protected function csvLineIsNotEmpty($p_row)
   {
@@ -125,11 +137,12 @@ class ImportABCDXml implements ImportModelsInterface
   //ftheeten 2017 08 03 added specimen_taxonomy_ref
   public function parseFile($file,$id)
   {
+    $this->configuration->loadHelpers(array('Darwin'));
     $this->import_id = $id ;
     //ftheeten 2017 08 03 added specimen_taxonomy_ref
-    $this->specimen_taxonomy_ref = Doctrine::getTable('Imports')->find($this->import_id)->getSpecimenTaxonomyRef();
+    $this->specimen_taxonomy_ref = Doctrine_Core::getTable('Imports')->find($this->import_id)->getSpecimenTaxonomyRef();
     //ftheeten 2017 09 13
-    $mime_type=Doctrine::getTable('Imports')->find($this->import_id)->getMimeType();
+    $mime_type=Doctrine_Core::getTable('Imports')->find($this->import_id)->getMimeType();
     //ftheeten 2017 09 13   
      //fwrite($myfile,"\n!!!!!!!!!!!!!!!!!IN PARSER!!!!!!!!!!!!!!!!!!");
 	     //jm herpers 2017 11 09 (auto increment in batches)
@@ -146,11 +159,13 @@ class ImportABCDXml implements ImportModelsInterface
 		{
 			$this->code_last_value=$this->collection_of_import->getCodeLastValue();		
 		}
-		$this->code_prefix=$this->collection_of_import->getCodePrefix();
-		$this->code_prefix_separator=$this->collection_of_import->getCodePrefixSeparator();
-		$this->code_suffix_separator=$this->collection_of_import->getCodeSuffixSeparator();
-		$this->code_suffix=$this->collection_of_import->getCodeSuffix();
-	}	
+		
+	}
+    $this->code_prefix=$this->collection_of_import->getCodePrefix();
+
+    $this->code_prefix_separator=$this->collection_of_import->getCodePrefixSeparator();
+    $this->code_suffix_separator=$this->collection_of_import->getCodeSuffixSeparator();
+    $this->code_suffix=$this->collection_of_import->getCodeSuffix();	
     if($mime_type==="text/plain")
     {  
     
@@ -160,45 +175,66 @@ class ImportABCDXml implements ImportModelsInterface
         }       
       
         
-        $tabParser=new RMCATabToABCDXml();
-        fclose($fp);
-        //$this->removeEmptyTag($file);
-        $fp = fopen($file, "r");
+       
+        $tabParser = new RMCATabDataDirect(
+            $this->configuration,
+            $this->import_id, 
+            $this->collection_of_import,  
+            $this->specimen_taxonomy_ref , 
+            $this->collection_has_autoincrement, 
+            $this->code_last_value, 
+            $this->code_prefix,
+            $this->code_prefix_separator,
+            $this->code_suffix_separator,
+            $this->code_suffix);
+       
         $options["tab_file"] = $file;
         $tabParser->configure($options);
         $tabParser->identifyHeader($fp);
         $i=1;
-        while (($row = fgetcsv($fp, 0, "\t")) !== FALSE){
-            if($this->csvLineIsNotEmpty($row))
-            {
-                if (array(null) !== $row) 
-                { // ignore blank lines
-                        //ftheeten 2018 02 28
-                     $row=  Encoding::toUTF8($row);
-                     $xml_parser = xml_parser_create();
-                    xml_set_object($xml_parser, $this) ;
-                    xml_parser_set_option($xml_parser, XML_OPTION_CASE_FOLDING, false);
-                    xml_set_element_handler($xml_parser, "startElement", "endElement");
-                    xml_set_character_data_handler($xml_parser, "characterData");
-                    $xml_conv= $tabParser->parseLineAndGetString($row);
-                    //print($xml_conv);
-                    $xml_conv=$this->removeEmptyTagString($xml_conv);
-                    if (!xml_parse($xml_parser, $xml_conv, feof($fp))) {
-                        return (sprintf("XML error: %s at line %d for record $i",
-                                    xml_error_string(xml_get_error_code($xml_parser)),
-                                    xml_get_current_line_number($xml_parser)));
-                    }
-                    $i++;
-                    xml_parser_free($xml_parser);
-                }
-            }
-        }
-
-         
-        //if(! $this->version_defined)
-        //  $this->errors_reported = $this->version_error_msg.$this->errors_reported;
+		$conn = Doctrine_Manager::connection();
+        
+		try
+		{
+			while (($row = fgetcsv($fp, 0, "\t")) !== FALSE)
+			{
+				if($this->csvLineIsNotEmpty($row))
+				{
+					if (array(null) !== $row) 
+					{ // ignore blank lines
+							//ftheeten 2018 02 28
+						 $row=  Encoding::toUTF8($row);
+						 $tabParser->parseLineAndSaveToDB($row);
+					}
+				 }
+			}
+			
+         }
+		 catch(Doctrine_Exception $ne)
+		{
+			/*print("ERROR 1");
+			$conn->rollback();
+			$import_obj = Doctrine_Core::getTable('Imports')->find($q->getId());
+            $import_obj->setErrorsInImport($ne->getMessage());
+            $import_obj->setState("error");
+            $import_obj->setWorking(FALSE);
+            $import_obj->save();*/
+			throw $ne;
+		}
+		catch(Exception $e)
+		{
+			/*print("ERROR 2");
+			$conn->rollback();
+			$import_obj = Doctrine_Core::getTable('Imports')->find($q->getId());
+            $import_obj->setErrorsInImport($ne->getMessage());
+            $import_obj->setState("error");
+            $import_obj->setWorking(FALSE);
+            $import_obj->save();*/
+			throw $e;
+		}
+		
         fclose($fp);
-        return $this->errors_reported ;
+        
     }
     else //old xml parser
     {
@@ -529,7 +565,7 @@ class ImportABCDXml implements ImportModelsInterface
         case "Version":
           $this->version_defined = true;
           $authorized = sfConfig::get('tpl_authorizedversion');
-          Doctrine::getTable('Imports')->find($this->import_id)->setTemplateVersion(trim($this->version))->save();
+          Doctrine_Core::getTable('Imports')->find($this->import_id)->setTemplateVersion(trim($this->version))->save();
           if(
             !isset( $authorized['specimens'] ) ||
             empty( $authorized['specimens'] ) ||
@@ -576,11 +612,63 @@ class ImportABCDXml implements ImportModelsInterface
         }
         $code = new Codes() ;
         $code->setCodeCategory(strtolower($category)) ;
-        $code->setCode($this->cdata) ;
-        if(substr($code->getCode(),0,4) != 'hash') $this->staging->addRelated($code) ;		
+        $tmpCode=$this->cdata;
+        
+
+
+        if(string_isset($this->code_prefix)&&$category=="main")
+        {
+            $prefixTmp=$this->code_prefix;
+            $sepFlag=FALSE;
+            if(string_isset($this->code_prefix_separator))
+            {
+                $prefixTmp.=$this->code_prefix_separator;
+                $sepFlag=TRUE;
+            }
+            if(startsWith($tmpCode,$prefixTmp ))
+            {  
+                $tmpCode=substr_replace($tmpCode,'',0, strlen($prefixTmp));
+            }
+            $code->setCodePrefix($this->code_prefix);
+            if($sepFlag)
+            {
+                 $code->setCodePrefixSeparator($this->code_prefix_separator);
+            }
+            
+        }
+        if(string_isset($this->code_suffix)&&$category=="main")
+        {
+            $suffixTmp=$this->code_suffix;
+            $sepFlag=FALSE;
+            if(string_isset($this->code_suffix_separator))
+            {
+                $suffixTmp.=$this->code_suffix_separator;
+                $sepFlag=TRUE;
+            }
+            if(endsWith($tmpCode,$suffixTmp ))
+            {                
+                $tmpCode=substr_replace($tmpCode,'',strlen($tmpCode)-strlen($suffixTmp), strlen($suffixTmp));
+            }
+            $code->setCodeSuffix($this->code_suffix);
+            if($sepFlag)
+            {
+                 $code->setCodeSuffixSeparator($this->code_suffix_separator);
+            }
+            
+        }
+        $code->setCode($tmpCode) ;
+        if(is_numeric($tmpCode)&&$this->collection_has_autoincrement&&$category=="main")
+        {
+            print("test autoincrement");
+            if((int)$tmpCode>(int)$this->collection_of_import->getCodeLastValue())
+            {
+                 print("_ autoincrement");
+                $this->collection_of_import->setCodeLastValue($tmpCode);
+                $this->collection_of_import->save();
+            }
+        }
+        if(substr($code->getCode(),0,4) != 'hash') $this->staging->addRelated($code) ;        
 	}
-    
-    
   }
 
   private function addComment($is_staging = false, $notion =  'general')
@@ -743,8 +831,8 @@ class ImportABCDXml implements ImportModelsInterface
   //know if collection is autoincremented
   private function getCollectionOfImport()
   {
-  	 $collection_ref=Doctrine::getTable('Imports')->find($this->import_id)->getCollectionRef();
-	 return Doctrine::getTable('Collections')->find($collection_ref);
+  	 $collection_ref=Doctrine_Core::getTable('Imports')->find($this->import_id)->getCollectionRef();
+	 return Doctrine_Core::getTable('Collections')->find($collection_ref);
   }
   
   

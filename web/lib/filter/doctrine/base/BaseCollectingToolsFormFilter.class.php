@@ -6,33 +6,27 @@
  * @package    darwin
  * @subpackage filter
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
+ * @version    SVN: $Id$
  */
-abstract class BaseCollectingToolsFormFilter extends BaseFormFilterDoctrine
+abstract class BaseCollectingToolsFormFilter extends DarwinModelFormFilter
 {
-  public function setup()
+  protected function setupInheritance()
   {
-    $this->setWidgets(array(
-      'tool'                     => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'tool_indexed'             => new sfWidgetFormFilterInput(),
-      'specimens_list'           => new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => 'Specimens')),
-      'specimens_maincodes_list' => new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => 'SpecimensMaincodes')),
-    ));
+    parent::setupInheritance();
 
-    $this->setValidators(array(
-      'tool'                     => new sfValidatorPass(array('required' => false)),
-      'tool_indexed'             => new sfValidatorPass(array('required' => false)),
-      'specimens_list'           => new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'Specimens', 'required' => false)),
-      'specimens_maincodes_list' => new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'SpecimensMaincodes', 'required' => false)),
-    ));
+    $this->widgetSchema   ['tool'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['tool'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['tool_indexed'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['tool_indexed'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['specimens_list'] = new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => 'Specimens'));
+    $this->validatorSchema['specimens_list'] = new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'Specimens', 'required' => false));
+
+    $this->widgetSchema   ['specimens_maincodes_list'] = new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => 'SpecimensMaincodes'));
+    $this->validatorSchema['specimens_maincodes_list'] = new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'SpecimensMaincodes', 'required' => false));
 
     $this->widgetSchema->setNameFormat('collecting_tools_filters[%s]');
-
-    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
-
-    $this->setupInheritance();
-
-    parent::setup();
   }
 
   public function addSpecimensListColumnQuery(Doctrine_Query $query, $field, $values)
@@ -78,12 +72,11 @@ abstract class BaseCollectingToolsFormFilter extends BaseFormFilterDoctrine
 
   public function getFields()
   {
-    return array(
-      'id'                       => 'Number',
-      'tool'                     => 'Text',
-      'tool_indexed'             => 'Text',
-      'specimens_list'           => 'ManyKey',
+    return array_merge(parent::getFields(), array(
+      'tool' => 'Text',
+      'tool_indexed' => 'Text',
+      'specimens_list' => 'ManyKey',
       'specimens_maincodes_list' => 'ManyKey',
-    );
+    ));
   }
 }

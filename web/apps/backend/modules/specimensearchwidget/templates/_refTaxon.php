@@ -26,6 +26,10 @@
         <td><?php echo __("Taxonomic group : ");?></td>
         <td><?php echo $form['taxonomy_metadata_ref'];?></td>
     </tr>
+	<tr>
+        <th><?php echo __("CITES : ");?></th>
+        <td><?php echo $form['taxonomy_cites'];?></td>
+    </tr>
   </tbody>
 </table>
 
@@ -133,7 +137,7 @@ $(document).ready(function () {
        $('#select2_taxa').select2({
 				width: "75%",
                 minimumInputLength : 1,
-				tags: true,
+				tags: false,
 				tokenSeparators: ['|'],
 				  ajax: {
 				    //url: getCodeUrl(),

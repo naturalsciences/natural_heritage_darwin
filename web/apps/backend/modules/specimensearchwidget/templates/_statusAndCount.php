@@ -1,17 +1,52 @@
 <table class="catalogue_widget_view">
   <head>
     <tr>
-      <th><?php echo $form['specimen_status']->renderLabel() ?></th>
-      <th><?php echo $form['count']->renderLabel() ?></th>
+      <th><?php echo $form['specimen_status']->renderLabel() ?></th>     
     </tr>
   </head>
   <tbody>
     <tr>
-      <td><?php echo $form['specimen_status']->render() ?></td>
-      <td>
-        <?php echo $form['count_operator']->render() ?>
-        <?php echo $form['count']->render() ?>
-      </td>
+      <td><?php echo $form['specimen_status']->render() ?></td>      
     </tr>
   </tbody>
+</table>
+<table>
+<!--ftheeten 2016 06 22-->
+  <tr>
+    <td></td>
+    <td><b>from</b></td>
+    <td><b>to</b></td>
+  <tr>
+  <tr>
+	<th><?php echo $form['specimen_count_min']->renderLabel();?></th>
+	<td><?php echo $form['specimen_count_min']->render() ?></td>
+    <td><?php echo $form['specimen_count_max']->render() ?></td>
+  </tr>
+
+
+<!--ftheeten 2016 06 22-->
+  <tr>
+	<th><?php echo $form['specimen_count_males_min']->renderLabel();?></th>
+	<td><?php echo $form['specimen_count_males_min']->render() ?></td>
+    <td><?php echo $form['specimen_count_males_max']->render() ?></td>
+  </tr>
+
+
+<!--ftheeten 2016 06 22-->
+  <tr>
+	<th><?php echo $form['specimen_count_females_min']->renderLabel();?></th>
+	<td><?php echo $form['specimen_count_females_min']->render() ?></td>
+    <td><?php echo $form['specimen_count_females_max']->render() ?></td>
+  </tr>
+
+<!--ftheeten 2016 06 22-->
+  <tr>
+	<th><?php echo $form['specimen_count_juveniles_min']->renderLabel();?></th>
+	<td><?php echo $form['specimen_count_juveniles_min']->render() ?></td>
+    <td><?php echo $form['specimen_count_juveniles_max']->render() ?></td>
+  </tr>
+
+ 
+
+
 </table>

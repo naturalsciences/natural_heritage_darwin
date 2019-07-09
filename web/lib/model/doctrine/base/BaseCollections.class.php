@@ -26,6 +26,8 @@
  * @property boolean $is_public
  * @property string $code_mask
  * @property boolean $allow_duplicates
+ * @property boolean $code_ai_inherit
+ * @property boolean $nagoya
  * @property People $Institution
  * @property Users $Manager
  * @property Users $Staff
@@ -57,6 +59,8 @@
  * @method boolean             getIsPublic()                            Returns the current record's "is_public" value
  * @method string              getCodeMask()                            Returns the current record's "code_mask" value
  * @method boolean             getAllowDuplicates()                     Returns the current record's "allow_duplicates" value
+ * @method boolean             getCodeAiInherit()                       Returns the current record's "code_ai_inherit" value
+ * @method boolean             getNagoya()                              Returns the current record's "nagoya" value
  * @method People              getInstitution()                         Returns the current record's "Institution" value
  * @method Users               getManager()                             Returns the current record's "Manager" value
  * @method Users               getStaff()                               Returns the current record's "Staff" value
@@ -87,6 +91,8 @@
  * @method Collections         setIsPublic()                            Sets the current record's "is_public" value
  * @method Collections         setCodeMask()                            Sets the current record's "code_mask" value
  * @method Collections         setAllowDuplicates()                     Sets the current record's "allow_duplicates" value
+ * @method Collections         setCodeAiInherit()                       Sets the current record's "code_ai_inherit" value
+ * @method Collections         setNagoya()                              Sets the current record's "nagoya" value
  * @method Collections         setInstitution()                         Sets the current record's "Institution" value
  * @method Collections         setManager()                             Sets the current record's "Manager" value
  * @method Collections         setStaff()                               Sets the current record's "Staff" value
@@ -197,6 +203,15 @@ abstract class BaseCollections extends DarwinModel
              'type' => 'boolean',
              'notnull' => true,
              'default' => false,
+             ));
+        $this->hasColumn('code_ai_inherit', 'boolean', null, array(
+             'type' => 'boolean',
+             'notnull' => true,
+             'default' => false,
+             ));
+        $this->hasColumn('nagoya', 'boolean', null, array(
+             'type' => 'boolean',
+             'notnull' => false,
              ));
     }
 

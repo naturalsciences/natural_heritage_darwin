@@ -118,6 +118,9 @@ class ImportsForm extends BaseImportsForm
         ));
       $this->validatorSchema['taxonomy_kingdom'] = new sfValidatorInteger(array('required'=>false));
       
+      $this->widgetSchema['enforce_code_unicity'] = new sfWidgetFormInputCheckbox(array("default"=>true));
+	  $this->validatorSchema['enforce_code_unicity'] = new sfValidatorBoolean(array('required' => false));
+      
       $category = imports::getFormats();
       //ftheeten 2018 08 07    
      

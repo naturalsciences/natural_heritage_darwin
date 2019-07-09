@@ -373,7 +373,30 @@ sps27:
    title_perso: Specimen Status / Count
    all_public: true
    
+sps28:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: identification
+   mandatory: false
+   order_by: 11
+   opened: true
+   visible: false
+   title_perso: Identification
+   all_public: true
 
+#jmherpers 20190506
+sps31:
+   col_num: 1
+   category: specimensearch_widget
+   group_name: nagoya
+   mandatory: false
+   order_by: 20
+   opened: false
+   visible: false
+   title_perso: Nagoya
+   all_public: true
+
+   
 sw1:
    col_num: 1
    category: specimen_widget
@@ -696,7 +719,17 @@ sw34:
    title_perso: Date
    all_public: true
 
-      
+#jmherpers 20190506
+sw35:
+  col_num: 1
+  category: specimen_widget
+  group_name: nagoya
+  mandatory: false
+  order_by: 20
+  opened: true
+  visible: true
+  title_perso: Nagoya
+  all_public: true      
 
    
 

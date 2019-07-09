@@ -15,13 +15,13 @@ class loanwidgetviewComponents extends sfComponents
   {
     $this->table ="loans";
     if(! isset($this->loan) )
-      $this->loan = Doctrine::getTable('Loans')->find($this->eid);
+      $this->loan = Doctrine_Core::getTable('Loans')->find($this->eid);
   }
 
   public function executeRefInsurances()
   {
     $this->defineObject();
-    $this->Insurances = Doctrine::getTable('Insurances')->findForTable('loans', $this->loan->getId()) ;
+    $this->Insurances = Doctrine_Core::getTable('Insurances')->findForTable('loans', $this->loan->getId()) ;
 
   }
 
@@ -33,10 +33,10 @@ class loanwidgetviewComponents extends sfComponents
   public function executeRefUsers()
   {
     $this->defineObject();
-    $this->users_rights = Doctrine::getTable('LoanRights')->findByLoanRef($this->loan->getId());
+    $this->users_rights = Doctrine_Core::getTable('LoanRights')->findByLoanRef($this->loan->getId());
     $this->users_ids = array();
     foreach($this->users_rights as $peo) $this->users_ids[$peo->getUserRef()] = '';
-    $tmp_users = Doctrine::getTable('Users')->getIdsFromArrayQuery('Users', array_keys($this->users_ids));
+    $tmp_users = Doctrine_Core::getTable('Users')->getIdsFromArrayQuery('Users', array_keys($this->users_ids));
     foreach($tmp_users as $usr) $this->users_ids[$usr->getId()] = $usr;
   }
 
@@ -48,37 +48,37 @@ class loanwidgetviewComponents extends sfComponents
   public function executeActors()
   {
     $this->defineObject();
-    $this->senders = Doctrine::getTable('CataloguePeople')->findActors($this->loan->getId(),'sender','loans');
-    $this->receivers = Doctrine::getTable('CataloguePeople')->findActors($this->loan->getId(),'receiver','loans');
+    $this->senders = Doctrine_Core::getTable('CataloguePeople')->findActors($this->loan->getId(),'sender','loans');
+    $this->receivers = Doctrine_Core::getTable('CataloguePeople')->findActors($this->loan->getId(),'receiver','loans');
     $this->people_ids = array();
     foreach($this->senders as $peo) $this->people_ids[$peo->getPeopleRef()] = '';
     foreach($this->receivers as $peo) $this->people_ids[$peo->getPeopleRef()] = '';
-    $people = Doctrine::getTable('People')->getIdsFromArrayQuery('People', array_keys($this->people_ids));
+    $people = Doctrine_Core::getTable('People')->getIdsFromArrayQuery('People', array_keys($this->people_ids));
     foreach($people as $peo) $this->people_ids[$peo->getId()] = $peo;
   }  
     
   public function executeRefRelatedFiles()
   { 
     $this->defineObject();
-    $this->files = Doctrine::getTable('Multimedia')->findForTable('loans', $this->loan->getId()) ;
+    $this->files = Doctrine_Core::getTable('Multimedia')->findForTable('loans', $this->loan->getId()) ;
     $this->atLeastOneFileVisible = true;
   }  
 
   public function executeRefComments()
   { 
     $this->defineObject();
-    $this->Comments = Doctrine::getTable('Comments')->findForTable('loans', $this->loan->getId()) ;
+    $this->Comments = Doctrine_Core::getTable('Comments')->findForTable('loans', $this->loan->getId()) ;
   }
   
   public function executeLoanStatus()
   { 
     $this->defineObject();
-    $this->loanstatus = Doctrine::getTable('LoanStatus')->getLoanStatus($this->loan->getId());
+    $this->loanstatus = Doctrine_Core::getTable('LoanStatus')->getLoanStatus($this->loan->getId());
   }
 
   public function executeMaintenances()
   { 
     $this->defineObject();
-    $this->maintenances = Doctrine::getTable('CollectionMaintenance')->getMergedMaintenances('loans', $this->loan->getId());
+    $this->maintenances = Doctrine_Core::getTable('CollectionMaintenance')->getMergedMaintenances('loans', $this->loan->getId());
   }
 }

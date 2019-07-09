@@ -25,23 +25,34 @@ class MaExtLinksForm extends BaseExtLinksForm
                                                          ));
 
     $this->validatorSchema['type'] = new sfValidatorChoice(array('choices'=>array_keys(ExtLinks::getLinkTypes())));
-
+	
+	//2019 04 24
+	 $this->widgetSchema['replace_existing'] = new WidgetFormInputCheckboxDarwin();
+	$this->validatorSchema['replace_existing'] = new sfValidatorBoolean();//sfValidatorPass();
   }
 
   public function doMassAction($user_id, $items, $values)
   {
-    $query = Doctrine_Query::create()->select('id')->from('Specimens s');
-    $query->andWhere('s.id in (select fct_filter_encodable_row(?,?,?))', array(implode(',',$items),'spec_ref', $user_id));
-    $results = $query->execute();
+	//2019 04 24
+	if($values['replace_existing']===true)
+	{
+		$query_delete = Doctrine_Query::create()->delete()->from('ExtLinks e')->where("e.record_id  in (select fct_filter_encodable_row(?,?,?))", array(implode(',',$items),'spec_ref', $user_id))->andWhere("e.type=?",$values['type'] )->execute();
+	}
+	//else
+	//{
+		$query = Doctrine_Query::create()->select('id')->from('Specimens s');
+		$query->andWhere('s.id in (select fct_filter_encodable_row(?,?,?))', array(implode(',',$items),'spec_ref', $user_id));
+		$results = $query->execute();
 
-    foreach($results as $result)
-    {
-      $ext_links = new ExtLinks();
-      $ext_links->fromArray($values);
-      $ext_links->setRecordId($result->getId());
-      $ext_links->setReferencedRelation("specimens");
-      $ext_links->save();
-    }
+		foreach($results as $result)
+		{
+		  $ext_links = new ExtLinks();
+		  $ext_links->fromArray($values);
+		  $ext_links->setRecordId($result->getId());
+		  $ext_links->setReferencedRelation("specimens");
+		  $ext_links->save();
+		}
+	//}
   }
 
 }

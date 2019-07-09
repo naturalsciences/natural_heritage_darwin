@@ -88,8 +88,8 @@ class TaxonomyTable extends DarwinTable
 	        $sql = "SELECT name, tmp[1] as canonical_name, tmp[2] as authorship , fct_rmca_sort_taxon_path_alphabetically_hstore(path) as hierarchy, fct_rmca_sort_taxon_path_alphabetically_hstore_key(path) as hierarchy_key FROM 
 (SELECT *, fct_rmca_taxonomy_split_name_author(name, level_ref) as tmp, taxonomy.level_ref as taxonomy_level_ref
 ,
- MIN(taxonomy.level_ref) OVER () as min_taxonomy_level_ref FROM taxonomy WHERE name ~* '".$canonicalTaxonName."($|\s[A-Z]|\s\(?(von\s|van\s|de\s|da\s|le\s|la\s|dal\s|des\s)\)?)') AS taxonomy
-WHERE taxonomy_level_ref= min_taxonomy_level_ref"; 
+ MIN(taxonomy.level_ref) OVER () as min_taxonomy_level_ref FROM taxonomy WHERE name ~* '".str_replace(" ", " (\([^\(]+\) )?",str_replace("(","\(",str_replace(")","\)",trim($canonicalTaxonName))))."($|\s+[A-Z]|\s+\(|\s+\(??(von(\s+|'')|van(\s+|'')|de(\s+|'')|da(\s+|'')|le(\s+|'')|la(\s+|'')|dal(\s+|'')|des(\s+|'')|zu(\s+|'')|zur(\s+|'')|dos(\s+|''))\)?)') AS taxonomy
+WHERE taxonomy_level_ref= min_taxonomy_level_ref ORDER BY level_ref"; 
 			$q = $conn->prepare($sql);
 			$q->execute();
 		}

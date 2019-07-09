@@ -2,11 +2,20 @@
   <thead>
     <tr>
       <th><?php echo $form['spec_ids']->renderLabel();?></th>
-    </tr>
+    </tr>   
   </thead>
   <tbody>
     <tr>
       <td><?php echo $form['spec_ids'];?></td>
+    </tr>
+    </tbody>
+    <thead>
+     <tr>
+      <th><?php echo $form['import_ref']->renderLabel();?></th>
+    </tr>
+     </thead>
+     <tr>
+      <td><?php echo $form['import_ref'];?></td>
     </tr>
   </tbody>
 </table>

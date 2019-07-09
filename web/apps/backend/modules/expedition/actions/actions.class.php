@@ -89,9 +89,9 @@ class expeditionActions extends DarwinActions
   public function executeEdit(sfWebRequest $request)
   {
     // Forward to a 404 page if the requested expedition id is not found
-    $this->forward404Unless($expeditions = Doctrine::getTable('Expeditions')->find($request->getParameter('id')), sprintf('Object expeditions does not exist (%s).', $request->getParameter('id')));
+    $this->forward404Unless($expeditions = Doctrine_Core::getTable('Expeditions')->find($request->getParameter('id')), sprintf('Object expeditions does not exist (%s).', $request->getParameter('id')));
     // Otherwise initialize the expedition encoding form
-    $this->no_right_col = Doctrine::getTable('Expeditions')->testNoRightsCollections('expedition_ref',$request->getParameter('id'), $this->getUser()->getId());
+    $this->no_right_col = Doctrine_Core::getTable('Expeditions')->testNoRightsCollections('expedition_ref',$request->getParameter('id'), $this->getUser()->getId());
     $this->form = new ExpeditionsForm($expeditions);
     $this->loadWidgets();
   }
@@ -106,9 +106,9 @@ class expeditionActions extends DarwinActions
     $request->checkCSRFProtection();
     // If method is <> from post or put and if the id edited and to be saved doesn't exist anymore... forward to a 404 page
     $this->forward404Unless($request->isMethod('post') || $request->isMethod('put'));
-    $expeditions = Doctrine::getTable('Expeditions')->find($request->getParameter('id'));
+    $expeditions = Doctrine_Core::getTable('Expeditions')->find($request->getParameter('id'));
     $this->forward404Unless($expeditions, sprintf('Object expeditions does not exist (%s).', $request->getParameter('id')));
-    $this->no_right_col = Doctrine::getTable('Expeditions')->testNoRightsCollections('expedition_ref',$request->getParameter('id'), $this->getUser()->getId());    
+    $this->no_right_col = Doctrine_Core::getTable('Expeditions')->testNoRightsCollections('expedition_ref',$request->getParameter('id'), $this->getUser()->getId());    
     // Instantiate a new expedition form
     $this->form = new ExpeditionsForm($expeditions);
     // Process the form for saving informations
@@ -127,7 +127,7 @@ class expeditionActions extends DarwinActions
     // Trigger the protection against the XSS attack
     $request->checkCSRFProtection();
     // Forward to a 404 page if the expedition to be deleted has not been found
-    $expeditions = Doctrine::getTable('Expeditions')->find(array($request->getParameter('id')));
+    $expeditions = Doctrine_Core::getTable('Expeditions')->find(array($request->getParameter('id')));
     $this->forward404Unless($expeditions, sprintf('Object expeditions does not exist (%s).', $request->getParameter('id')));
     // Effectively triggers the delete method of the expedition table
     try
@@ -232,7 +232,7 @@ class expeditionActions extends DarwinActions
   }
   public function executeView(sfWebRequest $request)
   {
-    $this->expedition = Doctrine::getTable('Expeditions')->find($request->getParameter('id'));
+    $this->expedition = Doctrine_Core::getTable('Expeditions')->find($request->getParameter('id'));
     $this->forward404Unless($this->expedition,'Expeditions not Found');
     $this->form = new ExpeditionsForm($this->expedition);    
     $this->loadWidgets();

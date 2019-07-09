@@ -109,7 +109,7 @@ class registerActions extends DarwinActions
           $this->getUser()->setCulture($this->form->user->getSelectedLang());
         }
 
-        $this->getUser()->setHelpIcon(Doctrine::getTable("Preferences")->getPreference($this->form->user->getId(),'help_message_activated',true));
+        $this->getUser()->setHelpIcon(Doctrine_Core::getTable("Preferences")->getPreference($this->form->user->getId(),'help_message_activated',true));
         sfContext::getInstance()->getLogger()->debug('LOGIN: '.$this->form->getValue('username').' '.$this->form->user->getId() );
         $this->getUser()->setAttribute('db_user_id',$this->form->user->getId());
         $this->getUser()->setAttribute('db_user_type',$this->form->user->getDbUserType());

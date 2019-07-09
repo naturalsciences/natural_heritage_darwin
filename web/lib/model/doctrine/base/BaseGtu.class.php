@@ -33,10 +33,11 @@
  * @property float $latitude_utm
  * @property float $longitude_utm
  * @property varchar $utm_zone
+ * @property boolean $nagoya
+ * @property Tags $Tags
  * @property TemporalInformation $TemporalInformation
  * @property DoctrineGtuComments $DoctrineGtuComments
  * @property Doctrine_Collection $TagGroups
- * @property Doctrine_Collection $Tags
  * @property Doctrine_Collection $Specimens
  * @property Doctrine_Collection $SpecimensMaincodes
  * 
@@ -68,10 +69,11 @@
  * @method float               getLatitudeUtm()             Returns the current record's "latitude_utm" value
  * @method float               getLongitudeUtm()            Returns the current record's "longitude_utm" value
  * @method varchar             getUtmZone()                 Returns the current record's "utm_zone" value
+ * @method boolean             getNagoya()                  Returns the current record's "nagoya" value
+ * @method Tags                getTags()                    Returns the current record's "Tags" value
  * @method TemporalInformation getTemporalInformation()     Returns the current record's "TemporalInformation" value
  * @method DoctrineGtuComments getDoctrineGtuComments()     Returns the current record's "DoctrineGtuComments" value
  * @method Doctrine_Collection getTagGroups()               Returns the current record's "TagGroups" collection
- * @method Doctrine_Collection getTags()                    Returns the current record's "Tags" collection
  * @method Doctrine_Collection getSpecimens()               Returns the current record's "Specimens" collection
  * @method Doctrine_Collection getSpecimensMaincodes()      Returns the current record's "SpecimensMaincodes" collection
  * @method Gtu                 setId()                      Sets the current record's "id" value
@@ -102,10 +104,11 @@
  * @method Gtu                 setLatitudeUtm()             Sets the current record's "latitude_utm" value
  * @method Gtu                 setLongitudeUtm()            Sets the current record's "longitude_utm" value
  * @method Gtu                 setUtmZone()                 Sets the current record's "utm_zone" value
+ * @method Gtu                 setNagoya()                  Sets the current record's "nagoya" value
+ * @method Gtu                 setTags()                    Sets the current record's "Tags" value
  * @method Gtu                 setTemporalInformation()     Sets the current record's "TemporalInformation" value
  * @method Gtu                 setDoctrineGtuComments()     Sets the current record's "DoctrineGtuComments" value
  * @method Gtu                 setTagGroups()               Sets the current record's "TagGroups" collection
- * @method Gtu                 setTags()                    Sets the current record's "Tags" collection
  * @method Gtu                 setSpecimens()               Sets the current record's "Specimens" collection
  * @method Gtu                 setSpecimensMaincodes()      Sets the current record's "SpecimensMaincodes" collection
  * 
@@ -214,11 +217,19 @@ abstract class BaseGtu extends DarwinModel
         $this->hasColumn('utm_zone', 'varchar', null, array(
              'type' => 'varchar',
              ));
+        $this->hasColumn('nagoya', 'boolean', null, array(
+             'type' => 'boolean',
+             'notnull' => false,
+             ));
     }
 
     public function setUp()
     {
         parent::setUp();
+        $this->hasOne('Tags', array(
+             'local' => 'id',
+             'foreign' => 'gtu_ref'));
+
         $this->hasOne('TemporalInformation', array(
              'local' => 'id',
              'foreign' => 'gtu_ref'));
@@ -228,10 +239,6 @@ abstract class BaseGtu extends DarwinModel
              'foreign' => 'record_id'));
 
         $this->hasMany('TagGroups', array(
-             'local' => 'id',
-             'foreign' => 'gtu_ref'));
-
-        $this->hasMany('Tags', array(
              'local' => 'id',
              'foreign' => 'gtu_ref'));
 

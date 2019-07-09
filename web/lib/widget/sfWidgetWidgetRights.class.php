@@ -32,7 +32,7 @@ class sfWidgetWidgetRights extends sfWidgetFormChoice
   
   public function getChoices()
   { 
-    $objects = Doctrine::getTable('MyWidgets')->setUserRef($this->getOption('user_ref'))->getAvailableWidgets() ; 
+    $objects = Doctrine_Core::getTable('MyWidgets')->setUserRef($this->getOption('user_ref'))->getAvailableWidgets() ; 
     $choices = array('old_right' => array()) ;
     foreach($objects as $object)
     {

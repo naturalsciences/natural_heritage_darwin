@@ -68,7 +68,7 @@ class DarwinTable extends Doctrine_Table
       ->select('count(id)')
       ->from($table.' t')
       ->where('t.parent_ref = ?',$id);
-    return $q->execute(null, Doctrine::HYDRATE_SINGLE_SCALAR);
+    return $q->execute(null, Doctrine_Core::HYDRATE_SINGLE_SCALAR);
   }
 
   protected function getI18N()
@@ -149,7 +149,7 @@ class DarwinTable extends Doctrine_Table
   */
   public function findWithParents($id)
   {
-    $self_unit = Doctrine::getTable($this->getTableName())->find($id);
+    $self_unit = Doctrine_Core::getTable($this->getTableName())->find($id);
     $ids = explode('/', $self_unit->getPath().$self_unit->getId());
 
     array_shift($ids); //Removing the first blank element

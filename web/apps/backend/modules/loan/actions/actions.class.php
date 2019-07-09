@@ -16,9 +16,9 @@ class loanActions extends DarwinActions
   protected function checkRight($loan_id)
   {
     // Forward to a 404 page if the requested expedition id is not found
-    $this->forward404Unless($loan = Doctrine::getTable('Loans')->find($loan_id), sprintf('Object loan does not exist (%s).', $loan_id));
+    $this->forward404Unless($loan = Doctrine_Core::getTable('Loans')->find($loan_id), sprintf('Object loan does not exist (%s).', $loan_id));
     if($this->getUser()->isAtLeast(Users::ADMIN)) return $loan ;
-    $right = Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$loan->getId()) ;
+    $right = Doctrine_Core::getTable('loanRights')->isAllowed($this->getUser()->getId(),$loan->getId()) ;
     if(!$right) {
       if ($this->getUser()->isAtLeast(Users::MANAGER))
         $this->redirect('loan/view?id='.$loan->getId());
@@ -35,18 +35,18 @@ class loanActions extends DarwinActions
     $loan = null;
 
     if ($fwd404)
-      return $this->forward404Unless($loan = Doctrine::getTable('Loans')->find($request->getParameter($parameter,0)));
+      return $this->forward404Unless($loan = Doctrine_Core::getTable('Loans')->find($request->getParameter($parameter,0)));
 
     if($request->getParameter('table','loans')== 'loans')
     {
       if($request->hasParameter($parameter))
-        $loan = Doctrine::getTable('Loans')->find($request->getParameter($parameter) );
+        $loan = Doctrine_Core::getTable('Loans')->find($request->getParameter($parameter) );
       $form = new LoansForm($loan,$options);
     }
     else
     {
       if($request->hasParameter($parameter))
-        $loan = Doctrine::getTable('LoanItems')->find($request->getParameter($parameter) );
+        $loan = Doctrine_Core::getTable('LoanItems')->find($request->getParameter($parameter) );
       $form = new LoanItemWidgetForm($loan,$options);
     }
     return $form;
@@ -95,13 +95,13 @@ class loanActions extends DarwinActions
         // If pager not yet executed, this means the query has to be executed for data loading
         if (! $this->pagerLayout->getPager()->getExecuted())
            $this->items = $this->pagerLayout->execute();
-        $this->rights = Doctrine::getTable('loanRights')->getEncodingRightsForUser($this->getUser()->getId());
+        $this->rights = Doctrine_Core::getTable('loanRights')->getEncodingRightsForUser($this->getUser()->getId());
         $loan_list = array();
         foreach($this->items as $loan) {
           $loan_list[] = $loan->getId() ;
         }
-        $this->printable = Doctrine::getTable('Loans')->getPrintableLoans($loan_list,$this->getUser());
-        $status = Doctrine::getTable('LoanStatus')->getStatusRelatedArray($loan_list) ;
+        $this->printable = Doctrine_Core::getTable('Loans')->getPrintableLoans($loan_list,$this->getUser());
+        $status = Doctrine_Core::getTable('LoanStatus')->getStatusRelatedArray($loan_list) ;
         $this->status = array();
         foreach($status as $sta) {
           $this->status[$sta->getLoanRef()] = $sta;
@@ -124,9 +124,9 @@ class loanActions extends DarwinActions
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     $duplic = $request->getParameter('duplicate_id','0') ;
     if ($duplic != 0){
-      if (in_array(Doctrine::getTable('LoanRights')->isAllowed($this->getUser()->getId(), $duplic), array(false,'view')) &&
+      if (in_array(Doctrine_Core::getTable('LoanRights')->isAllowed($this->getUser()->getId(), $duplic), array(false,'view')) &&
           !$this->getUser()->isAtLeast(Users::ADMIN)) $this->forwardToSecureAction();
-      $id = Doctrine::getTable('Loans')->duplicateLoan($duplic);
+      $id = Doctrine_Core::getTable('Loans')->duplicateLoan($duplic);
       if ($id != 0) {
         $this->redirect('loan/edit?id='.$id);
       }
@@ -150,10 +150,10 @@ class loanActions extends DarwinActions
   public function executeView(sfWebRequest $request)
   {
     // Forward to a 404 page if the requested loan id is not found
-    $this->loan = Doctrine::getTable('Loans')->find($request->getParameter('id'));
+    $this->loan = Doctrine_Core::getTable('Loans')->find($request->getParameter('id'));
     $this->forward404Unless($this->loan, sprintf('Object loan does not exist (%s).', $request->getParameter('id')));
     if(!$this->getUser()->isAtLeast(Users::MANAGER)) {
-      if(!Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$this->loan->getId()))
+      if(!Doctrine_Core::getTable('loanRights')->isAllowed($this->getUser()->getId(),$this->loan->getId()))
         $this->forwardToSecureAction();
     }
     $this->loadWidgets();
@@ -178,8 +178,8 @@ class loanActions extends DarwinActions
 
   public function executeViewAll(sfWebRequest $request)
   {
-    $this->loans = Doctrine::getTable('Loans')->getMyLoans($this->getUser()->getId())->execute();
-    $this->rights = Doctrine::getTable('LoanRights')->getEncodingRightsForUser($this->getUser()->getId());
+    $this->loans = Doctrine_Core::getTable('Loans')->getMyLoans($this->getUser()->getId())->execute();
+    $this->rights = Doctrine_Core::getTable('LoanRights')->getEncodingRightsForUser($this->getUser()->getId());
 
     if( count($this->loans) )
     {
@@ -188,13 +188,13 @@ class loanActions extends DarwinActions
         $ids[] = $loan->getId();
 
       if( !empty($ids) )
-        $this->status = Doctrine::getTable('LoanStatus')->getFromLoans($ids);
+        $this->status = Doctrine_Core::getTable('LoanStatus')->getFromLoans($ids);
     }
   }
 
   public function executeViewAllStatus(sfWebRequest $request)
   {
-    $this->informativeWorkflow = Doctrine::getTable('LoanStatus')->getallLoanStatus($request->getParameter('id'));
+    $this->informativeWorkflow = Doctrine_Core::getTable('LoanStatus')->getallLoanStatus($request->getParameter('id'));
     $this->setTemplate('viewAll','informativeWorkflow') ;
   }
 
@@ -204,7 +204,7 @@ class loanActions extends DarwinActions
     $loan = $this->checkRight($request->getParameter('id')) ;
     try
     {
-      $files = Doctrine::getTable("Multimedia")->getMultimediaRelated('loans',$request->getParameter('id')) ;
+      $files = Doctrine_Core::getTable("Multimedia")->getMultimediaRelated('loans',$request->getParameter('id')) ;
       $loan->delete();
       foreach($files as $file) unlink($file) ;
       if ( $request->isXmlHttpRequest() ) {
@@ -274,9 +274,9 @@ class loanActions extends DarwinActions
   }
 
   public function executeOverviewView(sfWebRequest $request) {
-    $this->loan = Doctrine::getTable('Loans')->find($request->getParameter('id'));
+    $this->loan = Doctrine_Core::getTable('Loans')->find($request->getParameter('id'));
     $this->forward404Unless($this->loan, sprintf('Object loan does not exist (%s).', $request->getParameter('id')));
-    $this->items = Doctrine::getTable('LoanItems')->findForLoan($this->loan->getId());
+    $this->items = Doctrine_Core::getTable('LoanItems')->findForLoan($this->loan->getId());
   }
 
   public function executeAddLoanItem(sfWebRequest $request)
@@ -292,7 +292,7 @@ class loanActions extends DarwinActions
 
   public function executeGetPartInfo(sfWebRequest $request)
   {
-    $item = Doctrine::getTable('Specimens')->getByMultipleIds(array($request->getParameter('id')),  $this->getUser()->getId(), $this->getUser()->isAtLeast(Users::ADMIN));
+    $item = Doctrine_Core::getTable('Specimens')->getByMultipleIds(array($request->getParameter('id')),  $this->getUser()->getId(), $this->getUser()->isAtLeast(Users::ADMIN));
     $this->forward404Unless(count($item),'Specimen does not exist');
     return $this->renderPartial('extInfo',array('item' => $item[0]));
   }
@@ -367,7 +367,7 @@ class loanActions extends DarwinActions
   public function executeSync(sfWebRequest $request)
   {
     $this->checkRight($request->getParameter('id'));
-    Doctrine::getTable('Loans')->syncHistory($request->getParameter('id'));
+    Doctrine_Core::getTable('Loans')->syncHistory($request->getParameter('id'));
     return $this->renderText('ok') ;
   }
 }

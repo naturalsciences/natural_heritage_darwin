@@ -15,11 +15,14 @@
             <th><?php echo $searchForm['classification']->renderLabel();?></th>
           <?php endif;?>
           <th><?php echo $searchForm['level_ref']->renderLabel();?></th>
+		  <!--JMHerpers 2019 04 29-->
+          <?php if(isset($searchForm['cites'])):?>
+            <th><?php echo 'CITES';?></th>
+          <?php endif;?>
           <?php if(isset($searchForm['lower_bound']) && isset($searchForm['upper_bound'])):?>
             <th class="datesNum"><?php echo $searchForm['lower_bound']->renderLabel();?></th>
             <th class="datesNum"><?php echo $searchForm['upper_bound']->renderLabel();?></th>
           <?php endif;?>
-          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -32,6 +35,10 @@
             <td><?php echo $searchForm['classification'];?></td>
           <?php endif;?>
           <td><?php echo $searchForm['level_ref'];?></td>
+		  <!--JMHerpers 2019 04 29-->
+		  <?php if(isset($searchForm['cites'])):?>
+            <td><?php echo $searchForm['cites'];?></td>
+          <?php endif;?>
           <?php if(isset($searchForm['lower_bound']) && isset($searchForm['upper_bound'])):?>
             <td class="datesNum"><?php echo $searchForm['lower_bound'];?></td>
             <td class="datesNum"><?php echo $searchForm['upper_bound'];?></td>
@@ -71,8 +78,8 @@
           <?php endif;?>
         </tr>
 
-        <tr>         
-          <td><input class="search_submit" type="submit" name="search" value="<?php echo __('Search');?>" /></td>
+        <tr>
+		  <td colspan="4"><input class="search_submit" type="submit" name="search" value="<?php echo __('Search');?>" /></td>
         </tr>
         <tr class="hidden">
           <td><?php echo $searchForm['relation'];?></td>

@@ -54,7 +54,7 @@ class gtuActions extends DarwinActions
         $query = $this->form->getQuery();
         if($request->getParameter('format') == 'json' || $request->getParameter('format') == 'text')
         {
-          $query->orderBy($this->orderBy .' '.$this->orderDir)
+          $query->addOrderBy($this->orderBy .' '.$this->orderDir)
             ->andWhere('latitude is not null');
           $this->setLayout(false);
           if($request->getParameter('format') == 'json')
@@ -80,7 +80,7 @@ class gtuActions extends DarwinActions
         }
         else
         {
-          $query->orderBy($this->orderBy .' '.$this->orderDir);
+          $query->addOrderBy($this->orderBy .' '.$this->orderDir);
           $this->pagerLayout = new PagerLayoutWithArrows(
             new DarwinPager(
               $query,
@@ -101,7 +101,7 @@ class gtuActions extends DarwinActions
         $gtu_ids = array();
         foreach($this->items as $i)
           $gtu_ids[] = $i->getId();
-        $tag_groups  = Doctrine::getTable('TagGroups')->fetchByGtuRefs($gtu_ids);
+        $tag_groups  = Doctrine_Core::getTable('TagGroups')->fetchByGtuRefs($gtu_ids);
         foreach($this->items as $i)
         {
           $i->TagGroups = new Doctrine_Collection('TagGroups');
@@ -129,15 +129,14 @@ class gtuActions extends DarwinActions
     $this->form = new GtuForm($gtu);
     if ($duplic)
     {
-    print("!!!!!!!!!!!!!!!!!!");
-    print($duplic);
-      $Tag = Doctrine::getTable('TagGroups')->fetchTag($duplic) ;
+   
+      $Tag = Doctrine_Core::getTable('TagGroups')->fetchTag($duplic) ;
       if(count($Tag))
       {
-        print("xxxxxxxxxxxx");
+       
         foreach ($Tag[$duplic] as $key=>$val)
         {
-        print("°°°°°°°°°°°°---");
+
            $tag = new TagGroups() ;
            $tag = $this->getRecordIfDuplicate($val->getId(), $tag);
            $this->form->addValue($key, $val->getGroupName(), $tag);
@@ -161,8 +160,8 @@ class gtuActions extends DarwinActions
 
   public function executeEdit(sfWebRequest $request)
   {
-    $this->forward404Unless($gtu = Doctrine::getTable('Gtu')->find($request->getParameter('id')), sprintf('Object gtu does not exist (%s).', $request->getParameter('id')));
-    $this->no_right_col = Doctrine::getTable('Gtu')->testNoRightsCollections('gtu_ref',$request->getParameter('id'), $this->getUser()->getId());
+    $this->forward404Unless($gtu = Doctrine_Core::getTable('Gtu')->find($request->getParameter('id')), sprintf('Object gtu does not exist (%s).', $request->getParameter('id')));
+    $this->no_right_col = Doctrine_Core::getTable('Gtu')->testNoRightsCollections('gtu_ref',$request->getParameter('id'), $this->getUser()->getId());
 
     $this->form = new GtuForm($gtu);
     $this->loadWidgets();
@@ -172,7 +171,7 @@ class gtuActions extends DarwinActions
 
   public function executeView(sfWebRequest $request)
   {
-    $this->forward404Unless($this->gtu = Doctrine::getTable('Gtu')->find($request->getParameter('id')), sprintf('Object gtu does not exist (%s).', $request->getParameter('id')));
+    $this->forward404Unless($this->gtu = Doctrine_Core::getTable('Gtu')->find($request->getParameter('id')), sprintf('Object gtu does not exist (%s).', $request->getParameter('id')));
     $this->form = new GtuForm($this->gtu);
     $this->loadWidgets();
   }
@@ -180,12 +179,12 @@ class gtuActions extends DarwinActions
   public function executeUpdate(sfWebRequest $request)
   {
     $this->forward404Unless($request->isMethod(sfRequest::POST) || $request->isMethod(sfRequest::PUT));
-    $this->forward404Unless($gtu = Doctrine::getTable('Gtu')->find($request->getParameter('id')), sprintf('Object gtu does not exist (%s).', $request->getParameter('id')));
-    $this->no_right_col = Doctrine::getTable('Gtu')->testNoRightsCollections('gtu_ref',$request->getParameter('id'), $this->getUser()->getId());
+    $this->forward404Unless($gtu = Doctrine_Core::getTable('Gtu')->find($request->getParameter('id')), sprintf('Object gtu does not exist (%s).', $request->getParameter('id')));
+    $this->no_right_col = Doctrine_Core::getTable('Gtu')->testNoRightsCollections('gtu_ref',$request->getParameter('id'), $this->getUser()->getId());
     $this->form = new GtuForm($gtu);
 
     $this->processForm($request, $this->form, 'update');
-    $this->no_right_col = Doctrine::getTable('Gtu')->testNoRightsCollections('gtu_ref',$request->getParameter('id'), $this->getUser()->getId());
+    $this->no_right_col = Doctrine_Core::getTable('Gtu')->testNoRightsCollections('gtu_ref',$request->getParameter('id'), $this->getUser()->getId());
 
     $this->loadWidgets();
     $this->setTemplate('edit');
@@ -196,7 +195,7 @@ class gtuActions extends DarwinActions
   {
     $request->checkCSRFProtection();
 
-    $this->forward404Unless($unit = Doctrine::getTable('Gtu')->find($request->getParameter('id')), sprintf('Object gtu does not exist (%s).', $request->getParameter('id')));
+    $this->forward404Unless($unit = Doctrine_Core::getTable('Gtu')->find($request->getParameter('id')), sprintf('Object gtu does not exist (%s).', $request->getParameter('id')));
 
     try
     {
@@ -210,7 +209,7 @@ class gtuActions extends DarwinActions
       $this->form = new GtuForm($unit);
       $this->form->getErrorSchema()->addError($error);
       $this->loadWidgets();
-      $this->no_right_col = Doctrine::getTable('Gtu')->testNoRightsCollections('gtu_ref',$request->getParameter('id'), $this->getUser()->getId());
+      $this->no_right_col = Doctrine_Core::getTable('Gtu')->testNoRightsCollections('gtu_ref',$request->getParameter('id'), $this->getUser()->getId());
       $this->setTemplate('edit');
     }
   }
@@ -248,7 +247,7 @@ class gtuActions extends DarwinActions
 
   public function executePurposeTag(sfWebRequest $request)
   {
-    $this->tags = Doctrine::getTable('TagGroups')->getPropositions($request->getParameter('value'), $request->getParameter('group_name'), $request->getParameter('sub_group_name'));
+    $this->tags = Doctrine_Core::getTable('TagGroups')->getPropositions($request->getParameter('value'), $request->getParameter('group_name'), $request->getParameter('sub_group_name'));
   }
 
   public function executeAddGroup(sfWebRequest $request)
@@ -257,7 +256,7 @@ class gtuActions extends DarwinActions
     $gtu = null;
 
     if($request->hasParameter('id') && $request->getParameter('id'))
-      $gtu = Doctrine::getTable('Gtu')->find($request->getParameter('id') );
+      $gtu = Doctrine_Core::getTable('Gtu')->find($request->getParameter('id') );
 
     $form = new GtuForm($gtu);
     $form->addValue($number, $request->getParameter('group'));
@@ -281,9 +280,9 @@ class gtuActions extends DarwinActions
     $gtu = false;
     if($request->hasParameter('id') && $request->getParameter('id'))
     {
-      $spec = Doctrine::getTable('Specimens')->fetchOneWithRights($request->getParameter('id'), $this->getUser());
+      $spec = Doctrine_Core::getTable('Specimens')->fetchOneWithRights($request->getParameter('id'), $this->getUser());
       if($spec->getHasEncodingRights() || $this->getUser()->isAtLeast(Users::ADMIN))
-        $gtu = Doctrine::getTable('Gtu')->find($spec->getGtuRef() );
+        $gtu = Doctrine_Core::getTable('Gtu')->find($spec->getGtuRef() );
       else
         $this->forwardToSecureAction();
     }
@@ -318,9 +317,9 @@ class gtuActions extends DarwinActions
     $spec = null;
 
     if ($fwd404)
-      $this->forward404Unless($spec = Doctrine::getTable('Gtu')->find($request->getParameter($parameter,0)));
+      $this->forward404Unless($spec = Doctrine_Core::getTable('Gtu')->find($request->getParameter($parameter,0)));
     elseif($request->hasParameter($parameter) && $request->getParameter($parameter))
-      $spec = Doctrine::getTable('Gtu')->find($request->getParameter($parameter));
+      $spec = Doctrine_Core::getTable('Gtu')->find($request->getParameter($parameter));
 
     $form = new GtuForm($spec, $options);
     return $form;

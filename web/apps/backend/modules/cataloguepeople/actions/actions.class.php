@@ -14,7 +14,7 @@ class cataloguepeopleActions extends DarwinActions
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();  
     if($request->hasParameter('id'))
-      $this->cataloguepeople =  Doctrine::getTable('CataloguePeople')->find($request->getParameter('id'));
+      $this->cataloguepeople =  Doctrine_Core::getTable('CataloguePeople')->find($request->getParameter('id'));
     else
     {
       $this->cataloguepeople = new CataloguePeople();
@@ -50,7 +50,7 @@ class cataloguepeopleActions extends DarwinActions
   {
     $orders = substr($request->getParameter('order', ','),0,-1);
     $orders_ids = explode(',',$orders);
-    Doctrine::getTable('CataloguePeople')->changeOrder(
+    Doctrine_Core::getTable('CataloguePeople')->changeOrder(
       $request->getParameter('table'),
       $request->getParameter('rid'),
       $request->getParameter('people_type'),
@@ -61,7 +61,7 @@ class cataloguepeopleActions extends DarwinActions
 
   public function executeGetSubType(sfWebRequest $request)
   {
-    $this->items = Doctrine::getTable('CataloguePeople')->getDistinctSubType($request->getParameter('type'));
+    $this->items = Doctrine_Core::getTable('CataloguePeople')->getDistinctSubType($request->getParameter('type'));
   }
 
 }

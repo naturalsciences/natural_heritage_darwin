@@ -65,6 +65,13 @@ $(document).ready(function ()
               <?php echo $form['collection_ref_for_gtu'] ?>
             </td>
           </tr>
+          <tr>
+            <th><?php echo $form['enforce_code_unicity']->renderLabel() ?> :</th>
+            <td>
+              <?php echo $form['enforce_code_unicity']->renderError() ?>
+              <?php echo $form['enforce_code_unicity'] ?>
+            </td>
+          </tr>
       <?php endif ?>
       <?php if($type == 'taxon') : ?>
       <tr>

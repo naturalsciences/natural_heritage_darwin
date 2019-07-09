@@ -102,11 +102,11 @@ class MaintenanceForm extends BaseCollectionMaintenanceForm
     if($record_id === false)
       $record_id = $this->getObject()->getId();
     if( $emFieldName =='Comments' )
-      return Doctrine::getTable('Comments')->findForTable('collection_maintenance', $record_id);
+      return Doctrine_Core::getTable('Comments')->findForTable('collection_maintenance', $record_id);
     if( $emFieldName =='ExtLinks' )
-      return Doctrine::getTable('ExtLinks')->findForTable('collection_maintenance', $record_id);
+      return Doctrine_Core::getTable('ExtLinks')->findForTable('collection_maintenance', $record_id);
     if( $emFieldName =='RelatedFiles' )
-      return Doctrine::getTable('Multimedia')->findForTable('collection_maintenance', $record_id);
+      return Doctrine_Core::getTable('Multimedia')->findForTable('collection_maintenance', $record_id);
   }
 
   public function addExtLinks($num, $obj=null)
@@ -137,13 +137,13 @@ class MaintenanceForm extends BaseCollectionMaintenanceForm
     parent::bind($taintedValues, $taintedFiles);
   }
 
-  public function saveEmbeddedForms($con = null, $forms = null)
+  public function saveObjectEmbeddedForms($con = null, $forms = null)
   {
     $this->saveEmbed('Comments', 'comment' ,$forms, array('referenced_relation'=>'collection_maintenance', 'record_id' => $this->getObject()->getId()));
     $this->saveEmbed('ExtLinks', 'url' ,$forms, array('referenced_relation'=>'collection_maintenance', 'record_id' => $this->getObject()->getId()));
     $this->saveEmbed('RelatedFiles', 'mime_type' ,$forms, array('referenced_relation'=>'collection_maintenance', 'record_id' => $this->getObject()->getId()));
 
-    return parent::saveEmbeddedForms($con, $forms);
+    return parent::saveObjectEmbeddedForms($con, $forms);
   }
 
   public function getEmbedRelationForm($emFieldName, $values)

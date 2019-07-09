@@ -6,37 +6,33 @@
  * @package    darwin
  * @subpackage filter
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
+ * @version    SVN: $Id$
  */
-abstract class BaseTemplatePeopleUsersAddrCommonFormFilter extends BaseFormFilterDoctrine
+abstract class BaseTemplatePeopleUsersAddrCommonFormFilter extends DarwinModelFormFilter
 {
-  public function setup()
+  protected function setupInheritance()
   {
-    $this->setWidgets(array(
-      'po_box'           => new sfWidgetFormFilterInput(),
-      'extended_address' => new sfWidgetFormFilterInput(),
-      'locality'         => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'region'           => new sfWidgetFormFilterInput(),
-      'zip_code'         => new sfWidgetFormFilterInput(),
-      'country'          => new sfWidgetFormFilterInput(array('with_empty' => false)),
-    ));
+    parent::setupInheritance();
 
-    $this->setValidators(array(
-      'po_box'           => new sfValidatorPass(array('required' => false)),
-      'extended_address' => new sfValidatorPass(array('required' => false)),
-      'locality'         => new sfValidatorPass(array('required' => false)),
-      'region'           => new sfValidatorPass(array('required' => false)),
-      'zip_code'         => new sfValidatorPass(array('required' => false)),
-      'country'          => new sfValidatorPass(array('required' => false)),
-    ));
+    $this->widgetSchema   ['po_box'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['po_box'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['extended_address'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['extended_address'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['locality'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['locality'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['region'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['region'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['zip_code'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['zip_code'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['country'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['country'] = new sfValidatorPass(array('required' => false));
 
     $this->widgetSchema->setNameFormat('template_people_users_addr_common_filters[%s]');
-
-    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
-
-    $this->setupInheritance();
-
-    parent::setup();
   }
 
   public function getModelName()
@@ -46,14 +42,13 @@ abstract class BaseTemplatePeopleUsersAddrCommonFormFilter extends BaseFormFilte
 
   public function getFields()
   {
-    return array(
-      'id'               => 'Number',
-      'po_box'           => 'Text',
+    return array_merge(parent::getFields(), array(
+      'po_box' => 'Text',
       'extended_address' => 'Text',
-      'locality'         => 'Text',
-      'region'           => 'Text',
-      'zip_code'         => 'Text',
-      'country'          => 'Text',
-    );
+      'locality' => 'Text',
+      'region' => 'Text',
+      'zip_code' => 'Text',
+      'country' => 'Text',
+    ));
   }
 }

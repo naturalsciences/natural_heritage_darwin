@@ -341,10 +341,10 @@ class SpecimensTable extends DarwinTable
         if(isset(self::$widget_array[$key]) && !in_array($fields,$default_values))
           $req_widget[self::$widget_array[$key]] = 1 ;
       }
-      Doctrine::getTable('MyWidgets')->forceWidgetOpened($user, $category ,array_keys($req_widget));
+      Doctrine_Core::getTable('MyWidgets')->forceWidgetOpened($user, $category ,array_keys($req_widget));
     }
     else
-      Doctrine::getTable('MyWidgets')->forceWidgetOpened($user, $category ,1);
+      Doctrine_Core::getTable('MyWidgets')->forceWidgetOpened($user, $category ,1);
   }
 
   public function fetchOneWithRights($id, $user)
@@ -470,5 +470,51 @@ class SpecimensTable extends DarwinTable
 
     return $res;
   }
+  
+      //ftheeten 2017 10 09
+  public function getSpecimenIDCorrespondingToCollectionNumber($collection_number, $code_category)
+  {
+    $returned=NULL;
+    if(strlen($collection_number)>0)
+      {
+            $q = Doctrine_Query::create()
+              ->select("c.record_id")
+              ->from('Codes c')
+              ->where('c.referenced_relation = ?', 'specimens')
+              ->andwhere('c.code_category = ?', $code_category)
+              ->andwhere("LOWER(REGEXP_REPLACE(TRIM(COALESCE(code_prefix,'')|| 
+       COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix)), '\s+', '', 'g')) = TRIM(REGEXP_REPLACE(LOWER(?), '\s+', '', 'g'))", $collection_number);
+              
+            $vals = $q->execute();
+           
+            $returned=Array();
+            foreach($vals as $val)
+            {
+                 $returned[]= $val->getRecordId();
+            }
+    }
+    return $returned;
+  }
+  
+    public function getSpecimenIDCorrespondingToMainCollectionNumber($collection_number)
+   {
+		return $this->getSpecimenIDCorrespondingToCollectionNumber($collection_number, 'main');
+   }
+   
+   public function getMainCode($spec_id)
+   {
+		$returned="";
+		$tmp = Doctrine_Query::create()
+              ->select("DISTINCT COALESCE(c.code_prefix,'')||COALESCE(c.code_prefix_separator,'')||COALESCE(c.code,'')||COALESCE(c.code_suffix_separator,'')||COALESCE(code_suffix,'') as value")
+              ->from('Codes c')
+              ->where('c.referenced_relation = ?', 'specimens')
+              ->andwhere('c.code_category = ?', "main")
+			  ->andWhere('c.record_id = ?', $spec_id)->fetchOne();
+	    if(isset($tmp))
+		{
+			$returned =$tmp["value"];
+		}
+		return $returned;
+   }
 
 }

@@ -95,8 +95,8 @@ class Gtu extends BaseGtu
   public function getTagsWithCode($view = null)
   {
     $str = $this->getName($view);
-    if($this->getLongitude() != '')
-      $str .= '<b class="img">'.$this->getMap().'</b>';
+    //if($this->getLongitude() != '')
+     // $str .= '<b class="img">'.$this->getMap().'</b>';
     $str .=  '<b class="code">'.$this->getCode().'</b>';
     $str .=  '<b class="lat">'.$this->getLatitude().'</b>';
     $str .=  '<b class="lon">'.$this->getLongitude().'</b>';
@@ -122,7 +122,7 @@ class Gtu extends BaseGtu
   //ftheeten 2018 12 12
   public function getRelatedTemporalInformationMasked()
   {
-    return  Doctrine::getTable('Gtu')->getRelatedTemporalInformationMaskedGtuId($this->getId());
+    return  Doctrine_Core::getTable('Gtu')->getRelatedTemporalInformationMaskedGtuId($this->getId());
   }  
   
   

@@ -14,7 +14,7 @@ class maintenanceswidgetviewComponents extends sfComponents
   {
     $this->table ="collection_maintenance";
     if(! isset($this->maintenance) )
-      $this->maintenance = Doctrine::getTable('CollectionMaintenance')->find($this->eid);
+      $this->maintenance = Doctrine_Core::getTable('CollectionMaintenance')->find($this->eid);
   }
 
   public function executeRefProperties()
@@ -25,19 +25,19 @@ class maintenanceswidgetviewComponents extends sfComponents
   public function executeRefRelatedFiles()
   {
     $this->defineObject();
-    $this->files = Doctrine::getTable('Multimedia')->findForTable('collection_maintenance', $this->maintenance->getId()) ;
+    $this->files = Doctrine_Core::getTable('Multimedia')->findForTable('collection_maintenance', $this->maintenance->getId()) ;
     $this->atLeastOneFileVisible = true;
   }
 
   public function executeRefComments()
   { 
     $this->defineObject();
-    $this->Comments = Doctrine::getTable('Comments')->findForTable('collection_maintenance', $this->maintenance->getId()) ;
+    $this->Comments = Doctrine_Core::getTable('Comments')->findForTable('collection_maintenance', $this->maintenance->getId()) ;
   }
   
   public function executeExtLinks()
   {
     $this->defineObject();
-    $this->links = Doctrine::getTable('extLinks')->findForTable('collection_maintenance', $this->maintenance->getId()) ;  
+    $this->links = Doctrine_Core::getTable('extLinks')->findForTable('collection_maintenance', $this->maintenance->getId()) ;  
   }  
 }

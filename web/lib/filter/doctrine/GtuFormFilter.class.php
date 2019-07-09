@@ -14,6 +14,7 @@ class GtuFormFilter extends BaseGtuFormFilter
   public function configure()
   {
 
+    $this->hasTags=False;
     $this->useFields(array('code', 'gtu_from_date', 'gtu_to_date'));
     $this->addPagerItems();
     $minDate = new FuzzyDateTime(strval(min(range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')))).'/01/01'));
@@ -119,7 +120,7 @@ class GtuFormFilter extends BaseGtuFormFilter
 
     $conn_MGR = Doctrine_Manager::connection();
     $tagList = '';
-
+   
     foreach($val as $line)
     {
       $line_val = $line['tag'];
@@ -128,14 +129,21 @@ class GtuFormFilter extends BaseGtuFormFilter
         //$tagList = $conn_MGR->quote($line_val, 'string');
         $tagList =$line_val;
         $sqlClause=Array();
+		$this->hasTags=True;
         foreach(explode(";", $tagList  ) as $tagvalue)
         {
             $tagvalue = $conn_MGR->quote($tagvalue, 'string');
-            $sqlClause[]="(tag_values_indexed::varchar ~ fulltoindex($tagvalue))";
+            $sqlClause[]="(tag_indexed::varchar ~ fulltoindex($tagvalue))";
         }
         $query->andWhere(implode(" OR ",$sqlClause ));
         //$query->andWhere("tag_values_indexed && getTagsIndexedAsArray($tagList)");
       }
+	  if($this->hasTags)
+      {
+		    $query->select('d.*')->from('DoctrineTemporalInformationGtuGroupTags d');
+			$query->addOrderBy("LENGTH(tag)");
+			$query->addOrderBy("fct_rmca_gtu_orderby_pattern(tag,$tagvalue )");
+	  }
     }
 
     return $query;
@@ -145,25 +153,19 @@ class GtuFormFilter extends BaseGtuFormFilter
   {
     if( $values['lat_from'] != '' && $values['lon_from'] != '' && $values['lon_to'] != ''  && $values['lat_to'] != '' )
     {
-      $horizontal_box = "((".$values['lat_from'].",-180),(".$values['lat_to'].",180))";
-      $query->andWhere("box(? :: text) @> location::point",$horizontal_box);
-
-      $vert_box = "((".$values['lat_from'].",".$values['lon_from']."),(".$values['lat_to'].",".$values['lon_to']."))";
-      // Look for a wrapped box (ie. between RUSSIA and USA)
-      if( (float)$values['lon_to'] < (float) $values['lon_from']) {
-        $query->andWhere(" NOT box(? :: text) @> location::point", $vert_box);
-      } else {
-        // Not wrapped, as in a normal world search
-        $query->andWhere("box(? :: text) @> location::point", $vert_box);
-      }
-      $query->andWhere('location is not null');
-    }
+		if(is_numeric($values['lat_from'])&&is_numeric($values['lon_from'])&&is_numeric($values['lon_to'])&&is_numeric($values['lat_to']))
+		{
+			$postgis_polygon= "public.ST_MakeEnvelope(".min(array($values['lon_from'] , $values['lon_to'] )).",".min(array($values['lat_from'] , $values['lat_to'] )).", ".max(array($values['lon_from'] , $values['lon_to'] )).",".max(array($values['lat_from'] , $values['lat_to'] )).",4326)";
+			$query->andWhere("public.ST_INTERSECTS($postgis_polygon, public.ST_SetSRID(public.ST_Point(longitude, latitude),4326))");		
+		}
+   }
     return $query;
   }
   
   //ftheeten 2018 08 08
   public function addExpeditionColumnExplicit($query, $values)
   {
+
     if($values['expedition'] !='')
     {
         $query->andWhere("(
@@ -182,13 +184,16 @@ class GtuFormFilter extends BaseGtuFormFilter
   //ftheeten 2018 12 01
     public function addDateFromToColumnQuery(Doctrine_Query $query, array $dateFields, $val_from, $val_to)
   {
-    if (count($dateFields) > 0)
+
+	$date=false;
+	if (count($dateFields) > 0)
     {
       if($val_from->getMask() > 0 && $val_to->getMask() > 0)
       {
         if (count($dateFields) == 1)
         {
-          $query->andWhere(" id in (SELECT t1.gtu_ref FROM TemporalInformation t1 WHERE t1.".$dateFields[0] . " Between ? and ? )",
+	       $date=true;
+          $query->andWhere(" (t1.".$dateFields[0] . " Between ? and ? ) ",
                            array($val_from->format('d/m/Y'),
                                  $val_to->format('d/m/Y')
                                 )
@@ -196,37 +201,52 @@ class GtuFormFilter extends BaseGtuFormFilter
         }
         else
         {
-          $query->andWhere("( id in (SELECT t2.gtu_ref FROM TemporalInformation t2 WHERE t2." . $dateFields[0] . " Between ? AND ? OR t2.".$dateFields[1] ." Between ? AND ? ))", 
+		  $date=true;
+          $query->andWhere("(". $dateFields[0] . " Between ? AND ?) OR (".$dateFields[1] ." Between ? AND ?)  ", 
             array($val_from->format('d/m/Y'),$val_to->format('d/m/Y'),$val_from->format('d/m/Y'),$val_to->format('d/m/Y')));
         }
       }
       elseif ($val_from->getMask() > 0)
-      {
-        $sql = " (id in (SELECT t3.gtu_ref FROM TemporalInformation t3 WHERE t3." . $dateFields[0] . " >= ? AND t3." . $dateFields[0] . "_mask > 0)) ";
+      { 
+	    $date=true;
+        $sql = "(". $dateFields[0] . " >= ? AND ". $dateFields[0] . "_mask > 0 )";
         $dateFieldsCount = count($dateFields);
         for ($i = 1; $i <= $dateFieldsCount; $i++)
         {
           $vals[] = $val_from->format('d/m/Y');
         }
-        if (count($dateFields) > 1) $sql .= " OR (id in (SELECT t4.gtu_ref FROM TemporalInformation t4 WHERE t4." . $dateFields[1] . " >= ? AND t4.". $dateFields[1] . "_mask > 0)) ";
+        if (count($dateFields) > 1) $sql .= " OR (" . $dateFields[1] . " >= ? AND ". $dateFields[1] . "_mask > 0) ";
         $query->andWhere($sql,
                          $vals
                         );
       }
       elseif ($val_to->getMask() > 0)
       {
-        $sql = " (id in (SELECT t5.gtu_ref FROM TemporalInformation t5 WHERE t5." . $dateFields[0] . " <= ? AND t5." . $dateFields[0] . "_mask > 0)) ";
+		$date=true;
+        $sql =  $dateFields[0] . " <= ? AND " . $dateFields[0] . "_mask > 0 ";
         $dateFieldsCount = count($dateFields);
         for ($i = 1; $i <= $dateFieldsCount; $i++)
         {
           $vals[] = $val_to->format('d/m/Y');
         }
-        if (count($dateFields) > 1) $sql .= " OR (id in (SELECT t6.gtu_ref FROM TemporalInformation t6 WHERE t6." . $dateFields[1] . " <= ? AND t6." . $dateFields[1] . "_mask > 0)) ";
+        if (count($dateFields) > 1) $sql .= " OR (" . $dateFields[1] . " <= ? AND " . $dateFields[1] . "_mask > 0) ";
         $query->andWhere($sql,
                          $vals
                         );
       }
-    }
+	   if($date)
+	   {
+		if($this->hasTags)
+		{
+		  $query->select('d.*')->from('DoctrineTemporalInformationGtuGroupUnnestTags d');
+		}
+		else
+		{
+			$query->select('d.*')->from('DoctrineTemporalInformationGtuGroupUnnest d');
+		}
+	   }
+	}
+   
     return $query;
   }
   
@@ -246,7 +266,8 @@ class GtuFormFilter extends BaseGtuFormFilter
   {
     if( $val != '' )
     {     
-      $query->andWhere('id IN (SELECT s.gtu_ref FROM specimens s WHERE ig_num= ?)', $val);
+      //$query->andWhere('id IN (SELECT s.gtu_ref FROM specimens s WHERE ig_num= ?)', $val);
+	  $query->andWhere('(EXISTS (SELECT s.id FROM specimens s WHERE  s.gtu_ref=d.id AND  s.ig_num= ?))', $val);
     }
     return $query;
   }

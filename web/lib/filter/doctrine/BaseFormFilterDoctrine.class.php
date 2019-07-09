@@ -22,7 +22,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
     $user = sfContext::getInstance()->getUser();
     if($user)
     {
-      $default = Doctrine::getTable('Preferences')->getPreference(
+      $default = Doctrine_Core::getTable('Preferences')->getPreference(
         $user->getId() ,
         'default_search_rec_pp'
       );
@@ -267,7 +267,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
      if ($values != "")
      {
        $levels = array();
-       $pul = Doctrine::getTable('PossibleUpperLevels')->findByLevelRef($values)->toArray();
+       $pul = Doctrine_Core::getTable('PossibleUpperLevels')->findByLevelRef($values)->toArray();
        foreach ($pul as $key=>$val)
        {
          $levels[]=$val['level_upper_ref'];
@@ -350,7 +350,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
       }
       elseif($relation =='synonym')
       {
-        $synonyms = Doctrine::getTable('ClassificationSynonymies')->findSynonymsIds($this->getTable()->getTableName(), $val);
+        $synonyms = Doctrine_Core::getTable('ClassificationSynonymies')->findSynonymsIds($this->getTable()->getTableName(), $val);
         if(empty($synonyms))
           $query->andWhere('0=1'); //False
         $query->andWhereIn("id",$synonyms)
@@ -375,7 +375,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
       // If we've got to include also the synonyms of the item_ref passed...
       if (($relation == 'child' || $relation == 'direct_child') && $parent_syn_included === true ) {
         // Get the list of synonyms ids
-        $synonyms = Doctrine::getTable('ClassificationSynonymies')->findSynonymsIds($table, $item_ref);
+        $synonyms = Doctrine_Core::getTable('ClassificationSynonymies')->findSynonymsIds($table, $item_ref);
         // If there are synonyms...
         if (count($synonyms) != 0) {
           // merge the result with the initialized array
@@ -390,7 +390,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
       elseif($relation == 'child')
       {
         $list_of_items = implode(',',$items);
-        $item  = Doctrine::getTable($table)->findBySql("id = ANY('{ $list_of_items }' :: int[])");
+        $item  = Doctrine_Core::getTable($table)->findBySql("id = ANY('{ $list_of_items }' :: int[])");
         foreach ($item as $element) {
           $whereClause .= "OR ${field_prefix}_path like ? ";
           $whereClauseParams[] = $element->getPath().$element->getId().'/%';
@@ -406,7 +406,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
       }
       elseif($relation =='synonym')
       {
-        $synonyms = Doctrine::getTable('ClassificationSynonymies')->findSynonymsIds($table, $item_ref);
+        $synonyms = Doctrine_Core::getTable('ClassificationSynonymies')->findSynonymsIds($table, $item_ref);
         if(empty($synonyms))
           $query->andWhere('0=1'); //False
         $query->andWhereIn($field_prefix."_ref",$synonyms)
@@ -445,7 +445,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
 				{
 					$queryTmp.= " OR ";
 				}
-        		$item  = Doctrine::getTable($table)->find($item_ref);
+        		$item  = Doctrine_Core::getTable($table)->find($item_ref);
         		//$query->andWhere($field_prefix."_path like ?", $item->getPath().''.$item->getId().'/%');
 			$queryTmp.=$field_prefix."_path like '".$item->getPath().''.$item->getId().'/%'."'" ;
 
@@ -470,7 +470,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
 				}
 				$queryTmp.= " ( ";
 
-        		$synonyms = Doctrine::getTable('ClassificationSynonymies')->findSynonymsIds($table, $item_ref);
+        		$synonyms = Doctrine_Core::getTable('ClassificationSynonymies')->findSynonymsIds($table, $item_ref);
 
         		
 				if(empty($synonyms))
@@ -545,7 +545,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
                             {
                                 $queryTmp.= " OR ";
                             }
-                            $item  = Doctrine::getTable($table)->find($item_ref);
+                            $item  = Doctrine_Core::getTable($table)->find($item_ref);
                             //$query->andWhere($field_prefix."_path like ?", $item->getPath().''.$item->getId().'/%');
                         $queryTmp.=$field_prefix."_path like '".$item->getPath().''.$item->getId().'/%'."'" ;
 
@@ -570,7 +570,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
                             }
                             $queryTmp.= " ( ";
 
-                            $synonyms = Doctrine::getTable('ClassificationSynonymies')->findSynonymsIds($table, $item_ref);
+                            $synonyms = Doctrine_Core::getTable('ClassificationSynonymies')->findSynonymsIds($table, $item_ref);
 
                             //if(empty($synonyms))
                             //$query->andWhere('0=1'); //False

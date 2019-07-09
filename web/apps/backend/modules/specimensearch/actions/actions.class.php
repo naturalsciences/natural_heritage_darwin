@@ -21,11 +21,11 @@ class specimensearchActions extends DarwinActions
     // if Parameter name exist, so the referer is mysavedsearch
     if ($request->getParameter('search_id','') != '')
     {
-      $saved_search = Doctrine::getTable('MySavedSearches')->getSavedSearchByKey($request->getParameter('search_id'), $this->getUser()->getId()) ;
+      $saved_search = Doctrine_Core::getTable('MySavedSearches')->getSavedSearchByKey($request->getParameter('search_id'), $this->getUser()->getId()) ;
       $criterias = $saved_search->getUnserialRequest();
 
       $this->fields = $saved_search->getVisibleFieldsInResultStr();
-      Doctrine::getTable('Specimens')->getRequiredWidget($criterias['specimen_search_filters'], $this->getUser()->getId(), 'specimensearch_widget');
+      Doctrine_Core::getTable('Specimens')->getRequiredWidget($criterias['specimen_search_filters'], $this->getUser()->getId(), 'specimensearch_widget');
       $this->form->bind($criterias['specimen_search_filters']) ;
     }
     else
@@ -89,7 +89,7 @@ class specimensearchActions extends DarwinActions
       elseif($request->hasParameter('spec_search'))
       {
         // Get the saved search concerned
-        $saved_search = Doctrine::getTable('MySavedSearches')->getSavedSearchByKey($request->getParameter('spec_search'), $this->getUser()->getId());
+        $saved_search = Doctrine_Core::getTable('MySavedSearches')->getSavedSearchByKey($request->getParameter('spec_search'), $this->getUser()->getId());
         // Forward 404 if we don't get the search requested
         $this->forward404Unless($saved_search);
 
@@ -104,7 +104,7 @@ class specimensearchActions extends DarwinActions
     elseif($request->getParameter('search_id','') != '')
     {
       // Get the saved search asked
-      $saved_search = Doctrine::getTable('MySavedSearches')->getSavedSearchByKey($request->getParameter('search_id'), $this->getUser()->getId()) ;
+      $saved_search = Doctrine_Core::getTable('MySavedSearches')->getSavedSearchByKey($request->getParameter('search_id'), $this->getUser()->getId()) ;
       // If not available, not found -> forward on 404 page
       $this->forward404Unless($saved_search);
 
@@ -118,7 +118,7 @@ class specimensearchActions extends DarwinActions
       if(isset($criterias['specimen_search_filters']))
       {
         // Bring all the required/necessary widgets on page
-        Doctrine::getTable('Specimens')->getRequiredWidget($criterias['specimen_search_filters'], $this->getUser()->getId(), 'specimensearch_widget');
+        Doctrine_Core::getTable('Specimens')->getRequiredWidget($criterias['specimen_search_filters'], $this->getUser()->getId(), 'specimensearch_widget');
         if($saved_search->getisOnlyId() && $criterias['specimen_search_filters']['spec_ids']=='')
           $criterias['specimen_search_filters']['spec_ids'] = '0';
         $this->form->bind($criterias['specimen_search_filters']) ;
@@ -135,14 +135,23 @@ class specimensearchActions extends DarwinActions
         {
           $this->setTemplate('index');
           // Bring all the required/necessary widgets on page
-          Doctrine::getTable('Specimens')->getRequiredWidget($criterias['specimen_search_filters'], $this->getUser()->getId(), 'specimensearch_widget');
+          Doctrine_Core::getTable('Specimens')->getRequiredWidget($criterias['specimen_search_filters'], $this->getUser()->getId(), 'specimensearch_widget');
           $this->loadWidgets();
           return;
         }
         else
         {
-          $this->spec_lists = Doctrine::getTable('MySavedSearches')
+          $this->spec_lists = Doctrine_Core::getTable('MySavedSearches')
             ->getListFor($this->getUser()->getId(), 'specimen');
+            
+          if($this->orderBy=="col_peoples")
+          {
+                $this->orderBy="(SELECT p.formated_name_indexed from people p where id= spec_coll_ids[1])";
+          }
+          elseif($this->orderBy=="don_peoples")
+          {
+                $this->orderBy="(SELECT p.formated_name_indexed from people p where id= spec_don_sel_ids[1])";
+          }
           $query = $this->form->getQuery()->orderby($this->orderBy . ' ' . $this->orderDir. ', id');
           //If export is defined export it!
           $this->field_to_show = $this->getVisibleColumns($this->getUser(), $this->form);
@@ -206,7 +215,7 @@ class specimensearchActions extends DarwinActions
 
     $this->setTemplate('index');
     if(isset($criterias['specimen_search_filters']))
-      Doctrine::getTable('Specimens')->getRequiredWidget($criterias['specimen_search_filters'], $this->getUser()->getId(), 'specimensearch_widget');
+      Doctrine_Core::getTable('Specimens')->getRequiredWidget($criterias['specimen_search_filters'], $this->getUser()->getId(), 'specimensearch_widget');
     $this->loadWidgets();
   }
 
@@ -222,7 +231,7 @@ class specimensearchActions extends DarwinActions
     }
 
     // codes retrieve and fill of a $this->codes variable (available in the specimen search result template)
-    $codes_collection = Doctrine::getTable('Codes')->getCodesRelatedMultiple('specimens',$spec_list) ;
+    $codes_collection = Doctrine_Core::getTable('Codes')->getCodesRelatedMultiple('specimens',$spec_list) ;
     $this->codes = array();
     foreach($codes_collection as $code) {
       if(! isset($this->codes[$code->getRecordId()]))
@@ -231,7 +240,7 @@ class specimensearchActions extends DarwinActions
     }
 
     // loans retrieve and fill of a $this->loans variable (available in the the specimen search result template)
-    $loans_collection = Doctrine::getTable('Loans')->getLoansRelatedArray($this->getUser(), $spec_list);
+    $loans_collection = Doctrine_Core::getTable('Loans')->getLoansRelatedArray($this->getUser(), $spec_list);
     $this->loans = array();
     foreach($loans_collection as $loan) {
       $loan['loans_count'] = (int) $loan['loans_count'];

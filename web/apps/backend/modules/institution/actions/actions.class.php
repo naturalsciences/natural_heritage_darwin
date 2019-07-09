@@ -90,7 +90,7 @@ class institutionActions extends DarwinActions
 
   public function executeEdit(sfWebRequest $request)
   {
-    $this->forward404Unless($institution = Doctrine::getTable('Institutions')->findInstitution($request->getParameter('id')), sprintf('Object institution does not exist (%s).', $request->getParameter('id')));
+    $this->forward404Unless($institution = Doctrine_Core::getTable('Institutions')->findInstitution($request->getParameter('id')), sprintf('Object institution does not exist (%s).', $request->getParameter('id')));
     $this->form = new InstitutionsForm($institution);
     $this->loadWidgets();
   }
@@ -98,7 +98,7 @@ class institutionActions extends DarwinActions
   public function executeUpdate(sfWebRequest $request)
   {
     $this->forward404Unless($request->isMethod(sfRequest::POST) || $request->isMethod(sfRequest::PUT));
-    $this->forward404Unless($institution = Doctrine::getTable('Institutions')->findInstitution($request->getParameter('id')), sprintf('Object institution does not exist (%s).', $request->getParameter('id')));
+    $this->forward404Unless($institution = Doctrine_Core::getTable('Institutions')->findInstitution($request->getParameter('id')), sprintf('Object institution does not exist (%s).', $request->getParameter('id')));
     $this->form = new InstitutionsForm($institution);
 
     $this->processForm($request, $this->form);
@@ -109,7 +109,7 @@ class institutionActions extends DarwinActions
   public function executeDelete(sfWebRequest $request)
   {
     $request->checkCSRFProtection();
-    $this->forward404Unless($institution = Doctrine::getTable('Institutions')->findInstitution($request->getParameter('id')), sprintf('Object institution does not exist (%s).', $request->getParameter('id')));
+    $this->forward404Unless($institution = Doctrine_Core::getTable('Institutions')->findInstitution($request->getParameter('id')), sprintf('Object institution does not exist (%s).', $request->getParameter('id')));
     try{
         $institution->delete();
 	$this->redirect('institution/index');
@@ -145,7 +145,7 @@ class institutionActions extends DarwinActions
   
   public function executeView(sfWebRequest $request)
   {
-    $this->instit = Doctrine::getTable('Institutions')->find($request->getParameter('id'));
+    $this->instit = Doctrine_Core::getTable('Institutions')->find($request->getParameter('id'));
     $this->forward404Unless($this->instit,'Institution not Found');
     $this->form = new InstitutionsForm($this->instit);    
     $this->types = Institutions::getTypes();

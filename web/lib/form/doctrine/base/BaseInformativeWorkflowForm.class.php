@@ -8,43 +8,42 @@
  * @package    darwin
  * @subpackage form
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
+ * @version    SVN: $Id$
  */
-abstract class BaseInformativeWorkflowForm extends BaseFormDoctrine
+abstract class BaseInformativeWorkflowForm extends DarwinModelForm
 {
-  public function setup()
+  protected function setupInheritance()
   {
-    $this->setWidgets(array(
-      'id'                     => new sfWidgetFormInputHidden(),
-      'record_id'              => new sfWidgetFormInputText(),
-      'referenced_relation'    => new sfWidgetFormTextarea(),
-      'user_ref'               => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Users'), 'add_empty' => true)),
-      'formated_name'          => new sfWidgetFormTextarea(),
-      'status'                 => new sfWidgetFormTextarea(),
-      'modification_date_time' => new sfWidgetFormTextarea(),
-      'comment'                => new sfWidgetFormTextarea(),
-      'is_last'                => new sfWidgetFormInputCheckbox(),
-    ));
+    parent::setupInheritance();
 
-    $this->setValidators(array(
-      'id'                     => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
-      'record_id'              => new sfValidatorInteger(),
-      'referenced_relation'    => new sfValidatorString(),
-      'user_ref'               => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Users'), 'required' => false)),
-      'formated_name'          => new sfValidatorString(array('required' => false)),
-      'status'                 => new sfValidatorString(array('required' => false)),
-      'modification_date_time' => new sfValidatorString(),
-      'comment'                => new sfValidatorString(array('required' => false)),
-      'is_last'                => new sfValidatorBoolean(),
-    ));
+    $this->widgetSchema   ['record_id'] = new sfWidgetFormInputText();
+    $this->validatorSchema['record_id'] = new sfValidatorInteger();
+
+    $this->widgetSchema   ['referenced_relation'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['referenced_relation'] = new sfValidatorString();
+
+    $this->widgetSchema   ['user_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Users'), 'add_empty' => true));
+    $this->validatorSchema['user_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Users'), 'column' => 'id', 'required' => false));
+
+    $this->widgetSchema   ['formated_name'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['formated_name'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['status'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['status'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['modification_date_time'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['modification_date_time'] = new sfValidatorString();
+
+    $this->widgetSchema   ['comment'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['comment'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['is_last'] = new sfWidgetFormInputCheckbox();
+    $this->validatorSchema['is_last'] = new sfValidatorBoolean();
+
+    $this->widgetSchema   ['user_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Users'), 'add_empty' => true));
+    $this->validatorSchema['user_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Users'), 'column' => 'id', 'required' => false));
 
     $this->widgetSchema->setNameFormat('informative_workflow[%s]');
-
-    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
-
-    $this->setupInheritance();
-
-    parent::setup();
   }
 
   public function getModelName()

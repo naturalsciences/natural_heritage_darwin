@@ -6,91 +6,117 @@
  * @package    darwin
  * @subpackage filter
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
+ * @version    SVN: $Id$
  */
-abstract class BaseDoctrineTemporalInformationGtuGroupFormFilter extends BaseFormFilterDoctrine
+abstract class BaseDoctrineTemporalInformationGtuGroupFormFilter extends DarwinModelFormFilter
 {
-  public function setup()
+  protected function setupInheritance()
   {
-    $this->setWidgets(array(
-      'code'                    => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'gtu_from_date_mask'      => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'gtu_from_date'           => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'gtu_to_date_mask'        => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'gtu_to_date'             => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'latitude'                => new sfWidgetFormFilterInput(),
-      'longitude'               => new sfWidgetFormFilterInput(),
-      'location'                => new sfWidgetFormFilterInput(),
-      'lat_long_accuracy'       => new sfWidgetFormFilterInput(),
-      'elevation'               => new sfWidgetFormFilterInput(),
-      'elevation_accuracy'      => new sfWidgetFormFilterInput(),
-      'import_ref'              => new sfWidgetFormFilterInput(),
-      'collector_refs'          => new sfWidgetFormFilterInput(),
-      'expedition_refs'         => new sfWidgetFormFilterInput(),
-      'collection_ref'          => new sfWidgetFormFilterInput(),
-      'coordinates_source'      => new sfWidgetFormFilterInput(),
-      'latitude_dms_degree'     => new sfWidgetFormFilterInput(),
-      'latitude_dms_minutes'    => new sfWidgetFormFilterInput(),
-      'latitude_dms_seconds'    => new sfWidgetFormFilterInput(),
-      'latitude_dms_direction'  => new sfWidgetFormFilterInput(),
-      'longitude_dms_degree'    => new sfWidgetFormFilterInput(),
-      'longitude_dms_minutes'   => new sfWidgetFormFilterInput(),
-      'longitude_dms_seconds'   => new sfWidgetFormFilterInput(),
-      'longitude_dms_direction' => new sfWidgetFormFilterInput(),
-      'latitude_utm'            => new sfWidgetFormFilterInput(),
-      'longitude_utm'           => new sfWidgetFormFilterInput(),
-      'utm_zone'                => new sfWidgetFormFilterInput(),
-      'array_from_date_mask'    => new sfWidgetFormFilterInput(),
-      'array_from_date'         => new sfWidgetFormFilterInput(),
-      'array_to_date_mask'      => new sfWidgetFormFilterInput(),
-      'array_to_date'           => new sfWidgetFormFilterInput(),
-      'comments'                => new sfWidgetFormFilterInput(),
-      'properties'              => new sfWidgetFormFilterInput(),
-    ));
+    parent::setupInheritance();
 
-    $this->setValidators(array(
-      'code'                    => new sfValidatorPass(array('required' => false)),
-      'gtu_from_date_mask'      => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
-      'gtu_from_date'           => new sfValidatorPass(array('required' => false)),
-      'gtu_to_date_mask'        => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
-      'gtu_to_date'             => new sfValidatorPass(array('required' => false)),
-      'latitude'                => new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false))),
-      'longitude'               => new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false))),
-      'location'                => new sfValidatorPass(array('required' => false)),
-      'lat_long_accuracy'       => new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false))),
-      'elevation'               => new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false))),
-      'elevation_accuracy'      => new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false))),
-      'import_ref'              => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
-      'collector_refs'          => new sfValidatorPass(array('required' => false)),
-      'expedition_refs'         => new sfValidatorPass(array('required' => false)),
-      'collection_ref'          => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
-      'coordinates_source'      => new sfValidatorPass(array('required' => false)),
-      'latitude_dms_degree'     => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
-      'latitude_dms_minutes'    => new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false))),
-      'latitude_dms_seconds'    => new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false))),
-      'latitude_dms_direction'  => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
-      'longitude_dms_degree'    => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
-      'longitude_dms_minutes'   => new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false))),
-      'longitude_dms_seconds'   => new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false))),
-      'longitude_dms_direction' => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
-      'latitude_utm'            => new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false))),
-      'longitude_utm'           => new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false))),
-      'utm_zone'                => new sfValidatorPass(array('required' => false)),
-      'array_from_date_mask'    => new sfValidatorPass(array('required' => false)),
-      'array_from_date'         => new sfValidatorPass(array('required' => false)),
-      'array_to_date_mask'      => new sfValidatorPass(array('required' => false)),
-      'array_to_date'           => new sfValidatorPass(array('required' => false)),
-      'comments'                => new sfValidatorPass(array('required' => false)),
-      'properties'              => new sfValidatorPass(array('required' => false)),
-    ));
+    $this->widgetSchema   ['code'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['code'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['gtu_from_date_mask'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['gtu_from_date_mask'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
+
+    $this->widgetSchema   ['gtu_from_date'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['gtu_from_date'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['gtu_to_date_mask'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['gtu_to_date_mask'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
+
+    $this->widgetSchema   ['gtu_to_date'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['gtu_to_date'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['latitude'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['latitude'] = new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false)));
+
+    $this->widgetSchema   ['longitude'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['longitude'] = new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false)));
+
+    $this->widgetSchema   ['location'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['location'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['lat_long_accuracy'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['lat_long_accuracy'] = new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false)));
+
+    $this->widgetSchema   ['elevation'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['elevation'] = new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false)));
+
+    $this->widgetSchema   ['elevation_accuracy'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['elevation_accuracy'] = new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false)));
+
+    $this->widgetSchema   ['import_ref'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['import_ref'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
+
+    $this->widgetSchema   ['collector_refs'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['collector_refs'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['expedition_refs'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['expedition_refs'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['collection_ref'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['collection_ref'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
+
+    $this->widgetSchema   ['coordinates_source'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['coordinates_source'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['latitude_dms_degree'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['latitude_dms_degree'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
+
+    $this->widgetSchema   ['latitude_dms_minutes'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['latitude_dms_minutes'] = new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false)));
+
+    $this->widgetSchema   ['latitude_dms_seconds'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['latitude_dms_seconds'] = new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false)));
+
+    $this->widgetSchema   ['latitude_dms_direction'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['latitude_dms_direction'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
+
+    $this->widgetSchema   ['longitude_dms_degree'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['longitude_dms_degree'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
+
+    $this->widgetSchema   ['longitude_dms_minutes'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['longitude_dms_minutes'] = new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false)));
+
+    $this->widgetSchema   ['longitude_dms_seconds'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['longitude_dms_seconds'] = new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false)));
+
+    $this->widgetSchema   ['longitude_dms_direction'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['longitude_dms_direction'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
+
+    $this->widgetSchema   ['latitude_utm'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['latitude_utm'] = new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false)));
+
+    $this->widgetSchema   ['longitude_utm'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['longitude_utm'] = new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false)));
+
+    $this->widgetSchema   ['utm_zone'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['utm_zone'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['array_from_date_mask'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['array_from_date_mask'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['array_from_date'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['array_from_date'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['array_to_date_mask'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['array_to_date_mask'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['array_to_date'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['array_to_date'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['comments'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['comments'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['properties'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['properties'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['id'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['id'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => 'DoctrineTemporalInformationGtuGroup', 'column' => 'id'));
 
     $this->widgetSchema->setNameFormat('doctrine_temporal_information_gtu_group_filters[%s]');
-
-    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
-
-    $this->setupInheritance();
-
-    parent::setup();
   }
 
   public function getModelName()
@@ -100,41 +126,41 @@ abstract class BaseDoctrineTemporalInformationGtuGroupFormFilter extends BaseFor
 
   public function getFields()
   {
-    return array(
-      'id'                      => 'Number',
-      'code'                    => 'Text',
-      'gtu_from_date_mask'      => 'Number',
-      'gtu_from_date'           => 'Text',
-      'gtu_to_date_mask'        => 'Number',
-      'gtu_to_date'             => 'Text',
-      'latitude'                => 'Number',
-      'longitude'               => 'Number',
-      'location'                => 'Text',
-      'lat_long_accuracy'       => 'Number',
-      'elevation'               => 'Number',
-      'elevation_accuracy'      => 'Number',
-      'import_ref'              => 'Number',
-      'collector_refs'          => 'Text',
-      'expedition_refs'         => 'Text',
-      'collection_ref'          => 'Number',
-      'coordinates_source'      => 'Text',
-      'latitude_dms_degree'     => 'Number',
-      'latitude_dms_minutes'    => 'Number',
-      'latitude_dms_seconds'    => 'Number',
-      'latitude_dms_direction'  => 'Number',
-      'longitude_dms_degree'    => 'Number',
-      'longitude_dms_minutes'   => 'Number',
-      'longitude_dms_seconds'   => 'Number',
+    return array_merge(parent::getFields(), array(
+      'code' => 'Text',
+      'gtu_from_date_mask' => 'Number',
+      'gtu_from_date' => 'Text',
+      'gtu_to_date_mask' => 'Number',
+      'gtu_to_date' => 'Text',
+      'latitude' => 'Number',
+      'longitude' => 'Number',
+      'location' => 'Text',
+      'lat_long_accuracy' => 'Number',
+      'elevation' => 'Number',
+      'elevation_accuracy' => 'Number',
+      'import_ref' => 'Number',
+      'collector_refs' => 'Text',
+      'expedition_refs' => 'Text',
+      'collection_ref' => 'Number',
+      'coordinates_source' => 'Text',
+      'latitude_dms_degree' => 'Number',
+      'latitude_dms_minutes' => 'Number',
+      'latitude_dms_seconds' => 'Number',
+      'latitude_dms_direction' => 'Number',
+      'longitude_dms_degree' => 'Number',
+      'longitude_dms_minutes' => 'Number',
+      'longitude_dms_seconds' => 'Number',
       'longitude_dms_direction' => 'Number',
-      'latitude_utm'            => 'Number',
-      'longitude_utm'           => 'Number',
-      'utm_zone'                => 'Text',
-      'array_from_date_mask'    => 'Text',
-      'array_from_date'         => 'Text',
-      'array_to_date_mask'      => 'Text',
-      'array_to_date'           => 'Text',
-      'comments'                => 'Text',
-      'properties'              => 'Text',
-    );
+      'latitude_utm' => 'Number',
+      'longitude_utm' => 'Number',
+      'utm_zone' => 'Text',
+      'array_from_date_mask' => 'Text',
+      'array_from_date' => 'Text',
+      'array_to_date_mask' => 'Text',
+      'array_to_date' => 'Text',
+      'comments' => 'Text',
+      'properties' => 'Text',
+      'id' => 'Number',
+    ));
   }
 }

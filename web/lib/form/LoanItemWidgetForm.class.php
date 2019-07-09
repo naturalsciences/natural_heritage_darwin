@@ -105,7 +105,7 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
     $this->embedForm('ActorsSender',$subForm);    
     if($this->getObject()->getId() !='')
     {
-      foreach(Doctrine::getTable('CataloguePeople')->findActors($this->getObject()->getId(),'sender','loan_items') as $key=>$vals)
+      foreach(Doctrine_Core::getTable('CataloguePeople')->findActors($this->getObject()->getId(),'sender','loan_items') as $key=>$vals)
       {
         $form = new ActorsForm($vals);
         $this->embeddedForms['ActorsSender']->embedForm($key, $form);
@@ -138,7 +138,7 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
     $this->embedForm('ActorsReceiver',$subForm);    
     if($this->getObject()->getId() !='')
     {
-      foreach(Doctrine::getTable('CataloguePeople')->findActors($this->getObject()->getId(),'receiver','loan_items') as $key=>$vals)
+      foreach(Doctrine_Core::getTable('CataloguePeople')->findActors($this->getObject()->getId(),'receiver','loan_items') as $key=>$vals)
       {
         $form = new ActorsForm($vals);
         $this->embeddedForms['ActorsReceiver']->embedForm($key, $form);
@@ -244,7 +244,7 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
     return parent::save($con);
   }
   
-  public function saveEmbeddedForms($con = null, $forms = null)
+  public function saveObjectEmbeddedForms($con = null, $forms = null)
   {
     $this->saveEmbed('Comments', 'comment' ,$forms, array('referenced_relation'=>'loan_items', 'record_id' => $this->getObject()->getId()));
     $this->saveEmbed('RelatedFiles', 'mime_type' ,$forms, array('referenced_relation'=>'loan_items', 'record_id' => $this->getObject()->getId()));
@@ -301,7 +301,7 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
         elseif(!is_array($value[$name]['people_sub_type'])) $form->getObject()->setPeopleSubType(array(128));        
       }
     }
-    return parent::saveEmbeddedForms($con, $forms);
+    return parent::saveObjectEmbeddedForms($con, $forms);
   }
 
   public function getJavaScripts()
@@ -329,19 +329,19 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
     if($record_id === false)
       $record_id = $this->getObject()->getId();
     if( $emFieldName =='Comments' )
-      return Doctrine::getTable('Comments')->findForTable('loan_items', $record_id);
+      return Doctrine_Core::getTable('Comments')->findForTable('loan_items', $record_id);
     if( $emFieldName =='RelatedFiles' )
-      return Doctrine::getTable('Multimedia')->findForTable('loan_items', $record_id);
+      return Doctrine_Core::getTable('Multimedia')->findForTable('loan_items', $record_id);
     if( $emFieldName =='Insurances' )
-      return Doctrine::getTable('Insurances')->findForTable('loan_items', $record_id);
+      return Doctrine_Core::getTable('Insurances')->findForTable('loan_items', $record_id);
     if( $emFieldName =='Codes' )
-      return Doctrine::getTable('Codes')->getCodesRelated('loan_items', $record_id);
+      return Doctrine_Core::getTable('Codes')->getCodesRelated('loan_items', $record_id);
   }
 
   public function duplicate($id)
   {
     // reembed duplicated comment
-    $Comments = Doctrine::getTable('Comments')->findForTable('loan_items',$id) ;
+    $Comments = Doctrine_Core::getTable('Comments')->findForTable('loan_items',$id) ;
     foreach ($Comments as $key=>$val)
     {
       $comment = new Comments();
@@ -350,7 +350,7 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
       $this->attachEmbedRecord('Comments', $form, $key);
     }
     // reembed duplicated codes
-    $Codes = Doctrine::getTable('Codes')->getCodesRelatedArray('loan_items',$id) ;
+    $Codes = Doctrine_Core::getTable('Codes')->getCodesRelatedArray('loan_items',$id) ;
     foreach ($Codes as $key=> $code)
     {
       $newCode = new Codes();
@@ -359,7 +359,7 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
       $this->attachEmbedRecord('Codes', $form, $key);
     }
     // reembed duplicated insurances
-    $Insurances = Doctrine::getTable('Insurances')->findForTable('loan_items',$id) ;
+    $Insurances = Doctrine_Core::getTable('Insurances')->findForTable('loan_items',$id) ;
     foreach ($Insurances as $key=>$val)
     {
       $insurance = new Insurances() ;

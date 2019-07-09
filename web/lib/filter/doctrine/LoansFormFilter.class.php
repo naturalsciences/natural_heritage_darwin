@@ -20,7 +20,7 @@ class LoansFormFilter extends BaseLoansFormFilter
     $dateUpperBound = new FuzzyDateTime(sfConfig::get('dw_dateUpperBound'));
 
     $this->widgetSchema['status'] = new sfWidgetFormChoice(array(
-        'choices' => Doctrine::getTable('LoanStatus')->getDistinctStatus()
+        'choices' => Doctrine_Core::getTable('LoanStatus')->getDistinctStatus()
     ));
     $this->validatorSchema['status'] = new sfValidatorString(array('required' => false));
 

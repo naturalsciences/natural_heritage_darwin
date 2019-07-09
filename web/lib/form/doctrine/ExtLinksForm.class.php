@@ -19,7 +19,7 @@ class ExtLinksForm extends BaseExtLinksForm
 
     /* Validators */
     $this->validatorSchema['id'] = new sfValidatorInteger(array('required'=>false));
-    $this->validatorSchema['url'] = new sfValidatorString(array('required'=>false));
+    $this->validatorSchema['url'] = new sfValidatorString(array('required'=>true), array('required'=> 'The URL of the link is missing'));
     $this->validatorSchema['comment'] = new sfValidatorString(array('trim'=>true, 'required'=>false));
     $this->mergePostValidator(new ExtLinksValidatorSchema());
 
@@ -27,7 +27,7 @@ class ExtLinksForm extends BaseExtLinksForm
       'choices' => ExtLinks::getLinkTypes(),
     ));
 
-    $this->validatorSchema['type'] = new sfValidatorChoice(array('choices'=>array_keys(ExtLinks::getLinkTypes())));
+    $this->validatorSchema['type'] = new sfValidatorChoice(array("required"=> true,'choices'=>array_keys(ExtLinks::getLinkTypes())), array('required'=> 'Type of link is missing') );
 
   }
   public function setRecordRef($relation, $rid)

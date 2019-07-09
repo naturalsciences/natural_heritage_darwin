@@ -105,6 +105,12 @@
  * @property string $status
  * @property boolean $complete
  * @property boolean $surnumerary
+ * @property integer $part_count_males_min
+ * @property integer $part_count_males_max
+ * @property integer $part_count_females_min
+ * @property integer $part_count_females_max
+ * @property integer $part_count_juveniles_min
+ * @property integer $part_count_juveniles_max
  * @property integer $specimen_taxonomy_ref
  * @property Imports $Import
  * @property Staging $Parent
@@ -213,6 +219,12 @@
  * @method string              getStatus()                    Returns the current record's "status" value
  * @method boolean             getComplete()                  Returns the current record's "complete" value
  * @method boolean             getSurnumerary()               Returns the current record's "surnumerary" value
+ * @method integer             getPartCountMalesMin()         Returns the current record's "part_count_males_min" value
+ * @method integer             getPartCountMalesMax()         Returns the current record's "part_count_males_max" value
+ * @method integer             getPartCountFemalesMin()       Returns the current record's "part_count_females_min" value
+ * @method integer             getPartCountFemalesMax()       Returns the current record's "part_count_females_max" value
+ * @method integer             getPartCountJuvenilesMin()     Returns the current record's "part_count_juveniles_min" value
+ * @method integer             getPartCountJuvenilesMax()     Returns the current record's "part_count_juveniles_max" value
  * @method integer             getSpecimenTaxonomyRef()       Returns the current record's "specimen_taxonomy_ref" value
  * @method Imports             getImport()                    Returns the current record's "Import" value
  * @method Staging             getParent()                    Returns the current record's "Parent" value
@@ -320,6 +332,12 @@
  * @method Staging             setStatus()                    Sets the current record's "status" value
  * @method Staging             setComplete()                  Sets the current record's "complete" value
  * @method Staging             setSurnumerary()               Sets the current record's "surnumerary" value
+ * @method Staging             setPartCountMalesMin()         Sets the current record's "part_count_males_min" value
+ * @method Staging             setPartCountMalesMax()         Sets the current record's "part_count_males_max" value
+ * @method Staging             setPartCountFemalesMin()       Sets the current record's "part_count_females_min" value
+ * @method Staging             setPartCountFemalesMax()       Sets the current record's "part_count_females_max" value
+ * @method Staging             setPartCountJuvenilesMin()     Sets the current record's "part_count_juveniles_min" value
+ * @method Staging             setPartCountJuvenilesMax()     Sets the current record's "part_count_juveniles_max" value
  * @method Staging             setSpecimenTaxonomyRef()       Sets the current record's "specimen_taxonomy_ref" value
  * @method Staging             setImport()                    Sets the current record's "Import" value
  * @method Staging             setParent()                    Sets the current record's "Parent" value
@@ -373,7 +391,6 @@ abstract class BaseStaging extends DarwinModel
              ));
         $this->hasColumn('gtu_ref', 'integer', null, array(
              'type' => 'integer',
-             'notnull' => true,
              ));
         $this->hasColumn('gtu_code', 'string', null, array(
              'type' => 'string',
@@ -645,6 +662,24 @@ abstract class BaseStaging extends DarwinModel
              ));
         $this->hasColumn('surnumerary', 'boolean', null, array(
              'type' => 'boolean',
+             ));
+        $this->hasColumn('part_count_males_min', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('part_count_males_max', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('part_count_females_min', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('part_count_females_max', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('part_count_juveniles_min', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('part_count_juveniles_max', 'integer', null, array(
+             'type' => 'integer',
              ));
         $this->hasColumn('specimen_taxonomy_ref', 'integer', null, array(
              'type' => 'integer',

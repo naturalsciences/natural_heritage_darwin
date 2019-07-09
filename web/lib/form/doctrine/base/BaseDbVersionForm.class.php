@@ -8,29 +8,18 @@
  * @package    darwin
  * @subpackage form
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
+ * @version    SVN: $Id$
  */
-abstract class BaseDbVersionForm extends BaseFormDoctrine
+abstract class BaseDbVersionForm extends DarwinModelForm
 {
-  public function setup()
+  protected function setupInheritance()
   {
-    $this->setWidgets(array(
-      'id'        => new sfWidgetFormInputText(),
-      'update_at' => new sfWidgetFormDateTime(),
-    ));
+    parent::setupInheritance();
 
-    $this->setValidators(array(
-      'id'        => new sfValidatorInteger(),
-      'update_at' => new sfValidatorDateTime(array('required' => false)),
-    ));
+    $this->widgetSchema   ['update_at'] = new sfWidgetFormDateTime();
+    $this->validatorSchema['update_at'] = new sfValidatorDateTime(array('required' => false));
 
     $this->widgetSchema->setNameFormat('db_version[%s]');
-
-    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
-
-    $this->setupInheritance();
-
-    parent::setup();
   }
 
   public function getModelName()

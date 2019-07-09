@@ -48,7 +48,7 @@
             <?php endif;?>
           </td>
           <td><?php echo $row['linked_info'];?></td>
-          <td>
+          <td class="<?php echo $row->getStatusFor("code");?>">
             <ul class="codes">
               <?php foreach($row['codes'] as $k=>$v):?>
                 <li>

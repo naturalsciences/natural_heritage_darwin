@@ -12,7 +12,7 @@ class SubCollectionsForm extends sfForm
   public function configure()
   {
     $subForm = new sfForm();
-    $collections = Doctrine::getTable('Collections')->fetchByCollectionParent($this->options['current_user'],$this->options['user_ref'], $this->options['collection_ref']);
+    $collections = Doctrine_Core::getTable('Collections')->fetchByCollectionParent($this->options['current_user'],$this->options['user_ref'], $this->options['collection_ref']);
 
     foreach ($collections as $record)
     {

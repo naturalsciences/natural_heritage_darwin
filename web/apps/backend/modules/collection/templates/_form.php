@@ -97,6 +97,14 @@ $(document).ready(function ()
           <?php echo $form['allow_duplicates'] ?>
         </td>
       </tr>
+	  <!--JMHerpers 20190506-->
+       <tr>
+        <th><?php echo $form['nagoya']->renderLabel() ?></th>
+        <td>
+          <?php echo $form['nagoya']->renderError() ?>
+          <?php echo $form['nagoya'] ?>
+        </td>
+      </tr>
       <tr>
         <td colspan="2">
           <table class="encoding collections_rights" id="user_right">

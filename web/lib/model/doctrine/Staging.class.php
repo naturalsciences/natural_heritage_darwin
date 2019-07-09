@@ -30,6 +30,138 @@ class Staging extends BaseStaging
   {
     return $this->_get('gtu_code');
   }
+    
+    
+  
+   //ftheeten 2019 05 21
+   public function getCode()
+  {
+    $val=NULL;
+    $tmpArray=Doctrine_Core::getTable('Codes')->getMainCodesRelatedArray("staging", array($this->getId()));
+    if(count($tmpArray)>0)
+    {
+        $val=trim($tmpArray[0]->getCodePrefix().$tmpArray[0]->getCodePrefixSeparator().$tmpArray[0]->getCode().$tmpArray[0]->getCodeSuffixSeparator().$tmpArray[0]->getCodeSuffix());
+    }
+    
+     return $val;
+  }
+  
+     //ftheeten 2019 05 21
+   public function setCode($val)
+  {
+    $tmpArray=Doctrine_Core::getTable('Codes')->getMainCodesRelatedArray("staging", array($this->getId()));
+    if(count($tmpArray)>0)
+    {
+        $obj=$tmpArray[0];
+        $obj->delete();
+    }
+    $this->addRelCode($val);
+   
+  }
+  
+  
+    private  function startsWith($string, $test) 
+    { 
+        print("test $string $test");
+        $strlen = strlen($string);
+        $testlen = strlen($test);
+        if ($testlen > $strlen) return false;
+            return substr_compare($string, $test, 0, $testlen) === 0;
+    }
+    
+   private function endsWith($string, $test) 
+    {
+        $strlen = strlen($string);
+        $testlen = strlen($test);
+        if ($testlen > $strlen) return false;
+            return substr_compare($string, $test, $strlen - $testlen, $testlen) === 0;
+    }
+     private function string_isset($str)
+    {
+        if(isset($str))
+        {
+            if(strlen($str)>0)
+            {
+                return TRUE;
+            }
+        }
+        return FALSE;
+        
+    }
+  
+    private function addRelCode($value, $category="main")
+  {
+
+     $collection_ref=Doctrine_Core::getTable('Imports')->find($this->getImportRef())->getCollectionRef();
+	 $collection= Doctrine_Core::getTable('Collections')->find($collection_ref);
+        if(strlen(trim($value))>0)
+        {
+
+            $code = new Codes() ;
+            $code->setReferencedRelation("staging") ;
+            $code->setRecordId($this->getId()) ;
+            $code->setCodeCategory(strtolower($category)) ;
+            $tmpCode=$value;
+                  
+
+
+            if($this->string_isset($collection->code_prefix)&&$category=="main")
+            {
+                $prefixTmp=$collection->getCodePrefix();
+                $sepFlag=FALSE;
+                if($this->string_isset($collection->getCodePrefixSeparator()))
+                {
+                    $prefixTmp.=$collection->getCodePrefixSeparator();
+                    $sepFlag=TRUE;
+                }
+                if($this->startsWith($tmpCode,$prefixTmp ))
+                {  
+                    $tmpCode=substr_replace($tmpCode,'',0, strlen($prefixTmp));
+                }
+                $code->setCodePrefix($collection->getCodePrefix());
+                if($sepFlag)
+                {
+                     $code->setCodePrefixSeparator($collection->getCodePrefixSeparator());
+                }
+                
+            }
+            if($this->string_isset($collection->getCodeSuffix())&&$category=="main")
+            {
+                $suffixTmp=$collection->getCodeSuffix();
+                $sepFlag=FALSE;
+                if($this->string_isset($collection->getCodeSuffixSeparator()))
+                {
+                    $suffixTmp.=$collection->getCodeSuffixSeparator();
+                    $sepFlag=TRUE;
+                }
+                if($this->endsWith($tmpCode,$suffixTmp ))
+                {                
+                    $tmpCode=substr_replace($tmpCode,'',strlen($tmpCode)-strlen($suffixTmp), strlen($suffixTmp));
+                }
+                if($sepFlag)
+                {
+                     $code->setCodeSuffixSeparator($collection->getCodeSuffixSeparator());
+                }
+                
+            }
+            $code->setCode($tmpCode) ;
+            if(is_numeric($tmpCode)&&$collection->getCodeAutoIncrement()&&$category=="main")
+            {
+               
+                if((int)$tmpCode>(int)$collection->getCodeLastValue())
+                {
+                    
+                    $collection->setCodeLastValue($tmpCode);
+                    $collection->save();
+                }
+            }
+            $code->save();
+                    
+        }
+  }
+  
+  
+
 
   public function getTaxon()
   {
@@ -140,6 +272,13 @@ class Staging extends BaseStaging
     elseif($field == "expedition")
     {
       if($this['expedition_ref'] == '') 
+		  return $tb_completed ;
+      else
+        return $tb_ok;
+    }
+    elseif($field == "code")
+    {      
+      if(array_key_exists("code", $this->getStatus())) 
 		  return $tb_completed ;
       else
         return $tb_ok;
@@ -255,7 +394,7 @@ class Staging extends BaseStaging
     if($field == 'operator') return('operator') ;
 	#ftheeten 2019 01 29
 	if($field == 'gtu') return('gtu_ref') ;
-	
+	if($field == 'code') return('code_ref') ;
     return($field) ;
   }
 }

@@ -141,7 +141,7 @@ class LoansForm extends BaseLoansForm
     $this->embedForm('Users',$subForm);    
     if($this->getObject()->getId() !='')
     {
-      foreach(Doctrine::getTable('LoanRights')->findByLoanRef($this->getObject()->getId()) as $key=>$vals)
+      foreach(Doctrine_Core::getTable('LoanRights')->findByLoanRef($this->getObject()->getId()) as $key=>$vals)
       {
         $form = new LoanRightsForm($vals);
         $this->embeddedForms['Users']->embedForm($key, $form);
@@ -175,7 +175,7 @@ class LoansForm extends BaseLoansForm
     $this->embedForm('ActorsSender',$subForm);    
     if($this->getObject()->getId() !='')
     {
-      foreach(Doctrine::getTable('CataloguePeople')->findActors($this->getObject()->getId(),'sender','loans') as $key=>$vals)
+      foreach(Doctrine_Core::getTable('CataloguePeople')->findActors($this->getObject()->getId(),'sender','loans') as $key=>$vals)
       {
         $form = new ActorsForm($vals);
         $this->embeddedForms['ActorsSender']->embedForm($key, $form);
@@ -209,7 +209,7 @@ class LoansForm extends BaseLoansForm
     $this->embedForm('ActorsReceiver',$subForm);    
     if($this->getObject()->getId() !='')
     {
-      foreach(Doctrine::getTable('CataloguePeople')->findActors($this->getObject()->getId(),'receiver','loans') as $key=>$vals)
+      foreach(Doctrine_Core::getTable('CataloguePeople')->findActors($this->getObject()->getId(),'receiver','loans') as $key=>$vals)
       {
         $form = new ActorsForm($vals);
         $this->embeddedForms['ActorsReceiver']->embedForm($key, $form);
@@ -324,7 +324,7 @@ class LoansForm extends BaseLoansForm
     parent::bind($taintedValues, $taintedFiles);   
   }
 
-  public function saveEmbeddedForms($con = null, $forms = null)
+  public function saveObjectEmbeddedForms($con = null, $forms = null)
   {
     $this->saveEmbed('Comments', 'comment' ,$forms, array('referenced_relation'=>'loans', 'record_id' => $this->getObject()->getId()));
     $this->saveEmbed('RelatedFiles', 'mime_type' ,$forms, array('referenced_relation'=>'loans', 'record_id' => $this->getObject()->getId()));
@@ -405,7 +405,7 @@ class LoansForm extends BaseLoansForm
       }
     }
 
-    return parent::saveEmbeddedForms($con, $forms);
+    return parent::saveObjectEmbeddedForms($con, $forms);
   }
 
   public function getEmbedRecords($emFieldName, $record_id = false)
@@ -413,17 +413,17 @@ class LoansForm extends BaseLoansForm
     if($record_id === false)
       $record_id = $this->getObject()->getId();
     if( $emFieldName =='Comments' )
-      return Doctrine::getTable('Comments')->findForTable('loans', $record_id);
+      return Doctrine_Core::getTable('Comments')->findForTable('loans', $record_id);
     if( $emFieldName =='RelatedFiles' )
-      return Doctrine::getTable('Multimedia')->findForTable('loans', $record_id);
+      return Doctrine_Core::getTable('Multimedia')->findForTable('loans', $record_id);
     if( $emFieldName =='Insurances' )
-      return Doctrine::getTable('Insurances')->findForTable('loans', $record_id);
+      return Doctrine_Core::getTable('Insurances')->findForTable('loans', $record_id);
   }
 
   public function duplicate($id)
   {
     // reembed duplicated comment
-    $Comments = Doctrine::getTable('Comments')->findForTable('loans',$id) ;
+    $Comments = Doctrine_Core::getTable('Comments')->findForTable('loans',$id) ;
     foreach ($Comments as $key=>$val)
     {
       $comment = new Comments();
@@ -433,7 +433,7 @@ class LoansForm extends BaseLoansForm
     }
 
     // reembed duplicated insurances
-    $Insurances = Doctrine::getTable('Insurances')->findForTable('loans',$id) ;
+    $Insurances = Doctrine_Core::getTable('Insurances')->findForTable('loans',$id) ;
     foreach ($Insurances as $key=>$val)
     {
       $insurance = new Insurances() ;

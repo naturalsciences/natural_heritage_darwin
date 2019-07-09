@@ -119,6 +119,15 @@
  * @property integer $specimen_count_max
  * @property string $object_name
  * @property string $object_name_indexed
+ * @property integer $specimen_count_males_min
+ * @property integer $specimen_count_males_max
+ * @property integer $specimen_count_females_min
+ * @property integer $specimen_count_females_max
+ * @property integer $specimen_count_juveniles_min
+ * @property integer $specimen_count_juveniles_max
+ * @property string $specimen_creation_date
+ * @property integer $import_ref
+ * @property boolean $nagoya
  * @property Collections $Collections
  * @property Expeditions $Expeditions
  * @property Gtu $Gtu
@@ -257,6 +266,15 @@
  * @method integer                          getSpecimenCountMax()                 Returns the current record's "specimen_count_max" value
  * @method string                           getObjectName()                       Returns the current record's "object_name" value
  * @method string                           getObjectNameIndexed()                Returns the current record's "object_name_indexed" value
+ * @method integer                          getSpecimenCountMalesMin()            Returns the current record's "specimen_count_males_min" value
+ * @method integer                          getSpecimenCountMalesMax()            Returns the current record's "specimen_count_males_max" value
+ * @method integer                          getSpecimenCountFemalesMin()          Returns the current record's "specimen_count_females_min" value
+ * @method integer                          getSpecimenCountFemalesMax()          Returns the current record's "specimen_count_females_max" value
+ * @method integer                          getSpecimenCountJuvenilesMin()        Returns the current record's "specimen_count_juveniles_min" value
+ * @method integer                          getSpecimenCountJuvenilesMax()        Returns the current record's "specimen_count_juveniles_max" value
+ * @method string                           getSpecimenCreationDate()             Returns the current record's "specimen_creation_date" value
+ * @method integer                          getImportRef()                        Returns the current record's "import_ref" value
+ * @method boolean                          getNagoya()                           Returns the current record's "nagoya" value
  * @method Collections                      getCollections()                      Returns the current record's "Collections" value
  * @method Expeditions                      getExpeditions()                      Returns the current record's "Expeditions" value
  * @method Gtu                              getGtu()                              Returns the current record's "Gtu" value
@@ -394,6 +412,15 @@
  * @method Specimens                        setSpecimenCountMax()                 Sets the current record's "specimen_count_max" value
  * @method Specimens                        setObjectName()                       Sets the current record's "object_name" value
  * @method Specimens                        setObjectNameIndexed()                Sets the current record's "object_name_indexed" value
+ * @method Specimens                        setSpecimenCountMalesMin()            Sets the current record's "specimen_count_males_min" value
+ * @method Specimens                        setSpecimenCountMalesMax()            Sets the current record's "specimen_count_males_max" value
+ * @method Specimens                        setSpecimenCountFemalesMin()          Sets the current record's "specimen_count_females_min" value
+ * @method Specimens                        setSpecimenCountFemalesMax()          Sets the current record's "specimen_count_females_max" value
+ * @method Specimens                        setSpecimenCountJuvenilesMin()        Sets the current record's "specimen_count_juveniles_min" value
+ * @method Specimens                        setSpecimenCountJuvenilesMax()        Sets the current record's "specimen_count_juveniles_max" value
+ * @method Specimens                        setSpecimenCreationDate()             Sets the current record's "specimen_creation_date" value
+ * @method Specimens                        setImportRef()                        Sets the current record's "import_ref" value
+ * @method Specimens                        setNagoya()                           Sets the current record's "nagoya" value
  * @method Specimens                        setCollections()                      Sets the current record's "Collections" value
  * @method Specimens                        setExpeditions()                      Sets the current record's "Expeditions" value
  * @method Specimens                        setGtu()                              Sets the current record's "Gtu" value
@@ -823,6 +850,34 @@ abstract class BaseSpecimens extends DarwinModel
              ));
         $this->hasColumn('object_name_indexed', 'string', null, array(
              'type' => 'string',
+             ));
+        $this->hasColumn('specimen_count_males_min', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('specimen_count_males_max', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('specimen_count_females_min', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('specimen_count_females_max', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('specimen_count_juveniles_min', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('specimen_count_juveniles_max', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('specimen_creation_date', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('import_ref', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('nagoya', 'boolean', null, array(
+             'type' => 'boolean',
+             'notnull' => false,
              ));
     }
 

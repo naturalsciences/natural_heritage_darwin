@@ -45,6 +45,13 @@ $(document).ready(function ()
   		    <?php if($form['extinct']->getValue()) echo __("Yes") ; else echo __("No") ;?>
         </td>
       </tr>
+	  <!--jmherpers 2019 04 25-->
+	  <tr>
+        <th><?php echo $form['cites']->renderLabel() ?></th>
+        <td>
+  		    <?php if($form['cites']->getValue()) echo __("Yes") ; else echo __("No") ;?>
+        </td>
+      </tr>
       <tr>
         <th><?php echo $form['parent_ref']->renderLabel() ?></th>
         <td>

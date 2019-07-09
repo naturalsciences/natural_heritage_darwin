@@ -95,7 +95,7 @@ class ExpeditionsForm extends BaseExpeditionsForm
     if($record_id === false)
       $record_id = $this->getObject()->getId();
     if( $emFieldName =='Members' )
-      return Doctrine::getTable('CataloguePeople')->getPeopleRelated('expeditions','member', $record_id);
+      return Doctrine_Core::getTable('CataloguePeople')->getPeopleRelated('expeditions','member', $record_id);
   }
 
   public function getEmbedRelationForm($emFieldName, $values)
@@ -107,7 +107,7 @@ class ExpeditionsForm extends BaseExpeditionsForm
   public function duplicate($id)
   {
     // reembed duplicated members
-    $Catalogue = Doctrine::getTable('CataloguePeople')->findForTableByType('expeditions',$id) ;
+    $Catalogue = Doctrine_Core::getTable('CataloguePeople')->findForTableByType('expeditions',$id) ;
     if(isset($Catalogue['member'])) {
       foreach ($Catalogue['member'] as $key=>$val) {
         $this->addMembers($key, array('people_ref' => $val->getPeopleRef()),$val->getOrderBy());
@@ -115,9 +115,9 @@ class ExpeditionsForm extends BaseExpeditionsForm
     }
   }
 
-  public function saveEmbeddedForms($con = null, $forms = null)
+  public function saveObjectEmbeddedForms($con = null, $forms = null)
   {
     $this->saveEmbed('Members', 'people_ref', $forms, array('people_type'=>'member','referenced_relation'=>'expeditions', 'record_id' => $this->getObject()->getId()));
-    return parent::saveEmbeddedForms($con, $forms);
+    return parent::saveObjectEmbeddedForms($con, $forms);
   }
 }

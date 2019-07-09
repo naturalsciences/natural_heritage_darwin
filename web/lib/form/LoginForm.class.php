@@ -1,4 +1,6 @@
 <?php
+
+
 class LoginForm extends BaseForm
 {
   public function configure()
@@ -30,7 +32,7 @@ class LoginForm extends BaseForm
   {
     if(! empty($values['username']) )
     {
-      $this->user = Doctrine::getTable('Users')->getUserByPassword($values['username'], $values['password']);
+      $this->user = Doctrine_Core::getTable('Users')->getUserByPassword($values['username'], $values['password']);
       if($this->user) {
         return $values;
       }
@@ -38,7 +40,7 @@ class LoginForm extends BaseForm
         $ldap = new ldapAuth();
         $values['username'] = strtolower($values['username']);
         if( $ldap->authenticate($values['username'], $values['password']) === true ) {
-          $this->user = Doctrine::getTable('Users')->getUserByLogin($values['username'], 'ldap');
+          $this->user = Doctrine_Core::getTable('Users')->getUserByLogin($values['username'], 'ldap');
           //We don't know the user yet but be is known on the LDAP
           if( !$this->user) {
 

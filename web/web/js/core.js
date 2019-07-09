@@ -325,17 +325,116 @@ $.fn.customRadioCheck = function() {
     
     //ftheeten 2019 02 04
     var getUrlParameter = function getUrlParameter(sParam) {
-            var sPageURL = window.location.search.substring(1),
-                sURLVariables = sPageURL.split('&'),
-                sParameterName,
-                i;
+		var sPageURL = window.location.search.substring(1),
+			sURLVariables = sPageURL.split('&'),
+			sParameterName,
+			i;
 
-            for (i = 0; i < sURLVariables.length; i++) {
-                sParameterName = sURLVariables[i].split('=');
+		for (i = 0; i < sURLVariables.length; i++) {
+			sParameterName = sURLVariables[i].split('=');
 
-                if (sParameterName[0] === sParam) {
-                    return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+			if (sParameterName[0] === sParam) {
+				return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+			}
+		}
+		return false;
+	};
+		
+	$(function() {
+		$('img[class^="clear_"]').click(
+            function(){
+                if(location.pathname.indexOf('/specimen/')!=-1)
+                {
+                    var root=$(this);
+                    var ctrl =$(this).siblings('input[name*="[id]"]');
+                    var val_id=$(ctrl).val();					
+                    var name_ctrl=$(ctrl).attr("name");
+                    if(name_ctrl.indexOf("[")!=-1)	{
+                        var array_val= name_ctrl.split(/[\[\]]/);
+                        var obj_name=array_val[0];
+                        var table_name=array_val[1];
+                        var num= array_val[3];
+                        if(array_val.length>1){	
+                            //attention path is not the same as on Tervuren RBINS server (Darwin is linked to the root of the URL in RBINS)
+                            var array_url = location.pathname.split("/") ;
+                            if(array_url.length>=4)
+                            {
+                                var url_tmp=array_url.slice(0, array_url.length-4).join("/");                         
+                                var url=location.protocol + '//' + location.host + "/"+  url_tmp + "/specimen/deleteLinkedObject";
+                                $.getJSON( url, {id: val_id, table: table_name}).done(function( data ) {           
+                                        obj = data;                                    
+                                            if(obj.deleted=="yes")
+                                            {
+                                                    if($.isNumeric(num))
+                                                    {
+                                                        var radical=obj_name+"["+table_name+"]["+num+"]";
+                                                        var ctrls =$('[name*="'+radical+'"]');
+                                                        ctrls.each(
+                                                            function(i, tmp_input)
+                                                            {
+                                                                $(tmp_input).remove();
+                                                            }
+                                                        );
+                                                        //ensure that all the idnex of HTML cotnrol names are consecutive after removal of a control (otherwise error by Symfony validation)
+                                                        var array_no_num=Array();
+                                                        var findMax=obj_name+"["+table_name+"]";
+                                                        var ctrls2 =$('[name*="'+findMax+'"]');
+                                                        if(ctrls2.length)
+                                                        {
+                                                            var arr = ctrls2.map(function(_, o) { return { t: $(o).attr("name")}; }).get();
+                                                            arr.sort(function(o1, o2) { return o1.t > o2.t ? 1 : o1.t < o2.t ? -1 : 0; });
+                                                            var last = arr[arr.length-1];
+                                                            var regex= /\[\d+\]/
+                                                            var array_regex= regex.exec(last.t);
+                                                            var vax_idx =-1;
+                                                            if(array_regex.length>0)
+                                                            {
+
+                                                                max_idx=array_regex[0].replace(/\[|\]/g,'');
+                                                                for(var i=0; i<=max_idx; i++)
+                                                                {
+                                                                    var name_to_test=obj_name+"["+table_name+"]["+i.toString()+"]";
+                                                                    var ctrls3 =$('[name*="'+name_to_test+'"]');
+                                                                    if(!ctrls3.length)
+                                                                    {
+                                                                       array_no_num.push(i);
+                                                                    }                                                              
+                                                                }
+                                                                for(var i=0; i<array_no_num.length; i++)
+                                                                {
+                                                                    var idx_tmp=array_no_num[i];
+                                                                    for(j=idx_tmp+1; j<= max_idx; j++)
+                                                                    {
+                                                                        var pattern_to_replace=obj_name+"["+table_name+"]["+j.toString()+"]";
+                                                                        var newJ=j-1;
+                                                                        var new_pattern=obj_name+"["+table_name+"]["+ newJ.toString()+"]";
+                                                                        var ctrls4 =$('[name*="'+pattern_to_replace+'"]');
+                                                                        if(ctrls4.length)
+                                                                        {                                                                    
+                                                                           ctrls4.each(
+                                                                            function(i, tmp_input)
+                                                                            {
+                                                                                var old_name=$(tmp_input).attr("name");
+                                                                                var new_name= old_name.replace(pattern_to_replace, new_pattern);
+                                                                                $(tmp_input).attr("name", new_name);
+                                                                                
+                                                                            }
+                                                                        );
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                            
+                                                         }
+                                                    }
+                                            }
+                                        }
+                                    );
+                                }
+                                                    
+                            }
+                    }
                 }
-            }
-            return false;
-        };
+			}
+		);
+	});

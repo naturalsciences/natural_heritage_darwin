@@ -67,13 +67,9 @@
 		</td>
 		<!--ftheeten 2015 09 10-->
 		<td>
-				<?php echo ucfirst($val->Specimen->getLabelCreatedOn())?'Date created: '.$val->Specimen->getLabelCreatedOn():'';?>
+				<?php echo ucfirst($val->Specimen->getSpecimenCreationDate())?'Date created: '.$val->Specimen->getSpecimenCreationDate():'';?>
 	    </td>
-		<td>
-					<!--JMHerpers 2018 02 14 : more readable valid sentence-->
-				<?php echo ucfirst($val->Specimen->getValidLabel()===FALSE)?'Not valid':'Valid';?>
-			<!--ftheeten 2015 09 10-->	
-		</td>
+		
       <?php endif ; ?>
     
     <td>

@@ -159,4 +159,25 @@ class ImportsTable extends Doctrine_Table
                ->where('p.id = ? ', $import_ref)
               ->execute();
     }
+	
+	 //2019 03 14
+    public function updateExpeditionInStaging($import_ref, $old_exp_name, $new_exp_id)
+    {
+        
+        Doctrine_Query::create()
+              ->update('imports p')
+              ->set('p.state','?','aprocessing')
+               ->where('p.id = ? ', $import_ref)
+              ->execute();     
+        $conn = Doctrine_Manager::connection();
+        $sql = "UPDATE staging set expedition_ref=:new, status = status - 'expedition'::text  WHERE import_ref =:import AND expedition_name= :old;";
+        $q = $conn->prepare($sql);
+		$q->execute(array(':import'=> $import_ref, ':old' => $old_exp_name, ':new' => $new_exp_id ));
+        
+        Doctrine_Query::create()
+              ->update('imports p')
+              ->set('p.state','?','pending')
+               ->where('p.id = ? ', $import_ref)
+              ->execute();
+    }
 }

@@ -115,7 +115,7 @@ class MySavedSearchesTable extends DarwinTable
 	  return $q->fetch()[0];
   }
   
-  public function getSavedSearchData($user_id, $query_id)
+    public function getSavedSearchData($user_id, $query_id)
   {
                         $sql="SELECT
 
@@ -141,6 +141,7 @@ class MySavedSearchesTable extends DarwinTable
                         longitude_text,
                         latitude_text,
                         gtu_country_tag_value,
+						gtu_province_tag_value,
                         municipality,
                         region_district,
                         exact_site,
@@ -214,6 +215,7 @@ class MySavedSearchesTable extends DarwinTable
 			
                             date_part('year', i.notion_date) as identification_year, 
                             gtu_country_tag_value,
+							gtu_province_tag_value,
                             array_to_string(array_agg(DISTINCT municipality.tag), '; ') as municipality,
                             array_to_string(array_agg(DISTINCT region_district.tag), '; ') as region_district,
                             array_to_string(array_agg(DISTINCT exact_site.tag), '; ') as exact_site,
@@ -304,6 +306,13 @@ longitude_text,
                              specimen_creation_date
 
                             FROM specimens s
+                            INNER JOIN
+                            (
+                            SELECT fct_rmca_dynamic_saved_search as returned FROM  fct_rmca_dynamic_saved_search(
+                                :ID_Q,:ID_USER
+                            )
+                            ) f
+                            ON s.id=f.returned 
                             LEFT JOIN codes c
                                 ON s.id=c.record_id
                                 AND c.referenced_relation='specimens'
@@ -360,12 +369,7 @@ longitude_text,
 			     LEFT JOIN  collecting_tools as col_tool
 				ON s_col_tool.collecting_tool_ref=col_tool.id
                             
-                            WHERE s.id in
-                                (SELECT fct_rmca_dynamic_saved_search(
-                               
-                                     :ID_Q, :ID_USER
-                                   
-                                )) 
+                            
 
                             GROUP BY s.id, c.code_prefix, c.code_prefix_separator, c.code, c.code_suffix, c.code_suffix_separator, i.id , col_tool.tool, col_meth.method,
                             --2018 11 21
@@ -387,6 +391,7 @@ longitude_text,
                         specimen_count_min,
                         specimen_count_max, 
                         gtu_country_tag_value,
+						gtu_province_tag_value,
                         municipality,
                         region_district,
                         exact_site,
@@ -440,7 +445,7 @@ longitude_text,
   
    public function getSavedSearchDataTaxonomy($user_id, $query_id)
   {
-                        $sql="SELECt * FROM fct_rmca_dynamic_saved_search_taxonomy(:ID_Q,:ID_USER);";
+                        $sql="SELECt DISTINCT * FROM fct_rmca_dynamic_saved_search_taxonomy(:ID_Q,:ID_USER);";
                         
                         $conn = Doctrine_Manager::connection();
                         $q = $conn->prepare($sql);
@@ -452,6 +457,7 @@ longitude_text,
                         return $dataset;
   
   }
+  
   
   
   
