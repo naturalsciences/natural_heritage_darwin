@@ -41,13 +41,8 @@
           </a>
         </th>
          <!--ftheeten 2018 07 19-->
-        <?php if(array_key_exists('taxonomy_metadata_name', $items[0])&&array_key_exists('metadata_ref', $items[0])): ?>
-            <?php if($items[0]['taxonomy_metadata_name']&&$items[0]['metadata_ref']): ?>
+        <?php if( $items[0]->getTaxonomyName()!==null): ?>
                 <th> <?php echo __('Taxonomy name');?></th>
-               	<!--JMHerpers 2019 04 26-->
-				<!--<th><?php echo __('Reference');?></th>
-				<th><?php echo __('Reference taxon');?></th>-->
-            <?php endif;?>
         <?php endif;?>
 		
 				 <!--JMHerpers 2019 04 26-->
@@ -110,19 +105,10 @@
               <span class="level_name"><?php echo $item->getLevel();?></span>
             </td>
              <!--ftheeten 2018 07 19-->
-            <?php if(isset($item['taxonomy_metadata_name'])&&isset($item['metadata_ref'])): ?>
+            <?php if($item->getTaxonomyName()!==null): ?>
              <td>
-				<span><?php echo $item->getTaxonomyMetadataName();?>
-			  		<!--JMHerpers 2019 04 26-->
-					<?php if($item->getTaxonomyMetadataReferenceStatus() == 1): ?>
-						<i>(REF.)</i>
-					<?php endif;?>
-				</span>
+				<span><?php echo $item->getTaxonomyName();?></span>
             </td>
-            <!--JMHerpers 2019 04 26-->
-			<!--<td>
-              <span><?php echo $item->getTaxonomyMetadataReferenceStatus() == "1" ? "true":"false" ;?></span>
-            </td>-->
             <?php endif;?>
 			<!--JMHerpers 2019 04 26-->
 			<td>
