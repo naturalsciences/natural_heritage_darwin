@@ -80,11 +80,16 @@ $(document).ready(function ()
 
   <?php echo form_tag('specimen/'.($form->getObject()->isNew() ? 'create' : 'update?id='.$form->getObject()->getId()), array('class'=>'edition no_border','enctype'=>'multipart/form-data'));?>
     <div>
-      <?php if($form->hasGlobalErrors()):?>
+	  <?php $errors = $form->getErrorSchema()->getErrors() ?>
+      <?php if($form->hasGlobalErrors()||count($errors)>0):?>
         <ul class="spec_error_list">
           <?php foreach ($form->getErrorSchema()->getErrors() as $name => $error): ?>
             <li class="error_fld_<?php echo $name;?>"><?php echo __($error) ?></li>
           <?php endforeach; ?>
+		  <?php foreach( $errors as $name => $error ) : ?>
+		     <li class="error_fld_<?php echo $name;?>"><?php echo $name ?> : <?php echo __($error) ?></li>
+		  <?php endforeach ?>
+		  <li>(Issue(s) might be caused by a closed widget containing a mandatory field) </li>
         </ul>
       <?php endif;?>
 
