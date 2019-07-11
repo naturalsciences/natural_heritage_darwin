@@ -125,8 +125,8 @@ class TaxonomyFormFilter extends BaseTaxonomyFormFilter
       */
     //ftheeten 2017 07 03   
     $query = DQ::create()
-      ->select('t.*')
-      ->from('Taxonomy t');
+      ->select('t.*, m.taxonomy_name as taxonomy_name')
+      ->from('Taxonomy t')->leftJoin("t.TaxonomyMetadata m ON t.metadata_ref=m.id");
 
     if ($values['collection_ref'] != '')
     {
