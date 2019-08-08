@@ -59,13 +59,6 @@ $(document).ready(function ()
             </td>
           </tr>
           <tr>
-            <th><?php echo $form['collection_ref_for_gtu']->renderLabel() ?> :</th>
-            <td>
-              <?php echo $form['collection_ref_for_gtu']->renderError() ?>
-              <?php echo $form['collection_ref_for_gtu'] ?>
-            </td>
-          </tr>
-          <tr>
             <th><?php echo $form['enforce_code_unicity']->renderLabel() ?> :</th>
             <td>
               <?php echo $form['enforce_code_unicity']->renderError() ?>

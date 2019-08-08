@@ -138,13 +138,15 @@ class DoctrineTemporalInformationGtuGroupTags extends BaseDoctrineTemporalInform
       //ftheeten 2018 01 07
        public function convertToTemporalInformation()
        {
+      
             $returned = Array();
-            $from_date_masks =explode(",",preg_replace('/\{|\|\'|\"}/i','', $this->getArrayFromDateMask()));
-            $from_date = explode(",",preg_replace('/\{|\|\'|\"}/i','', $this->getArrayFromDate()));
-            $to_date_masks =explode(",",preg_replace('/\{|\}/i','', $this->getArrayToDateMask()));
-            $to_date = explode(",",preg_replace('/\{|\}/i','', $this->getArrayToDate()));
+            $from_date_masks =explode(",",preg_replace('/\{|\|\'|\"|\}/i','', $this->getArrayFromDateMask()));
+            $from_date = explode(",",preg_replace('/\{|\|\'|\"|\}/i','', $this->getArrayFromDate()));
+            $to_date_masks =explode(",",preg_replace('/\{|\|\}/i','', $this->getArrayToDateMask()));
+            $to_date = explode(",",preg_replace('/\{|\|\'|\"|\}/i','', $this->getArrayToDate()));
             if(count($from_date)>0&&(count($from_date_masks)==count($from_date))&&(count($to_date_masks)==count($to_date)))
             {
+           
                 for($i=0; $i<count( $from_date_masks); $i++)
                 {
                 
@@ -152,14 +154,18 @@ class DoctrineTemporalInformationGtuGroupTags extends BaseDoctrineTemporalInform
                     {
                         $item = new TemporalInformation();
                         $item->setGtuRef($this->getId());
-                        $item->setFromDateMask($from_date_masks[$i]);
+                       
+                       
+                      
                         $item->setFromDate(str_replace('"','',$from_date[$i]));
+                        $item->setFromDateMask($from_date_masks[$i]);
+                        
                         if($i<count($to_date))
                         {
                             if((int)$to_date_masks[$i]>0)
-                            {
-                                $item->setToDateMask($to_date_masks[$i]);
+                            {                                
                                 $item->setToDate(str_replace('"','',$to_date[$i]));
+                                $item->setToDateMask($to_date_masks[$i]);
                             }
                         }
                         $returned[]= $item;
@@ -167,7 +173,7 @@ class DoctrineTemporalInformationGtuGroupTags extends BaseDoctrineTemporalInform
                 }
                 
             }
-          
+         
             return $returned;
        }
        
@@ -183,6 +189,7 @@ class DoctrineTemporalInformationGtuGroupTags extends BaseDoctrineTemporalInform
       {
           foreach($tmpTemporalInformation as $key=>$item)
           {
+          //print($item->getFromDateMask());
                 if((int)$item->getFromDateMask()>0||(int)$item->getToDateMask()>0)
                 {
                     $tmp=Array();
@@ -191,8 +198,9 @@ class DoctrineTemporalInformationGtuGroupTags extends BaseDoctrineTemporalInform
                     $tmp['to_raw']=$item->getToDate();
                     $tmp["from"]=$item->getFromDateString();//getFromDateMasked(ESC_RAW);
                     $tmp["to"]=$item->getToDateString(); //getToDateMasked(ESC_RAW);
-                    $tmp["from_masked"]=$item->getFromDateMasked(ESC_RAW);
-                    $tmp["to_masked"]=$item->getToDateMasked(ESC_RAW);
+                    $tmp["from_masked"]=$item->getFromDateMasked();
+                    $tmp["to_masked"]=$item->getToDateMasked();
+                    
                     $tmp["from_mask"]=(int)$item->getFromDateMask();
                     $tmp["to_mask"]=(int)$item->getToDateMask();
                     
@@ -209,6 +217,69 @@ class DoctrineTemporalInformationGtuGroupTags extends BaseDoctrineTemporalInform
                     $tmp['to_minute']=$item->getToDate()['minute'];
                     $tmp['to_second']=$item->getToDate()['second'];
                     
+                     //test from data mask
+                    $msk=(int)$item->getFromDateMask();
+                 
+                    if($msk&1)
+                    {
+                        $tmp["from_masked_select"]=$item->getFromDateMasked(ESC_RAW);
+                    }
+                    elseif($msk&2)
+                    {
+                        $tmp["from_masked_select"]=$item->getFromDateMasked(ESC_RAW);
+                    }
+                    elseif($msk&4)
+                    {
+                        $tmp["from_masked_select"]=$item->getFromDateMasked(ESC_RAW);
+                    }
+                    elseif($msk&8)
+                    {
+                        $tmp["from_masked_select"]=$item->getFromDate()['day'].'/'.$item->getFromDate()['month'].'/'.$item->getFromDate()['year'];
+                    }
+                    elseif($msk&16)
+                    {
+                        $tmp["from_masked_select"]='xx/'.$item->getFromDate()['month'].'/'.$item->getFromDate()['year'];
+                    }
+                    elseif($msk&32)
+                    {
+                        $tmp["from_masked_select"]='xx/xx/'.$item->getFromDate()['year'];
+                    }
+                    else
+                    {
+                         $tmp["from_masked_select"]='UNK';
+                    }
+                    //to
+                    $msk=(int)$item->getToDateMask();
+                 
+                    if($msk&1)
+                    {
+                        $tmp["to_masked_select"]=$item->getToDateMasked(ESC_RAW);
+                    }
+                    elseif($msk&2)
+                    {
+                        $tmp["to_masked_select"]=$item->getToDateMasked(ESC_RAW);
+                    }
+                    elseif($msk&4)
+                    {
+                        $tmp["to_masked_select"]=$item->getToDateMasked(ESC_RAW);
+                    }
+                    elseif($msk&8)
+                    {
+                        $tmp["to_masked_select"]=$item->getToDate()['day'].'/'.$item->getToDate()['month'].'/'.$item->getToDate()['year'];
+                    }
+                    elseif($msk&16)
+                    {
+                        $tmp["to_masked_select"]='xx/'.$item->getToDate()['month'].'/'.$item->getToDate()['year'];
+                    }
+                    elseif($msk&32)
+                    {
+                        $tmp["to_masked_select"]='xx/xx/'.$item->getToDate()['year'];
+                    }
+                    else
+                    {
+                         $tmp["to_masked_select"]='UNK';
+                    }
+
 
                     $returned[]=$tmp;
                 }

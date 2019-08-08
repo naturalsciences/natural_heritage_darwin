@@ -99,10 +99,7 @@ $(document).ready(function () {
 				autocomplete_rmca_array_taxon=$('.col_check:checked').map(function(){
                     return $(this).val();
                     }).get();
-                /*autocomplete_rmca_array_taxon_text=$('.col_check:checked').map(function(){
-                       return $(this).parent().parent().text();
-                    }).get();
-              */
+                
               var textCollections="Search in all collections";  
               if(autocomplete_rmca_array_taxon.length>0)
               {

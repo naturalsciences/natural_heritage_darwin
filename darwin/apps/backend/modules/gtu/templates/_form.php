@@ -36,7 +36,7 @@ $(document).ready(function ()
 			<?php echo $form['nagoya']->renderError() ?>
 			<?php echo $form['nagoya'] ?>
 			
-			<a href=location.protocol + '//' + location.host + "/"+ location.pathname.split("/")[1] + "/"+ location.pathname.split("/")[2] +"/help/nagoya_countries.html" target="popup" onclick="window.open(location.protocol + '//' + location.host + '/'+ location.pathname.split('/')[1] +'/help/nagoya_countries.html','popup','width=1150,height=800'); return false;" style="display: inline-block;">
+			<a href=location.protocol + '//' + location.host + "/"+ location.pathname.split("/")[1] + "/"+ location.pathname.split("/")[2] +"/help/nagoya_countries.html" target="popup" onclick="window.open(location.protocol + '//' + '<?php print(parse_url(sfContext::getInstance()->getRequest()->getUri(),PHP_URL_HOST ));?>' +'/help/nagoya_countries.html','popup','width=1150,height=800'); return false;" style="display: inline-block;">
 				<?php echo image_tag('info.png',"title=nagoya_info class=nagoya_info id=nagoya");?>
 			</a>
         </td>

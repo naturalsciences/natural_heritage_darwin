@@ -101,9 +101,15 @@ class RMCATabDataDirect
         $fields[] = "samplingMethod";
         
         //Taxonomy fields
-
+        //$fields[] = "AuthorYear";
         $fields[] = "FullScientificName";
-        
+        /*$fields[] = "Subspecies";
+        $fields[] = "Species";
+        $fields[] = "Genus";
+        $fields[] = "Family";
+        $fields[] = "Order";
+        $fields[] = "Class";
+        $fields[] = "Phylum";*/
         $fields[] = "IdentifiedBy";
         $fields[] = "IdentificationYear";
         $fields[] = "IdentificationMonth";

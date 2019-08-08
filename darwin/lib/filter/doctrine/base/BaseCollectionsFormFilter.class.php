@@ -80,6 +80,9 @@ abstract class BaseCollectionsFormFilter extends DarwinModelFormFilter
     $this->widgetSchema   ['nagoya'] = new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no')));
     $this->validatorSchema['nagoya'] = new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0)));
 
+    $this->widgetSchema   ['preferred_taxonomy'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['preferred_taxonomy'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
+
     $this->widgetSchema   ['institution_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Institution'), 'add_empty' => true));
     $this->validatorSchema['institution_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Institution'), 'column' => 'id'));
 
@@ -125,6 +128,7 @@ abstract class BaseCollectionsFormFilter extends DarwinModelFormFilter
       'allow_duplicates' => 'Boolean',
       'code_ai_inherit' => 'Boolean',
       'nagoya' => 'Boolean',
+      'preferred_taxonomy' => 'Number',
       'institution_ref' => 'ForeignKey',
       'main_manager_ref' => 'ForeignKey',
       'staff_ref' => 'ForeignKey',

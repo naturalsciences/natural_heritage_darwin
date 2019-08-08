@@ -53,6 +53,20 @@ function chooseGtu(event)
     gtu_tags.html(gtu_tags.html()+date_tags.html());
     ref_element_name=gtu_tags.html();
   }
+  else if($(event.target).attr("name")=="gtu_choose")
+  {
+    var gtu_id=ref_element_id.split("_")[0];
+    var idSelectDate="#select_gtu_date_id_"+ref_element_id;
+
+    var tags_class=".temporalinformation_date_id_"+$(idSelectDate).val();
+
+    var date_tags=el.find(tags_class);
+    var gtu_address='.class_gtu_id_'+gtu_id;
+    var gtu_tags=$(gtu_address);
+    
+    gtu_tags.html(gtu_tags.html());
+    ref_element_name=gtu_tags.html();
+  }
 
   $('.result_choose').die('click');
   $('body').trigger('close_modal');

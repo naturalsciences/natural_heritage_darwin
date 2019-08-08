@@ -115,7 +115,7 @@ $(document).ready(function () {
   $(".new_link").click( function()
   {
    url = $(this).find('a').attr('href'),
-   data= $('.search_form').serialize(),
+   data= $(".search_form input[value!='']").serialize(),
    reg=new RegExp("(<?php echo $searchForm->getName() ; ?>)", "g");   
    open(url+'?'+data.replace(reg,'<?php echo $searchForm['table']->getValue() ; ?>'));
     return false;  

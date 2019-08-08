@@ -89,6 +89,14 @@ $(document).ready(function ()
           <?php echo $form['parent_ref'] ?>
         </td>
       </tr>
+      <tr>
+        <th><?php echo $form['preferred_taxonomy']->renderLabel() ?></th>
+        <td>
+          <?php echo $form['preferred_taxonomy']->renderError() ?>
+          <?php echo $form['preferred_taxonomy'] ?>
+        </td>
+      </tr>
+	  	  
       <!--ftheeten 2018 08 08-->
        <tr>
         <th><?php echo $form['allow_duplicates']->renderLabel() ?></th>

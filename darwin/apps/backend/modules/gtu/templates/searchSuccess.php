@@ -74,6 +74,7 @@
              </div>
              <?php endif;?>
              <!--ftheeten 2019 07 01-->
+             
              <?php if(count($item->getRelatedTemporalInformationMasked())>0):?>          
                          <ul >
                         <li  >
@@ -82,8 +83,8 @@
                         <select id="select_gtu_date_id_<?php print($item->getId())?>">
                             <?php $iRow=0;?>
                             <?php foreach($item->getRelatedTemporalInformationMasked(ESC_RAW) as $date):?>
-                                <option value="<?php print($item->getId());?>_<?php print($iRow);?>">From : <?php print($date["from"]);?>
-                                <?php if($date["to_mask"]>0):?> - To : <?php print($date["to"]);?>            
+                                <option value="<?php print($item->getId());?>_<?php print($iRow);?>">From : <?php print($date["from_masked_select"]);?>
+                                <?php if($date["to_mask"]>0):?> - To : <?php print($date["to_masked_select"]);?>            
                                 <?php endif; ?>                                       
                                 </option>
                                 <?php $iRow++;?>

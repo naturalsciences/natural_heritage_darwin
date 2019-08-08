@@ -33,17 +33,20 @@
         <tr class="and_row">
           <td colspan="3"></td>
           <td>
-            <?php echo image_tag('add_blue.png');?> <a href="<?php echo url_for('gtu/andSearch');?>" class="and_tag"><?php echo __('And'); ?></a>
+            <?php echo image_tag('add_blue.png');?> <a href="<?php echo url_for('gtu/andSearch');?>" class="and_tag"><?php echo __('OR'); ?></a>
           </td>
         </tr>
         <!--ftheeten 2018 08 08-->
         <tr>
             <th><?php echo $form['ig_number']->renderLabel() ?></th>
 		  <th><?php echo $form['expedition']->renderLabel() ?></th>
+           <th><?php echo __("Technical ID") ?></th>
         </tr>
         <tr>
         <td><?php echo $form['ig_number']->render() ?></td>
         <td><?php echo $form['expedition']->render() ?></td>
+         <td><?php echo $form['id']->render() ?></td>
+         <td><input type="button" id="last_encoded" name="last_encoded" value="<?php print(__("Last encoded")); ?>"</input> </td>
         </tr>
         <!--ftheeten 2018 08 08-->
         <tr>
@@ -175,6 +178,22 @@
 					$(".gtu_code_callback").val("<?php print($_REQUEST["name"]);?>");
 				}
 			   <?php endif;?>
+               
+           $("#last_encoded").click(
+            function()
+            {
+                var url_last="<?php echo(url_for('gtu/getLastEncodedId?'));?>";
+                 $.getJSON(url_last, {                                
+                            } , 
+                            function (data) 
+                            {
+                                $(".gtu_id_callback").val(data.id);
+                                $(".search_submit").click();
+                                //onElementInserted("body", ".result_choose", function(){$(".result_choose").click();} )
+                            });
+                   
+            }
+           );    
 
         });
         

@@ -7,6 +7,9 @@ th, td {
     padding: 15px;
     text-align: left;
 }
+
+
+
 </style>
 <div class="page">
 <div>
@@ -27,13 +30,13 @@ Page :
 <input type="submit" value = "go"></submit>
 </form>
 
-<table>
-<tr>
+<table class="staging_table">
+<tr >
 <th>Message</th>
 <th>Count</th>
 </tr>
  <?php $sum=0; $i=0; foreach($stats as $stat):?>
-    <tr>
+    <tr <?php ($stat['import_exception']=="imported"||$stat['import_exception']=="imported.imported")? print("class='fld_ok'") : print("class='fld_tocomplete'"); ?> >
 		<?php $text; $text = $stat['import_exception'] ?: "None" ?>
          <td><a  href="javascript:filter_stats('<?php print($text);?>')" ><?php print($text);?></a></td>
          <td><?php $sum+=(int)$stat['count'];  print($stat['count']);?></td>           
@@ -43,13 +46,13 @@ Page :
 </table>
 
 All data:<br/>
-<table>
-<tr>
+<table class="staging_table">
+<tr >
 <th>Message</th>
 <th>Count</th>
 </tr>
  <?php $sum=0; $i=0; foreach($stats_all as $stat):?>
-    <tr>
+    <tr <?php ($stat['import_exception']=="imported"||$stat['import_exception']=="imported.imported")? print("class='fld_ok'") : print("class='fld_tocomplete'"); ?>>
 		<?php $text; $text = $stat['import_exception'] ?: "None" ?>
          <td><a  href="javascript:filter_stats('<?php print($text);?>')" ><?php print($text);?></a></td>
          <td><?php $sum+=(int)$stat['count'];  print($stat['count']);?></td>           
@@ -60,7 +63,7 @@ All data:<br/>
 <br/>
 <br/>
 
-<table id="result_gtu" name="result_gtu" >
+<table id="result_gtu" name="result_gtu" class="staging_table" >
  <tr>   
         <th>id_file</th>
 		<th>id_staging_gtu_db</th>  
@@ -72,6 +75,7 @@ All data:<br/>
         <th>station_type</th>
         <th>sampling_code</th>
         <th>sampling_field_number</th>
+		<th>tags</th>
         <th>event_cluster_code</th>
         <th>event_order</th>
         <th>ig_num</th>
@@ -126,7 +130,7 @@ All data:<br/>
         
       </tr>  
  <?php $i=0; foreach($items as $item):?>
-    <tr>
+    <tr <?php ($item['import_exception']=="imported"||$item['import_exception']=="imported.imported")? print("class='fld_ok'") : print("class='fld_tocomplete'"); ?>>
         <td><?php print($item['pos_in_file']);?></td>
         <td><?php print($item['id']);?></td> 
 		<td><?php print($item['imported']? "YES" : "NO");?></td>
@@ -169,6 +173,7 @@ All data:<br/>
                 <?php print($item['sampling_code']);?></td>
             <?php endif;?>
         <td><?php print($item['sampling_field_number']);?></td>
+		<td><?php print($item['tag_values']);?></td>
         <td><?php print($item['event_cluster_code']);?></td>
         <td><?php print($item['event_order']);?></td>
         <td><?php print($item['ig_num']);?></td>

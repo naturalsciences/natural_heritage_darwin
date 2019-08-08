@@ -283,7 +283,7 @@
 	});
 	function GetNagoyaGTU(){
 		if ($("#specimen_gtu_ref_code").html() !== $gtu_ref_code || $gtu_ref_code == "") {
-			var url=location.protocol + '//' + location.host + "/"+ location.pathname.split("/")[1] + "/"+ location.pathname.split("/")[2] + "/specimen/getNagoyaGTU";
+			var url=location.protocol + '//' + "<?php print(parse_url(sfContext::getInstance()->getRequest()->getUri(),PHP_URL_HOST ));?>" + "/backend.php/specimen/getNagoyaGTU";
 			$.getJSON( 
 				url,
 				{id: $('#specimen_gtu_ref').val()},

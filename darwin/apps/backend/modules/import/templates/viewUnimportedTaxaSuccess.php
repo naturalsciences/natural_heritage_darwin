@@ -27,13 +27,13 @@ Page :
 <input type="submit" value = "go"></submit>
 </form>
 
-<table>
+<table class="staging_table">
 <tr>
 <th>Message</th>
 <th>Count</th>
 </tr>
  <?php $sum=0; $i=0; foreach($stats as $stat):?>
-    <tr>
+    <tr <?php ($stat['import_exception']=="imported_taxon")? print("class='fld_ok'") : print("class='fld_tocomplete'"); ?>>
 		<?php $text; $text = $stat['import_exception'] ?: "None" ?>
          <td><a  href="javascript:filter_stats('<?php print($text);?>')" ><?php print($text);?></a></td>
          <td><?php $sum+=(int)$stat['count'];  print($stat['count']);?></td>           
@@ -43,13 +43,13 @@ Page :
 </table>
 
 All data:<br/>
-<table>
+<table class="staging_table">
 <tr>
 <th>Message</th>
 <th>Count</th>
 </tr>
  <?php $sum=0; $i=0; foreach($stats_all as $stat):?>
-    <tr>
+    <tr <?php ($stat['import_exception']=="imported_taxon")? print("class='fld_ok'") : print("class='fld_tocomplete'"); ?>>
 		<?php $text; $text = $stat['import_exception'] ?: "None" ?>
          <td><a  href="javascript:filter_stats('<?php print($text);?>')" ><?php print($text);?></a></td>
          <td><?php $sum+=(int)$stat['count'];  print($stat['count']);?></td>           
@@ -66,8 +66,8 @@ All data:<br/>
 <a href="<?php print(url_for("import/rechecktaxonomy"));?>?id=<?php print($id);?>"><?php print(__("Recheck and reimport"));?></a>
 <br/>
 <br/>
-<table id="result_taxa" name="result_taxa" >
- <tr> 
+<table id="result_taxa" name="result_taxa" class="staging_table">
+ <tr > 
         <th>id</th>
         <th>name</th>
         <th>level_ref</th>
@@ -78,7 +78,7 @@ All data:<br/>
         <th>Import</th>
  </tr>
  <?php $i=0; foreach($items as $item):?>
-    <tr>
+    <tr <?php ($item['import_exception']=="imported_taxon")? print("class='fld_ok'") : print("class='fld_tocomplete'"); ?>>
 		<?php $text; $text = $item['import_exception'] ?: "None" ?>
          <td><?php print($item['id']);?></td>
          <td><?php print($item['name']);?></td>
