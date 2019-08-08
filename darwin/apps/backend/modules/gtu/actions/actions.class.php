@@ -324,13 +324,11 @@ class gtuActions extends DarwinActions
     $form = new GtuForm($spec, $options);
     return $form;
   }
-  //ftheeten 2018 11 29
-  /* public function executeAddTemporalInformation(sfWebRequest $request)
-  {
-    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
-    $number = intval($request->getParameter('num'));
-    $form = $this->getGtuForm($request);
-    $form->addTemporalInformation($number, array());
-    return $this->renderPartial('gtu_temporal_information',array('form' => $form['newGtuTemporalInformationForm'][$number], 'rownum'=>$number));
-  }*/
+       //ftheeten 2018 08 08
+   public function executeGetLastEncodedId(sfWebRequest $request)
+   {
+          $this->getResponse()->setContentType('application/json');
+		return  $this->renderText(json_encode(array("id"=>$_SESSION["gtu_id"])));
+        
+  }
 }

@@ -2,7 +2,7 @@
 	<tr>
 		<td>
 			<b>Check this box if specimen is concerned by Nagoya protocol:</b><?php echo $form['nagoya']->render() ?>
-			<a href=location.protocol + '//' + location.host + '/'+ location.pathname.split('/')[1] +'/help/nagoya.html' target="popup" onclick="window.open(location.protocol + '//' + location.host + '/'+ location.pathname.split('/')[1] +'/help/nagoya.html','popup','width=1150,height=800'); return false;" style="display: inline-block;">
+			<a href='https://darwin.naturalsciences.be/help/nagoya_countries.html' target="popup" onclick="window.open(location.protocol + '//' + location.host + '/help/nagoya.html','popup','width=1150,height=800'); return false;" style="display: inline-block;">
 				<?php echo image_tag('info.png',"title=nagoya_info class=nagoya_info id=nagoya");?>
 			</a> 
 			<?php echo $form['nagoya']->renderError(); ?>
@@ -96,7 +96,7 @@
 		});
 				
 		function GetNagoyaCollection(){
-			var url=location.protocol + '//' + location.host + "/"+ location.pathname.split("/")[1] + "/"+ location.pathname.split("/")[2]+ "/specimen/getNagoyaCollection";
+			var url=location.protocol + '//' + "<?php print(parse_url(sfContext::getInstance()->getRequest()->getUri(),PHP_URL_HOST ));?>" + "/backend.php/specimen/getNagoyaCollection";
 			$.getJSON( 
 				url,
 				{id: $("#specimen_collection_ref").val()},

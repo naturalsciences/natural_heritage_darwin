@@ -28,6 +28,7 @@
  * @property boolean $allow_duplicates
  * @property boolean $code_ai_inherit
  * @property boolean $nagoya
+ * @property integer $preferred_taxonomy
  * @property People $Institution
  * @property Users $Manager
  * @property Users $Staff
@@ -61,6 +62,7 @@
  * @method boolean             getAllowDuplicates()                     Returns the current record's "allow_duplicates" value
  * @method boolean             getCodeAiInherit()                       Returns the current record's "code_ai_inherit" value
  * @method boolean             getNagoya()                              Returns the current record's "nagoya" value
+ * @method integer             getPreferredTaxonomy()                   Returns the current record's "preferred_taxonomy" value
  * @method People              getInstitution()                         Returns the current record's "Institution" value
  * @method Users               getManager()                             Returns the current record's "Manager" value
  * @method Users               getStaff()                               Returns the current record's "Staff" value
@@ -93,6 +95,7 @@
  * @method Collections         setAllowDuplicates()                     Sets the current record's "allow_duplicates" value
  * @method Collections         setCodeAiInherit()                       Sets the current record's "code_ai_inherit" value
  * @method Collections         setNagoya()                              Sets the current record's "nagoya" value
+ * @method Collections         setPreferredTaxonomy()                   Sets the current record's "preferred_taxonomy" value
  * @method Collections         setInstitution()                         Sets the current record's "Institution" value
  * @method Collections         setManager()                             Sets the current record's "Manager" value
  * @method Collections         setStaff()                               Sets the current record's "Staff" value
@@ -212,6 +215,9 @@ abstract class BaseCollections extends DarwinModel
         $this->hasColumn('nagoya', 'boolean', null, array(
              'type' => 'boolean',
              'notnull' => false,
+             ));
+        $this->hasColumn('preferred_taxonomy', 'integer', null, array(
+             'type' => 'integer',
              ));
     }
 

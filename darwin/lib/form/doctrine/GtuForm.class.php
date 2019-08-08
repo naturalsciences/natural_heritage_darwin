@@ -269,10 +269,7 @@ class GtuForm extends BaseGtuForm
       )
     ));
     
-    //ftheeten 2018 11 29
-	//MUST NOT HAVE THE SAME NAME AS THE TABLE OTHERWISE EXTRA RECORDS ADDED
-    //$this->widgetSchema['GtuTemporalInformationForm_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
-    //$this->validatorSchema['GtuTemporalInformationForm_holder'] = new sfValidatorPass();
+
 
      $this->widgetSchema['temporal_information'] =  new sfWidgetFormChoice(array(
       'choices' =>  $this->getObject()->getRelatedTemporalInformationMaskedList()  
@@ -345,9 +342,7 @@ class GtuForm extends BaseGtuForm
     $this->embedRelation('TagGroups');
     
    
-   // $this->mergePostValidator(new sfValidatorCallback(
-		//	array('callback' => array($this, 'checkDateNoBound'))));
-            
+
          
   }
 
@@ -398,18 +393,7 @@ class GtuForm extends BaseGtuForm
       $this->embedForm('newVal', $this->embeddedForms['newVal']);
    }
 
-  //ftheeten 2018 12 01 
- /* public function reembedTemporalInformation($ti, $ti_number)
-  {
-    $this->getEmbeddedForm('TemporalInformation')->embedForm($ti_number, $ti);
-    $this->embedForm('TemporalInformation', $this->embeddedForms['Identifications']);
-  }
- //ftheeten 2018 12 01 
-  public function reembedNewTemporalInformation($ti, $ti_number)
-  {
-    $this->getEmbeddedForm('newTemporalInformation')->embedForm($ti_number, $ti);
-    $this->embedForm('newTemporalInformation', $this->embeddedForms['newIdentification']);
-  }*/
+
     public function bind(array $taintedValues = null, array $taintedFiles = null)
     {
 
@@ -426,8 +410,8 @@ class GtuForm extends BaseGtuForm
 	  
 
        //ftheeten 2019 03 08
-      $this->saveDate($taintedValues, $taintedFiles);
-      $this->deleteDate($taintedValues, $taintedFiles);
+      //$this->saveDate($taintedValues, $taintedFiles);
+        $this->deleteDate($taintedValues, $taintedFiles);
       //ftheeten 2018 11 29
 
 
@@ -439,6 +423,7 @@ class GtuForm extends BaseGtuForm
     public function saveObjectEmbeddedForms($con = null, $forms = null)
     {
 
+      $_SESSION["gtu_id"]= $this->getObject()->getId();
       if (null === $forms)
       {
         $value = $this->getValue('newVal');
@@ -462,19 +447,11 @@ class GtuForm extends BaseGtuForm
         }
 		
       }
-      //ftheeten 2018 11 29
-     // $this->saveEmbed('GtuTemporalInformationForm', 'from_date' ,$forms, array('gtu_ref' => $this->getObject()->getId()));
      
       return parent::saveObjectEmbeddedForms($con, $forms);
     }
     
-  //ftheeten 2018 11 29
-  /*public function addTemporalInformation($num, $values, $order_by=0)
-  {
-    $options = array("gtu_ref"=>$this->getObject()->getId());
-    $options = array_merge($values, $options);
-    $this->attachEmbedRecord('GtuTemporalInformationForm', new TemporalInformationSubForm(DarwinTable::newObjectFromArray('TemporalInformation',$options)), $num);
-  }*/
+
   
   //ftheeten 2018 11 29
   public function getEmbedRecords($emFieldName, $record_id = false)
@@ -485,66 +462,30 @@ class GtuForm extends BaseGtuForm
         $record_id = $this->getObject()->getId();
      }
 	 
-     /*if( $emFieldName =='GtuTemporalInformationForm' )
-     {
-      $res= Doctrine_Core::getTable('TemporalInformation')->getSortedTemporalInformation($record_id);
-      return $res;
-    }*/
+
   }
   
     //ftheeten 2018 11 29
   
   public function getEmbedRelationForm($emFieldName, $values)
   {   
-    /*if( $emFieldName =='GtuTemporalInformationForm' )
-    {
-      return new TemporalInformationSubForm($values);
-    }*/
+    
   }
   
-   //ftheeten 2018 11 29
-  /* public function loadEmbedTemporalInformation()
-  {
-    if($this->isBound()) return;
-    $subForm = new sfForm();
-    $this->embedForm('GtuTemporalInformationForm',$subForm);
-    if($this->getObject()->getId() !='')
-    {
-      foreach(Doctrine_Core::getTable('TemporalInformation')->getSortedTemporalInformation($this->getObject()->getId()) as $key=>$vals)
-      {
-        $form = new TemporalInformationSubForm($vals);
-        $this->embeddedForms['GtuTemporalInformationForm']->embedForm($key, $form);
-      }
-      //Re-embedding the container
-      $this->embedForm('GtuTemporalInformationForm', $this->embeddedForms['GtuTemporalInformationForm']);
-    }
-    $subForm = new sfForm();
-    $this->embedForm('newGtuTemporalInformationForm',$subForm);
-  }*/
 
-  
-    //ftheeten 2018 11 29
-    
-  /* public function saveObjectEmbeddedForms($con = null, $forms = null)
-  {
-     //$this->saveEmbed('TemporalInformation', 'from_date' ,$forms, array('gtu_ref' => $this->getObject()->getId()));
-    return parent::saveObjectEmbeddedForms($con, $forms);
-  }*/
-
-  public function saveDate(array $taintedValues = null, array $taintedFiles = null)
+  /*public function saveDate(array $taintedValues = null, array $taintedFiles = null)
   {
     $this->getObject()->addNewTemporalInformation($taintedValues["new_from_date"], $taintedValues["new_to_date"]);
-  }
+  }*/
   
   public function deleteDate(array $taintedValues = null, array $taintedFiles = null)
   {
-	  print("DELETE");
+
     if(isset($taintedValues["delete_mode"])&&is_numeric($taintedValues["temporal_information"]))
     {
-		print("enter");
+
         if(strtolower($taintedValues["delete_mode"])=="on")
         {   
-	print("on");
             Doctrine_Core::getTable('TemporalInformation')->deleteTemporalInformation($taintedValues["temporal_information"]);
         }
     }
@@ -552,10 +493,9 @@ class GtuForm extends BaseGtuForm
   
   public function checkDateNoBound($validator, $taintedValues, $arguments)
   {
-     print("test not bound");
     if(isset($taintedValues["delete_mode"])&&is_numeric($taintedValues["temporal_information"]))
     {
-     print("go 1");
+ 
         if(strtolower($taintedValues["delete_mode"])=="on")        {
            
             $cpt=Doctrine_Core::getTable('TemporalInformation')->countTemporalInformationBoundtoSpecimen($taintedValues["temporal_information"]);
@@ -568,7 +508,7 @@ class GtuForm extends BaseGtuForm
            
         }
 	}
-    print("returned");
+
      return $taintedValues;;
   }
   

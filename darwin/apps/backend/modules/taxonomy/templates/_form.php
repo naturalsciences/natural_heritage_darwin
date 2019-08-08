@@ -163,21 +163,23 @@ $(document).ready(function () {
          
             var  taxo="<?php print($_REQUEST['taxonomy']['metadata_ref']);?>";
             if ( $( ".col_check_metadata_ref" ).length && taxo.length>0 ) { 
-           
-                $(".col_check_metadata_ref option:eq('<?php print($_REQUEST['taxonomy']['metadata_ref']);?>')").attr("selected", "selected");
+				
+                $(".col_check_metadata_ref option:[value='<?php print($_REQUEST['taxonomy']['metadata_ref']);?>']").attr("selected", "selected");
      
             }
             else
             {
           
-               $(".col_check_metadata_ref option:eq(1)").attr("selected", "selected");
+               $(".col_check_metadata_ref option:[value='1']").attr("selected", "selected");
             }
           <?php else:?>
-           $(".col_check_metadata_ref option:eq(1)").attr("selected", "selected");
+		    
+           $(".col_check_metadata_ref option:[value='1']").attr("selected", "selected");
          <?php endif;?>
     <?php else:?> 
        if ( $( ".col_check_metadata_ref" ).length ) { 
-                $(".col_check_metadata_ref option:eq(1)").attr("selected", "selected");
+	    
+                $(".col_check_metadata_ref option:[value='1']").attr("selected", "selected");
      
             }
     <?php endif;?>

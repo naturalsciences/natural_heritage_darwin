@@ -97,8 +97,13 @@ class CollectionsForm extends BaseCollectionsForm
     $this->embedForm('CollectionsRights', $this->embeddedForms['CollectionsRights']);
 
 	//jmherpers 20190506
-	$this->widgetSchema['nagoya'] = new sfWidgetFormInputCheckbox(array ('default' => 'false'));
+	$this->widgetSchema['nagoya'] = new sfWidgetFormInputCheckbox();
     $this->validatorSchema['nagoya'] = new sfValidatorBoolean() ;
+	
+	$this->widgetSchema['preferred_taxonomy'] = new sfWidgetFormChoice(array(
+      'choices' => TaxonomyMetadataTable::getAllTaxonomicMetadata( 'id ASC',true)  //array_merge( array(''=>'All'),TaxonomyMetadataTable::getAllTaxonomicMetadata("id ASC"))
+    ));
+	$this->validatorSchema['preferred_taxonomy'] = new sfValidatorInteger(array('required'=>false));
 	
     $subForm = new sfForm();
     $this->embedForm('newVal',$subForm);

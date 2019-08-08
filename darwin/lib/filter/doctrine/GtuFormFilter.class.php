@@ -23,6 +23,8 @@ class GtuFormFilter extends BaseGtuFormFilter
     $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
     $dateUpperBound = new FuzzyDateTime(sfConfig::get('dw_dateUpperBound'));
     $this->widgetSchema['code'] = new sfWidgetFormInputText();
+    $this->widgetSchema['id'] = new sfWidgetFormInputText();
+    $this->widgetSchema['id']->setAttributes(array('class'=>'gtu_id_callback'));
 	//ftheeten 2018 03 14 added "taxonomy name callback"
     $this->widgetSchema['code']->setAttributes(array('class'=>'gtu_code_callback'));
     $this->widgetSchema['tags'] = new sfWidgetFormInputText();
@@ -103,6 +105,8 @@ class GtuFormFilter extends BaseGtuFormFilter
     $this->widgetSchema['ig_number'] = new sfWidgetFormInputText();
     $this->validatorSchema['ig_number'] = new sfValidatorString(array('required' => false, 'trim' => true));
     
+    $this->validatorSchema['id'] = new sfValidatorInteger(array('required'=>false));
+    
     $subForm = new sfForm();
     $this->embedForm('Tags',$subForm);
   }
@@ -114,13 +118,19 @@ class GtuFormFilter extends BaseGtuFormFilter
     $query->andWhere("LOWER(code) ilike ? ", "%" . strtolower($val) . "%");
   }
 
+   public function addIdColumnQuery($query, $field, $val)
+  {
+    if($val == '') return $query;
+    //ftheeten 2019 01 24 case insensitive
+    $query->andWhere("id = ? ",$val);
+  }
 
   public function addTagsColumnQuery($query, $field, $val)
   {
 
     $conn_MGR = Doctrine_Manager::connection();
     $tagList = '';
-   
+    $whereList=Array();
     foreach($val as $line)
     {
       $line_val = $line['tag'];
@@ -129,22 +139,34 @@ class GtuFormFilter extends BaseGtuFormFilter
         //$tagList = $conn_MGR->quote($line_val, 'string');
         $tagList =$line_val;
         $sqlClause=Array();
-		$this->hasTags=True;
+		
+        $tagList=trim($tagList);
+        $tagList=trim($tagList, ";");
         foreach(explode(";", $tagList  ) as $tagvalue)
         {
-            $tagvalue = $conn_MGR->quote($tagvalue, 'string');
-            $sqlClause[]="(tag_indexed::varchar ~ fulltoindex($tagvalue))";
+            if(strlen(trim( $tagvalue))>0)
+            {
+                $tagvalue = $conn_MGR->quote($tagvalue, 'string');
+                $sqlClause[]="(tag_indexed::varchar ~ fulltoindex($tagvalue))";
+            }
         }
-        $query->andWhere(implode(" OR ",$sqlClause ));
+        //$query->andWhere(implode(" OR ",$sqlClause ));
         //$query->andWhere("tag_values_indexed && getTagsIndexedAsArray($tagList)");
+        $whereList[]=implode(" OR ",$sqlClause );
       }
-	  if($this->hasTags)
+	  
+    }
+    if(count($whereList)>0)
+    {
+        $this->hasTags=True;
+        $query->andWhere("(". implode(" OR ",$whereList ).")");
+    }
+    if($this->hasTags)
       {
 		    $query->select('d.*')->from('DoctrineTemporalInformationGtuGroupTags d');
 			$query->addOrderBy("LENGTH(tag)");
 			$query->addOrderBy("fct_rmca_gtu_orderby_pattern(tag,$tagvalue )");
 	  }
-    }
 
     return $query;
   }
@@ -296,25 +318,13 @@ class GtuFormFilter extends BaseGtuFormFilter
 
 
   public function doBuildQuery(array $values)
-  {
-    
-    /*$query = DQ::create()
-        ->select('g.*, t.from_date, t.from_date_mask, t.to_date, t.to_date_mask')
-      ->from('Gtu g')->leftJoin("g.DoctrineDistinctTemporalInformation t ON g.id=t.gtu_ref");
-    */
-    //$query=parent::doBuildQuery($values);
-    //$query->leftJoin("SubCommentsGtu");
-	/*$query = DQ::create()
-        ->select('g.*, c.comments as comments')
-      ->from('Gtu g')->leftJoin("g.DoctrineGtuComments c ON g.id=c.record_id");*/
-    //ftheeten 2018 08 09
-    /*$query = DQ::create()
-        ->select('g.*, d.*')
-      ->from('Gtu g')->leftJoin("g.TemporalInformation t")->leftJoin("g.DoctrineTemporalInformationGtuGroup d");;*/
+  {    
+   
      $query = DQ::create()
         ->select('d.*')
       ->from('DoctrineTemporalInformationGtuGroup d');
     $this->addCodeColumnQuery($query, $values,$values["code"]);
+    $this->addIdColumnQuery($query, $values,$values["id"]);
     $this->addIgNumberColumnQuery($query, $values,$values["ig_number"]);     
     $this->addTagsColumnQuery($query, $values,$values["Tags"]);
     $this->addExpeditionColumnExplicit($query,$values);

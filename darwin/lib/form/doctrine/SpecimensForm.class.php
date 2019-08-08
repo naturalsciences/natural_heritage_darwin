@@ -83,7 +83,7 @@ class SpecimensForm extends BaseSpecimensForm
     ));
 
     /* Taxonomy Reference */
-    $this->widgetSchema['taxon_ref'] = new widgetFormCompleteButtonRef(array(
+    $this->widgetSchema['taxon_ref'] = new widgetFormCompleteButtonRefDynamic(array(
        'model' => 'Taxonomy',
        'link_url' => 'taxonomy/choose',
        'method' => 'getName',
@@ -91,6 +91,7 @@ class SpecimensForm extends BaseSpecimensForm
        'nullable' => true,
        'button_class'=>'',
        'complete_url' => 'catalogue/completeNameTaxonomyWithRef',
+	   'additional_data_class'=> array("taxon_ref"=>".col_check_metadata_ref")
     ));
 
     /* Chronostratigraphy Reference */
@@ -456,6 +457,12 @@ class SpecimensForm extends BaseSpecimensForm
     $this->validatorSchema['expedition_ref'] = new sfValidatorInteger(array('required'=>false));
 
     $this->validatorSchema['taxon_ref'] = new sfValidatorInteger(array('required'=>false));
+	
+	$this->widgetSchema['preferred_taxonomy'] = new sfWidgetFormChoice(array(
+      'choices' => TaxonomyMetadataTable::getAllTaxonomicMetadata( 'id ASC',true)  //array_merge( array(''=>'All'),TaxonomyMetadataTable::getAllTaxonomicMetadata("id ASC"))
+    ));
+	 $this->widgetSchema['preferred_taxonomy']->setAttributes(array('class'=>'col_check_metadata_ref col_check_metadata_callback'));
+	$this->validatorSchema['preferred_taxonomy'] = new sfValidatorInteger(array('required'=>false));
 
     $this->validatorSchema['chrono_ref'] = new sfValidatorInteger(array('required'=>false));
 

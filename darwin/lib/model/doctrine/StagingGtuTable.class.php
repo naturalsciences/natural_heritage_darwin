@@ -32,7 +32,28 @@ class StagingGtuTable extends DarwinTable
 		$params[':import_ref'] = $import_ref;
 		$params[':offset'] = $offset;
 	    $params[':limit'] = $limit;
-		$sql =" SELECT * FROM staging_gtu WHERE import_ref=:import_ref ORDER BY id OFFSET :offset LIMIT :limit;";
+		$sql =" SELECT staging_gtu.*, string_agg(sub_group_name||': '||tag_value, '; ') as tag_values FROM staging_gtu
+					LEFT JOIN
+					staging_gtu_tag_groups
+					ON  staging_gtu.id=staging_gtu_ref WHERE import_ref=:import_ref 	GROUP BY 
+					staging_gtu.id, import_ref, status, date_included, tags_merged,
+					sensitive_information_withheld, gtu_ref, station_type, 
+					sampling_code, sampling_field_number, event_cluster_code, 
+					event_order, ig_num, ig_num_indexed, collections, collectors, 
+					expeditions, collection_refs, collector_refs, expedition_refs, 
+					iso3166, iso3166_subdivision, countries, tags, tags_indexed,
+					locality_text, locality_text_indexed, ecology_text, ecology_text_indexed,
+					coordinates_format, latitude1, longitude1, latitude2, longitude2,
+					gis_type, coordinates_wkt, coordinates_datum, coordinates_proj_ref,
+					coordinates_original, coordinates_accuracy, coordinates_accuracy_text, 
+					station_baseline_elevation, station_baseline_accuracy, 
+					sampling_elevation_start, sampling_elevation_end,
+					sampling_elevation_accuracy, original_elevation_data, 
+					sampling_depth_start, sampling_depth_end, sampling_depth_accuracy, 
+					original_depth_data, collecting_date_begin, collecting_date_begin_mask, 
+					collecting_date_end, collecting_date_end_mask, collecting_time_begin, 
+					collecting_time_end, sampling_method, sampling_fixation, imported,
+					pos_in_file, import_exception ORDER BY id OFFSET :offset LIMIT :limit;";
 		$statement = $conn->prepare($sql);
 		$statement->execute($params);
 		$items = $statement->fetchAll(PDO::FETCH_ASSOC);

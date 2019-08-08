@@ -6,6 +6,11 @@
 
 <?php echo $form['taxon_ref']->renderError() ?>
 <?php echo $form['taxon_ref']->render() ?>
+<br/>
+<?php print(__("Taxonomic classification :"));?>
+<br/>
+<?php echo $form['preferred_taxonomy']->renderError() ?>
+<?php echo $form['preferred_taxonomy']->render() ?>
 
 <B><label class="cites"></label></B></BR>
 <B><label class="taxonomy1"></label></B>
@@ -47,12 +52,30 @@
                 alert("Please attribute a scientific name");
              }
     });
+	
+	function GetCollectionInfo(id){
+			var url=location.protocol + '//' + "<?php print(parse_url(sfContext::getInstance()->getRequest()->getUri(),PHP_URL_HOST ));?>" + "/backend.php/collection/descCollectionJSON";
+			$.getJSON( 
+				url,
+				{id: id},
+				function(data) {
+					if($.isNumeric(data[0].preferred_taxonomy))
+					{
+						$(".col_check_metadata_ref option[value='"+data[0].preferred_taxonomy+"']").prop('selected', true)
+					}
+					else
+					{
+						$(".col_check_metadata_ref option:first").prop('selected', true)
+					}
+				}
+			);
+		};
 
 	$(document).ready(function (){
 		var $val_id=$("#specimen_taxon_ref_name").val();
 
 		if ($val_id != ""){
-			var url=location.protocol + '//' + location.host + "/"+ location.pathname.split("/")[1]+ "/"+ location.pathname.split("/")[2]  +  "/specimen/getCitesAndTaxonomy";
+			var url=location.protocol + '//' + "<?php print(parse_url(sfContext::getInstance()->getRequest()->getUri(),PHP_URL_HOST ));?>" +   "/backend.php/specimen/getCitesAndTaxonomy";
 			$.get( 
 				url,
 				{id: $val_id},
@@ -67,6 +90,25 @@
 					}
 				}
 			);
+		}
+		
+		
+		var align_collection_and_taxonomy=function(tax_id)
+		{
+				console.log(tax_id);
+				GetCollectionInfo(tax_id);
+		}
+		$("#specimen_collection_ref").change(function(){
+			
+			align_collection_and_taxonomy($("#specimen_collection_ref").val());
+		});	
+		
+		if($("#specimen_collection_ref").val().length>0)
+		{
+			if($.isNumeric($("#specimen_collection_ref").val()))
+			{
+				align_collection_and_taxonomy($("#specimen_collection_ref").val());
+			}
 		}
 	});
 </script>
