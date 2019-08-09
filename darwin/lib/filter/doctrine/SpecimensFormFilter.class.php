@@ -859,6 +859,10 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 	//ftheeten 2019 06 02
 	 $this->widgetSchema['import_ref'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
 	 $this->validatorSchema['import_ref'] = new sfValidatorString(array('required' => false));
+     
+    //2018 11 22
+	$this->widgetSchema['tag_boolean'] = new sfWidgetFormChoice(array('choices' => array('OR' => 'OR', 'AND' => 'AND')));
+	$this->validatorSchema['tag_boolean'] = new sfValidatorPass();
   
   }
 
@@ -1164,28 +1168,45 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
   {
     $conn_MGR = Doctrine_Manager::connection();
     $tagList = '';
-
+    $whereArray=array();
+    $goWhere=false;
     foreach($val as $line)
     {
       $line_val = $line['tag'];
       if( $line_val != '')
       {
-        $tagList = $conn_MGR->quote($line_val, 'string');
-        $query->andWhere("
-              (station_visible = true AND  gtu_tag_values_indexed && getTagsIndexedAsArray($tagList))
-               OR
-              (station_visible = false
-               AND (
-                    (
-                      collection_ref in (".implode(',',$this->encoding_collection).")
-                      AND gtu_tag_values_indexed && getTagsIndexedAsArray($tagList)
-                    )
-                    OR
-                    (gtu_country_tag_indexed && getTagsIndexedAsArray($tagList))
-                  )
-              )");
-        $query->whereParenWrap();        
-        
+        //$tagList = $conn_MGR->quote($line_val, 'string');
+        $tagList=trim($line_val);
+        $tagList=trim($tagList, ";");
+        foreach(explode(";", $tagList  ) as $tagvalue)
+        {
+            if(strlen($tagvalue)>0)
+            {
+                $tagvalue = $conn_MGR->quote($tagvalue, 'string');
+                $tmpStr="(station_visible = true AND  gtu_tag_values_indexed::varchar ~ fulltoindex($tagvalue) )
+                       OR
+                      (station_visible = false
+                       AND (
+                            (
+                              collection_ref in (".implode(',',$this->encoding_collection).")
+                              AND  gtu_tag_values_indexed::varchar   ~ fulltoindex($tagvalue)
+                            )
+                            OR
+                            gtu_country_tag_indexed::varchar   ~ fulltoindex($tagvalue)
+                          )
+                      )";
+                if(strtolower($this->tag_boolean)=="or")
+                {
+                    $query->orWhere($tmpStr);
+                }
+                elseif(strtolower($this->tag_boolean)=="and")
+                {
+                    $query->andWhere($tmpStr);
+                }
+                
+                $query->whereParenWrap();        
+            }
+        }      
       }
     }
     return $query ;
@@ -1818,6 +1839,15 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 
   public function bind(array $taintedValues = null, array $taintedFiles = null)
   {
+  
+    $this->tag_boolean='AND';
+	 if(isset($taintedValues['tag_boolean'])) 
+	 {
+		if(strtolower($taintedValues['tag_boolean'])=='or')
+		{
+			$this->tag_boolean='OR';
+		}
+	}
     // the line below is used to avoid with_multimedia checkbox to remains checked when we click to back to criteria
     if(!isset($taintedValues['with_multimedia'])) $taintedValues['with_multimedia'] = false ;
 

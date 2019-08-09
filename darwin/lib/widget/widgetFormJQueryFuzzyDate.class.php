@@ -36,6 +36,7 @@ class widgetFormJQueryFuzzyDate extends sfWidgetFormDate
     $this->addOption('with_time', false);
     $this->addOption('with_seconds', true);
     $this->addOption('wrap_class', 'edition');
+    $this->addOption('with_reset', true);
     parent::configure($options, $attributes);
 
     if ('' == $this->getOption('culture'))
@@ -84,7 +85,7 @@ class widgetFormJQueryFuzzyDate extends sfWidgetFormDate
       ));
       $time_str = $widget->render($name, $value, $attributes, $errors);
     }
-    
+    $name_id=$this->generateId($name);
     $script_to_format = '<script type="text/javascript">
                            function wfd_%1$s_read_linked()
                            {
@@ -180,8 +181,13 @@ class widgetFormJQueryFuzzyDate extends sfWidgetFormDate
                            });
                            jQuery("#%6$s, #%5$s, #%3$s").change(wfd_%1$s_check_linked_days);
                          </script>';
+    $resetHTML="";
+    if($this->getOption('with_reset'))
+    {
+         $resetHTML=image_tag('remove.png', array('id'=>'reset_date_'.$name_id,'class'=>'reset_date')) ;
+    }
     return parent::render($name, $value, $attributes, $errors).
-           $this->renderTag('input', array('type' => 'hidden', 'size' => 10, 'id' => $id = $this->generateId($name).'_jquery_control', 'disabled' => 'disabled')).
+           $this->renderTag('input', array('type' => 'hidden', 'size' => 10, 'id' => $id = $name_id.'_jquery_control', 'disabled' => 'disabled')).
            sprintf($script_to_format,
                    $prefix, 
                    min($this->getOption('years')),
@@ -197,6 +203,6 @@ class widgetFormJQueryFuzzyDate extends sfWidgetFormDate
                    $this->getOption('config'),
                    $this->getOption('wrap_class')
                   ).
-           $time_str;
+           $time_str.$resetHTML;
   }
 }

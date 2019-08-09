@@ -33,7 +33,7 @@
         <tr class="and_row">
           <td colspan="3"></td>
           <td>
-            <?php echo image_tag('add_blue.png');?> <a href="<?php echo url_for('gtu/andSearch');?>" class="and_tag"><?php echo __('OR'); ?></a>
+             <a href="<?php echo url_for('gtu/andSearch');?>" class="and_tag"><?php echo image_tag('add_blue.png');?></a><?php print($form['tag_boolean']->render()); ?>
           </td>
         </tr>
         <!--ftheeten 2018 08 08-->

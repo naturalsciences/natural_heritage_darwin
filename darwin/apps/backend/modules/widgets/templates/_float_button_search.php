@@ -30,6 +30,25 @@ $(document).ready(
                 $("#criteria_butt").click();
             }
        );
+       
+       $('.reset_date').click(
+		function()
+		{
+            var ctrl_name = $(this).attr('id');           
+            var radical=ctrl_name.replace('reset_date_','');
+            
+			$(".from_date, .to_date").each(
+				function(idx2, this2)
+				{
+					 var ctrl_name2 = $(this2).attr('id');
+                     if(ctrl_name2.startsWith(radical))
+                     {                       
+                        $(this2)[0].selectedIndex = 0;
+                     }
+				}
+			);
+		}		
+	);
      }
    );
 
