@@ -28,7 +28,7 @@
         <?php endforeach;?>
         <tr class="and_row">
           <td colspan="3"></td>
-          <td><?php echo image_tag('add_blue.png');?><a href="<?php echo url_for('specimensearch/andSearch');?>" class="and_tag"><?php echo __('And'); ?></a></td>
+          <td><a href="<?php echo url_for('specimensearch/andSearch');?>" class="and_tag"><?php echo image_tag('add_blue.png');?></a><?php echo $form['tag_boolean']->render(); ?></td>
         </tr>
       </tbody>
     </table>

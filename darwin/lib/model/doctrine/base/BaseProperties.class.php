@@ -157,6 +157,10 @@ abstract class BaseProperties extends DarwinModel
              array(
               'referenced_relation' => 'specimens',
              ),
+             'GtuProperties' => 
+             array(
+              'referenced_relation' => 'gtu',
+             ),
              ));
     }
 

@@ -120,7 +120,7 @@ class Gtu extends BaseGtu
   }
   
   //ftheeten 2018 12 12
-  public function getRelatedTemporalInformationMasked()
+  public function getRelatedTemporalInformationMaskedLogic()
   {
     return  Doctrine_Core::getTable('Gtu')->getRelatedTemporalInformationMaskedGtuId($this->getId());
   }  
@@ -132,7 +132,7 @@ class Gtu extends BaseGtu
   public function getRelatedTemporalInformationMaskedList()
   {
 	  $returned=Array();
-      $tmp=$this->getRelatedTemporalInformationMasked();
+      $tmp=$this->getRelatedTemporalInformationMaskedLogic();
       foreach($tmp as $date)
       {
         if($date["to_mask"]>0)
@@ -149,6 +149,121 @@ class Gtu extends BaseGtu
         return ($a - $b);
         });*/
       return $returned;
+  }
+  
+   //ftheeten 2018 12 12
+  public function getRelatedTemporalInformationMasked()
+  {
+
+	  $returned=Array();
+      $tmpTemporalInformation = $this->getRelatedTemporalInformationMaskedLogic();
+      
+      if(count($tmpTemporalInformation)>0)
+      {
+     
+          foreach($tmpTemporalInformation as $key=>$item)
+          {
+                if((int)$item["from_mask"]>0||(int)$item["to_mask"]>0)
+                {
+                    
+                    $tmp=Array();
+                    //$tmp['id']=$item->getId();
+                    $tmp['from_raw']=$item["from"];
+                    $tmp['to_raw']=$item["to"];
+                    $tmp["from"]=$item["from"];//getFromDateMasked(ESC_RAW);
+                    $tmp["to"]=$item["to"]; //getToDateMasked(ESC_RAW);
+                    $tmp["from_masked"]=$item["from_masked"];
+                    $tmp["to_masked"]=$item["to_masked"];
+                    $tmp["from_mask"]=(int)$item["from_mask"];
+                    $tmp["to_mask"]=(int)$item['to_mask'];
+                    
+                    $tmp['from_year']=$item["from_year"];
+                    $tmp['from_month']=$item["from_month"];
+                    $tmp['from_day']=$item["from_day"];
+                    $tmp['from_hour']=$item["from_hour"];
+                    $tmp['from_minute']=$item["from_minute"];
+                    $tmp['from_second']=$item["from_second"];
+                    $tmp['to_year']=$item["to_year"];
+                    $tmp['to_month']=$item["to_month"];
+                    $tmp['to_day']=$item["to_day"];
+                    $tmp['to_hour']=$item["to_hour"];
+                    $tmp['to_minute']=$item["to_minute"];
+                    $tmp['to_second']=$item["to_second"];
+                    
+                    //test from data mask
+                    $msk=(int)$item["from_mask"];
+                 
+                    if($msk&1)
+                    {
+                        $tmp["from_masked_select"]=strip_tags($item["from_masked"] );
+                    }
+                    elseif($msk&2)
+                    {
+                        $tmp["from_masked_select"]=strip_tags($item["from_masked"] );
+                    }
+                    elseif($msk&4)
+                    {
+                        $tmp["from_masked_select"]=strip_tags($item["from_masked"] );
+                    }
+                    elseif($msk&8)
+                    {
+                        $tmp["from_masked_select"]=$item['from_day'].'/'.$item['from_month'].'/'.$item['from_year'];
+                    }
+                    elseif($msk&16)
+                    {
+                        $tmp["from_masked_select"]='xx/'.$item['from_month'].'/'.$item['from_year'];
+                    }
+                    elseif($msk&32)
+                    {
+                        $tmp["from_masked_select"]='xx/xx/'.$item['from_year'];
+                    }
+                    else
+                    {
+                         $tmp["from_masked_select"]='UNK';
+                    }
+                    //to
+                    $msk=(int)(int)$item["to_mask"];
+                 
+                    if($msk&1)
+                    {
+                        $tmp["to_masked_select"]=strip_tags($item["to_masked"] );
+                    }
+                    elseif($msk&2)
+                    {
+                        $tmp["to_masked_select"]=strip_tags($item["to_masked"] );
+                    }
+                    elseif($msk&4)
+                    {
+                        $tmp["to_masked_select"]=strip_tags($item["to_masked"] );
+                    }
+                    elseif($msk&8)
+                    {
+                        $tmp["to_masked_select"]=$item['to_day'].'/'.$item['to_month'].'/'.$item['to_year'];
+                    }
+                    elseif($msk&16)
+                    {
+                        $tmp["to_masked_select"]='xx/'.$item['to_month'].'/'.$item['to_year'];
+                    }
+                    elseif($msk&32)
+                    {
+                        $tmp["to_masked_select"]='xx/xx/'.$item['to_year'];
+                    }
+                    else
+                    {
+                         $tmp["to_masked_select"]='UNK';
+                    }
+
+                    $returned[]=$tmp;
+                }
+          }
+          usort($returned, function($a, $b) {
+            return ($a['from_masked'].$a['to_masked']) - ($b['from_masked'].$b['to_masked']);
+            });
+      }
+	  $returned= array_unique($returned, SORT_REGULAR);
+	  
+	  
+	  return $returned;
   }
   
   

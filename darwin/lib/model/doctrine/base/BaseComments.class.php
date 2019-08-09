@@ -65,6 +65,10 @@ abstract class BaseComments extends DarwinModel
              array(
               'referenced_relation' => 'specimens',
              ),
+             'GtuComments' => 
+             array(
+              'referenced_relation' => 'gtu',
+             ),
              ));
     }
 
