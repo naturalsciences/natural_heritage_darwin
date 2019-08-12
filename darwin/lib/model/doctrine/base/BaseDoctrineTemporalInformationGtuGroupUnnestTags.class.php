@@ -42,6 +42,7 @@
  * @property string $tag
  * @property string $tag_indexed
  * @property Doctrine_Collection $TagGroups
+ * @property Doctrine_Collection $Tags
  * 
  * @method integer                                       getId()                      Returns the current record's "id" value
  * @method string                                        getCode()                    Returns the current record's "code" value
@@ -80,6 +81,7 @@
  * @method string                                        getTag()                     Returns the current record's "tag" value
  * @method string                                        getTagIndexed()              Returns the current record's "tag_indexed" value
  * @method Doctrine_Collection                           getTagGroups()               Returns the current record's "TagGroups" collection
+ * @method Doctrine_Collection                           getTags()                    Returns the current record's "Tags" collection
  * @method DoctrineTemporalInformationGtuGroupUnnestTags setId()                      Sets the current record's "id" value
  * @method DoctrineTemporalInformationGtuGroupUnnestTags setCode()                    Sets the current record's "code" value
  * @method DoctrineTemporalInformationGtuGroupUnnestTags setGtuFromDateMask()         Sets the current record's "gtu_from_date_mask" value
@@ -117,6 +119,7 @@
  * @method DoctrineTemporalInformationGtuGroupUnnestTags setTag()                     Sets the current record's "tag" value
  * @method DoctrineTemporalInformationGtuGroupUnnestTags setTagIndexed()              Sets the current record's "tag_indexed" value
  * @method DoctrineTemporalInformationGtuGroupUnnestTags setTagGroups()               Sets the current record's "TagGroups" collection
+ * @method DoctrineTemporalInformationGtuGroupUnnestTags setTags()                    Sets the current record's "Tags" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -261,6 +264,10 @@ abstract class BaseDoctrineTemporalInformationGtuGroupUnnestTags extends DarwinM
     {
         parent::setUp();
         $this->hasMany('TagGroups', array(
+             'local' => 'id',
+             'foreign' => 'gtu_ref'));
+
+        $this->hasMany('Tags', array(
              'local' => 'id',
              'foreign' => 'gtu_ref'));
     }

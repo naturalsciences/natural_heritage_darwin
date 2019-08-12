@@ -1183,29 +1183,29 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
             if(strlen($tagvalue)>0)
             {
                 $tagvalue = $conn_MGR->quote($tagvalue, 'string');
-                $tmpStr="(station_visible = true AND  gtu_tag_values_indexed::varchar ~ fulltoindex($tagvalue) )
-                       OR
-                      (station_visible = false
-                       AND (
-                            (
-                              collection_ref in (".implode(',',$this->encoding_collection).")
-                              AND  gtu_tag_values_indexed::varchar   ~ fulltoindex($tagvalue)
-                            )
-                            OR
-                            gtu_country_tag_indexed::varchar   ~ fulltoindex($tagvalue)
-                          )
+                $tmpStr="(
+                        
+                        EXISTS(SELECT id FROM Tags t where t.tag_indexed ~fulltoindex($tagvalue) and t.gtu_ref=s.gtu_ref) 
                       )";
-                if(strtolower($this->tag_boolean)=="or")
+                if(strtolower($this->tag_boolean)=="or"&&$goWhere)
                 {
-                    $query->orWhere($tmpStr);
+                    
+                    $query->orWhere($tmpStr);                    
+                    $query->whereParenWrap();
+
                 }
-                elseif(strtolower($this->tag_boolean)=="and")
+                else
                 {
                     $query->andWhere($tmpStr);
+                    $query->whereParenWrap();
+
                 }
-                
-                $query->whereParenWrap();        
+                 $query->andWhere("(s.station_visible = true 
+												   OR (s.station_visible = false AND s.collection_ref in (".implode(',',$this->encoding_collection).")))");
+                 $query->whereParenWrap();
+                //$query->whereParenWrap();        
             }
+            $goWhere=true;
         }      
       }
     }

@@ -37,8 +37,6 @@
  * @property Tags $Tags
  * @property TemporalInformation $TemporalInformation
  * @property DoctrineGtuComments $DoctrineGtuComments
- * @property GtuComments $GtuComments
- * @property GtuProperties $GtuProperties
  * @property Doctrine_Collection $TagGroups
  * @property Doctrine_Collection $Specimens
  * @property Doctrine_Collection $SpecimensMaincodes
@@ -75,8 +73,6 @@
  * @method Tags                getTags()                    Returns the current record's "Tags" value
  * @method TemporalInformation getTemporalInformation()     Returns the current record's "TemporalInformation" value
  * @method DoctrineGtuComments getDoctrineGtuComments()     Returns the current record's "DoctrineGtuComments" value
- * @method GtuComments         getGtuComments()             Returns the current record's "GtuComments" value
- * @method GtuProperties       getGtuProperties()           Returns the current record's "GtuProperties" value
  * @method Doctrine_Collection getTagGroups()               Returns the current record's "TagGroups" collection
  * @method Doctrine_Collection getSpecimens()               Returns the current record's "Specimens" collection
  * @method Doctrine_Collection getSpecimensMaincodes()      Returns the current record's "SpecimensMaincodes" collection
@@ -112,8 +108,6 @@
  * @method Gtu                 setTags()                    Sets the current record's "Tags" value
  * @method Gtu                 setTemporalInformation()     Sets the current record's "TemporalInformation" value
  * @method Gtu                 setDoctrineGtuComments()     Sets the current record's "DoctrineGtuComments" value
- * @method Gtu                 setGtuComments()             Sets the current record's "GtuComments" value
- * @method Gtu                 setGtuProperties()           Sets the current record's "GtuProperties" value
  * @method Gtu                 setTagGroups()               Sets the current record's "TagGroups" collection
  * @method Gtu                 setSpecimens()               Sets the current record's "Specimens" collection
  * @method Gtu                 setSpecimensMaincodes()      Sets the current record's "SpecimensMaincodes" collection
@@ -241,14 +235,6 @@ abstract class BaseGtu extends DarwinModel
              'foreign' => 'gtu_ref'));
 
         $this->hasOne('DoctrineGtuComments', array(
-             'local' => 'id',
-             'foreign' => 'record_id'));
-
-        $this->hasOne('GtuComments', array(
-             'local' => 'id',
-             'foreign' => 'record_id'));
-
-        $this->hasOne('GtuProperties', array(
              'local' => 'id',
              'foreign' => 'record_id'));
 

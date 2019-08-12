@@ -106,6 +106,7 @@ class GtuFormFilter extends BaseGtuFormFilter
     $this->validatorSchema['ig_number'] = new sfValidatorString(array('required' => false, 'trim' => true));
     
     $this->validatorSchema['id'] = new sfValidatorInteger(array('required'=>false));
+    
     //2018 11 22
 	$this->widgetSchema['tag_boolean'] = new sfWidgetFormChoice(array('choices' => array('OR' => 'OR', 'AND' => 'AND')));
 	$this->validatorSchema['tag_boolean'] = new sfValidatorPass();
@@ -131,8 +132,6 @@ class GtuFormFilter extends BaseGtuFormFilter
   public function addTagsColumnQuery($query, $field, $val)
   {
 
-        	//ftheeten 2015 10 22
-	
     $conn_MGR = Doctrine_Manager::connection();
     $tagList = '';
     $whereList=Array();
@@ -141,6 +140,7 @@ class GtuFormFilter extends BaseGtuFormFilter
       $line_val = $line['tag'];
       if( $line_val != '')
       {
+        //$tagList = $conn_MGR->quote($line_val, 'string');
         $tagList =$line_val;
         $sqlClause=Array();
 		
@@ -161,6 +161,8 @@ class GtuFormFilter extends BaseGtuFormFilter
                 }
             }
         }
+        //$query->andWhere(implode(" OR ",$sqlClause ));
+        //$query->andWhere("tag_values_indexed && getTagsIndexedAsArray($tagList)");
         $whereList[]=implode(" OR ",$sqlClause );
       }
 	  
@@ -171,11 +173,10 @@ class GtuFormFilter extends BaseGtuFormFilter
         $query->andWhere("(". implode(" ".$this->tag_boolean." ",$whereList ).")");
     }
     if($this->hasTags)
-      {		  
-            $query->leftJoin("g.Tags  t on g.id=t.gtu_ref");
+      {
+		    $query->select('d.*')->from('DoctrineTemporalInformationGtuGroupTags d');
 			$query->addOrderBy("LENGTH(tag)");
 			$query->addOrderBy("fct_rmca_gtu_orderby_pattern(tag,$tagvalue )");
-
 	  }
 
     return $query;
@@ -268,10 +269,15 @@ class GtuFormFilter extends BaseGtuFormFilter
       }
 	   if($date)
 	   {
-         $query->leftJoin("g.TemporalInformation i ON g.id=i.gtu_ref");
-		
-	   
-       }
+		if($this->hasTags)
+		{
+		  $query->select('d.*')->from('DoctrineTemporalInformationGtuGroupUnnestTags d');
+		}
+		else
+		{
+			$query->select('d.*')->from('DoctrineTemporalInformationGtuGroupUnnest d');
+		}
+	   }
 	}
    
     return $query;
@@ -293,15 +299,14 @@ class GtuFormFilter extends BaseGtuFormFilter
   {
     if( $val != '' )
     {     
-     
-	  $query->andWhere('(EXISTS (SELECT s.id FROM specimens s WHERE  s.gtu_ref=g.id AND  s.ig_num= ?))', $val);
+      //$query->andWhere('id IN (SELECT s.gtu_ref FROM specimens s WHERE ig_num= ?)', $val);
+	  $query->andWhere('(EXISTS (SELECT s.id FROM specimens s WHERE  s.gtu_ref=d.id AND  s.ig_num= ?))', $val);
     }
     return $query;
   }
   
   public function bind(array $taintedValues = null, array $taintedFiles = null)
   {
-    
     $this->tag_boolean='AND';
 	 if(isset($taintedValues['tag_boolean'])) 
 	 {
@@ -310,7 +315,6 @@ class GtuFormFilter extends BaseGtuFormFilter
 			$this->tag_boolean='OR';
 		}
 	}
-  
     if(isset($taintedValues['Tags']))
     {
       foreach($taintedValues['Tags'] as $key=>$newVal)
@@ -336,18 +340,8 @@ class GtuFormFilter extends BaseGtuFormFilter
   {    
    
      $query = DQ::create()
-        ->select("g.*, 
-        
-        fct_rmca_concatenate_comment(g.id, 'gtu') AS comments,
-         fct_rmca_concatenate_properties(g.id, 'gtu') AS properties
-
-        ")
-      ->from('Gtu g')->leftJoin("g.GtuComments c ON g.id=c.record_id AND c.referenced_relation='gtu'")
-      ->leftJoin("g.GtuProperties p ON g.id=p.record_id AND p.referenced_relation='gtu'")
-    
-      ;
-      
-
+        ->select('d.*')
+      ->from('DoctrineTemporalInformationGtuGroup d');
     $this->addCodeColumnQuery($query, $values,$values["code"]);
     $this->addIdColumnQuery($query, $values,$values["id"]);
     $this->addIgNumberColumnQuery($query, $values,$values["ig_number"]);     

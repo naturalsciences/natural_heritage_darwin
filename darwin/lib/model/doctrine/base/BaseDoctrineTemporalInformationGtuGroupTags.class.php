@@ -42,6 +42,7 @@
  * @property string $tag
  * @property string $tag_indexed
  * @property Doctrine_Collection $TagGroups
+ * @property Doctrine_Collection $Tags
  * 
  * @method integer                                 getId()                      Returns the current record's "id" value
  * @method string                                  getCode()                    Returns the current record's "code" value
@@ -80,6 +81,7 @@
  * @method string                                  getTag()                     Returns the current record's "tag" value
  * @method string                                  getTagIndexed()              Returns the current record's "tag_indexed" value
  * @method Doctrine_Collection                     getTagGroups()               Returns the current record's "TagGroups" collection
+ * @method Doctrine_Collection                     getTags()                    Returns the current record's "Tags" collection
  * @method DoctrineTemporalInformationGtuGroupTags setId()                      Sets the current record's "id" value
  * @method DoctrineTemporalInformationGtuGroupTags setCode()                    Sets the current record's "code" value
  * @method DoctrineTemporalInformationGtuGroupTags setGtuFromDateMask()         Sets the current record's "gtu_from_date_mask" value
@@ -117,6 +119,7 @@
  * @method DoctrineTemporalInformationGtuGroupTags setTag()                     Sets the current record's "tag" value
  * @method DoctrineTemporalInformationGtuGroupTags setTagIndexed()              Sets the current record's "tag_indexed" value
  * @method DoctrineTemporalInformationGtuGroupTags setTagGroups()               Sets the current record's "TagGroups" collection
+ * @method DoctrineTemporalInformationGtuGroupTags setTags()                    Sets the current record's "Tags" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -253,6 +256,10 @@ abstract class BaseDoctrineTemporalInformationGtuGroupTags extends DarwinModel
     {
         parent::setUp();
         $this->hasMany('TagGroups', array(
+             'local' => 'id',
+             'foreign' => 'gtu_ref'));
+
+        $this->hasMany('Tags', array(
              'local' => 'id',
              'foreign' => 'gtu_ref'));
     }
