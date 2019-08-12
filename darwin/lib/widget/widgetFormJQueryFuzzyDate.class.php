@@ -69,7 +69,10 @@ class widgetFormJQueryFuzzyDate extends sfWidgetFormDate
   public function render($name, $value = null, $attributes = array(), $errors = array())
   {
     $prefix = $this->generateId($name);
-
+    if($this->getOption('with_reset'))
+    {
+        $attributes["class"]=$attributes["class"]." group_date_".$prefix;
+    }
     $image = '';
     if (false !== $this->getOption('image'))
     {
@@ -160,6 +163,21 @@ class widgetFormJQueryFuzzyDate extends sfWidgetFormDate
                            }
                          
                            jQuery(document).ready(function() {
+                           
+                           
+                                 jQuery("#reset_date_'.$name_id.'").click(
+                                    function()
+                                    {
+                                        $(".group_date_'.$prefix.'").each(
+                                            function()
+                                            {
+                                                 $(this)[0].selectedIndex = 0;
+                                            }
+                                        )
+                                    }
+                                 );
+                               
+                             
                              jQuery("#%7$s").datepicker(jQuery.extend({}, {
                                minDate:    new Date(%2$s, 1 - 1, 1),
                                maxDate:    new Date(%9$s, 12 - 1, 31),
@@ -180,6 +198,8 @@ class widgetFormJQueryFuzzyDate extends sfWidgetFormDate
                              }, jQuery.datepicker.regional["%11$s"], %12$s, {dateFormat: "yy-mm-dd"}));
                            });
                            jQuery("#%6$s, #%5$s, #%3$s").change(wfd_%1$s_check_linked_days);
+                           
+                         
                          </script>';
     $resetHTML="";
     if($this->getOption('with_reset'))
