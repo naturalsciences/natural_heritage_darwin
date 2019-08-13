@@ -9,7 +9,9 @@ It runs on PostgreSQL 9.6 and a forked version of the Symfony 1.4 framework (Lex
 **Most important changes :**
   - Possibility to import taxa, gtu, lithostratigraphical classification and specimens by Tab-delimited files (no XML anymore, but the code should remain fucntional). Position of columns, case of columns name are optional. This template is linked to a mechanism that can attribute collection number
   - Parallel taxonomies
-  - Creation of JSON APIs :
+  - Creation of JSON APIs (see below)
+  
+ **JSON APIs**
   
       - List all collections : https://darwin.naturalsciences.be/public_dev.php/json/get_collections_catalogue
       
