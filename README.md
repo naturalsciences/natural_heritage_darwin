@@ -1,4 +1,4 @@
-# natural_heritage_darwin
+# Natural Heritage Darwin :
 
 This is the repository of the Darwin CMS for natural sciences collections, hosted at the RBINS.
 
@@ -6,14 +6,22 @@ This version has been developped within the framework of the BELSPO project Natu
 
 It runs on PostgreSQL 9.6 and a forked version of the Symfony 1.4 framework (Lexpress : https://github.com/FriendsOfSymfony1/symfony1), which is compliant with PHP 7+. Sources of this framework are embedded in the vendor folder.
 
-**Most important changes**
+**Most important changes :**
   - Possibility to import taxa, gtu, lithostratigraphical classification and specimens by Tab-delimited files (no XML anymore, but the code should remain fucntional). Position of columns, case of columns name are optional. This template is linked to a mechanism that can attribute collection number
   - Parallel taxonomies
-  - More JSON API
+  - More JSON APIs :
+      - List all collections : https://darwin.naturalsciences.be/public_dev.php/json/get_collections_catalogue
+      - Describe  a specific collection : https://darwin.naturalsciences.be/public_dev.php/json/get_collections_catalogue?id={id}
+          e.g. : https://darwin.naturalsciences.be/public_dev.php/json/get_collections_catalogue?id=4
+        Or  : https://darwin.naturalsciences.be/public_dev.php/json/get_collections_catalogue?code={code}
+          e.g : https://darwin.naturalsciences.be/public_dev.php/json/get_collections_catalogue?code=Rhopa
+      - Detailed view on a collection: 
+https://darwin.naturalsciences.be/public_dev.php/json/Get_collection_detail?id={id} 
+        Or https://darwin.naturalsciences.be/public_dev.php/json/Get_collection_detail?code={code}
+           e.g. : https://darwin.naturalsciences.be/public_dev.php/json/Get_collection_detail?code=Rhopa
 
 
-
-**Data model**
+**Data model :**
   - The PostgreSQL data model is different from the original one of Darwin. It now features a "temporal_information" table between the specimen and the gtu, for chronological information. The sql code contains several fucntion to mirgate from the old data model to the current one in the "public" schema. This migration procedures use the PostgreSQL "ForeignDataWrappers"
   
 
