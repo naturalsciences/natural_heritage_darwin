@@ -516,5 +516,99 @@ class SpecimensTable extends DarwinTable
 		}
 		return $returned;
    }
+   
+        //ftheeten 2017 14 11
+    public function getSpecimensInCollectionsJSON($p_collection_code, $p_host, $p_size=50, $p_page=1, $p_prefix_service_specimen="/public.php/search/getjson?specimennumber=", $p_prefix_service_collection="public.php/search/getcollectionjson?")
+    {
+
+      
+      if((string)$p_collection_code!="-1"&&is_numeric($p_size)&&is_numeric($p_page))
+      {
+      
+            if($p_size>0 && $p_page>0)
+            {
+
+                $conn_MGR = Doctrine_Manager::connection();
+                $conn = $conn_MGR->getDbh();
+               
+                $rows=array();
+                
+                $query="SELECT a.*, count(*) OVER() AS full_count FROM (SELECT distinct 'http://'||:host||:prefix||COALESCE(codes.code_prefix,'')||COALESCE(codes.code_prefix_separator,'')||COALESCE(codes.code,'')||COALESCE(codes.code_suffix_separator,'')||COALESCE(codes.code_suffix,'') as url_specimen,
+                COALESCE(codes.code_prefix,'')||COALESCE(codes.code_prefix_separator,'')||COALESCE(codes.code,'')||COALESCE(codes.code_suffix_separator,'')||COALESCE(codes.code_suffix,'') AS code_display
+                FROM codes WHERE 
+                referenced_relation='specimens'
+                AND code_category='main' and codes.record_id
+                IN (SELECT id FROM specimens WHERE collection_ref = (SELECT id FROM collections where LOWER(collections.code)=LOWER(:collection) ))
+                GROUP BY codes.code_prefix, codes.code_prefix_separator, codes.code, codes.code_suffix_separator, codes.code_suffix 
+                ORDER BY code_display) a
+                LIMIT :size OFFSET :offset;";
+                $stmt=$conn->prepare($query);
+                $stmt->bindValue(":host", $p_host);
+                $stmt->bindValue(":prefix",$p_prefix_service_specimen);
+                $stmt->bindValue(":collection", $p_collection_code);
+                $stmt->bindValue(":size", (int)$p_size);
+                $stmt->bindValue(":offset", ((int)$p_page -1)*((int)$p_size));
+                $stmt->execute();
+               
+                $rs=$stmt->fetchAll(PDO::FETCH_ASSOC);
+                if($rs[0]["full_count"]>0)
+                {
+                 
+                   $returned=Array();
+                   $returned["count"]=$rs[0]["full_count"];
+                   $returned["size_page"]=$p_size;
+                   $returned["current_page"]=(int)$p_page;
+                   $last_page=ceil($rs[0]["full_count"]/$p_size);
+                   $returned["last_page"]=$last_page;
+                   $returned["this_url"]="http://".$p_host."/".$p_prefix_service_collection."collection=".$p_collection_code."&page=".$p_page."&size=".$p_size;
+                   if((int)$p_page<$last_page)
+                   {
+                        $returned["next_url"]="http://".$p_host."/".$p_prefix_service_collection."collection=".$p_collection_code."&page=".($p_page+1)."&size=".$p_size;
+                   }
+                   else
+                   {
+                        $returned["next_url"]="http://".$p_host."/".$p_prefix_service_collection."collection=".$p_collection_code."&page=".$last_page."&size=".$p_size;
+                   }
+                   $returned["last_url"]="http://".$p_host."/".$p_prefix_service_collection."collection=".$p_collection_code."&page=".$last_page."&size=".$p_size;
+                   $records=Array();
+                   foreach($rs as $item)
+                   {
+                        $row["code_display"]=$item["code_display"];
+                        $row["url_specimen"]=$item["url_specimen"];
+                        $records[]=$row;
+                   }
+                   $returned["records"]=$records;
+                   return $returned;
+                       
+                }
+             }
+        }
+        return Array();
+     }
+
+    //ftheeten 2017 12 04
+     public function getCollectionsAllAccessPointsJSON($p_host, $p_prefix_url="/public.php/search/getcollectionjson?")
+     {
+   
+        $conn_MGR = Doctrine_Manager::connection();
+        $conn = $conn_MGR->getDbh();
+               
+        $rows=array();
+        
+        $query="SELECT code as collection_code, name as collection_name,
+         'http://'||:host||:prefix||'collection='||code as accespoint_collection
+        FROM collections;";
+        $stmt=$conn->prepare($query);
+        $stmt->bindValue(":host", $p_host);
+        $stmt->bindValue(":prefix", $p_prefix_url);
+        $stmt->execute();
+        $rs=$stmt->fetchAll(PDO::FETCH_ASSOC);
+       
+         if(count($rs)>0)
+         {
+              return $rs;
+         }
+         return Array();
+     }      
 
 }

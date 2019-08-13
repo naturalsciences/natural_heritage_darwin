@@ -1170,6 +1170,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $tagList = '';
     $whereArray=array();
     $goWhere=false;
+     $tmpStr=Array();
     foreach($val as $line)
     {
       $line_val = $line['tag'];
@@ -1178,36 +1179,47 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
         //$tagList = $conn_MGR->quote($line_val, 'string');
         $tagList=trim($line_val);
         $tagList=trim($tagList, ";");
+       
         foreach(explode(";", $tagList  ) as $tagvalue)
         {
             if(strlen($tagvalue)>0)
             {
                 $tagvalue = $conn_MGR->quote($tagvalue, 'string');
-                $tmpStr="(
+                $tmpStr[]="(
                         
                         EXISTS(SELECT id FROM Tags t where t.tag_indexed ~fulltoindex($tagvalue) and t.gtu_ref=s.gtu_ref) 
                       )";
-                if(strtolower($this->tag_boolean)=="or"&&$goWhere)
+                /*if(strtolower($this->tag_boolean)=="or"&&$goWhere)
                 {
                     
                     $query->orWhere($tmpStr);                    
-                    $query->whereParenWrap();
+                    //$query->whereParenWrap();
 
                 }
                 else
                 {
                     $query->andWhere($tmpStr);
-                    $query->whereParenWrap();
+                    //$query->whereParenWrap();
 
-                }
-                 $query->andWhere("(s.station_visible = true 
-												   OR (s.station_visible = false AND s.collection_ref in (".implode(',',$this->encoding_collection).")))");
-                 $query->whereParenWrap();
+                }*/
+                 
+                 //$query->whereParenWrap();
                 //$query->whereParenWrap();        
             }
             $goWhere=true;
-        }      
+        } 
+          
       }
+    }
+    if(count($tmpStr)>0)
+    {
+        $query->andWhere("(".implode(" ".$this->tag_boolean." ",$tmpStr).") AND (s.station_visible = true 
+												   OR (s.station_visible = false AND s.collection_ref in (".implode(',',$this->encoding_collection).")))");      
+    }
+    else
+    {
+        $query->andWhere(" (s.station_visible = true 
+												   OR (s.station_visible = false AND s.collection_ref in (".implode(',',$this->encoding_collection).")))"); 
     }
     return $query ;
   }

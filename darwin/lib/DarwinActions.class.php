@@ -379,4 +379,60 @@ class DarwinActions extends sfActions
 		}
 		return $tmp_id;
 	}
+    
+     //ftheeten 2017 11 24
+    protected function getSpecimenJSON(sfWebRequest $request)
+    {
+    
+        if($request->hasParameter('specimennumber'))
+		{
+       
+            $results=Doctrine_Core::getTable('Specimens')->getJSON($request->getParameter('specimennumber'));
+            
+            return  $results;
+            
+        }
+        return Array();
+    }
+    
+    //ftheeten 2017 11 24
+    protected function getCollectionJSON(sfWebRequest $request)
+    {
+    
+         
+        
+        $size=50; 
+        $page=1;
+       
+        if($request->hasParameter('collection'))
+		{
+        
+            $collection_code=$request->getParameter('collection');
+            $host=$request->getHost();
+            $prefix_service="/public.php/search/getjson?specimennumber=" ;            
+           
+            if($request->hasParameter('size'))
+            {
+                 $size=$request->getParameter('size');
+            }
+             if($request->hasParameter('page'))
+            {
+                 $page=$request->getParameter('page');
+            }
+           
+            $results=Doctrine_Core::getTable('Specimens')->getSpecimensInCollectionsJSON($collection_code, $host, $size, $page);
+            return  $results;
+            
+        }
+      
+        return Array();
+    }
+    
+    //ftheeten 2017 12 04
+    protected function getAllCollectionsAccessPointJSON(sfWebRequest $request)
+    {
+        $host=$request->getHost();
+        $results=Doctrine_Core::getTable('Specimens')->getCollectionsAllAccessPointsJSON( $host);
+        return  $results;
+    }
 }
