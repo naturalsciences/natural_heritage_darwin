@@ -10,18 +10,23 @@ It runs on PostgreSQL 9.6 and a forked version of the Symfony 1.4 framework (Lex
   - Possibility to import taxa, gtu, lithostratigraphical classification and specimens by Tab-delimited files (no XML anymore, but the code should remain fucntional). Position of columns, case of columns name are optional. This template is linked to a mechanism that can attribute collection number
   - Parallel taxonomies
   - More JSON APIs :
+  
       - List all collections : https://darwin.naturalsciences.be/public_dev.php/json/get_collections_catalogue
+      
       - Describe  a specific collection : https://darwin.naturalsciences.be/public_dev.php/json/get_collections_catalogue?id={id}
           - e.g. : https://darwin.naturalsciences.be/public_dev.php/json/get_collections_catalogue?id=4
         Or  : https://darwin.naturalsciences.be/public_dev.php/json/get_collections_catalogue?code={code}
         
           - e.g : https://darwin.naturalsciences.be/public_dev.php/json/get_collections_catalogue?code=Rhopa
+          
       - Detailed view on a collection: 
 https://darwin.naturalsciences.be/public_dev.php/json/Get_collection_detail?id={id} 
         Or https://darwin.naturalsciences.be/public_dev.php/json/Get_collection_detail?code={code}
            - e.g. : https://darwin.naturalsciences.be/public_dev.php/json/Get_collection_detail?code=Rhopa
+           
       - Check taxon existence :https://darwin.naturalsciences.be/public_dev.php/search/getTaxon?taxon-name={taxon-name}&taxon-level={taxon-level}
            - e.g:  https://darwin.naturalsciences.be/public_dev.php/search/getTaxon?taxon-name=Tilapia
+           
       - check taxon hierarchy (GBIF style): https://darwin.naturalsciences.be/public_dev.php/search/checkTaxonHierarchy?taxon-name={taxon_name)&canonical={true|false}
            - e.g:https://darwin.naturalsciences.be/public_dev.php/search/checkTaxonHierarchy?taxon-name=Tilapia%20Test&canonical=false
 
