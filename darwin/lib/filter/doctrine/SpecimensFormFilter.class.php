@@ -1189,22 +1189,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
                         
                         EXISTS(SELECT id FROM Tags t where t.tag_indexed ~fulltoindex($tagvalue) and t.gtu_ref=s.gtu_ref) 
                       )";
-                /*if(strtolower($this->tag_boolean)=="or"&&$goWhere)
-                {
-                    
-                    $query->orWhere($tmpStr);                    
-                    //$query->whereParenWrap();
-
-                }
-                else
-                {
-                    $query->andWhere($tmpStr);
-                    //$query->whereParenWrap();
-
-                }*/
-                 
-                 //$query->whereParenWrap();
-                //$query->whereParenWrap();        
+         
             }
             $goWhere=true;
         } 
@@ -1218,8 +1203,8 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     }
     else
     {
-        $query->andWhere(" (s.station_visible = true 
-												   OR (s.station_visible = false AND s.collection_ref in (".implode(',',$this->encoding_collection).")))"); 
+        //$query->andWhere(" (s.station_visible = true 
+		//										   OR (s.station_visible = false AND s.collection_ref in //(".implode(',',$this->encoding_collection).")))"); 
     }
     return $query ;
   }
