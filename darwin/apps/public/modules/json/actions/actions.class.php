@@ -160,6 +160,7 @@ class jsonActions extends DarwinActions
         //ftheeten 2017 11 24 
     public function executeGetjson(sfWebRequest $request)
   {
+
      $results=$this->getSpecimenJSON($request);
      $this->getResponse()->setContentType('application/json');
      return  $this->renderText(json_encode($results,JSON_UNESCAPED_SLASHES));

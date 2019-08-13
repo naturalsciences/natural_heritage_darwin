@@ -387,7 +387,15 @@ class DarwinActions extends sfActions
         if($request->hasParameter('specimennumber'))
 		{
        
-            $results=Doctrine_Core::getTable('Specimens')->getJSON($request->getParameter('specimennumber'));
+            $results=Doctrine_Core::getTable('Specimens')->getJSON("NUMBER",$request->getParameter('specimennumber'));
+            
+            return  $results;
+            
+        }
+        elseif($request->hasParameter('id'))
+		{
+       
+            $results=Doctrine_Core::getTable('Specimens')->getJSON("ID",$request->getParameter('id'));
             
             return  $results;
             
@@ -406,25 +414,28 @@ class DarwinActions extends sfActions
        
         if($request->hasParameter('collection'))
 		{
-        
+ 
             $collection_code=$request->getParameter('collection');
             $host=$request->getHost();
             $prefix_service="/public.php/search/getjson?specimennumber=" ;            
            
             if($request->hasParameter('size'))
             {
+           
                  $size=$request->getParameter('size');
             }
              if($request->hasParameter('page'))
             {
+
                  $page=$request->getParameter('page');
             }
-           
+   
             $results=Doctrine_Core::getTable('Specimens')->getSpecimensInCollectionsJSON($collection_code, $host, $size, $page);
+      
             return  $results;
             
         }
-      
+  
         return Array();
     }
     
@@ -435,4 +446,6 @@ class DarwinActions extends sfActions
         $results=Doctrine_Core::getTable('Specimens')->getCollectionsAllAccessPointsJSON( $host);
         return  $results;
     }
+    
+   
 }
