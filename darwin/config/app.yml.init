@@ -1,0 +1,14 @@
+all:
+  ldap:
+    #set it to true to enable the ldap backend
+    ldap_enabled: false
+    host: 192.168.0.1
+    port: 389
+    user: MyUserName@example.com
+    pass: MYPassword
+    baseuser: cn=Users, dc=YourOganisation, dc=be
+    version: 3
+    attr_displayname: displayName
+    attr_mail: mail
+    #Often uid
+    attr_id: cn
