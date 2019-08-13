@@ -12,13 +12,14 @@ It runs on PostgreSQL 9.6 and a forked version of the Symfony 1.4 framework (Lex
   - More JSON APIs :
       - List all collections : https://darwin.naturalsciences.be/public_dev.php/json/get_collections_catalogue
       - Describe  a specific collection : https://darwin.naturalsciences.be/public_dev.php/json/get_collections_catalogue?id={id}
-          e.g. : https://darwin.naturalsciences.be/public_dev.php/json/get_collections_catalogue?id=4
+          - e.g. : https://darwin.naturalsciences.be/public_dev.php/json/get_collections_catalogue?id=4
         Or  : https://darwin.naturalsciences.be/public_dev.php/json/get_collections_catalogue?code={code}
-          e.g : https://darwin.naturalsciences.be/public_dev.php/json/get_collections_catalogue?code=Rhopa
+        
+          - e.g : https://darwin.naturalsciences.be/public_dev.php/json/get_collections_catalogue?code=Rhopa
       - Detailed view on a collection: 
 https://darwin.naturalsciences.be/public_dev.php/json/Get_collection_detail?id={id} 
         Or https://darwin.naturalsciences.be/public_dev.php/json/Get_collection_detail?code={code}
-           e.g. : https://darwin.naturalsciences.be/public_dev.php/json/Get_collection_detail?code=Rhopa
+           - e.g. : https://darwin.naturalsciences.be/public_dev.php/json/Get_collection_detail?code=Rhopa
 
 
 **Data model :**
