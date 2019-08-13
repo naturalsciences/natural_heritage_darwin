@@ -20,7 +20,10 @@ It runs on PostgreSQL 9.6 and a forked version of the Symfony 1.4 framework (Lex
 https://darwin.naturalsciences.be/public_dev.php/json/Get_collection_detail?id={id} 
         Or https://darwin.naturalsciences.be/public_dev.php/json/Get_collection_detail?code={code}
            - e.g. : https://darwin.naturalsciences.be/public_dev.php/json/Get_collection_detail?code=Rhopa
-
+      - Check taxon existence :https://darwin.naturalsciences.be/public_dev.php/search/getTaxon?taxon-name={taxon-name}&taxon-level={taxon-level}
+           - e.g:  https://darwin.naturalsciences.be/public_dev.php/search/getTaxon?taxon-name=Tilapia
+      - check taxon hierarchy (GBIF style): https://darwin.naturalsciences.be/public_dev.php/search/checkTaxonHierarchy?taxon-name={taxon_name)&canonical={true|false}
+           - e.g:https://darwin.naturalsciences.be/public_dev.php/search/checkTaxonHierarchy?taxon-name=Tilapia%20Test&canonical=false
 
 **Data model :**
   - The PostgreSQL data model is different from the original one of Darwin. It now features a "temporal_information" table between the specimen and the gtu, for chronological information. The sql code contains several fucntion to mirgate from the old data model to the current one in the "public" schema. This migration procedures use the PostgreSQL "ForeignDataWrappers"
