@@ -12,7 +12,7 @@ It runs on PostgreSQL 9.6 and a forked version of the Symfony 1.4 framework (Lex
   - Creation of JSON APIs (see below)
   
  **JSON APIs**
-  
+   - List : 
       - List all collections : https://darwin.naturalsciences.be/public_dev.php/json/get_collections_catalogue
       
       - Describe  a specific collection : https://darwin.naturalsciences.be/public_dev.php/json/get_collections_catalogue?id={id}
