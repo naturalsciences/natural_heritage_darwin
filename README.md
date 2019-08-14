@@ -32,7 +32,7 @@ https://darwin.naturalsciences.be/public_dev.php/json/Get_collection_detail?id={
       - check taxon hierarchy (GBIF style): https://darwin.naturalsciences.be/public_dev.php/search/checkTaxonHierarchy?taxon-name={taxon_name)&canonical={true|false}
            - e.g:https://darwin.naturalsciences.be/public_dev.php/search/checkTaxonHierarchy?taxon-name=Tilapia%20Test&canonical=false
       - Browse specimens inside of a collection: https://darwin.naturalsciences.be/public_dev.php/json/getcollectionjson?collection={collection_code}
-           - e.g. https://darwin.naturalsciences.be/public_dev.php/json/getcollectionjson?collection=TEST_DEVELOPPERS (NOTE: doens't go currently in sub-collections)
+           - e.g. https://darwin.naturalsciences.be/public_dev.php/json/getcollectionjson?collection=TEST_DEVELOPPERS (NOTE: doesn't go currently in sub-collections)
       - JSON representation of a specimen  : https://darwin.naturalsciences.be/public.php/json/getjson?id={id}
            - e.g.: https://darwin.naturalsciences.be/public.php/json/getjson?id=923000
 
