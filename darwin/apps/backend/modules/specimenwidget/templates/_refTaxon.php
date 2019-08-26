@@ -95,7 +95,6 @@
 		
 		var align_collection_and_taxonomy=function(tax_id)
 		{
-				console.log(tax_id);
 				GetCollectionInfo(tax_id);
 		}
 		$("#specimen_collection_ref").change(function(){

@@ -115,12 +115,42 @@
 	
 		//ftheeten 2018 12 01
 		var mask_from=0;
+        
+        function clean_select_date(ctrl)
+        {
+            if($(ctrl+'year').length) 
+            { 
+                $(ctrl+'year')[0].selectedIndex = 0; 
+            }
+            
+            if($(ctrl+'month').length) 
+            { 
+                $(ctrl+'month')[0].selectedIndex = 0; 
+            }
+            if($(ctrl+'day').length) 
+            { 
+                $(ctrl+'day')[0].selectedIndex = 0; 
+            }
+            if($(ctrl+'hour').length) 
+            { 
+                $(ctrl+'hour')[0].selectedIndex = 0;
+            }
+            if($(ctrl+'minute').length) 
+            { 
+                $(ctrl+'minute')[0].selectedIndex = 0;
+            }
+            if($(ctrl+'second').length) 
+            { 
+                $(ctrl+'second')[0].selectedIndex = 0;
+            }
+        }
+        
 		function adaptCollectingDateFrom_core(ctrl, mode, mask, year, month, day, hour, minute, second)
 		{
-			//console.log(year);
+            clean_select_date(ctrl);
 			if((mask&32)==32)
 			{
-				//console.log("go");
+				
 				$(ctrl+'year option[value="' + year + '"]').prop("selected", "selected");
 			}
 			if((mask&16)==16)
