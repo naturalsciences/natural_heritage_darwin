@@ -147,7 +147,7 @@
         
 		function adaptCollectingDateFrom_core(ctrl, mode, mask, year, month, day, hour, minute, second)
 		{
-            clean_select_date(ctrl);
+          
 			if((mask&32)==32)
 			{
 				
@@ -291,7 +291,8 @@
 		}
 		$('#specimen_gtu_ref').change(function()
 		{
-		 
+		   clean_select_date("#specimen_gtu_from_date_");
+           clean_select_date("#specimen_gtu_to_date_");
 			$("#specimen_gtu_ref_name").html(trim(ref_element_name));
 			splitGtu();
 			GetNagoyaGTU();
