@@ -15,10 +15,10 @@
       <?php endif?>
       <?php echo image_tag('save.png',array('class' => 'submit_image', 'title'=> __('Save'))) ; ?>
 	  <?php 
-		if(strpos($_SERVER['REQUEST_URI'], "/duplicate_id/"))
+		/*if(strpos($_SERVER['REQUEST_URI'], "/duplicate_id/"))
 		{
 			print(image_tag('calendar_erase.gif',array('class' => 'remove_date', 'title'=> __('Remove date'))));
-		}
+		}*/
 		?>
     </p>
     <script type="text/javascript">
