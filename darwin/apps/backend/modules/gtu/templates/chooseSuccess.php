@@ -12,6 +12,35 @@ $(document).ready(function () {
 });
 
 
+function clean_select_date(ctrl)
+        {
+            if($(ctrl+'year').length) 
+            { 
+                $(ctrl+'year')[0].selectedIndex = 0; 
+            }
+            
+            if($(ctrl+'month').length) 
+            { 
+                $(ctrl+'month')[0].selectedIndex = 0; 
+            }
+            if($(ctrl+'day').length) 
+            { 
+                $(ctrl+'day')[0].selectedIndex = 0; 
+            }
+            if($(ctrl+'hour').length) 
+            { 
+                $(ctrl+'hour')[0].selectedIndex = 0;
+            }
+            if($(ctrl+'minute').length) 
+            { 
+                $(ctrl+'minute')[0].selectedIndex = 0;
+            }
+            if($(ctrl+'second').length) 
+            { 
+                $(ctrl+'second')[0].selectedIndex = 0;
+            }
+        }
+
 
 function chooseGtu(event)
 {
@@ -35,7 +64,9 @@ function chooseGtu(event)
   {   
     //see _refGtu template
     //var selectedindex = $("#select_gtu_date").text();
-    //console.log(selectedindex);
+    //console.log(selectedindex)
+    clean_select_date("#specimen_gtu_from_date_");
+    clean_select_date("#specimen_gtu_to_date_");;
     var date_tags = el.find('td.temporal_information_value');
     
    
