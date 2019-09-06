@@ -246,7 +246,7 @@ class RMCATabToTaxonomyXml
 						
 						if($key_absolute>=24)
 						{
-                            $first_char=substr(trim($explodedVal[0]),1);
+                            $first_char=substr(trim($explodedVal[0]),0,1);
 							
 							//if more than one word and 1st char uppercase
 							if(count($explodedVal)>1)//&&strtoupper($first_char)==$first_char)
