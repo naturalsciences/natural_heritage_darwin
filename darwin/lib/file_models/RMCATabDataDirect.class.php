@@ -34,7 +34,7 @@ class RMCATabDataDirect
     
     protected $configuration;
 
-       
+    protected $parsed_fields=Array();   
 	
 	public function __construct($p_configuration, $p_import_id, $p_collection_of_import, $p_taxonomy_ref, $p_code_has_auto_increment=false, $p_code_last_value=NULL, $p_code_prefix=NULL, $p_code_prefix_separator=NULL, $p_code_suffix_separator=NULL, $p_code_suffix=NULL)
     {
@@ -115,7 +115,7 @@ class RMCATabDataDirect
         $fields[] = "IdentificationMonth";
         $fields[] = "IdentificationDay";
         $fields[] = "IdentificationNotes";
-        $fields[] = "IdentificationHistory";
+        //$fields[] = "IdentificationHistory";
         $fields[] = "IdentificationMethod";
         $fields[] = "referenceString";
 	    $fields[] = "externalLink";
@@ -451,11 +451,11 @@ class RMCATabDataDirect
             {
                 $this->addComment($valTmp, true, "identifications");
             }
-            $valTmp=$this->getCSVValue("identificationHistory");
+            /*$valTmp=$this->getCSVValue("identificationHistory");
             if($this->isset_and_not_null($valTmp))
             {
                 $this->addComment($valTmp, true, "taxonomy");
-            }
+            }*/
             
             $tmp=$this->identification_object->getLastDeclaredLevel() ;
              
@@ -1064,7 +1064,7 @@ class RMCATabDataDirect
          for($i=1; $i<=$this->nbProperties; $i++)
         {
                        
-                        $this->addMeasurementDynamicField((string)$i, true);
+              $this->addMeasurementDynamicField((string)$i, true);
         }
         
         $this->handleCoordinates();
@@ -1109,7 +1109,7 @@ class RMCATabDataDirect
     public function addMeasurement_free( $p_parameter_name_csv, $p_parameter_name_db)
     {   
          if(strlen(trim($this->row[$this->headers_inverted[strtolower($p_parameter_name_csv)]]))>0)
-         {
+         {      
                 $valTmp=$this->getCSVValue($p_parameter_name_csv);
                 if($this->isset_and_not_null($valTmp))
                 {
@@ -1144,9 +1144,13 @@ class RMCATabDataDirect
             if(strlen(trim($this->row[$this->headers_inverted[strtolower($prefix2."Value".$p_index_csv)]]))>0)
             {
                 $valTmp=$this->getCSVValue($prefix2."Value".$p_index_csv);
+               
                 $parameter=$this->getCSVValue( $prefix2.$p_index_csv);
+               
                 if($this->isset_and_not_null($valTmp)&&$this->isset_and_not_null($parameter))
                 {
+                    $this->parsed_fields[]=$prefix2."Value".$p_index_csv;
+                    $this->parsed_fields[]=$prefix2.$p_index_csv;
                     $this->property = new ParsingProperties() ;
                     //$this->property->property->setReferencedRelation("staging_gtu") ;
                     $this->property->property->setPropertyType($parameter); 
@@ -1160,7 +1164,65 @@ class RMCATabDataDirect
             }
         }
     }
-    
+        
+      
+
+    //2019 09 12
+     public function addIdentificationHistory(  $p_index_csv)
+    {
+      
+            
+        $prefixDate="IdentificationHistory".$p_index_csv."Date";
+        $prefixNotionConcerned ="IdentificationHistory".$p_index_csv."Notion";
+        $prefixValue ="IdentificationHistory".$p_index_csv."Value";
+        $prefixStatus ="IdentificationHistory".$p_index_csv."Status";
+        $prefixIdentifier ="IdentificationHistory".$p_index_csv."Identifier";
+        
+        if (array_key_exists(strtolower($prefixValue), $this->headers_inverted)&&array_key_exists(strtolower($prefixNotionConcerned), $this->headers_inverted)) 
+        {           
+            $this->identification_object = new ParsingIdentifications() ;
+            $valTmp=$this->getCSVValue($prefixValue);
+            
+            if( $this->isset_and_not_null($valTmp )) 
+            {
+                $this->parsed_fields[]=$prefixValue;
+                $this->identification_object->fullname = $valTmp;
+            }             
+            $valTmp=$this->getCSVValue($prefixStatus);
+            if($this->isset_and_not_null($valTmp))
+            {
+                $this->parsed_fields[]=$prefixStatus;
+                $this->identification_object->determination_status=$valTmp;
+            }
+            
+            $valTmp=$this->getCSVValue($prefixNotionConcerned);
+            if($this->isset_and_not_null($valTmp))
+            {
+                $this->parsed_fields[]=$prefixNotionConcerned;
+                $this->identification_object->setNotion($valTmp);
+            }
+                
+            $valTmp=$this->getCSVValue($prefixIdentifier);
+            if($this->isset_and_not_null($valTmp))
+            {
+                $this->parsed_fields[]=$prefixIdentifier;
+                $this->handlePeople($this->identification_object, "identifier", $valTmp);
+            }
+                
+            $identDate=$this->generateDateGeneric($prefixDate);
+            if(strlen($identDate))
+            {
+                $this->parsed_fields[]=$prefixDate."Year";
+                $this->parsed_fields[]=$prefixDate."Month";
+                $this->parsed_fields[]=$prefixDate."Day";
+                $this->identification_object->identification->setNotionDate(FuzzyDateTime::getValidDate($identDate)) ;
+            }                           
+                
+               
+            $this->identification_object->save($this->staging) ;
+            
+        }
+    }
     
     public function addStorage()
     {
@@ -1731,6 +1793,7 @@ class RMCATabDataDirect
         for($i=1; $i<=$this->nbProperties; $i++)
         {
             $this->addMeasurementDynamicField( (string)$i);
+            $this->addIdentificationHistory((string)$i);
         }
 		
 		foreach($p_row as $key=>$value)
@@ -1743,8 +1806,11 @@ class RMCATabDataDirect
             {
 				if(!array_key_exists(strtolower(trim($field_name)), $this->fields_inverted))
 				{			               
-						$this->addMeasurement_free($field_name, $field_name);
-				}
+						if(!in_array($field_name, $this->parsed_fields))
+                        {
+                            $this->addMeasurement_free($field_name, $field_name);
+                        }
+                }
 			}
 			
 		}
@@ -1974,30 +2040,7 @@ print($externallink);
           $this->staging->addRelated($this->property->property);
         }
       }
-      //ftheeten 2016 06 22
-      /*elseif(strtolower($this->property->getPropertyType()) == 'n males') {
-        if(ctype_digit($this->property->getLowerValue())) {
-          $this->staging->setPartCountMalesMin($this->property->getLowerValue());
-          $this->staging->setPartCountMalesMax($this->property->getLowerValue());
-          $this->property = null;
-        } else {
-          $this->staging->addRelated($this->property->property);
-        }
-      }
-      //ftheeten 2016 06 22
-      elseif(strtolower($this->property->getPropertyType()) == 'n females') {
-        if(ctype_digit($this->property->getLowerValue())) {
-          $this->staging->setPartCountFemalesMin($this->property->getLowerValue());
-          $this->staging->setPartCountFemalesMax($this->property->getLowerValue());
-          $this->property = null;
-        } else {
-          $this->staging->addRelated($this->property->property);
-        }
-      }*/
-     /* elseif(strtolower($this->property->getPropertyType()) == 'social status') {
-        $this->staging->setIndividualSocialStatus($this->property->getLowerValue()) ;
-        $this->property = null;
-      }*/
+
 	  else {
         $this->staging->addRelated($this->property->property);
       }
