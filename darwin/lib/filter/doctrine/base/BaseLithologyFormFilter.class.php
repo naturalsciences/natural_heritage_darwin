@@ -38,11 +38,17 @@ abstract class BaseLithologyFormFilter extends DarwinModelFormFilter
     $this->widgetSchema   ['parent_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'add_empty' => true));
     $this->validatorSchema['parent_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Parent'), 'column' => 'id'));
 
+    $this->widgetSchema   ['metadata_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('TaxonomyMetadata'), 'add_empty' => true));
+    $this->validatorSchema['metadata_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('TaxonomyMetadata'), 'column' => 'id'));
+
     $this->widgetSchema   ['parent_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'add_empty' => true));
     $this->validatorSchema['parent_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Parent'), 'column' => 'id'));
 
     $this->widgetSchema   ['level_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Level'), 'add_empty' => true));
     $this->validatorSchema['level_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Level'), 'column' => 'id'));
+
+    $this->widgetSchema   ['metadata_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('TaxonomyMetadata'), 'add_empty' => true));
+    $this->validatorSchema['metadata_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('TaxonomyMetadata'), 'column' => 'id'));
 
     $this->widgetSchema->setNameFormat('lithology_filters[%s]');
   }
@@ -63,8 +69,10 @@ abstract class BaseLithologyFormFilter extends DarwinModelFormFilter
       'color' => 'Text',
       'path' => 'Text',
       'parent_ref' => 'ForeignKey',
+      'metadata_ref' => 'ForeignKey',
       'parent_ref' => 'ForeignKey',
       'level_ref' => 'ForeignKey',
+      'metadata_ref' => 'ForeignKey',
     ));
   }
 }

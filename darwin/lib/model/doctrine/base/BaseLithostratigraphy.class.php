@@ -15,8 +15,10 @@
  * @property string $path
  * @property integer $parent_ref
  * @property integer $import_ref
+ * @property integer $metadata_ref
  * @property Lithostratigraphy $Parent
  * @property CatalogueLevels $Level
+ * @property TaxonomyMetadata $TaxonomyMetadata
  * @property Doctrine_Collection $Lithostratigraphy
  * @property Doctrine_Collection $Specimens
  * @property Doctrine_Collection $SpecimensMaincodes
@@ -31,8 +33,10 @@
  * @method string              getPath()               Returns the current record's "path" value
  * @method integer             getParentRef()          Returns the current record's "parent_ref" value
  * @method integer             getImportRef()          Returns the current record's "import_ref" value
+ * @method integer             getMetadataRef()        Returns the current record's "metadata_ref" value
  * @method Lithostratigraphy   getParent()             Returns the current record's "Parent" value
  * @method CatalogueLevels     getLevel()              Returns the current record's "Level" value
+ * @method TaxonomyMetadata    getTaxonomyMetadata()   Returns the current record's "TaxonomyMetadata" value
  * @method Doctrine_Collection getLithostratigraphy()  Returns the current record's "Lithostratigraphy" collection
  * @method Doctrine_Collection getSpecimens()          Returns the current record's "Specimens" collection
  * @method Doctrine_Collection getSpecimensMaincodes() Returns the current record's "SpecimensMaincodes" collection
@@ -46,8 +50,10 @@
  * @method Lithostratigraphy   setPath()               Sets the current record's "path" value
  * @method Lithostratigraphy   setParentRef()          Sets the current record's "parent_ref" value
  * @method Lithostratigraphy   setImportRef()          Sets the current record's "import_ref" value
+ * @method Lithostratigraphy   setMetadataRef()        Sets the current record's "metadata_ref" value
  * @method Lithostratigraphy   setParent()             Sets the current record's "Parent" value
  * @method Lithostratigraphy   setLevel()              Sets the current record's "Level" value
+ * @method Lithostratigraphy   setTaxonomyMetadata()   Sets the current record's "TaxonomyMetadata" value
  * @method Lithostratigraphy   setLithostratigraphy()  Sets the current record's "Lithostratigraphy" collection
  * @method Lithostratigraphy   setSpecimens()          Sets the current record's "Specimens" collection
  * @method Lithostratigraphy   setSpecimensMaincodes() Sets the current record's "SpecimensMaincodes" collection
@@ -102,6 +108,9 @@ abstract class BaseLithostratigraphy extends DarwinModel
         $this->hasColumn('import_ref', 'integer', null, array(
              'type' => 'integer',
              ));
+        $this->hasColumn('metadata_ref', 'integer', null, array(
+             'type' => 'integer',
+             ));
     }
 
     public function setUp()
@@ -113,6 +122,10 @@ abstract class BaseLithostratigraphy extends DarwinModel
 
         $this->hasOne('CatalogueLevels as Level', array(
              'local' => 'level_ref',
+             'foreign' => 'id'));
+
+        $this->hasOne('TaxonomyMetadata', array(
+             'local' => 'metadata_ref',
              'foreign' => 'id'));
 
         $this->hasMany('Lithostratigraphy', array(

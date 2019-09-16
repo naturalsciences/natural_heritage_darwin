@@ -16,6 +16,10 @@
  * @property string $url_website
  * @property string $url_webservice
  * @property Doctrine_Collection $Taxonomy
+ * @property Doctrine_Collection $Chronostratigraphy
+ * @property Doctrine_Collection $Lithostratigraphy
+ * @property Doctrine_Collection $Mineralogy
+ * @property Doctrine_Collection $Lithology
  * 
  * @method integer             getId()                    Returns the current record's "id" value
  * @method string              getCreationDate()          Returns the current record's "creation_date" value
@@ -28,6 +32,10 @@
  * @method string              getUrlWebsite()            Returns the current record's "url_website" value
  * @method string              getUrlWebservice()         Returns the current record's "url_webservice" value
  * @method Doctrine_Collection getTaxonomy()              Returns the current record's "Taxonomy" collection
+ * @method Doctrine_Collection getChronostratigraphy()    Returns the current record's "Chronostratigraphy" collection
+ * @method Doctrine_Collection getLithostratigraphy()     Returns the current record's "Lithostratigraphy" collection
+ * @method Doctrine_Collection getMineralogy()            Returns the current record's "Mineralogy" collection
+ * @method Doctrine_Collection getLithology()             Returns the current record's "Lithology" collection
  * @method TaxonomyMetadata    setId()                    Sets the current record's "id" value
  * @method TaxonomyMetadata    setCreationDate()          Sets the current record's "creation_date" value
  * @method TaxonomyMetadata    setCreationDateMask()      Sets the current record's "creation_date_mask" value
@@ -39,6 +47,10 @@
  * @method TaxonomyMetadata    setUrlWebsite()            Sets the current record's "url_website" value
  * @method TaxonomyMetadata    setUrlWebservice()         Sets the current record's "url_webservice" value
  * @method TaxonomyMetadata    setTaxonomy()              Sets the current record's "Taxonomy" collection
+ * @method TaxonomyMetadata    setChronostratigraphy()    Sets the current record's "Chronostratigraphy" collection
+ * @method TaxonomyMetadata    setLithostratigraphy()     Sets the current record's "Lithostratigraphy" collection
+ * @method TaxonomyMetadata    setMineralogy()            Sets the current record's "Mineralogy" collection
+ * @method TaxonomyMetadata    setLithology()             Sets the current record's "Lithology" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -93,6 +105,22 @@ abstract class BaseTaxonomyMetadata extends DarwinModel
     {
         parent::setUp();
         $this->hasMany('Taxonomy', array(
+             'local' => 'id',
+             'foreign' => 'metadata_ref'));
+
+        $this->hasMany('Chronostratigraphy', array(
+             'local' => 'id',
+             'foreign' => 'metadata_ref'));
+
+        $this->hasMany('Lithostratigraphy', array(
+             'local' => 'id',
+             'foreign' => 'metadata_ref'));
+
+        $this->hasMany('Mineralogy', array(
+             'local' => 'id',
+             'foreign' => 'metadata_ref'));
+
+        $this->hasMany('Lithology', array(
              'local' => 'id',
              'foreign' => 'metadata_ref'));
     }

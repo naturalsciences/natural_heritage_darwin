@@ -666,6 +666,7 @@ Chronostratigraphy:
         parent_ref: { type: integer}
         lower_bound: { type: decimal, length: 10, scale: 3}
         upper_bound: { type: decimal, length: 10, scale: 3}
+        metadata_ref : {type: integer}
     relations:
         Parent:
             class: Chronostratigraphy
@@ -675,6 +676,11 @@ Chronostratigraphy:
             class: CatalogueLevels
             local: level_ref
             foreign: id
+        TaxonomyMetadata:
+            class: TaxonomyMetadata
+            local: metadata_ref
+            foreign: id
+
 
 Lithostratigraphy:
     columns:
@@ -689,6 +695,7 @@ Lithostratigraphy:
         parent_ref: { type: integer}
         #2019 03 06
         import_ref: { type: integer}
+        metadata_ref : {type: integer}
     relations:
         Parent:
             class: Lithostratigraphy
@@ -698,6 +705,11 @@ Lithostratigraphy:
             class: CatalogueLevels
             local: level_ref
             foreign: id
+        TaxonomyMetadata:
+            class: TaxonomyMetadata
+            local: metadata_ref
+            foreign: id
+
 
 Mineralogy:
     columns:
@@ -715,6 +727,7 @@ Mineralogy:
         formule: { type: string }
         formule_indexed: { type: string }
         cristal_system: { type: string }
+        metadata_ref : {type: integer}
     relations:
         Parent:
             class: Mineralogy
@@ -724,6 +737,11 @@ Mineralogy:
             class: CatalogueLevels
             local: level_ref
             foreign: id
+        TaxonomyMetadata:
+            class: TaxonomyMetadata
+            local: metadata_ref
+            foreign: id
+
 
 Lithology:
     columns:
@@ -736,6 +754,7 @@ Lithology:
         color: { type: string}
         path: { type: string, notnull: false, default: '/'}
         parent_ref: { type: integer}
+        metadata_ref : {type: integer}
     relations:
         Parent:
             class: Lithology
@@ -745,6 +764,10 @@ Lithology:
             class: CatalogueLevels
             local: level_ref
             foreign: id
+        TaxonomyMetadata:
+            class: TaxonomyMetadata
+            local: metadata_ref
+            foreign: id           
 
 Igs:
     columns:

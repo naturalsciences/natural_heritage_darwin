@@ -69,6 +69,12 @@ class ParsingIdentifications
   {
     $this->identification->setNotionDate(FuzzyDateTime::getValidDate($date)) ;
   }
+  
+  public function setNotionDate($date)
+  {
+    $this->identification->setNotionDate(FuzzyDateTime::getValidDate($date)) ;
+  }
+  
   public function setNotion($data)
   {
     if(substr($data,0,7) == 'mineral') $this->notion = 'mineralogy' ;

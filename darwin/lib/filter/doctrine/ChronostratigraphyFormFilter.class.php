@@ -69,7 +69,9 @@ class ChronostratigraphyFormFilter extends BaseChronostratigraphyFormFilter
 
   public function doBuildQuery(array $values)
   {
-    $query = parent::doBuildQuery($values);
+    $query = DQ::create()
+      ->select('c.*, m.taxonomy_name as taxonomy_name')
+      ->from('Chronostratigraphy c')->leftJoin("c.TaxonomyMetadata m ON c.metadata_ref=m.id");
     $this->addNamingColumnQuery($query, 'chronostratigraphy', 'name_indexed', $values['name']);
     $this->addRelationItemColumnQuery($query, $values);
     $this->addBoundRangeColumnQuery($query, $values['lower_bound'], $values['upper_bound']);

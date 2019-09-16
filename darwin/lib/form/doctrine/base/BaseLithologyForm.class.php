@@ -40,11 +40,17 @@ abstract class BaseLithologyForm extends DarwinModelForm
     $this->widgetSchema   ['parent_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'add_empty' => true));
     $this->validatorSchema['parent_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'column' => 'id', 'required' => false));
 
+    $this->widgetSchema   ['metadata_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('TaxonomyMetadata'), 'add_empty' => true));
+    $this->validatorSchema['metadata_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('TaxonomyMetadata'), 'column' => 'id', 'required' => false));
+
     $this->widgetSchema   ['parent_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'add_empty' => true));
     $this->validatorSchema['parent_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'column' => 'id', 'required' => false));
 
     $this->widgetSchema   ['level_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Level'), 'add_empty' => false));
     $this->validatorSchema['level_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Level'), 'column' => 'id'));
+
+    $this->widgetSchema   ['metadata_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('TaxonomyMetadata'), 'add_empty' => true));
+    $this->validatorSchema['metadata_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('TaxonomyMetadata'), 'column' => 'id', 'required' => false));
 
     $this->widgetSchema->setNameFormat('lithology[%s]');
   }

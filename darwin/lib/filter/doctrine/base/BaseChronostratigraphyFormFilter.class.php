@@ -44,11 +44,17 @@ abstract class BaseChronostratigraphyFormFilter extends DarwinModelFormFilter
     $this->widgetSchema   ['upper_bound'] = new sfWidgetFormFilterInput();
     $this->validatorSchema['upper_bound'] = new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false)));
 
+    $this->widgetSchema   ['metadata_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('TaxonomyMetadata'), 'add_empty' => true));
+    $this->validatorSchema['metadata_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('TaxonomyMetadata'), 'column' => 'id'));
+
     $this->widgetSchema   ['parent_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'add_empty' => true));
     $this->validatorSchema['parent_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Parent'), 'column' => 'id'));
 
     $this->widgetSchema   ['level_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Level'), 'add_empty' => true));
     $this->validatorSchema['level_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Level'), 'column' => 'id'));
+
+    $this->widgetSchema   ['metadata_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('TaxonomyMetadata'), 'add_empty' => true));
+    $this->validatorSchema['metadata_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('TaxonomyMetadata'), 'column' => 'id'));
 
     $this->widgetSchema->setNameFormat('chronostratigraphy_filters[%s]');
   }
@@ -71,8 +77,10 @@ abstract class BaseChronostratigraphyFormFilter extends DarwinModelFormFilter
       'parent_ref' => 'ForeignKey',
       'lower_bound' => 'Number',
       'upper_bound' => 'Number',
+      'metadata_ref' => 'ForeignKey',
       'parent_ref' => 'ForeignKey',
       'level_ref' => 'ForeignKey',
+      'metadata_ref' => 'ForeignKey',
     ));
   }
 }
