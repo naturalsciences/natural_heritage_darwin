@@ -16,8 +16,10 @@
  * @property integer $parent_ref
  * @property decimal $lower_bound
  * @property decimal $upper_bound
+ * @property integer $metadata_ref
  * @property Chronostratigraphy $Parent
  * @property CatalogueLevels $Level
+ * @property TaxonomyMetadata $TaxonomyMetadata
  * @property Doctrine_Collection $Chronostratigraphy
  * @property Doctrine_Collection $Specimens
  * @property Doctrine_Collection $SpecimensMaincodes
@@ -33,8 +35,10 @@
  * @method integer             getParentRef()          Returns the current record's "parent_ref" value
  * @method decimal             getLowerBound()         Returns the current record's "lower_bound" value
  * @method decimal             getUpperBound()         Returns the current record's "upper_bound" value
+ * @method integer             getMetadataRef()        Returns the current record's "metadata_ref" value
  * @method Chronostratigraphy  getParent()             Returns the current record's "Parent" value
  * @method CatalogueLevels     getLevel()              Returns the current record's "Level" value
+ * @method TaxonomyMetadata    getTaxonomyMetadata()   Returns the current record's "TaxonomyMetadata" value
  * @method Doctrine_Collection getChronostratigraphy() Returns the current record's "Chronostratigraphy" collection
  * @method Doctrine_Collection getSpecimens()          Returns the current record's "Specimens" collection
  * @method Doctrine_Collection getSpecimensMaincodes() Returns the current record's "SpecimensMaincodes" collection
@@ -49,8 +53,10 @@
  * @method Chronostratigraphy  setParentRef()          Sets the current record's "parent_ref" value
  * @method Chronostratigraphy  setLowerBound()         Sets the current record's "lower_bound" value
  * @method Chronostratigraphy  setUpperBound()         Sets the current record's "upper_bound" value
+ * @method Chronostratigraphy  setMetadataRef()        Sets the current record's "metadata_ref" value
  * @method Chronostratigraphy  setParent()             Sets the current record's "Parent" value
  * @method Chronostratigraphy  setLevel()              Sets the current record's "Level" value
+ * @method Chronostratigraphy  setTaxonomyMetadata()   Sets the current record's "TaxonomyMetadata" value
  * @method Chronostratigraphy  setChronostratigraphy() Sets the current record's "Chronostratigraphy" collection
  * @method Chronostratigraphy  setSpecimens()          Sets the current record's "Specimens" collection
  * @method Chronostratigraphy  setSpecimensMaincodes() Sets the current record's "SpecimensMaincodes" collection
@@ -112,6 +118,9 @@ abstract class BaseChronostratigraphy extends DarwinModel
              'length' => 10,
              'scale' => 3,
              ));
+        $this->hasColumn('metadata_ref', 'integer', null, array(
+             'type' => 'integer',
+             ));
     }
 
     public function setUp()
@@ -123,6 +132,10 @@ abstract class BaseChronostratigraphy extends DarwinModel
 
         $this->hasOne('CatalogueLevels as Level', array(
              'local' => 'level_ref',
+             'foreign' => 'id'));
+
+        $this->hasOne('TaxonomyMetadata', array(
+             'local' => 'metadata_ref',
              'foreign' => 'id'));
 
         $this->hasMany('Chronostratigraphy', array(

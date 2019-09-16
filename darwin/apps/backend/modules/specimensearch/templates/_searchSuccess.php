@@ -24,8 +24,9 @@
               <?php endif;?>
             </th>
             <th><!-- Pin -->
-              <label class="top_pin"><input type="checkbox" /></label>
+              <label class="top_pin"><?php print(__("Select")); ?><input type="checkbox" /></label>
             </th>
+             <th><?php print(__("Actions")); ?></th>
             <?php $all_columns = $columns->getRawValue() ;?>
             <?php foreach($all_columns as $col_name => $col):?>
               <th class="col_<?php echo $col_name;?>">
@@ -49,7 +50,7 @@
                  <?php endif ; ?>
               </th>
             <?php endforeach;?>
-            <th><!-- actions --></th>
+           
           </tr>
         </thead>
         <tbody>
@@ -63,16 +64,18 @@
               <td>
                 <label class="pin"><input type="checkbox" value="<?php echo $specimen->getId();?>" <?php if($sf_user->isPinned($specimen->getId(), 'specimen')):?>checked="checked"<?php endif;?> /></label>
               </td>
-              <?php include_partial('result_content_specimen', array( 'specimen' => $specimen, 'codes' => $codes, 'is_specimen_search' => $is_specimen_search)); ?>
-              <?php include_partial('result_content_individual', array( 'specimen' => $specimen, 'is_specimen_search' => $is_specimen_search)); ?>
-              <?php include_partial('result_content_part', array( 'specimen' => $specimen, 'is_specimen_search' => $is_specimen_search, 'loans' => $loans)); ?>
               <td>
-              <?php if($sf_user->isAtLeast(Users::ADMIN) || $specimen->getHasEncodingRights()) : ?>
+               <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))), 'specimen/view?id='.$specimen->getId(), array('target' => 'pop'));?>
+               <?php if($sf_user->isAtLeast(Users::ADMIN) || $specimen->getHasEncodingRights()) : ?>
                 <?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))), 'specimen/edit?id='.$specimen->getId());?>
                 <?php echo link_to(image_tag('duplicate.png', array("title" => __("Duplicate"))), 'specimen/new?duplicate_id='.$specimen->getId(), array('class' => 'duplicate_link','target' => '_blank'));?>
               <?php endif; ?>
-                <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))), 'specimen/view?id='.$specimen->getId(), array('target' => 'pop'));?>
+               
               </td>
+              <?php include_partial('result_content_specimen', array( 'specimen' => $specimen, 'codes' => $codes, 'is_specimen_search' => $is_specimen_search)); ?>
+              <?php include_partial('result_content_individual', array( 'specimen' => $specimen, 'is_specimen_search' => $is_specimen_search)); ?>
+              <?php include_partial('result_content_part', array( 'specimen' => $specimen, 'is_specimen_search' => $is_specimen_search, 'loans' => $loans)); ?>
+              
             </tr>
         <?php endforeach;?>
       </tbody>

@@ -14,8 +14,10 @@
  * @property string $color
  * @property string $path
  * @property integer $parent_ref
+ * @property integer $metadata_ref
  * @property Lithology $Parent
  * @property CatalogueLevels $Level
+ * @property TaxonomyMetadata $TaxonomyMetadata
  * @property Doctrine_Collection $Lithology
  * @property Doctrine_Collection $Specimens
  * @property Doctrine_Collection $SpecimensMaincodes
@@ -29,8 +31,10 @@
  * @method string              getColor()              Returns the current record's "color" value
  * @method string              getPath()               Returns the current record's "path" value
  * @method integer             getParentRef()          Returns the current record's "parent_ref" value
+ * @method integer             getMetadataRef()        Returns the current record's "metadata_ref" value
  * @method Lithology           getParent()             Returns the current record's "Parent" value
  * @method CatalogueLevels     getLevel()              Returns the current record's "Level" value
+ * @method TaxonomyMetadata    getTaxonomyMetadata()   Returns the current record's "TaxonomyMetadata" value
  * @method Doctrine_Collection getLithology()          Returns the current record's "Lithology" collection
  * @method Doctrine_Collection getSpecimens()          Returns the current record's "Specimens" collection
  * @method Doctrine_Collection getSpecimensMaincodes() Returns the current record's "SpecimensMaincodes" collection
@@ -43,8 +47,10 @@
  * @method Lithology           setColor()              Sets the current record's "color" value
  * @method Lithology           setPath()               Sets the current record's "path" value
  * @method Lithology           setParentRef()          Sets the current record's "parent_ref" value
+ * @method Lithology           setMetadataRef()        Sets the current record's "metadata_ref" value
  * @method Lithology           setParent()             Sets the current record's "Parent" value
  * @method Lithology           setLevel()              Sets the current record's "Level" value
+ * @method Lithology           setTaxonomyMetadata()   Sets the current record's "TaxonomyMetadata" value
  * @method Lithology           setLithology()          Sets the current record's "Lithology" collection
  * @method Lithology           setSpecimens()          Sets the current record's "Specimens" collection
  * @method Lithology           setSpecimensMaincodes() Sets the current record's "SpecimensMaincodes" collection
@@ -96,6 +102,9 @@ abstract class BaseLithology extends DarwinModel
         $this->hasColumn('parent_ref', 'integer', null, array(
              'type' => 'integer',
              ));
+        $this->hasColumn('metadata_ref', 'integer', null, array(
+             'type' => 'integer',
+             ));
     }
 
     public function setUp()
@@ -107,6 +116,10 @@ abstract class BaseLithology extends DarwinModel
 
         $this->hasOne('CatalogueLevels as Level', array(
              'local' => 'level_ref',
+             'foreign' => 'id'));
+
+        $this->hasOne('TaxonomyMetadata', array(
+             'local' => 'metadata_ref',
              'foreign' => 'id'));
 
         $this->hasMany('Lithology', array(

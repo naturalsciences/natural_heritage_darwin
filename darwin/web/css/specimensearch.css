@@ -63,7 +63,7 @@
 
 .spec_results
 {
-  background-color:white;
+  background-color:#dfe7f2;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   vertical-align: middle;
@@ -90,8 +90,8 @@
   text-decoration:underline;
 }
 
-.spec_results tbody:nth-child(even) tr {background: #E9F2F7}
-.spec_results tbody:nth-child(odd) tr {background: white}
+.spec_results tbody tr:nth-child(even)  {background: #E9F2F7}
+.spec_results tbody tr:nth-child(odd)  {background: #dfe7f2}
 
 .spec_results th, .spec_results td
 {

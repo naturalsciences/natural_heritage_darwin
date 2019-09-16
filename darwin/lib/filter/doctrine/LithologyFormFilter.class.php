@@ -46,7 +46,9 @@ class LithologyFormFilter extends BaseLithologyFormFilter
 
   public function doBuildQuery(array $values)
   {
-    $query = parent::doBuildQuery($values);
+    $query = DQ::create()
+      ->select('l.*, m.taxonomy_name as taxonomy_name')
+      ->from('Lithology l')->leftJoin("l.TaxonomyMetadata m ON l.metadata_ref=m.id");
     $this->addRelationItemColumnQuery($query, $values);
     $this->addNamingColumnQuery($query, 'lithology', 'name_indexed', $values['name']);
     $query->andWhere("id != 0 ")

@@ -46,7 +46,9 @@ class LithostratigraphyFormFilter extends BaseLithostratigraphyFormFilter
 
   public function doBuildQuery(array $values)
   {
-    $query = parent::doBuildQuery($values);
+     $query = DQ::create()
+      ->select('l.*, m.taxonomy_name as taxonomy_name')
+      ->from('Lithostratigraphy l')->leftJoin("l.TaxonomyMetadata m ON l.metadata_ref=m.id");
     $this->addRelationItemColumnQuery($query, $values);
     $this->addNamingColumnQuery($query, 'lithostratigraphy', 'name_indexed', $values['name']);
     $query->andWhere("id != 0 ")

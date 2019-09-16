@@ -1208,14 +1208,15 @@ class RMCATabDataDirect
                 $this->parsed_fields[]=$prefixIdentifier;
                 $this->handlePeople($this->identification_object, "identifier", $valTmp);
             }
-                
+            print("test date");
             $identDate=$this->generateDateGeneric($prefixDate);
+            print($identDate);
             if(strlen($identDate))
             {
                 $this->parsed_fields[]=$prefixDate."Year";
                 $this->parsed_fields[]=$prefixDate."Month";
                 $this->parsed_fields[]=$prefixDate."Day";
-                $this->identification_object->identification->setNotionDate(FuzzyDateTime::getValidDate($identDate)) ;
+                $this->identification_object->setNotionDate(FuzzyDateTime::getValidDate($identDate)) ;
             }                           
                 
                
@@ -1992,12 +1993,11 @@ class RMCATabDataDirect
    
    private function addExternalLink($externallinks)
   {
-	print("external");
     $unique_externallinks = array_unique(array_map('trim', explode(';', $externallinks)));
 
     foreach($unique_externallinks as $externallink)
     {  
-print($externallink);
+
       $prefix = substr($externallink,0,strpos($externallink,"://")) ;
       if($prefix != "http" && $prefix != "https") $externallink = "http://".$externallink ;
       $ext = new ExtLinks();
