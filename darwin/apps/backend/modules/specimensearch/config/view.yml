@@ -1,5 +1,5 @@
 indexSuccess:
-  stylesheets: [specimensearch.css]
+  stylesheets: [specimensearch.css?version=2019091]
  
 searchSuccess:
-  stylesheets: [specimensearch.css]
+  stylesheets: [specimensearch.css?version=2019091]
