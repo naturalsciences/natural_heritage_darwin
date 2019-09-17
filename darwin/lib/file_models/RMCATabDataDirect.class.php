@@ -1208,15 +1208,17 @@ class RMCATabDataDirect
                 $this->parsed_fields[]=$prefixIdentifier;
                 $this->handlePeople($this->identification_object, "identifier", $valTmp);
             }
-            print("test date");
+           
             $identDate=$this->generateDateGeneric($prefixDate);
             print($identDate);
             if(strlen($identDate))
             {
                 $this->parsed_fields[]=$prefixDate."Year";
                 $this->parsed_fields[]=$prefixDate."Month";
-                $this->parsed_fields[]=$prefixDate."Day";
-                $this->identification_object->setNotionDate(FuzzyDateTime::getValidDate($identDate)) ;
+                $this->parsed_fields[]=$prefixDate."Day";               
+                 
+                $this->identification_object->setNotionDate($identDate) ;
+                $this->identification_object->setNotionDateMask($identDate) ;
             }                           
                 
                
