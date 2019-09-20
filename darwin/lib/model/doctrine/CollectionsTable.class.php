@@ -253,7 +253,7 @@ class CollectionsTable extends DarwinTable
     
     $all_fields=implode(", ", $fields);
    
-    $sql ="SELECT ".$all_fields." FROM tv_reporting_count_all_specimens_by_collection_year_ig WHERE ".implode(" AND ", $where);
+    $sql ="SELECT ".$all_fields." FROM v_reporting_count_all_specimens_by_collection_year_ig WHERE ".implode(" AND ", $where);
     
     if(count($groups)>0)
     {
@@ -406,7 +406,7 @@ class CollectionsTable extends DarwinTable
     
     $all_fields=implode(", ", $fields);
    
-    $sql ="SELECT ".$all_fields." FROM tv_reporting_count_all_specimens_type_by_collection_ref_year_ig  WHERE ".implode(" AND ", $where);
+    $sql ="SELECT ".$all_fields." FROM v_reporting_count_all_specimens_type_by_collection_ref_year_ig  WHERE ".implode(" AND ", $where);
     
     if(count($groups)>0)
     {
@@ -558,7 +558,7 @@ class CollectionsTable extends DarwinTable
     
     $all_fields=implode(", ", $fields);
    
-    $sql ="SELECT ".$all_fields." FROM tv_reporting_taxa_in_specimen_per_rank_collection_ref_year_ig  WHERE ".implode(" AND ", $where);
+    $sql ="SELECT ".$all_fields." FROM v_reporting_taxa_in_specimen_per_rank_collection_ref_year_ig  WHERE ".implode(" AND ", $where);
     
     if(count($groups)>0)
     {

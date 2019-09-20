@@ -183,7 +183,7 @@ var getStatistics = function(collection_id, ig_num, from_date, to_date, includes
             $("#results2 tr").remove();
             $("#results3 tr").remove();
             var request1 = $.ajax({
-              url: "<?php echo url_for("collection/display_statistics_specimens");?>",
+              url: detect_https("<?php echo url_for("collection/display_statistics_specimens");?>"),
               method: "GET",
               data: dataTmp,
               dataType: "json"
@@ -198,7 +198,7 @@ var getStatistics = function(collection_id, ig_num, from_date, to_date, includes
             );
            
             var request2 = $.ajax({
-              url: "<?php echo url_for("collection/display_statistics_types");?>",
+              url: detect_https("<?php echo url_for("collection/display_statistics_types");?>"),
               method: "GET",
               data: dataTmp,
               dataType: "json"
@@ -212,7 +212,7 @@ var getStatistics = function(collection_id, ig_num, from_date, to_date, includes
             );
             
             var request3 = $.ajax({
-              url: "<?php echo url_for("collection/display_statistics_taxa");?>",
+              url: detect_https("<?php echo url_for("collection/display_statistics_taxa");?>"),
               method: "GET",
               data: dataTmp,
               dataType: "json"
@@ -229,7 +229,7 @@ var getStatistics = function(collection_id, ig_num, from_date, to_date, includes
         {
             $("#div_loader").css("display", 'none');
             var getQuery=$.param(dataTmp);            
-            window.open("<?php echo url_for("collection/display_all_statistics_csv");?>?"+getQuery);
+            window.open(detect_https("<?php echo url_for("collection/display_all_statistics_csv");?>?"+getQuery));
             return false;
         }
 	}
