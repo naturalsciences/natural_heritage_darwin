@@ -863,6 +863,12 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     //2018 11 22
 	$this->widgetSchema['tag_boolean'] = new sfWidgetFormChoice(array('choices' => array('OR' => 'OR', 'AND' => 'AND')));
 	$this->validatorSchema['tag_boolean'] = new sfValidatorPass();
+    
+    
+	//ftheeten 2015 01 08
+	$this->widgetSchema['code_boolean'] = new sfWidgetFormChoice(array('choices' => array('OR' => 'OR', 'AND' => 'AND')));
+  	////ftheeten 2015 01 08
+	$this->validatorSchema['code_boolean'] = new sfValidatorPass();
   
   }
 
@@ -1164,7 +1170,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     return $query ;
   }
 
-  public function addTagsColumnQuery($query, $field, $val)
+  public function addTagsColumn($query, $field, $val)
   {
     $conn_MGR = Doctrine_Manager::connection();
     $tagList = '';
@@ -1201,11 +1207,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
         $query->andWhere("(".implode(" ".$this->tag_boolean." ",$tmpStr).") AND (s.station_visible = true 
 												   OR (s.station_visible = false AND s.collection_ref in (".implode(',',$this->encoding_collection).")))");      
     }
-    else
-    {
-        //$query->andWhere(" (s.station_visible = true 
-		//										   OR (s.station_visible = false AND s.collection_ref in //(".implode(',',$this->encoding_collection).")))"); 
-    }
+    
     return $query ;
   }
   
@@ -1277,7 +1279,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     }
     return $query ;
   }
-  
+  /*
   public function addCodesColumnQuery($query, $field, $val)
   {
 
@@ -1355,6 +1357,69 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 
     return $query ;
   }
+  
+  */
+  
+  public function addCodesColumnQuery($query, $field, $val)
+ {
+	$sqlElems = Array();
+    $sqlParams = Array() ;
+	 foreach($val as $i => $code)
+    {   
+        $sql="";
+        if(array_key_exists('code_from', $code)&&array_key_exists('code_to', $code))
+        {
+            if(ctype_digit($code['code_from']) && ctype_digit($code['code_to'])) 
+            {
+              $sql = "EXISTS(select 1 from codes where  referenced_relation='specimens' and record_id = s.id AND  code_num BETWEEN ? AND ?";
+              $sqlParams[]=$code['code_from'];
+              $sqlParams[]=$code['code_to'];
+              if($code['category']  != '' && strtolower($code['category'])  != 'all') 
+                {
+                    
+                        $sql .= " AND code_category = ?";
+                         $sqlParams[]=$code['category'];
+                }
+                 $sql .= ")";
+                 
+             
+            }
+		}
+        if(array_key_exists('code_part', $code))
+        {           
+            if($code['code_part']  != '')
+            {
+                $sql ="EXISTS(select 1 from codes where  referenced_relation='specimens' and record_id = s.id AND full_code_indexed like (SELECT fulltoindex(?))";
+                $sqlParams[]=$code['code_part'];
+                if($code['category']  != '' && strtolower($code['category'])  != 'all') 
+                {
+                    
+                        $sql .= " AND code_category = ?";
+                        $sqlParams[]=$code['category'];
+                }
+                 $sql .= ")";
+            }
+            if(strlen($sql)>0)
+            {
+             $sqlElems[]= $sql ;
+            }
+        }
+    }
+	if(count($sqlElems)>0)
+	{
+		if($this->code_boolean=='OR')
+		{
+			$query->andWhere("(".implode(" OR ", $sqlElems).")",$sqlParams);
+		}
+		else
+		{			
+			$query->andWhere("(".implode(" AND ", $sqlElems).")",$sqlParams);
+		}
+		
+	}
+	return $query;
+	 
+ }
   //ftheeten 2019 24 01
   public function addGtuRefColumnQuery($query, $field, $val)
   {
@@ -1837,6 +1902,15 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
   public function bind(array $taintedValues = null, array $taintedFiles = null)
   {
   
+  
+  	$this->code_boolean='AND';
+	 if(isset($taintedValues['Codes'])&& is_array($taintedValues['Codes']) && isset($taintedValues['code_boolean'])) 
+	 {
+		if($taintedValues['code_boolean']=='OR')
+		{
+			$this->code_boolean='OR';
+		}
+	}
     $this->tag_boolean='AND';
 	 if(isset($taintedValues['tag_boolean'])) 
 	 {
@@ -1983,7 +2057,7 @@ $query = DQ::create()
       ->from('Specimens s');
       
      ;
-      
+    $this->addTagsColumn($query, $values['Tags'], $values["Tags"]);
     if($values['with_multimedia'])
       $query->where("EXISTS (select m.id from multimedia m where m.referenced_relation = 'specimens' AND m.record_id = s.id)") ;
 
