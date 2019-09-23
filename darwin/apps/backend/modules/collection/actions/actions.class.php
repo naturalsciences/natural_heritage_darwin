@@ -178,6 +178,7 @@ class collectionActions extends DarwinActions
 
   public function executeUpdate(sfWebRequest $request)
   {
+
     if(! $this->getUser()->isAtLeast(Users::MANAGER) ) $this->forwardToSecureAction();
     $this->forward404Unless($request->isMethod('post') || $request->isMethod('put'));
     $this->level = $this->getUser()->getDbUserType() ;

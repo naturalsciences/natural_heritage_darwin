@@ -1,6 +1,10 @@
 <table id="code_search" class="full_size">
   <thead>
     <tr>
+      <td colspan="6">
+		Boolean Selector:<?php echo $form['code_boolean'];?></td>
+     </td>
+    <tr>
       <th><?php echo __('Category');?></th>
       <th colspan="2"></th>
       <th class="between_col"><?php echo __('Between');?></th>

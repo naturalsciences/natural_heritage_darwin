@@ -78,8 +78,22 @@ class Collections extends BaseCollections
 
   public function isEncodable()
   {
-    if(count($this->CollectionsRights) && $this->CollectionsRights[0]->getDbUserType() >= Users::ENCODER)
+    $adminFlag=false;
+    $user=sfContext::getInstance()->getUser();
+
+    if($user!==NULL)
+    {
+        if($user->isAtLeast(Users::ADMIN))
+        {
+            
+            $adminFlag=true;
+        }
+    }
+    if((count($this->CollectionsRights) && $this->CollectionsRights[0]->getDbUserType() >= Users::ENCODER)||$adminFlag)
+    { 
       return true;
+    }
+
     return false;
   }
   
