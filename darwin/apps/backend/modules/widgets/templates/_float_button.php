@@ -54,6 +54,6 @@
 		}
 	);
     
-    
+
     </script>
 <?php endif; ?>
