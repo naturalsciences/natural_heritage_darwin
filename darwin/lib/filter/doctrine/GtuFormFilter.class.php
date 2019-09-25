@@ -201,14 +201,15 @@ class GtuFormFilter extends BaseGtuFormFilter
 
     if($values['expedition'] !='')
     {
-        $query->andWhere("(
-        (expedition_refs &&   (SELECT array_agg(e".$this->idxSubQuery.".id) from Expeditions e".$this->idxSubQuery." WHERE e".$this->idxSubQuery.".name_indexed=fulltoindex(?)) 
-        )
+         $query->andWhere("
+   		(EXISTS (SELECT d.id
+			  FROM Expeditions e1 WHERE 
+			   name_indexed = fulltoindex(?) AND e1.id = ANY ( d.expedition_refs) ))
         OR 
         (
-        id  IN (SELECT s.gtu_ref FROM Specimens s , Expeditions ex".$this->idxSubQuery."   WHERE s.expedition_ref=ex".$this->idxSubQuery.".id AND ex".$this->idxSubQuery.".name_indexed=fulltoindex(?) ) 
+        EXISTS (SELECT s.gtu_ref FROM Specimens s , Expeditions e2   WHERE  s.gtu_ref=d.id AND s.expedition_ref=e2.id   AND e2.name_indexed=fulltoindex(?)) 
         
-        )) ", Array( $values['expedition'], $values['expedition']));
+        ) ", Array( $values['expedition'], $values['expedition']));
         $this->idxSubQuery++;
     }
     return $query;
