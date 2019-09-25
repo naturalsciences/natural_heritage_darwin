@@ -56,11 +56,13 @@
 		var $val_id = "";
 		var $isnew=false;
 		
+        var url_nagoya=location.protocol + '//' + "<?php print(parse_url(sfContext::getInstance()->getRequest()->getUri(),PHP_URL_HOST ));?>" + "/backend.php/specimen/getNagoyaCollection";
+        
 		$(document).ready(function () {
 			<?php if($form->isNew()):?>
 				$isnew=true;
 			<?php else:?>
-				GetNagoyaCollection();
+				GetNagoyaCollection(url_nagoya);
 				GetNagoyaDateAcquisition();
 				GetNagoyaDateSampling();
 				GetNagoyaGTU();
@@ -76,7 +78,7 @@
 			});	
 		});
 		
-		GetNagoyaCollection();
+		GetNagoyaCollection(url_nagoya);
 		
 		$('#add_url_nagoya').click(function(event){
 			jQuery('#add_links').click();
@@ -95,22 +97,7 @@
 			},500); 
 		});
 				
-		function GetNagoyaCollection(){
-			var url=location.protocol + '//' + "<?php print(parse_url(sfContext::getInstance()->getRequest()->getUri(),PHP_URL_HOST ));?>" + "/backend.php/specimen/getNagoyaCollection";
-			$.getJSON( 
-				url,
-				{id: $("#specimen_collection_ref").val()},
-				function(data) {
-					if(data.nagoya == "yes"){
-						$('#coll').val("ok");
-					}else if(data.nagoya == "no"){
-							$('#coll').val("nok");
-					}else{
-						$('#coll').val("");
-					}
-				}
-			);
-		};
+
 		
 		function fillcheckandlabels($origin) { 
 			if(	$('#coll').val()!="" & $('#gtu').val()!=""  & $('#date_sampl').val()!="" & $('#date_acq').val()!=""){

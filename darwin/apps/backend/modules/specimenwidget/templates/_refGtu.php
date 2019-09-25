@@ -285,41 +285,9 @@
 		});
 		splitGtu();
 	});
-	function GetNagoyaGTU(){
-		if ($("#specimen_gtu_ref_code").html() !== $gtu_ref_code || $gtu_ref_code == "") {
-			var url=location.protocol + '//' + "<?php print(parse_url(sfContext::getInstance()->getRequest()->getUri(),PHP_URL_HOST ));?>" + "/backend.php/specimen/getNagoyaGTU";
-			$.getJSON( 
-				url,
-				{id: $('#specimen_gtu_ref').val()},
-				function(data) {
-					if(data.nagoya == "yes"){
-						$('#gtu').val("ok");
-					}else if(data.nagoya == "no"){
-						$('#gtu').val("nok");
-					}else{
-						$('#gtu').val("");
-					}
-				}
-			);
-		}
-	}
+
 	
-	function GetNagoyaDateSampling(){
-		var datefrom = new Date( $("#specimen_gtu_from_date_year").val(),$("#specimen_gtu_from_date_month").val()-1,$("#specimen_gtu_from_date_day").val());
-		var dateto = new Date( $("#specimen_gtu_to_date_year").val(),$("#specimen_gtu_to_date_month").val()-1,$("#specimen_gtu_to_date_day").val());
-		var datenagoya = new Date(2014,9,12);
-		var dnull = new Date(1899,10,30);
-		
-		if(datefrom > datenagoya | dateto > datenagoya){
-			$('#date_sampl').val("ok");
-		}else{
-			$('#date_sampl').val("nok");
-		}
-		if(dateto.getTime() === dnull.getTime() & datefrom.getTime() === dnull.getTime()){
-			$('#date_sampl').val("");
-		}
-	}
-	
+
 	function init_ol_map(gtu_ref, lon,lat)
 	{
 	

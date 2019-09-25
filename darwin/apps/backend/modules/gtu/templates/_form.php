@@ -238,7 +238,25 @@ $(document).ready(function () {
 
 
     $('.counter_date').text($('#gtu_temporal_information option').size()+" Value(s)");
+    /*$('.add_date').live('click', function(event)
+        {
+            //document.forms[0].submit();
+           //$("#submit").click();
+            //$("#submit").click();
+          // event.preventDefault();
+        }
+    );*/
     
+     /*$('.remove_date').live('click', function(event)
+        {
+            
+             
+            $('#gtu_delete_mode').prop('checked', true);            
+            $("#submit").click();
+            //document.forms[0].submit();
+            event.preventDefault();
+        }
+    );*/
     
     //ftheeten 2016 02 05
 

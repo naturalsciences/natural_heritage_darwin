@@ -438,3 +438,83 @@ $.fn.customRadioCheck = function() {
 			}
 		);
 	});
+    
+    var detect_https=function(url)
+    {
+        if (location.protocol == "https:") 
+        {
+            url=url.replace("http://","https://");
+        }
+        return url;
+    }
+    
+    function GetNagoyaDateAcquisition(){
+		var d1 = new Date( $("#specimen_acquisition_date_year").val(),$("#specimen_acquisition_date_month").val()-1,$("#specimen_acquisition_date_day").val());
+		var d2 = new Date(2014,9,12);
+		var dnull = new Date(1899,10,30);
+		
+		if(d1 > d2){
+		//	if(confirm("Enable Nagoya on this specimen")){
+			$('#date_acq').val("ok");
+		//	}
+		}
+		if(d1 < d2){
+			$('#date_acq').val("nok");
+		}
+		if(d1.getTime() === dnull.getTime()){
+			$('#date_acq').val("");
+		}
+	}
+    
+         function GetNagoyaCollection(url){
+			
+			$.getJSON( 
+				url,
+				{id: $("#specimen_collection_ref").val()},
+				function(data) {
+					if(data.nagoya == "yes"){
+						$('#coll').val("ok");
+					}else if(data.nagoya == "no"){
+							$('#coll').val("nok");
+					}else{
+						$('#coll').val("");
+					}
+				}
+			);
+		};
+        
+       function GetNagoyaDateSampling(){
+		var datefrom = new Date( $("#specimen_gtu_from_date_year").val(),$("#specimen_gtu_from_date_month").val()-1,$("#specimen_gtu_from_date_day").val());
+		var dateto = new Date( $("#specimen_gtu_to_date_year").val(),$("#specimen_gtu_to_date_month").val()-1,$("#specimen_gtu_to_date_day").val());
+		var datenagoya = new Date(2014,9,12);
+		var dnull = new Date(1899,10,30);
+		
+		if(datefrom > datenagoya | dateto > datenagoya){
+			$('#date_sampl').val("ok");
+		}else{
+			$('#date_sampl').val("nok");
+		}
+		if(dateto.getTime() === dnull.getTime() & datefrom.getTime() === dnull.getTime()){
+			$('#date_sampl').val("");
+		}
+	}
+    
+    	function GetNagoyaGTU(){
+		if ($("#specimen_gtu_ref_code").html() !== $gtu_ref_code || $gtu_ref_code == "") {
+			var url=location.protocol + '//' + "<?php print(parse_url(sfContext::getInstance()->getRequest()->getUri(),PHP_URL_HOST ));?>" + "/backend.php/specimen/getNagoyaGTU";
+			$.getJSON( 
+				url,
+				{id: $('#specimen_gtu_ref').val()},
+				function(data) {
+					if(data.nagoya == "yes"){
+						$('#gtu').val("ok");
+					}else if(data.nagoya == "no"){
+						$('#gtu').val("nok");
+					}else{
+						$('#gtu').val("");
+					}
+				}
+			);
+		}
+	}
+	
