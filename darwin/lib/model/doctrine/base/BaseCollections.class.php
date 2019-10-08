@@ -27,7 +27,7 @@
  * @property string $code_mask
  * @property boolean $allow_duplicates
  * @property boolean $code_ai_inherit
- * @property boolean $nagoya
+ * @property string $nagoya
  * @property integer $preferred_taxonomy
  * @property People $Institution
  * @property Users $Manager
@@ -61,7 +61,7 @@
  * @method string              getCodeMask()                            Returns the current record's "code_mask" value
  * @method boolean             getAllowDuplicates()                     Returns the current record's "allow_duplicates" value
  * @method boolean             getCodeAiInherit()                       Returns the current record's "code_ai_inherit" value
- * @method boolean             getNagoya()                              Returns the current record's "nagoya" value
+ * @method string              getNagoya()                              Returns the current record's "nagoya" value
  * @method integer             getPreferredTaxonomy()                   Returns the current record's "preferred_taxonomy" value
  * @method People              getInstitution()                         Returns the current record's "Institution" value
  * @method Users               getManager()                             Returns the current record's "Manager" value
@@ -212,9 +212,10 @@ abstract class BaseCollections extends DarwinModel
              'notnull' => true,
              'default' => false,
              ));
-        $this->hasColumn('nagoya', 'boolean', null, array(
-             'type' => 'boolean',
-             'notnull' => false,
+        $this->hasColumn('nagoya', 'string', null, array(
+             'type' => 'string',
+             'notnull' => true,
+             'default' => 'not defined',
              ));
         $this->hasColumn('preferred_taxonomy', 'integer', null, array(
              'type' => 'integer',

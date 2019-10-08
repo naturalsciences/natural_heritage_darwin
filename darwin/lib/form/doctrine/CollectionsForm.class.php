@@ -11,6 +11,13 @@ class CollectionsForm extends BaseCollectionsForm
 {
   public function configure()
   {
+        	//JMHerpers 4/9/2019
+	static $nagoyaanswers = array(
+		"yes" 		=> "Yes",
+		"no" 		=> "No",
+		"not defined"     	=> "Not defined"
+	);
+    
     $this->useFields(array(
       'is_public',
       'code',
@@ -26,6 +33,8 @@ class CollectionsForm extends BaseCollectionsForm
 	   'nagoya'
     ));
 
+
+    
     $this->widgetSchema['is_public'] = new sfWidgetFormInputCheckbox(array ('default' => 'true'), array('title' => 'checked = public'));
     $this->validatorSchema['is_public'] = new sfValidatorBoolean() ;
     $this->widgetSchema['code'] = new sfWidgetFormInputText();
@@ -96,15 +105,22 @@ class CollectionsForm extends BaseCollectionsForm
     //Re-embedding the container
     $this->embedForm('CollectionsRights', $this->embeddedForms['CollectionsRights']);
 
-	//jmherpers 20190506
-	$this->widgetSchema['nagoya'] = new sfWidgetFormInputCheckbox();
-    $this->validatorSchema['nagoya'] = new sfValidatorBoolean() ;
+
+
 	
 	$this->widgetSchema['preferred_taxonomy'] = new sfWidgetFormChoice(array(
       'choices' => TaxonomyMetadataTable::getAllTaxonomicMetadata( 'id ASC',true)  //array_merge( array(''=>'All'),TaxonomyMetadataTable::getAllTaxonomicMetadata("id ASC"))
     ));
 	$this->validatorSchema['preferred_taxonomy'] = new sfValidatorInteger(array('required'=>false));
-	
+    
+     
+     //jmherpers 20190506
+    $this->widgetSchema['nagoya'] = new sfWidgetFormChoice(array(
+      'choices' =>  $nagoyaanswers,
+    ));
+	$this->setDefault('nagoya', "not defined");
+	$this->validatorSchema['nagoya'] = new sfValidatorChoice(array('choices' => array_keys($nagoyaanswers), 'required' => true));
+    
     $subForm = new sfForm();
     $this->embedForm('newVal',$subForm);
   }

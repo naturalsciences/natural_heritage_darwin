@@ -56,6 +56,40 @@ class IgsFormFilter extends BaseIgsFormFilter
                                                                           array('invalid'=>'The "begin" date cannot be above the "end" date.')
                                                                          )
                                             );
+      	//people widget
+    $this->widgetSchema['people_ref'] = new widgetFormButtonRef(array(
+      'model' => 'People',
+      'link_url' => 'people/searchBoth',
+      'box_title' => $this->getI18N()->__('Choose people'),
+	  'label' => $this->getI18N()->__('Choose people'),
+      'nullable' => true,
+      'button_class'=>'people_ref people_ref_0',
+      ),
+      array('class'=>'inline',)
+    );
+
+    $fields_to_search = array(
+      'spec_coll_ids' => $this->getI18N()->__('Collector'),
+      'spec_don_sel_ids' => $this->getI18N()->__('Donator or seller'),
+      'ident_ids' => $this->getI18N()->__('Identifier')
+    );
+
+    $this->widgetSchema['role_ref'] = new sfWidgetFormChoice(
+      array('choices'=> $fields_to_search,
+            'multiple' => true,
+            'expanded' => true,
+			 'label' => $this->getI18N()->__('Choose people role'),
+      ),
+	  array('class'=> 'role_ref_0'));
+    $this->validatorSchema['people_ref'] = new sfValidatorInteger(array('required' => false)) ;
+    $this->validatorSchema['role_ref'] = new sfValidatorChoice(array('choices'=>array_keys($fields_to_search), 'required'=>false)) ;
+    $this->validatorSchema['role_ref'] = new sfValidatorPass() ;
+	//ftheeten 2016/01/07
+		$this->widgetSchema['people_fuzzy'] = new sfWidgetFormInputText();
+	$this->widgetSchema['people_fuzzy']->setAttributes(array("class"=> 'class_fuzzy_people_0'));
+	$this->validatorSchema['people_fuzzy'] = new sfValidatorString(array('required' => false)) ;
+	$this->validatorSchema['people_fuzzy'] = new sfValidatorPass() ;
+  
   }
 
   public function addIgNumColumnQuery(Doctrine_Query $query, $field, $values)
@@ -67,12 +101,99 @@ class IgsFormFilter extends BaseIgsFormFilter
      }
      return $query;
   }
+  
+  public function addPeopleSearchColumnQuery(Doctrine_Query $query, $people_id, $field_to_use)
+  {
+	
+   $query->leftJoin("i.Specimens s on i.id=s.ig_ref");
+    $alias1="cp";
+
+	
+    $build_query = '';
+    if(! is_array($field_to_use) || count($field_to_use) < 1)
+      $field_to_use = array('ident_ids','spec_coll_ids','spec_don_sel_ids') ;
+
+	$nb2=0;  
+    foreach($field_to_use as $field)
+    {
+       $alias1=$alias1.$nb2;
+
+	  if($field == 'ident_ids')
+      {
+		$build_query .= "s.spec_ident_ids @> ARRAY[$people_id]::int[] OR " ;
+      }
+      elseif($field == 'spec_coll_ids')
+      {
+         $build_query .= "(s.spec_coll_ids @> ARRAY[$people_id]::int[] OR (s.expedition_ref IN (SELECT $alias1.record_id FROM CataloguePeople $alias1 WHERE $alias1.referenced_relation= 'expeditions' AND $alias1.people_ref= $people_id) )) OR " ;
+
+      }
+      else
+      {
+        $build_query .= "s.spec_don_sel_ids @> ARRAY[$people_id]::int[] OR " ;
+      }
+	  $nb2++;
+    }
+    // I remove the last 'OR ' at the end of the string
+    $build_query = substr($build_query,0,strlen($build_query) -3) ;
+
+    $query->andWhere($build_query) ;
+    return $query ;
+  }
+  
+  
+  public function addPeopleSearchColumnQueryFuzzy(Doctrine_Query $query, $people_name, $field_to_use)
+  {
+  
+    $query->leftJoin("i.Specimens s on i.id=s.ig_ref");
+    $alias1="ppa";
+	$alias2="ppb";
+	$alias3="cp";
+	$alias4="ppc";
+	$alias5="ppd";
+	
+	
+	
+    $build_query = '';
+    if(! is_array($field_to_use) || count($field_to_use) < 1)
+      $field_to_use = array('ident_ids','spec_coll_ids','spec_don_sel_ids') ;
+	 $sql_params = array();
+    foreach($field_to_use as $field)
+    {
+      if($field == 'ident_ids')
+      {
+        $build_query .= "s.spec_ident_ids && (SELECT array_agg($alias1.id) FROM people $alias1 WHERE fulltoindex(formated_name_indexed) LIKE  '%'||fulltoindex(?)||'%' ) OR " ;
+		$sql_params[]=$people_name;
+      }
+      elseif($field == 'spec_coll_ids')
+      {
+        $build_query .= "(s.spec_coll_ids && (SELECT array_agg($alias2.id) FROM people $alias2 WHERE fulltoindex(formated_name_indexed)LIKE '%'||fulltoindex(?)||'%' ) OR s.expedition_ref IN (SELECT $alias3.record_id FROM CataloguePeople $alias3 WHERE $alias3.referenced_relation= 'expeditions' AND $alias3.people_ref IN (SELECT $alias4.id FROM people $alias4 WHERE fulltoindex(formated_name_indexed) LIKE '%'||fulltoindex(?)||'%')) ) OR " ;
+		$sql_params[]=$people_name;
+		$sql_params[]=$people_name;
+      }
+      else
+      {
+        $build_query .= "s.spec_don_sel_ids && (SELECT array_agg($alias5.id) FROM people $alias5 WHERE fulltoindex(formated_name_indexed) LIKE '%'||fulltoindex(?)||'%' ) OR " ;
+		$sql_params[]=$people_name;
+      }
+    }
+    // I remove the last 'OR ' at the end of the string
+    $build_query = substr($build_query,0,strlen($build_query) -3) ;
+
+   $query->andWhere($build_query, $sql_params) ;
+	
+    return $query ;
+  }
+  
 
   public function doBuildQuery(array $values)
   {
-    $query = parent::doBuildQuery($values);
+    $query = DQ::create()
+      ->select('DISTINCT i.*')->from("Igs i"); //parent::doBuildQuery($values);
     $fields = array('ig_date');
+    $this->addIgNumColumnQuery($query, $fields, $values['ig_num']);
     $this->addDateFromToColumnQuery($query, $fields, $values['from_date'], $values['to_date']);
+    if ($values['people_ref'] != '') $this->addPeopleSearchColumnQuery($query, $values['people_ref'], $values['role_ref']);
+	if ($values['people_fuzzy'] != '') $this->addPeopleSearchColumnQueryFuzzy($query, $values['people_fuzzy'], $values['role_ref']);
     $query->andWhere("id > 0 ");
     return $query;
   }

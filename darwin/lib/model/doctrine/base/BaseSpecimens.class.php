@@ -127,7 +127,7 @@
  * @property integer $specimen_count_juveniles_max
  * @property string $specimen_creation_date
  * @property integer $import_ref
- * @property boolean $nagoya
+ * @property string $nagoya
  * @property Collections $Collections
  * @property Expeditions $Expeditions
  * @property Gtu $Gtu
@@ -274,7 +274,7 @@
  * @method integer                          getSpecimenCountJuvenilesMax()        Returns the current record's "specimen_count_juveniles_max" value
  * @method string                           getSpecimenCreationDate()             Returns the current record's "specimen_creation_date" value
  * @method integer                          getImportRef()                        Returns the current record's "import_ref" value
- * @method boolean                          getNagoya()                           Returns the current record's "nagoya" value
+ * @method string                           getNagoya()                           Returns the current record's "nagoya" value
  * @method Collections                      getCollections()                      Returns the current record's "Collections" value
  * @method Expeditions                      getExpeditions()                      Returns the current record's "Expeditions" value
  * @method Gtu                              getGtu()                              Returns the current record's "Gtu" value
@@ -875,9 +875,10 @@ abstract class BaseSpecimens extends DarwinModel
         $this->hasColumn('import_ref', 'integer', null, array(
              'type' => 'integer',
              ));
-        $this->hasColumn('nagoya', 'boolean', null, array(
-             'type' => 'boolean',
-             'notnull' => false,
+        $this->hasColumn('nagoya', 'string', null, array(
+             'type' => 'string',
+             'notnull' => true,
+             'default' => 'not defined',
              ));
     }
 

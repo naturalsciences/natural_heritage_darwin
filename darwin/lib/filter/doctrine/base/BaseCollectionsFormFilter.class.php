@@ -77,8 +77,8 @@ abstract class BaseCollectionsFormFilter extends DarwinModelFormFilter
     $this->widgetSchema   ['code_ai_inherit'] = new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no')));
     $this->validatorSchema['code_ai_inherit'] = new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0)));
 
-    $this->widgetSchema   ['nagoya'] = new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no')));
-    $this->validatorSchema['nagoya'] = new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0)));
+    $this->widgetSchema   ['nagoya'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['nagoya'] = new sfValidatorPass(array('required' => false));
 
     $this->widgetSchema   ['preferred_taxonomy'] = new sfWidgetFormFilterInput();
     $this->validatorSchema['preferred_taxonomy'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
@@ -127,7 +127,7 @@ abstract class BaseCollectionsFormFilter extends DarwinModelFormFilter
       'code_mask' => 'Text',
       'allow_duplicates' => 'Boolean',
       'code_ai_inherit' => 'Boolean',
-      'nagoya' => 'Boolean',
+      'nagoya' => 'Text',
       'preferred_taxonomy' => 'Number',
       'institution_ref' => 'ForeignKey',
       'main_manager_ref' => 'ForeignKey',

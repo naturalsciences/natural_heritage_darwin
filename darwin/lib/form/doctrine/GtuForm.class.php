@@ -11,6 +11,13 @@ class GtuForm extends BaseGtuForm
 {
   public function configure()
   {
+  
+  	static $nagoyaanswers = array(
+		"yes" 		=> "Yes",
+		"no" 		=> "No",
+		"not defined"     	=> "Not defined"
+	);
+    
     $this->useFields(array('code', 'gtu_from_date', 'gtu_to_date', 'latitude', 'longitude',
       'lat_long_accuracy', 'elevation', 'elevation_accuracy',
         //ftheeten 2018 08 08
@@ -330,7 +337,11 @@ class GtuForm extends BaseGtuForm
     );
     
 	//jmherpers 20190508
-    $this->validatorSchema['nagoya'] = new sfValidatorBoolean() ;
+    $this->widgetSchema['nagoya'] = new sfWidgetFormChoice(array(
+      'choices' =>  $nagoyaanswers,
+    ));
+	$this->setDefault('nagoya', "not defined");
+	$this->validatorSchema['nagoya'] = new sfValidatorChoice(array('choices' => array_keys($nagoyaanswers), 'required' => true));
 	
     $this->widgetSchema['delete_mode'] = new sfWidgetFormInputCheckbox();
 

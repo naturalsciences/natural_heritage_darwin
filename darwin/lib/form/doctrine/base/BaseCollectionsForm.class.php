@@ -79,8 +79,8 @@ abstract class BaseCollectionsForm extends DarwinModelForm
     $this->widgetSchema   ['code_ai_inherit'] = new sfWidgetFormInputCheckbox();
     $this->validatorSchema['code_ai_inherit'] = new sfValidatorBoolean(array('required' => false));
 
-    $this->widgetSchema   ['nagoya'] = new sfWidgetFormInputCheckbox();
-    $this->validatorSchema['nagoya'] = new sfValidatorBoolean(array('required' => false));
+    $this->widgetSchema   ['nagoya'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['nagoya'] = new sfValidatorString(array('required' => false));
 
     $this->widgetSchema   ['preferred_taxonomy'] = new sfWidgetFormInputText();
     $this->validatorSchema['preferred_taxonomy'] = new sfValidatorInteger(array('required' => false));

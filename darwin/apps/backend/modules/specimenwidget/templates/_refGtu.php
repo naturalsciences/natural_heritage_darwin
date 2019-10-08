@@ -109,7 +109,7 @@
 	var OSM_layer;
 		
 	var $gtu_ref_code = "";
-	GetNagoyaDateSampling();
+	//GetNagoyaDateSampling("#specimen_gtu");
 	$(document).ready(function () {
 		$gtu_ref_code = $("#specimen_gtu_ref_code").html();
 	
@@ -206,15 +206,15 @@
 			}
 		);
 		
-		$("#specimen_gtu_from_date_year").change(function(){
-			GetNagoyaDateSampling();
+		$(".group_date_specimen_gtu_from_date").change(function(){
+			GetNagoyaDateSampling("#specimen_gtu");
 			setTimeout(function (){ 
 				fillcheckandlabels(1);} //in _nagoya.php
 			,500); 
 		});
 		
-		$("#specimen_gtu_to_date_year").change(function(){
-			GetNagoyaDateSampling();
+		$(".group_date_specimen_gtu_to_date").change(function(){
+			GetNagoyaDateSampling("#specimen_gtu");
 			setTimeout(function (){ 
 				fillcheckandlabels(1);} //in _nagoya.php
 			,500); 

@@ -28,13 +28,15 @@
 </table>
 <script type="text/javascript">
 	//2019 05 08
-
+        var url_nagoya=location + "/../getNagoyaCollection";
 	
     	GetNagoyaDateAcquisition();
 	
-	$("#specimen_acquisition_date_year").change(function(){
+	$(".group_date_specimen_acquisition_date").change(function(){
+        GetNagoyaCollection(url_nagoya);
 		GetNagoyaDateAcquisition();
 		setTimeout(function (){ 
+        console.log("CALL");
 			fillcheckandlabels(1);}		//in _nagoya.php
 		,500); 
 	});

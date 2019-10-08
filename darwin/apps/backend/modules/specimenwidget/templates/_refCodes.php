@@ -102,7 +102,7 @@ $(document).ready(function () {
         if(typeof $("#specimen_collection_ref").val() !=="undefined")
         {
           //alert($("#specimen_collection_ref").val());
-            jQuery.getJSON( "<?php print(url_for("collection/descCollectionJSON")); ?>", {id:$("#specimen_collection_ref").val()})
+            jQuery.getJSON( detect_https("<?php print(url_for("collection/descCollectionJSON")); ?>"), {id:$("#specimen_collection_ref").val()})
             .done(function(result)
             {
                 var allow_duplicates=result[0].allow_duplicates;
