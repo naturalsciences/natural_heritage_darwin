@@ -10,7 +10,7 @@
           <th><?php echo $form['family_name']->renderLabel('Name') ?></th>
           <th><?php echo $form['activity_date_from']->renderLabel(); ?></th>
           <th><?php echo $form['activity_date_to']->renderLabel(); ?></th>
-   	      <th><?php echo $form['people_type']->renderLabel('Type');?></th>
+   	      
           <th></th>
         </tr>
       </thead>
@@ -19,8 +19,19 @@
           <td><?php echo $form['family_name']->render() ?></td>
           <td><?php echo $form['activity_date_from']->render() ?></td>
           <td><?php echo $form['activity_date_to']->render() ?></td>
-          <td><?php echo $form['people_type']->render() ?></td>
-          <td><input class="search_submit" type="submit" name="search" value="<?php echo __('Search'); ?>" /></td>
+          
+          
+        </tr>
+        <tr>
+            <th><?php echo $form['people_type']->renderLabel('Type');?></th>
+            <th><?php echo $form['ig_number']->renderLabel('I.G. Number');?></th>
+        </tr>
+        <tr>
+            <td><?php echo $form['people_type']->render() ?></td>
+            <td><?php echo $form['ig_number']->render() ?></td>
+        </tr>
+        <tr>
+        <td><input class="search_submit" type="submit" name="search" value="<?php echo __('Search'); ?>" /></td>
         </tr>
       </tbody>
     </table>
@@ -43,5 +54,14 @@ $(document).ready(function () {
    open(url+'?'+data.replace(reg,'people'));
     return false;
   });
+  
+  //ftheeten 2018 04 10
+     var ig_num=urlParam('ig_num');
+      if(!!ig_num)
+      {
+            
+          $("#people_filters_ig_number").val(decodeURIComponent(ig_num));
+          $( ".search_form" ).submit();
+      }      
 });
 </script>

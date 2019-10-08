@@ -379,8 +379,8 @@ abstract class BaseSpecimensForm extends DarwinModelForm
     $this->widgetSchema   ['import_ref'] = new sfWidgetFormInputText();
     $this->validatorSchema['import_ref'] = new sfValidatorInteger(array('required' => false));
 
-    $this->widgetSchema   ['nagoya'] = new sfWidgetFormInputCheckbox();
-    $this->validatorSchema['nagoya'] = new sfValidatorBoolean(array('required' => false));
+    $this->widgetSchema   ['nagoya'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['nagoya'] = new sfValidatorString(array('required' => false));
 
     $this->widgetSchema   ['collection_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Collections'), 'add_empty' => false));
     $this->validatorSchema['collection_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Collections'), 'column' => 'id'));

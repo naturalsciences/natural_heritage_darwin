@@ -16,8 +16,8 @@ abstract class BaseSpecimensMaincodesForm extends DarwinModelForm
   {
     parent::setupInheritance();
 
-    $this->widgetSchema   ['code_main'] = new sfWidgetFormInputText();
-    $this->validatorSchema['code_main'] = new sfValidatorPass(array('required' => false));
+    $this->widgetSchema   ['code_main'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['code_main'] = new sfValidatorString(array('required' => false));
 
     $this->widgetSchema   ['category'] = new sfWidgetFormTextarea();
     $this->validatorSchema['category'] = new sfValidatorString(array('required' => false));

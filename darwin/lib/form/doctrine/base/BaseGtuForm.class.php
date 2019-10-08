@@ -94,11 +94,11 @@ abstract class BaseGtuForm extends DarwinModelForm
     $this->widgetSchema   ['longitude_utm'] = new sfWidgetFormInputText();
     $this->validatorSchema['longitude_utm'] = new sfValidatorNumber(array('required' => false));
 
-    $this->widgetSchema   ['utm_zone'] = new sfWidgetFormInputText();
-    $this->validatorSchema['utm_zone'] = new sfValidatorPass(array('required' => false));
+    $this->widgetSchema   ['utm_zone'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['utm_zone'] = new sfValidatorString(array('required' => false));
 
-    $this->widgetSchema   ['nagoya'] = new sfWidgetFormInputCheckbox();
-    $this->validatorSchema['nagoya'] = new sfValidatorBoolean(array('required' => false));
+    $this->widgetSchema   ['nagoya'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['nagoya'] = new sfValidatorString(array('required' => false));
 
     $this->widgetSchema   ['id'] = new sfWidgetFormInputHidden();
     $this->validatorSchema['id'] = new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false));

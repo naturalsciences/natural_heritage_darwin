@@ -215,10 +215,10 @@ Gtu:
         #ftheeten rmca 2010 02 05
         longitude_utm: {type: float}
         #ftheeten rmca 2010 02 05
-        utm_zone: {type: varchar}
+        utm_zone: {type: string}
         location: {type: string}
         #JMHerpers 2019 05 07
-        nagoya: { type: boolean, notnull: false}
+        nagoya: { type: string, notnull: true, default: 'not defined'}
     #ftheeten 2018 12 11
     relations:
         Tags:
@@ -462,7 +462,7 @@ Collections:
         allow_duplicates: { type:boolean, notnull:true,default:false}
         code_ai_inherit: { type: boolean, notnull: true, default: false}
         #JMHerpers 2019 05 07
-        nagoya: { type: boolean, notnull: false}
+        nagoya: { type: string, notnull: true, default: 'not defined'}
         preferred_taxonomy: {type: integer}
     relations:
         Institution:
@@ -920,7 +920,7 @@ Specimens:
         specimen_creation_date: { type: string}
         import_ref: {type: integer}
         #JMHerpers 2019 05 07
-        nagoya: { type: boolean, notnull: false}
+        nagoya: { type: string, notnull: true, default: 'not defined'}
     relations:
         Collections:
             local: collection_ref
@@ -1582,7 +1582,7 @@ Reports:
 SpecimensMaincodes:
     columns:
         id: { type: integer, primary: true, autoincrement: true }
-        code_main: { type: varchar }
+        code_main: { type: string }
         category: { type: string, notnull: true, default: physical }
         collection_ref: { type: integer, notnull: true }
         expedition_ref: { type: integer}
@@ -1969,7 +1969,7 @@ DoctrineTemporalInformationGtuGroup:
         #ftheeten rmca 2010 02 05
         longitude_utm: {type: float}
         #ftheeten rmca 2010 02 05
-        utm_zone: {type: varchar}
+        utm_zone: {type: string}
         location: {type: string}
         array_from_date_mask : {type : string}
         array_from_date : {type : string}
@@ -2026,7 +2026,7 @@ DoctrineTemporalInformationGtuGroupUnnest:
         #ftheeten rmca 2010 02 05
         longitude_utm: {type: float}
         #ftheeten rmca 2010 02 05
-        utm_zone: {type: varchar}
+        utm_zone: {type: string}
         location: {type: string}
         from_date_mask: { type: integer, notnull: true, default:0}
         from_date: { type: string, notnull: true, default: '0001-01-01'}
@@ -2078,7 +2078,7 @@ DoctrineTemporalInformationGtuGroupTags:
         #ftheeten rmca 2010 02 05
         longitude_utm: {type: float}
         #ftheeten rmca 2010 02 05
-        utm_zone: {type: varchar}
+        utm_zone: {type: string}
         location: {type: string}
         array_from_date_mask : {type : string}
         array_from_date : {type : string}
@@ -2132,7 +2132,7 @@ DoctrineTemporalInformationGtuGroupUnnestTags:
         #ftheeten rmca 2010 02 05
         longitude_utm: {type: float}
         #ftheeten rmca 2010 02 05
-        utm_zone: {type: varchar}
+        utm_zone: {type: string}
         location: {type: string}
         from_date_mask: { type: integer, notnull: true, default:0}
         from_date: { type: string, notnull: true, default: '0001-01-01'}
@@ -2143,4 +2143,10 @@ DoctrineTemporalInformationGtuGroupUnnestTags:
         tag : {type : string}
         tag_indexed : {type : string}
 
+ TagGroupsDistinct:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }        
+        sub_group_name_indexed: {type: string, notnull: true}
+        group_name_indexed: { type: string }
+        tag_value: { type: string, notnull: true}
 

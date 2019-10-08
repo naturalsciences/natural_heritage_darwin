@@ -331,4 +331,17 @@ class gtuActions extends DarwinActions
 		return  $this->renderText(json_encode(array("id"=>$_SESSION["gtu_id"])));
         
   }
+  
+  public function executeGetTagSubGroup(sfWebRequest $request)
+  {
+    $results=Array();
+    if($request->hasParameter('tag') )
+    {
+        $tag=$request->getParameter('tag');
+        $results=Doctrine_Core::getTable('TagGroups')->getDistinctSubGroups($tag);
+    }
+     $this->getResponse()->setContentType('application/json');
+    return  $this->renderText(json_encode($results));
+  
+  }
 }

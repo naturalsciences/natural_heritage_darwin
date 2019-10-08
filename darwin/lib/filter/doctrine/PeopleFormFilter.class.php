@@ -68,6 +68,10 @@ class PeopleFormFilter extends BasePeopleFormFilter
     $this->widgetSchema['people_type'] = new sfWidgetFormChoice(array('choices' => $people_types ));
     $this->widgetSchema['people_type']->setLabel('Role');
     $this->validatorSchema['people_type'] = new sfValidatorChoice(array('required' => false, 'choices' => array_keys($people_types) ));
+           //ftheeten 2018 03 23
+    $this->widgetSchema['ig_number'] = new sfWidgetFormInputText();
+    $this->validatorSchema['ig_number'] = new sfValidatorString(array('required' => false, 'trim' => true));
+
 
     $this->validatorSchema->setPostValidator(
       new sfValidatorSchemaCompare(
@@ -86,6 +90,22 @@ class PeopleFormFilter extends BasePeopleFormFilter
     $fields = array('activity_date_from', 'activity_date_to');
     $this->addDateFromToColumnQuery($query, $fields, $values['activity_date_from'], $values['activity_date_to']);
     $query->andWhere('id != 0');
+    
+    if($values['ig_number'] != "")
+    {
+    
+        if(isset($values['people_type']))
+        {
+             $alias = $query->getRootAlias() ;
+             $query->andWhere("EXISTS (select c2.id from cataloguePeople c2 where $alias.id = c2.people_ref and people_type = ? AND referenced_relation = 'specimens' AND record_id IN (SELECT s.id FROM specimens s WHERE ig_num= ?))",array($values['people_type'],$values['ig_number']));
+        }
+        else
+        {
+            $alias = $query->getRootAlias() ;
+            $query->andWhere("EXISTS (select c2.id from cataloguePeople c2 where $alias.id = c2.people_ref AND referenced_relation = 'specimens' AND record_id IN (SELECT s.id FROM specimens s WHERE ig_num= ?))",$values['ig_number']);
+        }
+    }
+    
     return $query;
   }
 

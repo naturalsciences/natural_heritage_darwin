@@ -32,8 +32,8 @@
  * @property integer $longitude_dms_direction
  * @property float $latitude_utm
  * @property float $longitude_utm
- * @property varchar $utm_zone
- * @property boolean $nagoya
+ * @property string $utm_zone
+ * @property string $nagoya
  * @property Tags $Tags
  * @property TemporalInformation $TemporalInformation
  * @property DoctrineGtuComments $DoctrineGtuComments
@@ -68,8 +68,8 @@
  * @method integer             getLongitudeDmsDirection()   Returns the current record's "longitude_dms_direction" value
  * @method float               getLatitudeUtm()             Returns the current record's "latitude_utm" value
  * @method float               getLongitudeUtm()            Returns the current record's "longitude_utm" value
- * @method varchar             getUtmZone()                 Returns the current record's "utm_zone" value
- * @method boolean             getNagoya()                  Returns the current record's "nagoya" value
+ * @method string              getUtmZone()                 Returns the current record's "utm_zone" value
+ * @method string              getNagoya()                  Returns the current record's "nagoya" value
  * @method Tags                getTags()                    Returns the current record's "Tags" value
  * @method TemporalInformation getTemporalInformation()     Returns the current record's "TemporalInformation" value
  * @method DoctrineGtuComments getDoctrineGtuComments()     Returns the current record's "DoctrineGtuComments" value
@@ -214,12 +214,13 @@ abstract class BaseGtu extends DarwinModel
         $this->hasColumn('longitude_utm', 'float', null, array(
              'type' => 'float',
              ));
-        $this->hasColumn('utm_zone', 'varchar', null, array(
-             'type' => 'varchar',
+        $this->hasColumn('utm_zone', 'string', null, array(
+             'type' => 'string',
              ));
-        $this->hasColumn('nagoya', 'boolean', null, array(
-             'type' => 'boolean',
-             'notnull' => false,
+        $this->hasColumn('nagoya', 'string', null, array(
+             'type' => 'string',
+             'notnull' => true,
+             'default' => 'not defined',
              ));
     }
 

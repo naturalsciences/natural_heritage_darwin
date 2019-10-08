@@ -193,7 +193,16 @@
                             });
                    
             }
-           );    
+           );   
+
+       //ftheeten 2018 04 10
+          var ig_num=urlParam('ig_num');
+          if(!!ig_num)
+          {
+            
+                $("#gtu_filters_ig_number").val(decodeURIComponent(ig_num));
+                $( ".search_form" ).submit();
+          }             
 
         });
         

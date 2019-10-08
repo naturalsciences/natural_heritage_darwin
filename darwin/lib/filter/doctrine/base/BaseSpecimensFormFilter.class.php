@@ -377,8 +377,8 @@ abstract class BaseSpecimensFormFilter extends DarwinModelFormFilter
     $this->widgetSchema   ['import_ref'] = new sfWidgetFormFilterInput();
     $this->validatorSchema['import_ref'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
 
-    $this->widgetSchema   ['nagoya'] = new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no')));
-    $this->validatorSchema['nagoya'] = new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0)));
+    $this->widgetSchema   ['nagoya'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['nagoya'] = new sfValidatorPass(array('required' => false));
 
     $this->widgetSchema   ['collection_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Collections'), 'add_empty' => true));
     $this->validatorSchema['collection_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Collections'), 'column' => 'id'));
@@ -587,7 +587,7 @@ abstract class BaseSpecimensFormFilter extends DarwinModelFormFilter
       'specimen_count_juveniles_max' => 'Number',
       'specimen_creation_date' => 'Text',
       'import_ref' => 'Number',
-      'nagoya' => 'Boolean',
+      'nagoya' => 'Text',
       'collection_ref' => 'ForeignKey',
       'expedition_ref' => 'ForeignKey',
       'gtu_ref' => 'ForeignKey',

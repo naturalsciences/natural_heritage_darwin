@@ -102,6 +102,7 @@
   </div>
 </form>
 <script>
+
 $(document).ready(function () {
   $('.catalogue_filter').choose_form({});
   $('#clear_cat_relation').click(function (event)
@@ -122,7 +123,16 @@ $(document).ready(function () {
   });
   
   //ftheeten 2018 09 07
-   $(".coll_for_taxonomy_ref").val("0");  
+   $(".coll_for_taxonomy_ref").val("0"); 
+
+    //ftheeten 2018 04 10
+  var ig_num=urlParam('ig_num');
+  if(!!ig_num)
+  {
+    
+        $("#searchCatalogue_ig_number").val(decodeURIComponent(ig_num));
+        $( ".search_form" ).submit();
+  }   
 
 });
 </script>

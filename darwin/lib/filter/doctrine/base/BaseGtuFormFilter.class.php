@@ -95,8 +95,8 @@ abstract class BaseGtuFormFilter extends DarwinModelFormFilter
     $this->widgetSchema   ['utm_zone'] = new sfWidgetFormFilterInput();
     $this->validatorSchema['utm_zone'] = new sfValidatorPass(array('required' => false));
 
-    $this->widgetSchema   ['nagoya'] = new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no')));
-    $this->validatorSchema['nagoya'] = new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0)));
+    $this->widgetSchema   ['nagoya'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['nagoya'] = new sfValidatorPass(array('required' => false));
 
     $this->widgetSchema   ['id'] = new sfWidgetFormFilterInput();
     $this->validatorSchema['id'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => 'Gtu', 'column' => 'id'));
@@ -139,7 +139,7 @@ abstract class BaseGtuFormFilter extends DarwinModelFormFilter
       'latitude_utm' => 'Number',
       'longitude_utm' => 'Number',
       'utm_zone' => 'Text',
-      'nagoya' => 'Boolean',
+      'nagoya' => 'Text',
       'id' => 'Number',
     ));
   }

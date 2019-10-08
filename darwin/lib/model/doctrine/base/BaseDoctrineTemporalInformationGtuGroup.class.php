@@ -32,7 +32,7 @@
  * @property integer $longitude_dms_direction
  * @property float $latitude_utm
  * @property float $longitude_utm
- * @property varchar $utm_zone
+ * @property string $utm_zone
  * @property string $array_from_date_mask
  * @property string $array_from_date
  * @property string $array_to_date_mask
@@ -69,7 +69,7 @@
  * @method integer                             getLongitudeDmsDirection()   Returns the current record's "longitude_dms_direction" value
  * @method float                               getLatitudeUtm()             Returns the current record's "latitude_utm" value
  * @method float                               getLongitudeUtm()            Returns the current record's "longitude_utm" value
- * @method varchar                             getUtmZone()                 Returns the current record's "utm_zone" value
+ * @method string                              getUtmZone()                 Returns the current record's "utm_zone" value
  * @method string                              getArrayFromDateMask()       Returns the current record's "array_from_date_mask" value
  * @method string                              getArrayFromDate()           Returns the current record's "array_from_date" value
  * @method string                              getArrayToDateMask()         Returns the current record's "array_to_date_mask" value
@@ -217,8 +217,8 @@ abstract class BaseDoctrineTemporalInformationGtuGroup extends DarwinModel
         $this->hasColumn('longitude_utm', 'float', null, array(
              'type' => 'float',
              ));
-        $this->hasColumn('utm_zone', 'varchar', null, array(
-             'type' => 'varchar',
+        $this->hasColumn('utm_zone', 'string', null, array(
+             'type' => 'string',
              ));
         $this->hasColumn('array_from_date_mask', 'string', null, array(
              'type' => 'string',

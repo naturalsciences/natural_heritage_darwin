@@ -11,6 +11,14 @@ class SpecimensForm extends BaseSpecimensForm
 {
   public function configure()
   {
+  
+    static $nagoyaanswers = array(
+		"yes" 		=> "Yes",
+		"no" 		=> "No",
+		"not defined"     	=> "Not defined"
+	);
+    
+    
     $this->useFields(array('category','collection_ref',
       'expedition_ref',
       'gtu_ref',
@@ -616,6 +624,12 @@ class SpecimensForm extends BaseSpecimensForm
 	$this->setDefault('unicity_check', true);
 	////ftheeten 2015 01 16
 	$this->validatorSchema['unicity_check'] = new sfValidatorPass();
+    
+    //jm herpers 2019 10 02
+    $this->widgetSchema['nagoya'] = new sfWidgetFormChoice(array(
+      'choices' =>  $nagoyaanswers,
+    ));
+	$this->setDefault('nagoya', "not defined");
     
     /* ftheeten 2018 11 30*/
     

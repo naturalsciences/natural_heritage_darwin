@@ -171,11 +171,11 @@ class TaxonomyFormFilter extends BaseTaxonomyFormFilter
     }
     
      //ftheeten 2018 03 23
-	// if(isset($values['ig_number']))
+
 	if($values['ig_number'] != "")
     {
     
-      $query->andWhere('id IN (SELECT s.taxon_ref FROM specimens s WHERE ig_num= ?)', $values['ig_number']);
+      $query->andWhere('id IN (SELECT s.taxon_ref FROM specimens s WHERE WHERE UPPER(TRIM(ig_num)) = UPPER(TRIM(?)))', $values['ig_number']);
     }
     
      $this->addRelationItemColumnQuery($query, $values);

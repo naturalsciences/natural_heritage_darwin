@@ -16,7 +16,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->useFields(array('gtu_ref','gtu_code','gtu_from_date','gtu_to_date', 'taxon_level_ref', 'litho_name', 'litho_level_ref', 'litho_level_name', 'chrono_name', 'chrono_level_ref',
         'chrono_level_name', 'lithology_name', 'lithology_level_ref', 'lithology_level_name', 'mineral_name', 'mineral_level_ref',
         'mineral_level_name','ig_num','acquisition_category','acquisition_date',
-        'import_ref',
+        'import_ref', 'ig_ref',
 		//JMherpers 2019 04 25
 		'nagoya'));
 
@@ -2274,7 +2274,16 @@ $query = DQ::create()
     }
     return $query ;
   }
-  
+      
+      //ftheeten 2018 04 10
+   public function addIgRefColumnQuery($query, $field, $values)
+  {
+    if ($values != "") {
+      $conn_MGR = Doctrine_Manager::connection();
+      $query->andWhere("s.ig_ref= ?" , $values);
+    }
+    return $query;
+  }
 
   public function getJavaScripts()
   {
@@ -2298,4 +2307,6 @@ $query = DQ::create()
     $items["/select2-4.0.5/dist/css/select2.min.css"]=  'all';
     return $items;
   }
+  
+
 }

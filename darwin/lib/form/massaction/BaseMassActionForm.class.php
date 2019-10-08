@@ -48,6 +48,9 @@ class BaseMassActionForm extends sfFormSymfony
         'related_files'  => self::getI18N()->__('Change Related Files visibility/publish state'),
 		//JMHerpers 2019 06 04
 		'nagoya_specimen' => self::getI18N()->__('Change Nagoya in specimens'),
+        'add_property' => self::getI18N()->__('Add property in specimen'),
+        'add_gtu_tag' => self::getI18N()->__('Add Locality tag'),
+        'sampling_date' => self::getI18N()->__('Change Sampling date'),
     );
     return $result;
   }
@@ -124,6 +127,12 @@ class BaseMassActionForm extends sfFormSymfony
 	  //JMHerpers 2019 06 04
 	elseif($action == 'nagoya_specimen')
       return 'MaNagoyaSpecForm';
+   elseif($action == 'add_property')
+      return 'MaAddPropertyForm';
+   elseif($action == 'add_gtu_tag')
+      return 'MaAddGtuTagForm';
+   elseif($action == 'sampling_date')
+      return 'MaSamplingDateForm';
     else
       return 'sfForm';
   }

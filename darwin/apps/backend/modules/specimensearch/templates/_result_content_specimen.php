@@ -85,7 +85,7 @@
             });
           </script>
           <?php if ($action == 'edit') : ?>
-            <a href="<?php echo url_for('gtu/'.$action.'?id='.$specimen->getGtuRef()) ;?>"><?php echo $specimen->getGtuCode();?></a>
+            <a href="<?php echo url_for('gtu/'.$action.'?id='.$specimen->getGtuRef(), array("target"=>"_blank")) ;?>"><?php echo $specimen->getGtuCode();?></a>
           <?php else : ?>
             <?php echo $specimen->getGtuCode();?>
           <?php endif ; ?>
