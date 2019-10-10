@@ -121,7 +121,7 @@ var hideLoader=function()
 var buildHtmlTable=function(myList, selector, view_data) 
 {
     $(selector+" tr").remove();
-      var columns = addAllColumnHeaders(myList, selector);
+      var columns = addAllColumnHeaders(myList, selector, view_data);
 
       for (var i = 0; i < myList.length; i++) {
         if(view_data||i == myList.length-1)
@@ -153,14 +153,17 @@ var buildHtmlTable=function(myList, selector, view_data)
 // Adds a header row to the table and returns the set of columns.
 // Need to do union of keys from all records as some records may not contain
 // all records.
-function addAllColumnHeaders(myList, selector) {
+function addAllColumnHeaders(myList, selector, view_data) {
   var columnSet = [];
   var headerTr = $('<tr/>');
 
   for (var i = 0; i < myList.length; i++) {
     var rowHash = myList[i];
-    for (var key in rowHash) {
-      if ($.inArray(key, columnSet) == -1) {
+    var j=0;
+    for (var key in rowHash) 
+    {
+      if ($.inArray(key, columnSet) == -1) 
+      {
         columnSet.push(key);
         key=key.replace(/_/g, " ");
         if(key.toLowerCase()=="total")
@@ -168,7 +171,8 @@ function addAllColumnHeaders(myList, selector) {
             key="<b>"+key+"</b>";
         }
         
-        headerTr.append($('<th/>').html(key));
+        headerTr.append($('<th/>').html(key).css("text-align","left"));
+        j++;
       }
     }
   }
@@ -190,8 +194,11 @@ var getStatistics = function(collection_id,  includesub, displaysub, includedata
         view_data=includedata;
 		if(collection_id.length>0)
 		{
-			dataTmp["collectionid"]=collection_id;
-		}		
+            if(collection_id>=0)
+            {
+                dataTmp["collectionid"]=collection_id;
+            }
+        }		
 		
 		if(includesub)
 		{          
