@@ -8,6 +8,25 @@ table.results  {
    border: 1px solid black;
 }
 
+
+table.results tr {
+    display: flex;
+    align-items: stretch;
+}
+
+table.results td , th {
+    min-width:25%;
+    max-width:25%;
+}
+
+table.results td:last-child, th:td:last-child {
+    flex: 1;   
+    display:inline-block;
+    /* to keep IE happy */
+}
+
+
+
 </style>
 <div class="page">
   <h1><?php echo __('Collection statistics');?><?php (strlen($name)>0)? print(" (". __($name).")"):print("");?></h1>
