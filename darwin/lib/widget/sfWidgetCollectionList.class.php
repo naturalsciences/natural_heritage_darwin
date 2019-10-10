@@ -112,8 +112,10 @@ class sfWidgetCollectionList extends sfWidgetFormChoice
       {
         $html .= "<li class=\"rid_".$child->getId()."\"";
         if($child->isEncodable())
+		{
           $html .= ' data-enc="true" ';
-        $html .= "><div class=\"col_name\">" ;
+        }
+		$html .= "><div class=\"col_name\">" ;
         $html .= image_tag ($img_expand, array('alt' => '+', 'class'=> 'tree_cmd collapsed'));
         $html .= image_tag ($img_expand_up, array('alt' => '-', 'class'=> 'tree_cmd expanded hidden'));
         $html .=  "<span>".$child->getName()."</span>";

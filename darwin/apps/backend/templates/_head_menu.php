@@ -57,23 +57,24 @@
             $flagMenu="off";
         }
     }
-    elseif(array_key_exists("menu", $_SESSION))
+    elseif(array_key_exists("menu", $_SESSION[$_SERVER["HTTP_REFERER"]]))
     {       
-        if($_SESSION['menu']=="off")
+        if($_SESSION[$_SERVER["HTTP_REFERER"]]['menu']=="off")
         {
             $flagMenu="off";
         }
         
     }
-    $_SESSION['menu']= $flagMenu;  
+    $_SESSION[$_SERVER["HTTP_REFERER"]]['menu']= $flagMenu;  
 ?>
 <?php if($flagMenu!="off" ):?>
 <?php 
-if(array_key_exists("menu", $_SESSION))
+if(array_key_exists("menu", $_SESSION[$_SERVER["HTTP_REFERER"]]))
 {
-    unset($_SESSION['menu']);
+    unset($_SESSION[$_SERVER["HTTP_REFERER"]]['menu']);
 }
 ?>
+
 <div class="menu_top">
     <ul id="navigation" class="sf-menu">
         <li class="house"><?php echo link_to(image_tag('home.png', 'alt=Home'),'board/index');?></li>
@@ -207,29 +208,4 @@ if(array_key_exists("menu", $_SESSION))
         }
     </style>    
 <?php endif;?>
-<script>
- //ftheeten 2018 05 30
-   
-    (function($){ //create closure so we can safely use $ as alias for jQuery
 
-      $(document).ready(function(){
-
-        // initialise plugin
-        var example = $('#navigation').superclick({
-          cssArrows: false
-          //add options here if required
-        });
-        $('.lvl_2').hide();
-       
- 
-        
-        
-      });
-
-    })(jQuery);
-    
-    //ftheeten 2018 05 30
-    
-    
-    
-</script>

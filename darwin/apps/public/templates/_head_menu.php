@@ -57,23 +57,24 @@
             $flagMenu="off";
         }
     }
-    elseif(array_key_exists("menu", $_SESSION))
+    elseif(array_key_exists("menu", $_SESSION[$_SERVER['HTTP_REFERER']]))
     {       
-        if($_SESSION['menu']=="off")
+        if($_SESSION[$_SERVER['menu']]=="off")
         {
             $flagMenu="off";
         }
         
     }
-    $_SESSION['menu']= $flagMenu;  
+    $_SESSION[$_SERVER['HTTP_REFERER']]['menu']= $flagMenu;  
 ?>
 <?php if($flagMenu!="off" ):?>
 <?php 
-if(array_key_exists("menu", $_SESSION))
+if(array_key_exists("menu", $_SESSION[$_SERVER['HTTP_REFERER']]))
 {
-    unset($_SESSION['menu']);
+    unset($_SESSION[$_SERVER['HTTP_REFERER']]['menu']);
 }
 ?>
+
 <td class="header_menu">
   <div class="menu_top">
     <table>
@@ -90,7 +91,8 @@ if(array_key_exists("menu", $_SESSION))
         <td colspan="2">
           <ul class="menu_link">
             <li><?php echo link_to(__('Zoological Search'),'@search');?></li>
-            <li><?php echo link_to(__('Geo/Paleo Search'),'@geoSearch');?></li>
+            <li><?php echo link_to(__('Geo/Paleo Search'),'@geoSearch');?></li>			
+			<li><?php echo link_to(__('Collections'), '@collections');?></li>
             <li><?php echo link_to(__('Take a tour'),'@tour');?></li>
             <li><?php echo link_to(__('Contacts'),'@contact');?></li>
           </ul>
@@ -113,4 +115,4 @@ if(array_key_exists("menu", $_SESSION))
   <?php include_component('login','MenuLogin') ; ?>
 
 </td>
-<?php endif;?>   
+<?php endif;?>  

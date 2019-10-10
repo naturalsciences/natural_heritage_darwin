@@ -432,7 +432,7 @@ class searchActions extends DarwinActions
            $flagMenu="off";
        }
     }
-    $_SESSION['menu']= $flagMenu; 
+    $_SESSION[$_SERVER['HTTP_REFERER']]['menu']= $flagMenu; 
     return sfView::NONE;    
 
   }
@@ -441,18 +441,71 @@ class searchActions extends DarwinActions
   public function executeCollection(sfWebRequest $request)
   {
       $id=-1;
+      $this->all_checked="checked";
         if($request->hasParameter('id'))
         {
             $id= $request->getParameter('id');
+            $coll_obj= Doctrine_Core::getTable("Collections")->find($id);
+            $this->name="";
+            $this->all_checked="";
+            if(is_object($coll_obj))
+            {                 
+                 $this->name=  $coll_obj->getName();
+            }
         }
         elseif($request->hasParameter('code'))
         {
             $coll_obj= Doctrine_Core::getTable("Collections")->findOneByCode($request->getParameter('code'));
+            $this->all_checked="";
             if(is_object($coll_obj))
             {
                  $id= $coll_obj->getId();
+                 $this->name=  $coll_obj->getName();
             }
             
+        }
+        
+        if($request->hasParameter('all'))
+        {
+            $all= $request->getParameter('all');
+            if(strtolower($all)=="on")
+            {
+                $this->all_checked="checked";
+            }
+        }
+        
+        $this->include_sub_checked="checked";
+         
+        $this->display_sub_checked="";
+        if($request->hasParameter('display_sub'))
+        {
+            $display_sub= $request->getParameter('display_sub');
+            if(strtolower($display_sub)=="on")
+            {
+                $this->display_sub_checked="checked";
+            }
+        }
+        
+        $this->display_data_checked="";
+        if($request->hasParameter('display_data'))
+        {
+            $display_data= $request->getParameter('display_data');
+            if(strtolower($display_data)=="on")
+            {
+                $this->display_data_checked="checked";
+            }
+        }
+        
+        $this->objects="";
+        $this->selection=false;
+        if($request->hasParameter('objects'))
+        {
+            $obj= $request->getParameter('objects');
+            if(strlen($obj)>0)
+            {
+                 $this->selection=true;
+                $this->objects=$obj;
+            }
         }
         $this->form = new CollectionsStatisticsFormFilter(array("id"=>$id));
         
