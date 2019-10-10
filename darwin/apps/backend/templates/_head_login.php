@@ -9,21 +9,21 @@
             $flagMenu="off";
         }
     }
-    elseif(array_key_exists("menu", $_SESSION))
+    elseif(array_key_exists("menu", $_SESSION[$_SERVER['HTTP_REFERER']]))
     {       
-        if($_SESSION['menu']=="off")
+        if($_SESSION[$_SERVER['HTTP_REFERER']]['menu']=="off")
         {
             $flagMenu="off";
         }
         
     }
-    $_SESSION['menu']= $flagMenu;  
+    $_SESSION[$_SERVER['HTTP_REFERER']]['menu']= $flagMenu;  
 ?>
 <?php if($flagMenu!="off"):?>
 <?php 
-if(array_key_exists("menu", $_SESSION))
+if(array_key_exists("menu", $_SESSION[$_SERVER['HTTP_REFERER']]))
 {
-    unset($_SESSION['menu']);
+    unset($_SESSION[$_SERVER['HTTP_REFERER']]['menu']);
 }
 ?>
 <td class="header_menu">
@@ -43,6 +43,7 @@ if(array_key_exists("menu", $_SESSION))
           <ul class="menu_link">
             <li><?php echo link_to(__('Zoological Search'),$sf_context->getConfiguration()->generatePublicUrl('search', array(), $sf_request));?></li>
             <li><?php echo link_to(__('Geo/Paleo Search'),$sf_context->getConfiguration()->generatePublicUrl('geoSearch', array(), $sf_request));?></li>
+			<li><?php echo link_to(__('Collections'),$sf_context->getConfiguration()->generatePublicUrl('collections', array(), $sf_request));?></li>
             <li><?php echo link_to(__('Take a tour'),$sf_context->getConfiguration()->generatePublicUrl('tour', array(), $sf_request));?></li>
             <li><?php echo link_to(__('Contacts'),$sf_context->getConfiguration()->generatePublicUrl('contact', array(), $sf_request));?></li>
           </ul>

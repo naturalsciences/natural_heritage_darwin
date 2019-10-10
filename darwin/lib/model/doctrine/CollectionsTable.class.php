@@ -516,10 +516,9 @@ class CollectionsTable extends DarwinTable
     
     
     $fields[4]="COUNT(DISTINCT taxonomy_id) as nb_database_records";
-   // $fields[5]="SUM(specimen_count_min) as nb_physical_specimens_low";
-   // $fields[6]="SUM(specimen_count_max) as nb_physical_specimens_high";
+
     
-    $orders[]="level_ref DESC";
+    $orders[]="level_ref ASC";
     $groups[]="level_ref";
     $fields[1]="level_name";
     $groups[]="level_name";

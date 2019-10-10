@@ -44,6 +44,8 @@ class massactionsActions extends DarwinActions
   public function executeStatus(sfWebRequest $request)
   {
     $this->nb_items = $request->getParameter('nb_item',0);
+    $this->session_messages=$_SESSION["mass_action_messages"];
+    unset($_SESSION["mass_action_messages"]);
   }
 
   public function executeGetSubForm(sfWebRequest $request)

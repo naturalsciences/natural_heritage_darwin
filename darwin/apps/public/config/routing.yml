@@ -38,3 +38,7 @@ default_index:
 
 default:
   url:   /:module/:action/*
+  
+collections:
+  url:   /search/collection
+

@@ -141,6 +141,7 @@ class BaseMassActionForm extends sfFormSymfony
   {
     if($this->isBound() && $this->isValid())
     {
+      $_SESSION['mass_action_messages']=Array();
       $actions_values = $this->getValue('MassActionForm');
 
       $query = Doctrine_Query::create()->update('Specimens s');

@@ -5,6 +5,7 @@
  */
 class Users extends BaseUsers
 {
+  const ANONYMOUS = 0;
   const REGISTERED_USER = 1;
   const ENCODER = 2;
   const MANAGER = 4;
