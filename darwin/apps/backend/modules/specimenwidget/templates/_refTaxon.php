@@ -54,7 +54,7 @@
     });
 	
 	function GetCollectionInfo(id){
-			var url=detect_https("<?php print(url_for("collection/descCollectionJSON")); ?>");
+			var url=location.protocol + '//' + "<?php print(parse_url(sfContext::getInstance()->getRequest()->getUri(),PHP_URL_HOST ));?>" + "/backend.php/collection/descCollectionJSON";
 			$.getJSON( 
 				url,
 				{id: id},
@@ -75,7 +75,7 @@
 		var $val_id=$("#specimen_taxon_ref_name").val();
 
 		if ($val_id != ""){
-			var url=detect_https("<?php print(url_for("collection/getCitesAndTaxonomy")); ?>");
+			var url=location.protocol + '//' + "<?php print(parse_url(sfContext::getInstance()->getRequest()->getUri(),PHP_URL_HOST ));?>" +   "/backend.php/specimen/getCitesAndTaxonomy";
 			$.get( 
 				url,
 				{id: $val_id},

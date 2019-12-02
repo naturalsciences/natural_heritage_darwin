@@ -36,7 +36,7 @@
         GetNagoyaCollection(url_nagoya);
 		GetNagoyaDateAcquisition();
 		setTimeout(function (){ 
-        console.log("CALL");
+        
 			fillcheckandlabels(1);}		//in _nagoya.php
 		,500); 
 	});

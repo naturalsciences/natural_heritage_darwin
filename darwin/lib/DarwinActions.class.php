@@ -209,6 +209,7 @@ class DarwinActions extends sfActions
     }
     
     $items=Doctrine_Core::getTable('Collections')->countSpecimens($idCollection, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections) ;
+     
     if(count($items)>1)
     {
         
@@ -243,7 +244,7 @@ class DarwinActions extends sfActions
         $items[]=$sum;
         
     }
-    
+  
     return $items;
     
   }

@@ -678,11 +678,20 @@ class specimenActions extends DarwinActions
 			select('c.nagoya')->
 			from('Collections c')->
 			where('c.id = ?', $collectionid)->
-			fetchOne(null,  Doctrine_Core::HYDRATE_ARRAY);
+			fetchOne();
 			
-
+		if($nagoya["nagoya"] == true ) {
+			$nagoya2="yes";
+		}
+		/*if(!isset($nagoya["nagoya"]))
+		{
+			$nagoya2="not_found";
+		}
+		else if($nagoya["nagoya"] == true ) {
+			$nagoya2="yes";
+		}*/
 		$this->getResponse()->setHttpHeader('Content-type','application/json');
-		return $this->renderText(json_encode($nagoya));
+		return $this->renderText(json_encode(array("nagoya"=>$nagoya2)));
 	}
    
     //JMherpers 2019 05 02

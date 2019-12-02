@@ -44,8 +44,6 @@ abstract class BaseTagGroupsForm extends DarwinModelForm
     $this->validatorSchema['gtu_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Gtu'), 'column' => 'id'));
 
     $this->widgetSchema->setNameFormat('tag_groups[%s]');
-    
-
   }
 
   public function getModelName()

@@ -115,8 +115,19 @@ class MySavedSearchesTable extends DarwinTable
 	  return $q->fetch()[0];
   }
   
-    public function getSavedSearchData($user_id, $query_id)
+public function getSavedSearchData($user_id, $query_id)
   {
+  
+            $test=sfContext::getInstance()->getUser()->isAtLeast(Users::ADMIN);
+            if($test)
+            {
+                $is_adm="'TRUE'::BOOLEAN";
+            }
+            else
+            {
+                $is_adm="'FALSE'::BOOLEAN";            
+            }
+                
                         $sql="SELECT
 
                         string_agg(DISTINCT id::varchar,'; ' order by a.id::varchar desc ) as id,
@@ -179,8 +190,31 @@ class MySavedSearchesTable extends DarwinTable
 
                         string_agg(DISTINCT comment, '; ' ) as comment,
                         string_agg(DISTINCT properties_all, '; ' ) as properties_all,
-                        specimen_creation_date
-                         
+                        specimen_creation_date,
+                        CASE WHEN coll_user_type>= 4 OR is_adm is true THEN
+                         building else 'NOT_APPLICABLE' END as building,
+
+
+                             CASE WHEN coll_user_type>= 4 OR is_adm is true THEN
+                         floor else 'NOT_APPLICABLE' END as floor,
+
+                            CASE WHEN coll_user_type>= 4 OR is_adm is true THEN
+                         room else 'NOT_APPLICABLE' END as room,
+
+                             CASE WHEN coll_user_type>= 4 OR is_adm is true THEN
+                         row else 'NOT_APPLICABLE' END as row,
+
+                             CASE WHEN coll_user_type>= 4 OR is_adm is true THEN
+                         shelf else 'NOT_APPLICABLE' END as shel,
+
+                            CASE WHEN coll_user_type>= 4 OR is_adm is true THEN
+                         container else 'NOT_APPLICABLE' END as container,
+
+                             CASE WHEN coll_user_type>= 4 OR is_adm is true THEN
+                         sub_container else 'NOT_APPLICABLE' END as sub_container
+
+      
+                             
                         FROM
 
                             (SELECT 
@@ -303,13 +337,24 @@ longitude_text,
                              array_to_string(array_agg(
                                 DISTINCT p.property_type||': '::varchar||p.lower_value||COALESCE('-'::varchar||p.upper_value,'')||COALESCE(' '::varchar||p.property_unit,'')),'| ')
                              as properties_all,
-                             specimen_creation_date
+                             specimen_creation_date,
 
+                             building,
+                             floor,
+                             room,
+                             row, 
+                             shelf,
+                             container,
+                             sub_container,
+                             cr.db_user_type as coll_user_type
+                            ,
+                             ".$is_adm." as IS_ADM
                             FROM specimens s
                             INNER JOIN
                             (
                             SELECT fct_rmca_dynamic_saved_search as returned FROM  fct_rmca_dynamic_saved_search(
                                 :ID_Q,:ID_USER
+                              
                             )
                             ) f
                             ON s.id=f.returned 
@@ -368,8 +413,9 @@ longitude_text,
 				ON s.id= s_col_tool.specimen_ref
 			     LEFT JOIN  collecting_tools as col_tool
 				ON s_col_tool.collecting_tool_ref=col_tool.id
-                            
-                            
+		             LEFT JOIN collections_rights cr
+		             ON s.collection_ref =cr.collection_ref
+                            AND user_ref=:ID_USER
 
                             GROUP BY s.id, c.code_prefix, c.code_prefix_separator, c.code, c.code_suffix, c.code_suffix_separator, i.id , col_tool.tool, col_meth.method,
                             --2018 11 21
@@ -378,7 +424,15 @@ longitude_text,
                            ,donator.given_name, donator.family_name ,
                            coordinates_source, 
                            latitude_dms_degree, latitude_dms_minutes, latitude_dms_seconds, latitude_dms_direction, latitude,
-                           longitude_dms_degree, longitude_dms_minutes, longitude_dms_seconds, longitude_dms_direction, longitude  
+                           longitude_dms_degree, longitude_dms_minutes, longitude_dms_seconds, longitude_dms_direction, longitude ,
+                          
+                            building,
+                             floor,
+                             room,
+                             row, 
+                             shelf,
+                             container,
+                             sub_container, cr.db_user_type 
                             ) a
 
 
@@ -427,7 +481,15 @@ longitude_text,
                         longitude_deci ,
                         latitude_deci,
 			latitude_text,
-			longitude_text
+			longitude_text,
+			 building,
+                             floor,
+                             room,
+                             row, 
+                             shelf,
+                             container,
+                             sub_container,
+                             coll_user_type, is_adm
 
                         ORDER BY code
                          LIMIT 50000;";
@@ -435,7 +497,7 @@ longitude_text,
                         $conn = Doctrine_Manager::connection();
                         $q = $conn->prepare($sql);
                         $q->bindParam(":ID_Q", $query_id, PDO::PARAM_INT);
-                        $q->bindParam(":ID_USER", $user_id, PDO::PARAM_INT);
+                        $q->bindParam(":ID_USER", $user_id, PDO::PARAM_INT);                      
                         $q->execute();
     
                         $dataset=$q->fetchAll(PDO::FETCH_ASSOC);

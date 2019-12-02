@@ -18,7 +18,6 @@ class SpecimensForm extends BaseSpecimensForm
 		"not defined"     	=> "Not defined"
 	);
     
-    
     $this->useFields(array('category','collection_ref',
       'expedition_ref',
       'gtu_ref',
@@ -190,6 +189,12 @@ class SpecimensForm extends BaseSpecimensForm
       array('class' => 'to_date')
     );
 	
+     //jm herpers 2019 10 02
+    $this->widgetSchema['nagoya'] = new sfWidgetFormChoice(array(
+      'choices' =>  $nagoyaanswers,
+    ));
+	$this->setDefault('nagoya', "not defined");
+    
 	 //JM Herpers 2019 04 24
     $this->widgetSchema['nagoya']->setAttributes(array('class'=>'nagoya')); 
 
@@ -624,12 +629,6 @@ class SpecimensForm extends BaseSpecimensForm
 	$this->setDefault('unicity_check', true);
 	////ftheeten 2015 01 16
 	$this->validatorSchema['unicity_check'] = new sfValidatorPass();
-    
-    //jm herpers 2019 10 02
-    $this->widgetSchema['nagoya'] = new sfWidgetFormChoice(array(
-      'choices' =>  $nagoyaanswers,
-    ));
-	$this->setDefault('nagoya', "not defined");
     
     /* ftheeten 2018 11 30*/
     

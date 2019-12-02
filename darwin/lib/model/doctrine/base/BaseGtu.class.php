@@ -32,7 +32,7 @@
  * @property integer $longitude_dms_direction
  * @property float $latitude_utm
  * @property float $longitude_utm
- * @property string $utm_zone
+ * @property varchar $utm_zone
  * @property string $nagoya
  * @property Tags $Tags
  * @property TemporalInformation $TemporalInformation
@@ -68,7 +68,7 @@
  * @method integer             getLongitudeDmsDirection()   Returns the current record's "longitude_dms_direction" value
  * @method float               getLatitudeUtm()             Returns the current record's "latitude_utm" value
  * @method float               getLongitudeUtm()            Returns the current record's "longitude_utm" value
- * @method string              getUtmZone()                 Returns the current record's "utm_zone" value
+ * @method varchar             getUtmZone()                 Returns the current record's "utm_zone" value
  * @method string              getNagoya()                  Returns the current record's "nagoya" value
  * @method Tags                getTags()                    Returns the current record's "Tags" value
  * @method TemporalInformation getTemporalInformation()     Returns the current record's "TemporalInformation" value
@@ -214,8 +214,8 @@ abstract class BaseGtu extends DarwinModel
         $this->hasColumn('longitude_utm', 'float', null, array(
              'type' => 'float',
              ));
-        $this->hasColumn('utm_zone', 'string', null, array(
-             'type' => 'string',
+        $this->hasColumn('utm_zone', 'varchar', null, array(
+             'type' => 'varchar',
              ));
         $this->hasColumn('nagoya', 'string', null, array(
              'type' => 'string',

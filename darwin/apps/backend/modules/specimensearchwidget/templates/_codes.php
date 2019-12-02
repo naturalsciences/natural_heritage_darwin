@@ -1,16 +1,10 @@
+<div>
 <table id="code_search" class="full_size">
   <thead>
     <tr>
       <td colspan="6">
 		Boolean Selector:<?php echo $form['code_boolean'];?></td>
-     </td>
-    <tr>
-      <th><?php echo __('Category');?></th>
-      <th colspan="2"></th>
-      <th class="between_col"><?php echo __('Between');?></th>
-      <th class="between_col"><?php echo __('and');?></th>
-      <th></th>
-    </tr>
+     </td>    
   </thead>
   <tbody>
     <?php foreach($form['Codes'] as $i => $code):?>
@@ -20,18 +14,27 @@
         <td colspan="2"></td>
         <td colspan="5"><?php echo image_tag('add_blue.png'). link_to(__('Add code'),'specimensearch/addCode', array('class'=>'add_search_code'));?></td>
       </tr>
+     </tbody> 
+    </table>
+</div>
+<div>
+<table class="full_size">
+    <thead>
      <!--ftheeten 2018 11 22--->
         <tr>
-            <td><?php echo $form['codes_list']->renderLabel();?> : </td><td><select name="select2_codes" id="select2_codes" multiple="multiple"></select><?php echo $form['codes_list'];?></td>        
-        </tr>
+            <th><?php echo $form['codes_list']->renderLabel();?> : </th>
+            <th style="font-style: italic;"><?php echo $form['exact_codes_list']->renderLabel();?> :</th>
+          </tr>
+     </thead>
+     <tbody>
         <tr>
-            <td style="font-style: italic;"><?php echo $form['exact_codes_list']->renderLabel();?> :</td>
+           <td><select name="select2_codes" id="select2_codes" multiple="multiple"></select><?php echo $form['codes_list'];?></td>        
             <td><?php echo $form['exact_codes_list'];?></td>        
         </tr>
       <!---->
   </tbody>
 </table>
-
+</div>
  
 <script  type="text/javascript">
 
@@ -40,9 +43,17 @@
 function checkBetween()
 {
   if( $('#code_search tbody .between_col:visible').length)
+  {
     $('#code_search thead .between_col').show();
+    //console.log("between");
+    //$('#code_search thead .autocomplete_for_code').hide();
+  }
   else
+  {
     $('#code_search thead .between_col').hide();
+    //    console.log("regular");
+    //$('#code_search thead .autocomplete_for_code').show();
+  }
 }
 
 $(document).ready(function () {
@@ -59,6 +70,7 @@ $(document).ready(function () {
       {
         $('#code_search > tbody .and_row').before(html);
         $('#code_search > tbody tr:not(.and_row):last .between_col').hide();
+        $('#code_search > tbody tr:not(.and_row):last .standard_code_col').show();
         showAfterRefresh('#codes');
       }
     });
@@ -70,8 +82,13 @@ $(document).ready(function () {
     tr = $(this).closest('tr');
     tr.find('.next').show();
     tr.find('.between_col').hide();
+    console.log("SHOW");
+    tr.find('.autocomplete_for_code').show();
     checkBetween();
     $(this).hide();
+    table = tr.closest('table');    
+    table.find('.between_col').hide();
+    table.find('.standard_code_col').show();
   })
 
   $('#code_search .code_between.next').live('click',function (event)
@@ -81,7 +98,12 @@ $(document).ready(function () {
     tr.find('.prev').show();
     tr.find('.between_col').show();
     $('#code_search thead .between_col').show();
+    console.log("HIDE");
+    tr.find('.autocomplete_for_code').hide();
     $(this).hide();
+    //table = tr.closest('table');    
+    //table.find('.standard_code_col').hide();
+    
   })
 
   $('#code_search tbody tr').each(function(i)

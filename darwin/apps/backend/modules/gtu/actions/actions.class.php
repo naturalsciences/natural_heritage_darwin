@@ -332,7 +332,7 @@ class gtuActions extends DarwinActions
         
   }
   
-  public function executeGetTagSubGroup(sfWebRequest $request)
+    public function executeGetTagSubGroup(sfWebRequest $request)
   {
     $results=Array();
     if($request->hasParameter('tag') )

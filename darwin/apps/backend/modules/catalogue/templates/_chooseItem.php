@@ -1,5 +1,8 @@
 <?php include_stylesheets_for_form($searchForm) ?>
 <?php include_javascripts_for_form($searchForm) ?>
+<?php
+	$flagMenu=detect_menu_hidden();
+?>
 <?php if(isset($is_choose)) : ?><div class="warn_message"><?php echo __('catalogue_search_tips') ; ?></div><?php endif ; ?>
 <div class="catalogue_filter">
 <?php echo form_tag('catalogue/search'.( isset($is_choose) ? '?is_choose='.$is_choose : '') , array('class'=>'search_form','id'=>'catalogue_filter'));?>
@@ -96,13 +99,12 @@
       <div class="search_results_content">
       </div>
     </div>
-    <?php if( (isset($user_allowed) && $user_allowed) || ($sf_user->getDbUserType() >= Users::ENCODER) ): ?>
+    <?php if( (isset($user_allowed) && $user_allowed) || ($sf_user->getDbUserType() >= Users::ENCODER)&& $flagMenu ): ?>
     <div class='new_link'><a <?php echo !(isset($is_choose) && $is_choose)?'':'target="_blank"';?> href="<?php echo url_for($searchForm['table']->getValue().'/new') ?>"><?php echo __('New Unit');?></a></div>
     <?php endif ; ?>
   </div>
 </form>
 <script>
-
 $(document).ready(function () {
   $('.catalogue_filter').choose_form({});
   $('#clear_cat_relation').click(function (event)
@@ -132,7 +134,7 @@ $(document).ready(function () {
     
         $("#searchCatalogue_ig_number").val(decodeURIComponent(ig_num));
         $( ".search_form" ).submit();
-  }   
+  }      
 
 });
 </script>

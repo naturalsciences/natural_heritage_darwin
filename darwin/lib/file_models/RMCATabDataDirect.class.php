@@ -155,7 +155,7 @@ class RMCATabDataDirect
         $fields[] = "associationType";
         
         //field in ABCD extensions
-        $fields[] = "Localisation";
+        //$fields[] = "Localisation";
         $fields[] = "Institution";
         $fields[] = "Building";
         $fields[] = "Floor";
@@ -346,7 +346,7 @@ class RMCATabDataDirect
     public function addID()
     {   	
 	    if(null != $this->getCSVValue("UnitID")) $this->addCode($this->getCSVValue("UnitID"));
-		if(null != $this->getCSVValue("datasetNames")) $this->addCode($this->getCSVValue("datasetNames"), "secondary");	       
+		if(null != $this->getCSVValue("datasetName")) $this->addCode($this->getCSVValue("datasetName"), "secondary");	       
     }
     
     
@@ -1230,7 +1230,7 @@ class RMCATabDataDirect
     public function addStorage()
     {
 
-        $valTmp=$this->getCSVValue("Localisation");
+        $valTmp=$this->getCSVValue("Institution");
         if($this->isset_and_not_null($valTmp))
         {
             $this->staging->setInstitutionName($valTmp) ; 

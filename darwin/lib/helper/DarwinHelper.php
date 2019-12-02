@@ -203,6 +203,34 @@ function constructReportBaseUrl($name, $lang, $format){
         return json_decode('{' . str_replace('"=>"', '":"', $param) . '}', true);
   }
   
+  function detect_menu_hidden()
+  {
+     $flagMenu=true;
+    if(array_key_exists("menu", $_REQUEST))
+    {       
+        if($_REQUEST['menu']=="off")
+        {
+          
+            $flagMenu=false;
+            $_SESSION['DW_REFERER']=$referer_domain;
+            $_SESSION['menu']= $flagMenu;  
+        }
+        else
+        {
+             $_SESSION['menu']= "on";  
+        }
+    }
+    elseif(array_key_exists("menu", $_SESSION))
+    {      
+        if($_SESSION['menu']=="off")
+        {         
+            $flagMenu=false;          
+        }
+        
+    }
+    return $flagMenu;
+  }
+  
 
 ?>
 

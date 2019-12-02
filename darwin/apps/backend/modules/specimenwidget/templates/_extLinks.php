@@ -55,5 +55,31 @@ $(document).ready(function () {
         $(this).closest('table.extlinks').find('thead').show();
         return false;
     }); 
+    
+    onElementInserted("body",".clear_link",
+            function(e)
+            {
+               
+                $(e).click(function() {
+                      
+                      var idex=$(e).attr("id").replace("clear_extlinks_", "");
+                     
+                      parent_el = $(e).closest('tbody');
+                      parentTableId = $(parent_el).closest('table').attr('id');
+                      $(parent_el).find('input[id$=\"_'+idex+'\"]').val('');      
+                      $(parent_el).hide();	  
+                          visibles = $('table#'+parentTableId+' tbody.spec_ident_extlinks_data:visible').size();
+                          if(!visibles)
+                          {
+                            $(e).closest('table#'+parentTableId).find('thead').hide();
+                            
+                          }
+                      
+                })
+          
+                                
+            }
+        );
+    
 });
 </script>

@@ -16,7 +16,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->useFields(array('gtu_ref','gtu_code','gtu_from_date','gtu_to_date', 'taxon_level_ref', 'litho_name', 'litho_level_ref', 'litho_level_name', 'chrono_name', 'chrono_level_ref',
         'chrono_level_name', 'lithology_name', 'lithology_level_ref', 'lithology_level_name', 'mineral_name', 'mineral_level_ref',
         'mineral_level_name','ig_num','acquisition_category','acquisition_date',
-        'import_ref', 'ig_ref',
+        'import_ref','ig_ref',
 		//JMherpers 2019 04 25
 		'nagoya'));
 
@@ -1213,33 +1213,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
   
 
   
-  /*public function addTagsColumnQuery($query, $field, $val)
-  {
-    
-    $conn_MGR = Doctrine_Manager::connection();
-    $tagList = '';
-
-    foreach($val as $line)
-    {
-      $line_val = $line['tag'];
-      if( $line_val != '')
-      {
-        $sqltmp=array();
-        foreach(explode(";",$line_val) as $str)
-        {
-            $str=$conn_MGR->quote($str, 'string');
-            $sqltmp[]="t.tag_indexed LIKE  '%'||fulltoindex($str)||'%' AND (station_visible = true OR (station_visible = false AND collection_ref in (".implode(',',$this->encoding_collection).") ) )";
-        }
-        if(count($sqltmp)>0)
-        {
-            $query->leftJoin('s.Tags t ON s.gtu_ref = t.gtu_ref');
-            $query->addWhere(implode(" OR ",$sqltmp ));
-        }
-      }
-     }
-  }
-  */
-
+ 
   //ftheeten 2018 11 22
     public function addPeoplesColumnQuery($query, $field, $val)
   {
@@ -1279,86 +1253,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     }
     return $query ;
   }
-  /*
-  public function addCodesColumnQuery($query, $field, $val)
-  {
-
-    $str_params = '';
-    $str_params_part = '' ;
-    $params = array();
-    $params_part = array() ;
-    $cpt=0;
-    foreach($val as $i => $code)
-    {
-      if(empty($code)) continue;
-      $sql = '';
-      $sql_params = array();
-      $has_query = false;
-      if(ctype_digit($code['code_from']) && ctype_digit($code['code_to'])) {
-          $sql = " code_num BETWEEN ? AND ? ";
-          $sql_params = array($code['code_from'], $code['code_to']);
-          $has_query = true;
-        }
-        if($code['code_part']  != '') {
-          if($has_query) $sql .= ' AND ';
-          //$sql .= " full_code_indexed ilike '%' || fulltoindex(?) || '%' ";
-          //ftheeten 20140922
-		    //ftheeten 20150909 (if on exact match
-		  if($this->code_exact_match==FALSE)
-		  {
-			//ftheeten 20140922
-			$sql .= " full_code_indexed like (SELECT fulltoindex(?))||'%'";
-		  }
-		  else if($this->code_exact_match==TRUE)
-		  {
-			$sql .= " full_code_indexed like (SELECT fulltoindex(?))";
-		  }
-		  
-		  $sql_params[] = $code['code_part'];
-          $has_query = true;
-        }
-		
-		//ftheeten 2018 06 14
-		if($code['category']  != '' && strtolower($code['category'])  != 'all') {
-          if($has_query) $sql .= ' AND ';
-         
-		 
-			
-		    $sql .= " code_category = ?";
-		  
-		  
-		  $sql_params[] = $code['category'];
-          $has_query = true;
-        }
-        else
-        {
-            if($has_query) $sql .= ' AND ';
-              $sql .= " code_category = 'main'";
-               $has_query = true;
-        }
-		
-		
-        //if($has_query)
-        //  $query->addWhere("EXISTS(select 1 from codes where  referenced_relation='specimens' and record_id = s.id AND $sql)", $sql_params);
-		if($has_query)
-		{
-		//ftheeten 2015 01 08
-			if($this->code_boolean=='OR'&&$cpt>0)
-			{
-				$query->orWhere("EXISTS(select 1 from codes where  referenced_relation='specimens' and record_id = s.id AND $sql)", $sql_params);
-			}
-			else
-			{
-				$query->andWhere("EXISTS(select 1 from codes where  referenced_relation='specimens' and record_id = s.id AND $sql)", $sql_params);
-			}
-		}
-        $cpt++;
-	}
-
-    return $query ;
-  }
   
-  */
   
   public function addCodesColumnQuery($query, $field, $val)
  {
@@ -1380,6 +1275,13 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
                         $sql .= " AND code_category = ?";
                          $sqlParams[]=$code['category'];
                 }
+                
+                 if($code['code_prefix']  != '')
+                {
+                     $sql .= " AND full_code_indexed LIKE (SELECT fulltoindex(?)||'%')";
+                     $sqlParams[]=$code['code_prefix'];
+                }
+                
                  $sql .= ")";
                  
              
@@ -2274,8 +2176,8 @@ $query = DQ::create()
     }
     return $query ;
   }
-      
-      //ftheeten 2018 04 10
+  
+       //ftheeten 2018 04 10
    public function addIgRefColumnQuery($query, $field, $values)
   {
     if ($values != "") {
@@ -2307,6 +2209,4 @@ $query = DQ::create()
     $items["/select2-4.0.5/dist/css/select2.min.css"]=  'all';
     return $items;
   }
-  
-
 }

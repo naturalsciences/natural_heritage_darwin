@@ -317,19 +317,6 @@ class Gtu extends BaseGtu
         $temporalInformation->save();
     }
   }
+  
 
-
-  
-  
-  
-  //ftheeten 2018 12 12
-  /*public function getComments()
-  {
-    return $this->getDoctrineGtuComments()->getComments();    
-  }*/
-  
- /* public function getArrayFromDate()
-  {
-    return "";
-  }*/
 }

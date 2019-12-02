@@ -1,8 +1,8 @@
 <?php include_stylesheets_for_form($form) ?>
 <?php include_javascripts_for_form($form) ?>
-<!--[if lte IE 8]>
-    <link rel="stylesheet" href="/leaflet/leaflet.ie.css" />
-<![endif]-->
+<?php
+	$flagMenu=detect_menu_hidden();
+?>
 <div class="catalogue_gtu">
 <?php echo form_tag('gtu/search'.( isset($is_choose) && $is_choose  ? '?is_choose='.$is_choose : '') , array('class'=>'search_form','id'=>'gtu_filter'));?>
   <div class="container">
@@ -193,19 +193,22 @@
                             });
                    
             }
-           );   
+           );  
 
-       //ftheeten 2018 04 10
-          var ig_num=urlParam('ig_num');
-          if(!!ig_num)
-          {
-            
-                $("#gtu_filters_ig_number").val(decodeURIComponent(ig_num));
-                $( ".search_form" ).submit();
-          }             
+        //ftheeten 2018 04 10
+                  var ig_num=urlParam('ig_num');
+                  if(!!ig_num)
+                  {
+                    
+                        $("#gtu_filters_ig_number").val(decodeURIComponent(ig_num));
+                        $( ".search_form" ).submit();
+                  }                
 
         });
         
+                 
+
+            
           //ftheeten 2018 03 08
           var url="<?php echo(url_for('catalogue/expeditionsAutocomplete?'));?>";
           var autocomplete_rmca_array=Array();
@@ -231,7 +234,7 @@
       <div class="search_results">
         <div class="search_results_content"></div>
       </div>
-      <div class='new_link'><a <?php echo !(isset($is_choose) && $is_choose)?'':'target="_blank"';?> href="<?php echo url_for('gtu/new') ?>"><?php echo __('New');?></a></div>
+      <?php if($flagMenu):?><div class='new_link'><a <?php echo !(isset($is_choose) && $is_choose)?'':'target="_blank"';?> href="<?php echo url_for('gtu/new') ?>"><?php echo __('New');?></a></div><?php endif;?>
   </div>
 </form> 
 </div>

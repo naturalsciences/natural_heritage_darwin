@@ -19,9 +19,11 @@ class CodeLineForm extends BaseForm
       'choices' => array('specimens'=>'specimens','specimen_parts'=>'specimen_parts'),
     ));
     $this->widgetSchema['code_part'] = new sfWidgetFormInput(array(),array('style'=> 'width:97%;'));
+    $this->widgetSchema['code_prefix'] = new sfWidgetFormInput(array(),array('class'=> 'lsmall_size '));
     $this->widgetSchema['code_from'] = new sfWidgetFormInput(array(),array('class'=> 'lsmall_size'));
     $this->widgetSchema['code_to'] = new sfWidgetFormInput(array(),array('class'=> 'lsmall_size'));
 
+    $this->validatorSchema['code_prefix'] = new sfValidatorString(array('required'=>false,'trim'=>true));
     $this->validatorSchema['code_part'] = new sfValidatorString(array('required'=>false,'trim'=>true));
     //ftheeten 2015 06 04
     $this->widgetSchema['code_part']->setAttributes(array('class'=>'autocomplete_for_code'));

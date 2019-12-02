@@ -17,7 +17,7 @@ class Mineralogy extends BaseMineralogy
     return $this->_get('name');
   }
   
-    	//ftheeten 2017 08 07
+      	//ftheeten 2017 08 07
     public function getTaxonomyMetadataName()
     {
         return Doctrine_Core::getTable('TaxonomyMetadata')->find($this->getMetadataRef())->getTaxonomyName();

@@ -8,12 +8,12 @@ class CollectionsStatisticsFormFilter extends BaseCollectionsFormFilter
     //$this->useFields(array('id'));
     //$this->widgetSchema['id'] = new sfWidgetFormInputText(array(), array("class"=>"id_collection"));
 	
-	$this->widgetSchema['id'] =new widgetFormCompleteButtonRef(array(
+	$this->widgetSchema['id'] = new widgetFormCompleteButtonRef(array(
       'model' => 'Collections',
       'link_url' => 'collection/choose',
       'method' => 'getName',
       'box_title' => $this->getI18N()->__('Choose Collection'),
-      'button_class'=>'ref_name',
+      'button_class'=>'',
       'complete_url' => 'catalogue/completeName?table=collections',
     ));
     //ftheeten 2017 01 13
@@ -75,7 +75,6 @@ class CollectionsStatisticsFormFilter extends BaseCollectionsFormFilter
     $javascripts[]='/js/jquery-datepicker-lang.js';
 	
     $javascripts[]='/js/ui.complete.js';
-   
 	
 	
     return $javascripts;
@@ -85,8 +84,6 @@ class CollectionsStatisticsFormFilter extends BaseCollectionsFormFilter
   {
     $javascripts=parent::getStylesheets();
     $javascripts['/css/ui.datepicker.css']='all';
-    $javascripts['/css/main.css']='all';
-
     return $javascripts;
   }
 }

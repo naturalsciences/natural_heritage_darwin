@@ -1,5 +1,8 @@
 <?php include_stylesheets_for_form($form) ?>
 <?php include_javascripts_for_form($form) ?>
+<?php
+	$flagMenu=detect_menu_hidden();
+?>
 <div class="catalogue_methods">
 <?php if(isset($notion) && (($notion == 'method' || $notion =='tool'))):?>
   <?php echo form_tag('methods_and_tools/search?notion='.$notion.( isset($is_choose) ? '&is_choose='.$is_choose : '') , array('class'=>'search_form','id'=>'methods_and_tools_filter'));?>
@@ -22,7 +25,7 @@
         <div class="search_results_content">
         </div>
       </div>
-      <?php if ($sf_user->isAtleast(Users::ENCODER)) : ?>        
+      <?php if ($sf_user->isAtleast(Users::ENCODER)&&$flagMenu) : ?>        
       <div class='new_link'><a <?php echo !(isset($is_choose) && $is_choose)?'':'target="_blank"';?> href="<?php echo url_for('methods_and_tools/new?notion='.$notion) ?>"><?php echo __('New');?></a></div>
       <?php endif ; ?>
     </div>

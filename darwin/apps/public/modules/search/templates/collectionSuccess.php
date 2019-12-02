@@ -15,8 +15,8 @@ table.results tr {
 }
 
 table.results td , th {
-    min-width:25%;
-    max-width:25%;
+    min-width:20%;
+    max-width:20%;
 }
 
 table.results td:last-child, th:td:last-child {

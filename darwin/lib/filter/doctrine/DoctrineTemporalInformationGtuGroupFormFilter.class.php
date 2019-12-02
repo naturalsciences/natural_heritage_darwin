@@ -6,11 +6,15 @@
  * @package    darwin
  * @subpackage filter
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id: sfDoctrineFormFilterTemplate.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
+ * @version    SVN: $Id$
  */
 class DoctrineTemporalInformationGtuGroupFormFilter extends BaseDoctrineTemporalInformationGtuGroupFormFilter
 {
+  /**
+   * @see DarwinModelFormFilter
+   */
   public function configure()
   {
+    parent::configure();
   }
 }

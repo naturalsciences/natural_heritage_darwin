@@ -29,6 +29,7 @@
  * @property boolean $code_ai_inherit
  * @property string $nagoya
  * @property integer $preferred_taxonomy
+ * @property string $uid
  * @property People $Institution
  * @property Users $Manager
  * @property Users $Staff
@@ -63,6 +64,7 @@
  * @method boolean             getCodeAiInherit()                       Returns the current record's "code_ai_inherit" value
  * @method string              getNagoya()                              Returns the current record's "nagoya" value
  * @method integer             getPreferredTaxonomy()                   Returns the current record's "preferred_taxonomy" value
+ * @method string              getUid()                                 Returns the current record's "uid" value
  * @method People              getInstitution()                         Returns the current record's "Institution" value
  * @method Users               getManager()                             Returns the current record's "Manager" value
  * @method Users               getStaff()                               Returns the current record's "Staff" value
@@ -96,6 +98,7 @@
  * @method Collections         setCodeAiInherit()                       Sets the current record's "code_ai_inherit" value
  * @method Collections         setNagoya()                              Sets the current record's "nagoya" value
  * @method Collections         setPreferredTaxonomy()                   Sets the current record's "preferred_taxonomy" value
+ * @method Collections         setUid()                                 Sets the current record's "uid" value
  * @method Collections         setInstitution()                         Sets the current record's "Institution" value
  * @method Collections         setManager()                             Sets the current record's "Manager" value
  * @method Collections         setStaff()                               Sets the current record's "Staff" value
@@ -219,6 +222,9 @@ abstract class BaseCollections extends DarwinModel
              ));
         $this->hasColumn('preferred_taxonomy', 'integer', null, array(
              'type' => 'integer',
+             ));
+        $this->hasColumn('uid', 'string', null, array(
+             'type' => 'string',
              ));
     }
 

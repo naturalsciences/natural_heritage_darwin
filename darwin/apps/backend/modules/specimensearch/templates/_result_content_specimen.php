@@ -34,6 +34,51 @@
         </script>
       <?php endif ; ?>
     </td>
+    <td class="col_codes">
+      <?php if(isset($codes[$specimen->getId()])):?>
+        <?php if(count($codes[$specimen->getId()]) <= 3):?>
+          <?php echo image_tag('info-bw.png',"title=info class=info");?>
+        <?php else:?>
+          <?php echo image_tag('info.png',"title=info class=info id=spec_code_".$specimen->getId()."_info");?>
+          <script type="text/javascript">
+            $(document).ready(function () {
+              $('#spec_code_<?php echo $specimen->getId();?>_info').click(function() 
+              {
+                item_row=$(this).closest('td');
+                if(item_row.find('li.code_supp:hidden').length)
+                {
+                  item_row.find('li.code_supp').removeClass('hidden');
+                }
+                else
+                {
+                  item_row.find('li.code_supp').addClass('hidden');
+                }
+              });
+            });
+          </script>
+        <?php endif;?>
+        <ul>
+            <?php $cpt = 0 ; foreach($codes[$specimen->getId()] as $key=>$code):?>            
+                <?php if($code->getCodeCategory() == 'main') : ?>
+                  <?php $cpt++ ; ?>
+                  <li <?php if($cpt > 3) echo("class='hidden code_supp'"); ?>>
+                  <!--rmca 2017 12 13-->
+                   <strong>
+                        <?php echo link_to( $code->getFullCode(), 'specimen/view?id='.$specimen->getId(), array('target' => '_blank'));?>
+                    </strong>
+                  </li> 			  
+              <?php elseif ($sf_user->isAtLeast(Users::ENCODER)) : ?>
+                          
+                <li class="hidden code_supp" >
+                    <?php if ($code->getCodeCategory() == 'main') echo "<strong>" ; ?>            
+                    <?php echo $code->getFullCode(); ?>
+                    <?php if ($code->getCodeCategory() == 'main') echo "</strong>" ; ?>
+                </li>         
+              <?php endif ; ?>
+            <?php endforeach; ?>
+        </ul>
+      <?php endif;?>
+    </td>
     <td class="col_taxon">
       <?php if($specimen->getTaxonRef() > 0) : ?>
         <?php echo image_tag('info.png',"title=info class=info id=taxon_".$specimen->getId()."_info");?>
@@ -145,51 +190,7 @@
             <?php endif ; ?>
 			<!--end jmherpers 2018 01 29-->
     </td>
-    <td class="col_codes">
-      <?php if(isset($codes[$specimen->getId()])):?>
-        <?php if(count($codes[$specimen->getId()]) <= 3):?>
-          <?php echo image_tag('info-bw.png',"title=info class=info");?>
-        <?php else:?>
-          <?php echo image_tag('info.png',"title=info class=info id=spec_code_".$specimen->getId()."_info");?>
-          <script type="text/javascript">
-            $(document).ready(function () {
-              $('#spec_code_<?php echo $specimen->getId();?>_info').click(function() 
-              {
-                item_row=$(this).closest('td');
-                if(item_row.find('li.code_supp:hidden').length)
-                {
-                  item_row.find('li.code_supp').removeClass('hidden');
-                }
-                else
-                {
-                  item_row.find('li.code_supp').addClass('hidden');
-                }
-              });
-            });
-          </script>
-        <?php endif;?>
-        <ul>
-            <?php $cpt = 0 ; foreach($codes[$specimen->getId()] as $key=>$code):?>            
-                <?php if($code->getCodeCategory() == 'main') : ?>
-                  <?php $cpt++ ; ?>
-                  <li <?php if($cpt > 3) echo("class='hidden code_supp'"); ?>>
-                  <!--rmca 2017 12 13-->
-                   <strong>
-                        <?php echo link_to( $code->getFullCode(), 'specimen/view?id='.$specimen->getId(), array('target' => '_blank'));?>
-                    </strong>
-                  </li> 			  
-              <?php elseif ($sf_user->isAtLeast(Users::ENCODER)) : ?>
-                          
-                <li class="hidden code_supp" >
-                    <?php if ($code->getCodeCategory() == 'main') echo "<strong>" ; ?>            
-                    <?php echo $code->getFullCode(); ?>
-                    <?php if ($code->getCodeCategory() == 'main') echo "</strong>" ; ?>
-                </li>         
-              <?php endif ; ?>
-            <?php endforeach; ?>
-        </ul>
-      <?php endif;?>
-    </td>
+
     <td  class="col_chrono">
       <?php if($specimen->getChronoRef() > 0) : ?>
         <?php echo image_tag('info.png',"title=info class=info id=chrono_".$specimen->getId()."_info");?>

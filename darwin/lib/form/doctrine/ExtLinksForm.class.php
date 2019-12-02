@@ -28,6 +28,7 @@ class ExtLinksForm extends BaseExtLinksForm
     ));
 
     $this->validatorSchema['type'] = new sfValidatorChoice(array("required"=> true,'choices'=>array_keys(ExtLinks::getLinkTypes())), array('required'=> 'Type of link is missing') );
+    $this->widgetSchema['type']->setAttributes(array('class'=>'link_type_selector')); 
 
   }
   public function setRecordRef($relation, $rid)

@@ -1,5 +1,8 @@
 <?php include_stylesheets_for_form($form) ?>
 <?php include_javascripts_for_form($form) ?>
+<?php
+	$flagMenu=detect_menu_hidden();
+?>
 <div class="catalogue_bibliography">
 <?php echo form_tag('bibliography/search'.( isset($is_choose) ? '?is_choose='.$is_choose : '') , array('class'=>'search_form','id'=>'bibliography_filter'));?>
   <div class="container">
@@ -23,7 +26,9 @@
       <div class="search_results_content">
       </div>  
     </div>
+	<?php if($flagMenu):?>
     <div class='new_link'><a <?php echo !(isset($is_choose) && $is_choose)?'':'target="_blank"';?> href="<?php echo url_for('bibliography/new?name='.$form['title']->getValue()) ?>"><?php echo __('New');?></a></div>
+	<?php endif;?>
   </div>
 </form>
 </div>

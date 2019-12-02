@@ -1,4 +1,7 @@
 <script type="text/javascript">
+<?php
+	$flagMenu=detect_menu_hidden();
+?>
 $(document).ready(function () {
     var original_tree = $('.collection_tree_div').html();
 
@@ -157,7 +160,7 @@ $(document).ready(function () {
 
     </div>
   <?php endforeach;?>
-  <?php if ($sf_user->isAtLeast(Users::MANAGER)): ?>
+  <?php if ($sf_user->isAtLeast(Users::MANAGER)&&$flagMenu): ?>
     <div class='new_link'><a <?php echo !(isset($is_choose) && $is_choose)?'':'target="_blank"';?> href='<?php echo url_for('collection/new') ?>'><?php echo __('New');?></a></div>
   <?php endif ; ?>
 </div>

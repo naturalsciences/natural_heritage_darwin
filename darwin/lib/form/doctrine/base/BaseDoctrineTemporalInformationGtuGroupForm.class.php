@@ -94,8 +94,8 @@ abstract class BaseDoctrineTemporalInformationGtuGroupForm extends DarwinModelFo
     $this->widgetSchema   ['longitude_utm'] = new sfWidgetFormInputText();
     $this->validatorSchema['longitude_utm'] = new sfValidatorNumber(array('required' => false));
 
-    $this->widgetSchema   ['utm_zone'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['utm_zone'] = new sfValidatorString(array('required' => false));
+    $this->widgetSchema   ['utm_zone'] = new sfWidgetFormInputText();
+    $this->validatorSchema['utm_zone'] = new sfValidatorPass(array('required' => false));
 
     $this->widgetSchema   ['array_from_date_mask'] = new sfWidgetFormTextarea();
     $this->validatorSchema['array_from_date_mask'] = new sfValidatorString(array('required' => false));

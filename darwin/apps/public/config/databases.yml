@@ -10,6 +10,6 @@ prod:
   doctrine:
     class: sfDoctrineDatabase
     param:
-      dsn: 'pgsql:host=hystrix.rbins.be;dbname=darwin2'
+      dsn: 'pgsql:host=salmoneus;dbname=darwin2'
       username: darwin2
       password: CeBmPadYc
