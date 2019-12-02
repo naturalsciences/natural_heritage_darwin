@@ -175,9 +175,19 @@ ul.spec_error_list, ul.error_list
 }
 
 .col_name:hover {
-  background-color: #ececec;
+  /*background-color: #ececec;*/
+  /*#ftheeten 2019 11 20 */
+  background-color: #ececff;
+  border-style: groove;
+   border-width: 2px;
 }
 
+/*#ftheeten 2019 11 20 */
+ul.checkbox_list li:hover {
+  background-color: #ececff;
+  border-style: groove;
+  border-width: 2px;
+}
 img.clear_prop, img.tree_cmd {
   cursor:pointer;
   vertical-align:middle;
@@ -3268,4 +3278,9 @@ div.mask_display {
 
 fieldset.opened.view_mode, fieldset.opened.view_mode > legend.view_mode {
   border: 1px solid #5BAABD;
+}
+
+input[readonly]
+{
+    background-color:	 #d1e0e0;
 }

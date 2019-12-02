@@ -1,5 +1,8 @@
 <?php include_stylesheets_for_form($form) ?>
 <?php include_javascripts_for_form($form) ?>
+<?php
+	$flagMenu=detect_menu_hidden();
+?>
 <div class="catalogue_people">
 <?php echo form_tag('people/search'.( isset($is_choose) ? '?is_choose='.$is_choose : '') , array('class'=>'search_form','id'=>'people_filter'));?>
   <div class="container">
@@ -31,15 +34,15 @@
             <td><?php echo $form['ig_number']->render() ?></td>
         </tr>
         <tr>
-        <td><input class="search_submit" type="submit" name="search" value="<?php echo __('Search'); ?>" /></td>
+        <td colspan="4" style="text-align:right"><input class="search_submit" type="submit" name="search" value="<?php echo __('Search'); ?>" /></td>
         </tr>
       </tbody>
-    </table>
+    </table>	
     <div class="search_results">
       <div class="search_results_content">
       </div>
     </div>
-    <div class='new_link'><a <?php echo !(isset($is_choose) && $is_choose)?'':'target="_blank"';?> href="<?php echo url_for('people/new'). ($form['family_name']->getValue() ? '?name='.urlencode($form['family_name']->getValue()) :'') ; ?>"><?php echo __('New');?></a></div>
+     <?php if($flagMenu): ?><div class='new_link'><a <?php echo !(isset($is_choose) && $is_choose)?'':'target="_blank"';?> href="<?php echo url_for('people/new'). ($form['family_name']->getValue() ? '?name='.urlencode($form['family_name']->getValue()) :'') ; ?>"><?php echo __('New');?></a></div><?php endif;?>
   </div>
 </form>
 <div>

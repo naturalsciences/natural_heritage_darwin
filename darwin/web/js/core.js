@@ -1,6 +1,12 @@
 var date_to_set={};
          //global
-var datenagoya = new Date(2014,9,12);     
+var datenagoya = new Date(2014,9,12);
+
+    //attention month -1 javascript flaw
+ var LastDayOfMonth=function(Year, Month) {
+            var dateTmp= new Date( (new Date(Year, Month,1))-1 );
+            return dateTmp.getDate();
+}     
   
 function calculate_date_range_generic(jquery_prefix)
 {
@@ -424,8 +430,6 @@ $.fn.customRadioCheck = function() {
 		return false;
 	};
 		
-        
-        //to fix bug when deleting collector in identification
 	$(function() {
 		$('img[class^="clear_"]').click(
             function(){
@@ -555,7 +559,7 @@ $.fn.customRadioCheck = function() {
 		var d2 = datenagoya;
 		var dnull = new Date(1899,10,30);
 		
-        console.log(d1);
+       
 		if(d1 > d2){
 		//	if(confirm("Enable Nagoya on this specimen")){
 			$('#date_acq').val("ok");
@@ -571,31 +575,28 @@ $.fn.customRadioCheck = function() {
 	}
     
          var GetNagoyaCollection=function(url)
-         {
-           
-			console.log("AJAX");
-            console.log(url);
+         {           
+			
 			$.getJSON( 
 				url,
 				{id: $("#specimen_collection_ref").val()},
 				function(data) 
                 {
-                console.log("data.nagoya"  + data.nagoya);
+
 					if(data.nagoya == "yes")
                     {
-                        console.log("COLL_1");
+                       
                         $('#coll').val("ok");
                         
 					}
                     else if(data.nagoya == "no")
                     {
-                        console.log("COLL_2");
+                       
 						$('#coll').val("nok");
                        
 					}
                     else
-                    {
-                        console.log("COLL_3");
+                    {                       
 						$('#coll').val("");
                         
                        
@@ -606,11 +607,7 @@ $.fn.customRadioCheck = function() {
            
 		};
         
-        //attention month -1 javascript flaw
-        var LastDayOfMonth=function(Year, Month) {
-            var dateTmp= new Date( (new Date(Year, Month,1))-1 );
-            return dateTmp.getDate();
-        }
+    
 
        
      
@@ -663,12 +660,11 @@ $.fn.customRadioCheck = function() {
     
     function fillcheckandlabels($origin) 
     { 
-        //console.log("A");
+       
 
-        console.log("coll : "+$('#coll').val())
 		if (	$('#coll').val()=="ok" && $('#gtu').val()=="ok"  && 	($('#date_sampl').val()=="ok" || $('#date_acq').val()=="ok") )
 		{
-				console.log("A");
+			
 	
 			   $('#specimen_nagoya option[value="yes"]').attr('selected','selected');
 
@@ -684,7 +680,7 @@ $.fn.customRadioCheck = function() {
 		}
 		else if (	$('#coll').val()=="nok" || $('#gtu').val()=="nok" || ($('#date_sampl').val()=="nok" && $('#date_acq').val()=="nok") )
 		{
-				console.log("B");
+				
 				
 					$('#specimen_nagoya option[value="no"]').attr('selected','selected');
 
@@ -719,7 +715,7 @@ $.fn.customRadioCheck = function() {
 					}
 			//}
 		}else{	
-console.log("C");		
+	
 
 			$('#specimen_nagoya option[value="not defined"]').attr('selected','selected');
 	
@@ -745,8 +741,7 @@ console.log("C");
 				$("#GTU_label").text("- Sampling location is NOT in a area concerned by Nagoya protocol");
 			}
 		//	alert($('#date_sampl').val() +" ---  " + $('#date_acq').val());
-		console.log($('#date_sampl').val());
-		console.log($('#date_acq').val());
+
 			if($('#date_sampl').val()=="not defined" || $('#date_acq').val()=="not defined") {
 				
 				$("#dates_label").text("- Date of acquisition and/or collect are NOT filled");
@@ -758,9 +753,8 @@ console.log("C");
 		}	
 	};
     
-    
-    //ftheeten 2018 04 10
-var urlParam= function(name){
+        //ftheeten 2018 04 10
+    var urlParam= function(name){
             var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
             if (results==null){
                return null;

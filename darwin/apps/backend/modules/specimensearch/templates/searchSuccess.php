@@ -103,7 +103,7 @@
       <?php elseif(! isset($is_pinned_only_search) && $is_specimen_search):?>
         <input type="button" id="del_from_spec" class="save_search" value="<?php echo __('Remove selected'); ?>">
       <?php endif;?>
-      <input type="button" id="export_spec" class="save_search" value="<?php echo __('Export');?>" />
+      <!--<input type="button" id="export_spec" class="save_search" value="<?php echo __('Export');?>" />-->
   
   </div>
 </div>

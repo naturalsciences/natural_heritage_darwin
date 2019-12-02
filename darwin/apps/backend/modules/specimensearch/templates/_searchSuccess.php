@@ -24,7 +24,7 @@
               <?php endif;?>
             </th>
             <th><!-- Pin -->
-              <label class="top_pin"><?php print(__("Select")); ?><input type="checkbox" /></label>
+              <label class="top_pin"><?php print(__("Select all")); ?><input type="checkbox" /></label>
             </th>
              <th><?php print(__("Actions")); ?></th>
             <?php $all_columns = $columns->getRawValue() ;?>

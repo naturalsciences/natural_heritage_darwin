@@ -11,13 +11,12 @@ class CollectionsForm extends BaseCollectionsForm
 {
   public function configure()
   {
-        	//JMHerpers 4/9/2019
+          	//JMHerpers 4/9/2019
 	static $nagoyaanswers = array(
 		"yes" 		=> "Yes",
 		"no" 		=> "No",
 		"not defined"     	=> "Not defined"
 	);
-    
     $this->useFields(array(
       'is_public',
       'code',
@@ -30,16 +29,18 @@ class CollectionsForm extends BaseCollectionsForm
       //ftheeten 2018 08 08
       'allow_duplicates',
 	  //JMHerpers 2019 05 20
-	   'nagoya'
+	   'nagoya',
+	   'uid'
     ));
 
-
-    
     $this->widgetSchema['is_public'] = new sfWidgetFormInputCheckbox(array ('default' => 'true'), array('title' => 'checked = public'));
     $this->validatorSchema['is_public'] = new sfValidatorBoolean() ;
     $this->widgetSchema['code'] = new sfWidgetFormInputText();
     $this->widgetSchema['code']->setAttributes(array('class'=>'small_size'));
-    $this->widgetSchema['name'] = new sfWidgetFormInputText();
+    $this->widgetSchema['uid'] = new sfWidgetFormInputText();
+	$this->widgetSchema['uid']->setLabel("Unique identifier");
+    $this->widgetSchema['uid']->setAttributes(array('class'=>'small_size', "readonly"=>"readonly"));
+	$this->widgetSchema['name'] = new sfWidgetFormInputText();
     $this->widgetSchema['name']->setAttributes(array('class'=>'medium_size'));
     $this->widgetSchema['institution_ref'] = new widgetFormCompleteButtonRef(array(
       'model' => 'Institutions',
@@ -105,22 +106,22 @@ class CollectionsForm extends BaseCollectionsForm
     //Re-embedding the container
     $this->embedForm('CollectionsRights', $this->embeddedForms['CollectionsRights']);
 
-
-
-	
-	$this->widgetSchema['preferred_taxonomy'] = new sfWidgetFormChoice(array(
-      'choices' => TaxonomyMetadataTable::getAllTaxonomicMetadata( 'id ASC',true)  //array_merge( array(''=>'All'),TaxonomyMetadataTable::getAllTaxonomicMetadata("id ASC"))
-    ));
-	$this->validatorSchema['preferred_taxonomy'] = new sfValidatorInteger(array('required'=>false));
-    
-     
-     //jmherpers 20190506
+	//jmherpers 20190506
     $this->widgetSchema['nagoya'] = new sfWidgetFormChoice(array(
       'choices' =>  $nagoyaanswers,
     ));
 	$this->setDefault('nagoya', "not defined");
 	$this->validatorSchema['nagoya'] = new sfValidatorChoice(array('choices' => array_keys($nagoyaanswers), 'required' => true));
     
+	
+	
+	$this->validatorSchema['uid'] = new sfValidatorString(array('required'=>false));
+	
+	$this->widgetSchema['preferred_taxonomy'] = new sfWidgetFormChoice(array(
+      'choices' => TaxonomyMetadataTable::getAllTaxonomicMetadata( 'id ASC',true)  //array_merge( array(''=>'All'),TaxonomyMetadataTable::getAllTaxonomicMetadata("id ASC"))
+    ));
+	$this->validatorSchema['preferred_taxonomy'] = new sfValidatorInteger(array('required'=>false));
+	
     $subForm = new sfForm();
     $this->embedForm('newVal',$subForm);
   }

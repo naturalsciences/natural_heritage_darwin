@@ -20,7 +20,7 @@ class myUser extends sfBasicSecurityUser
   {
     return -1;
   }
-  
+    
    public function isAtLeast($role)
   {
     return Users::ANONYMOUS >= $role;

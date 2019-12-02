@@ -348,6 +348,9 @@ class specimensearchActions extends DarwinActions
       'collection' => array(
         'collection_name',
         $this->getI18N()->__('Collection'),),
+      'codes' => array(
+        false,
+        $this->getI18N()->__('Codes'),),
       'taxon' => array(
         'taxon_name_indexed',
         $this->getI18N()->__('Taxon'),),
@@ -359,9 +362,7 @@ class specimensearchActions extends DarwinActions
         'gtu_from_date',
         $this->getI18N()->__('Collecting date'),
       ),
-      'codes' => array(
-        false,
-        $this->getI18N()->__('Codes'),),
+
       'chrono' => array(
         'chrono_name_indexed',
         $this->getI18N()->__('Chronostratigraphic unit'),),

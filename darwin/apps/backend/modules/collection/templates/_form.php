@@ -41,6 +41,13 @@ $(document).ready(function ()
           <?php echo $form['code'] ?>
         </td>
       </tr>
+	  <tr>
+        <th><?php echo $form['uid']->renderLabel() ?></th>
+        <td>
+          <?php echo $form['uid']->renderError() ?>
+          <?php echo $form['uid'] ?>
+        </td>
+      </tr>
       <tr>
         <th><?php echo $form['name']->renderLabel() ?></th>
         <td>

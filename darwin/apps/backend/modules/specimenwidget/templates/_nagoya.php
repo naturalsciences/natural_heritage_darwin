@@ -84,23 +84,19 @@
 			});	
 		});
 		
-		//GetNagoyaCollection(url_nagoya);
-		onElementInserted("body",".spec_ident_extlinks_data",
+		
+		onElementInserted("body",".link_type_selector",
             function(e)
             {
                 console.log("new_link");
                 
                 if(insert_nagoya==true)
-                {
-                    console.log("nagoya");
-                    //var id=$(this).attr("id");
-                   
-                    var child=$(e).find("input[name*='specimen[newExtLinks]']");
-                    if(child.length>0)
-                    {
-                        console.log("found");
-                    }
-                    console.log(child);
+                {            
+                 
+                      $([document.documentElement, document.body]).animate({
+                            scrollTop: $(e).offset().top-250
+                        }, 500);
+                    $(e).val("nagoya");                        
                     insert_nagoya=false;
                 }
             }
@@ -114,47 +110,24 @@
                     console.log("added");
                     var ctrls=$('[id^="spec\_ident\_extlinks\_data\_"]');
                     console.log(ctrls);
-                    for (i=0;i<10;i++){
-					if ($("#specimen_newExtLinks_"+i+"_url").val() == "")
+                    for (i=0;i<10;i++)
                     {
-                            console.log(i);
-                    }
+                        if ($("#specimen_newExtLinks_"+i+"_url").val() == "")
+                        {
+                                console.log(i);
+                        }
                     }
                    
                 }
             );
-			//jQuery('#add_links').click();
-            /*var ctrls=$('[id ^="spec_ident_extlinks_data_"]');
-            if(ctrls.length>0)
-            {
-                $.each(
-                    function(key, obj)
-                    {
-                        console.log(obj.attr("id"));
-                    }    
-                );
-            }*/
-			//console.log(ctrls);
-				/*for (i=0;i<10;i++){
-					if ($("#specimen_newExtLinks_"+i+"_url").val() == ""){
-							$("#specimen_newExtLinks_"+i+"_url").closest('div').css("display","block"); // widget_content   
-							$("#specimen_newExtLinks_"+i+"_url").closest('li').find("div:eq(0)").find("div:eq(0)").css("display","none");		//widget_top_button
-							$("#specimen_newExtLinks_"+i+"_url").closest('li').find("div:eq(0)").find("div:eq(1)").css("display","block");		//widget_bottom_button
-						$("#specimen_newExtLinks_"+i+"_comment").val("Link to Nagoya directory");
-						$("#specimen_newExtLinks_"+i+"_type option[value='nagoya']").attr('selected','selected');
-						$("#specimen_newExtLinks_"+i+"_url").focus();
-					}
-				};*/    
+	  
 	});
 				
 
 		
 		$("#specimen_collection_ref").change(function(){
 			GetNagoyaCollection(url_nagoya);
-            //fillcheckandlabels(1,url_nagoya);
-			/*setTimeout(function (){ 
-				fillcheckandlabels(1);}  //0 if called at opening and 1 if called in a change
-			,500);*/ 
+           
 		});	
 
 	</script>

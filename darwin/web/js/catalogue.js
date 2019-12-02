@@ -67,6 +67,7 @@
                 {
                   new_link = $(self).attr('href') + element_name ;
                   //ftheeten 2019 09 17
+                 //ftheeten 2019 09 17
                   //document.location.href = new_link;
                   window.open( new_link,'_blank');
                   return true;

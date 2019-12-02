@@ -17,7 +17,6 @@ class GtuForm extends BaseGtuForm
 		"no" 		=> "No",
 		"not defined"     	=> "Not defined"
 	);
-    
     $this->useFields(array('code', 'gtu_from_date', 'gtu_to_date', 'latitude', 'longitude',
       'lat_long_accuracy', 'elevation', 'elevation_accuracy',
         //ftheeten 2018 08 08

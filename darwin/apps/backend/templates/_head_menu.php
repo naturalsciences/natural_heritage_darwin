@@ -1,32 +1,50 @@
 <script>
  //ftheeten 2018 05 30
-    function disableFrameMenu() {
-    var isInIframe = (parent !== window),
-        parentUrl = null;
 
-        if (isInIframe) {
+    function disableFrameMenu() 
+    {
+        var in_frame=false;
+        var fame_tested=false;
+        var this_frame=null;
+        var ancestor_frame=null;
+        var parentUrl = null;
+        var redirect_mode=false;
+      
         
-            parentUrl = document.referrer;
-            if(parentUrl.indexOf('<?php print(sfConfig::get('dw_domain_disable_menu'));?>') ===-1)
-            {
-                $.ajax({
-                  url: "http://<?php print(parse_url(sfContext::getInstance()->getRequest()->getUri(),PHP_URL_HOST ));?>/search/disableMenu?menu=on",              
-                }).done(function() {
-                  
-                });
-            }
-            
-        }
-        else
-        {
-            
-             $.ajax({
-                  url: "http://<?php print(parse_url(sfContext::getInstance()->getRequest()->getUri(),PHP_URL_HOST ));?>/search/disableMenu?menu=on",              
-                }).done(function() {
-                  
-                });
-        }
+        $.ajax({
+                  url: detect_https("http://<?php print(parse_url(sfContext::getInstance()->getRequest()->getUri(),PHP_URL_HOST ));?>/search/checkReferer"),              
+                }).done(
+                
+                    function(data) 
+                    {
+                      
+                      var tmp_url=data["DW_REFERER"];                     
+                      if(tmp_url.length>0)
+                      {
+                          if(tmp_url.indexOf('<?php print(sfConfig::get('dw_domain_disable_menu'));?>') !==-1)
+                          {
+                            in_frame=true;
+                           
+                           }
+                      }
+                       if(in_frame)
+                       {
+                          
+                             $.ajax({
+                            url: detect_https("http://<?php print(parse_url(sfContext::getInstance()->getRequest()->getUri(),PHP_URL_HOST ));?>/search/disableMenu?menu=off"),              
+                                }).done(function() {
+                            
+                                });
+                       }
+                       fame_tested=true;
+                    }
+                );
+    
+     
+   
+        
 
+   
     
     }
     (function($){ //create closure so we can safely use $ as alias for jQuery
@@ -49,31 +67,34 @@
 <?php
     $flagMenu="on";
     
-    
+	$referer_domain=parse_url($_SERVER["HTTP_REFERER"])["scheme"].'://'.parse_url($_SERVER["HTTP_REFERER"])["host"];
+    $_SESSION['DW_REFERER']="";
     if(array_key_exists("menu", $_REQUEST))
     {       
         if($_REQUEST['menu']=="off")
         {
+          
             $flagMenu="off";
+            $_SESSION['DW_REFERER']=$referer_domain;
+            $_SESSION['menu']= $flagMenu;  
+        }
+        else
+        {
+             $_SESSION['menu']= "on";  
         }
     }
-    elseif(array_key_exists("menu", $_SESSION[$_SERVER["HTTP_REFERER"]]))
-    {       
-        if($_SESSION[$_SERVER["HTTP_REFERER"]]['menu']=="off")
-        {
-            $flagMenu="off";
+    elseif(array_key_exists("menu", $_SESSION))
+    {      
+        if($_SESSION['menu']=="off")
+        {         
+            $flagMenu="off";          
         }
         
     }
-    $_SESSION[$_SERVER["HTTP_REFERER"]]['menu']= $flagMenu;  
+    
+    //$_SESSION['menu']= $flagMenu;  
 ?>
 <?php if($flagMenu!="off" ):?>
-<?php 
-if(array_key_exists("menu", $_SESSION[$_SERVER["HTTP_REFERER"]]))
-{
-    unset($_SESSION[$_SERVER["HTTP_REFERER"]]['menu']);
-}
-?>
 
 <div class="menu_top">
     <ul id="navigation" class="sf-menu">

@@ -201,7 +201,7 @@ class GtuFormFilter extends BaseGtuFormFilter
 
     if($values['expedition'] !='')
     {
-         $query->andWhere("
+        $query->andWhere("
    		(EXISTS (SELECT d.id
 			  FROM Expeditions e1 WHERE 
 			   name_indexed = fulltoindex(?) AND e1.id = ANY ( d.expedition_refs) ))

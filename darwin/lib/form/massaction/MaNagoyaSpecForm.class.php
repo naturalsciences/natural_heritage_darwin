@@ -2,14 +2,21 @@
 
 class MaNagoyaSpecForm extends BaseForm
 {
+
+    
   public function configure() {
-	  $this->widgetSchema['nagoya_specimen'] = new sfWidgetFormChoice(array(
-        'expanded' => true,
-        'choices'  => array(True => 'true', False => 'false'),
-        'default'=> true,
-       
-        ), array( 'style' => "display: inline-block;text-align:center; width: auto !important"));
-    $this->validatorSchema['nagoya_specimen'] = new sfValidatorString(array('required' => true));     
+  
+  
+    static $nagoyaanswers = array(
+            "yes" 		=> "Yes",
+            "no" 		=> "No",
+            "not defined"     	=> "Not defined"
+        );
+	 $this->widgetSchema['nagoya_specimen'] = new sfWidgetFormChoice(array(
+      'choices' =>  $nagoyaanswers,
+    ));
+	$this->setDefault('nagoya_specimen', "not defined");
+	$this->validatorSchema['nagoya_specimen'] = new sfValidatorChoice(array('choices' => array_keys($nagoyaanswers), 'required' => true));     
 
     $this->widgetSchema['nagoya_specimen']->setLabel('Choose new value for Nagoya in specimen');
   }

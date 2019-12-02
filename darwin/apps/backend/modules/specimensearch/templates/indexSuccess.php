@@ -25,7 +25,7 @@
             <input type="submit" name="submit" id="submit" value="<?php echo __('Search'); ?>" class="search_submit">
           </div>
       </div>
-      <div class="check_right" id="save_button">
+      <div class="check_right hidden" id="save_button">
         <?php include_partial('savesearch/saveSearch');?>
       </div>
     </form>

@@ -94,8 +94,8 @@ abstract class BaseDoctrineTemporalInformationGtuGroupUnnestForm extends DarwinM
     $this->widgetSchema   ['longitude_utm'] = new sfWidgetFormInputText();
     $this->validatorSchema['longitude_utm'] = new sfValidatorNumber(array('required' => false));
 
-    $this->widgetSchema   ['utm_zone'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['utm_zone'] = new sfValidatorString(array('required' => false));
+    $this->widgetSchema   ['utm_zone'] = new sfWidgetFormInputText();
+    $this->validatorSchema['utm_zone'] = new sfValidatorPass(array('required' => false));
 
     $this->widgetSchema   ['from_date_mask'] = new sfWidgetFormInputText();
     $this->validatorSchema['from_date_mask'] = new sfValidatorInteger(array('required' => false));

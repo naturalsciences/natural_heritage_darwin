@@ -430,10 +430,26 @@ class searchActions extends DarwinActions
        if(strtolower($request->getParameter('menu'))=="off")
        {
            $flagMenu="off";
+           $_SESSION['menu']= $flagMenu; 
        }
     }
-    $_SESSION[$_SERVER['HTTP_REFERER']]['menu']= $flagMenu; 
+   
     return sfView::NONE;    
+
+  }
+  
+  
+   public function executeCheckReferer(sfWebRequest $request)
+  {
+    $returned="";
+    if(array_key_exists("DW_REFERER", $_SESSION)) 
+    {
+       $returned=$_SESSION["DW_REFERER"];
+    }
+    
+   $this->getResponse()->setHttpHeader('Content-type','application/json');
+   $this->setLayout('json');
+   return $this->renderText(json_encode(array("DW_REFERER"=>$returned)));
 
   }
   
