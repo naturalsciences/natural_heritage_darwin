@@ -1,20 +1,11 @@
 <script  type="text/javascript">
-function forceIdentificationHelper(e,ui)
-{
-   $(".ui-state-highlight").html("<td colspan='6' style='line-height:"+ui.item[0].offsetHeight+"px'>&nbsp;</td>");
-}
+
 
 function forceIdentifiersHelper(e,ui)
 {
    $(".ui-state-highlight").html("<td colspan='3' style='line-height:"+ui.item[0].offsetHeight+"px'>&nbsp;</td>");
 }
 
-function reOrderIdent()
-{
-  $('table#identifications').find('tbody.spec_ident_data:visible').each(function (index, item){
-    $(item).find('tr.spec_ident_data input[id$=\"_order_by\"]').val(index+1);
-  });
-}
 
 function reOrderIdentifiers(tableId)
 {
@@ -94,17 +85,6 @@ $(document).ready(function () {
         return false;
     });    
 
-    $("#identifications").sortable({
-         placeholder: 'ui-state-highlight',
-         handle: '.spec_ident_handle',
-         axis: 'y',
-         change: function(e, ui) {
-           forceIdentificationHelper(e,ui);
-         },
-         deactivate: function(event, ui) {
-           reOrderIdent();
-         }
-       });
        
 
 
@@ -119,3 +99,6 @@ $(document).ready(function () {
         }
         );
 </script>
+
+
+

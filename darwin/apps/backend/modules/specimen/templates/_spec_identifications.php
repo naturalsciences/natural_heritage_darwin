@@ -10,8 +10,8 @@ sfContext::getInstance()->getActionName()=="addIdentification"||sfContext::getIn
   </tr>
   <?php endif;?>
   <tr class="spec_ident_data">
-    <td class="spec_ident_handle">
-      <?php echo image_tag('drag.png');?>
+    <td >
+      
     </td>
     <td>
       <?php echo $form['notion_date'];?>
