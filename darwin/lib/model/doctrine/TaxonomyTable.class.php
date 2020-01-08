@@ -311,7 +311,7 @@ WHERE taxonomy_level_ref= min_taxonomy_level_ref ORDER BY level_ref";
 
                 $sql = "SELECT  string_agg(taxonomy.id::varchar, ';') as value, name as label
                       FROM taxonomy 
-                       WHERE name=:term AND metadata_ref= :taxon_ref GROUP BY name ORDER BY name LIMIT :limit;
+                       WHERE name=:term AND metadata_ref= :taxon_ref GROUP BY level_ref,name ORDER BY level_ref, name LIMIT :limit;
                     ";
             
             }
@@ -319,7 +319,7 @@ WHERE taxonomy_level_ref= min_taxonomy_level_ref ORDER BY level_ref";
             {
                 $sql = "SELECT  string_agg(taxonomy.id::varchar, ';') as value, name as label
                       FROM taxonomy 
-                       WHERE name_indexed like concat(fulltoindex(:term),'%') AND metadata_ref= :taxon_ref GROUP BY name ORDER BY name LIMIT :limit;
+                       WHERE name_indexed like concat(fulltoindex(:term),'%') AND metadata_ref= :taxon_ref GROUP BY level_ref,name ORDER BY level_ref, name LIMIT :limit;
                     ";
             }       
             $q = $conn->prepare($sql);
@@ -333,7 +333,7 @@ WHERE taxonomy_level_ref= min_taxonomy_level_ref ORDER BY level_ref";
 
                 $sql = "SELECT  string_agg(taxonomy.id::varchar, ';') as value, name as label
                       FROM taxonomy 
-                       WHERE name=:term  GROUP BY name ORDER BY name LIMIT :limit;
+                       WHERE name=:term  GROUP BY level_ref,name ORDER BY level_ref, name LIMIT :limit;
                     ";
             
             }
@@ -341,7 +341,7 @@ WHERE taxonomy_level_ref= min_taxonomy_level_ref ORDER BY level_ref";
             {
                 $sql = "SELECT  string_agg(taxonomy.id::varchar, ';') as value, name as label
                       FROM taxonomy 
-                       WHERE name_indexed like concat(fulltoindex(:term),'%')  GROUP BY name ORDER BY name LIMIT :limit;
+                       WHERE name_indexed like concat(fulltoindex(:term),'%')  GROUP BY level_ref,name ORDER BY level_ref, name LIMIT :limit;
                     ";
             }       
             $q = $conn->prepare($sql);
