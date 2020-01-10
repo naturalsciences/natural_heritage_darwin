@@ -309,18 +309,50 @@ WHERE taxonomy_level_ref= min_taxonomy_level_ref ORDER BY level_ref";
             {
                
 
-                $sql = "SELECT  string_agg(taxonomy.id::varchar, ';') as value, name as label
+                $sql = "WITH find_taxa AS
+(SELECT  string_agg(taxonomy.id::varchar, ';') as value, CASE WHEN status <> 'valid' THEN name||' ('||status||')' ELSE name END as label
                       FROM taxonomy 
-                       WHERE name=:term AND metadata_ref= :taxon_ref GROUP BY level_ref,name ORDER BY level_ref, name LIMIT :limit;
-                    ";
+                       WHERE name=:term AND metadata_ref= :taxon_ref GROUP BY level_ref,name, status ORDER BY level_ref, name LIMIT :limit
+                    )
+
+,
+ find_taxa_2 AS
+(
+SELECT group_id as group_id_tmp FROM darwin2.classification_synonymies INNER 
+JOIN (SELECT unnest((string_to_array(find_taxa.value, ';')))::int as tmp_taxa from find_taxa) find_taxa
+ON record_id=tmp_taxa and referenced_relation='taxonomy'
+)
+
+
+SELECT * FROM find_taxa
+UNION
+SELECT taxonomy.id::text, name||' ('||status||')' FROM classification_synonymies
+INNER JOIN  find_taxa_2 ON group_id =group_id_tmp AND record_id NOT in (SELECT unnest((string_to_array(find_taxa.value, ';')))::int as tmp_taxa from find_taxa)
+INNER JOIN taxonomy ON taxonomy.id=record_id";
             
             }
             else
             {
-                $sql = "SELECT  string_agg(taxonomy.id::varchar, ';') as value, name as label
+                $sql = "WITH find_taxa AS
+(SELECT  string_agg(taxonomy.id::varchar, ';') as value, CASE WHEN status <> 'valid' THEN name||' ('||status||')' ELSE name END as label
                       FROM taxonomy 
-                       WHERE name_indexed like concat(fulltoindex(:term),'%') AND metadata_ref= :taxon_ref GROUP BY level_ref,name ORDER BY level_ref, name LIMIT :limit;
-                    ";
+                       WHERE name_indexed like concat(fulltoindex(:term),'%') AND metadata_ref= :taxon_ref GROUP BY level_ref,name, status ORDER BY level_ref, name LIMIT :limit
+                    )
+
+,
+ find_taxa_2 AS
+(
+SELECT group_id as group_id_tmp FROM darwin2.classification_synonymies INNER 
+JOIN (SELECT unnest((string_to_array(find_taxa.value, ';')))::int as tmp_taxa from find_taxa) find_taxa
+ON record_id=tmp_taxa and referenced_relation='taxonomy'
+)
+
+
+SELECT * FROM find_taxa
+UNION
+SELECT taxonomy.id::text, name||' ('||status||')' FROM classification_synonymies
+INNER JOIN  find_taxa_2 ON group_id =group_id_tmp AND record_id NOT in (SELECT unnest((string_to_array(find_taxa.value, ';')))::int as tmp_taxa from find_taxa)
+INNER JOIN taxonomy ON taxonomy.id=record_id";
             }       
             $q = $conn->prepare($sql);
             $q->execute(array(':term' => $needle, ':taxon_ref' => $taxon_ref, ':limit'=> $limit));
@@ -331,18 +363,50 @@ WHERE taxonomy_level_ref= min_taxonomy_level_ref ORDER BY level_ref";
             {
                
 
-                $sql = "SELECT  string_agg(taxonomy.id::varchar, ';') as value, name as label
+                $sql = "WITH find_taxa AS
+(SELECT  string_agg(taxonomy.id::varchar, ';') as value, CASE WHEN status <> 'valid' THEN name||' ('||status||')' ELSE name END as label
                       FROM taxonomy 
-                       WHERE name=:term  GROUP BY level_ref,name ORDER BY level_ref, name LIMIT :limit;
-                    ";
+                       WHERE name=:term  GROUP BY level_ref,name, status ORDER BY level_ref, name, status LIMIT :limit
+                    )
+
+,
+ find_taxa_2 AS
+(
+SELECT group_id as group_id_tmp FROM darwin2.classification_synonymies INNER 
+JOIN (SELECT unnest((string_to_array(find_taxa.value, ';')))::int as tmp_taxa from find_taxa) find_taxa
+ON record_id=tmp_taxa and referenced_relation='taxonomy'
+)
+
+
+SELECT * FROM find_taxa
+UNION
+SELECT taxonomy.id::text, name||' ('||status||')' FROM classification_synonymies
+INNER JOIN  find_taxa_2 ON group_id =group_id_tmp AND record_id NOT in (SELECT unnest((string_to_array(find_taxa.value, ';')))::int as tmp_taxa from find_taxa)
+INNER JOIN taxonomy ON taxonomy.id=record_id";
             
             }
             else
             {
-                $sql = "SELECT  string_agg(taxonomy.id::varchar, ';') as value, name as label
+                $sql = "WITH find_taxa AS
+(SELECT  string_agg(taxonomy.id::varchar, ';') as value, CASE WHEN status <> 'valid' THEN name||' ('||status||')' ELSE name END as label
                       FROM taxonomy 
-                       WHERE name_indexed like concat(fulltoindex(:term),'%')  GROUP BY level_ref,name ORDER BY level_ref, name LIMIT :limit;
-                    ";
+                       WHERE name_indexed like concat(fulltoindex(:term),'%')  GROUP BY level_ref,name, status ORDER BY level_ref, name LIMIT :limit
+                    )
+
+,
+ find_taxa_2 AS
+(
+SELECT group_id as group_id_tmp FROM darwin2.classification_synonymies INNER 
+JOIN (SELECT unnest((string_to_array(find_taxa.value, ';')))::int as tmp_taxa from find_taxa) find_taxa
+ON record_id=tmp_taxa and referenced_relation='taxonomy'
+)
+
+
+SELECT * FROM find_taxa
+UNION
+SELECT taxonomy.id::text, name||' ('||status||')' FROM classification_synonymies
+INNER JOIN  find_taxa_2 ON group_id =group_id_tmp AND record_id NOT in (SELECT unnest((string_to_array(find_taxa.value, ';')))::int as tmp_taxa from find_taxa)
+INNER JOIN taxonomy ON taxonomy.id=record_id";
             }       
             $q = $conn->prepare($sql);
             $q->execute(array(':term' => $needle, ':limit'=> $limit));
