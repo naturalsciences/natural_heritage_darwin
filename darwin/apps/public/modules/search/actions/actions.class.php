@@ -110,6 +110,7 @@ class searchActions extends DarwinActions
   public function executeView(sfWebRequest $request)
   {
     $this->full = false ;
+    $specimen_set=false;
     if($request->hasParameter('full')) 
     {
         $this->full = true ;
@@ -126,11 +127,34 @@ class searchActions extends DarwinActions
       $id = $suggestion['id'] ;
       $ajax = true ;
     }
-    else $id = $request->getParameter('id') ;
-
-    $this->forward404Unless(ctype_digit($request->getParameter('id')));
-    $this->specimen = Doctrine_Core::getTable('Specimens')->find((int) $request->getParameter('id'));
-    $this->comments = Doctrine_Core::getTable('Comments')->getRelatedComment('specimens', (int) $request->getParameter('id'));
+    //ftheeten 2020 01 10
+    elseif($request->hasParameter('original_id')) 
+    {
+        $this->forward404Unless(ctype_digit($request->getParameter('original_id')));
+        $stable = Doctrine_Core::getTable('SpecimensStableIds')->findOneBySpecimenRef((int) $request->getParameter('original_id'));
+        $this->specimen = Doctrine_Core::getTable('Specimens')->findOneById($stable->getSpecimenRef());       
+        $id=$this->specimen->getId();
+        $this->comments = Doctrine_Core::getTable('Comments')->getRelatedComment('specimens', $id);
+        $specimen_set=true;
+    }
+    elseif($request->hasParameter('uuid')) 
+    {   
+        $stable = Doctrine_Core::getTable('SpecimensStableIds')->findOneByUuid($request->getParameter('uuid'));    
+        $this->specimen = Doctrine_Core::getTable('Specimens')->findOneById($stable->getSpecimenRef()); 
+        $id=$this->specimen->getId();
+        $this->comments = Doctrine_Core::getTable('Comments')->getRelatedComment('specimens', $id);
+        $specimen_set=true;
+    }
+    else 
+    {
+        $id = $request->getParameter('id') ;
+    }
+    if(!$specimen_set)
+    {
+        $this->forward404Unless(ctype_digit($request->getParameter('id')));
+        $this->specimen = Doctrine_Core::getTable('Specimens')->find((int) $request->getParameter('id'));
+        $this->comments = Doctrine_Core::getTable('Comments')->getRelatedComment('specimens', (int) $request->getParameter('id'));
+   }
     $this->forward404Unless($this->specimen);
     if(!$this->specimen->getCollectionIsPublic()) $this->forwardToSecureAction();
 
@@ -608,5 +632,26 @@ class searchActions extends DarwinActions
 		 return  $this->renderText(json_encode($results,JSON_UNESCAPED_SLASHES));
 	  
 	  }
+      
+      #2020 01 14
+   public function executeDoiview(sfWebRequest $request)
+   {
+        $spec_ids= $this->getIDFromCollectionNumber($request);
+        if(count($spec_ids>0))
+        {
+            $spec_id=$spec_ids[0];
+            $count=count($spec_ids);
+        }
+        else
+        {
+            $spec_id=-1;
+            $count=0;   
+        }
+        $this->specimen = Doctrine_Core::getTable('Specimens')->find((int) $request->getParameter('id'));
+        $this->count= 1;
+        
+        $this->getResponse()->setHttpHeader('Content-type','application/xml');
+        return $this->renderText($this->specimen->getXMLDataCite());
+   }
   
 }

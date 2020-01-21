@@ -782,6 +782,6 @@ class SpecimensTable extends DarwinTable
                 }
             }
             return Array();
-    }     
+    }   
 
 }

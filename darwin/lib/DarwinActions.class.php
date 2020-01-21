@@ -358,7 +358,28 @@ class DarwinActions extends sfActions
 		 //ftheeten 2017 10 09
 		$tmp_id=NULL;
 		$initialized=false;
-		if(null!==($request->getParameter('id')))
+        //2020 01 10
+        if(null!==($request->getParameter('original_id')))
+		{
+			if(strlen($request->getParameter('original_id')))
+			{			  
+              $stable = Doctrine_Core::getTable('SpecimensStableIds')->findOneBySpecimenRef((int) $request->getParameter('original_id'));
+              $this->specimen = Doctrine_Core::getTable('Specimens')->findOneById($stable->getSpecimenRef());
+              $tmp_id=Array($this->specimen->getId());
+			  $initialized=true;
+			}
+		}
+        elseif(null!==($request->getParameter('uuid')))
+		{
+			if(strlen($request->getParameter('uuid')))
+			{
+			  $stable = Doctrine_Core::getTable('SpecimensStableIds')->findOneByUuid($request->getParameter('uuid'));
+              $this->specimen = Doctrine_Core::getTable('Specimens')->findOneById($stable->getSpecimenRef());
+              $tmp_id=Array($this->specimen->getId());
+			  $initialized=true;
+			}
+		}
+		elseif(null!==($request->getParameter('id')))
 		{
 			if(strlen($request->getParameter('id')))
 			{

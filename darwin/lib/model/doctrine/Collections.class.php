@@ -131,4 +131,18 @@ class Collections extends BaseCollections
 	  }
 	  return -1;
   }
+  
+   public function getPathString()
+  {
+	  $conn = Doctrine_Manager::connection();				
+	  $sql = "SELECT * FROM fct_rmca_get_collection_text_path(:coll_id);";
+	  $q = $conn->prepare($sql);
+             
+	  $q->bindParam(":coll_id", $this->getId());
+              
+	 $q->execute();
+	 $item=$q->fetch(PDO::FETCH_NUM);
+             
+	  return $item[0];
+  }
 }

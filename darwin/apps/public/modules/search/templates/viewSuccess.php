@@ -5,7 +5,7 @@
 	$ig=$specimen->getIgNum(); $spec_num=$specimen->getMainCode();
   ?>
   <?php if(strlen($specimen->getIgNum()??'')>0||strlen($specimen->getIgNum()??'')>0):?>
-	<h1><?php echo __("I.G. Number : ");?><?php echo (strlen($specimen->getIgNum()??'')>0 ?  $specimen->getIgNum():'No I.G. Num' );?><br/><?php echo __("Collection Number : ");?><?php echo (strlen($specimen->getIgNum()??'')>0 ?  $specimen->getMainCode():'No main code' );?> </h1>
+	<h1><?php echo __("I.G. Number : ");?><?php echo (strlen($specimen->getIgNum()??'')>0 ?  $specimen->getIgNum():'No I.G. Num' );?><br/><?php echo __("Number in Collection : ");?><?php echo (strlen($specimen->getIgNum()??'')>0 ?  $specimen->getMainCode():'No main code' );?> </h1>
   <?php endif;?>
   <h2 class="title"><?php echo __("Collection") ?></h2>
     <div class="borded right_padded">
@@ -312,6 +312,12 @@
               <span>-</span>
             <?php endif ; ?>
           </td>
+        <tr>
+            <td><span class="pager_nav"><?php echo __("UUID") ; ?> :</span></td>
+            <td>
+            <span><?php echo (count($specimen->getSpecimensStableIds())>0?($specimen->getSpecimensStableIds())[0]->getUuid():"") ; ?></span>
+          </td>
+        </tr>
         </tr>
             <?php if(count($properties)) : ?>
         <tr>

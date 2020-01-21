@@ -365,7 +365,7 @@ INNER JOIN taxonomy ON taxonomy.id=record_id";
 
                 $sql = "WITH find_taxa AS
 (SELECT  string_agg(taxonomy.id::varchar, ';') as value, CASE WHEN status <> 'valid' THEN name||' ('||status||')' ELSE name END as label
-                      FROM taxonomy 
+                       ,count(id) as cpt FROM taxonomy 
                        WHERE name=:term  GROUP BY level_ref,name, status ORDER BY level_ref, name, status LIMIT :limit
                     )
 
@@ -378,7 +378,10 @@ ON record_id=tmp_taxa and referenced_relation='taxonomy'
 )
 
 
-SELECT * FROM find_taxa
+SELECT value,label  FROM find_taxa WHERE cpt=1
+UNION
+SELECT id::text, name||' (Family : '||fct_rmca_sort_taxon_get_parent_level_text(id,34)||' Order : '||fct_rmca_sort_taxon_get_parent_level_text(id,28)||')' FROM taxonomy INNER JOIN (SELECT unnest(string_to_array(value,';')) as id_unnest FROM find_taxa WHERE cpt>1) a
+ON id=id_unnest::int
 UNION
 SELECT taxonomy.id::text, name||' ('||status||')' FROM classification_synonymies
 INNER JOIN  find_taxa_2 ON group_id =group_id_tmp AND record_id NOT in (SELECT unnest((string_to_array(find_taxa.value, ';')))::int as tmp_taxa from find_taxa)
@@ -389,7 +392,7 @@ INNER JOIN taxonomy ON taxonomy.id=record_id";
             {
                 $sql = "WITH find_taxa AS
 (SELECT  string_agg(taxonomy.id::varchar, ';') as value, CASE WHEN status <> 'valid' THEN name||' ('||status||')' ELSE name END as label
-                      FROM taxonomy 
+                    ,count(id) as cpt   FROM taxonomy 
                        WHERE name_indexed like concat(fulltoindex(:term),'%')  GROUP BY level_ref,name, status ORDER BY level_ref, name LIMIT :limit
                     )
 
@@ -402,7 +405,10 @@ ON record_id=tmp_taxa and referenced_relation='taxonomy'
 )
 
 
-SELECT * FROM find_taxa
+SELECT value,label  FROM find_taxa WHERE cpt=1
+UNION
+SELECT id::text, name||' (Family : '||fct_rmca_sort_taxon_get_parent_level_text(id,34)||' Order : '||fct_rmca_sort_taxon_get_parent_level_text(id,28)||')' FROM taxonomy INNER JOIN (SELECT unnest(string_to_array(value,';')) as id_unnest FROM find_taxa WHERE cpt>1) a
+ON id=id_unnest::int
 UNION
 SELECT taxonomy.id::text, name||' ('||status||')' FROM classification_synonymies
 INNER JOIN  find_taxa_2 ON group_id =group_id_tmp AND record_id NOT in (SELECT unnest((string_to_array(find_taxa.value, ';')))::int as tmp_taxa from find_taxa)
