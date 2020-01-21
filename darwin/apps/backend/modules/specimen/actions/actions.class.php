@@ -235,35 +235,7 @@ class specimenActions extends DarwinActions
         }
       }
       
-      //ftheeten 2019 01 18 
-	    /*
-		$temp_array[]=Array();
-        $properties = Doctrine::getTable('Properties')->findForTable("specimens", $duplic) ;              
-        foreach ($properties as $key=>$val)
-		{
-            $propTmp = new Properties();
-            $propTmp->setRecordId(-1);
-            $propTmp->setPropertyType($val->getPropertyType());
-            $propTmp->setReferencedRelation($val->getReferencedRelation());
-            $propTmp->setAppliesTo($val->getAppliesTo());
-            $propTmp->setDateFromMask($val->getDateFromMask());
-            $propTmp->setDateFrom($val->getDateFromRaw());
-            $propTmp->setDateToMask($val->getDateToMask());
-            $propTmp->setDateTo($val->getDateToRaw());
-            $propTmp->setIsQuantitative($val->getIsQuantitative());
-            $propTmp->setPropertyUnit($val->getPropertyUnit());
-            $propTmp->setMethod($val->getMethod());            
-            $propTmp->setLowerValue($val->getLowerValue());
-            $propTmp->setUpperValue($val->getUpperValue());
-            $propTmp->setPropertyAccuracy($val->getPropertyAccuracy());
-            $propTmp->save();
-			$temp_array[]=$propTmp->getId();                
-		}
-        if(count($temp_array)>0)
-        {
-            $_SESSION["TEMP_DARWIN_PROPERTY"]=$temp_array;
-        }*/
-        //ftheeten 2016 06 16
+      
     }
     else
     {
@@ -712,5 +684,26 @@ class specimenActions extends DarwinActions
 		
 		$this->getResponse()->setHttpHeader('Content-type','application/json');
 		return $this->renderText(json_encode(array("nagoya"=>$nagoya2)));
+   }
+   
+   #2020 01 14
+   public function executeDoiview(sfWebRequest $request)
+   {
+        $spec_ids= $this->getIDFromCollectionNumber($request);
+        if(count($spec_ids>0))
+        {
+            $spec_id=$spec_ids[0];
+            $count=count($spec_ids);
+        }
+        else
+        {
+            $spec_id=-1;
+            $count=0;   
+        }
+        $this->specimen = Doctrine_Core::getTable('Specimens')->fetchOneWithRights($spec_id, $this->getUser());
+        $this->count= 1;
+        
+        $this->getResponse()->setHttpHeader('Content-type','text/xml');
+        return $this->renderText($this->specimen->getXMLDataCite());
    }
 }

@@ -306,6 +306,78 @@ class Specimens extends BaseSpecimens
    {
 		return Doctrine_Core::getTable('Specimens')->getMainCode($this->getId());
    }
+   
+   //2020 01 14
+  public function getXMLDataCite($institution="Royal Belgian Institute for Natural Sciences (RBINS)")
+  {
+    
+    $collection= Doctrine_Core::getTable('Collections')->findOneById($this->getCollectionRef());
+    $returned ="";
+    $returned.="<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+    $returned.='<resource xmlns="http://datacite.org/schema/kernel-4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4/metadata.xsd">
+   ';
+    $returned.='<identifier identifierType="DOI"></identifier>
+    <creators>
+        <creator>
+            <creatorName>'.htmlspecialchars($institution).'</creatorName>
+        </creator>
+    </creators>';
+    $returned.='<subjects>
+            <subject xml:lang="en-US" schemeURI="http://dewey.info/" subjectScheme="dewey">570 Biology</subject>
+            </subjects>';
+    $returned.='<titles>
+                <title>I.G.:'.htmlspecialchars($this->getIgNum()).' '.htmlspecialchars($this->getMainCode().' '.$this->getTaxonName()).'</title>
+            </titles>';
+    $returned.='<publisher>'.htmlspecialchars($institution).'</publisher>';
+    $returned.='<publicationYear>'.substr($this->getSpecimenCreationDate(),0,4).'</publicationYear>';
+    
+    $Collectors = Doctrine_Core::getTable('CataloguePeople')->getPeopleRelated('specimens','collector',$this->getId());
+    $people=Array();
+    foreach( $Collectors as $collector_link)
+    {
+        $col=Array();
+        $collector=Doctrine_Core::getTable('People')->findOneById($collector_link->getPeopleRef());
+        $col["contributorType"]="dataCollector";
+        $col["contributorName"]=htmlspecialchars($collector->getFormatedName());
+        $col["givenName"]=htmlspecialchars($collector->getGivenName());
+        $col["familyName"]=htmlspecialchars($collector->getFamilyName());
+        $people[]=$col;
+    }
+    $Identifications = Doctrine_Core::getTable('Identifications')->getIdentificationsRelated('specimens',$this->getId()) ;
+        foreach ($Identifications as $key=>$val)
+        {
+          
+          $Identifier = Doctrine_Core::getTable('CataloguePeople')->getPeopleRelated('identifications', 'identifier', $val->getId()) ;
+          foreach ($Identifier as $ident_link)
+          {
+            $ident=Array();
+            $identifier=Doctrine_Core::getTable('People')->findOneById($ident_link->getPeopleRef());
+            $ident["contributorType"]="Researcher";
+            $ident["contributorName"]=htmlspecialchars($identifier->getFormatedName());
+            $ident["givenName"]=htmlspecialchars($identifier->getGivenName());
+            $ident["familyName"]=htmlspecialchars($identifier->getFamilyName());
+            $people[]=$ident;
+          }
+        }
+    $returned.='<Contributors>';
+    foreach($people as $ppl)
+    {
+        $returned.='<contributor contributorType="'.$ppl[contributorType].'">
+                        <contributorName>'.$ppl["contributorName"].'</contributorName>
+                        <givenName>'.$ppl["givenName"].'</givenName>
+                        <familyName>'.$ppl["familyName"].'</familyName>                        
+                    </contributor>
+                ';
+    }
+    $returned.='</Contributors>';
+    $returned.='<description xml:lang="en-US" descriptionType="Abstract">
+                    Physical object in collection '.$collection->getPathString().
+                '</description>';
+    $returned.='<resourceType resourceTypeGeneral="data-set">Web page (DaRWIN Collection Manegement system)</resourceType>';
+    $returned.='</resource>';
+    
+    return $returned;
+  }
 
 // end group date  
 

@@ -66,4 +66,16 @@ class UsersTrackingTable extends DarwinTable
       ->orderBy('r.modification_date_time desc');
     return $q->execute();
   }
+  
+  //2020 01 15
+  public function getCreationDate($table, $id)
+  {
+    $q = Doctrine_Query::create()
+      ->from('UsersTracking r')
+      ->innerJoin('r.Users')
+      ->where('r.referenced_relation = ?',$table)
+      ->andWhere('r.record_id = ?',$id)
+      ->andWhere('r.action = ?',"insert")
+      ->orderBy('r.modification_date_time desc');
+  }
 }

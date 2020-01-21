@@ -124,7 +124,7 @@ class DarwinTable extends Doctrine_Table
       ->select('dict_value as '.$new_col)
       ->where('dict_field = ?', $column)
       ->andwhere('referenced_relation = ?', $table)
-      ->orderBy("$new_col ASC");
+      ->orderBy("darwin2.fct_rcma_sort_letter_before_numbers(dict_value)  ASC");
     return $q;
   }
   public function createFlatDistinctDepend($table, $column, $depend, $new_col='item')

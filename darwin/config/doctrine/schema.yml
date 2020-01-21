@@ -922,6 +922,7 @@ Specimens:
         import_ref: {type: integer}
         #JMHerpers 2019 05 07
         nagoya: { type: string, notnull: true, default: 'not defined'}
+        #uuid: { type: string, notnull: true}
     relations:
         Collections:
             local: collection_ref
@@ -988,7 +989,25 @@ Specimens:
             class: Tags
             local: gtu_ref
             foreign: gtu_ref
-            
+        SpecimensStableIds:
+            class: SpecimensStableIds
+            local: id
+            foreign: specimen_fk
+
+SpecimensStableIds:
+    tableName: specimens_stable_ids
+    columns:
+        id : {type: integer, notnull: true}
+        specimen_ref : {type: integer, notnull: true}
+        original_id : {type: integer, notnull: true}
+        uuid : {type : string}
+        doi: {type : string}
+        specimen_fk : {type: integer, notnull: true} 
+    relations:
+        Specimens:
+            class: Specimens
+            local: specimen_fk
+            foreign: id            
 IgsSearch:
     tableName: specimens
     columns:
@@ -2143,5 +2162,4 @@ DoctrineTemporalInformationGtuGroupUnnestTags:
         properties: {type : string}
         tag : {type : string}
         tag_indexed : {type : string}
-
 

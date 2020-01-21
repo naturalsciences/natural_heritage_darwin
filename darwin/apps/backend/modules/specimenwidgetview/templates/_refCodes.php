@@ -21,5 +21,13 @@
     </td>
   </tr>
   <?php endforeach ; ?>
+  <tr>
+    <td><?php echo __("Original and stable id");?></td>
+    <td><?php echo   $stable?$stable->getOriginalId():"";?></td>
+  </tr>
+  <tr>
+    <td><?php echo __("UUID");?></td>
+    <td><?php echo $stable? $stable->getUuid():"";?></td>
+  </tr>
 </table>
 

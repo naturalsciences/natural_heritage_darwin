@@ -122,7 +122,8 @@ class specimenwidgetviewComponents extends sfComponents
 
   public function executeRefCodes()
   {
-    $this->Codes = Doctrine_Core::getTable('Codes')->getCodesRelatedArray('specimens',$this->eid) ;
+    $this->stable = Doctrine_Core::getTable('SpecimensStableIds')->findOneBySpecimenRef($this->eid);
+    $this->Codes  = Doctrine_Core::getTable('Codes')->getCodesRelatedArray('specimens',$this->eid) ;
   }
 
   public function executeRefMainCodes()
