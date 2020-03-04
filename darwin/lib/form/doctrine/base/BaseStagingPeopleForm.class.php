@@ -37,6 +37,9 @@ abstract class BaseStagingPeopleForm extends DarwinModelForm
     $this->widgetSchema   ['formated_name'] = new sfWidgetFormTextarea();
     $this->validatorSchema['formated_name'] = new sfValidatorString(array('required' => false));
 
+    $this->widgetSchema   ['import_ref'] = new sfWidgetFormInputText();
+    $this->validatorSchema['import_ref'] = new sfValidatorInteger(array('required' => false));
+
     $this->widgetSchema   ['people_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('People'), 'add_empty' => false));
     $this->validatorSchema['people_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('People'), 'column' => 'id'));
 

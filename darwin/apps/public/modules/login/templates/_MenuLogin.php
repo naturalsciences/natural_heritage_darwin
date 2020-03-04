@@ -15,7 +15,7 @@
                   </td>
                   <td class="menu_button"><?php echo link_to(__('Register'),'register/index') ;?></td>
                 <?php else:?>
-                  <td class="menu_button"><a href="<?php echo url_for('@homepage') ;?>/../../backend.php">Go to backend</a></td>
+                  <td class="menu_button"><a href="<?php print(sfConfig::get('dw_root_url_darwin'));?>/backend.php">Go to backend</a></td>
                   <td class="menu_button"><?php echo link_to(__('Logout'),'register/logout') ;?></td>
                 <?php endif;?>
               </tr>

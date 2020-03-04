@@ -379,6 +379,9 @@ abstract class BaseSpecimensForm extends DarwinModelForm
     $this->widgetSchema   ['import_ref'] = new sfWidgetFormInputText();
     $this->validatorSchema['import_ref'] = new sfValidatorInteger(array('required' => false));
 
+    $this->widgetSchema   ['main_code_indexed'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['main_code_indexed'] = new sfValidatorString(array('required' => false));
+
     $this->widgetSchema   ['nagoya'] = new sfWidgetFormTextarea();
     $this->validatorSchema['nagoya'] = new sfValidatorString(array('required' => false));
 

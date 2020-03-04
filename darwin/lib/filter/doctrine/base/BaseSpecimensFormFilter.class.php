@@ -377,6 +377,9 @@ abstract class BaseSpecimensFormFilter extends DarwinModelFormFilter
     $this->widgetSchema   ['import_ref'] = new sfWidgetFormFilterInput();
     $this->validatorSchema['import_ref'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
 
+    $this->widgetSchema   ['main_code_indexed'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['main_code_indexed'] = new sfValidatorPass(array('required' => false));
+
     $this->widgetSchema   ['nagoya'] = new sfWidgetFormFilterInput(array('with_empty' => false));
     $this->validatorSchema['nagoya'] = new sfValidatorPass(array('required' => false));
 
@@ -587,6 +590,7 @@ abstract class BaseSpecimensFormFilter extends DarwinModelFormFilter
       'specimen_count_juveniles_max' => 'Number',
       'specimen_creation_date' => 'Text',
       'import_ref' => 'Number',
+      'main_code_indexed' => 'Text',
       'nagoya' => 'Text',
       'collection_ref' => 'ForeignKey',
       'expedition_ref' => 'ForeignKey',

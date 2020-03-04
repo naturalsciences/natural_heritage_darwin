@@ -82,7 +82,7 @@ class RMCATabDataDirect
         $fields[] = "CollectedBy";
         $fields[] = "SamplingCode";
         $fields[] = "Country";
-        //$fields[] = "LocalityText";
+
         
         //2018 04 11
         $fields[] = "accessionNumber";
@@ -103,19 +103,11 @@ class RMCATabDataDirect
         //Taxonomy fields
         //$fields[] = "AuthorYear";
         $fields[] = "FullScientificName";
-        /*$fields[] = "Subspecies";
-        $fields[] = "Species";
-        $fields[] = "Genus";
-        $fields[] = "Family";
-        $fields[] = "Order";
-        $fields[] = "Class";
-        $fields[] = "Phylum";*/
         $fields[] = "IdentifiedBy";
         $fields[] = "IdentificationYear";
         $fields[] = "IdentificationMonth";
         $fields[] = "IdentificationDay";
         $fields[] = "IdentificationNotes";
-        //$fields[] = "IdentificationHistory";
         $fields[] = "IdentificationMethod";
         $fields[] = "referenceString";
 	    $fields[] = "externalLink";
@@ -152,7 +144,9 @@ class RMCATabDataDirect
         $fields[] = "associatedUnitInstitution";
         $fields[] = "associatedUnitCollection";
         $fields[] = "associatedUnitID";
-        $fields[] = "associationType";
+        $fields[] = "associationType"; /* host, parasite, commensalism etc...*/
+        $fields[] = "associationDomain"; /* values : darwin_id, darwin_file, taxonomy, mineralogy, external */
+        
         
         //field in ABCD extensions
         //$fields[] = "Localisation";
@@ -220,13 +214,7 @@ class RMCATabDataDirect
         $fields[] = "lithostratigraphyBed";
         $fields[] = "lithostratigraphyInformalName";
 		
-		//2019 06 12 Mineralogy
-		/*$fields[] = "mineralClassification";
-		$fields[] = "mineralClass";
-		$fields[] = "mineralSubclass";	
-		$fields[] = "mineralSerie";	
-		$fields[] = "mineralName";	
-		$fields[] = "mineralDescription";*/
+
 		
 		//good
 		$fields[]="mineralogicalIdentification";
@@ -255,16 +243,24 @@ class RMCATabDataDirect
         $this->file   = $options['tab_file'];
         
     }
+	
+	public function getHeadersInverted()
+	{
+		return $this->headers_inverted;
+	}
     
 	
    //ftheeten 2019 04 19
    public function getCSVValue( $name_tag_csv)
    {
+	   $lower_key=trim(strtolower($name_tag_csv));
+	   $tmp_headers=$this->getHeadersInverted();
 	   
 	   $returned=null ;
-	   if (array_key_exists(strtolower($name_tag_csv), $this->headers_inverted))
-	   {
-		   return $this->row[$this->headers_inverted[strtolower($name_tag_csv)]];
+	   if(array_key_exists($lower_key, $tmp_headers))
+	   {		   
+		  
+		   return $this->row[$tmp_headers[$lower_key]];
 	   }
 	   return $returned;
    }
@@ -277,6 +273,7 @@ class RMCATabDataDirect
    
 	if(strlen(trim($value))>0)
     {
+		
         if($category=="main")
         {
             $this->main_code_found=true;
@@ -344,9 +341,22 @@ class RMCATabDataDirect
    
    
     public function addID()
-    {   	
-	    if(null != $this->getCSVValue("UnitID")) $this->addCode($this->getCSVValue("UnitID"));
-		if(null != $this->getCSVValue("datasetName")) $this->addCode($this->getCSVValue("datasetName"), "secondary");	       
+    {   
+	
+	    //if(null != $this->getCSVValue("UnitID")) $this->addCode($this->getCSVValue("UnitID"), "main");
+		//if(null != $this->getCSVValue("datasetName")) $this->addCode($this->getCSVValue("datasetName"), "secondary");	   
+		$valTmp=$this->getCSVValue("UnitID");
+		if( $this->isset_and_not_null($valTmp )) 
+        {
+			
+			$this->addCode($valTmp, "main");
+		}
+		$valTmp=$this->getCSVValue("datasetName");
+		if( $this->isset_and_not_null($valTmp )) 
+        {
+			
+			$this->addCode($valTmp, "secondary");
+		}
     }
     
     
@@ -358,51 +368,9 @@ class RMCATabDataDirect
         if( $this->isset_and_not_null($valTmp )) 
         {
             $this->identification_object->fullname = $valTmp;
-            $this->staging["taxon_name"] = $this->identification_object->getCatalogueName() ;
+            $this->staging["taxon_name"] = $this->identification_object->getCatalogueName() ;        
         
-        
-            /*$valTmp=$this->getCSVValue("Phylum");
-            if( $this->isset_and_not_null($valTmp ))
-            {
-                $this->identification_object->higher_level = "phylum" ;
-                $this->identification_object->higher_name = $valTmp;
-            }
-            
-             $valTmp=$this->getCSVValue("Class");
-            if( $this->isset_and_not_null($valTmp ))
-            {
-                $this->identification_object->higher_level = "classis" ;
-                $this->identification_object->higher_name = $valTmp;
-            }
-            $valTmp=$this->getCSVValue("Order");
-            if( $this->isset_and_not_null($valTmp ))
-            {
-                $this->identification_object->higher_level = "ordo" ;
-                $this->identification_object->higher_name = $valTmp;
-            }
-            $valTmp=$this->getCSVValue("Family");
-            if($this->isset_and_not_null( $valTmp ))
-            {
-                $this->identification_object->higher_level = "familia" ;
-                $this->identification_object->higher_name = $valTmp;
-            }
-            $valTmp=$this->getCSVValue("Genus");
-            if($this->isset_and_not_null( $valTmp))
-            {
-                $this->identification_object->handleKeyword("GenusOrMonomial",$valTmp,$this->staging) ;
-            }
-            $valTmp=$this->getCSVValue("Species");
-            if( $this->isset_and_not_null($valTmp ))
-            {
-                $this->identification_object->handleKeyword("SpeciesEpithet",$valTmp,$this->staging) ;	
-            }
-            
-            $valTmp=$this->getCSVValue("Subspecies");
-            if( $this->isset_and_not_null($valTmp))
-            {
-                $this->identification_object->handleKeyword("SubspeciesEpithet",$valTmp,$this->staging) ;	
-            } 
-            */
+           
             
             $valTmp=$this->getCSVValue("IdentifiedBy");
             if($this->isset_and_not_null($valTmp))
@@ -597,21 +565,75 @@ class RMCATabDataDirect
 					$this->object->setSourceName($valTmp) ;
 				}
                 
-                $valTmp=$this->getCSVValue("associatedUnitID");
-				if($this->isset_and_not_null($valTmp))
+                
+                $associationType=$this->getCSVValue("associationType");
+				if($this->isset_and_not_null($associationType))
 				{
-					 if(in_array($valTmp, array_keys($this->unit_id_ref)))
+					$this->object->setRelationshipType($associationType) ; 
+				}
+                
+                $valTmp=$this->getCSVValue("associatedUnitID");
+                $associationDomain=$this->getCSVValue("associationDomain");
+				if($this->isset_and_not_null($valTmp)&&$this->isset_and_not_null($valTmp))
+				{
+					/*if(in_array($valTmp, array_keys($this->unit_id_ref)))
+                    {
 						$this->object->setStagingRelatedRef($this->unit_id_ref[$this->cdata]); 
-					else 
+					}
+                    else 
 					{ 
 						$this->object->setSourceId($valTmp) ; 
 						$this->object->setUnitType('external') ;
-					} 
-				}
-                $valTmp=$this->getCSVValue("associationType");
-				if($this->isset_and_not_null($valTmp))
-				{
-					$this->object->setRelationshipType($valTmp) ; 
+					} */
+                    if( $associationDomain=="external")
+                    {
+                        $this->object->setSourceId($valTmp) ; 
+                        $this->object->setUnitType('external') ; 
+                    }
+                    elseif( $associationDomain=="taxon")
+                    {
+                        $this->object->setSourceId($valTmp) ; 
+                         $this->object->setUnitType("taxonomy") ; 
+                    }
+                    elseif( $associationDomain=="mineral")
+                    {
+                        $this->object->setSourceId($valTmp) ; 
+                        $this->object->setUnitType("mineralogy") ; 
+                    }
+                    elseif( $associationDomain=="darwin_id")
+                    {
+                    
+                        $spec=Doctrine_Core::getTable('Specimens')->findById($valTmp);
+                        
+                        if(count($spec)>0)
+                        {                            
+                            $this->object->setExistingSpecimenRef($valTmp); 
+                            $this->object->setUnitType("specimens") ; 
+                        }
+                        else
+                        {
+                            $this->object->setSourceId($valTmp. " (not_found_in_darwin)") ; 
+                            $this->object->setUnitType('external') ;
+                        }
+                    }
+                    elseif( $associationDomain=="darwin_file")
+                    {
+                        if(array_key_exists($valTmp,$this->unit_id_ref))
+                        {
+                            $this->object->setStagingRelatedRef($this->unit_id_ref[$valTmp]); 
+                            $this->object->setUnitType("specimens") ; 
+                        }
+                        else
+                        {
+                            $this->object->setStagingRelatedRef($valTmp. " (not_found_in_import_file)"); 
+                            $this->object->setUnitType("specimens") ; 
+                        }
+                    }
+                    else //external by default
+                    {
+                        $this->object->setSourceId($valTmp) ; 
+						$this->object->setUnitType('external') ;
+                    }
 				}
 				$this->staging->addRelated($this->object) ; 
 				$this->object=null; 
@@ -1210,7 +1232,7 @@ class RMCATabDataDirect
             }
            
             $identDate=$this->generateDateGeneric($prefixDate);
-            print($identDate);
+
             if(strlen($identDate))
             {
                 $this->parsed_fields[]=$prefixDate."Year";
@@ -1390,11 +1412,11 @@ class RMCATabDataDirect
 			$this->staging->setPartCountFemalesMax($valTmp) ;  			
         }
         
-        $valTmp=$this->getCSVValue("juvenileCountCount");
+        $valTmp=$this->getCSVValue("juvenileCount");
         if($this->isset_and_not_null($valTmp))
         {    
-            $this->staging->setPartCountJuvenileMin($valTmp) ;
-			$this->staging->setPartCountJuvenileMax($valTmp) ;  			
+            $this->staging->setPartCountJuvenilesMin($valTmp) ;
+			$this->staging->setPartCountJuvenilesMax($valTmp) ;  			
         }
     }
     
@@ -1666,9 +1688,12 @@ class RMCATabDataDirect
         
         foreach($this->headers as $key=>$value)
         {
-           $this->headers_inverted[strtolower(trim($value))]= $key;
-        }      
-       
+		   if(strlen(trim($value))>0)
+		   {
+            $this->headers_inverted[strtolower(trim($value))]= $key;
+           }
+		}      
+        //print_r($this->headers_inverted);
        
         $this->number_of_fields = count($this->headers);
         
@@ -1733,10 +1758,9 @@ class RMCATabDataDirect
 		$this->row = $p_row;
        
         $this->gtu_object=new ParsingTag("gtu") ;
-        $this->unit_object =new ParsingTag("unit") ;
-		////print("begin parse\n");
+        $this->unit_object =new ParsingTag("unit") ;		
         $this->addId();
-		////print("A\n");
+		
         $this->addIdentifications();
 		$this->addMineralogicalIdentifications();
         $this->addKindOfUnit();
@@ -1799,6 +1823,7 @@ class RMCATabDataDirect
             $this->addIdentificationHistory((string)$i);
         }
 		
+		//print_r($this->fields_inverted);
 		foreach($p_row as $key=>$value)
         {
             
@@ -1807,10 +1832,12 @@ class RMCATabDataDirect
            
 			if(strlen(trim($value))>0)
             {
+				
 				if(!array_key_exists(strtolower(trim($field_name)), $this->fields_inverted))
 				{			               
 						if(!in_array($field_name, $this->parsed_fields))
                         {
+							print("add measuremnt $field_name \n");
                             $this->addMeasurement_free($field_name, $field_name);
                         }
                 }
@@ -1839,7 +1866,7 @@ class RMCATabDataDirect
 	
 	 private function saveUnit()
 	{
-		
+		//print("save");
 		$ok = true ;
 		//print("TRY TO SAVE UNIT\n");
 	
@@ -1881,7 +1908,7 @@ class RMCATabDataDirect
 		}
 		elseif($this->main_code_found===FALSE)
 		{
-			//print("CODE_ISSUE");
+			
 			return;
 		}
 		$this->main_code_found=FALSE;
@@ -1985,6 +2012,7 @@ class RMCATabDataDirect
             $people = new StagingPeople() ;
             $people->setPeopleType($type) ;
             $people->setFormatedName($name) ;
+            $people->setImportRef($this->import_id);
 			//print("People type : ".$type);
 		    //print("People name : ".$name);
             $object->handleRelation($people,$this->staging) ;

@@ -127,6 +127,7 @@
  * @property integer $specimen_count_juveniles_max
  * @property string $specimen_creation_date
  * @property integer $import_ref
+ * @property string $main_code_indexed
  * @property string $nagoya
  * @property Collections $Collections
  * @property Expeditions $Expeditions
@@ -145,11 +146,12 @@
  * @property DoctrineTaxonomicIdentifications $DoctrineTaxonomicIdentifications
  * @property TemporalInformation $TemporalInformation
  * @property Tags $Tags
- * @property Doctrine_Collection $SpecimensStableIds
+ * @property SpecimensStableIds $SpecimensStableIds
  * @property Doctrine_Collection $SpecimensRelationships
  * @property Doctrine_Collection $SpecimensCodes
  * @property Doctrine_Collection $SpecimensMethods
  * @property Doctrine_Collection $SpecimensTools
+ * @property Doctrine_Collection $StagingRelationship
  * @property Doctrine_Collection $LoanItems
  * @property Doctrine_Collection $TaxonomicIdentifications
  * 
@@ -275,6 +277,7 @@
  * @method integer                          getSpecimenCountJuvenilesMax()        Returns the current record's "specimen_count_juveniles_max" value
  * @method string                           getSpecimenCreationDate()             Returns the current record's "specimen_creation_date" value
  * @method integer                          getImportRef()                        Returns the current record's "import_ref" value
+ * @method string                           getMainCodeIndexed()                  Returns the current record's "main_code_indexed" value
  * @method string                           getNagoya()                           Returns the current record's "nagoya" value
  * @method Collections                      getCollections()                      Returns the current record's "Collections" value
  * @method Expeditions                      getExpeditions()                      Returns the current record's "Expeditions" value
@@ -293,11 +296,12 @@
  * @method DoctrineTaxonomicIdentifications getDoctrineTaxonomicIdentifications() Returns the current record's "DoctrineTaxonomicIdentifications" value
  * @method TemporalInformation              getTemporalInformation()              Returns the current record's "TemporalInformation" value
  * @method Tags                             getTags()                             Returns the current record's "Tags" value
- * @method Doctrine_Collection              getSpecimensStableIds()               Returns the current record's "SpecimensStableIds" collection
+ * @method SpecimensStableIds               getSpecimensStableIds()               Returns the current record's "SpecimensStableIds" value
  * @method Doctrine_Collection              getSpecimensRelationships()           Returns the current record's "SpecimensRelationships" collection
  * @method Doctrine_Collection              getSpecimensCodes()                   Returns the current record's "SpecimensCodes" collection
  * @method Doctrine_Collection              getSpecimensMethods()                 Returns the current record's "SpecimensMethods" collection
  * @method Doctrine_Collection              getSpecimensTools()                   Returns the current record's "SpecimensTools" collection
+ * @method Doctrine_Collection              getStagingRelationship()              Returns the current record's "StagingRelationship" collection
  * @method Doctrine_Collection              getLoanItems()                        Returns the current record's "LoanItems" collection
  * @method Doctrine_Collection              getTaxonomicIdentifications()         Returns the current record's "TaxonomicIdentifications" collection
  * @method Specimens                        setId()                               Sets the current record's "id" value
@@ -422,6 +426,7 @@
  * @method Specimens                        setSpecimenCountJuvenilesMax()        Sets the current record's "specimen_count_juveniles_max" value
  * @method Specimens                        setSpecimenCreationDate()             Sets the current record's "specimen_creation_date" value
  * @method Specimens                        setImportRef()                        Sets the current record's "import_ref" value
+ * @method Specimens                        setMainCodeIndexed()                  Sets the current record's "main_code_indexed" value
  * @method Specimens                        setNagoya()                           Sets the current record's "nagoya" value
  * @method Specimens                        setCollections()                      Sets the current record's "Collections" value
  * @method Specimens                        setExpeditions()                      Sets the current record's "Expeditions" value
@@ -440,11 +445,12 @@
  * @method Specimens                        setDoctrineTaxonomicIdentifications() Sets the current record's "DoctrineTaxonomicIdentifications" value
  * @method Specimens                        setTemporalInformation()              Sets the current record's "TemporalInformation" value
  * @method Specimens                        setTags()                             Sets the current record's "Tags" value
- * @method Specimens                        setSpecimensStableIds()               Sets the current record's "SpecimensStableIds" collection
+ * @method Specimens                        setSpecimensStableIds()               Sets the current record's "SpecimensStableIds" value
  * @method Specimens                        setSpecimensRelationships()           Sets the current record's "SpecimensRelationships" collection
  * @method Specimens                        setSpecimensCodes()                   Sets the current record's "SpecimensCodes" collection
  * @method Specimens                        setSpecimensMethods()                 Sets the current record's "SpecimensMethods" collection
  * @method Specimens                        setSpecimensTools()                   Sets the current record's "SpecimensTools" collection
+ * @method Specimens                        setStagingRelationship()              Sets the current record's "StagingRelationship" collection
  * @method Specimens                        setLoanItems()                        Sets the current record's "LoanItems" collection
  * @method Specimens                        setTaxonomicIdentifications()         Sets the current record's "TaxonomicIdentifications" collection
  * 
@@ -878,6 +884,9 @@ abstract class BaseSpecimens extends DarwinModel
         $this->hasColumn('import_ref', 'integer', null, array(
              'type' => 'integer',
              ));
+        $this->hasColumn('main_code_indexed', 'string', null, array(
+             'type' => 'string',
+             ));
         $this->hasColumn('nagoya', 'string', null, array(
              'type' => 'string',
              'notnull' => true,
@@ -958,7 +967,7 @@ abstract class BaseSpecimens extends DarwinModel
              'local' => 'gtu_ref',
              'foreign' => 'gtu_ref'));
 
-        $this->hasMany('SpecimensStableIds', array(
+        $this->hasOne('SpecimensStableIds', array(
              'local' => 'id',
              'foreign' => 'specimen_fk'));
 
@@ -975,6 +984,10 @@ abstract class BaseSpecimens extends DarwinModel
              'foreign' => 'specimen_ref'));
 
         $this->hasMany('SpecimensTools', array(
+             'local' => 'id',
+             'foreign' => 'specimen_ref'));
+
+        $this->hasMany('StagingRelationship', array(
              'local' => 'id',
              'foreign' => 'specimen_ref'));
 

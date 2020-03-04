@@ -36,7 +36,7 @@
                                       'currentPage' => $currentPage,
                                       'pagerLayout' => $pagerLayout,
                                       'is_specimen_search' => $is_specimen_search,
-                                      'columns' => $columns,
+                                      'columns' => $columns
                                      )
                                ); ?>
         </div>

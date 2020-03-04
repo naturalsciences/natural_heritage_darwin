@@ -204,6 +204,7 @@ class ImportABCDXml implements ImportModelsInterface
 					{ // ignore blank lines
 							//ftheeten 2018 02 28
 						 $row=  Encoding::toUTF8($row);
+						 
 						 $tabParser->parseLineAndSaveToDB($row);
 					}
 				 }

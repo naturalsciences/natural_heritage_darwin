@@ -179,17 +179,20 @@ class specimensearchActions extends DarwinActions
           // Replace the count query triggered by the Pager to get the number of records retrieved
           $count_q = clone $query;
           // Remove from query the group by and order by clauses
-          $count_q = $count_q->select('count(s.id)')->removeDqlQueryPart('orderby')->limit(0);
+		  //ftheeten 2020 02 20
+          $count_q = $count_q->select("count(s.id), count(distinct TRIM(COALESCE(s.ig_num||'_','') || COALESCE(s.main_code_indexed,''))) as count_ig, sum(specimen_count_min) as count_min, sum(specimen_count_max) as count_max ")->removeDqlQueryPart('orderby')->limit(0);
           if($this->form->with_group) {
-             $count_q->select('count(distinct s.id)')->removeDqlQueryPart('groupby');
+             $count_q->select("count(distinct s.id), count(distinct TRIM(COALESCE(s.ig_num||'_','')|| COALESCE(s.main_code_indexed,''))) as count_ig, , sum(specimen_count_min) as count_min, sum(specimen_count_max) as count_max")->removeDqlQueryPart('groupby');
           }
 
           // Initialize an empty count query
           $counted = new DoctrineCounted();
           // Define the correct select count() of the count query
           $counted->count_query = $count_q;
+		  
           // And replace the one of the pager with this new one
           $pager->setCountQuery($counted);
+		  
           $this->pagerLayout = new PagerLayoutWithArrows($pager,
                                                         new Doctrine_Pager_Range_Sliding(array('chunk' => $this->pagerSlidingSize)),
                                                         $this->getController()->genUrl($this->s_url.$this->o_url).'/page/{%page_number}'
@@ -199,7 +202,8 @@ class specimensearchActions extends DarwinActions
           // If pager not yet executed, this means the query has to be executed for data loading
           if (! $this->pagerLayout->getPager()->getExecuted())
             $this->specimensearch = $this->pagerLayout->execute();
-
+	      //ftheeten 2020 11 02
+			$this->pagerLayout->getPager()->additional_count=$counted->all_results;
           //Load Codes and Loans and related for each item
           $this->loadRelated();
           $this->field_to_show = $this->getVisibleColumns($this->getUser(), $this->form);

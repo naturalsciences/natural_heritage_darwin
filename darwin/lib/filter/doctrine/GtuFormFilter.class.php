@@ -42,7 +42,7 @@ class GtuFormFilter extends BaseGtuFormFilter
       'gtu_to_date' => 'and',
     ));
 
-    $this->validatorSchema['tags'] = new sfValidatorString(array('required' => false, 'trim' => true));
+    $this->validatorSchema['tags'] = new sfValidatorString(array('required' => false, 'trim' => FALSE));
     $this->validatorSchema['code'] = new sfValidatorString(array('required' => false, 'trim' => true));
     $this->validatorSchema['gtu_from_date'] = new fuzzyDateValidator(array(
       'required' => false,
@@ -109,6 +109,7 @@ class GtuFormFilter extends BaseGtuFormFilter
     
     //2018 11 22
 	$this->widgetSchema['tag_boolean'] = new sfWidgetFormChoice(array('choices' => array('OR' => 'OR', 'AND' => 'AND')));
+	$this->widgetSchema['tag_boolean']->setDefault(array("or"));
 	$this->validatorSchema['tag_boolean'] = new sfValidatorPass();
     
     $subForm = new sfForm();
@@ -144,20 +145,45 @@ class GtuFormFilter extends BaseGtuFormFilter
         $tagList =$line_val;
         $sqlClause=Array();
 		
-        $tagList=trim($tagList);
+        $tagList=$line_val;
         $tagList=trim($tagList, ";");
         foreach(explode(";", $tagList  ) as $tagvalue)
         {
             if(strlen(trim( $tagvalue))>0)
             {
-                $tagvalue = $conn_MGR->quote($tagvalue, 'string');
-                if(strtolower($this->tag_boolean)=="and")
-                {
-                     $sqlClause[]="(tag_values_indexed::varchar ~ fulltoindex($tagvalue))";
+                $tagvalue=str_replace('*', '.*', $tagvalue);
+				$tagPrefix="''";
+				$tagSuffix="''";
+				
+				
+                
+					if(strtolower($this->tag_boolean)=="and")
+					{
+						if(substr($tagvalue, 0,2)!=".*")
+					{					
+						$tagPrefix= "'(\s+|{|\")'";
+					}
+					if(substr($tagvalue, strlen($tagvalue)-2,2)!=".*")
+					{					
+						$tagSuffix= "'(\s+|}|\")'";
+					}
+					$tagvalue=trim($tagvalue);
+					$tagvalue = $conn_MGR->quote($tagvalue, 'string');
+                     $sqlClause[]="(tag_values_indexed::varchar ~ fulltoindex_add_prefix_suffix(fulltoindex($tagvalue, TRUE, TRUE),$tagPrefix, $tagSuffix))";
                 }
                 else
                 {
-                    $sqlClause[]="(tag_indexed::varchar ~ fulltoindex($tagvalue))";
+					if(substr($tagvalue, 0,2)!=".*")
+					{					
+						$tagPrefix= "'(\s+|^)'";
+					}
+					if(substr($tagvalue, strlen($tagvalue)-2,2)!=".*")
+					{					
+						$tagSuffix= "'(\s+|$)'";
+					}
+					$tagvalue=trim($tagvalue);
+					$tagvalue = $conn_MGR->quote($tagvalue, 'string');
+                    $sqlClause[]="(tag_indexed::varchar ~ fulltoindex_add_prefix_suffix(fulltoindex($tagvalue, TRUE, TRUE),$tagPrefix, $tagSuffix))";
                 }
             }
         }

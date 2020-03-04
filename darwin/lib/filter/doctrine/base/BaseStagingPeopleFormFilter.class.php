@@ -35,6 +35,9 @@ abstract class BaseStagingPeopleFormFilter extends DarwinModelFormFilter
     $this->widgetSchema   ['formated_name'] = new sfWidgetFormFilterInput();
     $this->validatorSchema['formated_name'] = new sfValidatorPass(array('required' => false));
 
+    $this->widgetSchema   ['import_ref'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['import_ref'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
+
     $this->widgetSchema   ['people_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('People'), 'add_empty' => true));
     $this->validatorSchema['people_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('People'), 'column' => 'id'));
 
@@ -56,6 +59,7 @@ abstract class BaseStagingPeopleFormFilter extends DarwinModelFormFilter
       'order_by' => 'Number',
       'people_ref' => 'ForeignKey',
       'formated_name' => 'Text',
+      'import_ref' => 'Number',
       'people_ref' => 'ForeignKey',
     ));
   }

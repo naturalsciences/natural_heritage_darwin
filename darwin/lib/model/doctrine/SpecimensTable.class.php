@@ -203,11 +203,19 @@ class SpecimensTable extends DarwinTable
   * @param string $type a type
   * @return array an Array of types in keys
   */
-  public function getDistinctSubContainerStorages($type)
+  public function getDistinctSubContainerStorages($type="")
   {
-    $q = $this->createFlatDistinctDepend('specimens', 'sub_container_storage', $type, 'storage');
-    $a =  DarwinTable::CollectionToArray($q->execute(), 'storage');
-    return array_merge(array('dry'=>'dry'),$a);
+    if(strlen($type)>0)
+    {
+        $q = $this->createFlatDistinctDepend('specimens', 'sub_container_storage', $type, 'storage');
+        $a =  DarwinTable::CollectionToArray($q->execute(), 'storage');
+        return array_merge(array('dry'=>'dry'),$a);
+    }
+    else
+    {
+         $items = $this->createUniqFlatDistinct('specimens', 'sub_container_storage', 'sub_container_storage', true);
+        return $items;
+    }
   }
 
 
@@ -217,11 +225,19 @@ class SpecimensTable extends DarwinTable
   * @param string $type a type
   * @return array an Array of types in keys
   */
-  public function getDistinctContainerStorages($type)
+  public function getDistinctContainerStorages($type="")
   {
-    $q = $this->createFlatDistinctDepend('specimens', 'container_storage', $type, 'storage');
-    $a =  DarwinTable::CollectionToArray($q->execute(), 'storage');
-    return array_merge(array('dry'=>'dry'),$a);
+    if(strlen($type)>0)
+    {
+        $q = $this->createFlatDistinctDepend('specimens', 'container_storage', $type, 'storage');
+        $a =  DarwinTable::CollectionToArray($q->execute(), 'storage');
+        return array_merge(array('dry'=>'dry'),$a);
+    }
+    else
+    {
+         $items = $this->createUniqFlatDistinct('specimens', 'container_storage', 'container_storage', true);
+        return $items;
+    }
   }
 
     /**
