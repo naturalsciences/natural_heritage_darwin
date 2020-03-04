@@ -920,6 +920,7 @@ Specimens:
         specimen_count_juveniles_max: { type: integer}
         specimen_creation_date: { type: string}
         import_ref: {type: integer}
+        main_code_indexed: { type: string}
         #JMHerpers 2019 05 07
         nagoya: { type: string, notnull: true, default: 'not defined'}
         #uuid: { type: string, notnull: true}
@@ -1379,7 +1380,13 @@ StagingRelationship:
         unit_type: { type: string, notnull: true, default: 'specimens'}
         quantity: { type: decimal, length: 16, scale: 2}
         unit: { type: string, default: '%'}
-
+        existing_specimen_ref: { type:string}
+    relations:
+        Specimens:
+            local: specimen_ref
+            foreign: id
+            class: Specimens
+            
 StagingTagGroups:
     columns:
         id: { type: integer, primary: true, autoincrement: true }
@@ -1403,6 +1410,7 @@ StagingPeople:
         order_by: { type: integer, notnull: true, default: 1}
         people_ref: { type: integer, notnull: true}
         formated_name: { type: string}
+        import_ref: { type: integer}
     relations:
         People:
             local: people_ref

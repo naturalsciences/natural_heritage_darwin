@@ -371,7 +371,7 @@ class importActions extends DarwinActions
                     chdir(sfconfig::get('sf_root_dir')); 
   
                 
-                    exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+                    exec('nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );
 
                     chdir($currentDir);
 					
@@ -445,8 +445,8 @@ class importActions extends DarwinActions
                         $this->setImportAsWorking($conn, array($request->getParameter('id')), true);
                         $currentDir=getcwd();
                         chdir(sfconfig::get('sf_root_dir'));
- print( 'nohup php symfony '.$cmd.'  >/dev/null &' );                        
-                        exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+ print( 'nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );                        
+                        exec('nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );
                        
                         
                         chdir($currentDir);                   
@@ -612,7 +612,7 @@ EOF
       chdir(sfconfig::get('sf_root_dir')); 
   
        $cmd='darwin:import-staging-gtu --id='.$idStagingGtu;          
-       exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+       exec('nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );
 
       chdir($currentDir);	 
 	  $this->redirect('import/indexLocalities');
@@ -633,7 +633,7 @@ EOF
         }
 	    chdir(sfconfig::get('sf_root_dir'));   
         $cmd='darwin:import-gtu --id='.$staging_gtu->getImportRef();          
-        exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+        exec('nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );
 		chdir($currentDir);	 
     }
 	  

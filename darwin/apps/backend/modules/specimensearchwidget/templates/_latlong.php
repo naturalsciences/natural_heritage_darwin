@@ -1,6 +1,6 @@
 <script language="JavaScript" type="text/javascript" src="<?php print(public_path('/openlayers/v5.2.0-dist/ol.js'));?>"></script>
 <link rel="stylesheet" href="<?php print(public_path('/openlayers/v5.2.0-dist/ol.css'));?>">
-<div id="lat_long_set">
+<div id="lat_long_set" >
  <!--ftheeten 2018 10 05-->
     <style>
 
@@ -35,13 +35,32 @@
         text-align: center; 
            
       }
+	  
+	  
+	  
+	  .map:-moz-full-screen {
+        height: 100%;
+      }
+      .map:-webkit-full-screen {
+        height: 100%;
+      }
+      .map:-ms-fullscreen {
+        height: 100%;
+      }
+      .map:fullscreen {
+        height: 100%;
+      }
+      .ol-rotate {
+        top: 3em;
+      }
+	  
      
      
       
     </style>
-  <p><strong><?php echo __('Choose latitude/longitude on map');?></strong><input type="checkbox" id="show_as_map"></p>
+  <p><strong><?php echo __('Choose latitude/longitude on map');?></strong><input type="checkbox" id="show_as_map" checked></p>
   <br /><br />
-  <table>
+  <table class="hidden">
     <tr>
       <td>
       </td>
@@ -64,23 +83,40 @@
     </tr>
   </table>
 </div>
-  <div id="map_search_form" class="hidden">
-    <div>
-        <div style="width: 600px; height:400px" id="smap">
-                   
-        </div>
-        <div id="mouse-position"></div>    
-    </div>        
-        <select id="layer-select">
+  <div id="map_search_form">
+    <div >
+        <div style="width: 100%; height:500px; display:inline-block" id="smap">
+          <select id="addwms" class="form-control">
+			  <option value="rbins_natural_earth_adm" >Natural Earth Administrative</option>
+			  <option value="rbins_natural_earth_physical" >Natural Earth Physical</option>
+        </select>
+        <input id="browse_wms" type="button" value="Browse layers"></input>		
+		<select id="addwmslayer" class="form-control">
+			
+        </select>
+		<input id="put_layer" type="button" value="Add layers"></input>
+		<select id="layer-select">
                        <option value="Aerial">Aerial</option>
                        <option value="AerialWithLabels" selected>Aerial with labels</option>
                        <option value="Road">Road (static)</option>
                        <option value="RoadOnDemand">Road (dynamic)</option>
 					   <option value="OSM">OpenStreetMap</option>
         </select>
-        <table>        
+		<br/>
+		Selected layers :
+		<input type="text" id="chosen_layer" style="width:70%" readonly>
+		 <input id="remove_last" type="button" value="Remove last"></input>	
+        </div>
+        <div id="mouse-position"></div>    
+    </div>   
+		<div id="wms_list"></div>
+        
+        <table> 			
         <tr>
             <td><?php echo $form['wkt_search']->renderLabel();?></td><td><?php echo $form['wkt_search']->render();?></td>
+        </tr>
+		<tr>
+            <td><?php echo $form['wfs_search']->renderLabel();?></td><td><?php echo $form['wfs_search']->render();?></td>
         </tr>
         </table>
   </div>
@@ -88,6 +124,7 @@
 
 
 <script  type="text/javascript">
+
     var results;
    // initSearchMap();
     
@@ -102,6 +139,110 @@
     var vectorLoaded =false;
     var type_draw="";
 	var OSM_layer;
+	var full_screen=false;
+	var globalLayers=Array();
+	var current_wms;
+	var current_layer_name;
+	//var WKTArray=Array();
+	var WFSArray=Array();
+	var LayerArray=Array();
+	var wfs_url="<?php print(sfConfig::get('dw_root_url_wfs'));?>";
+	
+	var createMultiPolygon=function()
+	{
+		var returned="";
+		if(WFSArray.length>0)
+		{
+			$('#chosen_layer').val(LayerArray.join("; "));
+			returned=JSON.stringify(WFSArray);
+			//returned="GEOMETRYCOLLECTION("+ WFSArray.join(",") +")";
+		}
+		$('.wfs_search').val(returned);
+		
+		
+	}
+	
+	var remove_last=function()
+	{
+		WFSArray.pop();
+		LayerArray.pop();
+		createMultiPolygon();
+		$('#chosen_layer').val(LayerArray.join("; "));
+	}
+	
+	var parseCapabilities= function(wms_point)
+	{
+		var cap_query=wfs_url + wms_point+ '/ows?service=wms&version=1.1.1&request=GetCapabilities';
+		console.log(cap_query);
+		$.get( cap_query)
+			  .done(function( data ) {
+					console.log(data);
+					$('#addwmslayer').find('option').remove().end();
+					$(data).find("Layer > Name").each(
+						function(index, obj)
+						{
+							var name_layer=obj.childNodes[0].nodeValue;
+							//console.log(name_layer);
+							var o = new Option(name_layer, name_layer);
+							$(o).html(name_layer);
+							$("#addwmslayer").append(o);
+						}
+					);					
+			  });
+	}
+	
+	var addLayer=function(wms_point, layer_name)
+	{
+			$(globalLayers).each(
+				function(idx, obj)
+				{
+					map.removeLayer(obj);			
+					
+				}
+			);
+			globalLayers=Array();
+			var wms_layer= new ol.layer.Tile(
+				{
+					source: new ol.source.TileWMS(
+					{
+					  url: wfs_url + wms_point + '/ows?',
+					  params: {'LAYERS': layer_name},
+					  ratio: 1,
+					  serverType: 'geoserver',
+					  projection: 'EPSG:4326',
+					  transition: 0
+					}
+					)
+				}
+				);
+		    current_layer_name=layer_name;
+			globalLayers.push(wms_layer);
+			map.addLayer(wms_layer);				
+	}
+	
+	$("#browse_wms").click(
+		function()
+		{
+			var wms_url=$("#addwms").val();					
+            parseCapabilities(wms_url);
+			current_wms=wms_url;
+		}
+	);
+	
+	$("#remove_last").click(
+		function()
+		{
+			remove_last();
+		}
+	);
+	
+   $("#put_layer").click(
+		function()
+		{
+			var wms_url=$("#addwmslayer").val();					
+            addLayer($("#addwms").val(),$("#addwmslayer").val());
+		}
+	);
    
    	var styleWKT= new ol.style.Style({
 			  fill: new ol.style.Fill({
@@ -130,6 +271,8 @@
 			});
 		}		
 	}
+	
+	
             
     	function addDarwinLayer(feature,origininput)
         {
@@ -304,6 +447,13 @@
                 });
       };
      ol.inherits(MoveMapControl, ol.control.Control);
+	 
+	
+	  
+	  var fullScreenControl = new ol.control.FullScreen();
+	  
+     //ol.inherits(FullScreenControl, FullScreen );
+     
      
        		map = new ol.Map({
 				target: 'smap',
@@ -315,7 +465,7 @@
 				}),
 				controls: ol.control.defaults({
 						attributionOptions: ({collapsible: false})
-				}).extend([mousePositionControl, scaleLineControl,  new DrawBoxControl(), new DrawPolygonControl(), new MoveMapControl()])
+				}).extend([mousePositionControl, scaleLineControl,  new DrawBoxControl(), new DrawPolygonControl(), new MoveMapControl(), fullScreenControl])
 		});
 		 map.addLayer(OSM_layer);
         mousePositionControl.setProjection("EPSG:4326");
@@ -330,7 +480,7 @@
         //select background
       var select = document.getElementById('layer-select');
 			function onChange() {
-			console.log(select.value)
+			//console.log(select.value)
 			if(select.value!="OSM")
 			{
 				OSM_layer.setVisible(false);
@@ -341,7 +491,7 @@
 			}
 			else
 			{
-				console.log("trye");
+				//console.log("trye");
 				for (var i = 0, ii = layers.length; i < ii; ++i) {
 				  layers[i].setVisible(false);
 				}
@@ -349,7 +499,49 @@
 			}
 		}
 		select.addEventListener('change', onChange);
-		onChange();   
+		onChange();  
+
+		map.on('singleclick', function(evt) {
+			if(globalLayers.length>0)
+			{
+								
+				var lonlat = map.getCoordinateFromPixel(evt.pixel);
+				lonlat= ol.proj.transform(lonlat, "EPSG:3857", "EPSG:4326");
+				//console.log(lonlat);
+				var filter="INTERSECTS(geom, POINT ("+ lonlat[1] +" "+ lonlat[0] +"))";
+				
+				var query_url=wfs_url + current_wms+"/wfs?service=wfs&version=2.0.0&request=GetFeature&typeNames="+ current_layer_name +"&cql_filter="+filter;
+				//console.log(query_url);
+				$.get( query_url)
+				  .done(function( data ) {
+	
+						
+						$(data).find("gml\\:name").each(
+							function(index, obj)
+							{
+								//console.log(obj);
+								var name=obj.childNodes[0].nodeValue;
+								//console.log(name);
+								LayerArray.push(name);
+								//var tmp={layer: current_layer_name ,'value':name}
+								//WFSArray.push(tmp);
+							}
+						);
+						$(data).find(current_wms +"\\:gid").each(
+							function(index, obj)
+							{
+								//console.log(obj);
+								var gid=obj.childNodes[0].nodeValue;
+								
+								
+								var tmp={layer: current_layer_name ,'value':gid}
+								WFSArray.push(tmp);
+							}
+						);
+						createMultiPolygon();						
+				  });
+			}
+	});		
         
 
 		

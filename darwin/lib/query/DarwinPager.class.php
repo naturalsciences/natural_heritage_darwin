@@ -12,6 +12,7 @@ class DarwinPager extends Doctrine_Pager
      * @param $hydrationMode        Hydration Mode of Doctrine_Query::execute returned ResultSet.
      * @return Doctrine_Collection  The root collection
      */
+	public $additional_count;
     public function execute($params = array(), $hydrationMode = null)
     {
         if ( !$this->getExecuted()) {
@@ -23,6 +24,19 @@ class DarwinPager extends Doctrine_Pager
           return new  Doctrine_Collection($this->getQuery()->getRoot()->getComponentName());
         }
         else
-          return $this->getQuery()->execute($params, $hydrationMode);
-    }
+		{
+          $tmp= $this->getQuery()->execute($params, $hydrationMode);
+		  return $tmp;
+		}
+	}
+	
+	public function setAdditionalCount($val)
+	{
+		$this->additionalCount=$val;
+	}
+	
+	public function getAdditionalCount()
+	{
+		$this->additionalCount;
+	}
 }

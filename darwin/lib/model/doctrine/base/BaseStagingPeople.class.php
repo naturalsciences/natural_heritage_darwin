@@ -13,6 +13,7 @@
  * @property integer $order_by
  * @property integer $people_ref
  * @property string $formated_name
+ * @property integer $import_ref
  * @property People $People
  * 
  * @method integer       getId()                  Returns the current record's "id" value
@@ -23,6 +24,7 @@
  * @method integer       getOrderBy()             Returns the current record's "order_by" value
  * @method integer       getPeopleRef()           Returns the current record's "people_ref" value
  * @method string        getFormatedName()        Returns the current record's "formated_name" value
+ * @method integer       getImportRef()           Returns the current record's "import_ref" value
  * @method People        getPeople()              Returns the current record's "People" value
  * @method StagingPeople setId()                  Sets the current record's "id" value
  * @method StagingPeople setReferencedRelation()  Sets the current record's "referenced_relation" value
@@ -32,6 +34,7 @@
  * @method StagingPeople setOrderBy()             Sets the current record's "order_by" value
  * @method StagingPeople setPeopleRef()           Sets the current record's "people_ref" value
  * @method StagingPeople setFormatedName()        Sets the current record's "formated_name" value
+ * @method StagingPeople setImportRef()           Sets the current record's "import_ref" value
  * @method StagingPeople setPeople()              Sets the current record's "People" value
  * 
  * @package    darwin
@@ -76,6 +79,9 @@ abstract class BaseStagingPeople extends DarwinModel
              ));
         $this->hasColumn('formated_name', 'string', null, array(
              'type' => 'string',
+             ));
+        $this->hasColumn('import_ref', 'integer', null, array(
+             'type' => 'integer',
              ));
     }
 

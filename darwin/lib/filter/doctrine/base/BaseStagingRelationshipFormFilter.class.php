@@ -53,6 +53,12 @@ abstract class BaseStagingRelationshipFormFilter extends DarwinModelFormFilter
     $this->widgetSchema   ['unit'] = new sfWidgetFormFilterInput();
     $this->validatorSchema['unit'] = new sfValidatorPass(array('required' => false));
 
+    $this->widgetSchema   ['existing_specimen_ref'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['existing_specimen_ref'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['specimen_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Specimens'), 'add_empty' => true));
+    $this->validatorSchema['specimen_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Specimens'), 'column' => 'id'));
+
     $this->widgetSchema->setNameFormat('staging_relationship_filters[%s]');
   }
 
@@ -77,6 +83,8 @@ abstract class BaseStagingRelationshipFormFilter extends DarwinModelFormFilter
       'unit_type' => 'Text',
       'quantity' => 'Number',
       'unit' => 'Text',
+      'existing_specimen_ref' => 'Text',
+      'specimen_ref' => 'ForeignKey',
     ));
   }
 }

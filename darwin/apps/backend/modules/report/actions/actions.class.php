@@ -269,7 +269,7 @@ class reportActions extends DarwinActions
       // Define Context params
       $ctx = stream_context_create(array('http'=>
                                            array(
-                                             'timeout' => 30, // 1 200 Seconds = 20 Minutes
+                                             'timeout' => 90, // 1 200 Seconds = 20 Minutes
                                            )
                                    ));
       set_time_limit(0) ;

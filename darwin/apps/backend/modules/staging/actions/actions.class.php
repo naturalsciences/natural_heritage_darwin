@@ -52,7 +52,7 @@ class stagingActions extends DarwinActions
    $currentDir=getcwd();
     chdir(sfconfig::get('sf_root_dir'));    
     //print('nohup php symfony '.$cmd.'  >/dev/null &' );
-    exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+    exec('nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );
     chdir($currentDir);              
    //end ftheeten
    
@@ -103,7 +103,7 @@ class stagingActions extends DarwinActions
    $currentDir=getcwd();
     chdir(sfconfig::get('sf_root_dir'));    
     //print('nohup php symfony '.$cmd.'  >/dev/null &' );
-    exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+    exec('nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );
     chdir($currentDir);              
    //end ftheeten
    
@@ -154,7 +154,7 @@ class stagingActions extends DarwinActions
 		$cmd='darwin:create-people --id='. $this->import->getId();
 		$currentDir=getcwd();
 		chdir(sfconfig::get('sf_root_dir'));    
-		exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+		exec('nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );
 		chdir($currentDir);      
     }
     return $this->redirect('import/index');

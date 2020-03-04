@@ -12,4 +12,6 @@
  */
 class StagingRelationship extends BaseStagingRelationship
 {
+
+ 
 }

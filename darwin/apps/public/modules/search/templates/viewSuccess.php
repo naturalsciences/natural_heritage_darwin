@@ -315,7 +315,7 @@
         <tr>
             <td><span class="pager_nav"><?php echo __("UUID") ; ?> :</span></td>
             <td>
-            <span><?php echo (count($specimen->getSpecimensStableIds())>0?($specimen->getSpecimensStableIds())[0]->getUuid():"") ; ?></span>
+            <span><?php echo (count($specimen->getSpecimensStableIds())>0?($specimen->getSpecimensStableIds()->getUuid()):"") ; ?></span>
           </td>
         </tr>
         </tr>

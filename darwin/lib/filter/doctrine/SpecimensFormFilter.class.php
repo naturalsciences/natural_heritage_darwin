@@ -361,7 +361,11 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       array('class' => 'to_date')
     );
 
-    $this->validatorSchema['tags'] = new sfValidatorString(array('required' => false, 'trim' => true));
+    $this->widgetSchema['gtu_from_precise'] = new sfWidgetFormInputCheckbox();//array('default' => FALSE));
+	$this->widgetSchema['gtu_from_precise']->setAttributes(Array("class"=>"precise_gtu_date"));
+    $this->validatorSchema['gtu_from_precise'] = new sfValidatorPass();
+    //ftheeten 2020 02 11 no trim
+    $this->validatorSchema['tags'] = new sfValidatorString(array('required' => false, 'trim'=>false));
     $this->validatorSchema['gtu_from_date'] = new fuzzyDateValidator(array(
       'required' => false,
       'from_date' => true,
@@ -591,15 +595,45 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->widgetSchema['sub_container'] = new sfWidgetFormInput();
     $this->validatorSchema['sub_container'] = new sfValidatorString(array('required' => false));
 
+    $storage_tmp=array_unique(array_map('strtolower',array_change_key_case(Doctrine_Core::getTable("Specimens")->getDistinctContainerStorages())));
+    $this->widgetSchema['container_storage'] = new sfWidgetFormChoice(array(
+       "choices"=> $storage_tmp,
+       'multiple' => true,
+    ), array("size"=>10));
 
-    $this->validatorSchema['part'] = new sfValidatorString(array('required' => false));
+    $this->validatorSchema['container_storage'] =  new sfValidatorChoice(
+        array(
+         "choices"=> $storage_tmp,
+         'multiple' => true,
+         "required"=>false
+         )
+    );
 
-    $this->widgetSchema['part'] = new sfWidgetFormDarwinDoctrineChoice(array(
-      'model' => 'Specimens',
-      'table_method' => 'getDistinctParts',
-      'add_empty' => true,
-    ));
+    $sub_storage_tmp=array_unique(array_map('strtolower',array_change_key_case(Doctrine_Core::getTable("Specimens")->getDistinctSubContainerStorages())));
+    $this->widgetSchema['sub_container_storage'] = new sfWidgetFormChoice(array(
+       "choices"=> $sub_storage_tmp,
+       'multiple' => true,
+    ), array("size"=>10));
 
+    $this->validatorSchema['sub_container_storage'] =  new sfValidatorChoice(
+         array("choices"=> $sub_storage_tmp,
+         'multiple' => true, 
+         "required"=>false
+         )
+    );
+
+    $part_tmp=array_unique(array_map('strtolower',array_change_key_case(Doctrine_Core::getTable("Specimens")->getDistinctParts())));
+    $this->widgetSchema['part'] = new sfWidgetFormChoice(array(
+       "choices"=> $part_tmp,
+       'multiple' => true,
+    ), array("size"=>10));
+
+    $this->validatorSchema['part'] =  new sfValidatorChoice(
+         array("choices"=> $part_tmp,
+         'multiple' => true, 
+         "required"=>false
+         )
+    );
     $this->widgetSchema['object_name'] = new sfWidgetFormInput();
     $this->validatorSchema['object_name'] = new sfValidatorString(array('required' => false));
 
@@ -762,6 +796,10 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->widgetSchema['wkt_search'] = new sfWidgetFormInputText();
     $this->widgetSchema['wkt_search']->setAttributes(array('class'=>'wkt_search'));
     $this->validatorSchema['wkt_search'] = new sfValidatorString(array('required' => false, 'trim' => true));
+	
+	$this->widgetSchema['wfs_search'] = new sfWidgetFormInputText();
+    $this->widgetSchema['wfs_search']->setAttributes(array('class'=>'wfs_search'));
+    $this->validatorSchema['wfs_search'] = new sfValidatorString(array('required' => false, 'trim' => true));
     
 	//ftheeten 2018 06 20
 	$this->widgetSchema['code_main'] = new sfWidgetFormInput();
@@ -991,6 +1029,45 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
             $query->andWhere("ST_INTERSECTS(ST_SETSRID(ST_Point(gtu_location[1], gtu_location[0]),4326), ST_GEOMFROMTEXT('".$values['wkt_search']."',4326))");
         }
     }
+	
+	if( isset($values['wfs_search']))
+    {
+        if(strlen(trim($values['wfs_search'])))
+        {
+           $tmp_array=json_decode($values['wfs_search'], TRUE);
+		   //print_r($tmp_array);
+		   $sql_block=Array();
+		   /*foreach($tmp_array as $key=>$val)
+		   {
+			  
+			   $searched=$val["value"];
+			   $layer=$val["layer"];
+			   
+			   $sql_block[]="  EXISTS(SELECT id FROM rmca_get_wfs_geom('wfs.".$layer."', ".$searched.") wfs WHERE wfs.id=s.id)  ";
+		   }
+		   $wfs_sql = implode(" OR ", $sql_block );
+		   $query->andWhere($wfs_sql);*/
+           $secondArray=Array();
+           foreach($tmp_array as $key=>$val)
+		   {
+            $searched=$val["value"];
+			$layer=$val["layer"];
+            if(!array_key_exists($layer,$secondArray))
+            {
+                 $secondArray[$layer]=Array();
+            }
+            $secondArray[$layer][]=$searched;
+           }
+           foreach($secondArray as $key=>$val)
+           {
+                $layer=$key;
+                $values="'{".implode(",", $val)."}'::integer[]";
+                $sql_block[]="  ST_INTERSECTS(ST_SETSRID(ST_Point(gtu_location[1], gtu_location[0]),4326),(SELECT rmca_get_wfs_geom('wfs.".$layer."', ".$values.")))"; 
+           }
+           $wfs_sql = implode(" OR ", $sql_block );
+		   $query->andWhere($wfs_sql);
+        }
+    }
     return $query;
   }
 
@@ -1117,6 +1194,29 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     }
     return $query ;
   }
+  
+  public function addContainerStorageColumnQuery($query, $field, $val)
+  { 
+    $containers=Array();
+    foreach($val as $tmp)
+    {
+        $containers[]='"'.str_replace("\"","\\\"", str_replace("\\","\\\\", $tmp )).'"';
+    }
+    $query->andWhere("LOWER(s.container_storage) = ANY ('{".implode(",", $containers)."}')");
+    return $query ;
+  }
+  
+   
+   public function addSubContainerStorageColumnQuery($query, $field, $val)
+  {
+    $sub_containers=Array();
+    foreach($val as $tmp)
+    {
+        $sub_containers[]='"'.str_replace("\"","\\\"", str_replace("\\","\\\\", $tmp )).'"';
+    }
+    $query->andWhere("LOWER(s.sub_container_storage) = ANY ('{".implode(",", $sub_containers)."}')");
+    return $query ;
+  }
 
   public function addBuildingColumnQuery($query, $field, $val)
   {
@@ -1161,14 +1261,16 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
   }
 
   public function addPartColumnQuery($query, $field, $val)
-  {
-    if( $val != '' ) {
-      $conn_MGR = Doctrine_Manager::connection();
-      $val = $conn_MGR->quote($val, 'string');
-      $query->andWhere('s.specimen_part  = '.$val);
+  { 
+    $containers=Array();
+    foreach($val as $tmp)
+    {
+        $containers[]='"'.str_replace("\"","\\\"", str_replace("\\","\\\\", $tmp )).'"';
     }
+    $query->andWhere("LOWER(s.specimen_part) = ANY ('{".implode(",", $containers)."}')");
     return $query ;
   }
+  
 
   public function addTagsColumn($query, $field, $val)
   {
@@ -1183,17 +1285,32 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       if( $line_val != '')
       {
         //$tagList = $conn_MGR->quote($line_val, 'string');
-        $tagList=trim($line_val);
+        //$tagList=trim($line_val);
+		//ftheeten 2020 02 11
+		$tagList=$line_val;
         $tagList=trim($tagList, ";");
        
         foreach(explode(";", $tagList  ) as $tagvalue)
         {
             if(strlen($tagvalue)>0)
             {
+            
+                $tagvalue=str_replace('*', '.*', $tagvalue);
+				$tagPrefix="''";
+				$tagSuffix="''";
+				if(substr($tagvalue, 0,2)!=".")
+				{					
+					$tagPrefix= "'(^|\s+)'";
+				}
+				if(substr($tagvalue, strlen($tagvalue)-2,2)!=".*")
+				{					
+					$tagSuffix= "'($|\s+)'";
+				}
+				$tagvalue=trim($tagvalue);
                 $tagvalue = $conn_MGR->quote($tagvalue, 'string');
                 $tmpStr[]="(
                         
-                        EXISTS(SELECT id FROM Tags t where t.tag_indexed ~fulltoindex($tagvalue) and t.gtu_ref=s.gtu_ref) 
+                        EXISTS(SELECT id FROM Tags t where t.tag_indexed ~ fulltoindex_add_prefix_suffix(fulltoindex($tagvalue, TRUE, TRUE),$tagPrefix, $tagSuffix) and t.gtu_ref=s.gtu_ref) 
                       )";
          
             }
@@ -1370,34 +1487,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     return $query ;
   }
   
- //ftheeten 2018 11 22
- /* 
-  public function addPeopleSearchColumnQuery(Doctrine_Query $query, $people_id, $field_to_use)
-  {
-    $build_query = '';
-    if(! is_array($field_to_use) || count($field_to_use) < 1)
-      $field_to_use = array('ident_ids','spec_coll_ids','spec_don_sel_ids') ;
-
-    foreach($field_to_use as $field)
-    {
-      if($field == 'ident_ids')
-      {
-        $build_query .= "s.spec_ident_ids @> ARRAY[$people_id]::int[] OR " ;
-      }
-      elseif($field == 'spec_coll_ids')
-      {
-        $build_query .= "s.spec_coll_ids @> ARRAY[$people_id]::int[] OR " ;
-      }
-      else
-      {
-        $build_query .= "s.spec_don_sel_ids @> ARRAY[$people_id]::int[] OR " ;
-      }
-    }
-    // I remove the last 'OR ' at the end of the string
-    $build_query = substr($build_query,0,strlen($build_query) -3) ;
-    $query->andWhere($build_query) ;
-    return $query ;
-  }*/
+ 
   
    public function addPeopleSearchColumnQuery(Doctrine_Query $query, $people_id, $field_to_use, $alias_id=NULL, $boolean="AND")
   {
@@ -1958,7 +2048,7 @@ $query = DQ::create()
       )
       ->from('Specimens s');
       
-     ;
+     
     $this->addTagsColumn($query, $values['Tags'], $values["Tags"]);
     if($values['with_multimedia'])
       $query->where("EXISTS (select m.id from multimedia m where m.referenced_relation = 'specimens' AND m.record_id = s.id)") ;
@@ -2026,10 +2116,14 @@ $query = DQ::create()
 
     $fields = array('gtu_from_date', 'gtu_to_date');
     $this->addDateFromToColumnQuery($query, $fields, $values['gtu_from_date'], $values['gtu_to_date']);
+     
+    
+    
     $this->addDateFromToColumnQuery($query, array('ig_date'), $values['ig_from_date'], $values['ig_to_date']);
     $this->addDateFromToColumnQuery($query, array('acquisition_date'), $values['acquisition_from_date'], $values['acquisition_to_date']);
     //2019 02 25
     $this->addCreationDateFromToColumnQuery($query, array('modification_date_time'), $values['creation_from_date'], $values['creation_to_date']);
+    
     
     
     //ftheeten 2016 03 24
@@ -2040,6 +2134,7 @@ $query = DQ::create()
     $this->addCatalogueRelationColumnQuery($query, $values['lithology_item_ref'], $values['lithology_relation'],'lithology','lithology', $values['lithology_child_syn_included']);
     $this->addCatalogueRelationColumnQuery($query, $values['mineral_item_ref'], $values['mineral_relation'],'mineralogy','mineral', $values['mineral_child_syn_included']);
 
+   
     $query->limit($this->getCatalogueRecLimits());
 
     return $query;
