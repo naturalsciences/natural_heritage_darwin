@@ -801,6 +801,9 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->widgetSchema['wfs_search']->setAttributes(array('class'=>'wfs_search'));
     $this->validatorSchema['wfs_search'] = new sfValidatorString(array('required' => false, 'trim' => true));
     
+	$this->widgetSchema['include_text_place'] = new sfWidgetFormInputCheckbox();//array('default' => FALSE));
+ 	$this->validatorSchema['include_text_place'] = new sfValidatorPass();
+    
 	//ftheeten 2018 06 20
 	$this->widgetSchema['code_main'] = new sfWidgetFormInput();
     $this->validatorSchema['code_main'] = new sfValidatorString(array('required' => false));
@@ -987,9 +990,10 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       $vert_box = "((".(float)$values['lat_from'].",".(float)$values['lon_from']."),(".(float)$values['lat_to'].",".(float)$values['lon_to']."))";
 
       // Look for a wrapped box (ie. between RUSSIA and USA)
-      if( (float)$values['lon_to'] < (float) $values['lon_from']) {
+      if( (float)$values['lon_to'] < (float) $values['lon_from']) 
+      {
 
-        $query->andWhere("
+        $tmp="
           ( station_visible = true
             AND box('$horizontal_box') @> gtu_location
             AND NOT box('$vert_box') @> gtu_location
@@ -999,25 +1003,37 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
             AND collection_ref IN (".implode(',',$this->encoding_collection).")
             AND box('$horizontal_box') @> gtu_location
             AND NOT box('$vert_box') @> gtu_location
-          )"
-        );
+          )" ;
         $query->whereParenWrap();
 
-      } else {
-        $query->andWhere("
-          ( station_visible = true
-            AND box('$horizontal_box') @> gtu_location
-            AND box('$vert_box') @> gtu_location
-          )
-          OR
-          ( station_visible = false
-            AND collection_ref IN (".implode(',',$this->encoding_collection).")
-            AND box('$horizontal_box') @> gtu_location
-            AND box('$vert_box') @> gtu_location
-          )"
-        );
-        $query->whereParenWrap();
       }
+      else
+      {
+        $tmp="
+          ( station_visible = true
+            AND box('$horizontal_box') @> gtu_location
+            AND box('$vert_box') @> gtu_location
+          )
+          OR
+          ( station_visible = false
+            AND collection_ref IN (".implode(',',$this->encoding_collection).")
+            AND box('$horizontal_box') @> gtu_location
+            AND box('$vert_box') @> gtu_location
+          )";
+        
+      }
+        
+            if($values['include_text_place']==TRUE)
+            {
+               $tmp2=$this->addTagsColumn_text(   $values['Tags']);
+               if(strlen($tmp2)>0)
+                 {
+                    $tmp= "((".$tmp.") OR (".$tmp2."))";
+                 }
+            }
+        
+      $query->andWhere($tmp);
+      $query->whereParenWrap();
       $query->andWhere('gtu_location is not null');
     }
     
@@ -1026,7 +1042,18 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     {
         if(strlen(trim($values['wkt_search'])))
         {
-            $query->andWhere("ST_INTERSECTS(ST_SETSRID(ST_Point(gtu_location[1], gtu_location[0]),4326), ST_GEOMFROMTEXT('".$values['wkt_search']."',4326))");
+            $tmp="ST_INTERSECTS(ST_SETSRID(ST_Point(gtu_location[1], gtu_location[0]),4326), ST_GEOMFROMTEXT('".$values['wkt_search']."',4326))";
+            
+                if($values['include_text_place']==TRUE)
+                {
+                $tmp2=$this->addTagsColumn_text(  $values['Tags']);
+                 if(strlen($tmp2)>0)
+                 {
+                    $tmp= "((".$tmp.") OR (".$tmp2."))";
+                 }
+               }   
+            
+            $query->andWhere($tmp);
         }
     }
 	
@@ -1037,16 +1064,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
            $tmp_array=json_decode($values['wfs_search'], TRUE);
 		   //print_r($tmp_array);
 		   $sql_block=Array();
-		   /*foreach($tmp_array as $key=>$val)
-		   {
-			  
-			   $searched=$val["value"];
-			   $layer=$val["layer"];
-			   
-			   $sql_block[]="  EXISTS(SELECT id FROM rmca_get_wfs_geom('wfs.".$layer."', ".$searched.") wfs WHERE wfs.id=s.id)  ";
-		   }
-		   $wfs_sql = implode(" OR ", $sql_block );
-		   $query->andWhere($wfs_sql);*/
+		   
            $secondArray=Array();
            foreach($tmp_array as $key=>$val)
 		   {
@@ -1061,10 +1079,23 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
            foreach($secondArray as $key=>$val)
            {
                 $layer=$key;
-                $values="'{".implode(",", $val)."}'::integer[]";
-                $sql_block[]="  ST_INTERSECTS(ST_SETSRID(ST_Point(gtu_location[1], gtu_location[0]),4326),(SELECT rmca_get_wfs_geom('wfs.".$layer."', ".$values.")))"; 
+                $val_tmp="'{".implode(",", $val)."}'::integer[]";
+                $sql_block[]="  ST_INTERSECTS(ST_SETSRID(ST_Point(gtu_location[1], gtu_location[0]),4326),(SELECT rmca_get_wfs_geom('wfs.".$layer."', ".$val_tmp.")))"; 
            }
            $wfs_sql = implode(" OR ", $sql_block );
+           
+           
+                if($values['include_text_place']==TRUE)
+                {
+               
+                   $tmp2=$this->addTagsColumn_text(  $values['Tags']);
+                     if(strlen($tmp2)>0)
+                     {
+                   
+                        $wfs_sql= "((".$wfs_sql.") OR (".$tmp2."))";
+                     }
+                 }
+           
 		   $query->andWhere($wfs_sql);
         }
     }
@@ -1327,6 +1358,67 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     
     return $query ;
   }
+  
+   public function addTagsColumn_text($val)
+  {
+  print_r($val);
+    $returned="";
+    $conn_MGR = Doctrine_Manager::connection();
+    $tagList = '';
+    $whereArray=array();
+    $goWhere=false;
+     $tmpStr=Array();
+    foreach($val as $line)
+    {
+   
+      $line_val = $line['tag'];
+      if( $line_val != '')
+      {
+       
+		//ftheeten 2020 02 11
+		$tagList=$line_val;
+        $tagList=trim($tagList, ";");
+       
+        foreach(explode(";", $tagList  ) as $tagvalue)
+        {
+       
+            if(strlen($tagvalue)>0)
+            {
+            
+                $tagvalue=str_replace('*', '.*', $tagvalue);
+				$tagPrefix="''";
+				$tagSuffix="''";
+				if(substr($tagvalue, 0,2)!=".")
+				{					
+					$tagPrefix= "'(^|\s+)'";
+				}
+				if(substr($tagvalue, strlen($tagvalue)-2,2)!=".*")
+				{					
+					$tagSuffix= "'($|\s+)'";
+				}
+				$tagvalue=trim($tagvalue);
+                $tagvalue = $conn_MGR->quote($tagvalue, 'string');
+                $tmpStr[]="(
+                        
+                        EXISTS(SELECT id FROM Tags t where t.tag_indexed ~ fulltoindex_add_prefix_suffix(fulltoindex($tagvalue, TRUE, TRUE),$tagPrefix, $tagSuffix) and t.gtu_ref=s.gtu_ref) 
+                      )";
+         
+            }
+           
+        } 
+          
+      }
+    }
+    if(count($tmpStr)>0)
+    {
+    
+        $returned="(".implode(" ".$this->tag_boolean." ",$tmpStr).") AND (s.station_visible = true 
+												   OR (s.station_visible = false AND s.collection_ref in (".implode(',',$this->encoding_collection).")))";      
+    }
+   
+    return $returned ;
+  }
+  
   
 
   
@@ -2049,7 +2141,21 @@ $query = DQ::create()
       ->from('Specimens s');
       
      
-    $this->addTagsColumn($query, $values['Tags'], $values["Tags"]);
+   $go_tag=TRUE;
+        
+  
+     
+        if($values['include_text_place']==TRUE)
+        {
+            $go_tag=false;
+                    
+        }
+    
+   if($go_tag)
+   {
+	    $this->addTagsColumn($query, $values['Tags'], $values["Tags"]);
+   }
+        
     if($values['with_multimedia'])
       $query->where("EXISTS (select m.id from multimedia m where m.referenced_relation = 'specimens' AND m.record_id = s.id)") ;
 

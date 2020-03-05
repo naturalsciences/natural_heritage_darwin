@@ -120,7 +120,9 @@
         </tr>
         </table>
   </div>
-
+<div>
+<?php print(__("Include locality tags ?"));?><?php echo $form['include_text_place'];?>
+<div>
 
 
 <script  type="text/javascript">
