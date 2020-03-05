@@ -18,6 +18,8 @@
                 <?php if($orderBy=='name') echo $orderSign ?>
               </a>
             </th>
+			<th><?php echo __('I.G. Numbers');?></th>
+			<th><?php echo __('Collectors');?></th>
             <th class="datesNum">
               <a class="sort" href="<?php echo url_for($s_url.'&orderby=expedition_from_date'.( ($orderBy=='expedition_from_date' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
                 <?php echo __('From');?>
@@ -35,10 +37,12 @@
         </thead>
         <tbody>
           <?php foreach($expeditions as $expedition):?>
-            <tr class="rid_<?php echo $expedition->getId(); ?>">
+            <tr  class="rid_<?php echo $expedition->getId(); ?>">
               <td><?php echo $expedition->getName();?></td>
-              <td class="datesNum"><?php echo $expedition->getExpeditionFromDateMasked(ESC_RAW);?></td>
-              <td class="datesNum"><?php echo $expedition->getExpeditionToDateMasked(ESC_RAW);?></td>
+			   <td><?php echo $expedition->getIgNumbers();?></td>
+			   <td><?php echo $expedition->getCollectors();?></td>
+              <td style="text-align:left;" class="datesNum"><?php echo $expedition->getExpeditionFromDateMasked(ESC_RAW);?></td>
+              <td style="text-align:left;" class="datesNum"><?php echo $expedition->getExpeditionToDateMasked(ESC_RAW);?></td>
                 <td class="<?php echo (! $is_choose)?'edit':'choose';?>">
                   <?php if(! $is_choose):?>
                     <?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>                  

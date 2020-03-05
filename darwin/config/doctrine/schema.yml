@@ -303,6 +303,11 @@ Expeditions:
         expedition_from_date: { type: string, default:'0001-01-01'}
         expedition_to_date_mask: { type: integer, notnull: true, default:0}
         expedition_to_date: { type: string, default: '2038-12-31'}
+    relations:
+        Specimens:
+            class: Specimens
+            local: id
+            foreign: expedition_ref
 
 Users:
     columns:

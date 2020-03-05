@@ -177,7 +177,6 @@ class CollectionsTable extends DarwinTable
   
     //ftheeten 2018 04 27
   
-    //ftheeten 2018 04 27
   
   public function countSpecimens($collectionID ="/", $year="", $creation_date_min="", $creation_date_max="", $ig_num="", $includeSubcollection=false, $detailSubCollections=false )
   {
@@ -238,12 +237,40 @@ class CollectionsTable extends DarwinTable
         {
             $where[]= "collection_path LIKE  :id||'%'";            
         }
+		elseif(strpos($collectionID, ","))
+		{
+			
+			$array_col_id=explode(",",$collectionID );
+			$whereTmp=Array();
+			foreach($array_col_id as $tmp_id)
+			{
+				if(is_numeric($tmp_id))
+				{
+					$whereTmp[]= "collection_path||'/'||collection_ref||'/' LIKE '%/$tmp_id/%'";
+				}
+			}
+			$where[]="(".implode(" OR ", $whereTmp).")";
+		}
         else
         {
             //$where[]= "collections.id::varchar  = :ida";
             $where[]= "collection_path||'/'||collection_ref||'/' LIKE '%/'||:idb||'/%'";
         }       
     }
+	elseif(strpos($collectionID, ","))
+	{
+			
+			$array_col_id=explode(",",$collectionID );
+			$whereTmp=Array();
+			foreach($array_col_id as $tmp_id)
+			{
+				if(is_numeric($tmp_id))
+				{
+					$whereTmp[]= "collection_ref = $tmp_id";
+				}
+			}
+			$where[]="(".implode(" OR ", $whereTmp).")";
+		}
     else
     {
          $where[]= "collection_ref::varchar  = :id";
@@ -286,13 +313,13 @@ class CollectionsTable extends DarwinTable
             $q->bindParam(":id", $collectionID, PDO::PARAM_STR);
             
         }
-        else
+        elseif(strpos($collectionID,"," )===FALSE)
         {
             //$q->bindParam(":ida", $collectionID, PDO::PARAM_STR);
             $q->bindParam(":idb", $collectionID, PDO::PARAM_STR);
         }       
     }
-    else
+    elseif(strpos($collectionID,"," )===FALSE)
     {
          $q->bindParam(":id", $collectionID, PDO::PARAM_STR);
     }
@@ -386,12 +413,40 @@ class CollectionsTable extends DarwinTable
         {
             $where[]= "collection_path LIKE  :id||'%'";            
         }
+		elseif(strpos($collectionID, ","))
+		{
+			
+			$array_col_id=explode(",",$collectionID );
+			$whereTmp=Array();
+			foreach($array_col_id as $tmp_id)
+			{
+				if(is_numeric($tmp_id))
+				{
+					$whereTmp[]= "collection_path||'/'||collection_ref||'/' LIKE '%/$tmp_id/%'";
+				}
+			}
+			$where[]="(".implode(" OR ", $whereTmp).")";
+		}
         else
         {
             //$where[]= "collections.id::varchar  = :ida";
             $where[]= "collection_path||'/'||collection_ref||'/' LIKE '%/'||:idb||'/%'";
         }       
     }
+	elseif(strpos($collectionID, ","))
+	{
+			
+			$array_col_id=explode(",",$collectionID );
+			$whereTmp=Array();
+			foreach($array_col_id as $tmp_id)
+			{
+				if(is_numeric($tmp_id))
+				{
+					$whereTmp[]= "collection_ref = $tmp_id";
+				}
+			}
+			$where[]="(".implode(" OR ", $whereTmp).")";
+		}
     else
     {
          $where[]= "collection_ref::varchar  = :id";
@@ -439,13 +494,13 @@ class CollectionsTable extends DarwinTable
             $q->bindParam(":id", $collectionID, PDO::PARAM_STR);
             
         }
-        else
+        elseif(strpos($collectionID,",")===false)
         {
             //$q->bindParam(":ida", $collectionID, PDO::PARAM_STR);
             $q->bindParam(":idb", $collectionID, PDO::PARAM_STR);
         }       
     }
-    else
+    elseif(strpos($collectionID,",")===false)
     {
          $q->bindParam(":id", $collectionID, PDO::PARAM_STR);
     }
@@ -541,12 +596,40 @@ class CollectionsTable extends DarwinTable
         {
             $where[]= "collection_path LIKE  :id||'%'";            
         }
+		elseif(strpos($collectionID, ","))
+		{
+			
+			$array_col_id=explode(",",$collectionID );
+			$whereTmp=Array();
+			foreach($array_col_id as $tmp_id)
+			{
+				if(is_numeric($tmp_id))
+				{
+					$whereTmp[]= "collection_path||'/'||collection_ref||'/' LIKE '%/$tmp_id/%'";
+				}
+			}
+			$where[]="(".implode(" OR ", $whereTmp).")";
+		}
         else
         {
             //$where[]= "collections.id::varchar  = :ida";
             $where[]= "collection_path||'/'||collection_ref||'/' LIKE '%/'||:idb||'/%'";
         }       
     }
+	elseif(strpos($collectionID, ","))
+	{
+			
+			$array_col_id=explode(",",$collectionID );
+			$whereTmp=Array();
+			foreach($array_col_id as $tmp_id)
+			{
+				if(is_numeric($tmp_id))
+				{
+					$whereTmp[]= "collection_ref = $tmp_id";
+				}
+			}
+			$where[]="(".implode(" OR ", $whereTmp).")";
+	}
     else
     {
          $where[]= "collection_ref::varchar  = :id";
@@ -592,13 +675,13 @@ class CollectionsTable extends DarwinTable
             $q->bindParam(":id", $collectionID, PDO::PARAM_STR);
             
         }
-        else
+        elseif(strpos($collectionID,",")===FALSE)
         {
             //$q->bindParam(":ida", $collectionID, PDO::PARAM_STR);
             $q->bindParam(":idb", $collectionID, PDO::PARAM_STR);
         }       
     }
-    else
+    elseif(strpos($collectionID,",")===FALSE)
     {
          $q->bindParam(":id", $collectionID, PDO::PARAM_STR);
     }

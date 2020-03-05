@@ -34,6 +34,9 @@ abstract class BaseExpeditionsForm extends DarwinModelForm
     $this->widgetSchema   ['expedition_to_date'] = new sfWidgetFormTextarea();
     $this->validatorSchema['expedition_to_date'] = new sfValidatorString(array('required' => false));
 
+    $this->widgetSchema   ['id'] = new sfWidgetFormInputHidden();
+    $this->validatorSchema['id'] = new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false));
+
     $this->widgetSchema->setNameFormat('expeditions[%s]');
   }
 

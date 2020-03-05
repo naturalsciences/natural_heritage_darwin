@@ -237,5 +237,82 @@ class expeditionActions extends DarwinActions
     $this->form = new ExpeditionsForm($this->expedition);    
     $this->loadWidgets();
   }
+  
+   public function executeDownloadTab(sfWebRequest $request)
+  {
+  
+	   if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
+	   
+	   $this->getResponse()->setHttpHeader('Content-type','text/tab-separated-values');
+		$this->getResponse()->setHttpHeader('Content-disposition','attachment; filename="darwin_expeditions_statistics.txt"');
+		$this->getResponse()->setHttpHeader('Pragma', 'no-cache');
+		$this->getResponse()->setHttpHeader('Expires', '0');
+		
+		$this->getResponse()->sendHttpHeaders(); //edited to add the missed sendHttpHeaders
+		//$this->getResponse()->setContent($returned);
+		$this->getResponse()->sendContent();   
+	    //$q=$query->execute();
+		//$items=$q->fetchAll(PDO::FETCH_ASSOC);
+		
+		 $form = new ExpeditionsFormFilter();
+		if($request->getParameter('searchExpedition','') !== '')
+		{
+            
+            $form->bind($request->getParameter('searchExpedition'));
+            if ($form->isValid())
+            {
+               
+                $query = $form->getQuery();			
+                $exps = $query->execute();
+                $comment_ids = array();
+                $comments=Array();
+                foreach($exps as $e)
+                {
+				
+                    $comment_ids[] = $e->getId();
+                }
+                $comments_groups  = Doctrine_Core::getTable('Comments')->getRelatedComment('expeditions',$comment_ids);
+                foreach($comments_groups as $comment)
+                {
+                  if(isset($comments[$comment->getRecordId()]))
+                  {
+                    $comments[$comment->getRecordId()] .= '/'.$comment->getComment() ;
+                  }
+                  else 
+                  {
+                    $comments[$comment->getRecordId()] = $comment->getComment() ;
+                  }
+                }
+                $result=Array();
+                foreach($exps as $exp)
+                {
+					$line=Array();
+					$line[]=$exp->getId();
+                    $line[]=$exp->getName();
+                    $line[]=$exp->getExpeditionFromDateMasked();
+                    $line[]=$exp->getExpeditionToDateMasked();
+                    $line[]=$exp->getIgNumbers();
+                    $line[]=$exp->getCollectors();
+                    if(isset($comments[$exp->getId()]))
+					{
+						 $line[]=preg_replace('/\r\n?/', ".", $comments[$exp->getId()]);
+					}
+					else
+					{
+						$line[]="";
+					}
+                    $line[]=$exp->countSpecimens();
+					$line[]=$exp->countSpecimensByCollectionsString();
+                    $result[]=implode("\t", $line);
+                }
+                print(implode("\t", array("id","name", "date_begin_html_mask", "date_end_html_mask", "Associated I.G.", "Collectors", "Comments","NB. specimens", "Specimens By collections" ))."\r\n");
+                print(implode("\r\n", $result));
+            }
+       
+		}
+		
+		return sfView::NONE;           
+	  
+  }
     
 }
