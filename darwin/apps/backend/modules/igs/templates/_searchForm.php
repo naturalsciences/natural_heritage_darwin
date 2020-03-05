@@ -37,6 +37,7 @@
         </tr>
         <tr>
          <td><input class="search_submit" type="submit" name="search" value="<?php echo __('Search'); ?>" /></td>
+		 <td><input class="search_submit get_tab" type="button" name="search" value="<?php echo __('Get tab-delimited'); ?>" /></td>
         </tr>
       </tbody>
     </table>
@@ -121,5 +122,39 @@
    open(url+'?'+data);
     return false;
   });
+  
+  $(".get_tab").click(
+	function()
+	{
+		
+
+		var $tmp=$('form:first');
+		
+		var new_target="<?php echo url_for('igs/downloadTab') ?>";		
+		var $inputs = $('form:first :input');
+        var form = document.createElement("form");
+		form.hidden=true;
+		form.setAttribute("method", "post");
+		form.setAttribute("action", new_target);
+
+		form.setAttribute("target", "view");
+
+		
+		$inputs.each(function() {
+			var hiddenField = document.createElement("input"); 
+			
+			hiddenField.setAttribute("name", this.name);
+			hiddenField.setAttribute("value", $(this).val());
+			
+			form.appendChild(hiddenField);
+		});
+		
+		document.body.appendChild(form);
+
+		window.open('', 'view');
+
+		form.submit();
+	}
+  );
 });
 </script>

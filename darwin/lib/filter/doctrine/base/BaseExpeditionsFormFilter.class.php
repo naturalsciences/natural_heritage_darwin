@@ -32,6 +32,9 @@ abstract class BaseExpeditionsFormFilter extends DarwinModelFormFilter
     $this->widgetSchema   ['expedition_to_date'] = new sfWidgetFormFilterInput();
     $this->validatorSchema['expedition_to_date'] = new sfValidatorPass(array('required' => false));
 
+    $this->widgetSchema   ['id'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['id'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => 'Expeditions', 'column' => 'id'));
+
     $this->widgetSchema->setNameFormat('expeditions_filters[%s]');
   }
 
@@ -49,6 +52,7 @@ abstract class BaseExpeditionsFormFilter extends DarwinModelFormFilter
       'expedition_from_date' => 'Text',
       'expedition_to_date_mask' => 'Number',
       'expedition_to_date' => 'Text',
+      'id' => 'Number',
     ));
   }
 }

@@ -131,8 +131,7 @@
                           <li><?php echo link_to(__('Sampling location'),'gtu/index');?></li>
                         <?php endif ; ?>
                         <li><?php echo link_to(__('Collecting Methods'),'methods_and_tools/methodsIndex');?></li>
-                        <li><?php echo link_to(__('Collecting Tools'),'methods_and_tools/toolsIndex');?></li>
-                        <li><?php echo link_to(__('Expeditions and I.G.'),'expeditionsIgs/index');?></li>
+                        <li><?php echo link_to(__('Collecting Tools'),'methods_and_tools/toolsIndex');?></li>                        
                         <li><?php echo link_to(__('Bibliography'),'bibliography/index');?></li>
                         <li><?php echo link_to(__('Comments'),'comment/index');?></li>
                         <li><?php echo link_to(__('Properties'),'property/index');?></li>
@@ -184,6 +183,7 @@
             <a href="" class="subtitle"><?php echo __('Administration');?></a>
             <ul class="submenu">
                 <li><?php echo link_to(__('Mass Actions'),'massactions/index');?></li>
+				<li><?php echo link_to(__('Collection statistics'),'collection/statistics');?></li>
                 <li>
                     <a href="#" class="subtitle"><?php echo __('Import');?> »</a>
                     <ul class="submenu lvl_2">

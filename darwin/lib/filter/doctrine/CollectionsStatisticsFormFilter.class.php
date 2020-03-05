@@ -8,14 +8,8 @@ class CollectionsStatisticsFormFilter extends BaseCollectionsFormFilter
     //$this->useFields(array('id'));
     //$this->widgetSchema['id'] = new sfWidgetFormInputText(array(), array("class"=>"id_collection"));
 	
-	$this->widgetSchema['id'] = new widgetFormCompleteButtonRef(array(
-      'model' => 'Collections',
-      'link_url' => 'collection/choose',
-      'method' => 'getName',
-      'box_title' => $this->getI18N()->__('Choose Collection'),
-      'button_class'=>'',
-      'complete_url' => 'catalogue/completeName?table=collections',
-    ));
+	$this->widgetSchema['id'] =  new sfWidgetCollectionList(array('choices' => array()));
+    $this->widgetSchema['id']->addOption('public_only',false);
     //ftheeten 2017 01 13
     $this->widgetSchema['id']->setAttributes(array('class'=>'collection_ref'));
 	// $this->widgetSchema['collection_ref']->addOption('default',$this->getOption('collection_id'));

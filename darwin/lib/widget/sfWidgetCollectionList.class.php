@@ -139,8 +139,11 @@ class sfWidgetCollectionList extends sfWidgetFormChoice
              $html .= link_to(image_tag('edit.png',array('title'=>'Edit Collection','class' => 'collection_edit')),'collection/edit?id='.$child->getId());
              $html .= link_to(image_tag('duplicate.png',array('title'=>'Duplicate Collection')),'collection/new?duplicate_id='.$child->getId());
               //ftheeten 2018 04 24
-             $html .= link_to("Statistics (page)",'collection/statistics?id='.$child->getId());
-            }
+			  if($this->withStatistics)
+			  {
+				$html .= link_to("Statistics (page)",'collection/statistics?id='.$child->getId());
+			  }
+			}
 
           }
         }
