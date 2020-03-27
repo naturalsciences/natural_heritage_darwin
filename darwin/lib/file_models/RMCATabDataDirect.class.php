@@ -68,6 +68,8 @@ class RMCATabDataDirect
         
         $fields[] = "UnitID";
         $fields[] = "additionalID";
+		//JMHerpers 23/3/2020
+		$fields[] = "secondary";
         $fields[] = "datasetName";
         $fields[] = "KindOfUnit";
 		$fields[] = "ObjectName";
@@ -81,6 +83,7 @@ class RMCATabDataDirect
         $fields[] = "socialStatus";
         $fields[] = "CollectedBy";
         $fields[] = "SamplingCode";
+		$fields[] = "Sampling_code";
         $fields[] = "Country";
 
         
@@ -998,7 +1001,12 @@ class RMCATabDataDirect
         if($this->isset_and_not_null($valTmp))
         {
              $this->staging['gtu_code']=$valTmp;
-        }        
+        }  
+		$valTmp=$this->getCSVValue("sampling_code");
+        if($this->isset_and_not_null($valTmp))
+        {
+             $this->staging['gtu_code']=$valTmp;
+        }	
 
         $valTmp=$this->getCSVValue("CollectedBy");
         if($this->isset_and_not_null($valTmp))
@@ -1346,6 +1354,15 @@ class RMCATabDataDirect
                 $this->addCode($valTmp, "Additional ID") ; 
             }
         }
+		//JMHerpers 23/3/2020
+		if (array_key_exists(strtolower("secondary"), $this->headers_inverted)) 
+        {
+            $valTmp=$this->getCSVValue("secondary");
+            if($this->isset_and_not_null($valTmp))
+            {
+                $this->addCode($valTmp, "secondary") ; 
+            }
+        }
     }
     
     public function addNotes()
@@ -1606,80 +1623,7 @@ class RMCATabDataDirect
         }
     }
 	
-	/*public function addMineralogy()
-	{
-		
 
-		if (array_key_exists(strtolower("mineralClassification"), $this->headers_inverted)&& (array_key_exists(strtolower("mineralClass"), $this->headers_inverted)||array_key_exists(strtolower("mineralSubclass"), $this->headers_inverted )||array_key_exists(strtolower("mineralSerie"), $this->headers_inverted )||array_key_exists(strtolower("mineralName"), $this->headers_inverted )||array_key_exists(strtolower("mineralDescription"), $this->headers_inverted ))) 
-        {  
-			 $this->object = new  ParsingIdentifications();
-			 $this->object->setNotion("mineralogy") ;
-			 $this->staging['part'] = "Mineral";
-			 $classification="";
-		
-			if (array_key_exists(strtolower("mineralClassification") , $this->headers_inverted))
-            {               
-                $valTmp=$this->getCSVValue("mineralClassification");
-                if($this->isset_and_not_null($valTmp))
-                {
-                     $classification=$valTmp;
-                }
-            }
-			
-			if (array_key_exists(strtolower("mineralClass") , $this->headers_inverted))
-            {               
-                $valTmp=$this->getCSVValue("mineralClass");
-                if($this->isset_and_not_null($valTmp))
-                {
-                    $this->object->higher_name =$valTmp;
-					$this->object->higher_level = "Class - $classification";
-                }
-            }
-			
-			if (array_key_exists(strtolower("mineralSubclass") , $this->headers_inverted))
-            {               
-                $valTmp=$this->getCSVValue("mineralSubclass");
-                if($this->isset_and_not_null($valTmp))
-                {
-                    $this->object->higher_name =$valTmp;
-					$this->object->higher_level = "Subclass - $classification";
-                }
-            }
-			
-			if (array_key_exists(strtolower("mineralSerie") , $this->headers_inverted))
-            {               
-                $valTmp=$this->getCSVValue("mineralSerie");
-                if($this->isset_and_not_null($valTmp))
-                {
-                    $this->object->higher_name =$valTmp;
-					$this->object->higher_level = "Subclass - $classification";
-                }
-            }
-			
-			if (array_key_exists(strtolower("mineralName") , $this->headers_inverted))
-            {               
-                $valTmp=$this->getCSVValue("mineralName");
-                if($this->isset_and_not_null($valTmp))
-                {
-                    $this->object->fullname = $valTmp;
-					$this->object->classification = $classification;
-                }
-            }
-			
-			if (array_key_exists(strtolower("mineralDescription") , $this->headers_inverted))
-            {               
-                $valTmp=$this->getCSVValue("mineralDescription");
-                if($this->isset_and_not_null($valTmp))
-                {
-                    $this->addComment($valTmp, true,"mineralogy") ; 
-                }
-            }
-			$this->object->getCatalogueParent( $this->staging ) ;
-			 $this->object->save($this->staging) ;
-		}
-		
-
-	}*/
     
     public function identifyHeader($p_handle)
     {
@@ -1808,8 +1752,7 @@ class RMCATabDataDirect
         $this->addMeasurement( "ParasiteFamily", "Parasite - Family");
         $this->addMeasurement( "ParasiteGenus", "Parasite - Genus");
 		$this->addMeasurement( "ParasiteSpecies", "Parasite - Species");
-		$this->addMeasurement( "ParasiteSpecies", "Host - Species");
-		$this->addMeasurement( "ParasiteSubSpecies", "Host - Subspecies");
+		$this->addMeasurement( "ParasiteSubSpecies", "Parasite - Subspecies");
         $this->addMeasurement( "ParasiteFullScientificName", "Parasite - Taxon name");
         $this->addMeasurement( "ParasiteRemark", "Parasite - Remark");
         $this->addMeasurement( "ParasiteAuthority", "Parasite - Authority");

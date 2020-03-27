@@ -141,7 +141,7 @@ class sfWidgetCollectionList extends sfWidgetFormChoice
               //ftheeten 2018 04 24
 			  if($this->withStatistics)
 			  {
-				$html .= link_to("Statistics (page)",'collection/statistics?id='.$child->getId());
+				$html .= link_to("Statistics (page)",'collection/statistics?id='.$child->getId(), array("target"=>"_blank"));
 			  }
 			}
 

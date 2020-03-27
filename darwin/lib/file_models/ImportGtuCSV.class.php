@@ -21,6 +21,8 @@ class ImportGtuCSV
 	private $set=false;
     protected $conn;
 	protected $true_count=0;
+	protected $decimal_delimiter=".";
+	protected $alternate_decimal_delimiter=",";
 	
     // entry point in Symfony	
 	public function parseFile($file,$id)
@@ -59,6 +61,7 @@ class ImportGtuCSV
                         //print("ROW");
                          $row=  Encoding::toUTF8($row);
                          $this->parseLineAndSaveObject($row, $i);
+						 //print_r($row);
                          $i++;
                     }
                 }
@@ -250,9 +253,16 @@ class ImportGtuCSV
 	{
 		$p_field=strtolower($p_field);
 		$returned=false;
+		
 		if(array_key_exists(strtolower($p_field),$this->headers_inverted)&&array_key_exists(strtolower($p_field),$this->fields_and_tags_inverted))
 		{
-			$returned = $p_row[$this->headers_inverted[$p_field]];			
+			$returned = $p_row[$this->headers_inverted[$p_field]];
+			$tmp=trim($returned);
+			if(preg_match('/^\d+,\d+$/',$tmp)!==false)
+			{
+				//print("REGREG");
+				$returned=str_replace($this->alternate_decimal_delimiter, $this->decimal_delimiter, $returned );
+			}
 		}
 		return $returned;
 	}
@@ -282,7 +292,7 @@ class ImportGtuCSV
 	
 	public function parseLineAndSaveObject($p_row, $i)
     {
-
+	//print("____________PARSE_AND_SAVE");
 		$obj = null;
 		$this->set=false;
 		
@@ -301,7 +311,15 @@ class ImportGtuCSV
 		}
 		else
 		{
-			//print("doesn't exists");
+			
+            $errors_reported = "Line misses sampling_code value";
+            if($this->conn->getDbh()->inTransaction())
+            {
+                 $this->conn->rollback();
+                            //$this->conn->commit();
+            }
+                        
+            throw  new sfException($errors_reported);
 		}
 		//}
 		if($this->set)
@@ -704,15 +722,44 @@ class ImportGtuCSV
 					////print($val."\r\n");
 					$obj->setCoordinatesWkt("POLYGON((".$val."))");				
 				}
+				//print("TEST_OBJ");
 				if($obj!==null)
 				{
+						//print("OBJ_IS_NOT_NULL");
 					$obj->setImportRef($this->import_id);
 					$tmp_id=$this->getStagingId();
 					$obj->setId($tmp_id);
 					$this->addComments($tmp_id, $obj, $p_row);
 					$this->addProperties($tmp_id, $obj, $p_row);
+					foreach($p_row as $key=>$value)
+					{
+						
+						$value=htmlspecialchars(trim($value));
+						$field_name=$this->headers[strtolower($key)];
+					   
+						if(strlen(trim($value))>0)
+						{
+							
+							if(!array_key_exists(strtolower(trim($field_name)), $this->fields_and_tags_inverted)
+								&&
+								!array_key_exists(strtolower(trim($field_name)), $this->headers_comments)
+								&&
+								!array_key_exists(strtolower(trim($field_name)), $this->headers_properties)
+								)
+							{			               
+									//print($field_name);
+									//print('!!!!!!!!!!!!!!!!!');
+									//print($value);
+									//print('????????????');
+									$this->addProperties_free($obj, htmlspecialchars(trim($field_name)), $value);
+							}
+						}
+						
+					}
+					
 					try
                     { 
+					//print("SAVE_OBJ");
                         $obj->save() ; 
 						//collectors
 						if(count($collectors)>0)
@@ -731,9 +778,7 @@ class ImportGtuCSV
                             $this->conn->rollback();
                             //$this->conn->commit();
                         }
-                        //$this->import->setErrorsInImport($this->import->setErrorsInImport()."|".$errors_reported);
-                        //$this->import->setState("aborted");
-                        //print( $errors_reported);
+
                         throw($ne);
                         
                       }
@@ -816,6 +861,17 @@ class ImportGtuCSV
             }
         }
   }	
+  
+    protected function addProperties_free($p_obj, $prop_type, $lower_value)
+  {
+
+		//create property there but look for other fields
+		$property = new Properties() ;
+		$property->setPropertyType($prop_type);
+		$property->setLowerValue($lower_value);	
+	    $property->setIsQuantitative(false);		
+		$p_obj->addRelated($property);                
+    }  	
   
   private function handlePeople($type,$names, $staging_id)
   {

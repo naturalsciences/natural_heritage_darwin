@@ -6,6 +6,7 @@
 <div class="catalogue_ig">
   <?php echo form_tag('igs/search'.( isset($is_choose) ? '?is_choose='.$is_choose : '') , array('class'=>'search_form','id'=>'igs_filter'));?>
   <div class="container">
+    <div  style="text-align:right"><input class="search_submit get_tab" type="button" name="search" value="<?php echo __('Get tab-delimited'); ?>"/></div>
     <table class="search" id="<?php echo ($is_choose)?'search_and_choose':'search' ?>">
       <thead>
         <tr>
@@ -36,8 +37,7 @@
         <td><?php echo $form['role_ref'];?></td> 
         </tr>
         <tr>
-         <td><input class="search_submit" type="submit" name="search" value="<?php echo __('Search'); ?>" /></td>
-		 <td><input class="search_submit get_tab" type="button" name="search" value="<?php echo __('Get tab-delimited'); ?>" /></td>
+         <td><input class="search_submit" type="submit" name="search" value="<?php echo __('Search'); ?>" /></td>		 
         </tr>
       </tbody>
     </table>

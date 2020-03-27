@@ -130,7 +130,7 @@ public function getSavedSearchData($user_id, $query_id)
                 
                         $sql="SELECT
 
-                        string_agg(DISTINCT id::varchar,'; ' order by a.id::varchar desc ) as id,
+                       a.id as id,
                         collection_code,
 
                         code,
@@ -437,7 +437,7 @@ longitude_text,
 
 
                         GROUP BY
-
+						id,
                         collection_code,
                         code,
                         additional_codes,

@@ -13,7 +13,7 @@ class PreferencesForm extends BaseForm
   public function configure()
   {
     $pref_keys = array('search_cols_specimen', 'board_search_rec_pp',
-      'board_spec_rec_pp','help_message_activated','default_search_rec_pp');
+      'board_spec_rec_pp','help_message_activated','default_search_rec_pp', 'exclude_prefix_in_searches');
     $this->db_keys = Doctrine_Core::getTable('Preferences')->getAllPreferences($this->options['user']->getId(), $pref_keys);
     $is_reg_user = $this->options['user']->isA(Users::REGISTERED_USER) ;
     $choices = Doctrine_Core::getTable('MySavedSearches')->getAllFields('specimen') ;
@@ -58,6 +58,12 @@ class PreferencesForm extends BaseForm
     $this->widgetSchema['help_message_activated']->setDefault((boolean)$this->db_keys['help_message_activated']) ;
     $this->widgetSchema['help_message_activated']->setLabel("Display help icons") ;
     $this->validatorSchema['help_message_activated'] = new sfValidatorboolean() ;
+    
+    $this->widgetSchema['exclude_prefix_in_searches'] = new sfWidgetFormInputCheckbox() ;
+    $this->widgetSchema->setHelp('exclude_prefix_in_searches',"exclude collection prefixes in specimens searches");
+    $this->widgetSchema['exclude_prefix_in_searches']->setDefault((boolean)$this->db_keys['exclude_prefix_in_searches']) ;
+    $this->widgetSchema['exclude_prefix_in_searches']->setLabel("Exclude prefix in search") ;
+    $this->validatorSchema['exclude_prefix_in_searches'] = new sfValidatorboolean() ;
 
     $this->widgetSchema->setNameFormat('preferences[%s]');
   }
@@ -83,6 +89,7 @@ class PreferencesForm extends BaseForm
       'board_spec_rec_pp'=> $this->getValue('board_spec_rec_pp'),
       'default_search_rec_pp'=> $this->getValue('default_search_rec_pp'),
       'help_message_activated' => intval($this->getValue('help_message_activated')),
+      'exclude_prefix_in_searches' => intval($this->getValue('exclude_prefix_in_searches')),
     );
     Doctrine_Core::getTable('Preferences')->saveAllPreferences($this->options['user']->getId(),$results);
   }
