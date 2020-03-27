@@ -29,7 +29,20 @@ class CodeLineForm extends BaseForm
     $this->widgetSchema['code_part']->setAttributes(array('class'=>'autocomplete_for_code'));
     $this->validatorSchema['code_from'] = new sfValidatorString(array('required'=>false,'trim'=>true));
     $this->validatorSchema['code_to'] = new sfValidatorString(array('required'=>false,'trim'=>true));
-    $this->mergePostValidator(new CodesLineValidatorSchema());
+   
+    
+       
+	$this->widgetSchema['exclude_prefix_in_searches'] = new sfWidgetFormInputCheckbox();
+    $this->widgetSchema['exclude_prefix_in_searches']->setLabel("Exclude collection prefixes in searches");
+    $pref_keys = array('exclude_prefix_in_searches');
+    $db_keys = Doctrine_Core::getTable('Preferences')->getAllPreferences( sfContext::getInstance()->getUser()->getId(), $pref_keys);
+    if((boolean)$db_keys['exclude_prefix_in_searches']==true)
+    {
+        $this->widgetSchema['exclude_prefix_in_searches']->setAttribute('checked', 'checked');;
+	}
+    $this->validatorSchema['exclude_prefix_in_searches'] = new  sfValidatorboolean() ;
+    
+     $this->mergePostValidator(new CodesLineValidatorSchema());
 
   }
 }

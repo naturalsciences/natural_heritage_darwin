@@ -35,6 +35,13 @@
         <?php echo image_tag('remove.png', 'alt=Delete class=clear_prop id=clear_code_'.$row_line); ?>
       </td>
     </tr>
+    <td>
+        <?php echo $code['exclude_prefix_in_searches']->renderLabel();?>
+    </td>
+    <td>
+        <?php echo $code['exclude_prefix_in_searches'];?>
+    </td>
+    </tr>
    </tbody>
   </table>
  </td>

@@ -46,7 +46,7 @@ EOF;
 				
 				$id_staging_gtu=$options['id'];
 				$conn->beginTransaction();
-				$sql = "SELECT * FROM rmca_import_gtu_force(".$id_staging_gtu.");";
+				$sql = "SELECT * FROM rmca_import_gtu_force(".$id_staging_gtu.");SELECT * FROM rmca_clean_gtu_imports(".$id_staging_gtu.")  ;";
 				$ctn = $conn->exec($sql);
 				$conn->commit();
 				$staging_gtu_sql="SELECT count(*) FROM staging_gtu WHERe import_ref=:id_import AND imported=false;";

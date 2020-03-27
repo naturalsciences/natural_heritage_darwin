@@ -2,20 +2,23 @@
 <?php slot('title', __('CollectionsStatistics'));  ?>
 <?php include_stylesheets_for_form($form) ?>
 <?php include_javascripts_for_form($form) ?>
-<div class="page">
+<div class="page" style="border:solid;">
   <h1><?php echo __('Collection statistics');?></h1>
+  <div style="text-align:right;">
+    <input type="button" href="<?php echo url_for("collection/display_all_statistics_csv");?>" target="_blank" class="search_submit edition" name="search_csv" id="search_csv" value="<?php echo __('Get tab file'); ?>"/>
+  </div>
  <table>
  <tr>
  <td>
  <?php echo(__("Collection")); ?> 
  </td>
  <td>
-	<div class="treelist collection_tree_div">
-		    <?php echo $form['id'] ; ?>
-      </div>
- </td>
- <td>
  <?php echo(__("All collections")); ?>  <input type="checkbox" id="all_collections" name="all_collections" class="all_collections"/>
+	<div class="treelist collection_tree_div" style="border:solid;">
+		    <?php echo $form['id'] ; ?>
+            <br/>
+      </div>
+       <br/>
  </td>
  </tr>
  <tr>
@@ -48,8 +51,9 @@
  <td><input type="checkbox" name="display_subcollections" id="display_subcollections" checked/></td>
  </tr>
  </table>
- <div style="text-align: center;"><input class="search_submit" type="submit" name="search" id="search" value="<?php echo __('Search'); ?>" /> 
-  <a href="<?php echo url_for("collection/display_all_statistics_csv");?>" target="_blank" class="search_submit" name="search_csv" id="search_csv"><?php echo __('Get tab file'); ?></a></div>
+<div style="text-align:center">
+<input class="search_submit" style="float: none;" type="submit" name="search" id="search" value="<?php echo __('Search'); ?>" /> 
+</div>
 <div id="div_loader" style="display:none;">
  <img src="<?php echo(public_path("images/loader.gif"));?>"></img>
  </div>
@@ -442,6 +446,13 @@ $(document).ready(
       $('.treelist input:checked').removeAttr('checked').change();
       $('li[data-enc] > div > label > input:checkbox').attr('checked','checked').change();
     });
+    
+      <?php if($id>0):?>
+            //init on load
+            $('.col_check[value="<?php print($id);?>"]').attr('checked', true);
+            $("#search").click();
+
+      <?php endif;?> 
     }
 );
 </script>

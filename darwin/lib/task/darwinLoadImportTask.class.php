@@ -37,15 +37,19 @@ EOF;
           ->fetchOne() ;
         //$file = sfConfig::get('sf_upload_dir').'/uploaded_'.sha1($q->getFilename().$q->getCreatedAt()).'.xml' ;
 		//ftheeten 2018 08 05
-		  $file = sfConfig::get('sf_upload_dir').'/uploaded_'.sha1($q->getFilename().$q->getCreatedAt()).".".end(explode(".",$q->getFilename())) ;
+		   $filename=$q->getFilename();
+		   $date=$q->getCreatedAt();
+		   $upload_dir=sfConfig::get('sf_upload_dir');
+		  $file = $upload_dir.'/uploaded_'.sha1($filename.$date).".".end(explode(".",$filename)) ;
+
         if(file_exists($file))
         {
-        print("GO");
+        //print("GO");
           try{
             switch ($q->getFormat())
             {
               case 'taxon':
-              print("TAXON");
+              //print("TAXON");
                 $import = new importCatalogueXml('taxonomy') ;
 				$result = $import->parseFile($file,$id) ;
 				//ftheeten 2019 02 07
@@ -58,7 +62,7 @@ EOF;
                 break;
 				//ftheeten 2018 07 15 				
               case 'locality':
-			  
+
 				 //fwrite($myfile, "\n!!!!!!!!!!!!!!!!!GTU detected!!!!!!!!!!!!!!!!!!");
 				$import = new ImportGtuCSV() ;
 				$result = $import->parseFile($file,$id) ;

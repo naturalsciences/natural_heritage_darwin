@@ -307,6 +307,7 @@ class collectionActions extends DarwinActions
             }
             
         }
+        $this->id=$id;
         $this->form = new CollectionsStatisticsFormFilter(array("id"=>$id));
         
         return sfView::SUCCESS;

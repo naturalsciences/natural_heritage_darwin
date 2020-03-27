@@ -197,7 +197,7 @@ class CollectionsTable extends DarwinTable
     if(strlen($creation_date_min)>0)
     {
         $fields[2]="year";
-        $where[]= "specimen_creation_date >= :creation_date_min::timestamp";
+        $where[]= "specimen_creation_date >= date_trunc('day',:creation_date_min::timestamp with time zone)";
         $groups[]="year";
     }
     
@@ -205,7 +205,7 @@ class CollectionsTable extends DarwinTable
     {
         $orders[]="year";
         $fields[2]="year";
-        $where[]= "specimen_creation_date <= :creation_date_max::timestamp";
+        $where[]= "specimen_creation_date <= (date_trunc('day',:creation_date_max::timestamp with time zone)  + (24*60*60 - 1) * interval '1 second')";
         $groups[]="year";
     }
     
@@ -369,14 +369,14 @@ class CollectionsTable extends DarwinTable
     if(strlen($creation_date_min)>0)
     {
         $fields[2]="year";
-        $where[]= "specimen_creation_date >= :creation_date_min::timestamp";
+        $where[]= "specimen_creation_date >= (date_trunc('day',:creation_date_min::timestamp with time zone))";
         $groups[]="year";
     }
     
     if(strlen($creation_date_max)>0)
     {
         $fields[2]="year";
-        $where[]= "specimen_creation_date <= :creation_date_max::timestamp";
+        $where[]= "specimen_creation_date <= (date_trunc('day',:creation_date_max::timestamp with time zone)  + (24*60*60 - 1) * interval '1 second')";
         $groups[]="year";
     }
     
@@ -551,14 +551,14 @@ class CollectionsTable extends DarwinTable
     if(strlen($creation_date_min)>0)
     {
         $fields[2]="year";
-        $where[]= "creation_date >= :creation_date_min::timestamp";
+        $where[]= "creation_date >= date_trunc('day',:creation_date_min::timestamp with time zone)";
         $groups[]="year";
     }
     
     if(strlen($creation_date_max)>0)
     {
         $fields[2]="year";
-        $where[]= "creation_date <= :creation_date_max::timestamp";
+        $where[]= "creation_date <= (date_trunc('day',:creation_date_max::timestamp with time zone)  + (24*60*60 - 1) * interval '1 second')";
         $groups[]="year";
     }
     

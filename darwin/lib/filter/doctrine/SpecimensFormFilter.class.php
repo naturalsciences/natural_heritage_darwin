@@ -801,7 +801,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->widgetSchema['wfs_search']->setAttributes(array('class'=>'wfs_search'));
     $this->validatorSchema['wfs_search'] = new sfValidatorString(array('required' => false, 'trim' => true));
     
-	$this->widgetSchema['include_text_place'] = new sfWidgetFormInputCheckbox();//array('default' => FALSE));
+	$this->widgetSchema['include_text_place'] = new sfWidgetFormChoice(array('choices' => array('OR' => 'OR', 'AND' => 'AND')));
  	$this->validatorSchema['include_text_place'] = new sfValidatorPass();
     
 	//ftheeten 2018 06 20
@@ -1023,7 +1023,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
         
       }
         
-            if($values['include_text_place']==TRUE)
+            if($this->testGtuIncluded($values)===TRUE)
             {
                $tmp2=$this->addTagsColumn_text(   $values['Tags']);
                if(strlen($tmp2)>0)
@@ -1044,7 +1044,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
         {
             $tmp="ST_INTERSECTS(ST_SETSRID(ST_Point(gtu_location[1], gtu_location[0]),4326), ST_GEOMFROMTEXT('".$values['wkt_search']."',4326))";
             
-                if($values['include_text_place']==TRUE)
+                if($this->testGtuIncluded($values)===TRUE)
                 {
                 $tmp2=$this->addTagsColumn_text(  $values['Tags']);
                  if(strlen($tmp2)>0)
@@ -1085,7 +1085,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
            $wfs_sql = implode(" OR ", $sql_block );
            
            
-                if($values['include_text_place']==TRUE)
+                if($this->testGtuIncluded($values)===TRUE)
                 {
                
                    $tmp2=$this->addTagsColumn_text(  $values['Tags']);
@@ -1341,7 +1341,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
                 $tagvalue = $conn_MGR->quote($tagvalue, 'string');
                 $tmpStr[]="(
                         
-                        EXISTS(SELECT id FROM Tags t where t.tag_indexed ~ fulltoindex_add_prefix_suffix(fulltoindex($tagvalue, TRUE, TRUE),$tagPrefix, $tagSuffix) and t.gtu_ref=s.gtu_ref) 
+                        EXISTS(SELECT id FROM Tags t where t.tag_indexed ~ fulltoindex_add_prefix_suffix(fulltoindex($tagvalue, '\s(\.\*)', '{\\,/}'::varchar[]),$tagPrefix, $tagSuffix) and t.gtu_ref=s.gtu_ref) 
                       )";
          
             }
@@ -1400,7 +1400,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
                 $tagvalue = $conn_MGR->quote($tagvalue, 'string');
                 $tmpStr[]="(
                         
-                        EXISTS(SELECT id FROM Tags t where t.tag_indexed ~ fulltoindex_add_prefix_suffix(fulltoindex($tagvalue, TRUE, TRUE),$tagPrefix, $tagSuffix) and t.gtu_ref=s.gtu_ref) 
+                        EXISTS(SELECT id FROM Tags t where t.tag_indexed ~ fulltoindex_add_prefix_suffix(fulltoindex($tagvalue, '\s(\.\*)', '{\\,/}'::varchar[]),$tagPrefix, $tagSuffix) and t.gtu_ref=s.gtu_ref) 
                       )";
          
             }
@@ -1470,6 +1470,15 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $sqlParams = Array() ;
 	 foreach($val as $i => $code)
     {   
+        $without_prefix=false;
+         
+         
+            if($code['exclude_prefix_in_searches']===TRUE)
+            {
+                $without_prefix=true;
+                
+            }
+        
         $sql="";
         if(array_key_exists('code_from', $code)&&array_key_exists('code_to', $code))
         {
@@ -1499,8 +1508,15 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
         if(array_key_exists('code_part', $code))
         {           
             if($code['code_part']  != '')
-            {
-                $sql ="EXISTS(select 1 from codes where  referenced_relation='specimens' and record_id = s.id AND full_code_indexed like (SELECT fulltoindex(?))";
+            { 
+                if($without_prefix)
+                {
+                    $sql ="EXISTS(select 1 from codes where  referenced_relation='specimens' and record_id = s.id AND  LOWER(code) = LOWER(?) ";
+                }
+                else
+                {
+                    $sql ="EXISTS(select 1 from codes where  referenced_relation='specimens' and record_id = s.id AND full_code_indexed like (SELECT fulltoindex(?))";
+                }
                 $sqlParams[]=$code['code_part'];
                 if($code['category']  != '' && strtolower($code['category'])  != 'all') 
                 {
@@ -2145,7 +2161,7 @@ $query = DQ::create()
         
   
      
-        if($values['include_text_place']==TRUE)
+        if($this->testGtuIncluded($values)===TRUE)
         {
             $go_tag=false;
                     
@@ -2386,6 +2402,23 @@ $query = DQ::create()
       $query->andWhere("s.ig_ref= ?" , $values);
     }
     return $query;
+  }
+  
+   protected function testGtuIncluded($values)
+  {       
+        if(strtoupper($values['include_text_place'])=="OR")
+        {
+           
+            
+            if(isset($values['wfs_search'])||isset($values['wkt_search'])||isset($values['lat_from']))
+            {
+                if(strlen($values['wfs_search'])>0||strlen($values['wkt_search'])>0||strlen($values['lat_from'])>0)
+                {
+                    return true;		
+                }
+            }
+        }	
+    return false;
   }
 
   public function getJavaScripts()
