@@ -1,0 +1,36 @@
+détecter les nouveaux fichiers potentiels :
+(from darwin/)
+git ls-files . --exclude-standard --others
+
+Cycle : 
+git add "files absolute path"
+git commit -am "description"
+git push
+
+Merge
+(from darwin)
+git pull origin BRANCH
+
+e.g of branch :
+DARWIN_2_MIGRATION_RBINS
+--------------------------
+RSYNC call from target 
+!NO TRAILING SLASH ON TARGET OTHERWISE FOLDER STRUCTURE LOST !!!
+
+FROM NAUTILUS :
+ sudo rsync -avzh  ftheeten@diptera:/var/www/html/darwin/config .
+ sudo rsync -avzh  ftheeten@diptera:/var/www/html/darwin/lib .
+ sudo rsync -avzh  ftheeten@diptera:/var/www/html/darwin/apps .
+ sudo rsync -avzh  ftheeten@diptera:/var/www/html/darwin/data .
+ sudo rsync -avzh --exclude 'uploads/*'  ftheeten@diptera:/var/www/html/darwin/web .
+ 
+ OR
+ 
+ sudo rsync -avzh --exclude-from=/var/www/html/darwin_git/darwin/config/rsync_exclude.txt ftheeten@diptera:/var/www/html/darwin/* .
+
+Script to save Database schema
+----------------------------------
+cd darwin/data/db/db_schema
+sudo -s -u POSTGRES_USER
+./extract_db_schema_hystrix.sh
+
