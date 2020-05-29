@@ -2,11 +2,33 @@
 <?php slot('title', __('CollectionsStatistics'));  ?>
 <?php include_stylesheets_for_form($form) ?>
 <?php include_javascripts_for_form($form) ?>
-<div class="page">
+
+<?php 
+	$form_visible="inline";
+	if(array_key_exists("hide_form",$_REQUEST))
+	{
+		if(strtolower($_REQUEST["hide_form"])=="on")
+		{
+				$form_visible="none";
+		}
+	}
+
+?>
+
+<div class="page" >
+<style>
+	table.results  td
+	{
+		text-align:left
+	}
+	table.results  th
+	{
+		text-align:left
+	}
+</style>
   <h1><?php echo __('Collection statistics');?></h1>
-  <div style="text-align:right;">
-    <input type="button" href="<?php echo url_for("collection/display_all_statistics_csv");?>" target="_blank" class="search_submit edition" name="search_csv" id="search_csv" value="<?php echo __('Get tab file'); ?>"/>
-  </div>
+
+ <div style="display:<?php print($form_visible);?>">
  <table>
  <tr>
  <td>
@@ -21,7 +43,10 @@
        <br/>
  </td>
  </tr>
- <tr>
+ </table>
+ </div>
+ <table>
+ <tr style="display:<?php print($form_visible);?>">
  <td>
   <?php echo($form["ig_num"]->renderLabel()); ?>
  </td>
@@ -29,7 +54,7 @@
  <?php echo($form["ig_num"]); ?>
  </td>
  </tr>
- <tr>
+ <tr style="display:<?php print($form_visible);?>">
  <td> 
   <?php echo($form["from_date"]->renderLabel()); ?>
  </td>
@@ -43,9 +68,10 @@
   <?php echo($form["to_date"]); ?>
  </td>
  </tr>
- <tr>
+ <tr style="display:<?php print($form_visible);?>">
  <td><?php echo __("Count subcollections");?></td>
  <td><input type="checkbox" name="count_subcollections" id="count_subcollections" checked/></td>
+ </tr>
  <tr>
  <td><?php echo __("Display subcollections");?></td>
  <td><input type="checkbox" name="display_subcollections" id="display_subcollections" checked/></td>
@@ -79,6 +105,9 @@ Taxa in specimens count :
 <br/>
 
 </div>
+<div style="text-align:center;">
+    <input type="button" href="<?php echo url_for("collections/display_all_statistics_csv");?>" target="_blank" class="search_submit edition" name="search_csv" id="search_csv" value="<?php echo __('Get tab file'); ?>"/>
+  </div>
 <script language="JavaScript">
 
 var oldCollId="";
@@ -189,7 +218,7 @@ var getStatistics = function(collection_ids, ig_num, from_date, to_date, include
             $("#results2 tr").remove();
             $("#results3 tr").remove();
             var request1 = $.ajax({
-              url: detect_https("<?php echo url_for("collection/display_statistics_specimens");?>"),
+              url: detect_https("<?php echo url_for("collections/display_statistics_specimens");?>"),
               method: "GET",
               data: dataTmp,
               dataType: "json"
@@ -204,7 +233,7 @@ var getStatistics = function(collection_ids, ig_num, from_date, to_date, include
             );
            
             var request2 = $.ajax({
-              url: detect_https("<?php echo url_for("collection/display_statistics_types");?>"),
+              url: detect_https("<?php echo url_for("collections/display_statistics_types");?>"),
               method: "GET",
               data: dataTmp,
               dataType: "json"
@@ -218,7 +247,7 @@ var getStatistics = function(collection_ids, ig_num, from_date, to_date, include
             );
             
             var request3 = $.ajax({
-              url: detect_https("<?php echo url_for("collection/display_statistics_taxa");?>"),
+              url: detect_https("<?php echo url_for("collections/display_statistics_taxa");?>"),
               method: "GET",
               data: dataTmp,
               dataType: "json"
@@ -235,7 +264,7 @@ var getStatistics = function(collection_ids, ig_num, from_date, to_date, include
         {
             $("#div_loader").css("display", 'none');
             var getQuery=$.param(dataTmp);            
-            window.open(detect_https("<?php echo url_for("collection/display_all_statistics_csv");?>?"+getQuery));
+            window.open(detect_https("<?php echo url_for("collections/display_all_statistics_csv");?>?"+getQuery));
             return false;
         }
 	}

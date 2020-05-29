@@ -623,6 +623,7 @@ EOF
   {
     $id_staging_gtu=$request->getParameter("staging_gtu_id");
     $sampling_code=$request->getParameter("sampling_code");
+	$currentDir=getcwd();
     if(is_numeric($id_staging_gtu) && strlen(trim($sampling_code))>0)
     {
         $staging_gtu=Doctrine_Core::getTable("StagingGtu")->find($id_staging_gtu);

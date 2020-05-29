@@ -17,9 +17,14 @@ all:
     #rmca 2016 02 22
     disableXSDValidation: true
     domain_disable_menu: http://collections.naturalsciences.be/darwin/
-	root_url_darwin: https://darwin.naturalsciences.be
     root_url_wfs: https://darwin.naturalsciences.be/geoserver/
-	php_console: 'php7'
+	root_url_uuid: https://darwin.naturalsciences.be/darwin/search/view/uuid/
+	php_console: 'php7.2'
+    wfs_layers: 
+           rbins_natural_earth_adm: "Natural Earth Administrative"
+           rbins_natural_earth_physical: "Natural Earth Physical"
+           rbins_osm: "Open Street Map"	
+           rbins_generic: "RBINS Other layers"
     
   mailer:
     sender: your_send_email@example.com
@@ -36,26 +41,6 @@ all:
   analytics:
     enabled: false
     code: UA-XXXXX-X
-	
-  report_server: 'http://USER:PASSWORD@diptera.rbins.be:8080/jasperserver'
-  
-  reports:
-    names_and_options:
-      default:
-        server: 'main'
-        language_added_to_name: false
-      loans_form_complete:
-        path: 'loans'
-      annual_stat_collection:
-        language_added_to_name: true
-       servers:
-    main:
-      server: 'diptera.rbins.be'
-      username: USER
-      password: PASSWORD
-      protocol: 'http'
-      port: '8080'
-      base_path: '/jasperserver/rest_v2/reports/darwin'
 
   preview_max_size: 10
 #Uncomment this if you want to set a Broadcast message like demo or maintenance
