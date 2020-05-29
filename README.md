@@ -43,7 +43,7 @@ https://darwin.naturalsciences.be/public_dev.php/json/Get_collection_detail?id={
 **Changes related to lexpress are :**
   - method **SaveEmbeddedForms** is replaced by **SaveObjectEmbeddedForms** in forms (different signature but same content). https://github.com/FriendsOfSymfony1/symfony1/issues/103
   - initialisation of the project in **./config/ProjectConfiguration.class.php** is different. The **configureDoctrine** method is replaced by **configureDoctrineEvent**) : https://github.com/FriendsOfSymfony1/symfony1/issues/42
-  - the "classic" PHP libraries are required (pdo, xml, xsl, json, ...), but please install **php-apcu** and **php-apcu-bc** (backward compatiability with the old apc API) for the Symfony cache
+  - the "classic" PHP libraries are required (pdo, xml, xsl, json, ...), but please install **php-apcu** and **php-apcu-bc** (backward compatibility with the old apc API) for the Symfony cache.
   
 
       
