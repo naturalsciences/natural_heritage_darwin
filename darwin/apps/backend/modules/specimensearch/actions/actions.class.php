@@ -180,7 +180,7 @@ class specimensearchActions extends DarwinActions
           $count_q = clone $query;
           // Remove from query the group by and order by clauses
 		  //ftheeten 2020 02 20
-          $count_q = $count_q->select("count(s.id), count(distinct TRIM(COALESCE(s.ig_num||'_','') || COALESCE(s.main_code_indexed,''))) as count_ig, sum(specimen_count_min) as count_min, sum(specimen_count_max) as count_max ")->removeDqlQueryPart('orderby')->limit(0);
+          $count_q = $count_q->select("count(s.id), count(distinct TRIM(COALESCE(s.ig_num||'_','') || COALESCE(s.main_code_indexed,''))) as count_ig, sum(specimen_count_min) as count_min, sum(specimen_count_max) as count_max")->removeDqlQueryPart('orderby')->limit(0);
           if($this->form->with_group) {
              $count_q->select("count(distinct s.id), count(distinct TRIM(COALESCE(s.ig_num||'_','')|| COALESCE(s.main_code_indexed,''))) as count_ig, , sum(specimen_count_min) as count_min, sum(specimen_count_max) as count_max")->removeDqlQueryPart('groupby');
           }

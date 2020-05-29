@@ -195,6 +195,7 @@ class specimenActions extends DarwinActions
       $this->form = new SpecimensForm($specimen);
       if($duplic)
       {
+		$this->duplic=$duplic;
         $this->form->duplicate($duplic);
 
         //reembed identification
@@ -311,7 +312,16 @@ class specimenActions extends DarwinActions
           $collection = Doctrine_Core::getTable('Collections')->findOneById($form->getObject()->getCollectionRef());
           $autoCodeForUpdate = !$collection->getCodeAutoIncrementForInsertOnly();
         }
+		
+		
         $specimen = $form->save();
+		if($request->hasParameter("duplicate_id"))
+		{
+			if($request->getParameter("keep_duplicate","off")=="on")
+			{
+				$this->handleRelationsOfDuplicate($specimen->getId(), $request->getParameter("duplicate_id",-1));
+			}
+		}
         //ftheeten 2018 02 08
 		$this->addCollectionCookie($specimen);
         if ($wasNew || $autoCodeForUpdate) {
@@ -706,4 +716,24 @@ class specimenActions extends DarwinActions
         $this->getResponse()->setHttpHeader('Content-type','text/xml');
         return $this->renderText($this->specimen->getXMLDataCite());
    }
+   
+  protected function handleRelationsOfDuplicate($src_id, $dest_id)
+  {
+        
+                        if($src_id!='-1'&&$dest_id!='-1')
+                        {
+                           $relationship_type="duplicated_from";
+                           $sql = "INSERT INTO specimens_relationships (specimen_ref, relationship_type, unit_type, specimen_related_ref) VALUES (:dest, :type, 'specimens', :src)";
+				
+                            $conn = Doctrine_Manager::connection();
+                            $q = $conn->prepare($sql);
+                            $q->execute(
+                                    array(
+                                        ':dest' =>$dest_id,
+                                        ':type' =>$relationship_type,
+                                         ':src' => $src_id
+                                        ));
+                        }
+                  
+  }
 }

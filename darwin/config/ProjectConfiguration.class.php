@@ -28,7 +28,7 @@ class ProjectConfiguration extends sfProjectConfiguration
     sfConfig::set('doctrine_model_builder_options', $options);
   }*/
   
-  //specific forl lexpress PHP 7 fork
+  //specific for lexpress PHP 7 fork
   public function configureDoctrineEvent(sfEvent $event)
   {
 	$manager = $event->getSubject();

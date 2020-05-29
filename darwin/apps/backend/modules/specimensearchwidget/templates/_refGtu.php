@@ -186,10 +186,11 @@
   <div id="map_search_form">
     <div >
         <div style="width: 100%; height:500px; display:inline-block" id="smap">
-          <select id="addwms" class="form-control">
-			  <option value="rbins_natural_earth_adm" >Natural Earth Administrative</option>
-			  <option value="rbins_natural_earth_physical" >Natural Earth Physical</option>
-        </select>
+         <select id="addwms" class="form-control">
+				<?php foreach(sfConfig::get('dw_wfs_layers') as $url=>$name):?>
+					<option value="<?php print($url);?>"><?php print($name);?></option>
+				<?php endforeach;?>				  
+			</select>
         <input id="browse_wms" type="button" value="Browse layers"></input>		
 		<select id="addwmslayer" class="form-control">
 			

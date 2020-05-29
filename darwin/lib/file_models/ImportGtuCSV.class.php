@@ -117,6 +117,7 @@ class ImportGtuCSV
         $tags[19]="habitat_text";
          $tags[20]="ecology";
         $tags[21]="habitat";
+		$tags[22]="exact_site";
 
 
 		$fields[0]="station_type";
