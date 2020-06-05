@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Multimedia filter form base class.
+ * StagingMultimedia filter form base class.
  *
  * @package    darwin
  * @subpackage filter
  * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id$
  */
-abstract class BaseMultimediaFormFilter extends DarwinModelFormFilter
+abstract class BaseStagingMultimediaFormFilter extends DarwinModelFormFilter
 {
   protected function setupInheritance()
   {
@@ -41,9 +41,6 @@ abstract class BaseMultimediaFormFilter extends DarwinModelFormFilter
     $this->widgetSchema   ['filename'] = new sfWidgetFormFilterInput();
     $this->validatorSchema['filename'] = new sfValidatorPass(array('required' => false));
 
-    $this->widgetSchema   ['search_indexed'] = new sfWidgetFormFilterInput();
-    $this->validatorSchema['search_indexed'] = new sfValidatorPass(array('required' => false));
-
     $this->widgetSchema   ['creation_date'] = new sfWidgetFormFilterInput(array('with_empty' => false));
     $this->validatorSchema['creation_date'] = new sfValidatorPass(array('required' => false));
 
@@ -74,12 +71,12 @@ abstract class BaseMultimediaFormFilter extends DarwinModelFormFilter
     $this->widgetSchema   ['field_observations'] = new sfWidgetFormFilterInput();
     $this->validatorSchema['field_observations'] = new sfValidatorPass(array('required' => false));
 
-    $this->widgetSchema->setNameFormat('multimedia_filters[%s]');
+    $this->widgetSchema->setNameFormat('staging_multimedia_filters[%s]');
   }
 
   public function getModelName()
   {
-    return 'Multimedia';
+    return 'StagingMultimedia';
   }
 
   public function getFields()
@@ -94,7 +91,6 @@ abstract class BaseMultimediaFormFilter extends DarwinModelFormFilter
       'description' => 'Text',
       'uri' => 'Text',
       'filename' => 'Text',
-      'search_indexed' => 'Text',
       'creation_date' => 'Text',
       'creation_date_mask' => 'Number',
       'mime_type' => 'Text',

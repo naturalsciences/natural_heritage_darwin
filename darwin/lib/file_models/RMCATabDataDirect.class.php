@@ -22,7 +22,7 @@ class RMCATabDataDirect
 	protected $specimen_taxonomy_ref;
 	private $unit_id_ref = array() ; // to keep the original unid_id per staging for Associations
 	private $name;
-	private $object_to_save = array(), $staging_tags = array(); 
+	private $object_to_save = array(), $staging_tags = array(), $multimedia= array();
 	private $row, $staging;
 	private $object;
     private $identification_object;
@@ -693,28 +693,46 @@ class RMCATabDataDirect
     public function generateHourGeneric($prefix)
     {
         $hourTmp="";
-		//print("test_date");
+		
          if(array_key_exists(strtolower($prefix."H"), $this->headers_inverted)) 
         {
-		//print("date found\n");
-                
+
                 if (is_numeric($this->row[$this->headers_inverted[strtolower($prefix."H")]])) 
                 {
-				//print("is numeric\n");
+				
                     $hourTmp=str_pad($this->row[$this->headers_inverted[strtolower($prefix."H")]],2,"0",STR_PAD_LEFT);               
-                   //print($hourTmp);
+                  
                     if(array_key_exists(strtolower($prefix."M"), $this->headers_inverted)) 
                     {
+                                   
                         if (is_numeric($this->row[$this->headers_inverted[strtolower($prefix."M")]])) 
                         {
                             $hourTmp=$hourTmp.":".str_pad($this->row[$this->headers_inverted[strtolower($prefix."M")]],2,"0",STR_PAD_LEFT);
-                            $hourTmp=$hourTmp.":00";
+                            
+                            
+                            if(array_key_exists(strtolower($prefix."S"), $this->headers_inverted)) 
+                            {
+                          
+                                if (is_numeric($this->row[$this->headers_inverted[strtolower($prefix."S")]])) 
+                               {
+                                    $hourTmp=$hourTmp.":".str_pad($this->row[$this->headers_inverted[strtolower($prefix."S")]],2,"0",STR_PAD_LEFT);
+                                
+                                }
+                                else
+                                {
+                                    $hourTmp=$hourTmp.":00";
+                                }
+                            }
+                            else
+                            {
+                                $hourTmp=$hourTmp.":00";
+                            }
                         }
                     }
                 }
                
             }
-			  //print($hourTmp);
+			
             return $hourTmp;
     }
     
@@ -735,13 +753,6 @@ class RMCATabDataDirect
 			{				
 				$dateTmpBegin .= "T".$hourTmpBegin;				
 			}
-
-
-			/*$dt =  FuzzyDateTime::getValidDate($dateTmpBegin); 
-			if(strlen($hourTmpBegin)>0)
-			{
-				$dt->addTime($hourTmpBegin);				
-			}*/
 			$dt = FuzzyDateTime::getValidDate($dateTmpBegin);
 			if(strlen($hourTmpBegin)>0)
 			{
@@ -1257,6 +1268,138 @@ class RMCATabDataDirect
         }
     }
     
+    public function addMultimedia(  $p_index_csv)
+    {
+      
+        $prefixUri="Multimedia".$p_index_csv."Uri";
+        $prefixTitle="Multimedia".$p_index_csv."Title";
+        $prefixType="Multimedia".$p_index_csv."Type"; //"image" or "sounds"
+        $prefixMimeType="Multimedia".$p_index_csv."MimeType"; //Image sounds
+        $prefixInternetProtocol="Multimedia".$p_index_csv."InternetProtocol";
+        $prefixSubType="Multimedia".$p_index_csv."SubType";        
+        $prefixDate="Multimedia".$p_index_csv."Date";
+        $prefixTime="Multimedia".$p_index_csv."Time";
+        //$prefixVisible="Multimedia".$p_index_csv."Visible";
+        //$prefixPublishable="Multimedia".$p_index_csv."Publishable";
+        $prefixTechInfo="Multimedia".$p_index_csv."TechnicalInformation";
+        $prefixFieldObservation="Multimedia".$p_index_csv."FieldObservation";
+       
+        
+        if (
+        array_key_exists(strtolower($prefixUri), $this->headers_inverted)
+        &&
+        array_key_exists(strtolower($prefixTitle), $this->headers_inverted)
+        &&
+        array_key_exists(strtolower($prefixType), $this->headers_inverted)
+        &&
+        array_key_exists(strtolower($prefixMimeType), $this->headers_inverted)
+        &&
+        array_key_exists(strtolower($prefixInternetProtocol), $this->headers_inverted)
+        ) 
+        {           
+            $tmpObject = new StagingMultimedia() ;
+            $tmpObject->setReferencedRelation("staging");
+                        
+                        
+            $valTmp=$this->getCSVValue($prefixUri);            
+            if( $this->isset_and_not_null($valTmp )) 
+            {     
+                $this->parsed_fields[]=$prefixUri;            
+                $tmpObject->setExternalUri($valTmp);
+            } 
+            
+            $valTmp=$this->getCSVValue($prefixTitle);
+            if($this->isset_and_not_null($valTmp))
+            {
+              $this->parsed_fields[]=$prefixTitle; 
+              $tmpObject->setTitle($valTmp);
+            }
+            
+            $valTmp=$this->getCSVValue($prefixType);
+            if($this->isset_and_not_null($valTmp))
+            {
+                $this->parsed_fields[]=$prefixType; 
+                $tmpObject->setType($valTmp);
+            }
+            
+            $valTmp=$this->getCSVValue($prefixMimeType);
+            if($this->isset_and_not_null($valTmp))
+            {
+                $this->parsed_fields[]=$prefixMimeType; 
+                $tmpObject->setMimeType($valTmp);
+            }
+            
+            $valTmp=$this->getCSVValue($prefixInternetProtocol);
+            if($this->isset_and_not_null($valTmp))
+            {
+                $this->parsed_fields[]=$prefixInternetProtocol; 
+                $tmpObject->setInternetProtocol($valTmp);
+            }
+                
+            $valTmp=$this->getCSVValue($prefixSubType);
+            if($this->isset_and_not_null($valTmp))
+            {
+                $this->parsed_fields[]=$prefixSubType; 
+                $tmpObject->setSubType($valTmp);
+            }
+            
+            $valTmp=$this->getCSVValue($prefixTechInfo);
+            if($this->isset_and_not_null($valTmp))
+            {
+                $this->parsed_fields[]=$prefixTechInfo; 
+                $tmpObject->setTechnicalParameters($valTmp);
+            }
+            
+            $valTmp=$this->getCSVValue($prefixFieldObservation);
+            if($this->isset_and_not_null($valTmp))
+            {
+                $this->parsed_fields[]=$prefixFieldObservation; 
+                $tmpObject->setFieldObservations($valTmp);
+            }
+           
+            $creationDate=$this->generateDateGeneric($prefixDate);
+            $date_time=null;
+            if(strlen($creationDate))
+            {               
+                $this->parsed_fields[]=$prefixDate."Year";
+                $this->parsed_fields[]=$prefixDate."Month";
+                $this->parsed_fields[]=$prefixDate."Day";
+                
+                $tmpObject->setCreationDate(FuzzyDateTime::getValidDate($creationDate)) ;
+                $tmpObject->setCreationDateMask(FuzzyDateTime::getValidDate($creationDate)->getMask()) ;
+                
+            }
+            $creationTime=$this->generateHourGeneric($prefixTime);
+
+            if(strlen($creationTime))
+            {               
+                $this->parsed_fields[]=$prefixTime."H";
+                $this->parsed_fields[]=$prefixTime."M";
+                $this->parsed_fields[]=$prefixTime."S";
+                if(strlen($creationTime)>0)
+                {				
+                    $date_time .= $creationDate."T".$creationTime;				
+                }
+                $dt =  FuzzyDateTime::getValidDate($date_time);
+                if(strlen($creationTime)>0)
+                {
+                    
+                    $dt->addTime($creationTime);				
+                }			
+                if (!is_null($dt)) 
+                { 
+                    
+                    $tmpObject->setCreationDate($date_time) ;
+                    $tmpObject->setCreationDateMask($dt->getMask()) ;
+                } 
+            }                  
+                
+               
+            $this->multimedia[]=$tmpObject ;
+            
+        }
+    }
+    
     public function addStorage()
     {
 
@@ -1765,6 +1908,7 @@ class RMCATabDataDirect
         {
             $this->addMeasurementDynamicField( (string)$i);
             $this->addIdentificationHistory((string)$i);
+            $this->addMultimedia((string)$i);
         }
 		
 		//print_r($this->fields_inverted);
@@ -1939,8 +2083,24 @@ class RMCATabDataDirect
 		throw $e;
       }
     }
+    foreach($this->multimedia as $object)
+    {
+       $object->setRecordId($this->staging->getId()) ;
+      try {
+      	  
+		$object->save() ; 
+	  }
+      catch(Doctrine_Exception $ne)
+      {
+        $e = new DarwinPgErrorParser($ne);
+        $this->errors_reported .= "Mulitmedia ".$object->getUri()." was not saved : ".$e->getMessage().";";
+		$this->import->setErrorsInImport("Table error for ".$object->getUri());
+		throw $e;
+      }
+    }
     $this->staging_tags = array() ;
     $this->object_to_save = array() ;
+    $this->multimedia = array() ;
   }
   
     private function handlePeople($object,$type,$names)
