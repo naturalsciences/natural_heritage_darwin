@@ -1,16 +1,16 @@
 <?php
 
 /**
- * Multimedia form base class.
+ * StagingMultimedia form base class.
  *
- * @method Multimedia getObject() Returns the current form's model object
+ * @method StagingMultimedia getObject() Returns the current form's model object
  *
  * @package    darwin
  * @subpackage form
  * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id$
  */
-abstract class BaseMultimediaForm extends DarwinModelForm
+abstract class BaseStagingMultimediaForm extends DarwinModelForm
 {
   protected function setupInheritance()
   {
@@ -43,9 +43,6 @@ abstract class BaseMultimediaForm extends DarwinModelForm
     $this->widgetSchema   ['filename'] = new sfWidgetFormInputText();
     $this->validatorSchema['filename'] = new sfValidatorPass(array('required' => false));
 
-    $this->widgetSchema   ['search_indexed'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['search_indexed'] = new sfValidatorString(array('required' => false));
-
     $this->widgetSchema   ['creation_date'] = new sfWidgetFormTextarea();
     $this->validatorSchema['creation_date'] = new sfValidatorString(array('required' => false));
 
@@ -76,12 +73,12 @@ abstract class BaseMultimediaForm extends DarwinModelForm
     $this->widgetSchema   ['field_observations'] = new sfWidgetFormTextarea();
     $this->validatorSchema['field_observations'] = new sfValidatorString(array('required' => false));
 
-    $this->widgetSchema->setNameFormat('multimedia[%s]');
+    $this->widgetSchema->setNameFormat('staging_multimedia[%s]');
   }
 
   public function getModelName()
   {
-    return 'Multimedia';
+    return 'StagingMultimedia';
   }
 
 }

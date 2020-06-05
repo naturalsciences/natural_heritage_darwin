@@ -1494,7 +1494,10 @@ Multimedia:
         visible: {type:boolean, notnull: true, default: true}
         publishable: {type:boolean, notnull: true, default: true}
         extracted_info: { type: string }
-
+        technical_parameters: { type: string }
+        external_uri: { type: string }
+        internet_protocol: { type: string }
+        field_observations: { type: string }
 # This sub class is used for linking loans with actors
 LoanActors:
     inheritance:
@@ -2180,3 +2183,25 @@ DoctrineTemporalInformationGtuGroupUnnestTags:
         tag : {type : string}
         tag_indexed : {type : string}
 
+StagingMultimedia:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        referenced_relation: { type: string, notnull: true}
+        record_id: { type: integer}
+        is_digital: {type: boolean, notnull:true, default: true}
+        type: { type: string, notnull: true, default: 'image'}
+        sub_type: { type: string }
+        title: { type: string, notnull: true}
+        description: { type: string, notnull: true, default:''}
+        uri: { type: string }
+        filename: : { type: string }
+        creation_date: { type: string, notnull: true, default: '0001-01-01'}
+        creation_date_mask: { type: integer, notnull: true, default:0}
+        mime_type: { type: string }
+        visible: {type:boolean, notnull: true, default: true}
+        publishable: {type:boolean, notnull: true, default: true}
+        extracted_info: { type: string }
+        technical_parameters: { type: string }
+        external_uri: { type: string }
+        internet_protocol: { type: string }
+        field_observations: { type: string }
