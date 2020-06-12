@@ -11,8 +11,7 @@ class CollectionsStatisticsFormFilter extends BaseCollectionsFormFilter
 	$this->widgetSchema['id'] =  new sfWidgetCollectionList(array('choices' => array()));
     $this->widgetSchema['id']->addOption('public_only',false);
     //ftheeten 2017 01 13
-    $this->widgetSchema['id']->setAttributes(array('class'=>'collection_ref id_collection'));
-    
+    $this->widgetSchema['id']->setAttributes(array('class'=>'collection_ref'));
 	// $this->widgetSchema['collection_ref']->addOption('default',$this->getOption('collection_id'));
     $minDate = new FuzzyDateTime(strval(min(range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')))).'/01/01'));
     $maxDate = new FuzzyDateTime(strval(max(range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')))).'/12/31'));

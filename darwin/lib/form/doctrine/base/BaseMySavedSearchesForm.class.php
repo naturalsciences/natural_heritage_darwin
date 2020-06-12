@@ -46,6 +46,18 @@ abstract class BaseMySavedSearchesForm extends DarwinModelForm
     $this->widgetSchema   ['query_parameters'] = new sfWidgetFormTextarea();
     $this->validatorSchema['query_parameters'] = new sfValidatorString();
 
+    $this->widgetSchema   ['current_page'] = new sfWidgetFormInputText();
+    $this->validatorSchema['current_page'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['page_size'] = new sfWidgetFormInputText();
+    $this->validatorSchema['page_size'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['nb_records'] = new sfWidgetFormInputText();
+    $this->validatorSchema['nb_records'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['download_lock'] = new sfWidgetFormInputCheckbox();
+    $this->validatorSchema['download_lock'] = new sfValidatorBoolean(array('required' => false));
+
     $this->widgetSchema   ['user_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('User'), 'add_empty' => false));
     $this->validatorSchema['user_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('User'), 'column' => 'id'));
 

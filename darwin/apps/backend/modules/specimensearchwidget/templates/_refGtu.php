@@ -104,7 +104,7 @@
  <!--ftheeten 2018 10 05-->
     <style>
 
-      
+      .qtip { max-width: none !important; }
       .draw-box {
         top: 65px;
         left: .5em;
@@ -183,7 +183,9 @@
     </tr>
   </table>
 </div>
+
   <div id="map_search_form">
+ 
     <div >
         <div style="width: 100%; height:500px; display:inline-block" id="smap">
          <select id="addwms" class="form-control">
@@ -206,7 +208,8 @@
 		<br/>
 		Selected layers :
 		<input type="text" id="chosen_layer" style="width:70%" readonly>
-		 <input id="remove_last" type="button" value="Remove last"></input>	
+		 <input id="remove_last" type="button" value="Remove last"></input>
+			<input type="button" value="<?php echo __("List from map");?>" name="btn_translate_wfs" id="btn_translate_wfs" class="result_choose"/>
         </div>
         <div id="mouse-position"></div>    
     </div>   
@@ -218,6 +221,9 @@
         </tr>
 		<tr>
             <td><?php echo $form['wfs_search']->renderLabel();?></td><td><?php echo $form['wfs_search']->render();?></td>
+        </tr>
+		<tr>
+            <td><?php echo $form['wfs_search_translated']->renderLabel();?></td><td><?php echo $form['wfs_search_translated']->render();?></td> 	
         </tr>
         </table>
   </div>
@@ -651,7 +657,107 @@
 	}
     
    // drawmap();
-    
+    $('#btn_translate_wfs').on('click',purposeTagsListWfs);
+	
+	 function purposeTagsTranslate_logic(name_session_item, value_item, url, p_data)
+  {
+	    sessionStorage.setItem(name_session_item, value_item);
+	    var last_position = $("#gtu_search").offset().top ;
+	    
+		// $(".translate_modal").modal_screen();
+		 $(this).qtip({
+		  id: 'modal',
+		  content: {
+			text: '<img src="/images/loader.gif" alt="loading"> Loading ...',
+			title: { button: true, text: "" },
+			ajax: {
+			     url: url,
+					type: 'GET',
+					// Take name in input if set
+					data: p_data
+			}
+		  },
+		  position: {
+			my: 'top center',
+			at: 'top center',
+			adjust:{
+			  y: 250 // option set in case of the qtip become too big
+			},
+			target: $(document.body)
+		  },
+
+		  show: {
+			ready: true,
+			delay: 0,
+			event: event.type,
+			solo: true,
+			modal: {
+			  on: true,
+			  blur: false
+			}
+		  },
+		  hide: {
+			event: 'close_modal_gtu',
+			target: $('body')
+		  },
+		  events: {
+			show: function () {
+			  ref_element_id = null;
+			  ref_element_name = null;
+			},
+			hide: function(event, api) {
+			  if(ref_element_id != null && ref_element_name != null)
+			  {
+				parent_el = api.elements.target.parent().prevAll('.ref_name');
+				if(parent_el.get( 0 ).nodeName == 'INPUT')
+				  parent_el.val(ref_element_name);
+				else
+				  parent_el.text(ref_element_name);
+				parent_el.prev().val(ref_element_id);
+				api.elements.target.parent().prevAll('.ref_clear').removeClass('hidden').show();
+				api.elements.target.find('.off').removeClass('hidden');
+				api.elements.target.find('.on').addClass('hidden');
+				parent_el.prev().trigger('change');
+				if (data_field_to_clean !== '') {
+				  if ($('.'+data_field_to_clean).length) {
+					$('.'+data_field_to_clean).val('');
+				  }
+				}
+			  }
+			  
+			  scroll(0,last_position) ;
+			  api.destroy();
+			}
+		  },
+		  style: 'ui-tooltip-light ui-tooltip-rounded'
+		},event);
+		
+		window.scrollTo(0, 250);
+				
+  }
+  
+   function purposeTagsListWfs(event)
+  {
+	  if($(".wfs_search").val().length>0)
+	  {
+		  var tmp_list=JSON.parse($(".wfs_search").val());
+		  var i;
+		  var layer;
+		  var tmp_ids=Array();
+		  
+		  for(i=0;i<tmp_list.length; i++)
+		  {
+			  layer=tmp_list[i]["layer"];
+			  tmp_ids.push(tmp_list[i]["value"]);
+		  }
+		  if(tmp_ids>0)
+		  {
+			
+			var data= {with_js:1, layer: 'wfs.'+layer, ids:tmp_ids.join(",")};
+			purposeTagsTranslate_logic("translated_line_wfs", '.wfs_search_translated',"<?php echo(url_for('gtu/gtuTranslationWfsGeom?'));?>" , data);
+		  }
+	  }
+  }
     $(document).ready(
         function()
         {
@@ -671,6 +777,8 @@
                   $('#map_search_form').hide();
                 }
               });
+			  
+		$('#btn_translate_wfs').on('click',purposeTagsListWfs);
 
         }
     );

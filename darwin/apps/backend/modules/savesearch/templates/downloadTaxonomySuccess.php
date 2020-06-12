@@ -50,10 +50,14 @@ function get_page()
 
 
 $(document).ready(
-	function()
+    function()
 	{
-		console.log("load");
+          $(".wait").text("wait (query running). Do not close page");
+        setTimeout(function(){
+          console.log("load");
 		get_page();
+        }, 20000);
+		
 	}
 );
 </script>
