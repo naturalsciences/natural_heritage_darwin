@@ -115,11 +115,10 @@ class MySavedSearchesTable extends DarwinTable
 	  return $q->fetch()[0];
   }
   
-public function getSavedSearchData($user_id, $query_id)
-  {
-  
-            $test=sfContext::getInstance()->getUser()->isAtLeast(Users::ADMIN);
-            if($test)
+public function getSavedSearchData($user_id, $query_id, $p_is_admin=false)
+  {  
+           
+            if($p_is_admin)
             {
                 $is_adm="'TRUE'::BOOLEAN";
             }
