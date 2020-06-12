@@ -48,4 +48,53 @@ class GtuTable extends DarwinTable
 	  return $returned;
   }
   
+  public function callTranslateService($word)
+  {
+	  $rows=array();
+	  if(strlen($word)>1)
+	  {
+		   $conn_MGR = Doctrine_Manager::connection();
+           $conn = $conn_MGR->getDbh();
+           $query="SELECT DISTINCT  '' AS source_table, '' AS wikidata, '' AS reference_name, translated_name,  
+       string_agg(DISTINCT lang_iso,';') as lang_iso, LENGTH(translated_name) FROM darwin2.rmca_wfs_translation_service_2(:tag) GROUP BY translated_name ORDER BY translated_name, string_agg(DISTINCT lang_iso,';'), LENGTH(translated_name);";
+		   $stmt=$conn->prepare($query);
+           $stmt->bindValue(":tag", $word);
+		   $stmt->execute();
+		   $rs=$stmt->fetchAll(PDO::FETCH_ASSOC);
+       
+         if(count($rs)>0)
+         {
+              return $rs;
+         }
+          
+            
+	  }
+	  return $rows;
+  }
+  
+    public function callTranslateServiceWfsGeometry($table, $ids)
+  {
+	  $ids="{".$ids."}";
+	  $rows=array();
+	  if(strlen($table)>1&&strlen($ids))
+	  {
+		   $conn_MGR = Doctrine_Manager::connection();
+           $conn = $conn_MGR->getDbh();
+           $query="SELECT * FROM rmca_wfs_get_darwin_translations(:table_name, :ids);";
+		   $stmt=$conn->prepare($query);
+           $stmt->bindValue(":table_name", $table);
+		   $stmt->bindValue(":ids", $ids);
+		   $stmt->execute();
+		   $rs=$stmt->fetchAll(PDO::FETCH_ASSOC);
+       
+         if(count($rs)>0)
+         {
+              return $rs;
+         }
+          
+            
+	  }
+	  return $rows;
+  }
+  
 }
