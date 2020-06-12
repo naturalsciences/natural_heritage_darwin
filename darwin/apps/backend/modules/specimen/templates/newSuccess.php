@@ -178,10 +178,10 @@ $(document).ready(function () {
 			event.preventDefault();
 		}
 		<?php if($duplic>0):?>
-		 if(window.confirm('Do you want to keep trace of the duplicate relation in the database ?'))
-		 {
+		 //if(window.confirm('Do you want to keep trace of the duplicate relation in the database ?'))
+		 //{
 			 $("#keep_duplicate").val("on");
-		 }
+		 //}
 		<?php endif;?>
 	}
   }) ; 

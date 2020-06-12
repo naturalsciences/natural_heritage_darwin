@@ -344,4 +344,52 @@ class gtuActions extends DarwinActions
     return  $this->renderText(json_encode($results));
   
   }
+  
+  public function executeJsonTranslation(sfWebRequest $request)
+  {
+	$results=Array();
+	if($request->hasParameter('tag') )
+    {
+        $tag=$request->getParameter('tag');
+	    $results=Doctrine_Core::getTable('Gtu')->callTranslateService($tag);
+    }
+	 $this->getResponse()->setContentType('application/json');
+     return  $this->renderText(json_encode($results));
+  }
+   
+   public function executeJsonTranslationWfsGeom(sfWebRequest $request)
+  {
+	$results=Array();
+	if($request->hasParameter('layer') && $layer=$request->hasParameter('ids') )
+    {
+        $layer=$request->getParameter('layer');
+		$ids=$request->getParameter('ids');
+	    $results=Doctrine_Core::getTable('Gtu')->callTranslateServiceWfsGeometry($layer, $ids);
+    }
+	 $this->getResponse()->setContentType('application/json');
+     return  $this->renderText(json_encode($results));
+  }
+  
+  public function executeGtuTranslation(sfWebRequest $request)
+  {
+	 $this->form = new TranslateForm();
+	$results=Array();
+	$this->tag="";
+	if($request->hasParameter('tag') )
+    {
+        $this->tag=$request->getParameter('tag');
+    }  
+  }
+  
+  public function executeGtuTranslationWfsGeom(sfWebRequest $request)
+  {
+	 $this->form = new TranslateWfsGeomForm();
+	$results=Array();
+	$this->tag="";
+	if($request->hasParameter('layer') && $layer=$request->hasParameter('ids') )
+    {
+        $this->layer=$request->getParameter('layer');
+		$this->ids=$request->getParameter('ids');	   
+    }  
+  }
 }

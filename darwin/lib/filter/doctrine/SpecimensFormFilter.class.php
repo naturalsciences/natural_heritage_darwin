@@ -386,6 +386,9 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       array('invalid' => 'Date provided is not valid',)
     );
 
+
+	$this->validatorSchema['related_ref'] = new sfValidatorInteger(array('required'=>false));
+	 $this->validatorSchema['related_ref'] = new sfValidatorNumber(array('required'=>false,'min' => '0'));
     $subForm = new sfForm();
     $this->embedForm('Tags',$subForm);
 
@@ -636,6 +639,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     );
     $this->widgetSchema['object_name'] = new sfWidgetFormInput();
     $this->validatorSchema['object_name'] = new sfValidatorString(array('required' => false));
+	
 
     $this->validatorSchema['floor'] = new sfValidatorString(array('required' => false));
 
@@ -800,6 +804,10 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 	$this->widgetSchema['wfs_search'] = new sfWidgetFormInputText();
     $this->widgetSchema['wfs_search']->setAttributes(array('class'=>'wfs_search'));
     $this->validatorSchema['wfs_search'] = new sfValidatorString(array('required' => false, 'trim' => true));
+	
+	$this->widgetSchema['wfs_search_translated'] = new sfWidgetFormInputText();
+    $this->widgetSchema['wfs_search_translated']->setAttributes(array('class'=>'wfs_search_translated'));
+    $this->validatorSchema['wfs_search_translated'] = new sfValidatorString(array('required' => false, 'trim' => true));
     
 	$this->widgetSchema['include_text_place'] = new sfWidgetFormChoice(array('choices' => array('OR' => 'OR', 'AND' => 'AND')));
  	$this->validatorSchema['include_text_place'] = new sfValidatorPass();
@@ -1059,6 +1067,9 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 	
 	if( isset($values['wfs_search']))
     {
+		
+		$wfs_sql=Array();
+		
         if(strlen(trim($values['wfs_search'])))
         {
            $tmp_array=json_decode($values['wfs_search'], TRUE);
@@ -1082,6 +1093,28 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
                 $val_tmp="'{".implode(",", $val)."}'::integer[]";
                 $sql_block[]="  ST_INTERSECTS(ST_SETSRID(ST_Point(gtu_location[1], gtu_location[0]),4326),(SELECT rmca_get_wfs_geom('wfs.".$layer."', ".$val_tmp.")))"; 
            }
+		   
+		   if( isset($values['wfs_search_translated']))
+			{
+				if(strlen(trim($values['wfs_search_translated'])))
+				{					
+					$tmp_array=explode("|",$values['wfs_search_translated']);
+					
+					$i=1;
+					$conn_MGR = Doctrine_Manager::connection();
+					foreach($tmp_array as $elem)
+					{
+						if(strlen(trim($elem))>0)
+						{
+							$alias="j".$i;
+							$sql_block[]="EXISTS (SELECT id FROM Tags $alias where tag_indexed = fulltoindex(".$conn_MGR->quote($elem, 'string').") and $alias.gtu_ref=s.gtu_ref) ";
+							$i++;
+							
+						}
+					}
+					
+				}
+			}
            $wfs_sql = implode(" OR ", $sql_block );
            
            
@@ -1099,6 +1132,8 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 		   $query->andWhere($wfs_sql);
         }
     }
+	
+	
     return $query;
   }
 
@@ -1361,7 +1396,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
   
    public function addTagsColumn_text($val)
   {
-  print_r($val);
+  //print_r($val);
     $returned="";
     $conn_MGR = Doctrine_Manager::connection();
     $tagList = '';
@@ -2213,6 +2248,25 @@ $query = DQ::create()
     if ($values['litho_level_ref'] != '') $query->andWhere('litho_level_ref = ?', intval($values['litho_level_ref']));
     if ($values['lithology_level_ref'] != '') $query->andWhere('lithology_level_ref = ?', intval($values['lithology_level_ref']));
     if ($values['mineral_level_ref'] != '') $query->andWhere('mineral_level_ref = ?', intval($values['mineral_level_ref']));
+	
+	
+	if ($values['related_ref']!= '')
+	{
+
+		$array_linked=Doctrine_Core::getTable('SpecimensRelationships')->getAllRelated($values['related_ref']);
+		
+		$array_linked_str=Array();
+		foreach($array_linked as $key=>$row)
+		{
+			if(is_int($row[0]))
+			{
+				$array_linked_str[]=$row[0];			
+			}
+		}
+		
+		$array_linked_str="{".implode(",",$array_linked_str)."}";
+		$query->andWhere(" s.id = ANY ('".$array_linked_str."'::integer[])");
+    }
     $this->addLatLonColumnQuery($query, $values);
     $this->addNamingColumnQuery($query, 'expeditions', 'expedition_name_indexed', $values['expedition_name'],'s','expedition_name_indexed');
 

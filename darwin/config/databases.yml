@@ -1,0 +1,7 @@
+all:
+  doctrine:
+    class: sfDoctrineDatabase
+    param:
+      dsn: 'pgsql:host=salmoneus;dbname=darwin2'
+      username: darwin2
+      password: CeBmPadYc

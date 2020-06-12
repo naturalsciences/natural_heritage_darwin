@@ -5,6 +5,9 @@
   </td>
   <td class="top_aligned">
     <input type="button" value="<?php echo __("fuzzy associations");?>" name="btn_fuz_<?php echo($row_line);?>" id="btn_fuz_<?php echo($row_line);?>" class="result_choose"/>
+	 <input type="button" value="<?php echo __("Translate");?>" name="btn_translate_<?php echo($row_line);?>" id="btn_translate_<?php echo($row_line);?>" class="result_choose"/>
+	 
+<div id="qtip_translate"></div>
 	 <input type="button" value="<?php echo __("Copy map entries");?>" name="btn_map_<?php echo($row_line);?>" id="btn_map_<?php echo($row_line);?>" class="result_choose"/>
   </td>
   <td class="widget_row_delete">
@@ -12,7 +15,10 @@
   </td>
 </tr>
 <script  type="text/javascript">
+  var global_translated="";
   $('#btn_fuz_<?php echo $row_line ; ?>').on('click',purposeTagsViaButton);
+  $('#btn_translate_<?php echo $row_line ; ?>').on('click',purposeTagsTranslate);
+  
   $('#btn_map_<?php echo $row_line ; ?>').on('click',purposeTagsViaMap);
   $('input.tag_line_<?php echo $row_line ; ?>').on('keydown click',purposeTags);
   $('#clear_tag_<?php echo $row_line;?>').click(function(){
@@ -55,6 +61,15 @@
   {
 	  $('input.tag_line_<?php echo $row_line ; ?>').val($("#chosen_layer").val());
   }
+  
+  function purposeTagsTranslate(event)
+  {
+	  var val_tag=$('input.tag_line_<?php echo $row_line ; ?>').val();
+	  var data= {with_js:1, tag:val_tag};
+	  purposeTagsTranslate_logic("translated_line", 'input.tag_line_<?php echo $row_line ; ?>',"<?php echo(url_for('gtu/gtuTranslation?'));?>", data );
+  }
+  
+
 
 
   $('#purposed_tags_<?php echo $row_line ; ?> li').live('click',function()

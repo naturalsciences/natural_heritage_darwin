@@ -42,13 +42,16 @@
          <td class="rurl_container">
             <select class="url_report">
             <option value=<?php echo(url_for("savesearch/downloadSpec")."/user_id/".sfContext::getInstance()->getUser()->getId()."/query_id/".$search->getId())?>>
-            Excel (specimens)
+            Tab-delimited (specimens)
+            </option> 
+            <option value=<?php echo(url_for("savesearch/downloadSpecLabels")."/user_id/".sfContext::getInstance()->getUser()->getId()."/query_id/".$search->getId())?>>
+            Tab-delimited (specimens - labels )
             </option> 
             <option value=<?php echo(url_for("savesearch/downloadTaxonomy")."/type_file/taxonomy/user_id/".sfContext::getInstance()->getUser()->getId()."/query_id/".$search->getId())?>>
-            Excel (taxonomy)
+            Tab-delimited (taxonomy)
             </option>
 			<option value=<?php echo(url_for("savesearch/downloadTaxonomy")."/type_file/taxonomy_count/user_id/".sfContext::getInstance()->getUser()->getId()."/query_id/".$search->getId())?>>
-            Excel (taxonomy : statistics)
+            Tab-delimited (taxonomy : statistics)
             </option> 			
             </select>
          </td>
