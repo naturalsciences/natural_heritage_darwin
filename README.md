@@ -49,8 +49,8 @@ https://darwin.naturalsciences.be/public_dev.php/json/Get_collection_detail?id={
 
  After having run the script containing the schema:
  
-   alter user darwin2 set search_path=darwin2,public;
+    alter user darwin2 set search_path=darwin2,public;
    
-   alter database darwin2 set datestyle to 'ISO, DMY';
+    alter database darwin2 set datestyle to 'ISO, DMY';
 
       
