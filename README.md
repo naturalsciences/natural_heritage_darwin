@@ -47,9 +47,10 @@ https://darwin.naturalsciences.be/public_dev.php/json/Get_collection_detail?id={
   
 **Configuration of PostgreSQL**
 
- After having run the script containing the schema
+ After having run the script containing the schema:
+ 
    alter user darwin2 set search_path=darwin2,public;
-
+   
    alter database darwin2 set datestyle to 'ISO, DMY';
 
       
