@@ -45,5 +45,11 @@ https://darwin.naturalsciences.be/public_dev.php/json/Get_collection_detail?id={
   - initialisation of the project in **./config/ProjectConfiguration.class.php** is different. The **configureDoctrine** method is replaced by **configureDoctrineEvent**) : https://github.com/FriendsOfSymfony1/symfony1/issues/42
   - the "classic" PHP libraries are required (pdo, xml, xsl, json, ...), but please install **php-apcu** and **php-apcu-bc** (backward compatiability with the old apc API) for the Symfony cache
   
+**Configuration of PostgreSQL**
+
+ After having run the script containing the schema
+   alter user darwin2 set search_path=darwin2,public;
+
+   alter database darwin2 set datestyle to 'ISO, DMY';
 
       
