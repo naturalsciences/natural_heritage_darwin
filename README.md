@@ -54,3 +54,11 @@ https://darwin.naturalsciences.be/public_dev.php/json/Get_collection_detail?id={
     alter database darwin2 set datestyle to 'ISO, DMY';
 
       
+**Configuration of PHP**
+
+  Packages :
+     php-apcu
+     php-mbstring
+     php-curl
+     php-pgsql
+     php-pdo
