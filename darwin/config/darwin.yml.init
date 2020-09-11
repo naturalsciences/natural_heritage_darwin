@@ -25,6 +25,7 @@ all:
            rbins_natural_earth_physical: "Natural Earth Physical"
            rbins_osm: "Open Street Map"	
            rbins_generic: "RBINS Other layers"
+    bing_key: "Ap3eFRefFd94_D4cqsicw-Fk1-d4kRat9pstTO4oo_i9anyUqrfQcqL9Ew9CJahg"  
     
   mailer:
     sender: your_send_email@example.com
