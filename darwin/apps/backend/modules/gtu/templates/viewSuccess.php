@@ -176,7 +176,7 @@
 			  visible: false,
 			  preload: Infinity,
 			  source: new ol.source.BingMaps({
-				key: " Al7loRcflCy8zRE2HskZKe4cQfzbiMu_kUEUaxjlQNH6DbLHfSqRC2O0_L2ibekX",
+				key: " <?php print(sfConfig::get('dw_bing_key'));?>",
 				imagerySet: styles[i]
 				// use maxZoom 19 to see stretched tiles instead of the BingMaps
 				// "no photos at this zoom level" tiles
