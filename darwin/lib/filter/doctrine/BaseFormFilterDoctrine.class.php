@@ -571,7 +571,17 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
                             $queryTmp.= " ( ";
 
                             $synonyms = Doctrine_Core::getTable('ClassificationSynonymies')->findSynonymsIds($table, $item_ref);
-
+							if(in_array("child",$relations))
+                            {
+								$synonyms_2 = Doctrine_Core::getTable('ClassificationSynonymies')->getAllChildSynonyms($item_ref);
+								$synonyms=array_merge($synonyms,$synonyms_2 );
+							}
+							elseif(in_array("direct_child",$relations))
+                            {
+								$synonyms_2 = Doctrine_Core::getTable('ClassificationSynonymies')->getAllDirectChildSynonyms($item_ref);
+								$synonyms=array_merge($synonyms,$synonyms_2 );
+						    }
+							$synonyms=array_unique($synonyms);
                             //if(empty($synonyms))
                             //$query->andWhere('0=1'); //False
                             //$query->andWhereIn($field_prefix."_ref",$synonyms)
@@ -588,9 +598,10 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
                                 if(in_array("child",$relations))
                                 {
                                     //$queryTmp.=" OR 24=24 ";
+									
                                     foreach($synonyms as $syno_object)
                                     {
-                                        $queryTmp.=" OR ".$field_prefix."_path like '%/".$syno_object."/%'" ;
+                                        $queryTmp.=" OR ".$field_prefix."_path like '%/".$syno_object."/%' " ;
                                     }
                                 }
                                 elseif(in_array("direct_child",$relations))
