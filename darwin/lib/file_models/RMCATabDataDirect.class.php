@@ -84,7 +84,7 @@ class RMCATabDataDirect
         $fields[] = "CollectedBy";
         $fields[] = "SamplingCode";
 		$fields[] = "Sampling_code";
-        //$fields[] = "Country";
+        $fields[] = "Country";
 
         
         //2018 04 11
@@ -797,7 +797,7 @@ class RMCATabDataDirect
         $coordDMS = str_replace(' ', '', $coordDMS);       
        
         
-        $hexDeg="\x".dechex(ord("°"));
+        $hexDeg="\x".dechex(ord("�"));
 
 
         $returned=NULL;
@@ -982,8 +982,8 @@ class RMCATabDataDirect
         if ($flagCopyLatLongText === true ) {
            
             $textCoord        = $latText . " " . $longText;
-            $textCoord= str_replace("Â°", "&#176;", $textCoord);
-            $hexDeg="\x".dechex(ord("Â°"));
+            $textCoord= str_replace("°", "&#176;", $textCoord);
+            $hexDeg="\x".dechex(ord("°"));
             $textCoord= str_replace($hexDeg, "&#176;", $textCoord);
 			if(strlen(trim($textCoord)))
 			{
@@ -1047,8 +1047,7 @@ class RMCATabDataDirect
         {
             $this->addComment($valTmp, true,"sampling_locations") ; 
         }
-        /*if (array_key_exists(strtolower("Country"), $this->headers_inverted)) 
-	{
+        if (array_key_exists(strtolower("Country"), $this->headers_inverted)) {
             if (strlen(trim($this->row[$this->headers_inverted[strtolower("country")]]))>0)
             {                
                 $valTmp=$this->getCSVValue("Country");
@@ -1059,7 +1058,7 @@ class RMCATabDataDirect
                     $this->staging_tags[] = $this->gtu_object->addTagGroups();
                 }
             }
-        }*/
+        }
         
         //ftheeten 2018 04 12
         if (array_key_exists(strtolower("elevationInMeters"), $this->headers_inverted)) {
@@ -2188,15 +2187,15 @@ class RMCATabDataDirect
     }
 
 
-    $pattern = '/^(\d+([\,\.]\d+)?)\W?([a-zA-Z\°]+)$/';
+    $pattern = '/^(\d+([\,\.]\d+)?)\W?([a-zA-Z\�]+)$/';
     // if unit not defined
     if($this->property && $this->property->property && $this->property->property->getPropertyUnit() =='') {
 
       // try to guess unit
       $val = $this->property->getLowerValue();
-      $val = str_replace('°', 'deg',$val);
+      $val = str_replace('�', 'deg',$val);
       if(preg_match($pattern, $val, $matches)) {
-        $val = str_replace('deg', '°',$matches[3]);
+        $val = str_replace('deg', '�',$matches[3]);
         $this->property->property->setPropertyUnit($val);
         $this->property->property->setLowerValue($matches[1]);
       }

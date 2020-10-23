@@ -1,5 +1,3 @@
-<script language="JavaScript" type="text/javascript" src="<?php print(public_path('/openlayers/v5.2.0-dist/ol.js'));?>"></script>
-<link rel="stylesheet" href="<?php print(public_path('/openlayers/v5.2.0-dist/ol.css'));?>"> 
  <div class="container">
     <table id="gtu_search">
       <thead>
@@ -271,6 +269,10 @@
 		
 	}
 	
+	var ol_ext_inherits = function(child,parent) {
+		child.prototype = Object.create(parent.prototype);
+		child.prototype.constructor = child;
+	};
 	var remove_last=function()
 	{
 		WFSArray.pop();
@@ -502,7 +504,7 @@
                   target: options.target
                 });
       };
-     ol.inherits(DrawBoxControl, ol.control.Control);
+      ol_ext_inherits(DrawBoxControl, ol.control.Control);
      
      //button draw Polygons
       DrawPolygonControl = function(opt_options) {
@@ -533,7 +535,7 @@
                   target: options.target
                 });
       };
-     ol.inherits(DrawPolygonControl, ol.control.Control);
+     ol_ext_inherits(DrawPolygonControl, ol.control.Control);
      
       //button moveMap
        MoveMapControl = function(opt_options) {
@@ -555,7 +557,7 @@
                   target: options.target
                 });
       };
-     ol.inherits(MoveMapControl, ol.control.Control);
+     ol_ext_inherits(MoveMapControl, ol.control.Control);
 	 
 	
 	  

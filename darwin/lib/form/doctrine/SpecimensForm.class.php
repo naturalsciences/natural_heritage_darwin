@@ -790,7 +790,7 @@ class SpecimensForm extends BaseSpecimensForm
       array(
         'choices' => new sfCallable(array(Doctrine_Core::getTable('CollectingTools'),'fetchTools')),
         'label_associated'=>$this->getI18N()->__('Selected'),
-        'label_unassociated'=>$this->getI18N()->__('Available'),
+        'label_unassociated'=>$this->getI18N()->__('Search'),
         'add_active'=>true,
         'add_url'=>'methods_and_tools/addTool'
       )

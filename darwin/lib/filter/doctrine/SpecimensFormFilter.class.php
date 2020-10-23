@@ -395,13 +395,13 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->widgetSchema['tools'] = new widgetFormSelectDoubleListFilterable(array(
       'choices' => new sfCallable(array(Doctrine_Core::getTable('CollectingTools'),'fetchTools')),
       'label_associated'=>$this->getI18N()->__('Selected'),
-      'label_unassociated'=>$this->getI18N()->__('Available')
+      'label_unassociated'=>$this->getI18N()->__('Search')
     ));
 
     $this->widgetSchema['methods'] = new widgetFormSelectDoubleListFilterable(array(
       'choices' => new sfCallable(array(Doctrine_Core::getTable('CollectingMethods'),'fetchMethods')),
       'label_associated'=>$this->getI18N()->__('Selected'),
-      'label_unassociated'=>$this->getI18N()->__('Available')
+      'label_unassociated'=>$this->getI18N()->__('Search')
     ));
 
     $this->validatorSchema['methods'] = new sfValidatorPass();
