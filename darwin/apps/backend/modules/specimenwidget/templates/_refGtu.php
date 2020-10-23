@@ -1,5 +1,3 @@
-<script language="JavaScript" type="text/javascript" src="<?php print(public_path('/openlayers/v5.2.0-dist/ol.js'));?>"></script>
-<link rel="stylesheet" href="<?php print(public_path('/openlayers/v5.2.0-dist/ol.css'));?>">
 <table>
   <tbody>
     <?php if($form['gtu_from_date']->hasError() || $form['gtu_to_date']->hasError()):?>

@@ -26,19 +26,6 @@ class ImportCatalogueXml implements ImportModelsInterface
     $this->referenced_relation = $table;
   }  
 
- //ftheeten 2018 09 24
-  protected function csvLineIsNotEmpty($p_row)
-  {
-    $returned=FALSE;
-    foreach($p_row as $field=>$value)
-    {
-        if(strlen(trim((string)$value))>0)
-        {
-            return TRUE;
-        }
-    }
-    return $returned;
-  }
 
   public function parseFile($file,$id)
   {
@@ -63,42 +50,9 @@ class ImportCatalogueXml implements ImportModelsInterface
         if (!($fp = fopen($file, "r"))) {
             return("could not open input file");
         }
-       $tabParser = new RMCATabTaxonomyDirect($this->import_id,$importTmp->getSpecimenTaxonomyRef());
-	    $tabParser->configure($options);
-        $tabParser->identifyHeader($fp);
-        $i=1;
-		
-		try
-		{
-			while (($row = fgetcsv($fp, 0, "\t")) !== FALSE)
-			{
-				if($this->csvLineIsNotEmpty($row))
-				{
-					if (array(null) !== $row) 
-					{ // ignore blank lines
-							//ftheeten 2018 02 28
-						 $row=  Encoding::toUTF8($row);
-						 
-						 $tabParser->parseLineAndSaveToDB($row);
-					}
-				 }
-			}
-			
-         }
-		 catch(Doctrine_Exception $ne)
-		{
-			
-			throw $ne;
-		}
-		catch(Exception $e)		
-		{
-			
-			throw $e;
-		}
-		
-        fclose($fp);
+       
     
-        /*$tabParser=new RMCATabToTaxonomyXml($importTmp);
+        $tabParser=new RMCATabToTaxonomyXml($importTmp);
         $options["tab_file"] = $file;
         $tabParser->configure($options);
         $tabParser->identifyHeader($fp);
@@ -128,7 +82,7 @@ class ImportCatalogueXml implements ImportModelsInterface
          
         //if(! $this->version_defined)
         //  $this->errors_reported = $this->version_error_msg.$this->errors_reported;
-        return $this->errors_reported ;*/
+        return $this->errors_reported ;
     }
     //back to old XML parser
     elseif(strpos(strtolower($mime_type),"xml")>=0)
