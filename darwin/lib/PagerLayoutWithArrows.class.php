@@ -35,8 +35,9 @@ class PagerLayoutWithArrows extends Doctrine_Pager_Layout
 	
 		
 		$current=(int)$pager->getPage();
+		$last=(int)$pager->getLastPage();
 		$last=$pager->getLastPage();
-		$pager="<input type='text' class='page_shortcut vvsmall_size' value='".$current."'/>";
+		$pager="<input type='text' class='page_shortcut vvsmall_size' value='".$current."'/>/".(string)$last;
 		$pager.="<input type='button' class='go_page' value='go'></input><div show='hidden'><a class='hidden_shortcut'/></div>";
 		$str .=$pager;
 		
@@ -45,14 +46,13 @@ class PagerLayoutWithArrows extends Doctrine_Pager_Layout
 			$('.go_page').click(
 			
 				function()
-				{
-					
+				{					
 					var first=$('ul.pager_nav a:first-child');					
 					var shortcut_page=$('.page_shortcut').val();					
 					if(Math.floor(shortcut_page) == shortcut_page && $.isNumeric(shortcut_page))
-					{
-						if(shortcut_page>=1&&shortcut_page<='".$last."')
-						{
+					{						
+						if(parseInt(shortcut_page)>=1&&parseInt(shortcut_page)<='".$last."')
+						{							
 							var tmplink_str=$(first[0]).attr('href');
 							var tmplink=tmplink_str.split('/');
 							tmplink[tmplink.length-1]=shortcut_page;
