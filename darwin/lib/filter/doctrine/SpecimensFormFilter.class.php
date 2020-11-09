@@ -413,7 +413,15 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 
     $this->validatorSchema['with_multimedia'] = new sfValidatorPass();
         //ftheeten 2018 11 22
-
+		
+		
+	$this->widgetSchema['link_type'] = new sfWidgetFormChoice(array(
+      'choices' => array_merge(array(""=>"all"),ExtLinks::getLinkTypes()),
+    ));	
+    $this->validatorSchema['link_type'] =  new sfValidatorPass();
+  
+   $this->widgetSchema['link_comment'] = new sfWidgetFormInputText();	
+    $this->validatorSchema['link_comment'] =  new sfValidatorString(array('required' => false, 'trim'=>true));
 
 
     /* Acquisition categories */
@@ -1925,6 +1933,30 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 		return $query ;
 	}
 	
+    public function addLinks($query, $type, $comment) {
+		if(isset($type)||isset($comment))
+		{
+			if(strlen($type)>0||strlen($comment)>0)
+			{
+				$params=Array();
+				$sql="EXISTS (select l.id FROM ExtLinks l WHERE referenced_relation='specimens' ";
+				if(strlen($type)>0)
+				{
+					$sql.=" AND l.type = ?";
+					$params[]=$type;
+				}
+				if(strlen($comment)>0)
+				{
+					$sql.=" AND fulltoindex(l.comment) like '%'||fulltoindex(?)||'%' ";
+					$params[]=$comment;
+				}
+				$sql.=" AND l.record_id = s.id )";
+				$query->andWhere( $sql ,$params);
+			}
+		}
+		return $query ;
+	}
+	
    public function addPropertiesQuery($query, $type , $applies_to, $value_from, $value_to, $unit, $taintedValues=Array()) 
   {
   
@@ -2310,6 +2342,7 @@ $query = DQ::create()
     $this->addCatalogueRelationColumnQuery($query, $values['lithology_item_ref'], $values['lithology_relation'],'lithology','lithology', $values['lithology_child_syn_included']);
     $this->addCatalogueRelationColumnQuery($query, $values['mineral_item_ref'], $values['mineral_relation'],'mineralogy','mineral', $values['mineral_child_syn_included']);
 
+    $this->addLinks($query, $values["link_type"], $values["link_comment"]);
    
     $query->limit($this->getCatalogueRecLimits());
 

@@ -128,7 +128,15 @@
                 <?php echo link_to(image_tag('remove.png', array("title" => __("Delete"))), 'import/delete?id='.$import->getId(),'class=remove_import');?>
               </td>             
              <?php endif ; ?>
-             <?php if($import->getState()==="to_be_loaded"&& !$import->getWorking() ) : ?>
+			 <?php if($import->getState()==="to_be_loaded"&& !$import->getWorking()  &&  $format == 'files') :?>
+			 <td>
+                    <?php echo link_to("Load files",'import/loadfiles?id='.$import->getId()); ?>
+			</td>
+			 <?php elseif($import->getState()==="to_be_loaded"&& !$import->getWorking()  &&  $format == 'links') :?>
+			 <td>
+                    <?php echo link_to("Load links",'import/loadlinks?id='.$import->getId()); ?>
+			</td>
+             <?php elseif($import->getState()==="to_be_loaded"&& !$import->getWorking() ) : ?>
                 <td>
                     <?php echo link_to("Load in staging",'import/loadstaging?id='.$import->getId()); ?>
 				</td>
