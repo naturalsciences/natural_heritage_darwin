@@ -21,7 +21,7 @@ class UploadFileForm extends BaseForm
     );
     
     $category = array('dna'=>'DNA');
-    $allowed_types = array('text/xml','image/jpeg') ;
+    $allowed_types = array('text/xml','image/jpeg','application/zip') ;
     $this->widgetSchema['format_ref'] = new sfWidgetFormChoice(
       array(
         'choices' => $category

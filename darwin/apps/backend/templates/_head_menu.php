@@ -191,6 +191,8 @@
                         <li><?php echo link_to(__('Taxonomy'),'import/indexTaxon');?></li>
                         <li><?php echo link_to(__('Lithostratigraphy'),'import/indexLithostratigraphy');?></li>
 						<li><?php echo link_to(__('Localities'),'import/indexLocalities');?></li>
+						<li><?php echo link_to(__('Files'),'import/indexFiles');?></li>
+						<li><?php echo link_to(__('Related links'),'import/indexLinks');?></li>
                     </ul>
                 </li>
                 <?php if($sf_user->isAtLeast(Users::ADMIN) ): ?>
