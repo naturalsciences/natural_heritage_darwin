@@ -468,6 +468,37 @@ class DarwinActions extends sfActions
         $results=Doctrine_Core::getTable('Specimens')->getCollectionsAllAccessPointsJSON( $host);
         return  $results;
     }
+	
+	    protected function getInstitutionIdentifierJSON(sfWebRequest $request)
+    {
+    
+        if($request->hasParameter('identifier_protocol')&&$request->hasParameter('identifier_value'))
+		{
+            $host=$request->getHost();
+            $results=Doctrine_Core::getTable('Specimens')->getSpecimensInInstitutionJSON($request->getParameter('identifier_protocol'),$request->getParameter('identifier_value'), $host);
+            
+            return  $results;
+            
+        }
+       
+        return Array();
+    }
+	
+	protected function getPeopleIdentifierJSON(sfWebRequest $request)
+    {
+    
+        if($request->hasParameter('identifier_protocol')&&$request->hasParameter('identifier_value'))
+		{
+            $host=$request->getHost();
+            $results=Doctrine_Core::getTable('Specimens')->getSpecimensForIdentifiersPeopleJSON($request->getParameter('identifier_protocol'),$request->getParameter('identifier_value'), $request->getParameter('identifier_role',''), $host);
+            
+            return  $results;
+            
+        }
+       
+        return Array();
+    }
+    
     
    
 }

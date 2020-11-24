@@ -1,6 +1,6 @@
 Institutions:
-  tableName: people
-  columns:
+    tableName: people
+    columns:
         id: { type: integer, notnull: true,primary: true, autoincrement: true}
         is_physical: { type: boolean, notnull: false}
         sub_type: { type: string }
@@ -8,6 +8,12 @@ Institutions:
         formated_name_indexed: { type: string}
         family_name: { type: string, notnull: true}
         additional_names: { type: string}
+    relations:
+        IdentifiersPeople:
+            class: IdentifiersPeople
+            local: id
+            foreign: record_id
+
 
 People:
     columns:
@@ -29,6 +35,11 @@ People:
         activity_date_from_mask: { type: integer, notnull: true, default:0}
         activity_date_to: { type: string, notnull: true, default: '2038-12-31'}
         activity_date_to_mask: { type: integer, notnull: true, default:0}
+    relations:
+        IdentifiersPeople:
+            class: IdentifiersPeople
+            local: id
+            foreign: record_id
 
 CatalogueRelationships:
     columns:
@@ -330,6 +341,10 @@ Users:
         People:
             local: people_id
             foreign: id
+        IdentifiersUsers:
+            local: id
+            foreign: record_id
+            class: IdentifiersUsers  
 
 PeopleLanguages:
     columns:
@@ -2205,3 +2220,49 @@ StagingMultimedia:
         external_uri: { type: string }
         internet_protocol: { type: string }
         field_observations: { type: string }
+        
+Identifiers:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        referenced_relation: { type: string, notnull: true}
+        record_id: { type: integer}
+        protocol: { type: string, notnull: true}
+        value: { type: string, notnull: true}
+        creation_date: { type: string, notnull: true }
+        
+IdentifiersPeople:
+    inheritance:
+        extends: Identifiers
+        type: column_aggregation
+        keyField: referenced_relation
+        keyValue: people
+        
+IdentifiersUsers:
+    inheritance:
+        extends: Identifiers
+        type: column_aggregation
+        keyField: referenced_relation
+        keyValue: users
+        
+InstitutionSubTypes:
+    tableName: PeopleSubTypes
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        people_ref: { type: integer, notnull: true}
+        sub_type: { type: string, notnull: true}
+    relations:
+        Institutions:
+            local: people_ref
+            foreign: id
+            class: Institutions 
+            
+PeopleSubTypes:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        people_ref: { type: integer, notnull: true}
+        sub_type: { type: string, notnull: true}
+    relations:
+        People:
+            local: people_ref
+            foreign: id
+            class: People
