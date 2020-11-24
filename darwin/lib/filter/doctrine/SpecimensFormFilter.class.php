@@ -926,6 +926,46 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 	$this->widgetSchema['code_boolean'] = new sfWidgetFormChoice(array('choices' => array('OR' => 'OR', 'AND' => 'AND')));
   	////ftheeten 2015 01 08
 	$this->validatorSchema['code_boolean'] = new sfValidatorPass();
+	
+		$protocol_tmp=Doctrine_Core::getTable("Identifiers")->getDistinctProtocol();
+	$this->widgetSchema['institution_protocol'] = new sfWidgetFormChoice(array(
+       "choices"=> $protocol_tmp
+    ));
+    $this->validatorSchema['institution_protocol'] = new sfValidatorChoice(
+        array(
+         "choices"=> $protocol_tmp,
+         'multiple' => false,
+         "required"=>false
+         )
+    );
+	
+	$this->widgetSchema['institution_identifier'] = new sfWidgetFormInput();
+	$this->validatorSchema['institution_identifier'] = new sfValidatorPass();
+	
+	$this->widgetSchema['people_protocol'] = new sfWidgetFormChoice(array(
+       "choices"=> $protocol_tmp
+    ));
+    $this->validatorSchema['people_protocol'] =  new sfValidatorChoice(
+        array(
+         "choices"=> $protocol_tmp,
+         'multiple' => false,
+         "required"=>false
+         )
+    );
+	
+	$this->widgetSchema['people_identifier'] = new sfWidgetFormInput();
+	$this->validatorSchema['people_identifier'] = new sfValidatorPass();
+	
+	$this->widgetSchema['people_identifier_role'] = new sfWidgetFormChoice(array(
+       "choices"=> array(""=>"", "collector"=> "Collector", "determinator"=> "Determinator", "donator"=> "Donator")
+    ));
+	$this->validatorSchema['people_identifier_role'] =  new sfValidatorChoice(
+        array(
+         "choices"=> array("collector", "", "determinator", "donator"),
+         'multiple' => false,
+         "required"=>false
+         )
+    );
   
   }
 
@@ -2344,6 +2384,9 @@ $query = DQ::create()
 
     $this->addLinks($query, $values["link_type"], $values["link_comment"]);
    
+   	$this->addInstitutionIdentifierQuery($query,   $values["institution_protocol"], $values["institution_identifier"]);
+	$this->addPeopleIdentifierQuery($query, $values["people_protocol"], $values["people_identifier"],$values["people_identifier_role"]);
+   
     $query->limit($this->getCatalogueRecLimits());
 
     return $query;
@@ -2479,6 +2522,55 @@ $query = DQ::create()
       $query->andWhere('s.specimen_count_juveniles_max  <= '.$val);
     }
     return $query ;
+  }
+  
+  public function addInstitutionIdentifierQuery($query,  $protocol, $identifier)
+  {
+	  if(strlen($protocol)>0&&strlen($identifier)>0)
+	  {
+		   $query->andWhere("EXISTS (select i.id  from Identifiers i where s.institution_ref = i.record_id AND referenced_relation = 'people' AND LOWER(i.protocol)=? AND i.value=?)",array(strtolower($protocol), $identifier));
+	  }
+	  return $query;
+  }
+  
+  public function addPeopleIdentifierQuery($query,  $protocol, $identifier, $role="collector")
+  {
+	  if(strlen($protocol)>0&&strlen($identifier)>0)
+	  {
+		  $sql_params=Array();
+		  $id=Doctrine_Core::getTable('Identifiers')->getLinkedId($protocol, $identifier, "people");
+		  if($id!==null)
+		  {
+			  if($role == 'determinator')
+			  {
+				$build_query = "? =any(spec_ident_ids) " ;
+				$sql_params[]=$id;
+				
+			  }
+			  elseif($role == 'collector')
+			  {
+				 
+				  $build_query = "(? =any(spec_coll_ids) OR EXISTS (SELECT cp.id FROM CataloguePeople cp WHERE cp.referenced_relation= 'expeditions' AND cp.people_ref=? AND s.expedition_ref=cp.record_id ))" ;
+				  $sql_params=array($id, $id);
+
+			  }
+			  elseif($role == 'donator')
+			  {
+				$build_query .= "? =any(spec_don_sel_ids) " ;
+				$sql_params[]=$id;
+			  }
+			  else
+			  {
+				  $build_query = "(? =any(spec_coll_ids||spec_ident_ids||spec_don_sel_ids) OR EXISTS (SELECT cp.id FROM CataloguePeople cp WHERE cp.referenced_relation= 'expeditions' AND cp.people_ref=? AND s.expedition_ref=cp.record_id ))" ;
+				  $sql_params=array($id, $id);
+
+			  }
+			  $query->andWhere($build_query, $sql_params ) ;
+		  }
+	  
+	  }
+	  return $query;
+	  
   }
   
        //ftheeten 2018 04 10

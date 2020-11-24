@@ -33,6 +33,16 @@
             <div class="borded framed">
             <table class="double_table collections">
               <tbody>
+			    <tr>
+				<th>
+				<?php echo __("Institution Identifier") ?>
+				</th>
+				</tr>
+				<tr>
+				<td>
+				<?php echo $form['institution_protocol'] ; ?>&nbsp;<?php echo $form['institution_identifier'] ; ?>
+				</td>
+				</tr>
                 <tr>
                   <td>
                     <div class="treelist">
@@ -160,6 +170,23 @@
           </td>          
         </tr>
       </tbody>
+	  
+	   <thead>
+	  <tr>
+	  <th>
+		<?php echo __("People identifier and role") ?>
+	  </th>
+	  </tr>
+	  </thead>
+	  <tbody>
+	  <tr>
+	  <td>
+		<?php echo $form['people_protocol'] ; ?>&nbsp;<?php echo $form['people_identifier'] ; ?>
+		&nbsp;
+		<?php echo $form['people_identifier_role'] ; ?>
+		</td>
+	  </tr>
+	  </tbody>
     </table>
     <br />
   </div>  

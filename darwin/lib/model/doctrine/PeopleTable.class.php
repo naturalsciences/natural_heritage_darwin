@@ -86,5 +86,54 @@ class PeopleTable extends DarwinTable
 
       return $q->fetchOne(); 
     }
+	
+    public function getPeopleAsArray($id)
+	{
+		$sql="SELECT p.* FROM people p WHERE id=:id;";
+		$conn_MGR = Doctrine_Manager::connection();
+        $conn = $conn_MGR->getDbh();
+		$stmt=$conn->prepare($sql);
+        $stmt->bindValue(":id", $id);
+			
+		$stmt->execute();
+        $rs=$stmt->fetchAll(PDO::FETCH_ASSOC);
+		
+		if(count($rs)>0)
+		{
+            $rs=$rs[0];			
+			$sql2="SELECT i.* FROM identifiers i WHERE i.referenced_relation='people' AND i.record_id=:id";
+			$stmt2=$conn->prepare($sql2);
+			$stmt2->bindValue(":id", strtolower($rs["id"]));
+			$stmt2->execute();
+			$rs2=$stmt2->fetchAll(PDO::FETCH_ASSOC);
+			$identifiers=Array();
+			foreach($rs2 as $rec2)
+			{
+				$identifiers[]=Array("identifier_protocol"=> $rec2["protocol"], "identifier_value"=> $rec2["value"]);
+			}
+			$rs["people_identifiers"]=$identifiers;
+		}
+		return $rs;
+	}
+	
+	
+    public function getPeopleAsArrayIdentifier($identifier_protocol, $identifier_value)
+	{
+		$sql="select i.record_id  from Identifiers i where referenced_relation = 'people' AND LOWER(i.protocol)=:protocol AND i.value=:value;";
+		$conn_MGR = Doctrine_Manager::connection();
+        $conn = $conn_MGR->getDbh();
+		$stmt=$conn->prepare($sql);
+        $stmt->bindValue(":protocol", strtolower($identifier_protocol));
+		$stmt->bindValue(":value", $identifier_value);
+		$stmt->execute();
+        $rs=$stmt->fetchAll(PDO::FETCH_ASSOC);
+		$res_json=Array();
+		
+		foreach($rs as $rec)
+		{
+			$res_json[]=$this->getPeopleAsArray($rec["record_id"]);
+		}
+		return $res_json;		
+	}
 
 }

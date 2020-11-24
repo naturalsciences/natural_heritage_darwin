@@ -1,0 +1,84 @@
+ <!--ftheeten 2018 11 29-->
+ <table class="property_values temporal_information" id="gtu_temporal_information">
+     <thead class="gtu_temporal_information_head">
+      <tr>
+         <th colspan='3'>
+           <?php echo $form['TemporalInformation_holder'];?>
+         </th>
+      </tr>
+       </thead>
+       <tbody id="gtu_temporal_information_body">     
+         <?php $retainedKey = 0;?>
+         <?php $existing_key = 0;?>
+         <?php if($form->getWidgetSchema()->offsetExists('TemporalInformation')):?>
+            
+             <?php foreach($form['TemporalInformation'] as $form_value):?>
+                 <tr><td>
+                <?php include_partial('gtu/gtu_temporal_information', array('form' => $form_value, 'rownum'=>$retainedKey,"edit"=>"true"));?>
+                </td></tr>
+                 <tr class="display_temporal_information_<?php echo $retainedKey;?>">
+                    <td class="display_temporal_information_<?php echo $retainedKey;?>" ><hr class="display_temporal_information_<?php echo $retainedKey;?>"></hr></td>
+                  </tr>
+
+                <?php $retainedKey = $retainedKey+1;?>
+             <?php endforeach;?>
+         <?php endif;?>
+         <?php $existing_key=$retainedKey;?>
+         <?php if($form->getWidgetSchema()->offsetExists('newTemporalInformation')):?>
+        
+             <?php foreach($form['newTemporalInformation'] as $form_value):?>
+			 <tr><td>Loop</td></tr>
+              <tr><td>
+               <?php include_partial('gtu/gtu_temporal_information', array('form' => $form_value, 'rownum'=>$retainedKey));?>
+               </td></tr>
+                 <tr class="display_temporal_information_<?php echo $retainedKey;?>">
+                    <td class="display_temporal_information_<?php echo $retainedKey;?>" ><hr class="display_temporal_information_<?php echo $retainedKey;?>"></hr></td>
+                  </tr>
+               <?php $retainedKey = $retainedKey+1;?>
+             <?php endforeach;?>
+         <?php endif;?>
+         
+   </tbody>
+      <tfoot>
+     <tr>
+       <td colspan="3">
+         <div  style="text-align:left" class="add_temporal_information">
+            <a href="<?php echo url_for("gtu/AddTemporalInformation/");?>/num/" id="add_temporal_information"><?php echo __('Add Date');?></a>
+         </div>
+       </td>
+     </tr>
+   </tfoot>
+ </table>
+ <input type="hidden" id="count_gtu_date" value="0"/>
+ <script  type="text/javascript">
+ $(document).ready(function () {
+ 
+    <?php if($form->getWidgetSchema()->offsetExists('TemporalInformation')):?>
+        $("#count_gtu_date").val(parseInt("<?php print($existing_key);?>"));       
+    <?php endif;?>
+    $('#add_temporal_information').click( function(event)
+    {
+        event.preventDefault();
+        hideForRefresh('#gtu_temporal_information');
+        parent_el = $(this).closest('#gtu_temporal_information');
+        parentId = $(parent_el).attr('id');
+        $.ajax(
+        {
+          type: "GET",
+          url: $(this).attr('href')+ $("#count_gtu_date").val(),
+          success: function(html)
+          { 
+            var lineIndex=parseInt($("#count_gtu_date").val())+1;
+            html="<tr><td>"+html+"</td></tr>";
+            //html=html+'<tr class="display_temporal_information_'+lineIndex+'"><td class="display_temporal_information_'+lineIndex+'" ><hr class="display_temporal_information_'+lineIndex+'"></hr></td></tr>';
+           
+            $( parent_el).append(html);
+            showAfterRefresh('#gtu_temporal_information');
+          }
+        });       
+        $("#count_gtu_date").val(parseInt($("#count_gtu_date").val())+1);
+        $(this).closest('table.temporal_information').find('thead').show();
+        return false;
+    }); 
+});
+</script>

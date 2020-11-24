@@ -10,12 +10,14 @@
       <thead>
         <tr>  
           <th><?php echo $form['family_name']->renderLabel('Institution Name');?></th>
+		  <th><?php echo $form['identifier']->renderLabel('Identifiers'); ?></th>
           <th></th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td><?php echo $form['family_name'];?><?php echo $form['is_physical'];?></td>
+		  <td><?php echo $form['protocol']->render() ?>&nbsp;<?php echo $form['identifier']->render() ?></td>
           <td><input class="search_submit" type="submit" name="search" value="<?php echo __('Search'); ?>" /></td>
         </tr>
       </tbody>
@@ -39,5 +41,12 @@ $(document).ready(function () {
    open(url+'?'+data.replace(reg,'institution'));
     return false;  
   });
+  
+   var protocol=urlParam('identifier_protocol');
+   var identifier=urlParam('identifier_value');
+   if(!!protocol&&!!identifier)
+   {
+		$( ".search_form" ).submit();
+   }     	  
 });
 </script>

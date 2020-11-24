@@ -9,6 +9,7 @@
           <th><?php echo $form['family_name']->renderLabel('Name') ?></th>
           <th><?php echo $form['db_user_type']->renderLabel('Type') ?></th>
           <th><?php echo $form['is_physical']->renderLabel('Status') ?></th>
+		  <th><?php echo $form['identifier']->renderLabel('identifiers') ?></th>
           <th></th>
         </tr>
       </thead>
@@ -17,6 +18,7 @@
           <td><?php echo $form['family_name']->render() ?></td>
           <td><?php echo $form['db_user_type']->render() ?></td>
           <td><?php echo $form['is_physical']->render() ?></td>
+		   <td><?php echo $form['protocol']->render() ?>&nbsp;<?php echo $form['identifier']->render() ?></td>
           <td><input class="search_submit" type="submit" name="search" value="<?php echo __('Search'); ?>" /></td>
         </tr>
       </tbody>

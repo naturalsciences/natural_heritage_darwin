@@ -26,7 +26,7 @@ all:
            rbins_osm: "Open Street Map"	
            rbins_generic: "RBINS Other layers"
     bing_key: "Ap3eFRefFd94_D4cqsicw-Fk1-d4kRat9pstTO4oo_i9anyUqrfQcqL9Ew9CJahg"
-    iiif_viewer: "https://darwinweb.africamuseum.be/mirador/index.php?manifest="		
+    iiif_viewer: "https://darwinweb.africamuseum.be/mirador/index.php?manifest="	
     
   mailer:
     sender: your_send_email@example.com

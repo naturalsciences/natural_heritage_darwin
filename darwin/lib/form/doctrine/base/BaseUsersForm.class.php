@@ -61,6 +61,9 @@ abstract class BaseUsersForm extends DarwinModelForm
     $this->widgetSchema   ['people_id'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('People'), 'add_empty' => true));
     $this->validatorSchema['people_id'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('People'), 'column' => 'id', 'required' => false));
 
+    $this->widgetSchema   ['id'] = new sfWidgetFormInputHidden();
+    $this->validatorSchema['id'] = new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false));
+
     $this->widgetSchema->setNameFormat('users[%s]');
   }
 

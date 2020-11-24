@@ -28,11 +28,23 @@
         <tr>
             <th><?php echo $form['people_type']->renderLabel('Type');?></th>
             <th><?php echo $form['ig_number']->renderLabel('I.G. Number');?></th>
+			<th></th>
         </tr>
         <tr>
             <td><?php echo $form['people_type']->render() ?></td>
             <td><?php echo $form['ig_number']->render() ?></td>
+			<td></td>
         </tr>
+		<tr>
+			<th><?php echo $form['identifier']->renderLabel('Identifiers'); ?></th>
+			<th></th>
+			<th></th>
+		</tr>
+		<tr>
+			<td colspan="2"><?php echo $form['protocol']->render() ?>&nbsp;<?php echo $form['identifier']->render() ?></td>
+			<td></td>
+			<td></td>
+		</tr>
         <tr>
         <td colspan="4" style="text-align:right"><input class="search_submit" type="submit" name="search" value="<?php echo __('Search'); ?>" /></td>
         </tr>
@@ -65,6 +77,13 @@ $(document).ready(function () {
             
           $("#people_filters_ig_number").val(decodeURIComponent(ig_num));
           $( ".search_form" ).submit();
-      }      
+      }  
+
+      var protocol=urlParam('identifier_protocol');
+	  var identifier=urlParam('identifier_value');
+      if(!!protocol&&!!identifier)
+      {
+          $( ".search_form" ).submit();
+      }     	  
 });
 </script>

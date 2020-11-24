@@ -59,6 +59,9 @@ abstract class BaseUsersFormFilter extends DarwinModelFormFilter
     $this->widgetSchema   ['people_id'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('People'), 'add_empty' => true));
     $this->validatorSchema['people_id'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('People'), 'column' => 'id'));
 
+    $this->widgetSchema   ['id'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['id'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => 'Users', 'column' => 'id'));
+
     $this->widgetSchema->setNameFormat('users_filters[%s]');
   }
 
@@ -85,6 +88,7 @@ abstract class BaseUsersFormFilter extends DarwinModelFormFilter
       'people_id' => 'ForeignKey',
       'selected_lang' => 'Text',
       'people_id' => 'ForeignKey',
+      'id' => 'Number',
     ));
   }
 }

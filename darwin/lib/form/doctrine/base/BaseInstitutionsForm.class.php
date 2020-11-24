@@ -34,6 +34,9 @@ abstract class BaseInstitutionsForm extends DarwinModelForm
     $this->widgetSchema   ['additional_names'] = new sfWidgetFormTextarea();
     $this->validatorSchema['additional_names'] = new sfValidatorString(array('required' => false));
 
+    $this->widgetSchema   ['id'] = new sfWidgetFormInputHidden();
+    $this->validatorSchema['id'] = new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false));
+
     $this->widgetSchema->setNameFormat('institutions[%s]');
   }
 
