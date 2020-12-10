@@ -186,5 +186,16 @@ class People extends BasePeople
     if($this->getGender() == 'M') return "user_suit_m.png" ;
     return "user_suit_f.png" ;
   }
-   
+  
+  //jim 2018 03 37
+  public function getCorrespondingInstitutionandAddress()
+  {
+	$conn = Doctrine_Manager::connection();
+	$sql = "select * from fct_rmca_instit_address_from_loan_actor(:id)";
+	$q = $conn->prepare($sql);
+	$q->execute(array(':id' => $this->getId()));
+	return json_encode($q->fetchAll());	  
+	
+	
+  }
 }

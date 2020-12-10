@@ -18,11 +18,10 @@
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfConfigHandler.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
 abstract class sfConfigHandler
 {
-  /** @var sfParameterHolder */
   protected
     $parameterHolder = null;
 
@@ -30,7 +29,6 @@ abstract class sfConfigHandler
    * Class constructor.
    *
    * @see initialize()
-   * @param array|null $parameters
    */
   public function __construct($parameters = null)
   {
@@ -42,7 +40,7 @@ abstract class sfConfigHandler
    *
    * @param array $parameters An associative array of initialization parameters
    *
-   * @return void
+   * @return bool true, if initialization completes successfully, otherwise false
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this ConfigHandler
    */
@@ -71,13 +69,13 @@ abstract class sfConfigHandler
    *
    * @param mixed $value The value on which to run the replacement procedure
    *
-   * @return string|mixed|array The new value
+   * @return string The new value
    */
   static public function replaceConstants($value)
   {
     if (is_array($value))
     {
-      array_walk_recursive($value, function(& $value) { $value = sfToolkit::replaceConstants($value); });
+      array_walk_recursive($value, create_function('&$value', '$value = sfToolkit::replaceConstants($value);'));
     }
     else
     {
@@ -98,7 +96,7 @@ abstract class sfConfigHandler
   {
     if (is_array($path))
     {
-      array_walk_recursive($path, function(&$path) { $path = sfConfigHandler::replacePath($path); });
+      array_walk_recursive($path, create_function('&$path', '$path = sfConfigHandler::replacePath($path);'));
     }
     else
     {

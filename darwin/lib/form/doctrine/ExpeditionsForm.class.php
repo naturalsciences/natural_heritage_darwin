@@ -16,7 +16,8 @@ class ExpeditionsForm extends BaseExpeditionsForm
   public function configure()
   {
     $this->useFields(array('name','expedition_from_date', 'expedition_to_date'));
-    $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')));
+	//JMHerpers 2018 02 15 Inversion of max and Min to have most recent dates on top
+	$yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')),intval(sfConfig::get('dw_yearRangeMin')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
     $dateText = array('year'=>'yyyy', 'month'=>'mm', 'day'=>'dd');
     $minDate = new FuzzyDateTime(strval(min($yearsKeyVal).'/01/01'));
@@ -95,7 +96,7 @@ class ExpeditionsForm extends BaseExpeditionsForm
     if($record_id === false)
       $record_id = $this->getObject()->getId();
     if( $emFieldName =='Members' )
-      return Doctrine_Core::getTable('CataloguePeople')->getPeopleRelated('expeditions','member', $record_id);
+      return Doctrine::getTable('CataloguePeople')->getPeopleRelated('expeditions','member', $record_id);
   }
 
   public function getEmbedRelationForm($emFieldName, $values)
@@ -107,7 +108,7 @@ class ExpeditionsForm extends BaseExpeditionsForm
   public function duplicate($id)
   {
     // reembed duplicated members
-    $Catalogue = Doctrine_Core::getTable('CataloguePeople')->findForTableByType('expeditions',$id) ;
+    $Catalogue = Doctrine::getTable('CataloguePeople')->findForTableByType('expeditions',$id) ;
     if(isset($Catalogue['member'])) {
       foreach ($Catalogue['member'] as $key=>$val) {
         $this->addMembers($key, array('people_ref' => $val->getPeopleRef()),$val->getOrderBy());
@@ -115,9 +116,9 @@ class ExpeditionsForm extends BaseExpeditionsForm
     }
   }
 
-  public function saveObjectEmbeddedForms($con = null, $forms = null)
+  public function saveEmbeddedForms($con = null, $forms = null)
   {
     $this->saveEmbed('Members', 'people_ref', $forms, array('people_type'=>'member','referenced_relation'=>'expeditions', 'record_id' => $this->getObject()->getId()));
-    return parent::saveObjectEmbeddedForms($con, $forms);
+    return parent::saveEmbeddedForms($con, $forms);
   }
 }

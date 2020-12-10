@@ -293,7 +293,7 @@
       </trans-unit>
           <trans-unit id="1255">
         <source>Individual Count</source>
-        <target>Number of items</target>
+        <target>Individual Count</target>
       </trans-unit>
           <trans-unit id="1256">
         <source>View Specimens</source>
@@ -763,19 +763,7 @@
         <source>Recommended browser for DaRWIN :</source>
         <target></target>
       </trans-unit>
-      <trans-unit id="1721">
-        <source>Associated comment</source>
-        <target></target>
-      </trans-unit>
-
-      <trans-unit id="1722">
-        <source>Object name</source>
-        <target></target>
-      </trans-unit>
-      <trans-unit id="1723">
-        <source>DaRWIN search</source>
-        <target></target>
-      </trans-unit>
     </body>
   </file>
 </xliff>
+

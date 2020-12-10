@@ -67,18 +67,6 @@ $(document).ready(function ()
   <?php use_javascript('double_list.js');?>
   <div>
   <!--new  control to catch error list of widgets RMCA 2018 02 13-->
-    <div class="encod_screen edition" id="intro">
-  <?php if($count>1):?>
-    <div><ul style="background-color: #ec9593;border: 3px solid #c36b70;margin-bottom: 1em;padding: 1em"><?php print($count);?> Specimen with same collection number</ul></div>
-  <?php endif;?> 
-   <div>
-    <ul id="main_error_list" class="error_list main_error_list" style="display:none">
-    <ul id="error_list" class="error_list" style="display:none">
-      <li></li>
-    </ul>
-  </div>
-
-  <?php echo form_tag('specimen/'.($form->getObject()->isNew() ? 'create' : 'update?id='.$form->getObject()->getId()), array('class'=>'edition no_border','enctype'=>'multipart/form-data'));?>
     <div>
 	  <?php $errors = $form->getErrorSchema()->getErrors() ?>
       <?php if($form->hasGlobalErrors()||count($errors)>0):?>
@@ -92,6 +80,39 @@ $(document).ready(function ()
 		  <li>(Issue(s) might be caused by a closed widget containing a mandatory field) </li>
         </ul>
       <?php endif;?>
+  </div>
+
+  <?php 
+		//RMCA 2015 10 19 (new identification, to redirect to a new acction: split_created
+		$formDisplay= form_tag('specimen/'.($form->getObject()->isNew() ? 'create' : 'update?id='.$form->getObject()->getId()), array('class'=>'edition no_border','enctype'=>'multipart/form-data'));
+		if(isset($newIdentification)&&isset($original_id))
+		{
+			if($newIdentification===TRUE&&isset($original_id))
+			{
+				$formDisplay=form_tag('specimen/'.($form->getObject()->isNew() ? 'create'.'?split_created='.$original_id : 'update?id='.$form->getObject()->getId()), array('class'=>'edition no_border','enctype'=>'multipart/form-data'));
+
+			}
+		}
+        //ftheeten 2016 06 16
+        elseif(isset($duplicateFlag))
+        {
+            if($duplicateFlag===TRUE&&isset($duplicate_id))
+            {
+               $formDisplay=form_tag('specimen/'.($form->getObject()->isNew() ? 'create'.'?duplicate_created='.$duplicate_id : 'update?id='.$form->getObject()->getId()), array('class'=>'edition no_border','enctype'=>'multipart/form-data'));
+            }
+        }
+		print($formDisplay);
+	?>
+    <?php echo $form['timestamp']->renderError(); ?>
+    <?php echo $form['timestamp'];?>
+    <div>
+      <?php if($form->hasGlobalErrors()):?>
+        <ul class="spec_error_list">
+          <?php foreach ($form->getErrorSchema()->getErrors() as $name => $error): ?>
+            <li class="error_fld_<?php echo $name;?>"><?php echo __($error) ?></li>
+          <?php endforeach; ?>
+        </ul>
+      <?php endif;?>
 
       <?php include_partial('widgets/screen', array(
         'widgets' => $widgets,
@@ -101,24 +122,20 @@ $(document).ready(function ()
       )); ?>
     </div>
     <p class="clear"></p>
-    <?php include_partial('widgets/float_button', array('form' => $form,
-                                                        'module' => 'specimen',
-                                                        'search_module'=>'specimensearch/index',
-                                                        'save_button_id' => 'submit_spec_f1')
-    ); ?>
+   <?php include_partial('widgets/float_button', array('form' => $form,
+	//ftheeten 2017 11 30
+	 'module' => 'specimen')); ?>
     <p class="form_buttons">
       <?php if (!$form->getObject()->isNew()): ?>
         <?php echo link_to(__('New specimen'), 'specimen/new') ?>
         &nbsp;<a href="<?php echo url_for('specimen/new?duplicate_id='.$form->getObject()->getId());?>" class="duplicate_link"><?php echo __('Duplicate specimen');?></a>
+		<!--RMCA 2015 10 19 new identifications-->
+	    &nbsp;<a href="<?php echo url_for('specimen/new?split_id='.$form->getObject()->getId());?>" class="duplicate_link"><?php echo __('New identification');?></a>
         &nbsp;<?php echo link_to(__('Delete'), 'specimen/delete?id='.$form->getObject()->getId(), array('method' => 'delete', 'confirm' => __('Are you sure?'))) ?>
       <?php endif?>
       &nbsp;<a href="<?php echo url_for('specimensearch/index') ?>" id="spec_cancel"><?php echo __('Cancel');?></a>
       <input type="submit" value="<?php echo __('Save');?>" id="submit_spec_f1"/>
     </p>
-	<?php if($duplic>0):?>
-		<input type="hidden" name="duplicate_id" id="duplicate_id" value="<?php print($duplic);?>"/>
-		<input type="hidden" name="keep_duplicate" id="keep_duplicate" value="off"/>
-	<?php endif;?>
   </form>
 <script  type="text/javascript">
  //ftheeten 2018 02 13
@@ -135,6 +152,7 @@ function removeErrorFromMain()
   $('ul"main_error_list').hide();
   $('ul#main_error_list').find('li').text(' ');
 }
+
 function addError(html)
 {
   $('ul#error_list').find('li').text(html);
@@ -151,42 +169,30 @@ $(document).ready(function () {
   $('body').duplicatable({duplicate_href: '<?php echo url_for('specimen/confirm');?>'});
   $('body').catalogue({});
 
-
-
-
-  $('#submit_spec_f1').click(function(event){
+  /*$('#submit_spec_f1').click(function(event){
 	 //JMHerpers 2018/02/08	  
-
-	if($('.code_mrac_input_mask').val() == null)
+	if($('.mrac_input_mask').val() == null)
     {	
 			alert ("Code is mandatory. Please fill the field");
 			$('#add_code').focus();
 			event.preventDefault();
 	}		
 	//rmca 2018 09 10
-	else if($('.code_mrac_input_mask').val() == "")
+	else if($('.mrac_input_mask').val() == "")
     {	
 			alert ("Code is mandatory and left empty. Please fill the field");
 			$('#add_code').focus();
 			event.preventDefault();
 	}else{
-		
-		
 		if($('#specimen_ig_ref_check').val() == 0 && $('#specimen_ig_ref').val() == "" && $('#specimen_ig_ref_name').val() != "")
 		{
-		  if(!window.confirm('Your I.G. number will be lost ! are you sure you want continue ?'))
+		  if(!window.confirm('<?php echo __("Your I.G. number will be lost ! are you sure you want continue ?") ; ?>'))
 			event.preventDefault();
 		}
-		<?php if($duplic>0):?>
-		 //if(window.confirm('Do you want to keep trace of the duplicate relation in the database ?'))
-		 //{
-			 $("#keep_duplicate").val("on");
-		 //}
-		<?php endif;?>
 	}
-  }) ; 
+  }) ;  */
   
-  //ftheeten 2015 10 14
+     //ftheeten 2015 10 14
   //to by pass unicity check has it is a duplicate
   <?php if(isset($newIdentification)): ?>
 	<?php if($newIdentification===TRUE): ?>
@@ -196,27 +202,15 @@ $(document).ready(function () {
  <?php endif; ?>
  
     //ftheeten 2018 02 13 (catch error messages of wiidgets and put them on top of page)
-   var browseErrors=function()
-   {
-	  
+   var browseErrors=function() {
 	   $(".error_list").not('.main_error_list').each(
-			function()
-			{
-							var errorMsg=$(this).text();
-							if(errorMsg.trim().length>0 && $(this).is(':visible'))
-							{
-							
-								addErrorToMain(errorMsg);								
-							}
+			function(){
+				var errorMsg=$(this).text();
+				if(errorMsg.trim().length>0 && $(this).is(':visible'))	{
+					addErrorToMain(errorMsg);								
+				}
 			}
 	   );
-       if ($('.main_error_list')[0]){
-            if($('.main_error_list').css('display').toLowerCase()!="none")
-            {
-                 alert("Error, data not recorded in database ! Check submitted data");
-            }
-        }
-	   
    }
    
    browseErrors();

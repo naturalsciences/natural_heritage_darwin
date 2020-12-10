@@ -4,7 +4,9 @@
  */
 class CollectionsTable extends DarwinTable
 {
-  public function completeAsArray($user, $needle, $exact, $limit = 30, $level)
+ //ftheeten added default to level 2016 11 04
+          //ftheeten added default to array_agg 2018 10 01
+  public function completeAsArray($user, $needle, $exact, $limit = 30, $level='', $agg=false)
   {
     $conn_MGR = Doctrine_Manager::connection();
     $q = Doctrine_Query::create()
@@ -91,15 +93,15 @@ class CollectionsTable extends DarwinTable
     return $q->fetchOne();
   }
 
-  public function fetchByCollectionParent($current_user, $user_id, $collection_id)
+  public function fetchByCollectionParent($curent_user, $user_id, $collection_id)
   {
     $expr = "%/$collection_id/%" ;
     $q = Doctrine_Query::create()
       ->select('c.*, r.*, CONCAT(c.path,c.id,E\'/\') as coll_path_id')
       ->from('Collections c')
       ->leftJoin('c.CollectionsRights r ON c.id=r.collection_ref AND r.user_ref = '.$user_id);
-    if(! $current_user->isAtLeast(Users::ADMIN))
-      $q->innerJoin('c.CollectionsRights r2 ON c.id=r2.collection_ref AND r2.db_user_type >=4 AND r2.user_ref = '.$current_user->getId());
+    if(! $curent_user->isAtLeast(Users::ADMIN))
+      $q->innerJoin('c.CollectionsRights r2 ON c.id=r2.collection_ref AND r2.db_user_type >=4 AND r2.user_ref = '.$curent_user->getId());
 
     $q->andWhere('c.path like ?', $expr)
       ->orderBy('coll_path_id ASC');
@@ -140,6 +142,7 @@ class CollectionsTable extends DarwinTable
   public function getAllAvailableCollectionsFor($user)
   {
     $user_id = $user->getId();
+
     $q = Doctrine_Query::create()
       ->select('c.*')
       ->from('Collections c')  ;   
@@ -175,10 +178,61 @@ class CollectionsTable extends DarwinTable
     return 0;
   }
   
-    //ftheeten 2018 04 27
+   //ftheeten 2017 07 05
+    public static function getAllAvailableCollectionsHierarchical()
+  {
+
+    $q = Doctrine_Query::create()
+      ->select('c.*')
+      ->from('Collections c')  ;   
+    $q->orderBy('name ASC');
+    $res = $q->execute();
+    $results = array(0 =>'All');
+    $resultsTmp = array();
+    $indexedResults = array();
+    $mapping=array();
+    $alphaPaths=array();
+    foreach($res as $row)
+    {
+      $resultsTmp[$row->getId()] = $row->getName();
+      $indexedResults[$row->getId()] = $row->getNameIndexed();
+      $mapping[$row->getId()] = $row->getPath().'/'.$row->getId().'/';
+
+    }
+    foreach($mapping as $key=>$path)
+    {
+      $alphaPath=CollectionsTable::getAlphabeticalPath($path, $indexedResults);
+      $alphaPaths[$alphaPath]=$key;
+    }
+    ksort($alphaPaths);
+    foreach($alphaPaths as $alphaPath=>$colId)
+    {
+        $levels= substr_count( $alphaPath, "/");
+        $results[$colId]= str_repeat("-", $levels-1).$resultsTmp[$colId];
+    }
+    return $results;
+  }
   
+  //ftheeten 2017 >08 01 ?
+  public static function getAlphabeticalPath($path, $colNames)
+  {
+
+    $arrayPath=explode("/", $path);
+    $returned="/";
+    foreach($arrayPath as $item)
+    {
+        if(is_numeric($item))
+        {            
+            $collname=$colNames[$item];
+             $returned.=$collname."/";
+        }
+    }
+    return $returned;
+  }
   
-  public function countSpecimens($collectionID ="/", $year="", $creation_date_min="", $creation_date_max="", $ig_num="", $includeSubcollection=false, $detailSubCollections=false , $hide_private=false, $user=null)
+  //ftheeten 2018 04 27
+  
+  public function countSpecimens($collectionID ="/", $year="", $creation_date_min="", $creation_date_max="", $ig_num="", $includeSubcollection=false, $detailSubCollections=false )
   {
   
     $fields =Array();
@@ -197,7 +251,7 @@ class CollectionsTable extends DarwinTable
     if(strlen($creation_date_min)>0)
     {
         $fields[2]="year";
-        $where[]= "specimen_creation_date >= date_trunc('day',:creation_date_min::timestamp with time zone)";
+        $where[]= "specimen_creation_date >= :creation_date_min::timestamp";
         $groups[]="year";
     }
     
@@ -205,7 +259,7 @@ class CollectionsTable extends DarwinTable
     {
         $orders[]="year";
         $fields[2]="year";
-        $where[]= "specimen_creation_date <= (date_trunc('day',:creation_date_max::timestamp with time zone)  + (24*60*60 - 1) * interval '1 second')";
+        $where[]= "specimen_creation_date <= :creation_date_max::timestamp";
         $groups[]="year";
     }
     
@@ -237,78 +291,22 @@ class CollectionsTable extends DarwinTable
         {
             $where[]= "collection_path LIKE  :id||'%'";            
         }
-		elseif(strpos($collectionID, ","))
-		{
-			
-			$array_col_id=explode(",",$collectionID );
-			$whereTmp=Array();
-			foreach($array_col_id as $tmp_id)
-			{
-				if(is_numeric($tmp_id))
-				{
-					$whereTmp[]= "collection_path||'/'||v_reporting_count_all_specimens_by_collection_year_ig.collection_ref||'/' LIKE '%/$tmp_id/%'";
-				}
-			}
-			$where[]="(".implode(" OR ", $whereTmp).")";
-		}
         else
         {
             //$where[]= "collections.id::varchar  = :ida";
-            $where[]= "collection_path||'/'||v_reporting_count_all_specimens_by_collection_year_ig.collection_ref||'/' LIKE '%/'||:idb||'/%'";
+            $where[]= "collection_path||'/'||collection_ref||'/' LIKE '%/'||:idb||'/%'";
         }       
     }
-	elseif(strpos($collectionID, ","))
-	{
-			
-			$array_col_id=explode(",",$collectionID );
-			$whereTmp=Array();
-			foreach($array_col_id as $tmp_id)
-			{
-				if(is_numeric($tmp_id))
-				{
-					$whereTmp[]= "v_reporting_count_all_specimens_by_collection_year_ig.collection_ref = $tmp_id";
-				}
-			}
-			$where[]="(".implode(" OR ", $whereTmp).")";
-		}
     else
     {
-         $where[]= "v_reporting_count_all_specimens_by_collection_year_ig.collection_ref::varchar  = :id";
+         $where[]= "collection_ref::varchar  = :id";
     }
     
     ksort($fields);
     
     $all_fields=implode(", ", $fields);
-	
-   $hide_str="";
-   $hide_str_where="";
-   $test_user=false;
-   $user_role=Users::ANONYMOUS;
-   $user_id=null;
-   if($user!==null)
-   {
-	   $test_user=true;
-	   $user_role=$user->getDbUserType();
-	   $user_id=$user->getId();
-   }
-   if($hide_private)
-   {
-	   if($user_role==Users::ADMIN)
-	   {
-		   $hide_str="";
-	   }   
-	   elseif(!$test_user||$user_role==Users::ANONYMOUS)
-	   {
-			$hide_str=" INNER JOIN collections ON v_reporting_count_all_specimens_by_collection_year_ig.collection_ref=collections.id AND is_public=true ";
-	   }
-	   else
-	   {
-		   $hide_str="LEFT JOIN collections_rights  ON v_reporting_count_all_specimens_by_collection_year_ig.collection_ref= collections_rights.collection_ref AND user_ref=".$user_id."
-					INNER JOIN collections ON v_reporting_count_all_specimens_by_collection_year_ig.collection_ref=collections.id ";
-			$where[]="(is_public=true OR db_user_type>= 2)";
-	   }
-   }
-    $sql ="SELECT ".$all_fields." FROM v_reporting_count_all_specimens_by_collection_year_ig ".$hide_str." WHERE ".implode(" AND ", $where);
+   
+    $sql ="SELECT ".$all_fields." FROM tv_reporting_count_all_specimens_by_collection_year_ig WHERE ".implode(" AND ", $where);
     
     if(count($groups)>0)
     {
@@ -341,13 +339,13 @@ class CollectionsTable extends DarwinTable
             $q->bindParam(":id", $collectionID, PDO::PARAM_STR);
             
         }
-        elseif(strpos($collectionID,"," )===FALSE)
+        else
         {
             //$q->bindParam(":ida", $collectionID, PDO::PARAM_STR);
             $q->bindParam(":idb", $collectionID, PDO::PARAM_STR);
         }       
     }
-    elseif(strpos($collectionID,"," )===FALSE)
+    else
     {
          $q->bindParam(":id", $collectionID, PDO::PARAM_STR);
     }
@@ -371,7 +369,7 @@ class CollectionsTable extends DarwinTable
     return $items;
   }
   
-    public function countTypeSpecimens($collectionID ="/", $year="", $creation_date_min="", $creation_date_max="", $ig_num="", $includeSubcollection=false, $detailSubCollections=false , $hide_private=false,$user=null )
+    public function countTypeSpecimens($collectionID ="/", $year="", $creation_date_min="", $creation_date_max="", $ig_num="", $includeSubcollection=false, $detailSubCollections=false )
   {
   
     $fields =Array();
@@ -397,14 +395,14 @@ class CollectionsTable extends DarwinTable
     if(strlen($creation_date_min)>0)
     {
         $fields[2]="year";
-        $where[]= "specimen_creation_date >= (date_trunc('day',:creation_date_min::timestamp with time zone))";
+        $where[]= "specimen_creation_date >= :creation_date_min::timestamp";
         $groups[]="year";
     }
     
     if(strlen($creation_date_max)>0)
     {
         $fields[2]="year";
-        $where[]= "specimen_creation_date <= (date_trunc('day',:creation_date_max::timestamp with time zone)  + (24*60*60 - 1) * interval '1 second')";
+        $where[]= "specimen_creation_date <= :creation_date_max::timestamp";
         $groups[]="year";
     }
     
@@ -441,43 +439,15 @@ class CollectionsTable extends DarwinTable
         {
             $where[]= "collection_path LIKE  :id||'%'";            
         }
-		elseif(strpos($collectionID, ","))
-		{
-			
-			$array_col_id=explode(",",$collectionID );
-			$whereTmp=Array();
-			foreach($array_col_id as $tmp_id)
-			{
-				if(is_numeric($tmp_id))
-				{
-					$whereTmp[]= "collection_path||'/'||v_reporting_count_all_specimens_type_by_collection_ref_year_ig.collection_ref||'/' LIKE '%/$tmp_id/%'";
-				}
-			}
-			$where[]="(".implode(" OR ", $whereTmp).")";
-		}
         else
         {
             //$where[]= "collections.id::varchar  = :ida";
-            $where[]= "collection_path||'/'||v_reporting_count_all_specimens_type_by_collection_ref_year_ig.collection_ref||'/' LIKE '%/'||:idb||'/%'";
+            $where[]= "collection_path||'/'||collection_ref||'/' LIKE '%/'||:idb||'/%'";
         }       
     }
-	elseif(strpos($collectionID, ","))
-	{
-			
-			$array_col_id=explode(",",$collectionID );
-			$whereTmp=Array();
-			foreach($array_col_id as $tmp_id)
-			{
-				if(is_numeric($tmp_id))
-				{
-					$whereTmp[]= "v_reporting_count_all_specimens_type_by_collection_ref_year_ig.collection_ref = $tmp_id";
-				}
-			}
-			$where[]="(".implode(" OR ", $whereTmp).")";
-		}
     else
     {
-         $where[]= "v_reporting_count_all_specimens_type_by_collection_ref_year_ig.collection_ref::varchar  = :id";
+         $where[]= "collection_ref::varchar  = :id";
     }
     
     $where[]="type <> 'specimen'";
@@ -489,32 +459,7 @@ class CollectionsTable extends DarwinTable
     
     $all_fields=implode(", ", $fields);
    
-   $hide_str="";
-   if($user!==null)
-   {
-	   $test_user=true;
-	   $user_role=$user->getDbUserType();
-	   $user_id=$user->getId();
-   }
-   if($hide_private)
-   {
-	   
-	   if($user_role==Users::ADMIN)
-	   {
-		   $hide_str="";
-	   }   
-	   elseif(!$test_user||$user_role==Users::ANONYMOUS)
-	   {
-			$hide_str=" INNER JOIN collections ON v_reporting_count_all_specimens_type_by_collection_ref_year_ig.collection_ref=collections.id AND is_public=true ";
-	   }
-	   else
-	   {
-		   $hide_str="LEFT JOIN collections_rights  ON v_reporting_count_all_specimens_type_by_collection_ref_year_ig.collection_ref= collections_rights.collection_ref AND user_ref=".$user_id."
-					INNER JOIN collections ON v_reporting_count_all_specimens_type_by_collection_ref_year_ig.collection_ref=collections.id ";
-			$where[]="(is_public=true OR db_user_type>= 2)";
-	   }
-   }
-    $sql ="SELECT ".$all_fields." FROM v_reporting_count_all_specimens_type_by_collection_ref_year_ig ".$hide_str."  WHERE ".implode(" AND ", $where);
+    $sql ="SELECT ".$all_fields." FROM tv_reporting_count_all_specimens_type_by_collection_ref_year_ig  WHERE ".implode(" AND ", $where);
     
     if(count($groups)>0)
     {
@@ -547,13 +492,13 @@ class CollectionsTable extends DarwinTable
             $q->bindParam(":id", $collectionID, PDO::PARAM_STR);
             
         }
-        elseif(strpos($collectionID,",")===false)
+        else
         {
             //$q->bindParam(":ida", $collectionID, PDO::PARAM_STR);
             $q->bindParam(":idb", $collectionID, PDO::PARAM_STR);
         }       
     }
-    elseif(strpos($collectionID,",")===false)
+    else
     {
          $q->bindParam(":id", $collectionID, PDO::PARAM_STR);
     }
@@ -578,7 +523,7 @@ class CollectionsTable extends DarwinTable
   }
   
   
-  public function countTaxaInSpecimen($collectionID ="/", $year="", $creation_date_min="", $creation_date_max="", $ig_num="", $includeSubcollection=false, $detailSubCollections=false  , $hide_private=false)
+  public function countTaxaInSpecimen($collectionID ="/", $year="", $creation_date_min="", $creation_date_max="", $ig_num="", $includeSubcollection=false, $detailSubCollections=false )
   {
   
     $fields =Array();
@@ -604,14 +549,14 @@ class CollectionsTable extends DarwinTable
     if(strlen($creation_date_min)>0)
     {
         $fields[2]="year";
-        $where[]= "creation_date >= date_trunc('day',:creation_date_min::timestamp with time zone)";
+        $where[]= "creation_date >= :creation_date_min::timestamp";
         $groups[]="year";
     }
     
     if(strlen($creation_date_max)>0)
     {
         $fields[2]="year";
-        $where[]= "creation_date <= (date_trunc('day',:creation_date_max::timestamp with time zone)  + (24*60*60 - 1) * interval '1 second')";
+        $where[]= "creation_date <= :creation_date_max::timestamp";
         $groups[]="year";
     }
     
@@ -649,43 +594,15 @@ class CollectionsTable extends DarwinTable
         {
             $where[]= "collection_path LIKE  :id||'%'";            
         }
-		elseif(strpos($collectionID, ","))
-		{
-			
-			$array_col_id=explode(",",$collectionID );
-			$whereTmp=Array();
-			foreach($array_col_id as $tmp_id)
-			{
-				if(is_numeric($tmp_id))
-				{
-					$whereTmp[]= "collection_path||'/'||v_reporting_taxa_in_specimen_per_rank_collection_ref_year_ig.collection_ref||'/' LIKE '%/$tmp_id/%'";
-				}
-			}
-			$where[]="(".implode(" OR ", $whereTmp).")";
-		}
         else
         {
             //$where[]= "collections.id::varchar  = :ida";
-            $where[]= "collection_path||'/'||v_reporting_taxa_in_specimen_per_rank_collection_ref_year_ig.collection_ref||'/' LIKE '%/'||:idb||'/%'";
+            $where[]= "collection_path||'/'||collection_ref||'/' LIKE '%/'||:idb||'/%'";
         }       
     }
-	elseif(strpos($collectionID, ","))
-	{
-			
-			$array_col_id=explode(",",$collectionID );
-			$whereTmp=Array();
-			foreach($array_col_id as $tmp_id)
-			{
-				if(is_numeric($tmp_id))
-				{
-					$whereTmp[]= "v_reporting_taxa_in_specimen_per_rank_collection_ref_year_ig.collection_ref = $tmp_id";
-				}
-			}
-			$where[]="(".implode(" OR ", $whereTmp).")";
-	}
     else
     {
-         $where[]= "v_reporting_taxa_in_specimen_per_rank_collection_ref_year_ig.collection_ref::varchar  = :id";
+         $where[]= "collection_ref::varchar  = :id";
     }
     
     
@@ -694,12 +611,7 @@ class CollectionsTable extends DarwinTable
     
     $all_fields=implode(", ", $fields);
    
-   $hide_str="";
-   if($hide_private)
-   {
-	   $hide_str=" INNER JOIN collections ON v_reporting_taxa_in_specimen_per_rank_collection_ref_year_ig.collection_ref=collections.id AND is_public=true ";
-   }
-    $sql ="SELECT ".$all_fields." FROM v_reporting_taxa_in_specimen_per_rank_collection_ref_year_ig ".$hide_str." WHERE ".implode(" AND ", $where);
+    $sql ="SELECT ".$all_fields." FROM tv_reporting_taxa_in_specimen_per_rank_collection_ref_year_ig  WHERE ".implode(" AND ", $where);
     
     if(count($groups)>0)
     {
@@ -733,13 +645,168 @@ class CollectionsTable extends DarwinTable
             $q->bindParam(":id", $collectionID, PDO::PARAM_STR);
             
         }
-        elseif(strpos($collectionID,",")===FALSE)
+        else
         {
             //$q->bindParam(":ida", $collectionID, PDO::PARAM_STR);
             $q->bindParam(":idb", $collectionID, PDO::PARAM_STR);
         }       
     }
-    elseif(strpos($collectionID,",")===FALSE)
+    else
+    {
+         $q->bindParam(":id", $collectionID, PDO::PARAM_STR);
+    }
+    
+    if(strlen($creation_date_min)>0)
+    {
+         $q->bindParam(":creation_date_min", $creation_date_min, PDO::PARAM_STR);
+    }
+    
+    if(strlen($creation_date_max)>0)
+    {
+        $q->bindParam(":creation_date_max", $creation_date_max, PDO::PARAM_STR);
+    }
+       
+   
+   
+    $q->execute();
+    
+    $items=$q->fetchAll(PDO::FETCH_ASSOC);
+
+    return $items;
+  
+  }
+  
+  public function countHigherTaxa($collectionID ="/", $year="", $creation_date_min="", $creation_date_max="", $ig_num="", $includeSubcollection=false, $detailSubCollections=false )
+  {
+  
+    $fields =Array();
+    $groups =Array();
+    $where =Array();
+    $orders=Array();
+    if($detailSubCollection>0)
+    {
+        $fields[0]="collection_name";
+        $fields[1]="level_name";
+        $groups[]="collection_name";
+        $groups[]="level_name";
+        
+    }
+   
+    if(strlen($year)>0)
+    {
+        $fields[2]="year";
+        $where[]= "year = :year";
+        $groups[]="year";
+    }
+    
+    if(strlen($creation_date_min)>0)
+    {
+        $fields[2]="year";
+        $where[]= "creation_date >= :creation_date_min::timestamp";
+        $groups[]="year";
+    }
+    
+    if(strlen($creation_date_max)>0)
+    {
+        $fields[2]="year";
+        $where[]= "creation_date <= :creation_date_max::timestamp";
+        $groups[]="year";
+    }
+    
+     if(strlen($ig_num)>0)
+    {
+        $fields[3]="ig_num";
+         $groups[]="ig_num";
+        $where[]= "ig_num = :ig_num";
+    }
+    
+    
+   
+    
+    $orders[]="level_ref";
+    $groups[]="level_ref";
+    
+    
+    $fields[1]="level_name";
+    $groups[]="level_name";
+    
+    if($detailSubCollections)
+    {
+        
+        $orders[]="collection_name";
+        $fields[0]="collection_name";
+        
+        $groups[]="collection_name";
+        $includeSubcollection=true;
+    }
+    
+    if($includeSubcollection||$collectionID=="/")
+    {
+        
+        if($collectionID=="/")
+        {
+            $where[]= "collection_path LIKE  :id||'%'";            
+        }
+        else
+        {
+            //$where[]= "collections.id::varchar  = :ida";
+            $where[]= "collection_path||'/'||collection_ref||'/' LIKE '%/'||:idb||'/%'";
+        }       
+    }
+    else
+    {
+         $where[]= "collection_ref::varchar  = :id";
+    }
+    
+    $fields[]="string_agg(DISTINCT taxon , ',' ORDER BY taxon) as taxa ";
+     $fields[]="level_ref ";
+    
+    
+    ksort($fields);
+    
+    $all_fields=implode(", ", $fields);
+   
+    $sql ="SELECT DISTINCT ".$all_fields." FROM tv_reporting_higher_taxa_per_rank_collection_ref_year_ig  WHERE ".implode(" AND ", $where);
+    
+    if(count($groups)>0)
+    {
+        $sql = $sql." GROUP BY ".implode(", ", $groups);
+    }
+    
+     if(count($orders)>0)
+    {
+        $sql = $sql." ORDER BY ".implode(", ", $orders);
+    }
+    
+  
+    $conn = Doctrine_Manager::connection();
+    $q = $conn->prepare($sql);
+    
+     if(strlen($year)>0)
+    {
+        $q->bindParam(":year", $year);
+    }
+    
+     if(strlen($ig_num)>0)
+    {
+       $q->bindParam(":ig_num", $ig_num, PDO::PARAM_STR);
+    }
+    
+    if($includeSubcollection||$collectionID=="/")    
+    {
+        
+        if($collectionID=="/")
+        {
+            $q->bindParam(":id", $collectionID, PDO::PARAM_STR);
+            
+        }
+        else
+        {
+            //$q->bindParam(":ida", $collectionID, PDO::PARAM_STR);
+            $q->bindParam(":idb", $collectionID, PDO::PARAM_STR);
+        }       
+    }
+    else
     {
          $q->bindParam(":id", $collectionID, PDO::PARAM_STR);
     }
@@ -886,56 +953,8 @@ class CollectionsTable extends DarwinTable
 
 		return $items;
    }
-   
-    //ftheeten 2017 07 05
-    public static function getAllAvailableCollectionsHierarchical()
-  {
-
-    $q = Doctrine_Query::create()
-      ->select('c.*')
-      ->from('Collections c')  ;   
-    $q->orderBy('name ASC');
-    $res = $q->execute();
-    $results = array(0 =>'All');
-    $resultsTmp = array();
-    $indexedResults = array();
-    $mapping=array();
-    $alphaPaths=array();
-    foreach($res as $row)
-    {
-      $resultsTmp[$row->getId()] = $row->getName();
-      $indexedResults[$row->getId()] = $row->getNameIndexed();
-      $mapping[$row->getId()] = $row->getPath().'/'.$row->getId().'/';
-
-    }
-    foreach($mapping as $key=>$path)
-    {
-      $alphaPath=CollectionsTable::getAlphabeticalPath($path, $indexedResults);
-      $alphaPaths[$alphaPath]=$key;
-    }
-    ksort($alphaPaths);
-    foreach($alphaPaths as $alphaPath=>$colId)
-    {
-        $levels= substr_count( $alphaPath, "/");
-        $results[$colId]= str_repeat("-", $levels-1).$resultsTmp[$colId];
-    }
-    return $results;
-  }
   
-  //ftheeten 2017 >08 01 ?
-  public static function getAlphabeticalPath($path, $colNames)
-  {
-
-    $arrayPath=explode("/", $path);
-    $returned="/";
-    foreach($arrayPath as $item)
-    {
-        if(is_numeric($item))
-        {            
-            $collname=$colNames[$item];
-             $returned.=$collname."/";
-        }
-    }
-    return $returned;
-  }
+  
+ 
+  
 }

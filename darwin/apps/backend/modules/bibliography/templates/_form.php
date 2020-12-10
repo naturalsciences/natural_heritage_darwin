@@ -28,6 +28,18 @@ $(document).ready(function ()
         <td>
           <?php echo $form['title']->renderError() ?>
           <?php echo $form['title'] ?>
+        </td>      
+        <th><?php echo $form['reference']->renderLabel() ?></th>
+        <td>
+          <?php echo $form['reference']->renderError() ?>
+          <?php echo $form['reference'] ?>
+        </td>
+      </tr>
+      <tr>
+        <th><?php echo $form['doi']->renderLabel() ?></th>
+        <td>
+          <?php echo $form['doi']->renderError() ?>
+          <?php echo $form['doi'] ?>
         </td>
       </tr>
       <tr>

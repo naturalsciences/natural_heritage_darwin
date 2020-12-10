@@ -18,7 +18,7 @@ class LoanRightsForm extends BaseLoanRightsForm
     $user_id= $this->getObject()->getUserRef() ;
     if($user_id)
     {      
-      $user = Doctrine_Core::getTable('Users')->findOneById($user_id) ;
+      $user = Doctrine::getTable('Users')->findOneById($user_id) ;
       $this->widgetSchema['user_ref']->setLabel($user->getFormatedName()) ;
     }
     else 

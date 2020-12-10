@@ -11,7 +11,9 @@ class UsersTable extends DarwinTable
   * @param $exact bool are we searching the exact term or more or less fuzzy
   * @return Array of results
   */
-  public function completeAsArray($user, $needle, $exact, $limit = 30, $level)
+   //ftheeten added default to level 2016 11 04
+    //ftheeten added default to arrat_agg 2018 10 01
+  public function completeAsArray($user, $needle, $exact, $limit = 30, $level='', $array_agg=false)
   {
     $conn_MGR = Doctrine_Manager::connection();
     $q = Doctrine_Query::create()

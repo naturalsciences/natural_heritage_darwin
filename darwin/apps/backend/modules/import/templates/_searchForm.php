@@ -1,7 +1,7 @@
 <?php include_stylesheets_for_form($form) ?>
 <?php include_javascripts_for_form($form) ?>
   <div class="import_filter">
-    <?php 
+  <?php 
 		//ftheeten 2018 07 15
 		if($format=="taxon")
 		{
@@ -11,16 +11,6 @@
 		elseif($format=="abcd")
 		{
 			$path='import/search';
-			
-		}
-		elseif($format=="locality")
-		{
-			$path='import/searchLocality';
-			
-		}
-        elseif($format=="lithostratigraphy")
-		{
-			$path='import/searchLithostratigraphy';
 			
 		}
 		elseif($format=="files")
@@ -62,14 +52,10 @@
     </div>
     <?php if($format == 'taxon') : ?>    
       <div class="new_link"><a href="<?php echo url_for('import/upload?format=taxon') ?>"><?php echo __('Import Taxons');?></a>
-	<?php elseif($format == 'locality') : ?>    
-      <div class="new_link"><a href="<?php echo url_for('import/upload?format=locality') ?>"><?php echo __('Import Localities');?></a>
-     <?php elseif($format == 'files') : ?>    
+	<?php elseif($format == 'files') : ?>    
       <div class="new_link"><a href="<?php echo url_for('import/upload?format=files') ?>"><?php echo __('Import Files');?></a>
-	  <?php elseif($format == 'links') : ?>    
+	<?php elseif($format == 'links') : ?>    
       <div class="new_link"><a href="<?php echo url_for('import/upload?format=links') ?>"><?php echo __('Import Links');?></a>
-	 <?php elseif($format == 'lithostratigraphy') : ?>    
-      <div class="new_link"><a href="<?php echo url_for('import/upload?format=lithostratigraphy') ?>"><?php echo __('Import Lithostratigraphy');?></a>
     <?php else : ?>
       <div class="new_link"><a href="<?php echo url_for('import/upload?format=abcd') ?>"><?php echo __('Import Specimens');?></a></div>
     <?php endif ; ?>

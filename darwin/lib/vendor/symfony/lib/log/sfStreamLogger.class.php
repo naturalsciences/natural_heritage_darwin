@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
- *
+ * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -14,11 +14,10 @@
  * @package    symfony
  * @subpackage log
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfStreamLogger.class.php 9081 2008-05-20 00:47:12Z Carl.Vondrick $
  */
 class sfStreamLogger extends sfLogger
 {
-  /** @var resource */
   protected
     $stream = null;
 
@@ -29,12 +28,10 @@ class sfStreamLogger extends sfLogger
    *
    * - stream: A PHP stream
    *
-   * @param  sfEventDispatcher $dispatcher A sfEventDispatcher instance
-   * @param  array             $options    An array of options.
+   * @param  sfEventDispatcher $dispatcher  A sfEventDispatcher instance
+   * @param  array             $options     An array of options.
    *
-   * @return void
-   *
-   * @throws sfConfigurationException
+   * @return Boolean      true, if initialization completes successfully, otherwise false.
    */
   public function initialize(sfEventDispatcher $dispatcher, $options = array())
   {
@@ -52,13 +49,13 @@ class sfStreamLogger extends sfLogger
 
     $this->stream = $options['stream'];
 
-    parent::initialize($dispatcher, $options);
+    return parent::initialize($dispatcher, $options);
   }
 
   /**
    * Sets the PHP stream to use for this logger.
    *
-   * @param resource $stream A php stream
+   * @param stream $stream A php stream
    */
   public function setStream($stream)
   {
@@ -69,7 +66,7 @@ class sfStreamLogger extends sfLogger
    * Logs a message.
    *
    * @param string $message   Message
-   * @param int    $priority  Message priority
+   * @param string $priority  Message priority
    */
   protected function doLog($message, $priority)
   {

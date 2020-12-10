@@ -10,10 +10,9 @@ class ParsingTag extends ImportABCDXml
   {
     switch($tagtype)
     {
-      //case "gtu" : $this->people_type = "collector" ; $this->relation = "gtu";  break ;;
-      //case "unit" : $this->people_type = "donator" ; break ;;
-      case "gtu" : $this->relation = "gtu";  break ;;
-      case "unit" :  break ;
+      case "gtu" : $this->people_type = "collector" ; $this->relation = "gtu";  break ;;
+     // case "unit" : $this->people_type = "donator" ; break ;;
+     case "unit" :  break ;
       case "lithology" : $this->relation = "lithology" ; break ;;
     }
   }
@@ -121,22 +120,17 @@ class ParsingTag extends ImportABCDXml
 
   public function addMethod($data,$staging_id)
   {
-    $method = Doctrine_Core::getTable('CollectingMethods')->checkIfMethod($data);
-	
+    $method = Doctrine::getTable('CollectingMethods')->checkIfMethod($data);
     if($method) $ref = $method->getId() ;
     else
     {
       $object = new CollectingMethods() ;
       $object->setMethod($data) ;
-	 
       $object->save() ;
-	   
       $ref = $object->getId() ;
     }
-	
     $object = new StagingMethods() ;
     $object->fromArray(array("staging_ref" => $staging_id, "collecting_method_ref" => $ref)) ;
-	
     return $object ;
   }
 
@@ -145,7 +139,7 @@ class ParsingTag extends ImportABCDXml
     $staging->addRelated($object) ;
   }
   
-  public function setPeopleType($value)
+    public function setPeopleType($value)
   {
      $this->people_type = $value;
   }

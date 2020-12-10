@@ -14,7 +14,7 @@ class cataloguepeopleActions extends DarwinActions
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();  
     if($request->hasParameter('id'))
-      $this->cataloguepeople =  Doctrine_Core::getTable('CataloguePeople')->find($request->getParameter('id'));
+      $this->cataloguepeople =  Doctrine::getTable('CataloguePeople')->find($request->getParameter('id'));
     else
     {
       $this->cataloguepeople = new CataloguePeople();
@@ -25,7 +25,7 @@ class cataloguepeopleActions extends DarwinActions
     $this->form = new CataloguePeopleForm($this->cataloguepeople,array('table' => $request->getParameter('table')));
 
     if($request->isMethod('post'))
-    {
+    {      
       $this->form->bind($request->getParameter('catalogue_people'));
       if($this->form->isValid())
       {
@@ -36,11 +36,24 @@ class cataloguepeopleActions extends DarwinActions
         }
         catch(Doctrine_Exception $ne)
         {
+          
           $e = new DarwinPgErrorParser($ne);
           $error = new sfValidatorError(new savedValidator(),$e->getMessage());
           $this->form->getErrorSchema()->addError($error, 'Darwin 2 :'); 
         }
       }
+      //ftheeten debug validation
+      /*else
+      {
+        print("can't bind");
+        foreach ($this->form->getErrorSchema() as $key => $err) {  
+            if ($key) {  
+                print("error=");
+                 print($key);
+                print($err->getMessage());  
+            }  
+        }
+      }*/
     }
     $this->form->forceSubType();
     $this->searchForm = new PeopleFormFilter(array('table'=> $request->getParameter('table')));
@@ -50,7 +63,7 @@ class cataloguepeopleActions extends DarwinActions
   {
     $orders = substr($request->getParameter('order', ','),0,-1);
     $orders_ids = explode(',',$orders);
-    Doctrine_Core::getTable('CataloguePeople')->changeOrder(
+    Doctrine::getTable('CataloguePeople')->changeOrder(
       $request->getParameter('table'),
       $request->getParameter('rid'),
       $request->getParameter('people_type'),
@@ -61,7 +74,7 @@ class cataloguepeopleActions extends DarwinActions
 
   public function executeGetSubType(sfWebRequest $request)
   {
-    $this->items = Doctrine_Core::getTable('CataloguePeople')->getDistinctSubType($request->getParameter('type'));
+    $this->items = Doctrine::getTable('CataloguePeople')->getDistinctSubType($request->getParameter('type'));
   }
 
 }

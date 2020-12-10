@@ -16,11 +16,12 @@ class KeywordsForm extends sfForm
     if(isset($this->options['no_load']))
       $keywords = array();
     else
-      $keywords = Doctrine_Core::getTable('ClassificationKeywords')->findForTable($this->options['table'], $this->options['id']);
+      $keywords = Doctrine::getTable('ClassificationKeywords')->findForTable($this->options['table'], $this->options['id']);
     foreach ($keywords as $index => $childObject)
     {
       $form = new ClassificationKeywordsForm($childObject);
       $subForm->embedForm($index, $form);
+     // $subForm->getWidgetSchema()->setLabel($index, (string) $childObject);
     }
     $this->embedForm('ClassificationKeywords', $subForm);
 

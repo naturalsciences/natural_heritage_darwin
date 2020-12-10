@@ -18,7 +18,7 @@
  * @author     John Christopher <john.christopher@symfony-project.com>
  * @author     David Heinemeier Hansson
  * @author     Fabian Lange <fabian.lange@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: JavascriptBaseHelper.php 24499 2009-11-28 14:12:02Z FabianLange $
  */
 
 /*
@@ -133,7 +133,7 @@ function array_or_string_for_javascript($option)
 {
   if (is_array($option))
   {
-    return "['".implode('\',\'', $option)."']";
+    return "['".join('\',\'', $option)."']";
   }
   else if (is_string($option) && $option[0] != "'")
   {
@@ -161,7 +161,7 @@ function options_for_javascript($options)
   }
   sort($opts);
 
-  return '{'.implode(', ', $opts).'}';
+  return '{'.join(', ', $opts).'}';
 }
 
 /**

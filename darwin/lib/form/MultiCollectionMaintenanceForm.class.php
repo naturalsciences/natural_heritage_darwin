@@ -13,7 +13,8 @@ class MultiCollectionMaintenanceForm extends BaseCollectionMaintenanceForm
   {
 	$this->useFields(array('people_ref', 'category', 'action_observation', 'description','modification_date_time'));
 
-    $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')));
+	//JMHerpers 2018 02 15 Inversion of max and Min to have most recent dates on top
+	$yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')),intval(sfConfig::get('dw_yearRangeMin')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
     $minDate = new FuzzyDateTime(strval(min($yearsKeyVal)).'/1/1 0:0:0');
     $maxDate = new FuzzyDateTime(strval(max($yearsKeyVal)).'/12/31 23:59:59');
@@ -54,22 +55,13 @@ class MultiCollectionMaintenanceForm extends BaseCollectionMaintenanceForm
 
     $this->validatorSchema['people_ref'] = new sfValidatorInteger();
 
+/*	$this->widgetSchema['parts_ids'] = new sfWidgetFormInputHidden();
+	$this->validatorSchema['parts_ids'] = new sfValidatorString(array('required' => false, 'empty_value' => ''));
+*/
+
 	$this->widgetSchema['category'] = new sfWidgetFormChoice(array('choices' => array('action' => 'Action', 'observation'=>'Observation')));
 	$this->widgetSchema['category']->setLabel('Type');
-
 	$this->widgetSchema['action_observation']->setLabel('Maintenance Achieved');
-
-  $forced_choices = false;
-  $default = null;
-  if(
-    isset($this->options['forced_action_observation_options'])
-    && is_array($this->options['forced_action_observation_options'])
-    && count($this->options['forced_action_observation_options']) > 0
-  ) {
-    $forced_choices = $this->options['forced_action_observation_options'];
-    $default = current(array_keys($forced_choices));
-  }
-
 	$this->widgetSchema['action_observation'] = new widgetFormSelectComplete(array(
 	  'model' => 'CollectionMaintenance',
 	  'table_method' => 'getDistinctActions',
@@ -78,8 +70,6 @@ class MultiCollectionMaintenanceForm extends BaseCollectionMaintenanceForm
 	  'add_empty' => false,
 	  'change_label' => 'Pick an action in the list',
 	  'add_label' => 'Add another action',
-    'forced_choices'=>$forced_choices,
-    'default'=>$default,
     ));
   }
 }

@@ -38,7 +38,3 @@ default_index:
 
 default:
   url:   /:module/:action/*
-
-collections:
-  url:   /collections
-  param: { module: collections, action: index }

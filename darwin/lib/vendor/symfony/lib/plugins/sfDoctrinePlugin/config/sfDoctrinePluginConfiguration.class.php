@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage doctrine
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfDoctrinePluginConfiguration.class.php 30445 2010-07-28 04:37:32Z Kris.Wallsmith $
  */
 class sfDoctrinePluginConfiguration extends sfPluginConfiguration
 {
@@ -37,11 +37,11 @@ class sfDoctrinePluginConfiguration extends sfPluginConfiguration
       $this->dispatcher->connect('debug.web.load_panels', array('sfWebDebugPanelDoctrine', 'listenToAddPanelEvent'));
     }
 
-    if (!class_exists('Doctrine_Core'))
+    if (!class_exists('Doctrine_Core', false))
     {
-      require_once sfConfig::get('sf_doctrine_dir', realpath(dirname(__FILE__).'/../lib/vendor/doctrine/lib')).'/Doctrine/Core.php';
-      spl_autoload_register(array('Doctrine_Core', 'autoload'));
+      require_once sfConfig::get('sf_doctrine_dir', realpath(dirname(__FILE__).'/../lib/vendor/doctrine')).'/Doctrine/Core.php';
     }
+    spl_autoload_register(array('Doctrine_Core', 'autoload'));
 
     $manager = Doctrine_Manager::getInstance();
     $manager->setAttribute(Doctrine_Core::ATTR_EXPORT, Doctrine_Core::EXPORT_ALL);
@@ -53,7 +53,11 @@ class sfDoctrinePluginConfiguration extends sfPluginConfiguration
     // apply default attributes
     $manager->setDefaultAttributes();
 
-    // configure doctrine through the dispatcher
+    if (method_exists($this->configuration, 'configureDoctrine'))
+    {
+      $this->configuration->configureDoctrine($manager);
+    }
+
     $this->dispatcher->notify(new sfEvent($manager, 'doctrine.configure'));
 
     // make sure the culture is intercepted
@@ -76,10 +80,13 @@ class sfDoctrinePluginConfiguration extends sfPluginConfiguration
       'baseClassName'        => 'sfDoctrineRecord',
     );
 
+    // for BC
+    $options = array_merge($options, sfConfig::get('doctrine_model_builder_options', array()));
+
     // filter options through the dispatcher
-    return $this->dispatcher
-      ->filter(new sfEvent($this, 'doctrine.filter_model_builder_options'), $options)
-      ->getReturnValue();
+    $options = $this->dispatcher->filter(new sfEvent($this, 'doctrine.filter_model_builder_options'), $options)->getReturnValue();
+
+    return $options;
   }
 
   /**

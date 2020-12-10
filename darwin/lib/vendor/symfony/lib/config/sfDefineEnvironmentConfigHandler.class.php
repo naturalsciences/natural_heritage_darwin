@@ -13,7 +13,7 @@
  * @package    symfony
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfDefineEnvironmentConfigHandler.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
 class sfDefineEnvironmentConfigHandler extends sfYamlConfigHandler
 {
@@ -42,7 +42,7 @@ class sfDefineEnvironmentConfigHandler extends sfYamlConfigHandler
     }
 
     // parse the yaml
-    $config = static::getConfiguration($configFiles);
+    $config = self::getConfiguration($configFiles);
 
     $values = array();
     foreach ($config as $category => $keys)
@@ -140,10 +140,9 @@ class sfDefineEnvironmentConfigHandler extends sfYamlConfigHandler
 
   /**
    * @see sfConfigHandler
-   * @inheritdoc
    */
   static public function getConfiguration(array $configFiles)
   {
-    return static::replaceConstants(static::flattenConfigurationWithEnvironment(static::parseYamls($configFiles)));
+    return self::replaceConstants(self::flattenConfigurationWithEnvironment(self::parseYamls($configFiles)));
   }
 }

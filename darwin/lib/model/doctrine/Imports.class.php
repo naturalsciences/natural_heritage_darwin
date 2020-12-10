@@ -23,6 +23,8 @@ class Imports extends BaseImports
     'finished' => 'Finished',
     'aborted' => 'Aborted',
     'error' => 'Error',
+	//ftheeten 2017 09 13
+    'loading' => 'Loading',
   );  
   private static $info = array(
     'to_be_loaded' => 'This file is ready to be loaded, an automatic task will be activated to load lines.',
@@ -72,8 +74,7 @@ class Imports extends BaseImports
   public function isEditableState()
   {
     if($this->getState() == 'error') return true ;
-	//2019 03 21
-    //if($this->getFormat() == 'taxon') return false ;
+    if($this->getFormat() == 'taxon') return false ;
     if(($this->getState() == 'pending') && ! $this->getIsFinished()) return true ;
     return false ;
   }   

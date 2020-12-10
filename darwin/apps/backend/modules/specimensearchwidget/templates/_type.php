@@ -18,6 +18,19 @@
 $(document).ready(
     function()
     {
+        if( window.location.href.includes("/criteria/"))
+        {
+            $(".search_type_class").each(
+            
+                    function(index)
+                    {
+                        if($(this).val()=="")
+                        {
+                            $(this).prop('checked', false);
+                        }
+                    }
+             );
+        }
         $("#check_all_types").change(
             function()
             {

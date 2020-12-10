@@ -1,3 +1,0 @@
-See folder 
-./darwin/data/db/db_schema
-to get the PostgreSQL schema needed to install Darwin

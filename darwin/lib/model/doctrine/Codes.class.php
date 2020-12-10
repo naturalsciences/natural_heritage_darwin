@@ -6,16 +6,14 @@
 class Codes extends BaseCodes
 {
   private static $category = array('main'=> 'Main',
+				 'additional id' => 'Addition.',
                  'secondary' => 'Second.',
                  'temporary' => 'Temp.',
-                 'inventory'=> 'Invent.',
-                 'barcode' => 'Barcode',
-                 'additional id' => 'Additional',
-                 'code' => 'Storage',
-                 'genbank number' => 'GenBank Nb.'
+                 'inventory'=> 'Invent.'
                 );
 
-  public static function getCategories()
+   //ftheeten 2018 06 14 (add all)
+  public static function getCategories($add_all=false)
   {
     try{
         $i18n_object = sfContext::getInstance()->getI18n();
@@ -24,7 +22,15 @@ class Codes extends BaseCodes
     {
         return self::$category;
     }
-    return array_map(array($i18n_object, '__'), self::$category);
+	if(!$add_all)
+	{
+		return array_map(array($i18n_object, '__'), self::$category);
+	}
+	else
+	{
+		return array_map(array($i18n_object, '__'), array_merge( array("all"=>"All"), self::$category));
+		
+	}	
   }  
   
   public function getCodeFormated()
@@ -42,5 +48,29 @@ class Codes extends BaseCodes
       $code_suffix = $code_suffix_separator.$code_suffix;
 
     return $code_prefix.$code.$code_suffix;
+  }
+  
+   public function getByCodesFull( $code, $table='specimens',$case_insensitive=true)
+  {
+    
+	if($case_insensitive)
+	{
+		$clause="LOWER(concat( concat(COALESCE(code_prefix,''), COALESCE(code_prefix_separator,''),  COALESCE(code,'') ), 
+        COALESCE(code_suffix_separator,''), COALESCE(code_suffix,'')))=LOWER(?)";
+	}
+	else
+	{
+		$clause="concat( concat(COALESCE(code_prefix,''), COALESCE(code_prefix_separator,''),  COALESCE(code,'') ), 
+        COALESCE(code_suffix_separator,''), COALESCE(code_suffix,''))=?";
+	}
+    $q = Doctrine_Query::create()->
+      select("record_id, code_category, concat( concat(COALESCE(code_prefix,''), COALESCE(code_prefix_separator,''),  COALESCE(code,'') ), 
+        COALESCE(code_suffix_separator,''), COALESCE(code_suffix,'')) as full_code")->
+      from('Codes')->
+      where('referenced_relation = ?', $table)->
+      andWhere($clause,$code)->
+      orderBy('code_category ASC,  full_code_indexed ASC');
+	  
+    return $q->execute();
   }
 }

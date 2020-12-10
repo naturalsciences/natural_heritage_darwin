@@ -11,13 +11,16 @@ class DarwinModel extends sfDoctrineRecord
 
   public function save( Doctrine_Connection $conn = null)
   {
+
     parent::save($conn);
     foreach($this->array_object as $object)
     {
+   
       $object->setReferencedRelation($this->getTable()->getTableName()) ;
+     
       $object->setRecordId($this->id) ;
       try {
-        $object->save() ;
+             $object->save() ;
       }
       catch(Doctrine_Exception $ne)
       {
@@ -28,3 +31,4 @@ class DarwinModel extends sfDoctrineRecord
     return $this->array_errors ;
   }
 }
+?>

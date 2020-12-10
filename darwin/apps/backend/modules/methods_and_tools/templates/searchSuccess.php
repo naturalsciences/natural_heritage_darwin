@@ -25,12 +25,6 @@
                   <?php if($orderBy==$notion) echo $orderSign ?>
                 </a>
               </th>
-              <th>
-                <?php echo __('Specimens count');?>
-              </th>
-              <th>
-                <?php echo __('Collections');?>
-              </th>
               <th>&nbsp;</th>
             </tr>
           </thead>
@@ -38,8 +32,6 @@
             <?php foreach($methods_and_tools as $method_and_tool):?>
               <tr class="rid_<?php echo $method_and_tool->getId(); ?>">
                 <td><?php echo $method_and_tool->getName();?></td>
-                <td><?php echo $method_and_tool->getCountspecimens();?></td>
-                <td><?php echo $method_and_tool->getCollections();?></td>
                 <?php if ($sf_user->isAtleast(Users::ENCODER)) : ?>                
                   <td class="<?php echo (! $is_choose)?'edit':'choose';?>">
                     <?php if(! $is_choose):?>

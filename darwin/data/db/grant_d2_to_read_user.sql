@@ -1,5 +1,5 @@
- GRANT USAGE ON SCHEMA :schema TO d2viewer;
- SET search_path TO :schema, public;
+ GRANT USAGE ON SCHEMA :dbname TO d2viewer;
+ SET search_path TO :dbname, public;
 
  GRANT SELECT ON template_table_record_ref TO d2viewer;
  GRANT SELECT ON catalogue_levels TO d2viewer;
@@ -85,22 +85,5 @@
  GRANT USAGE ON informative_workflow_id_seq TO d2viewer;
  GRANT USAGE ON specimens_relationships_id_seq TO d2viewer;
  GRANT USAGE ON properties_id_seq TO d2viewer;
-
-GRANT EXECUTE ON FUNCTION fct_listing_taxonomy (IN nbr_records INTEGER, VARIADIC taxon_ids INTEGER[]) TO d2viewer;
-GRANT EXECUTE ON FUNCTION fct_listing_zoology (IN nbr_records INTEGER, VARIADIC taxon_ids INTEGER[]) TO d2viewer;
-GRANT EXECUTE ON FUNCTION fct_listing_botany (IN nbr_records INTEGER, VARIADIC taxon_ids INTEGER[]) TO d2viewer;
-GRANT EXECUTE ON FUNCTION fct_listing_chronostratigraphy (IN nbr_records INTEGER, VARIADIC chrono_unit_ids INTEGER[]) TO d2viewer;
-GRANT EXECUTE ON FUNCTION fct_listing_lithostratigraphy (IN nbr_records INTEGER, VARIADIC litho_unit_ids INTEGER[]) TO d2viewer;
-GRANT EXECUTE ON FUNCTION fct_listing_mineralogy (IN nbr_records INTEGER, VARIADIC mineralo_unit_ids INTEGER[]) TO d2viewer;
-GRANT EXECUTE ON FUNCTION fct_listing_lithology (IN nbr_records INTEGER, VARIADIC litholo_unit_ids INTEGER[]) TO d2viewer;
-
- GRANT EXECUTE ON FUNCTION stats_collections_encoding (collections.id%TYPE, timestamp, timestamp) to d2viewer;
- GRANT EXECUTE ON FUNCTION stats_collections_encoding (collections.id%TYPE, text, text) to d2viewer;
- GRANT EXECUTE ON FUNCTION stats_collections_encoding_optimistics (collections.id%TYPE, timestamp, timestamp) to d2viewer;
- GRANT EXECUTE ON FUNCTION stats_collections_encoding_optimistics (collections.id%TYPE, text, text) to d2viewer;
- GRANT EXECUTE ON FUNCTION stats_encoders_encoding (collections.id%TYPE, TEXT, TEXT, TEXT) to d2viewer;
- GRANT EXECUTE ON FUNCTION stats_encoders_encoding (collections.id%TYPE, TEXT, TIMESTAMP, TIMESTAMP) to d2viewer;
- GRANT EXECUTE ON FUNCTION stats_encoders_encoding_optimistics (collections.id%TYPE, TEXT, TEXT, TEXT) to d2viewer;
- GRANT EXECUTE ON FUNCTION stats_encoders_encoding_optimistics (collections.id%TYPE, TEXT, TIMESTAMP, TIMESTAMP) to d2viewer;
 
  ALTER USER d2viewer SET search_path TO darwin2, public;

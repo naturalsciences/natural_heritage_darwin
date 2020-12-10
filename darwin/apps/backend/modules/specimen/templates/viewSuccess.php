@@ -3,9 +3,9 @@
 <?php use_stylesheet('widgets.css') ?>
 <?php use_javascript('widgets.js') ?>
 <?php use_javascript('button_ref.js') ?>
+<?php use_javascript('../barcode/jquery-barcode.js') ?>
 <div class="page">
   <h3 class="spec">
-  
   <span class="title"><?php echo __('View Specimen');?></span>
     <span class="specimen_actions">
         <?php if($sf_user->isPinned($specimen->getId(), 'specimen')) {
@@ -22,9 +22,6 @@
     </span>
   </h3>
   <div class="encod_screen edition" id="intro">
-  <?php if($count>1):?>
-    <div><ul class="error_list main_error_list"><?php print($count);?> Specimen with same collection number</ul></div>
-  <?php endif;?> 
    <div>
       <?php include_partial('widgets/screen', array(
         'widgets' => $widgets,

@@ -8,48 +8,45 @@
  * @package    darwin
  * @subpackage form
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
  */
-abstract class BasePeopleRelationshipsForm extends DarwinModelForm
+abstract class BasePeopleRelationshipsForm extends BaseFormDoctrine
 {
-  protected function setupInheritance()
+  public function setup()
   {
-    parent::setupInheritance();
+    $this->setWidgets(array(
+      'id'                      => new sfWidgetFormInputHidden(),
+      'relationship_type'       => new sfWidgetFormTextarea(),
+      'person_1_ref'            => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'add_empty' => false)),
+      'person_2_ref'            => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Child'), 'add_empty' => false)),
+      'path'                    => new sfWidgetFormTextarea(),
+      'activity_date_from'      => new sfWidgetFormTextarea(),
+      'activity_date_from_mask' => new sfWidgetFormInputText(),
+      'activity_date_to'        => new sfWidgetFormTextarea(),
+      'activity_date_to_mask'   => new sfWidgetFormInputText(),
+      'person_user_role'        => new sfWidgetFormTextarea(),
+    ));
 
-    $this->widgetSchema   ['relationship_type'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['relationship_type'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['person_1_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'add_empty' => false));
-    $this->validatorSchema['person_1_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'column' => 'id'));
-
-    $this->widgetSchema   ['person_2_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Child'), 'add_empty' => false));
-    $this->validatorSchema['person_2_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Child'), 'column' => 'id'));
-
-    $this->widgetSchema   ['path'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['path'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['activity_date_from'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['activity_date_from'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['activity_date_from_mask'] = new sfWidgetFormInputText();
-    $this->validatorSchema['activity_date_from_mask'] = new sfValidatorInteger(array('required' => false));
-
-    $this->widgetSchema   ['activity_date_to'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['activity_date_to'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['activity_date_to_mask'] = new sfWidgetFormInputText();
-    $this->validatorSchema['activity_date_to_mask'] = new sfValidatorInteger(array('required' => false));
-
-    $this->widgetSchema   ['person_user_role'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['person_user_role'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['person_1_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'add_empty' => false));
-    $this->validatorSchema['person_1_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'column' => 'id'));
-
-    $this->widgetSchema   ['person_2_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Child'), 'add_empty' => false));
-    $this->validatorSchema['person_2_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Child'), 'column' => 'id'));
+    $this->setValidators(array(
+      'id'                      => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
+      'relationship_type'       => new sfValidatorString(array('required' => false)),
+      'person_1_ref'            => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'))),
+      'person_2_ref'            => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Child'))),
+      'path'                    => new sfValidatorString(array('required' => false)),
+      'activity_date_from'      => new sfValidatorString(array('required' => false)),
+      'activity_date_from_mask' => new sfValidatorInteger(array('required' => false)),
+      'activity_date_to'        => new sfValidatorString(array('required' => false)),
+      'activity_date_to_mask'   => new sfValidatorInteger(array('required' => false)),
+      'person_user_role'        => new sfValidatorString(array('required' => false)),
+    ));
 
     $this->widgetSchema->setNameFormat('people_relationships[%s]');
+
+    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
+
+    $this->setupInheritance();
+
+    parent::setup();
   }
 
   public function getModelName()

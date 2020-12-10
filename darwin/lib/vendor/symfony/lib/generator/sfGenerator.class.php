@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- *
+ * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -14,23 +14,21 @@
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfGenerator.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
 abstract class sfGenerator
 {
-  protected $generatorClass = '';
-  /** @var sfGeneratorManager */
-  protected $generatorManager = null;
-  protected $generatedModuleName = '';
-  protected $theme = 'default';
-  protected $moduleName = '';
-  
+  protected
+    $generatorClass      = '',
+    $generatorManager    = null,
+    $generatedModuleName = '',
+    $theme               = 'default',
+    $moduleName          = '';
+
   /**
    * Class constructor.
    *
    * @see initialize()
-   *
-   * @param sfGeneratorManager $generatorManager
    */
   public function __construct(sfGeneratorManager $generatorManager)
   {
@@ -126,7 +124,7 @@ abstract class sfGenerator
   /**
    * Gets the sfGeneratorManager instance.
    *
-   * @return sfGeneratorManager The sfGeneratorManager instance
+   * @return string The sfGeneratorManager instance
    */
   protected function getGeneratorManager()
   {

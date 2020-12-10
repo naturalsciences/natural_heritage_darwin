@@ -6,11 +6,10 @@
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfModelGeneratorConfiguration.class.php 29656 2010-05-28 13:09:33Z Kris.Wallsmith $
  */
 abstract class sfModelGeneratorConfiguration
 {
-  /** @var sfModelGeneratorConfigurationField[][][] */
   protected
     $configuration = array();
 
@@ -100,12 +99,12 @@ abstract class sfModelGeneratorConfiguration
       'new'    => array(
         'fields'  => array(),
         'title'   => $this->getNewTitle(),
-        'actions' => $this->getNewActions() ?: $this->getFormActions(),
+        'actions' => $this->getNewActions() ? $this->getNewActions() : $this->getFormActions(),
       ),
       'edit'   => array(
         'fields'  => array(),
         'title'   => $this->getEditTitle(),
-        'actions' => $this->getEditActions() ?: $this->getFormActions(),
+        'actions' => $this->getEditActions() ? $this->getEditActions() : $this->getFormActions(),
       ),
     );
 
@@ -232,11 +231,6 @@ abstract class sfModelGeneratorConfiguration
     }
   }
 
-  /**
-   * @param string        $context
-   * @param string[]|null $fields
-   * @return array|sfModelGeneratorConfigurationField[]
-   */
   public function getContextConfiguration($context, $fields = null)
   {
     if (!isset($this->configuration[$context]))
@@ -307,8 +301,6 @@ abstract class sfModelGeneratorConfiguration
    * all the fields from the form are returned (dynamically).
    *
    * @param sfForm $form The form with the fields
-   *
-   * @return array
    */
   public function getFormFilterFields(sfForm $form)
   {
@@ -358,8 +350,6 @@ abstract class sfModelGeneratorConfiguration
    *
    * @param sfForm $form    The form with the fields
    * @param string $context The display context
-   *
-   * @return array
    */
   public function getFormFields(sfForm $form, $context)
   {
@@ -474,7 +464,6 @@ abstract class sfModelGeneratorConfiguration
 
   public function getPager($model)
   {
-    // TODO: Probably `getPagerClass()` method should be abstract here. As well as `getPagerMaxPerPage`
     $class = $this->getPagerClass();
 
     return new $class($model, $this->getPagerMaxPerPage());

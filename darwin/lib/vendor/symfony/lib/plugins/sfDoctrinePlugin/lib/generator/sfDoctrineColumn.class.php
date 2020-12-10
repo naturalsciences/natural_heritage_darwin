@@ -16,7 +16,7 @@
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfDoctrineColumn.class.php 24604 2009-11-30 21:00:46Z Jonathan.Wage $
  */
 class sfDoctrineColumn implements ArrayAccess
 {
@@ -49,14 +49,6 @@ class sfDoctrineColumn implements ArrayAccess
   protected $foreignClassName = null;
 
   /**
-   * Store the name of the related column for this column if it is
-   * a foreign key
-   *
-   * @var string
-   */
-  protected $foreignFieldName = null;
-
-  /**
    * Doctrine_Table instance this column belongs to
    *
    * @var Doctrine_Table $table
@@ -77,12 +69,6 @@ class sfDoctrineColumn implements ArrayAccess
    */
   protected $definition = array();
 
-  /**
-   * Constructor
-   *
-   * @param string $name
-   * @param Doctrine_Table $table
-   */
   public function __construct($name, Doctrine_Table $table)
   {
     $this->name = $name;
@@ -185,16 +171,16 @@ class sfDoctrineColumn implements ArrayAccess
     if ($this->hasDefinitionKey($key))
     {
       return $this->definition[$key];
+    } else {
+      return false;
     }
-
-    return false;
   }
 
   /**
    * Returns a value from the current column's relation.
-   *
+   * 
    * @param string $key
-   *
+   * 
    * @return mixed|null
    */
   public function getRelationKey($key)
@@ -208,8 +194,6 @@ class sfDoctrineColumn implements ArrayAccess
         return $relation[$key];
       }
     }
-
-    return null;
   }
 
   /**
@@ -223,12 +207,10 @@ class sfDoctrineColumn implements ArrayAccess
     {
       return $this->definition['notnull'];
     }
-
     if (isset($this->definition['notblank']))
     {
       return $this->definition['notblank'];
     }
-
     return false;
   }
 
@@ -243,7 +225,6 @@ class sfDoctrineColumn implements ArrayAccess
     {
       return $this->definition['primary'];
     }
-
     return false;
   }
 
@@ -271,15 +252,9 @@ class sfDoctrineColumn implements ArrayAccess
       if (in_array(strtolower($this->name), $local))
       {
         $this->foreignClassName = $relation['class'];
-        if ($relation->getType() === Doctrine_Relation::ONE)
-        {
-          $this->foreignFieldName = $relation['foreign'];
-        }
-
         return true;
       }
     }
-
     return false;
   }
 
@@ -293,24 +268,9 @@ class sfDoctrineColumn implements ArrayAccess
     if ($this->isForeignKey())
     {
       return $this->foreignClassName;
+    } else {
+      return false;
     }
-
-    return false;
-  }
-
-  /**
-   * Get the name of the related field for this column foreign key.
-   *
-   * @return string
-   */
-  public function getForeignFieldName()
-  {
-    if ($this->isForeignKey())
-    {
-      return $this->foreignFieldName;
-    }
-
-    return false;
   }
 
   /**
@@ -323,9 +283,9 @@ class sfDoctrineColumn implements ArrayAccess
     if ($this->isForeignKey())
     {
       return Doctrine_Core::getTable($this->foreignClassName);
+    } else {
+      return false;
     }
-
-    return false;
   }
 
   /**

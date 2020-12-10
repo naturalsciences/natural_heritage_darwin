@@ -40,19 +40,20 @@
             <?php if($orderBy=='level_ref') echo $orderSign ?>
           </a>
         </th>
-         <!--ftheeten 2018 07 19-->
-        <?php if( $items[0]->getTaxonomyName()!==null): ?>
-                <th> <?php echo __('Taxonomy name');?></th>
+        <!--ftheeten 2018 07 19-->
+        <?php if($items[0]['taxonomy_metadata_name']&&$items[0]['metadata_ref']): ?>
+            <th> <?php echo __('Taxonomy name');?></th>
+			<!--JMHerpers 2019 04 26-->
+            <!--<th><?php echo __('Reference');?></th>
+            <th><?php echo __('Reference taxon');?></th>-->
         <?php endif;?>
 		
-				 <!--JMHerpers 2019 04 26-->
+		<!--JMHerpers 2019 04 26-->
 		<th>
-			<?php if($table=="taxonomy"):?>
-			  <a class="sort" href="<?php echo url_for($s_url.'&orderby=cites'.( ($orderBy=='cites' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
-				<?php echo __('CITES');?>
-				<?php if($orderBy=='cites') echo $orderSign ?>
-			  </a>
-			<?php endif; ?>
+          <a class="sort" href="<?php echo url_for($s_url.'&orderby=cites'.( ($orderBy=='cites' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
+            <?php echo __('CITES');?>
+            <?php if($orderBy=='cites') echo $orderSign ?>
+          </a>
         </th>
 		
         <?php if(isset($items[0]['lower_bound']) && isset($items[0]['upper_bound'])): ?>
@@ -102,20 +103,32 @@
               </div>
             </td>
             <td>
-              <span class="level_name"><?php echo $item->getLevel();?></span>
+				<span><?php echo $item->getLevel();?></span>
             </td>
-             <!--ftheeten 2018 07 19-->
-            <?php if($item->getTaxonomyName()!==null): ?>
-             <td>
-				<span><?php echo $item->getTaxonomyName();?></span>
-            </td>
+            <!--ftheeten 2018 07 19-->
+			<?php if($item['taxonomy_metadata_name']&&$item['metadata_ref']): ?>
+				<td>
+					<span><?php echo $item->getTaxonomyMetadataName();?>
+					<!--JMHerpers 2019 04 26-->
+					<?php if($item->getTaxonomyMetadataReferenceStatus() == 1): ?>
+						<i>(REF.)</i>
+					<?php endif;?></span>
+				</td>
+				<!--JMHerpers 2019 04 26-->
+				<!--<td>
+					 <span><?php echo $item->getTaxonomyMetadataReferenceStatus();?></span>
+					<?php if($item->getTaxonomyMetadataReferenceStatus() == 1): ?>
+						<span  style="margin:auto; display:table;">X</span>
+					<?php endif;?>
+				</td>
+				<td>
+				  <span><?php echo $item->getTaxonomyMetadataReferenceStatus() == "1" ? "true":"false" ;?></span>
+				</td>-->
             <?php endif;?>
 			<!--JMHerpers 2019 04 26-->
 			<td>
-				<?php if($table=="taxonomy"):?>
-					<?php if($item->getCites() == 1): ?>
-						<span  style="margin:auto; display:table;">X</span>
-					<?php endif;?>
+				<?php if($item->getCites() == 1): ?>
+					<span  style="margin:auto; display:table;">X</span>
 				<?php endif;?>
             </td>
             <?php if(isset($item['lower_bound']) && isset($item['upper_bound'])): ?>
@@ -123,21 +136,21 @@
                 <span><?php echo $item->getLowerBound();?></span>
               </td>
               <td class="datesNum">
-                <span><?php echo $item->getUpperBound();?></span>
+                <span><?php echo $item->getUpperBound();?></span> 
               </td>
             <?php endif;?>
             <td class="<?php echo (! $is_choose)?'edit':'choose';?>">
               <a href="#" class="search_related"><?php echo image_tag('link.png', array("title" => __("Search Related")));?></a>
-                <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),$searchForm->getValue('table').'/view?id='.$item->getId());?>
+                <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),$searchForm->getValue('table').'/view?id='.$item->getId(), array("target"=>"_blank"));?>
               <?php if(! $is_choose):?>
                 <?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>
-                  <?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))),$searchForm->getValue('table').'/edit?id='.$item->getId(),array('target'=>"_blank"));?>
-                  <?php echo link_to(image_tag('duplicate.png', array("title" => __("Duplicate"))),$searchForm->getValue('table').'/new?duplicate_id='.$item->getId(),array('target'=>"_blank"));?>
+                  <?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))),$searchForm->getValue('table').'/edit?id='.$item->getId(), array("target"=>"_blank"));?>
+                  <?php echo link_to(image_tag('duplicate.png', array("title" => __("Duplicate"))),$searchForm->getValue('table').'/new?duplicate_id='.$item->getId(), array("target"=>"_blank"));?>
                 <?php endif ; ?>
               <?php else:?>
                 <?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>
-                  <?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))),$searchForm->getValue('table').'/edit?id='.$item->getId(),array('target'=>"_blank"));?>
-                  <?php echo link_to(image_tag('duplicate.png', array("title" => __("Duplicate"))),$searchForm->getValue('table').'/new?duplicate_id='.$item->getId(),array('target'=>"_blank"));?>
+                  <?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))),$searchForm->getValue('table').'/edit?id='.$item->getId(),array('target'=>"_blank"), array("target"=>"_blank"));?>
+                  <?php echo link_to(image_tag('duplicate.png', array("title" => __("Duplicate"))),$searchForm->getValue('table').'/new?duplicate_id='.$item->getId(),array('target'=>"_blank"), array("target"=>"_blank"));?>
                 <?php endif ; ?>
                 <div class="result_choose"><?php echo __('Choose');?></div>
               <?php endif;?>
@@ -152,28 +165,14 @@
     $(document).ready(function () {
       $('a.search_related').click(function(event)
       {
-     
-        //ftheeten 2018 09 10
-        //$(this).closest('form')[0].reset();
-        
-        //ftheeten 2018 09 10
-        var tmpForm=$(this).closest('form')[0];
-        for(var i=0; i < tmpForm.elements.length; i++){
-                var e = tmpForm.elements[i];        
-             
-                if(e.type=="text")
-                {
-                    $(e).val("")
-                }
-                else if(e.type.indexOf("select")!=-1&&e.id!="searchCatalogue_rec_per_page")
-                {                    
-                    e.selectedIndex = 0;                    
-                }
-        }
+        $(this).closest('form')[0].reset();
         event.preventDefault();
         row = $(this).closest('tr');
         iname = row.find('.item_name');
-        $('.search_item_name').html(iname.html());
+        //ftheeten 2018 03 01
+        //$('.search_item_name').html(iname.html());
+        var text_tmp=$(iname).text();
+        $('.search_item_name').html(text_tmp);
         rid = getIdInClasses(row);
         $('#searchCatalogue_item_ref').val(rid);
         $('.search_item_name').closest('tr').show();
@@ -188,7 +187,7 @@
             item_row.find('.tree').html(html).slideDown();
           });
         }
-        item_row.find('.tree').slideUp();
+        $('.tree').slideUp();
       });
 
     });

@@ -36,14 +36,14 @@ class informativeWorkflowActions extends DarwinActions
 
   public function executeViewAll(sfWebRequest $request)
   {
-    $this->informativeWorkflow = Doctrine_Core::getTable('InformativeWorkflow')->findAllForTable($request->getParameter('table'), $request->getParameter('id'));
+    $this->informativeWorkflow = Doctrine::getTable('InformativeWorkflow')->findAllForTable($request->getParameter('table'), $request->getParameter('id'));
   }
 
   public function executeDelete(sfWebRequest $request)
   {
     if(! $this->getUser()->isAtLeast(Users::MANAGER)) $this->forwardToSecureAction();
 
-    Doctrine_Core::getTable('InformativeWorkflow')->deleteRow($request->getParameter('id'), $this->getUser());
+    Doctrine::getTable('InformativeWorkflow')->deleteRow($request->getParameter('id'), $this->getUser());
 
     return $this->renderText('ok');
   }
@@ -68,7 +68,7 @@ class informativeWorkflowActions extends DarwinActions
       $status = $request->getParameter('status');
       $this->form->bind(array('status' => $request->getParameter('status')));
     }
-    $query = Doctrine_Core::getTable("informativeWorkflow")->getAllLatestWorkflow($this->getUser(),$status);   
+    $query = Doctrine::getTable("informativeWorkflow")->getAllLatestWorkflow($this->getUser(),$status);   
     $this->pagerLayout = new PagerLayoutWithArrows(
       new DarwinPager(
         $query,

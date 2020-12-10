@@ -1,10 +1,6 @@
 <script type="text/javascript">
-<?php
-	$flagMenu=detect_menu_hidden();
-?>
 $(document).ready(function () {
     var original_tree = $('.collection_tree_div').html();
-
     $('.treelist li:not(li:has(ul)) img.tree_cmd').hide();
     $('.collapsed').click(function()
     {
@@ -37,8 +33,28 @@ $(document).ready(function () {
         }
       });
     });
-
-
+    <?php if($statistics===TRUE):?>
+    $(".extd_info_stat").click(function ()
+    {
+         var id=$(this).attr('data-collid-stat');
+        
+         var item_row = $(this).closest('.general_statistics');
+         var elem = item_row.find('#statistics_'+id+'_details');
+          if(elem.is(":hidden"))
+                { 
+                  $.get('collection/collectionStatistics/id/'+ id,function (html){
+                    //item_row.slideUp();
+                    elem.html(html).slideDown();
+                  });
+                }
+                else
+               {
+                  elem.slideUp();
+                  //item_row.find('.general_statistics').slideDown();
+                }
+    });
+    <?php endif;?>
+    
     //ftheeten 2018 10 04 collection search engine
     $(".do_reinit_collection").click(
         function()        
@@ -121,8 +137,9 @@ $(document).ready(function () {
         });
      
     //end ftheeten 2018 10 04
+   
     
-    
+ 
 
 
 });
@@ -136,8 +153,7 @@ $(document).ready(function () {
 <div class="container collection_tree_div">
   <?php foreach($institutions as $institution):?>
     <h2><?php echo $institution->getFormatedName();?></h2>
-    
-    <div class='treelist'>
+    <div class="treelist">
     <?php
       $w = new sfWidgetCollectionList(array('choices'=>array(), 'is_choose' => $is_choose));
       //ftheeten 2017 03 31
@@ -147,6 +163,7 @@ $(document).ready(function () {
         $w->attachStatistics();
        
       }
+     
       $root = $tree = new Collections();
       foreach($institution->Collections as $item)
       {
@@ -160,7 +177,7 @@ $(document).ready(function () {
 
     </div>
   <?php endforeach;?>
-  <?php if ($sf_user->isAtLeast(Users::MANAGER)&&$flagMenu): ?>
-    <div class='new_link'><a <?php echo !(isset($is_choose) && $is_choose)?'':'target="_blank"';?> href='<?php echo url_for('collection/new') ?>'><?php echo __('New');?></a></div>
+  <?php if ($sf_user->isAtLeast(Users::MANAGER)): ?>
+    <div class='new_link'><a <?php echo !(isset($is_choose) && $is_choose)?'':'target="_blank"';?> href="<?php echo url_for('collection/new') ?>"><?php echo __('New');?></a></div>
   <?php endif ; ?>
 </div>

@@ -15,11 +15,11 @@ class loanitemActions extends DarwinActions
   protected function checkRight($loan_item_id)  
   {
     // Forward to a 404 page if the requested expedition id is not found
-    $loanitem = Doctrine_Core::getTable('LoanItems')->find($loan_item_id);
+    $loanitem = Doctrine::getTable('LoanItems')->find($loan_item_id);
 
     $this->forward404Unless($loanitem, sprintf('Object loanitem does not exist (%s).', $loan_item_id));
     if($this->getUser()->isAtLeast(Users::ADMIN)) return $loanitem ;
-    $right = Doctrine_Core::getTable('loanRights')->isAllowed($this->getUser()->getId(),$loanitem->getLoanRef());
+    $right = Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$loanitem->getLoanRef());
     if(!$right)
     {
       if ($this->getUser()->isAtLeast(Users::MANAGER)) $this->redirect('loan/view?id='.$loan->getId());
@@ -93,7 +93,7 @@ class loanitemActions extends DarwinActions
     // Forward to a 404 page if the requested expedition id is not found
     $this->forward404Unless($items = explode(',',$request->getParameter('ids')) );
     if(!$id = doctrine::getTable('loanItems')->getLoanRef($items)) $this->forwardToSecureAction();
-    if(!$this->getUser()->isAtLeast(Users::ADMIN) && Doctrine_Core::getTable('loanRights')->isAllowed($this->getUser()->getId(),$id) !== true)
+    if(!$this->getUser()->isAtLeast(Users::ADMIN) && Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$id) !== true)
       $this->forwardToSecureAction();
     if($request->isXmlHttpRequest()) 
     {
@@ -112,7 +112,7 @@ class loanitemActions extends DarwinActions
     // Forward to a 404 page if the requested expedition id is not found
     $this->forward404Unless($items = explode(',',$request->getParameter('ids')) );
     if(!$id = doctrine::getTable('loanItems')->getLoanRef($items)) $this->forwardToSecureAction();
-    if(!$this->getUser()->isAtLeast(Users::ADMIN) && Doctrine_Core::getTable('loanRights')->isAllowed($this->getUser()->getId(),$id) !== true)
+    if(!$this->getUser()->isAtLeast(Users::ADMIN) && Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$id) !== true)
       $this->forwardToSecureAction();
 
     $i18n = $this->getContext()->getI18N();
@@ -159,28 +159,28 @@ class loanitemActions extends DarwinActions
   public function executeView(sfWebRequest $request)
   {
     // Forward to a 404 page if the requested expedition id is not found
-    $this->loan_item = Doctrine_Core::getTable('LoanItems')->find($request->getParameter('id'));
+    $this->loan_item = Doctrine::getTable('LoanItems')->find($request->getParameter('id'));
     $this->forward404Unless($this->loan_item, sprintf('Object loan item does not exist (%s).', $request->getParameter('id')));
 
-    if(!$this->getUser()->isAtLeast(Users::MANAGER) && !Doctrine_Core::getTable('loanRights')->isAllowed($this->getUser()->getId(),$this->loan_item->getLoanRef() ))
+    if(!$this->getUser()->isAtLeast(Users::MANAGER) && !Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$this->loan_item->getLoanRef() ))
       $this->forwardToSecureAction();
     $this->loadWidgets();
   }
 
   public function executeShowmaintenances(sfWebRequest $request)
   {
-    $this->loan_item = Doctrine_Core::getTable('LoanItems')->find($request->getParameter('id'));
+    $this->loan_item = Doctrine::getTable('LoanItems')->find($request->getParameter('id'));
     $this->forward404Unless($this->loan_item, sprintf('Object loan item does not exist (%s).', $request->getParameter('id')));
 
-    if(!$this->getUser()->isAtLeast(Users::ADMIN) && !Doctrine_Core::getTable('loanRights')->isAllowed($this->getUser()->getId(),$this->loan_item->getLoanRef() ))
+    if(!$this->getUser()->isAtLeast(Users::ADMIN) && !Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$this->loan_item->getLoanRef() ))
       $this->forwardToSecureAction();
 
-    $this->maintenances =  Doctrine_Core::getTable('CollectionMaintenance')->getRelatedArray('loan_items', $this->loan_item->getId());
+    $this->maintenances =  Doctrine::getTable('CollectionMaintenance')->getRelatedArray('loan_items', $this->loan_item->getId());
   }
 
   public function executeGetIgNum(sfWebRequest $request)
   {
-    $ig = Doctrine_Core::getTable('Igs')->findIgBySpecimenRef($request->getParameter('id'));
+    $ig = Doctrine::getTable('Igs')->findIgBySpecimenRef($request->getParameter('id'));
     $this->getResponse()->setHttpHeader('Content-type', 'application/json');
     if($ig)
       return $this->renderText( json_encode(array('ig_num'=>$ig->getIgNum(), 'ig_ref'=>$ig->getId())));

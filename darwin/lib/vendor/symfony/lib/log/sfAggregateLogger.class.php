@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- *
+ * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage log
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfAggregateLogger.class.php 14603 2009-01-11 10:35:17Z dwhittle $
  */
 class sfAggregateLogger extends sfLogger
 {
@@ -31,12 +31,12 @@ class sfAggregateLogger extends sfLogger
    * @param  sfEventDispatcher $dispatcher  A sfEventDispatcher instance
    * @param  array             $options     An array of options.
    *
-   * @return void
+   * @return Boolean      true, if initialization completes successfully, otherwise false.
    */
   public function initialize(sfEventDispatcher $dispatcher, $options = array())
   {
     $this->dispatcher = $dispatcher;
-
+    
     if (isset($options['loggers']))
     {
       if (!is_array($options['loggers']))
@@ -47,7 +47,7 @@ class sfAggregateLogger extends sfLogger
       $this->addLoggers($options['loggers']);
     }
 
-    parent::initialize($dispatcher, $options);
+    return parent::initialize($dispatcher, $options);
   }
 
   /**
@@ -76,9 +76,9 @@ class sfAggregateLogger extends sfLogger
   /**
    * Adds a logger.
    *
-   * @param sfLoggerInterface $logger The Logger object
+   * @param object $logger The Logger object
    */
-  public function addLogger(sfLoggerInterface $logger)
+  public function addLogger(sfLogger $logger)
   {
     $this->loggers[] = $logger;
 
@@ -89,7 +89,7 @@ class sfAggregateLogger extends sfLogger
    * Logs a message.
    *
    * @param string $message   Message
-   * @param int    $priority  Message priority
+   * @param string $priority  Message priority
    */
   protected function doLog($message, $priority)
   {
@@ -106,10 +106,7 @@ class sfAggregateLogger extends sfLogger
   {
     foreach ($this->loggers as $logger)
     {
-      if ($logger instanceof sfLogger)
-      {
-        $logger->shutdown();
-      }
+      $logger->shutdown();
     }
 
     $this->loggers = array();

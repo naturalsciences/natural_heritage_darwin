@@ -8,16 +8,13 @@
  * @package    darwin
  * @subpackage form
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfDoctrineFormGeneratedInheritanceTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
  */
 abstract class BaseLoanActorsForm extends CataloguePeopleForm
 {
   protected function setupInheritance()
   {
     parent::setupInheritance();
-
-    $this->widgetSchema   ['record_id'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Loans'), 'add_empty' => false));
-    $this->validatorSchema['record_id'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Loans'), 'column' => 'id'));
 
     $this->widgetSchema->setNameFormat('loan_actors[%s]');
   }

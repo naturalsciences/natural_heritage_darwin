@@ -1,12 +1,12 @@
     <?php $action = $sf_user->isAtLeast(Users::ENCODER)?'edit':'view' ; ?>
     <td class="col_category">
-      <?php if($specimen->getCategory() == 'physical' || $specimen->getCategory() == 'mixed' ):?>
+      <?php if($specimen->getStoragePartFieldHTML("category") == 'physical' || $specimen->getStoragePartFieldHTML("category") == 'mixed' ):?>
         <?php echo image_tag('sp_in.png', array('alt' => __('Physical'), 'title'=> __('Physical')));?>
       <?php endif;?>
-      <?php if($specimen->getCategory() == 'mixed' ):?>
+      <?php if($specimen->getStoragePartFieldHTML("category") == 'mixed' ):?>
         <?php echo __('+');?>
       <?php endif;?>
-      <?php if($specimen->getCategory() == 'observation'  || $specimen->getCategory() == 'mixed' ):?>
+      <?php if($specimen->getStoragePartFieldHTML("category") == 'observation'  || $specimen->getStoragePartFieldHTML("category") == 'mixed' ):?>
         <?php echo image_tag('blue_eyel.png', array('alt' => __('Other'), 'title'=> __('Other')));?>
       <?php endif;?>
     </td>
@@ -19,6 +19,10 @@
           <?php echo $specimen->getCollectionName();?>
         <?php endif ; ?>
         <div id="collection_<?php echo $specimen->getId();?>_tree" class="tree"></div>
+		
+				<!--JMHerpers 2018 02 27 add collection ref hidden-->
+		<input id="Collid" class="Collid" style="display: none;" value="<?php echo $specimen->getCollectionRef();?>">
+		
         <script type="text/javascript">
             $('#collection_<?php echo $specimen->getId();?>_info').click(function() 
             {
@@ -34,60 +38,32 @@
         </script>
       <?php endif ; ?>
     </td>
-    <td class="col_codes">
-      <?php if(isset($codes[$specimen->getId()])):?>
-        <?php if(count($codes[$specimen->getId()]) <= 3):?>
-          <?php echo image_tag('info-bw.png',"title=info class=info");?>
-        <?php else:?>
-          <?php echo image_tag('info.png',"title=info class=info id=spec_code_".$specimen->getId()."_info");?>
-          <script type="text/javascript">
-            $(document).ready(function () {
-              $('#spec_code_<?php echo $specimen->getId();?>_info').click(function() 
-              {
-                item_row=$(this).closest('td');
-                if(item_row.find('li.code_supp:hidden').length)
-                {
-                  item_row.find('li.code_supp').removeClass('hidden');
-                }
-                else
-                {
-                  item_row.find('li.code_supp').addClass('hidden');
-                }
-              });
-            });
-          </script>
-        <?php endif;?>
-        <ul>
-            <?php $cpt = 0 ; foreach($codes[$specimen->getId()] as $key=>$code):?>            
-                <?php if($code->getCodeCategory() == 'main') : ?>
-                  <?php $cpt++ ; ?>
-                  <li <?php if($cpt > 3) echo("class='hidden code_supp'"); ?>>
-                  <!--rmca 2017 12 13-->
-                   <strong>
-                        <?php echo link_to( $code->getFullCode(), 'specimen/view?id='.$specimen->getId(), array('target' => '_blank'));?>
-                    </strong>
-                  </li> 			  
-              <?php elseif ($sf_user->isAtLeast(Users::ENCODER)) : ?>
-                          
-                <li class="hidden code_supp" >
-                    <?php if ($code->getCodeCategory() == 'main') echo "<strong>" ; ?>            
-                    <?php echo $code->getFullCode(); ?>
-                    <?php if ($code->getCodeCategory() == 'main') echo "</strong>" ; ?>
-                </li>         
-              <?php endif ; ?>
-            <?php endforeach; ?>
-        </ul>
-      <?php endif;?>
-    </td>
     <td class="col_taxon">
       <?php if($specimen->getTaxonRef() > 0) : ?>
         <?php echo image_tag('info.png',"title=info class=info id=taxon_".$specimen->getId()."_info");?>
-        <a href="<?php echo url_for('taxonomy/'.$action.'?id='.$specimen->getTaxonRef());?>"><?php echo $specimen->getTaxonName();?></a>
-		<!--JMHerpers 2019 05 29-->
-		<!-- ?php if($specimen->getCites() == TRUE ) : ?> 
+        <a href="<?php echo url_for('taxonomy/'.$action.'?id='.$specimen->getTaxonRef());?>" target="_blank"><?php echo $specimen->getTaxonName();?></a>
+        <!--ftheeten 2016 10 12 (synonymy)-->
+        <?php if($specimen->getSynonymyCountAllInGroup() > 0) : ?>
+        
+            <?php if($specimen->getCountBySynonymyStatus() ==$specimen->getSynonymyCountAllInGroup() ) : ?>
+                    <div id="taxon_synonymy<?php echo $specimen->getId();?>" ><i>Is synonym or has synonyms (no unique valid name set in the synonymy)</i></div>
+            <?php else : ?>
+                <?php if($specimen->getSynonymyStatus() =="invalid") : ?>
+                    <div id="taxon_synonymy<?php echo $specimen->getId();?>" ><i>Synonym</i></div>
+                <?php elseif($specimen->getSynonymyStatus() =="valid" && $specimen->getCountBySynonymyStatus()>1) : ?>
+                    <div id="taxon_synonymy<?php echo $specimen->getId();?>" ><i>Is synonym or has synonyms (no unique valid name set in the synonymy)</i></div>
+                <?php elseif($specimen->getSynonymyStatus() =="valid" && $specimen->getCountBySynonymyStatus()==1) : ?>
+                    <div id="taxon_synonymy<?php echo $specimen->getId();?>" ><i>Has synonyms</i></div>
+                <?php endif ; ?>
+            <?php endif ; ?>
+         <?php endif ; ?>
+		 <?php if(strlen($specimen->getDeterminationStatus())> 0 ) : ?>
+			 <div id="taxon_synonymy<?php echo $specimen->getId();?>" >Det. status : <?php print($specimen->getDeterminationStatus()); ?></div>
+		 <?php endif ; ?>
+		<?php if($specimen->getCites() == TRUE ) : ?>
 			&nbsp;<B><font size="4" color="red">(CITES!!)</font></B>
-		 < ?php endif ; ? -->
-	   <div id="taxon_<?php echo $specimen->getId();?>_tree" class="tree"></div>
+		 <?php endif ; ?>
+        <div id="taxon_<?php echo $specimen->getId();?>_tree" class="tree"></div>
         <script type="text/javascript">
             $('#taxon_<?php echo $specimen->getId();?>_info').click(function() 
             {
@@ -106,7 +82,8 @@
     <td class="col_gtu">
       <?php if($specimen->getGtuRef() > 0) : ?>
         <?php if($specimen->getHasEncodingRights() || $specimen->getStationVisible() || $sf_user->isAtLeast(Users::ADMIN) ):?>
-          <?php echo image_tag('info.png',"title=info class=info id=gtu_ctr_".$specimen->getId()."_info");?>
+			<!--JMHerpers 2018 02 22-->
+          <!--<?php echo image_tag('info.png',"title=info class=info id=gtu_ctr_".$specimen->getId()."_info");?>-->
           <script type="text/javascript">
             $(document).ready(function()
             {
@@ -130,67 +107,136 @@
             });
           </script>
           <?php if ($action == 'edit') : ?>
-            <a href="<?php echo url_for('gtu/'.$action.'?id='.$specimen->getGtuRef(), array("target"=>"_blank")) ;?>"><?php echo $specimen->getGtuCode();?></a>
+            <a target='_blank' href="<?php echo url_for('gtu/'.$action.'?id='.$specimen->getGtuRef()) ;?>"><?php echo $specimen->getGtuCode();?></a>
           <?php else : ?>
-            <?php echo $specimen->getGtuCode();?>
+            <?php echo $specimen->getGtuCode(ESC_RAW);?>
           <?php endif ; ?>
         <?php else:?>
           <?php echo image_tag('info-bw.png',"title=info class=info id=gtu_ctr_".$specimen->getId()."_info");?>
         <?php endif;?>
 
           <div class="general_gtu">
-		   <?php if($specimen->getGtuCountryTagValue() != ""): ?>
-            <strong><?php 
-            //ftheeten 2018 10 04
-            echo __('Country');?> :</strong>
-           <?php echo $specimen->getGtuCountryTagValue(ESC_RAW);?>
-		   </br>
-          <?php endif ; ?>
-          <?php if($specimen->getAllGtuTags() != ""): ?>
-            <strong><?php 
-            //ftheeten 2018 10 04
-            echo __('Localities');?> :</strong>
-           <?php echo $specimen->getAllGtuTags(ESC_RAW);?>
-		   </br>
-		   <?php endif ; ?>
-		   <?php if($specimen->getGtuLocation() != ""): ?>
-		   </br>
-            <strong><?php 
-            //ftheeten 2018 10 04
-            echo __('Coordinates');?> :</strong>
-           <?php echo "<br/>Long :". str_replace(",", " Lat. :",preg_replace('(\(|\))','',(string)$specimen->getGtuLocation()));?>
-		   </br>
-          <?php endif ; ?>
+			<?php if($specimen->getOtherGtuTags() != ""): ?>
+				<!--JMHerpers 2018 02 22-->
+				<!--<strong><?php echo __('Locality (summary)');?> :</strong>-->
+				<?php echo $specimen->getOtherGtuTags(ESC_RAW);?>
+			<?php endif ; ?>
           </div>
           <div id="gtu_<?php echo $specimen->getId();?>_details" style="display:none;"></div>
 
       <?php endif ; ?>
     </td> 
-    <!--ftheeten 2018 11 30-->
+		    <!--JMHerpers 2018 02 22-->
+    <td class="col_gtu_location">
+		<?php if($specimen->getGtuLocation() !== null) : ?>
+			<?php $pos = strpos($specimen->getGtuLocation(), ",");echo "● <b>Long: </b>".substr($specimen->getGtuLocation(),1,$pos -1)."<br>● <b>Lat: </b>".substr($specimen->getGtuLocation(),$pos+1,strlen($specimen->getGtuLocation())-$pos-2);?>
+			<br>
+			<?php if(null !== $specimen->getGtuElevation()):;?>
+				<b>● Elevation: </b><?php echo $specimen->getGtuElevation();?>
+			<?php endif ; ?>
+		<?php endif ; ?>
+    </td>
+    <!--ftheeten 2016 09 13-->
     <td class="col_collecting_dates">
 			<!--jmherpers 2018 01 29-->
-			<?php if(null !==$specimen->getTemporalInformation()->getFromDateMasked() && $specimen->getTemporalInformation()->getFromDateMask()):?>
-				<?php if($specimen->getTemporalInformation()->getFromDateMask() >= 56):?>
-					<b>From: </b><?php echo $specimen->getTemporalInformation()->getFromDateMasked(ESC_RAW);?>
-					<?php elseif($specimen->getTemporalInformation()->getFromDateMask() == 48):?>
-						<b>From: </b><?php echo substr($specimen->getTemporalInformation()->getFromDateMasked(ESC_RAW),12,10);?>
-						<?php elseif($specimen->getTemporalInformation()->getFromDateMask() == 32):?>
-							<b>From: </b><?php echo substr($specimen->getTemporalInformation()->getFromDateMasked(ESC_RAW),15,8);?>
+			<?php if(null !==$specimen->getGtuFromDateMasked() && $specimen->getGtuFromDateMask()):?>
+				<?php if($specimen->getGtuFromDateMask() == 56):?>
+					<b>From: </b><?php echo substr($specimen->getGtuFromDateMasked(ESC_RAW),0,14);?>
+					<?php elseif($specimen->getGtuFromDateMask() == 48):?>
+						<b>From: </b><?php echo substr($specimen->getGtuFromDateMasked(ESC_RAW),12,10);?>
+						<?php elseif($specimen->getGtuFromDateMask() == 32):?>
+							<b>From: </b><?php echo substr($specimen->getGtuFromDateMasked(ESC_RAW),15,8);?>
 				<?php endif ; ?>
             <?php endif ; ?>
-            <?php if(null !==$specimen->getTemporalInformation()->getToDateMasked() && $specimen->getTemporalInformation()->getToDateMask()):?>
+            <?php if(null !==$specimen->getGtuToDateMasked() && $specimen->getGtuToDateMask()):?>
 				<br/>
-				<?php if($specimen->getTemporalInformation()->getToDateMask() >= 56):?>
-					<b>To: </b><?php echo $specimen->getTemporalInformation()->getToDateMasked(ESC_RAW);;?>
-					<?php elseif($specimen->getTemporalInformation()->getToDateMask() == 48):?>
-						<b>To: </b><?php echo substr($specimen->getTemporalInformation()->getToDateMasked(ESC_RAW),12,10);?>
-						<?php elseif($specimen->getTemporalInformation()->getToDateMask() == 32):?>
-							<b>To: </b><?php echo substr($specimen->getTemporalInformation()->getToDateMasked(ESC_RAW),15,8);?>
+				<?php if($specimen->getGtuToDateMask() == 56):?>
+					<b>To: </b><?php echo substr($specimen->getGtuToDateMasked(ESC_RAW),0,14);?>
+					<?php elseif($specimen->getGtuToDateMask() == 48):?>
+						<b>To: </b><?php echo substr($specimen->getGtuToDateMasked(ESC_RAW),12,10);?>
+						<?php elseif($specimen->getGtuToDateMask() == 32):?>
+							<b>To: </b><?php echo substr($specimen->getGtuToDateMasked(ESC_RAW),15,8);?>
 				<?php endif ; ?>
             <?php endif ; ?>
 			<!--end jmherpers 2018 01 29-->
     </td>
+     <!--ftheeten 2016 09 13-->
+    <td class="col_ecology">
+            <?php if(Doctrine::getTable('Comments')->findForTableByNotion('specimens',$specimen->getId(), "ecology")):?>
+            <?php echo(Doctrine::getTable('Comments')->findForTableByNotion('specimens',$specimen->getId(), "ecology")[0]->getComment()); ?>
+            <?php endif ; ?>
+    </td>
 
+    <td class="col_codes">
+      <?php if(isset($codes[$specimen->getId()])):?>
+		
+        <ul>
+        <?php $cpt = 0 ; foreach($codes[$specimen->getId()] as $key=>$code):?>            
+            <?php if($code->getCodeCategory() == 'main') : ?>
+              <?php $cpt++ ; ?>
+              <li <?php if($cpt > 3) echo("class='hidden code_supp'"); ?>>
+			  <!--rmca 2017 12 13-->
+			   <strong>
+					<?php echo link_to( $code->getFullCode(), 'specimen/view?id='.$specimen->getId(), array('target' => '_blank'));?>
+                </strong>
+              </li> 			  
+          <?php elseif ($sf_user->isAtLeast(Users::ENCODER)) : ?>
+                      
+            <li class="hidden code_supp" >
+                <?php if ($code->getCodeCategory() == 'main') echo "<strong>" ; ?>            
+                <?php echo $code->getFullCode(); ?>
+                <?php if ($code->getCodeCategory() == 'main') echo "</strong>" ; ?>
+            </li>         
+          <?php endif ; ?>
+        <?php endforeach; ?>
+        </ul>
+      <?php endif;?>
+    </td>
+	<?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>
+    <td  class="col_loans">
+        <?php if($specimen->getLoanItems()!==NULL):?>
+            <?php foreach($specimen->getLoanDescription() as $key=>$item):?>
+                <?php echo($item['name']);?>&nbsp;&nbsp;&nbsp;<?php echo($item['last_status']);?>
+                <br/>
+             <?php endforeach;?>
+        <?php endif;?>
+    </td>
+     <?php endif;?>
+     <td  class="col_valid_label">
+         <?php if($specimen->getValidLabel()===TRUE):?>
+			<!--jmherpers 2018 01 29-->
+            <!--<?php echo __("Valid label: yes");?>-->
+			<?php echo __("Valid");?>
+        <?php elseif($specimen->getValidLabel()===FALSE):?>
+			<!--jmherpers 2018 01 29-->
+            <!--<?php echo __("Valid label: no");?>-->
+			<?php echo __("Not valid");?>
+        <?php endif;?>
+    </td>
+	<td class="col_nagoya"><?php echo $specimen->getNagoyastatus();?></td> 
+	<td class="col_col_peoples">
+		<?php $cpt = 0 ; foreach(Doctrine::getTable('CataloguePeople')->getPeopleRelated("specimens", array('collector'),$specimen->getId() ) as $key=>$people):?>
+			<li>
+			<?php echo Doctrine::getTable('People')->findOneById($people->getPeopleRef())->getFormatedName() ; ?>
+			</li>
+		<?php endforeach; ?>		
+	</td>
+	<td class="col_ident_peoples">
+		 <?php foreach(Doctrine::getTable('Identifications')->getIdentificationsRelated("specimens", $specimen->getId() ) as $keyIdent=>$ident):?>
+			<?php $cpt = 0 ; foreach(Doctrine::getTable('CataloguePeople')->getPeopleRelated("identifications", array('identifier'), $ident->getId()) as $key=>$people):?>
+				<li>
+					<?php echo Doctrine::getTable('People')->findOneById($people->getPeopleRef())->getFormatedName() ; ?>
+				</li>
+			 <?php endforeach?>
+		 <?php endforeach?>
+	</td>
+	<td class="col_don_peoples">
+		<?php $cpt = 0 ; foreach(Doctrine::getTable('CataloguePeople')->getPeopleRelated("specimens", array('donator'),$specimen->getId() ) as $key=>$people):?>
+			<li>
+			<?php echo Doctrine::getTable('People')->findOneById($people->getPeopleRef())->getFormatedName() ; ?>
+			</li>
+		<?php endforeach; ?>		
+	</td>
     <td  class="col_chrono">
       <?php if($specimen->getChronoRef() > 0) : ?>
         <?php echo image_tag('info.png',"title=info class=info id=chrono_".$specimen->getId()."_info");?>
@@ -284,5 +330,4 @@
     </td>
     <td class="col_acquisition_category">
         <?php echo $specimen->getAcquisitionCategory();?>
-    </td>
-
+    </td>    

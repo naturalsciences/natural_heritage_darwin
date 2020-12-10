@@ -71,7 +71,7 @@ class DarwinTestFunctional extends sfTestFunctional
   
   public function addCustomUserAndLogin($name = '' ,$password = 'nothing')
   { 
-    if($user= Doctrine_Core::getTable("Users")->findOneByFamilyName($name)) return($user->getId()) ;
+    if($user= Doctrine::getTable("Users")->findOneByFamilyName($name)) return($user->getId()) ;
   	if ($name == '') $name = 'user_test_'.rand(1,1000) ;
   	$this->setTester('doctrine', 'sfTesterDoctrine');
   	$this->
@@ -93,7 +93,7 @@ class DarwinTestFunctional extends sfTestFunctional
        check('usersLoginInfos', array('user_name' => $name,
           						'login_type' => 'local'))->
 	  end();    
-	  return(Doctrine_Core::getTable("Users")->findOneByFamilyName($name)->getId()) ;     
+	  return(Doctrine::getTable("Users")->findOneByFamilyName($name)->getId()) ;     
 		   
   }
   
@@ -101,16 +101,16 @@ class DarwinTestFunctional extends sfTestFunctional
   {
     if ($name == "") $name = 'collection_test_'.rand(1,1000) ;  
     $institution_id = $this->addCustomInstitution('Institution for test', 'ITF') ;
-    if ($record = Doctrine_Core::getTable("Users")->findOneByFamilyName('manager')) 
+    if ($record = Doctrine::getTable("Users")->findOneByFamilyName('manager')) 
         $manager_id = $record->getId() ;
     else
     	   $manager_id = $this->addCustomUserAndLogin('manager','evil');    
     
-    if ($record = Doctrine_Core::getTable("Users")->findOneByFamilyName('encoder')) 
+    if ($record = Doctrine::getTable("Users")->findOneByFamilyName('encoder')) 
         $encoder_id = $record->getId() ;
     else
         $encoder_id = $this->addCustomUserAndLogin('encoder','evil');  
-    if ($record = Doctrine_Core::getTable("Users")->findOneByFamilyName('reguser')) 
+    if ($record = Doctrine::getTable("Users")->findOneByFamilyName('reguser')) 
         $reguser_id = $record->getId() ;
     else
         $reguser_id = $this->addCustomUserAndLogin('reguser','evil');               
@@ -139,7 +139,7 @@ class DarwinTestFunctional extends sfTestFunctional
           'main_manager_ref' => $manager_id)
         )->
       end();
-  	$collection_id = Doctrine_Core::getTable('Collections')->getCollectionByName($name)->getId() ;
+  	$collection_id = Doctrine::getTable('Collections')->getCollectionByName($name)->getId() ;
     $this->
        with('doctrine')->begin()->		    
        	check('CollectionsRights', array('user_ref' => $encoder_id, 'collection_ref' => $collection_id))->		     				  
@@ -163,7 +163,7 @@ class DarwinTestFunctional extends sfTestFunctional
           					   'additional_names' => $add_name,
           					   'is_physical' => false))->
 	  end(); 
-	  return(Doctrine_Core::getTable('Institutions')->getInstitutionByName($name)->getId()) ; 
+	  return(Doctrine::getTable('Institutions')->getInstitutionByName($name)->getId()) ; 
   }
   
   public function addCustomTaxon($name = '', $level = 1)
@@ -180,7 +180,7 @@ class DarwinTestFunctional extends sfTestFunctional
        	check('Taxonomy', array('name' => $name,
           				    'level_ref' => $level))->
 	  end();  
-	  return (Doctrine_Core::getTable('Taxonomy')->getTaxonByName($name,$level,'/')->getId()) ;	
+	  return (Doctrine::getTable('Taxonomy')->getTaxonByName($name,$level,'/')->getId()) ;	
   }  
   
   public function addCustomExpedition($name = '')
@@ -204,11 +204,11 @@ class DarwinTestFunctional extends sfTestFunctional
   public function addCustomSpecimen()
   {
     $this->setTester('doctrine', 'sfTesterDoctrine');
-    $collections = Doctrine_Core::getTable('Collections')->findAll();
+    $collections = Doctrine::getTable('Collections')->findAll();
     $collection_id = $collections[rand(0,count($collections)-1)]->getId(); 
     $collector_1 = $this->addCustomPeople() ;
     $collector_2 = $this->addCustomPeople() ;
-    $taxonomy = Doctrine_Core::getTable('Taxonomy')->getRealTaxon();
+    $taxonomy = Doctrine::getTable('Taxonomy')->getRealTaxon();
     $taxon_id = $taxonomy[rand(0,count($taxonomy)-1)]->getId();	 		  
     $this->
       info('** add a custom specimen **')->
@@ -273,6 +273,6 @@ class DarwinTestFunctional extends sfTestFunctional
        with('doctrine')->begin()->		    
        	check('People', array('family_name' => $name))->
 	  end();   
-	return (Doctrine_Core::getTable("People")->findOneByFamilyName($name)->getId()) ;
+	return (Doctrine::getTable("People")->findOneByFamilyName($name)->getId()) ;
   }
 }

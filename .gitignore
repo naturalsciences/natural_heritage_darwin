@@ -1,9 +1,3 @@
-/web/uploads
-/web/log/backend_dev.log
-/web/log/backend_prod.log
-/web/log/public_dev.log
-/web/log/public_prod.log
-/web/config/databases.yml
-/web/cache
-/web/lib/file_models_bck20190131
-/web/lib/modelBck20160706
+/darwin/uploads/*
+/darwin/log/*
+/darwin/config/databases.yml

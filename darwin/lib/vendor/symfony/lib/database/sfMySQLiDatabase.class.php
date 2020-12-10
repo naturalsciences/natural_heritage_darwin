@@ -12,8 +12,6 @@
 /**
  * sfMySQLiDatabase provides connectivity for the MySQL brand database.
  * @see sfMySQLDatabase
- *
- * @property $connection mysqli
  */
 class sfMySQLiDatabase extends sfMySQLDatabase
 {

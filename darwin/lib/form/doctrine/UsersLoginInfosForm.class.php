@@ -51,7 +51,7 @@ class UsersLoginInfosForm extends BaseUsersLoginInfosForm
   {
     if(! isset($values['login_type']))
       $values['login_type'] = 'local';
-    $this->password = Doctrine_Core::getTable('UsersLoginInfos')->getPasswordByType($values['user_ref'], $values['login_type']);
+    $this->password = Doctrine::getTable('UsersLoginInfos')->getPasswordByType($values['user_ref'], $values['login_type']);
     if($this->getObject()->isNew()) //if isset so we're in edition mode
     {
       if($this->password)

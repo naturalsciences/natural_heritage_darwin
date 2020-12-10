@@ -30,7 +30,7 @@ class UsersCommTable extends DarwinTable
     return $q->execute();
   }
   
-      //2017 08 28
+    //2017 08 28
   public function getProfessionalMailsByUser($id)
   {
     $q = Doctrine_Query::create()

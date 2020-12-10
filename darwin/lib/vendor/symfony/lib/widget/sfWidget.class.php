@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
- *
+ * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfWidget.class.php 33596 2012-11-21 14:14:21Z fabien $
  */
 abstract class sfWidget
 {
@@ -157,13 +157,12 @@ abstract class sfWidget
    * Gets an option value.
    *
    * @param  string $name The option name
-   * @param  string $default A default value if option does not exists
    *
    * @return mixed  The option value
    */
-  public function getOption($name, $default = null)
+  public function getOption($name)
   {
-    return isset($this->options[$name]) ? $this->options[$name] : $default;
+    return isset($this->options[$name]) ? $this->options[$name] : null;
   }
 
   /**
@@ -362,7 +361,7 @@ abstract class sfWidget
    */
   static public function escapeOnce($value)
   {
-    return self::fixDoubleEscape(htmlspecialchars((string) $value, ENT_QUOTES, self::getCharset()));
+    return self::fixDoubleEscape(htmlspecialchars(!is_array($value) ? (string) $value : null, ENT_QUOTES, self::getCharset()));
   }
 
   /**
@@ -386,12 +385,8 @@ abstract class sfWidget
   public function attributesToHtml($attributes)
   {
     $attributes = array_merge($this->attributes, $attributes);
-    foreach ($attributes as $key => &$value)
-    {
-      $value = $this->attributesToHtmlCallback($key, $value);
-    }
 
-    return implode('', $attributes);
+    return implode('', array_map(array($this, 'attributesToHtmlCallback'), array_keys($attributes), array_values($attributes)));
   }
 
   /**

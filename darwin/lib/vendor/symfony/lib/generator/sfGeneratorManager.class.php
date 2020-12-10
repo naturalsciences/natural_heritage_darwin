@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfGeneratorManager.class.php 23922 2009-11-14 14:58:38Z fabien $
  */
 class sfGeneratorManager
 {
@@ -75,22 +75,17 @@ class sfGeneratorManager
    *
    * @param string $path    The relative path
    * @param string $content The content
-   *
-   * @return int
-   *
-   * @throws sfCacheException
    */
   public function save($path, $content)
   {
     $path = $this->getBasePath().DIRECTORY_SEPARATOR.$path;
 
-    $cacheDir = dirname($path);
-    if (!is_dir($cacheDir))
+    if (!is_dir(dirname($path)))
     {
       $current_umask = umask(0000);
-      if (!@mkdir($cacheDir, 0777, true) && !is_dir($cacheDir))
+      if (false === @mkdir(dirname($path), 0777, true))
       {
-        throw new \sfCacheException(sprintf('Failed to make cache directory "%s".', $cacheDir));
+        throw new sfCacheException(sprintf('Failed to make cache directory "%s".', dirname($path)));
       }
       umask($current_umask);
     }
@@ -113,7 +108,6 @@ class sfGeneratorManager
    */
   public function generate($generatorClass, $param)
   {
-    /** @var sfGenerator $generator */
     $generator = new $generatorClass($this);
 
     return $generator->generate($param);

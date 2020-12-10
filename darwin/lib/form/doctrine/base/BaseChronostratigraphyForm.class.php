@@ -8,57 +8,47 @@
  * @package    darwin
  * @subpackage form
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
  */
-abstract class BaseChronostratigraphyForm extends DarwinModelForm
+abstract class BaseChronostratigraphyForm extends BaseFormDoctrine
 {
-  protected function setupInheritance()
+  public function setup()
   {
-    parent::setupInheritance();
+    $this->setWidgets(array(
+      'id'           => new sfWidgetFormInputHidden(),
+      'name'         => new sfWidgetFormTextarea(),
+      'name_indexed' => new sfWidgetFormTextarea(),
+      'level_ref'    => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Level'), 'add_empty' => false)),
+      'status'       => new sfWidgetFormTextarea(),
+      'local_naming' => new sfWidgetFormInputCheckbox(),
+      'color'        => new sfWidgetFormTextarea(),
+      'path'         => new sfWidgetFormTextarea(),
+      'parent_ref'   => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'add_empty' => true)),
+      'lower_bound'  => new sfWidgetFormInputText(),
+      'upper_bound'  => new sfWidgetFormInputText(),
+    ));
 
-    $this->widgetSchema   ['name'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['name'] = new sfValidatorString();
-
-    $this->widgetSchema   ['name_indexed'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['name_indexed'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['level_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Level'), 'add_empty' => false));
-    $this->validatorSchema['level_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Level'), 'column' => 'id'));
-
-    $this->widgetSchema   ['status'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['status'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['local_naming'] = new sfWidgetFormInputCheckbox();
-    $this->validatorSchema['local_naming'] = new sfValidatorBoolean(array('required' => false));
-
-    $this->widgetSchema   ['color'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['color'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['path'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['path'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['parent_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'add_empty' => true));
-    $this->validatorSchema['parent_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'column' => 'id', 'required' => false));
-
-    $this->widgetSchema   ['lower_bound'] = new sfWidgetFormInputText();
-    $this->validatorSchema['lower_bound'] = new sfValidatorNumber(array('required' => false));
-
-    $this->widgetSchema   ['upper_bound'] = new sfWidgetFormInputText();
-    $this->validatorSchema['upper_bound'] = new sfValidatorNumber(array('required' => false));
-
-    $this->widgetSchema   ['metadata_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('TaxonomyMetadata'), 'add_empty' => true));
-    $this->validatorSchema['metadata_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('TaxonomyMetadata'), 'column' => 'id', 'required' => false));
-
-    $this->widgetSchema   ['parent_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'add_empty' => true));
-    $this->validatorSchema['parent_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'column' => 'id', 'required' => false));
-
-    $this->widgetSchema   ['level_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Level'), 'add_empty' => false));
-    $this->validatorSchema['level_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Level'), 'column' => 'id'));
-
-    $this->widgetSchema   ['metadata_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('TaxonomyMetadata'), 'add_empty' => true));
-    $this->validatorSchema['metadata_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('TaxonomyMetadata'), 'column' => 'id', 'required' => false));
+    $this->setValidators(array(
+      'id'           => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
+      'name'         => new sfValidatorString(),
+      'name_indexed' => new sfValidatorString(array('required' => false)),
+      'level_ref'    => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Level'))),
+      'status'       => new sfValidatorString(array('required' => false)),
+      'local_naming' => new sfValidatorBoolean(array('required' => false)),
+      'color'        => new sfValidatorString(array('required' => false)),
+      'path'         => new sfValidatorString(array('required' => false)),
+      'parent_ref'   => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'required' => false)),
+      'lower_bound'  => new sfValidatorNumber(array('required' => false)),
+      'upper_bound'  => new sfValidatorNumber(array('required' => false)),
+    ));
 
     $this->widgetSchema->setNameFormat('chronostratigraphy[%s]');
+
+    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
+
+    $this->setupInheritance();
+
+    parent::setup();
   }
 
   public function getModelName()

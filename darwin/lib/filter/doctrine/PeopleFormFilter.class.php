@@ -21,8 +21,8 @@ class PeopleFormFilter extends BasePeopleFormFilter
 
     $this->widgetSchema['is_physical'] = new sfWidgetFormInputHidden();
     $this->setDefault('is_physical', true);
-
-    $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')));
+	//JMHerpers 2018 02 15 Inversion of max and Min to have most recent dates on top
+	$yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')),intval(sfConfig::get('dw_yearRangeMin')));
     $minDate = new FuzzyDateTime(strval(min($yearsKeyVal).'/01/01'));
     $maxDate = new FuzzyDateTime(strval(max($yearsKeyVal).'/12/31'));
     $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
@@ -69,26 +69,9 @@ class PeopleFormFilter extends BasePeopleFormFilter
     $this->widgetSchema['people_type']->setLabel('Role');
     $this->validatorSchema['people_type'] = new sfValidatorChoice(array('required' => false, 'choices' => array_keys($people_types) ));
     
-     //ftheeten 2018 03 23
+       //ftheeten 2018 03 23
     $this->widgetSchema['ig_number'] = new sfWidgetFormInputText();
     $this->validatorSchema['ig_number'] = new sfValidatorString(array('required' => false, 'trim' => true));
-
-
-    $protocol_tmp=Doctrine_Core::getTable("Identifiers")->getDistinctProtocol();
-    $this->widgetSchema['protocol'] = new sfWidgetFormChoice(array(
-       "choices"=> $protocol_tmp
-    ));
-
-    $this->validatorSchema['protocol'] =  new sfValidatorChoice(
-        array(
-         "choices"=> $protocol_tmp,
-         'multiple' => false,
-         "required"=>false
-         )
-    );
-	
-	$this->widgetSchema['identifier'] = new sfWidgetFormInput();
-	$this->validatorSchema['identifier'] = new sfValidatorPass();
 
     $this->validatorSchema->setPostValidator(
       new sfValidatorSchemaCompare(
@@ -104,29 +87,27 @@ class PeopleFormFilter extends BasePeopleFormFilter
   public function doBuildQuery(array $values)
   {
     $query = parent::doBuildQuery($values);
-	$alias = $query->getRootAlias() ;
-	$query->select("$alias.*, string_agg(ip.protocol||' : '||ip.value,'; ') as identifiers")->leftJoin("$alias.IdentifiersPeople ip ON $alias.id=ip.record_id");
     $fields = array('activity_date_from', 'activity_date_to');
     $this->addDateFromToColumnQuery($query, $fields, $values['activity_date_from'], $values['activity_date_to']);
     $query->andWhere('id != 0');
     
-      if($values['ig_number'] != "")
+      //ftheeten 2018 03 23
+   // if(isset($values['ig_number']))
+	if($values['ig_number'] != "")
     {
     
         if(isset($values['people_type']))
         {
-             
+             $alias = $query->getRootAlias() ;
              $query->andWhere("EXISTS (select c2.id from cataloguePeople c2 where $alias.id = c2.people_ref and people_type = ? AND referenced_relation = 'specimens' AND record_id IN (SELECT s.id FROM specimens s WHERE ig_num= ?))",array($values['people_type'],$values['ig_number']));
         }
         else
         {
-           
+            $alias = $query->getRootAlias() ;
             $query->andWhere("EXISTS (select c2.id from cataloguePeople c2 where $alias.id = c2.people_ref AND referenced_relation = 'specimens' AND record_id IN (SELECT s.id FROM specimens s WHERE ig_num= ?))",$values['ig_number']);
         }
     }
-	$this->addIdentifierQuery($query, $alias, $values['protocol'],$values['identifier']);
     
-    $query->groupBy("$alias.id");
     return $query;
   }
 
@@ -142,15 +123,8 @@ class PeopleFormFilter extends BasePeopleFormFilter
 
   public function addFamilyNameColumnQuery($query, $field, $val)
   {
+    //$val=str_replace("-", " ", $val);
     return $this->addNamingColumnQuery($query, 'people', 'formated_name_indexed', $val);
-  }
-  
-  public function addIdentifierQuery($query, $alias, $protocol, $identifier)
-  {
-	  if(strlen($protocol)>0&&strlen($identifier)>0)
-	  {
-		   $query->andWhere("EXISTS (select i.id  from Identifiers i where $alias.id = i.record_id AND referenced_relation = 'people' AND LOWER(i.protocol)=? AND i.value=?)",array(strtolower($protocol), $identifier));
-	  }
   }
 
 }

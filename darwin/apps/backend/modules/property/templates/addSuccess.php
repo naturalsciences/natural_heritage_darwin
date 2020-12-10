@@ -113,6 +113,7 @@
 
 <script  type="text/javascript">
 $(document).ready(function () {
+
   $('form.qtiped_form').modal_screen();
   
   function toggleRangeValue(){

@@ -31,10 +31,10 @@ class massactionsActions extends DarwinActions
         $this->redirect('massactions/status?nb_item='.$nb_item);
       }
       $items_ids = $this->getUser()->getAllPinned('specimen');
-      $this->items = Doctrine_Core::getTable('Specimens')->getByMultipleIds($items_ids, $this->getUser()->getId());
+      $this->items = Doctrine::getTable('Specimens')->getByMultipleIds($items_ids, $this->getUser()->getId());
     } else {
       $items_ids = $this->getUser()->getAllPinned('specimen');
-      $this->items = Doctrine_Core::getTable('Specimens')->getByMultipleIds($items_ids, $this->getUser()->getId(), $this->getUser()->isAtLeast(Users::ADMIN));
+      $this->items = Doctrine::getTable('Specimens')->getByMultipleIds($items_ids, $this->getUser()->getId(), $this->getUser()->isAtLeast(Users::ADMIN));
     }
   }
 

@@ -51,14 +51,28 @@ class LoanRightsTable extends Doctrine_Table
   
   public function isAllowed($user_id, $loan_id)
   {
-    $q = Doctrine_Query::create()      
+    /*$q = Doctrine_Query::create()      
       ->from('LoanRights')
       ->where('user_ref = ?', $user_id)
       ->AndWhere('loan_ref =?', $loan_id);
     $result = $q->fetchOne(); 
     if(!$result) return false ; 
     if($result->getHasEncodingRight()) return true ;
-    return 'view' ;
+    return 'view' ;*/
+    /*$q = Doctrine_Query::create()      
+      ->from('LoanRights')
+      ->where('user_ref = ?', $user_id)
+      ->AndWhere('loan_ref =?', $loan_id);
+    $result = $q->fetchOne(); 
+    if(!$result) return false ; 
+    if($result->getHasEncodingRight()) return true ;
+    return 'view' ;*/
+    //ftheeten 2018 03 07
+    $loan= Doctrine::getTable('Loans')->find($loan_id);
+    $user= Doctrine::getTable('Users')->find($user_id);
+    $testColLoan=Doctrine::getTable('CollectionsRights')->hasEditRightsFor($user, $loan->getCollectionRef());
+   
+    return $testColLoan;
   }
 
 }

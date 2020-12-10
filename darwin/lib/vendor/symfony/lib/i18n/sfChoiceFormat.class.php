@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version    $Id$
+ * @version    $Id: sfChoiceFormat.class.php 33251 2011-12-12 16:30:59Z fabien $
  * @package    symfony
  * @subpackage i18n
  */
@@ -21,18 +21,18 @@
 
 /**
  * sfChoiceFormat class.
- *
- * sfChoiceFormat converts between ranges of numeric values and string
+ * 
+ * sfChoiceFormat converts between ranges of numeric values and string 
  * names for those ranges.
  *
- * A sfChoiceFormat splits the real number line -Inf to +Inf into two or
- * more contiguous ranges. Each range is mapped to a string.
- * sfChoiceFormat is generally used in a MessageFormat for displaying
+ * A sfChoiceFormat splits the real number line -Inf to +Inf into two or 
+ * more contiguous ranges. Each range is mapped to a string. 
+ * sfChoiceFormat is generally used in a MessageFormat for displaying 
  * grammatically correct plurals such as "There are 2 files."
  *
  * <code>
  *  $string = '[0] are no files |[1] is one file |(1,Inf] are {number} files';
- *
+ *  
  *  $formatter = new sfMessageFormat(...); //init for a source
  *  $translated = $formatter->format($string);
  *
@@ -45,7 +45,7 @@
  *  # <t>[1,2]</t> -- accepts values between 1 and 2, inclusive.
  *  # <t>(1,2)</t> -- accepts values between 1 and 2, excluding 1 and 2.
  *  # <t>{1,2,3,4}</t> -- only values defined in the set are accepted.
- *  # <t>[-Inf,0)</t> -- accepts value greater or equal to negative infinity
+ *  # <t>[-Inf,0)</t> -- accepts value greater or equal to negative infinity 
  *                       and strictly less than 0
  * Any non-empty combinations of the delimiters of square and round brackets
  * are acceptable.
@@ -85,9 +85,7 @@ class sfChoiceFormat
    *
    * @param  float  $number the number to test.
    * @param  string $set    the set, in set notation.
-   *
-   * @return bool true if number is in the set, false otherwise.
-   * @throws sfException
+   * @return boolean true if number is in the set, false otherwise.
    */
   public function isValid($number, $set)
   {
@@ -124,13 +122,13 @@ class sfChoiceFormat
         }
         else
         {
-          $elements[] = (float) $string;
+          $elements[] = floatval($string);
         }
       }
       $i++;
     }
     $total = count($elements);
-    $number = (float) $number;
+    $number = floatval($number);
 
     if ($leftBracket == '{' && $rightBracket == '}')
     {
@@ -157,7 +155,12 @@ class sfChoiceFormat
       $right = $number < $elements[$total - 1];
     }
 
-    return $left && $right;
+    if ($left && $right)
+    {
+      return true;
+    }
+
+    return false;
   }
 
   protected function isValidSetNotation($number, $set)
@@ -178,7 +181,6 @@ class sfChoiceFormat
    * Parses a choice string and get a list of sets and a list of strings corresponding to the sets.
    *
    * @param  string $string the string containing the choices
-   *
    * @return array array($sets, $strings)
    */
   public function parse($string)
@@ -208,8 +210,7 @@ class sfChoiceFormat
    *
    * @param  string $string   the choices string.
    * @param  float  $number   the number to test.
-   *
-   * @return string the chosen string.
+   * @return string the choosen string.
    */
   public function format($string, $number)
   {

@@ -8,27 +8,35 @@
  * @package    darwin
  * @subpackage form
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
  */
-abstract class BaseClassificationKeywordsForm extends DarwinModelForm
+abstract class BaseClassificationKeywordsForm extends BaseFormDoctrine
 {
-  protected function setupInheritance()
+  public function setup()
   {
-    parent::setupInheritance();
+    $this->setWidgets(array(
+      'id'                  => new sfWidgetFormInputHidden(),
+      'referenced_relation' => new sfWidgetFormTextarea(),
+      'record_id'           => new sfWidgetFormInputText(),
+      'keyword_type'        => new sfWidgetFormTextarea(),
+      'keyword'             => new sfWidgetFormTextarea(),
+    ));
 
-    $this->widgetSchema   ['referenced_relation'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['referenced_relation'] = new sfValidatorString();
-
-    $this->widgetSchema   ['record_id'] = new sfWidgetFormInputText();
-    $this->validatorSchema['record_id'] = new sfValidatorInteger();
-
-    $this->widgetSchema   ['keyword_type'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['keyword_type'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['keyword'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['keyword'] = new sfValidatorString();
+    $this->setValidators(array(
+      'id'                  => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
+      'referenced_relation' => new sfValidatorString(),
+      'record_id'           => new sfValidatorInteger(),
+      'keyword_type'        => new sfValidatorString(array('required' => false)),
+      'keyword'             => new sfValidatorString(),
+    ));
 
     $this->widgetSchema->setNameFormat('classification_keywords[%s]');
+
+    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
+
+    $this->setupInheritance();
+
+    parent::setup();
   }
 
   public function getModelName()

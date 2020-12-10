@@ -12,7 +12,7 @@ class TaxonomyFormFilter extends BaseTaxonomyFormFilter
 {
   public function configure()
   {
-	 //JMHerpers 2019 04 29 added cites
+	  //JMHerpers 2019 04 29 added cites
     $this->useFields(array('name', 'level_ref','cites'));
     $this->addPagerItems();
     $this->widgetSchema['name'] = new sfWidgetFormInputText();
@@ -96,12 +96,12 @@ class TaxonomyFormFilter extends BaseTaxonomyFormFilter
 	 //2017 07 23 + 2018 03 06 chnage sort order on name
      
 	$this->widgetSchema['metadata_ref'] = new sfWidgetFormChoice(array(
-      'choices' => TaxonomyMetadataTable::getAllTaxonomicMetadata( 'id ASC',true)  //array_merge( array(''=>'All'),TaxonomyMetadataTable::getAllTaxonomicMetadata("id ASC"))
+      'choices' => TaxonomyMetadataTable::getAllTaxonomicMetadata( 'taxonomy_name ASC',true)  //array_merge( array(''=>'All'),TaxonomyMetadataTable::getAllTaxonomicMetadata("id ASC"))
     ));
 	 $this->widgetSchema['metadata_ref']->setAttributes(array('class'=>'col_check_metadata_ref col_check_metadata_callback'));
 	$this->validatorSchema['metadata_ref'] = new sfValidatorInteger(array('required'=>false));
      
-	//JM herpers 2019 04 29
+	 //JM herpers 2019 04 29
 	$this->widgetSchema['cites'] = new sfWidgetFormChoice(array(
         'expanded' => true,
         'choices'  => array(True => 'Yes', False => 'No', NULL=>'Yes or No'),
@@ -125,8 +125,8 @@ class TaxonomyFormFilter extends BaseTaxonomyFormFilter
       */
     //ftheeten 2017 07 03   
     $query = DQ::create()
-      ->select('t.*, m.taxonomy_name as taxonomy_name')
-      ->from('Taxonomy t')->leftJoin("t.TaxonomyMetadata m ON t.metadata_ref=m.id");
+      ->select('t.*')
+      ->from('Taxonomy t');
 
     if ($values['collection_ref'] != '')
     {
@@ -171,7 +171,7 @@ class TaxonomyFormFilter extends BaseTaxonomyFormFilter
     }
     
      //ftheeten 2018 03 23
-
+	// if(isset($values['ig_number']))
 	if($values['ig_number'] != "")
     {
     

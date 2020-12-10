@@ -8,11 +8,12 @@ class LoanOverviewForm extends sfForm
     if(isset($this->options['no_load']))
       $items = array();
     else
-      $items = Doctrine_Core::getTable('LoanItems')->findForLoan($this->options['loan']->getId());
+      $items = Doctrine::getTable('LoanItems')->findForLoan($this->options['loan']->getId());
     foreach ($items as $index => $childObject)
     {
       $form = new LoanItemsForm($childObject);
       $subForm->embedForm($index, $form);
+     // $subForm->getWidgetSchema()->setLabel($index, (string) $childObject);
     }
     $this->embedForm('LoanItems', $subForm);
 
@@ -20,6 +21,15 @@ class LoanOverviewForm extends sfForm
     $this->embedForm('newLoanItems', $subForm2);
 
     $this->widgetSchema->setNameFormat('loan_overview[%s]');
+    
+    //ftheeten 2016 11 25
+    $this->widgetSchema['code_part'] = new sfWidgetFormInput(array(),array());
+	//ftheeten 2015 06 04
+    $this->widgetSchema['code_part']->setAttributes(array('class'=>'class_rmca_input_mask autocomplete_for_code large_size'));
+    $this->validatorSchema['code_part'] = new sfValidatorString(array('required'=>false,'trim'=>true));
+    $this->widgetSchema['selected_id']= new sfWidgetFormInputHidden();
+    $this->widgetSchema['selected_id']->setAttributes(array('class'=>'catch_selection'));
+    $this->validatorSchema['selected_id'] = new sfValidatorPass();
 
   }
 
@@ -28,7 +38,7 @@ class LoanOverviewForm extends sfForm
   {
     $item = new LoanItems() ;
     if($spec_ref){
-      $spec = Doctrine_Core::getTable('Specimens')->find($spec_ref);
+      $spec = Doctrine::getTable('Specimens')->find($spec_ref);
       if($spec) {
         $item->setSpecimenRef($spec->getId()) ;
         $item->setIgRef($spec->getIgRef()) ;

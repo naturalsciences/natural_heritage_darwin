@@ -42,7 +42,7 @@ class SpecimensRelationshipsTable extends DarwinTable
     return $q->execute();
   }
   
-      public function getAllRelated($spec_id)
+  public function getAllRelated($spec_id)
   {
 	  
 	  $conn = Doctrine_Manager::connection();

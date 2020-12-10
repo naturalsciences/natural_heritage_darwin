@@ -33,14 +33,14 @@ class lithologyActions extends DarwinActions
 
   public function executeDelete(sfWebRequest $request)
   { 
-    $unit = Doctrine_Core::getTable('Lithology')->find($request->getParameter('id'));
+    $unit = Doctrine::getTable('Lithology')->find($request->getParameter('id'));
     $this->forward404Unless(
       $unit,
       sprintf('Object lithology does not exist (%s).', $request->getParameter('id'))
     );
     if(! $request->hasParameter('confirm'))
     {
-      $this->number_child = Doctrine_Core::getTable('Lithology')->hasChildrens('Lithology',$unit->getId());
+      $this->number_child = Doctrine::getTable('Lithology')->hasChildrens('Lithology',$unit->getId());
       if($this->number_child)
       {
         $this->link_delete = 'lithology/delete?confirm=1&id='.$unit->getId();
@@ -62,7 +62,7 @@ class lithologyActions extends DarwinActions
       $this->form->getErrorSchema()->addError($error); 
       $this->loadWidgets();
       $this->setTemplate('edit');
-      $this->no_right_col = Doctrine_Core::getTable('Lithology')->testNoRightsCollections('lithology_ref',$request->getParameter('id'), $this->getUser()->getId());
+      $this->no_right_col = Doctrine::getTable('Lithology')->testNoRightsCollections('lithology_ref',$request->getParameter('id'), $this->getUser()->getId());
     }
   }
 
@@ -84,9 +84,9 @@ class lithologyActions extends DarwinActions
     
   public function executeEdit(sfWebRequest $request)
   {
-    $unit = Doctrine_Core::getTable('Lithology')->find($request->getParameter('id'));
+    $unit = Doctrine::getTable('Lithology')->find($request->getParameter('id'));
     $this->forward404Unless($unit,'Unit not Found');
-    $this->no_right_col = Doctrine_Core::getTable('Lithology')->testNoRightsCollections('lithology_ref',$request->getParameter('id'), $this->getUser()->getId());
+    $this->no_right_col = Doctrine::getTable('Lithology')->testNoRightsCollections('lithology_ref',$request->getParameter('id'), $this->getUser()->getId());
 
     $this->form = new LithologyForm($unit);
     $this->loadWidgets();
@@ -94,9 +94,9 @@ class lithologyActions extends DarwinActions
 
   public function executeUpdate(sfWebRequest $request)
   {
-    $unit = Doctrine_Core::getTable('Lithology')->find($request->getParameter('id'));
+    $unit = Doctrine::getTable('Lithology')->find($request->getParameter('id'));
     $this->forward404Unless($unit,'Unit not Found');
-    $this->no_right_col = Doctrine_Core::getTable('Lithology')->testNoRightsCollections('lithology_ref',$request->getParameter('id'), $this->getUser()->getId());    
+    $this->no_right_col = Doctrine::getTable('Lithology')->testNoRightsCollections('lithology_ref',$request->getParameter('id'), $this->getUser()->getId());    
     $this->form = new LithologyForm($unit);
     
     $this->processForm($request,$this->form);
@@ -131,7 +131,7 @@ class lithologyActions extends DarwinActions
   }
   public function executeView(sfWebRequest $request)
   {
-    $this->litho = Doctrine_Core::getTable('Lithology')->find($request->getParameter('id'));
+    $this->litho = Doctrine::getTable('Lithology')->find($request->getParameter('id'));
     $this->forward404Unless($this->litho,'Lithologic unit not Found');
     $this->form = new LithologyForm($this->litho);    
     $this->loadWidgets();

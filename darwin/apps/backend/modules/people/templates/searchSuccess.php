@@ -14,7 +14,6 @@
         <tr>
           <th></th>
           <th class="hidden"></th>
-		  <th><?php echo __('Identifiers');?></th>
           <th>
             <a class="sort" href="<?php echo url_for($s_url.'&orderby=title'.( ($orderBy=='title' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
               <?php echo __('Title');?>
@@ -59,7 +58,6 @@
           <tr class="rid_<?php echo $item->getId();?>">
             <td><?php echo image_tag('info.png',"title=info class=info");?></td>
             <td class="hidden item_name"><?php echo $item->getFormatedName();?></td>
-			<td><?php echo $item->getIdentifiers() ?></td>
             <td><?php echo $item->getTitle() ?></td>
             <td><?php echo $item->getFamilyName();?></td>
             <td><?php echo $item->getGivenName();?></td>

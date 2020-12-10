@@ -391,6 +391,7 @@ abstract class BaseStaging extends DarwinModel
              ));
         $this->hasColumn('gtu_ref', 'integer', null, array(
              'type' => 'integer',
+             'notnull' => true,
              ));
         $this->hasColumn('gtu_code', 'string', null, array(
              'type' => 'string',

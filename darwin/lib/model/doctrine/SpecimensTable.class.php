@@ -6,18 +6,17 @@ class SpecimensTable extends DarwinTable
 {
   static public $acquisition_category = array(
       'undefined' => 'Undefined',
-      'collect' => 'Collect',
       'donation' => 'Donation',
-      'excavation' => 'Excavation',
       'exchange' => 'Exchange',
-      'exploration' => 'Exploration',
-      'gift' => 'Gift',
       'internal work' => 'Internal work',
-      'seizure' => 'Judicial seizure',
       'loan' => 'Loan',
       'mission' => 'Mission',
       'purchase' => 'Purchase',
+      'seizure' => 'Judicial seizure',
       'trip' => 'Trip',
+      'excavation' => 'Excavation',
+      'exploration' => 'Exploration',
+      'collect' => 'Collect',
       );
 
   protected static $widget_array = array(
@@ -59,10 +58,9 @@ class SpecimensTable extends DarwinTable
       ->andwhere('s.ig_ref is not distinct from ?', $object->getIgRef())
       ->andwhere('s.acquisition_category = ?', $object->getAcquisitionCategory())
       ->andwhere('s.acquisition_date = ?', $object->getRawAcquisitionDate())
-       //ftheeten 2018 30 11
+      //ftheeten 2016 07 07
        ->andwhere('s.gtu_from_date = ?', $object->getRawGtuFromDate())
-       ->andwhere('s.gtu_to_date = ?', $object->getRawGtuToDate())
-      ;
+       ->andwhere('s.gtu_to_date = ?', $object->getRawGtuToDate());
     return $q->fetchOne();
   }
 
@@ -203,19 +201,11 @@ class SpecimensTable extends DarwinTable
   * @param string $type a type
   * @return array an Array of types in keys
   */
-  public function getDistinctSubContainerStorages($type="")
+  public function getDistinctSubContainerStorages($type)
   {
-    if(strlen($type)>0)
-    {
-        $q = $this->createFlatDistinctDepend('specimens', 'sub_container_storage', $type, 'storage');
-        $a =  DarwinTable::CollectionToArray($q->execute(), 'storage');
-        return array_merge(array('dry'=>'dry'),$a);
-    }
-    else
-    {
-         $items = $this->createUniqFlatDistinct('specimens', 'sub_container_storage', 'sub_container_storage', true);
-        return $items;
-    }
+    $q = $this->createFlatDistinctDepend('specimens', 'sub_container_storage', $type, 'storage');
+    $a =  DarwinTable::CollectionToArray($q->execute(), 'storage');
+    return array_merge(array('dry'=>'dry'),$a);
   }
 
 
@@ -225,19 +215,11 @@ class SpecimensTable extends DarwinTable
   * @param string $type a type
   * @return array an Array of types in keys
   */
-  public function getDistinctContainerStorages($type="")
+  public function getDistinctContainerStorages($type)
   {
-    if(strlen($type)>0)
-    {
-        $q = $this->createFlatDistinctDepend('specimens', 'container_storage', $type, 'storage');
-        $a =  DarwinTable::CollectionToArray($q->execute(), 'storage');
-        return array_merge(array('dry'=>'dry'),$a);
-    }
-    else
-    {
-         $items = $this->createUniqFlatDistinct('specimens', 'container_storage', 'container_storage', true);
-        return $items;
-    }
+    $q = $this->createFlatDistinctDepend('specimens', 'container_storage', $type, 'storage');
+    $a =  DarwinTable::CollectionToArray($q->execute(), 'storage');
+    return array_merge(array('dry'=>'dry'),$a);
   }
 
     /**
@@ -248,6 +230,23 @@ class SpecimensTable extends DarwinTable
     {
       $items = $this->createUniqFlatDistinct('specimens', 'type', 'type', true);
       return $items;
+    }
+    
+            //ftheeten 2017 09 21
+    public function getDistinctTypesNoCombinations()
+    {
+      $items = $this->createUniqFlatDistinct('specimens', 'type', 'type', true);
+      $items2=Array();
+      foreach($items as $key=>$value)
+      {
+        $items3=preg_split("(\/|\s)", $key);
+        foreach($items3 as $value2)
+        {
+            $items2[trim($value2)]=trim($value2);
+        }
+      }
+      ksort($items2, SORT_LOCALE_STRING);
+      return $items2;
     }
 
     /**
@@ -287,16 +286,6 @@ class SpecimensTable extends DarwinTable
     public function getDistinctStates()
     {
       $states = $this->createUniqFlatDistinct('specimens', 'state', 'state',true);
-      return $states;
-    }
-
-    /**
-    * Get distinct Specimen_status
-    * @return Doctrine_collection with distinct "specimen_status" as column
-    */
-    public function getDistinctSpecimenStatus()
-    {
-      $states = $this->createUniqFlatDistinct('specimens', 'specimen_status', 'specimen_status',true);
       return $states;
     }
 
@@ -357,10 +346,10 @@ class SpecimensTable extends DarwinTable
         if(isset(self::$widget_array[$key]) && !in_array($fields,$default_values))
           $req_widget[self::$widget_array[$key]] = 1 ;
       }
-      Doctrine_Core::getTable('MyWidgets')->forceWidgetOpened($user, $category ,array_keys($req_widget));
+      Doctrine::getTable('MyWidgets')->forceWidgetOpened($user, $category ,array_keys($req_widget));
     }
     else
-      Doctrine_Core::getTable('MyWidgets')->forceWidgetOpened($user, $category ,1);
+      Doctrine::getTable('MyWidgets')->forceWidgetOpened($user, $category ,1);
   }
 
   public function fetchOneWithRights($id, $user)
@@ -408,8 +397,7 @@ class SpecimensTable extends DarwinTable
         ->orderBy("dict_value ASC");
       $res = $q->execute();
       $this->flat_results = array();
-      foreach($res as $result) 
-      {
+      foreach($res as $result) {
         if(! isset($this->flat_results[$result->getDictField()]))
           $this->flat_results[$result->getDictField()] = array();
         $this->flat_results[$result->getDictField()][$result->getDictValue()] = $result->getDictValue();
@@ -420,64 +408,16 @@ class SpecimensTable extends DarwinTable
     return array();
   }
 
-  /**
-   * For a given sort of "storage" ($item: building, floor, room, row, shelf, container, sub_container),
-   * for a list of collections availabe for the user passed as parameter and
-   * for a list of filtering applied (a selection of a given building for instance,...),
-   * return the list of entries found (type of storage asked - $item)
-   * @param object $user User object
-   * @param string $item Type of storage to be retrieved
-   * @param array $criterias An array of filtering criterias to be applied
-   * @return array A recordset of the list of type of storage given available, with, for each of them,
-   *               the count of specimens concerned
-   */
-  public function findConservatories($user , $item, $criterias) {
-
-    $sql = "SELECT COALESCE( $item ::text,'') as item,
-                   COUNT(*) as ctn
-            FROM Specimens s
-            WHERE  collection_ref IN (
-                                        SELECT fct_search_authorized_view_collections( ? )
-                                     )
-           ";
-    $sql_params = array($user->getId());
-    foreach($criterias as $k => $v) {
-      $sql .= " AND COALESCE( $k , '') = ? ";
+  public function findConservatories($user , $item, $cirterias) {
+    $sql = "SELECT COALESCE(".$item."::text,'') as item,  count(*) as ctn FROM Specimens s
+      WHERE  collection_ref in (select fct_search_authorized_view_collections(".$user->getId().'))';
+    $sql_params = array();
+    foreach($cirterias as $k => $v) {
+      $sql .= " AND COALESCE(".$k.", '') = ?";
       $sql_params[] = $v;
     }
-    $sql .= "
-              GROUP BY item
-              ORDER BY item ASC
-            ";
-    $conn_MGR = Doctrine_Manager::connection();
-    $conn = $conn_MGR->getDbh();
-    $statement = $conn->prepare($sql);
-    $statement->execute($sql_params);
-    $res = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $sql .= " GROUP BY item order by item asc";
 
-    return $res;
-  }
-
-  /**
-   * @param integer $id Id of family to use as top family
-   * @return array A recordset of the list of specimens that are of the family
-   *               provided
-   */
-  public function getFamilyContent($id) {
-    $sql="
-            select collection_name, id, taxon_name
-            from specimens
-            where taxon_ref in
-            (
-              select id
-              from taxonomy
-              where id = ?
-                 or path like '%/'||?::text||'/%'
-            )
-            and collection_ref not in (176,316)
-            order by collection_name, taxon_name, id
-         ";
-    $sql_params = array($id,$id);
     $conn_MGR = Doctrine_Manager::connection();
     $conn = $conn_MGR->getDbh();
     $statement = $conn->prepare($sql);
@@ -487,7 +427,7 @@ class SpecimensTable extends DarwinTable
     return $res;
   }
   
-      //ftheeten 2017 10 09
+    //ftheeten 2017 10 09
   public function getSpecimenIDCorrespondingToCollectionNumber($collection_number, $code_category)
   {
     $returned=NULL;
@@ -498,16 +438,11 @@ class SpecimensTable extends DarwinTable
               ->from('Codes c')
               ->where('c.referenced_relation = ?', 'specimens')
               ->andwhere('c.code_category = ?', $code_category)
-              ->andwhere("LOWER(REGEXP_REPLACE(TRIM(COALESCE(code_prefix,'')|| 
-       COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix)), '\s+', '', 'g')) = TRIM(REGEXP_REPLACE(LOWER(?), '\s+', '', 'g'))", $collection_number);
+              ->andwhere('c.full_code_indexed=fulltoindex(?,false)', $collection_number);
               
-            $vals = $q->execute();
-           
-            $returned=Array();
-            foreach($vals as $val)
-            {
-                 $returned[]= $val->getRecordId();
-            }
+            $val= $q->fetchOne();
+            return $val->getRecordId();
+      
     }
     return $returned;
   }
@@ -516,120 +451,8 @@ class SpecimensTable extends DarwinTable
    {
 		return $this->getSpecimenIDCorrespondingToCollectionNumber($collection_number, 'main');
    }
-   
-   public function getMainCode($spec_id)
-   {
-		$returned="";
-		$tmp = Doctrine_Query::create()
-              ->select("DISTINCT COALESCE(c.code_prefix,'')||COALESCE(c.code_prefix_separator,'')||COALESCE(c.code,'')||COALESCE(c.code_suffix_separator,'')||COALESCE(code_suffix,'') as value")
-              ->from('Codes c')
-              ->where('c.referenced_relation = ?', 'specimens')
-              ->andwhere('c.code_category = ?', "main")
-			  ->andWhere('c.record_id = ?', $spec_id)->fetchOne();
-	    if(isset($tmp))
-		{
-			$returned =$tmp["value"];
-		}
-		return $returned;
-   }
-   
-        //ftheeten 2017 14 11
-    public function getSpecimensInCollectionsJSON($p_collection_code, $p_host, $p_size=50, $p_page=1, $p_prefix_service_specimen="/public.php/json/getjson?", $p_prefix_service_collection="public.php/json/getcollectionjson?")
-    {
 
-      
-      if((string)$p_collection_code!="-1"&&is_numeric($p_size)&&is_numeric($p_page))
-      {
-      
-            if($p_size>0 && $p_page>0)
-            {
-
-                $conn_MGR = Doctrine_Manager::connection();
-                $conn = $conn_MGR->getDbh();
-               
-                $rows=array();
-                
-                $query="SELECT a.*, count(*) OVER() AS full_count FROM (SELECT distinct 'http://'||:host||:prefix||'specimennumber='||COALESCE(codes.code_prefix,'')||COALESCE(codes.code_prefix_separator,'')||COALESCE(codes.code,'')||COALESCE(codes.code_suffix_separator,'')||COALESCE(codes.code_suffix,'') as url_specimen,
-                
-               'http://'||:host||:prefix||'id='||codes.record_id::varchar as technical_url_specimen, COALESCE(codes.code_prefix,'')||COALESCE(codes.code_prefix_separator,'')||COALESCE(codes.code,'')||COALESCE(codes.code_suffix_separator,'')||COALESCE(codes.code_suffix,'') AS code_display
-                FROM codes WHERE 
-                referenced_relation='specimens'
-                AND code_category='main' and codes.record_id
-                IN (SELECT id FROM specimens WHERE collection_ref = (SELECT id FROM collections where LOWER(collections.code)=LOWER(:collection) ))
-                GROUP BY codes.code_prefix, codes.code_prefix_separator, codes.code, codes.code_suffix_separator, codes.code_suffix , record_id
-                ORDER BY code_display) a
-                LIMIT :size OFFSET :offset;";
-                $stmt=$conn->prepare($query);
-                $stmt->bindValue(":host", $p_host);
-                $stmt->bindValue(":prefix",$p_prefix_service_specimen);
-                $stmt->bindValue(":collection", $p_collection_code);
-                $stmt->bindValue(":size", (int)$p_size);
-                $stmt->bindValue(":offset", ((int)$p_page -1)*((int)$p_size));
-                $stmt->execute();
-               
-                $rs=$stmt->fetchAll(PDO::FETCH_ASSOC);
-                if($rs[0]["full_count"]>0)
-                {
-                 
-                   $returned=Array();
-                   $returned["count"]=$rs[0]["full_count"];
-                   $returned["size_page"]=$p_size;
-                   $returned["current_page"]=(int)$p_page;
-                   $last_page=ceil($rs[0]["full_count"]/$p_size);
-                   $returned["last_page"]=$last_page;
-                   $returned["this_url"]="http://".$p_host."/".$p_prefix_service_collection."collection=".$p_collection_code."&page=".$p_page."&size=".$p_size;
-                   if((int)$p_page<$last_page)
-                   {
-                        $returned["next_url"]="http://".$p_host."/".$p_prefix_service_collection."collection=".$p_collection_code."&page=".($p_page+1)."&size=".$p_size;
-                   }
-                   else
-                   {
-                        $returned["next_url"]="http://".$p_host."/".$p_prefix_service_collection."collection=".$p_collection_code."&page=".$last_page."&size=".$p_size;
-                   }
-                   $returned["last_url"]="http://".$p_host."/".$p_prefix_service_collection."collection=".$p_collection_code."&page=".$last_page."&size=".$p_size;
-                   $records=Array();
-                   foreach($rs as $item)
-                   {
-                        $row["code_display"]=$item["code_display"];
-                        $row["url_specimen"]=$item["url_specimen"];
-                        $row["technical_url_specimen"]=$item["technical_url_specimen"];
-                        $records[]=$row;
-                   }
-                   $returned["records"]=$records;
-                   return $returned;
-                       
-                }
-             }
-        }
-        return Array();
-     }
-
-    //ftheeten 2017 12 04
-     public function getCollectionsAllAccessPointsJSON($p_host, $p_prefix_url="/public.php/search/getcollectionjson?")
-     {
-   
-        $conn_MGR = Doctrine_Manager::connection();
-        $conn = $conn_MGR->getDbh();
-               
-        $rows=array();
-        
-        $query="SELECT code as collection_code, name as collection_name,
-         'http://'||:host||:prefix||'collection='||code as accespoint_collection
-        FROM collections;";
-        $stmt=$conn->prepare($query);
-        $stmt->bindValue(":host", $p_host);
-        $stmt->bindValue(":prefix", $p_prefix_url);
-        $stmt->execute();
-        $rs=$stmt->fetchAll(PDO::FETCH_ASSOC);
-       
-         if(count($rs)>0)
-         {
-              return $rs;
-         }
-         return Array();
-     }
-
- public function getJSON($p_mode="NUMBER", $p_specimencode=NULL, $p_public_url = "https://darwin.naturalsciences.be/darwin/search/view/id/")
+public function getJSON($p_specimencode, $p_public_url = "http://www.africamuseum.be/collections/browsecollections/naturalsciences/biology/ichtyology/darwin_specimen?id_spec=")
     {
   
        
@@ -643,8 +466,8 @@ class SpecimensTable extends DarwinTable
             $rows=array();
             
             $query="
-            SELECT distinct  id, 
-            :public_url||id::varchar as public_url,
+            SELECT distinct string_agg(DISTINCT id::varchar, ',') as ids, 
+            :public_url||code_display as public_url,
             collection_name, collection_code, (SELECT modification_date_time FROM users_tracking where referenced_relation='specimens' and record_id= max(specimens.id)  GROUP BY modification_date_time ,users_tracking.id having users_tracking.id=max(users_tracking.id) limit 1) as last_modification, code_display, string_agg(DISTINCT taxon_path::varchar, ',') as taxon_paths, string_agg(DISTINCT taxon_ref::varchar, ',') as taxon_ref,
                     string_agg(DISTINCT taxon_name, ',') as taxon_name,
                     string_agg(DISTINCT  history, ';') as history_identification
@@ -658,7 +481,11 @@ class SpecimensTable extends DarwinTable
                     gtu_to_date_mask) as date_to_display,
                     coll_type,
                                 
-                               
+                                 STRING_AGG(urls_thumbnails, ';') as urls_thumbnails,  STRING_AGG(image_category_thumbnails, ';') as image_category_thumbnails, STRING_AGG(contributor_thumbnails,';') as contributor_thumbnails, STRING_AGG(disclaimer_thumbnails,';') as disclaimer_thumbnails, STRING_AGG(license_thumbnails, ';') as license_thumbnails , STRING_AGG(display_order_thumbnails::varchar, ';') as display_order_thumbnails,
+                                 
+                                  STRING_AGG(urls_image_links, ';') as urls_image_links,  STRING_AGG(image_category_image_links, ';') as image_category_image_links, STRING_AGG(contributor_image_links,';') as contributor_image_links, STRING_AGG(disclaimer_image_links,';') as disclaimer_image_links, STRING_AGG(license_image_links, ';') as license_image_links , STRING_AGG(display_order_image_links::varchar, ';') as display_order_image_links,
+                                  
+                                              STRING_AGG(urls_3d_snippets, ';') as urls_3d_snippets,  STRING_AGG(image_category_3d_snippets, ';') as image_category_3d_snippets, STRING_AGG(contributor_3d_snippets,';') as contributor_3d_snippets, STRING_AGG(disclaimer_3d_snippets,';') as disclaimer_3d_snippers, STRING_AGG(license_3d_snippets, ';') as license_3d_snippets , STRING_AGG(display_order_3d_snippets::varchar, ';') as display_order_3d_snippets,
                                   
                     longitude, latitude
                      ,count(*) OVER() AS full_count,collector_ids, 
@@ -670,27 +497,31 @@ class SpecimensTable extends DarwinTable
                       from 
                     (SELECT specimens.id,
                     collections.code as collection_code, collections.name as collection_name, 
-                    COALESCE(codes.code_prefix,'')||COALESCE(codes.code_prefix_separator,'')||COALESCE(codes.code,'')||COALESCE(codes.code_suffix_separator,'')||COALESCE(codes.code_suffix,'') as code_display, full_code_indexed, taxon_path, taxon_ref, collection_ref ,CASE WHEN station_visible THEN  gtu_country_tag_indexed ELSE NULL END AS gtu_country_tag_indexed, 
-                    CASE WHEN station_visible THEN  specimens.gtu_country_tag_value ELSE NULL END AS gtu_country_tag_value,
-                            CASE WHEN station_visible THEN specimens.gtu_others_tag_indexed ELSE NULL END as localities_indexed,
-                     CASE WHEN station_visible THEN specimens.gtu_others_tag_value  ELSE NULL END as gtu_others_tag_value
+                    COALESCE(codes.code_prefix,'')||COALESCE(codes.code_prefix_separator,'')||COALESCE(codes.code,'')||COALESCE(codes.code_suffix_separator,'')||COALESCE(codes.code_suffix,'') as code_display, full_code_indexed, taxon_path, taxon_ref, collection_ref , gtu_country_tag_indexed , gtu_country_tag_value, 
+                    gtu_others_tag_indexed as localities_indexed,
+                    gtu_others_tag_value
                     , taxon_name,
                      spec_coll_ids as collector_ids , 
                      spec_don_sel_ids as donator_ids,
-                    CASE WHEN station_visible THEN gtu_from_date ELSE NULL END AS gtu_from_date,
-                   CASE WHEN station_visible THEN  gtu_from_date_mask  END AS gtu_from_date_mask,
-                   CASE WHEN station_visible  THEN gtu_to_date ELSE NULL END AS gtu_to_date,
-                    CASE WHEN station_visible THEN gtu_to_date_mask ELSE NULL END AS gtu_to_date_mask,
+                    gtu_from_date,
+                    gtu_from_date_mask,
+                    gtu_to_date,
+                    gtu_to_date_mask,
                     type as coll_type,
                     case
-                    when gtu_country_tag_indexed is not null AND station_visible then
+                    when gtu_country_tag_indexed is not null then
                     unnest(gtu_country_tag_indexed) 
                 else null end
-                    as country_unnest,                   
-
+                    as country_unnest,
+                    
+                               ext_links_thumbnails.url as urls_thumbnails, ext_links_thumbnails.category image_category_thumbnails, ext_links_thumbnails.contributor contributor_thumbnails, ext_links_thumbnails.disclaimer disclaimer_thumbnails, ext_links_thumbnails.license license_thumbnails, ext_links_thumbnails.display_order display_order_thumbnails,
                                
-                    CASE WHEN station_visible THEN gtu_location[1] ELSE NULL END as latitude,
-                    CASE WHEN station_visible THEN gtu_location[0] ELSE NULL END as longitude,
+                                 ext_links_image_links.url as urls_image_links, ext_links_image_links.category image_category_image_links, ext_links_image_links.contributor contributor_image_links, ext_links_image_links.disclaimer disclaimer_image_links, ext_links_image_links.license license_image_links, ext_links_image_links.display_order display_order_image_links,
+                                 
+                                   ext_links_3d_snippets.url as urls_3d_snippets, ext_links_3d_snippets.category image_category_3d_snippets, ext_links_3d_snippets.contributor contributor_3d_snippets, ext_links_3d_snippets.disclaimer disclaimer_3d_snippets, ext_links_3d_snippets.license license_3d_snippets, ext_links_3d_snippets.display_order display_order_3d_snippets,
+                               
+                    gtu_location[1] as latitude,
+                    gtu_location[0] as longitude,
                     notion_date as identification_date, 
                     notion_date_mask as identification_date_mask,
                     coalesce(fct_mask_date(notion_date, notion_date_mask)||': ','')||taxon_name as history,
@@ -698,7 +529,7 @@ class SpecimensTable extends DarwinTable
                     group_type, sub_group_type,
                     tag
 
-                    , CASE WHEN station_visible THEN group_type||'-'||sub_group_type||':'||tag ELSE NULL END as tag_locality 
+                    , group_type||'-'||sub_group_type||':'||tag as tag_locality 
                     FROM specimens
                     LEFT JOIN
                     collections ON
@@ -707,7 +538,20 @@ class SpecimensTable extends DarwinTable
                     codes
                     ON codes.referenced_relation='specimens' and code_category='main' and specimens.id=codes.record_id
                     
-                   
+                    LEFT JOIN
+                    ext_links as ext_links_thumbnails
+                    ON
+                    specimens.id=ext_links_thumbnails.record_id and ext_links_thumbnails.referenced_relation='specimens' and ext_links_thumbnails.category='thumbnail'
+                    
+                    LEFT JOIN
+                    ext_links as ext_links_image_links
+                    ON
+                    specimens.id=ext_links_image_links.record_id and ext_links_image_links.referenced_relation='specimens' and ext_links_image_links.category='image_link'
+                    
+                    LEFT JOIN
+                    ext_links as ext_links_3d_snippets
+                    ON
+                    specimens.id=ext_links_3d_snippets.record_id and ext_links_3d_snippets.referenced_relation='specimens' and ext_links_3d_snippets.category='html_3d_snippet'
                     
                     LEFT JOIN identifications
                     on identifications.referenced_relation='specimens'
@@ -721,18 +565,11 @@ class SpecimensTable extends DarwinTable
                 
                     
                     
-                 if($p_mode=="NUMBER")
-                {
-                      $query.=" WHERE full_code_indexed=(SELECT * FROM fulltoindex(:number))";
-                }
-                elseif($p_mode=="ID")
-                {
-                      $query.=" WHERE specimens.id=:id";
-                }
-                       
+
+                        $query.=" WHERE full_code_indexed=(SELECT * FROM fulltoindex(:number))";
                     
                     
-                 $query.=" GROUP BY id, 
+                 $query.=" GROUP BY 
                     collection_name,
                     collection_code,
                     code_display         
@@ -752,15 +589,7 @@ class SpecimensTable extends DarwinTable
                
                 $stmt=$conn->prepare($query);
                 $stmt->bindValue(":public_url", $p_public_url);
-                if($p_mode=="NUMBER")
-                {
-                     $stmt->bindValue(":number", $p_specimencode);
-                }
-                elseif($p_mode=="ID")
-                {
-                     $stmt->bindValue(":id", $p_specimencode);
-                }
-              
+                $stmt->bindValue(":number", $p_specimencode);
                 $stmt->execute();
                 $rs=$stmt->fetchAll(PDO::FETCH_ASSOC);
         
@@ -799,12 +628,12 @@ class SpecimensTable extends DarwinTable
             }
             return Array();
     }
-
-    public function getSpecimensInInstitutionJSON($p_institution_protocol, $p_institution_identifier, $p_host, $p_size=50, $p_page=1, $p_prefix_service_specimen="/public.php/json/getjson?", $p_prefix_service_collection="public.php/json/get_institution_identifier_json?")
+        //ftheeten 2017 14 11
+    public function getSpecimensInCollectionsJSON($p_collection_code, $p_host, $p_size=50, $p_page=1, $p_prefix_service_specimen="/public.php/search/getjson?specimennumber=", $p_prefix_service_collection="public.php/search/getcollectionjson?")
     {
 
-      
-      if(strlen($p_institution_protocol)>0&&strlen($p_institution_identifier)>0&&is_numeric($p_size)&&is_numeric($p_page))
+       
+      if((string)$p_collection_code!="-1"&&is_numeric($p_size)&&is_numeric($p_page))
       {
       
             if($p_size>0 && $p_page>0)
@@ -815,25 +644,23 @@ class SpecimensTable extends DarwinTable
                
                 $rows=array();
                 
-                $query="SELECT a.*, count(*) OVER() AS full_count FROM (SELECT distinct 'http://'||:host||:prefix||'specimennumber='||COALESCE(codes.code_prefix,'')||COALESCE(codes.code_prefix_separator,'')||COALESCE(codes.code,'')||COALESCE(codes.code_suffix_separator,'')||COALESCE(codes.code_suffix,'') as url_specimen,
-                
-               'http://'||:host||:prefix||'id='||codes.record_id::varchar as technical_url_specimen, COALESCE(codes.code_prefix,'')||COALESCE(codes.code_prefix_separator,'')||COALESCE(codes.code,'')||COALESCE(codes.code_suffix_separator,'')||COALESCE(codes.code_suffix,'') AS code_display
+                $query="SELECT a.*, count(*) OVER() AS full_count FROM (SELECT distinct 'http://'||:host||:prefix||COALESCE(codes.code_prefix,'')||COALESCE(codes.code_prefix_separator,'')||COALESCE(codes.code,'')||COALESCE(codes.code_suffix_separator,'')||COALESCE(codes.code_suffix,'') as url_specimen,
+                COALESCE(codes.code_prefix,'')||COALESCE(codes.code_prefix_separator,'')||COALESCE(codes.code,'')||COALESCE(codes.code_suffix_separator,'')||COALESCE(codes.code_suffix,'') AS code_display
                 FROM codes WHERE 
                 referenced_relation='specimens'
-                AND code_category='main' 
-				AND EXISTS (SELECT 1 FROM specimens INNER JOIN identifiers ON specimens.institution_ref= identifiers.record_id WHERE identifiers.referenced_relation='people' AND LOWER(identifiers.protocol)=:institution_protocol AND identifiers.value =  :institution_identifier  AND codes.record_id=specimens.id)
-                GROUP BY codes.code_prefix, codes.code_prefix_separator, codes.code, codes.code_suffix_separator, codes.code_suffix , record_id
+                AND code_category='main' and codes.record_id
+                IN (SELECT id FROM specimens WHERE collection_ref = (SELECT id FROM collections where LOWER(collections.code)=LOWER(:collection) ))
+                GROUP BY codes.code_prefix, codes.code_prefix_separator, codes.code, codes.code_suffix_separator, codes.code_suffix 
                 ORDER BY code_display) a
                 LIMIT :size OFFSET :offset;";
                 $stmt=$conn->prepare($query);
                 $stmt->bindValue(":host", $p_host);
                 $stmt->bindValue(":prefix",$p_prefix_service_specimen);
-                $stmt->bindValue(":institution_protocol", strtolower($p_institution_protocol));
-				$stmt->bindValue(":institution_identifier", $p_institution_identifier);
+                $stmt->bindValue(":collection", $p_collection_code);
                 $stmt->bindValue(":size", (int)$p_size);
                 $stmt->bindValue(":offset", ((int)$p_page -1)*((int)$p_size));
                 $stmt->execute();
-              
+               
                 $rs=$stmt->fetchAll(PDO::FETCH_ASSOC);
                 if($rs[0]["full_count"]>0)
                 {
@@ -844,22 +671,21 @@ class SpecimensTable extends DarwinTable
                    $returned["current_page"]=(int)$p_page;
                    $last_page=ceil($rs[0]["full_count"]/$p_size);
                    $returned["last_page"]=$last_page;
-                   $returned["this_url"]="http://".$p_host."/".$p_prefix_service_collection."identifier_protocol=".$p_institution_protocol."&identifier_value=".$p_institution_identifier."&page=".$p_page."&size=".$p_size;
+                   $returned["this_url"]="http://".$p_host."/".$p_prefix_service_collection."collection=".$p_collection_code."&page=".$p_page."&size=".$p_size;
                    if((int)$p_page<$last_page)
                    {
-                        $returned["next_url"]="http://".$p_host."/".$p_prefix_service_collection."identifier_protocol=".$p_institution_protocol."&identifier_value=".$p_institution_identifier."&page=".($p_page+1)."&size=".$p_size;
+                        $returned["next_url"]="http://".$p_host."/".$p_prefix_service_collection."collection=".$p_collection_code."&page=".($p_page+1)."&size=".$p_size;
                    }
                    else
                    {
-                        $returned["next_url"]="http://".$p_host."/".$p_prefix_service_collection."identifier_protocol=".$p_institution_protocol."&identifier_value=".$p_institution_identifier."&page=".$last_page."&size=".$p_size;
+                        $returned["next_url"]="http://".$p_host."/".$p_prefix_service_collection."collection=".$p_collection_code."&page=".$last_page."&size=".$p_size;
                    }
-                   $returned["last_url"]="http://".$p_host."/".$p_prefix_service_collection."identifier_protocol=".$p_institution_protocol."&identifier_value=".$p_institution_identifier."&page=".$last_page."&size=".$p_size;
+                   $returned["last_url"]="http://".$p_host."/".$p_prefix_service_collection."collection=".$p_collection_code."&page=".$last_page."&size=".$p_size;
                    $records=Array();
                    foreach($rs as $item)
                    {
                         $row["code_display"]=$item["code_display"];
                         $row["url_specimen"]=$item["url_specimen"];
-                        $row["technical_url_specimen"]=$item["technical_url_specimen"];
                         $records[]=$row;
                    }
                    $returned["records"]=$records;
@@ -870,106 +696,29 @@ class SpecimensTable extends DarwinTable
         }
         return Array();
      }
-	 
-	public function getSpecimensForIdentifiersPeopleJSON($p_identifier_protocol, $p_identifier_value, $identifier_role, $p_host, $p_size=50, $p_page=1, $p_prefix_service_specimen="/public.php/json/getjson?", $p_prefix_service_collection="public.php/json/get_institution_identifier_json?")
-    {
 
-      
-      if(strlen($p_identifier_protocol)>0&&strlen($p_identifier_value)>0&&is_numeric($p_size)&&is_numeric($p_page))
-      {
-      
-            if($p_size>0 && $p_page>0)
-            {
-				 $id=Doctrine_Core::getTable('Identifiers')->getLinkedId($p_identifier_protocol, $p_identifier_value, "people");
-				  if($id!==null)
-				  {
-					 
-					  if($role == 'determinator')
-					  {
-						$build_query = ":id =any(spec_ident_ids) " ;
-						
-						
-					  }
-					  elseif($role == 'collector')
-					  {
-						 
-						  $build_query = "(:id =any(spec_coll_ids) OR EXISTS (SELECT cp.id FROM catalogue_people cp WHERE cp.referenced_relation= 'expeditions' AND cp.people_ref=:id AND specimens.expedition_ref=cp.record_id ))" ;
-						  
-
-					  }
-					  elseif($role == 'donator')
-					  {
-						$build_query .= ":id =any(spec_don_sel_ids) " ;
-					
-					  }
-					  else
-					  {
-						  $build_query = "(:id =any(spec_coll_ids||spec_ident_ids||spec_don_sel_ids) OR EXISTS (SELECT cp.id FROM catalogue_people cp WHERE cp.referenced_relation= 'expeditions' AND cp.people_ref=:id AND specimens.expedition_ref=cp.record_id ))" ;
-						 
-
-					  }
-					 
-				  
-					$conn_MGR = Doctrine_Manager::connection();
-					$conn = $conn_MGR->getDbh();
-				   
-					$rows=array();
-					
-					$query="SELECT a.*, count(*) OVER() AS full_count FROM (SELECT distinct 'http://'||:host||:prefix||'specimennumber='||COALESCE(codes.code_prefix,'')||COALESCE(codes.code_prefix_separator,'')||COALESCE(codes.code,'')||COALESCE(codes.code_suffix_separator,'')||COALESCE(codes.code_suffix,'') as url_specimen,
-					
-				   'http://'||:host||:prefix||'id='||codes.record_id::varchar as technical_url_specimen, COALESCE(codes.code_prefix,'')||COALESCE(codes.code_prefix_separator,'')||COALESCE(codes.code,'')||COALESCE(codes.code_suffix_separator,'')||COALESCE(codes.code_suffix,'') AS code_display
-					FROM codes WHERE 
-					referenced_relation='specimens'
-					AND code_category='main' 
-					AND EXISTS (SELECT 1 FROM specimens WHERE $build_query  AND codes.record_id=specimens.id )
-					GROUP BY codes.code_prefix, codes.code_prefix_separator, codes.code, codes.code_suffix_separator, codes.code_suffix , record_id
-					ORDER BY code_display) a
-					LIMIT :size OFFSET :offset;";
-					$stmt=$conn->prepare($query);
-					$stmt->bindValue(":host", $p_host);
-					$stmt->bindValue(":prefix",$p_prefix_service_specimen);
-					$stmt->bindValue(":id", $id);
-					
-					$stmt->bindValue(":size", (int)$p_size);
-					$stmt->bindValue(":offset", ((int)$p_page -1)*((int)$p_size));
-					$stmt->execute();
-				  
-					$rs=$stmt->fetchAll(PDO::FETCH_ASSOC);
-					if($rs[0]["full_count"]>0)
-					{
-					 
-					   $returned=Array();
-					   $returned["count"]=$rs[0]["full_count"];
-					   $returned["size_page"]=$p_size;
-					   $returned["current_page"]=(int)$p_page;
-					   $last_page=ceil($rs[0]["full_count"]/$p_size);
-					   $returned["last_page"]=$last_page;
-					   $returned["this_url"]="http://".$p_host."/".$p_prefix_service_collection."identifier_protocol=".$p_institution_protocol."&identifier_value=".$p_institution_identifier."&page=".$p_page."&size=".$p_size;
-					   if((int)$p_page<$last_page)
-					   {
-							$returned["next_url"]="http://".$p_host."/".$p_prefix_service_collection."identifier_protocol=".$p_institution_protocol."&identifier_value=".$p_institution_identifier."&page=".($p_page+1)."&size=".$p_size;
-					   }
-					   else
-					   {
-							$returned["next_url"]="http://".$p_host."/".$p_prefix_service_collection."identifier_protocol=".$p_institution_protocol."&identifier_value=".$p_institution_identifier."&page=".$last_page."&size=".$p_size;
-					   }
-					   $returned["last_url"]="http://".$p_host."/".$p_prefix_service_collection."identifier_protocol=".$p_institution_protocol."&identifier_value=".$p_institution_identifier."&page=".$last_page."&size=".$p_size;
-					   $records=Array();
-					   foreach($rs as $item)
-					   {
-							$row["code_display"]=$item["code_display"];
-							$row["url_specimen"]=$item["url_specimen"];
-							$row["technical_url_specimen"]=$item["technical_url_specimen"];
-							$records[]=$row;
-					   }
-					   $returned["records"]=$records;
-					   return $returned;
-                    }    
-                }
-             }
-        }
-        return Array();
-     }
-		
-
+    //ftheeten 2017 12 04
+     public function getCollectionsAllAccessPointsJSON($p_host, $p_prefix_url="/public.php/search/getcollectionjson?")
+     {
+   
+        $conn_MGR = Doctrine_Manager::connection();
+        $conn = $conn_MGR->getDbh();
+               
+        $rows=array();
+        
+        $query="SELECT code as collection_code, name as collection_name,
+         'http://'||:host||:prefix||'collection='||code as accespoint_collection
+        FROM collections;";
+        $stmt=$conn->prepare($query);
+        $stmt->bindValue(":host", $p_host);
+        $stmt->bindValue(":prefix", $p_prefix_url);
+        $stmt->execute();
+        $rs=$stmt->fetchAll(PDO::FETCH_ASSOC);
+       
+         if(count($rs)>0)
+         {
+              return $rs;
+         }
+         return Array();
+     }      
 }

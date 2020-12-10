@@ -130,7 +130,7 @@ sw22:
    col_num: 2
    category: specimen_widget
    group_name: localisation
-   mandatory: true
+   mandatory: false
    order_by: 12
    opened: true
    visible: true

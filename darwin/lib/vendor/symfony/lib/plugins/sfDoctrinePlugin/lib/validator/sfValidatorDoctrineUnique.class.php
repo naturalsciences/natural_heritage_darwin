@@ -20,7 +20,7 @@
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfValidatorDoctrineUnique.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
 class sfValidatorDoctrineUnique extends sfValidatorSchema
 {
@@ -113,10 +113,7 @@ class sfValidatorDoctrineUnique extends sfValidatorSchema
 
     $columns = $this->getOption('column');
 
-    $errorSchema = new sfValidatorErrorSchema($this);
-    $errorSchema->addError($error, $columns[0]);
-
-    throw $errorSchema;
+    throw new sfValidatorErrorSchema($this, array($columns[0] => $error));
   }
 
   /**

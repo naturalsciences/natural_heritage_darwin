@@ -16,7 +16,7 @@ class loanitemwidgetComponents extends sfComponents
     {
       if(isset($this->eid) && $this->eid !== null)
       {
-        $loanitem = Doctrine_Core::getTable('LoanItems')->find($this->eid);
+        $loanitem = Doctrine::getTable('LoanItems')->find($this->eid);
         $this->form = new LoanItemWidgetForm($loanitem);
       }
       else
@@ -80,6 +80,6 @@ class loanitemwidgetComponents extends sfComponents
     if(isset($this->form))
       $this->eid = $this->form->getObject()->getId();
     if(isset($this->eid))
-       $this->maintenances = Doctrine_Core::getTable('CollectionMaintenance')->getMergedMaintenances('loan_items', $this->eid);
+       $this->maintenances = Doctrine::getTable('CollectionMaintenance')->getMergedMaintenances('loan_items', $this->eid);
   }
 }

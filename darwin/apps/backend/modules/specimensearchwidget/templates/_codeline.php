@@ -35,18 +35,13 @@
         <?php echo image_tag('remove.png', 'alt=Delete class=clear_prop id=clear_code_'.$row_line); ?>
       </td>
     </tr>
-    <td>
-        <?php echo $code['exclude_prefix_in_searches']->renderLabel();?>
-    </td>
-    <td>
-        <?php echo $code['exclude_prefix_in_searches'];?>
-    </td>
-    </tr>
    </tbody>
   </table>
  </td>
 </tr>
 <script  type="text/javascript">
+
+
   $('#clear_code_<?php echo $row_line;?>').click(function(event)
   {
     event.preventDefault();
@@ -62,13 +57,12 @@
     }
     checkBetween();
   });
-  
-    //ftheeten 2018 03 08
-  var url_code="<?php echo(url_for('catalogue/codesAutocomplete?'));?>";
-  var autocomplete_rmca_array=Array();
-  $('.autocomplete_for_code').autocomplete({
+  //ftheeten 2018 03 08
+  var url="<?php echo(url_for('catalogue/codesAutocomplete?'));?>";
+   var autocomplete_rmca_array=Array();
+  $('.autocomplete_for_code').autocomplete({       
 		source: function (request, response) {
-			$.getJSON(url_code, {
+			$.getJSON(url, {
 						term : request.term,
 						collections: autocomplete_rmca_array.join()
 					} , 
@@ -80,7 +74,6 @@
 			});
 		},
 		minLength: 2,
-		delay: 200
+		delay: 500
 	});
 </script>
-

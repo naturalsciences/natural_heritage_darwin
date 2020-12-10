@@ -15,7 +15,7 @@
  * @package    symfony
  * @subpackage debug
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfWebDebugPanelCache.class.php 22932 2009-10-11 22:40:20Z Kris.Wallsmith $
  */
 class sfWebDebugPanelCache extends sfWebDebugPanel
 {

@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage cache
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfXCacheCache.class.php 17865 2009-05-02 09:23:55Z FabianLange $
  */
 class sfXCacheCache extends sfCache
 {
@@ -26,7 +26,6 @@ class sfXCacheCache extends sfCache
    * * see sfCache for options available for all drivers
    *
    * @see sfCache
-   * @inheritdoc
    */
   public function initialize($options = array())
   {
@@ -45,25 +44,23 @@ class sfXCacheCache extends sfCache
 
  /**
   * @see sfCache
-  * @inheritdoc
   */
   public function get($key, $default = null)
   {
-
+    
     $set = $this->getBaseValue($key);
-
+    
     if (!is_array($set) || !array_key_exists('data', $set))
     {
-
+      
       return $default;
     }
-
+    
     return $set['data'];
   }
 
   /**
    * @see sfCache
-   * @inheritdoc
    */
   public function has($key)
   {
@@ -72,7 +69,6 @@ class sfXCacheCache extends sfCache
 
   /**
    * @see sfCache
-   * @inheritdoc
    */
   public function set($key, $data, $lifetime = null)
   {
@@ -83,13 +79,12 @@ class sfXCacheCache extends sfCache
       'data'    => $data,
       'ctime'   => time()
     );
-
+    
     return xcache_set($this->getOption('prefix').$key, $set, $lifetime);
   }
 
   /**
    * @see sfCache
-   * @inheritdoc
    */
   public function remove($key)
   {
@@ -98,7 +93,6 @@ class sfXCacheCache extends sfCache
 
   /**
    * @see sfCache
-   * @inheritdoc
    */
   public function clean($mode = sfCache::ALL)
   {
@@ -122,51 +116,44 @@ class sfXCacheCache extends sfCache
 
   /**
    * @see sfCache
-   * @inheritdoc
    */
   public function getLastModified($key)
   {
     $set = $this->getBaseValue($key);
-
+    
     if (!is_array($set) || !array_key_exists('ctime', $set))
     {
-
+      
       return 0;
     }
-
+    
     return $set['ctime'];
   }
 
   /**
    * @see sfCache
-   * @inheritdoc
    */
   public function getTimeout($key)
   {
-
+    
     $set = $this->getBaseValue($key);
-
+    
     if (!is_array($set) || !array_key_exists('timeout', $set))
     {
-
+      
       return 0;
     }
-
+    
     return $set['timeout'];
   }
-
-  /**
-   * @param string $key
-   * @return mixed|null
-   */
+  
   public function getBaseValue($key)
   {
     return xcache_isset($this->getOption('prefix').$key) ? xcache_get($this->getOption('prefix').$key) : null;
   }
-
+  
   /**
    * @see sfCache
-   * @inheritdoc
    */
   public function removePattern($pattern)
   {
@@ -192,10 +179,6 @@ class sfXCacheCache extends sfCache
     }
   }
 
-  /**
-   * @param string $key
-   * @return array|null
-   */
   public function getCacheInfo($key)
   {
     $this->checkAuth();

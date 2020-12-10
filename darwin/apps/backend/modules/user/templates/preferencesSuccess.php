@@ -63,21 +63,6 @@
         </tr>
         <tr>
       </tbody>
-       <thead>
-        <tr>
-          <th colspan="2"><?php echo __("Search option");?></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th>
-            <?php echo $form['exclude_prefix_in_searches']->renderLabel();?>
-            <?php echo help_ico($form['exclude_prefix_in_searches']->renderHelp(),$sf_user);?>
-          </th>
-          <td><?php echo $form['exclude_prefix_in_searches'];?></td>
-        </tr>
-        <tr>
-      </tbody>
       <tfoot>
         <tr>
           <td colspan='2'>

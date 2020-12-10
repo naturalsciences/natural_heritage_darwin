@@ -1,6 +1,6 @@
 <?php slot('title','Successfly updated');?>
 <div class="page" id="mass_action_status">
-  <h1><?php echo __('Action Status :');?></h1>
+  <h1><?php echo __('Action Status :');?></h1>  
       <?php if(count($session_messages)>0):?>
         <ul class="spec_error_list">
           <?php foreach ($session_messages as $message): ?>

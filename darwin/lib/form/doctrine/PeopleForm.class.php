@@ -78,7 +78,8 @@ class PeopleForm extends BasePeopleForm
 
   protected function initiateBirthItems()
   {
-    $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')));
+					//JMHerpers 2018 02 15 Inversion of max and Min to have most recent dates on top
+	$yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')),intval(sfConfig::get('dw_yearRangeMin')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
     $dateText = array('year'=>'yyyy', 'month'=>'mm', 'day'=>'dd');
     $minDate = new FuzzyDateTime(strval(min($yearsKeyVal).'/01/01'));
@@ -140,7 +141,8 @@ class PeopleForm extends BasePeopleForm
 
   protected function initiateActivityItems()
   {
-    $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')));
+					//JMHerpers 2018 02 15 Inversion of max and Min to have most recent dates on top
+	$yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')),intval(sfConfig::get('dw_yearRangeMin')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
     $dateText = array('year'=>'yyyy', 'month'=>'mm', 'day'=>'dd');
     $minDate = new FuzzyDateTime(strval(min($yearsKeyVal).'/01/01'));
@@ -192,9 +194,9 @@ class PeopleForm extends BasePeopleForm
     );
 
     $this->Postvalidators[] = new sfValidatorSchemaCompare(
-      'activity_date_from',
+      'birth_date',
       '<=',
-      'activity_date_to',
+      'end_date',
       array('throw_global_error' => true),
       array('invalid'=>'The begin activity date cannot be above the end activity date.')
     );

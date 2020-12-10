@@ -17,28 +17,21 @@
       <td><?php echo $form['litho_level_ref'];?></td>
     </tr>
     <tr id="litho_precise_line">
-      <td id="litho_relation"><?php echo $form['litho_relation'];?></td>
-      <td><?php echo $form['litho_item_ref'];?></td>     
+      <td><?php echo $form['litho_relation'];?></td>
+      <td><?php echo $form['litho_item_ref'];?></td>
     </tr>
   </tbody>
 </table>
 
 <script type="text/javascript">
 $(document).ready(function () {
-
-  //ftheeten 20190307
-  $('#litho_precise_line :checkbox').each(
-    function()
-    {
-           $(this).prop('checked', true);
-    }
-    );
-
   $('#litho_precise').click(function() {
     $('#litho_precise').attr('disabled','disabled') ;
     $('#litho_full_text').removeAttr('disabled') ;
     $('#litho_precise_line').toggle() ;
     $(this).closest('table').find('#litho_full_text_line').toggle() ;
+    $('#litho_full_text_line').find('input:text').val("") ;
+    $('#litho_full_text_line').find('select').val('') ;
   });
   
   $('#litho_full_text').click(function() {
@@ -46,35 +39,16 @@ $(document).ready(function () {
     $('#litho_full_text').attr('disabled','disabled') ;
     $('#litho_precise_line').toggle() ;
     $(this).closest('table').find('#litho_full_text_line').toggle() ;
+    $('#litho_precise_line').find('input:text').val("") ;
+    $('#litho_precise_line').find('input:hidden').val('') ;
 
+//     $('#specimen_search_filters_litho_item_ref').val('') ;
+//     $('#specimen_search_filters_litho_item_ref_name').val('') ;
   }); 
   
   if($('#specimen_search_filters_litho_name').val() != '')
   {
     $('#litho_full_text').trigger("click") ;
   }
-
-  $('#litho_relation ul.radio_list input').click(function () {
-    if ( $(this).val() in { child : "child", direct_child : "direct_child" } ) {
-      $('#litho_child_syn_included').removeClass('hidden');
-    }
-    else {
-      $('#litho_child_syn_included').addClass('hidden');
-    }
-  });
-
-  if (!($('#litho_relation input:checked').val() in { child : "child", direct_child : "direct_child" } )) {
-    $('#litho_child_syn_included').addClass('hidden');
-  }
-
-  $('.litho_name').on(
-    'change',
-    function() {
-      if($(this).val() !== '') {
-        $('.litho_autocomplete').val('');
-      }
-    }
-  );
-
 });
 </script>

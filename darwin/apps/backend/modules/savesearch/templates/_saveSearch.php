@@ -1,4 +1,4 @@
-<input type="button" name="save" id="save_search" value="<?php echo __('Save this search'); ?>" class="save_search">
+<input type="button" name="save" id="save_search" value="<?php echo __('Save this search (+ report)'); ?>" class="save_search">
 
 <script  type="text/javascript">
 $(document).ready(function () {
@@ -6,9 +6,9 @@ $(document).ready(function () {
   $("#save_search").click(function(event){
     event.preventDefault();
     column_str = '';
-    if( $('ul.column_menu .col_switcher :checked').length) {		
+    if( $('ul.column_menu .col_switcher :checked').length) {
       column_str = getSearchColumnVisibilty();
-    } else {				
+    } else {
       column_str = $('#specimen_search_filters_col_fields').val();
     }
     var last_position = $(window).scrollTop();

@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage test
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfTester.class.php 13691 2008-12-03 22:17:01Z Kris.Wallsmith $
  */
 abstract class sfTester
 {

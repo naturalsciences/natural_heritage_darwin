@@ -7,11 +7,7 @@ class ProjectConfiguration extends sfProjectConfiguration
 {
   public function setup()
   {
-    $this->enableAllPluginsExcept();
-
-    $this->dispatcher->connect('doctrine.configure', array($this, 'configureDoctrine'));
-    $this->dispatcher->connect('doctrine.configure_connection', array($this, 'configureDoctrineConnection'));
-    $this->dispatcher->connect('doctrine.filter_model_builder_options', array($this, 'configureDoctrineModelBuilder'));
+    $this->enableAllPluginsExcept(array('sfPropelPlugin'));
   }
 
   public function initializeDoctrine()
@@ -41,27 +37,20 @@ class ProjectConfiguration extends sfProjectConfiguration
     $task->run(array($path));
   }
 
-  public function configureDoctrine(sfEvent $event)
+  public function configureDoctrine(Doctrine_Manager $manager)
   {
-    $manager = $event->getSubject();
     $manager->setAttribute(Doctrine_Core::ATTR_VALIDATE, true);
 
+    $options = array('baseClassName' => 'myDoctrineRecord');
+    sfConfig::set('doctrine_model_builder_options', $options);
   }
 
-  public function configureDoctrineModelBuilder(sfEvent $event, $options)
+  public function configureDoctrineConnection(Doctrine_Connection $connection)
   {
-    $options['baseClassName'] = 'myDoctrineRecord';
-
-    return $options;
   }
 
-  public function configureDoctrineConnection(sfEvent $event)
+  public function configureDoctrineConnectionDoctrine2(Doctrine_Connection $connection)
   {
-    $parameters = $event->getParameters();
-
-    if ('doctrine2' === $parameters['connection']->getName())
-    {
-      $parameters['connection']->setAttribute(Doctrine_Core::ATTR_VALIDATE, false);
-    }
+    $connection->setAttribute(Doctrine_Core::ATTR_VALIDATE, false);
   }
 }

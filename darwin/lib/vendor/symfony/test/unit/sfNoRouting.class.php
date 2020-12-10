@@ -73,14 +73,6 @@ class sfNoRouting extends sfRouting
   /**
    * @see sfRouting
    */
-  public function getRoute($name)
-  {
-    return null;
-  }
-
-  /**
-   * @see sfRouting
-   */
   public function setRoutes($routes)
   {
     return array();

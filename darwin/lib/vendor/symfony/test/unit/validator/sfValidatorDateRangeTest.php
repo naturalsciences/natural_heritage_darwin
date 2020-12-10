@@ -8,9 +8,9 @@
  * file that was distributed with this source code.
  */
 
-require_once(__DIR__.'/../../bootstrap/unit.php');
+require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(6);
+$t = new lime_test(7);
 
 try
 {
@@ -20,7 +20,8 @@ try
 }
 catch (RuntimeException $e)
 {
-  $t->pass('__construct() throws a RuntimeException if you don\'t pass a from_date and a to_date option');
+  $t->pass('__construct() throws a sfValidatorError if you don\'t pass a from_date and a to_date option');
+  $t->is($e->getCode(), 'invalid', '->clean() throws a sfValidatorError');
 }
 
 $v = new sfValidatorDateRange(array(

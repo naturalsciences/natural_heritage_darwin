@@ -9,9 +9,7 @@
       else
         $orderSign = '<span class="order_sign_up">&nbsp;&#9650;</span>';
     ?>
-    
-    <!-- ftheeten 2014 04 17-->
-    <?php include_partial('showurl', array('id'=>1, 'currentPage'=>$currentPage,'postMapper' => $_POST, 'getMapper' => $_GET, 's_url'=>$s_url , 'method'=>$_SERVER['REQUEST_METHOD'])); ?>
+        <!--jm herpers 2018 06 04 removed show url-->
     <?php include_partial('global/pager', array('pagerLayout' => $pagerLayout)); ?>
     <?php include_partial('pager_info', array('form' => $form, 'pagerLayout' => $pagerLayout, 'container'=> '.spec_results')); ?>
 
@@ -24,20 +22,19 @@
               <?php endif;?>
             </th>
             <th><!-- Pin -->
-              <label class="top_pin"><?php print(__("Select all")); ?><input type="checkbox" /></label>
+              <label class="top_pin"><input type="checkbox" /></label>
             </th>
-             <th><?php print(__("Actions")); ?></th>
+			<th><!-- actions --></th>
             <?php $all_columns = $columns->getRawValue() ;?>
             <?php foreach($all_columns as $col_name => $col):?>
               <th class="col_<?php echo $col_name;?>">
-                <?php if($col[0] !== false):?>
+                <?php if($col[0] != false):?>
                   <a class="sort" href="<?php echo url_for($s_url.'&orderby='.$col[0].( ($orderBy==$col[0] && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.
                     $currentPage);?>">
                     <?php echo $col[1];?>
                     <?php if($orderBy == $col[0]) echo $orderSign; ?>
                   </a>
-                <?php else:?>                 
-                <!--ftheeten 2018 09 06-->
+                <?php else:?>
                   <?php if($col_name == 'codes') : ?>
 					<a class="sort" href="<?php echo url_for($s_url.'&orderby=main_code_indexed'.( ($orderBy=="main_code_indexed" && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.
                     $currentPage);?>">
@@ -47,10 +44,9 @@
                   <?php else:?>
 						<?php echo $col[1];?>
                   <?php endif ; ?>
-                 <?php endif ; ?>
+				<?php endif;?>
               </th>
             <?php endforeach;?>
-           
           </tr>
         </thead>
         <tbody>
@@ -62,31 +58,31 @@
                 <?php endif;?>
               </td>
               <td>
-                <label class="pin"><input type="checkbox" value="<?php echo $specimen->getId();?>" <?php if($sf_user->isPinned($specimen->getId(), 'specimen')):?>checked="checked"<?php endif;?> /></label>
+				<label class="pin"><input type="checkbox" value="<?php echo $specimen->getId();?>" <?php if($sf_user->isPinned($specimen->getId(), 'specimen')):?>checked="checked"<?php endif;?> /></label>
               </td>
-              <td>
-               <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))), 'specimen/view?id='.$specimen->getId(), array('target' => 'pop'));?>
-               <?php if($sf_user->isAtLeast(Users::ADMIN) || $specimen->getHasEncodingRights()) : ?>
-                <?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))), 'specimen/edit?id='.$specimen->getId(), array('target' => 'pop'));?>
-                <?php echo link_to(image_tag('duplicate.png', array("title" => __("Duplicate"))), 'specimen/new?duplicate_id='.$specimen->getId(), array('class' => 'duplicate_link','target' => '_blank'));?>
-              <?php endif; ?>
-               
+			  <td>
+				<?php if($sf_user->isAtLeast(Users::ADMIN) || $specimen->getHasEncodingRights()) : ?>
+					<?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))), 'specimen/edit?id='.$specimen->getId(), array('target' => '_blank'));?>&nbsp;&nbsp;
+					<?php echo link_to(image_tag('duplicate.png', array("title" => __("Duplicate"))), 'specimen/new?duplicate_id='.$specimen->getId(), array('class' => 'duplicate_link'));?>&nbsp;&nbsp;
+				<?php endif; ?>
+				<?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))), 'specimen/view?id='.$specimen->getId(), array('target' => '_blank'));?>&nbsp;&nbsp;
               </td>
               <?php include_partial('result_content_specimen', array( 'specimen' => $specimen, 'codes' => $codes, 'is_specimen_search' => $is_specimen_search)); ?>
               <?php include_partial('result_content_individual', array( 'specimen' => $specimen, 'is_specimen_search' => $is_specimen_search)); ?>
-              <?php include_partial('result_content_part', array( 'specimen' => $specimen, 'is_specimen_search' => $is_specimen_search, 'loans' => $loans)); ?>
-              
+              <?php include_partial('result_content_part', array( 'specimen' => $specimen, 'is_specimen_search' => $is_specimen_search)); ?>
+
             </tr>
         <?php endforeach;?>
       </tbody>
       </table>
       <?php include_partial('global/pager', array('pagerLayout' => $pagerLayout)); ?>
       <!-- ftheeten 2014 04 17-->
-    <?php include_partial('showurl', array('id'=>2, 'currentPage'=>$currentPage,'postMapper' => $_POST, 'getMapper' => $_GET, 's_url'=>$s_url , 'method'=>$_SERVER['REQUEST_METHOD'])); ?>
+      <?php include_partial('showurl', array('id'=>2, 'currentPage'=>$currentPage,'postMapper' => $_POST, 'getMapper' => $_GET, 's_url'=>$s_url , 'method'=>$_SERVER['REQUEST_METHOD'])); ?>
     <?php else:?>
       <?php echo __('No Specimen Matching');?>
     <?php endif;?>
 </div>  
+
 <script type="text/javascript">
 
 function pin(ids, status) {
@@ -104,6 +100,72 @@ function pin(ids, status) {
 }
 
 $(document).ready(function () {
+     //ftheeten 2017 02 07
+    var tmpPageStr="<?php echo $currentPage; ?>";
+    tmpPage=parseInt(tmpPageStr);
+    var anchor=$("#criteria_butt");
+    var modePage="1";
+    if(tmpPage>1)
+    {
+        tmpPage--;
+        var modePage="0";
+    }
+    else
+    {
+         var modePage="1";
+    }
+    $("#mode_back_button").val(modePage);
+    var test_back_mode=$("#mode_back_button").val();
+    var anchor=undefined;
+    
+    //ftheeten 2017 02 07
+  
+  if (window.history && window.history.pushState) {
+ 
+
+    window.history.pushState('forward', null, '.');
+
+    $(window).on('popstate', function() {
+
+       
+       
+        if(test_back_mode=="0")
+        {
+             anchor=$("a").filter(function() {   return $(this).text() === String(tmpPage);}).first();
+        }
+        else
+        {
+            anchor=$("#criteria_butt");
+        }
+        
+        anchor.click();
+         event.stopPropagation();
+    });
+
+  }
+
+
+	//rmca 2016 05 12
+	var gtu_loaded=false;
+	var gtu_expanded=false;
+
+	//added by ftheeten for label printing
+	if ($("#h_current_page").length){
+			//alert('<?php echo $currentPage; ?>');
+			$("#h_current_page").val('<?php echo $currentPage; ?>');
+			//alert($("#current_page").val());
+	}
+	if ($("#h_order_by").length)
+	{
+		$("#h_order_by").val('<?php echo $orderBy; ?>');
+	}
+	
+	if ($("#h_order_dir").length)
+	{
+		$("#h_order_dir").val('<?php echo $orderDir; ?>');
+	}
+	//end added by ftheeten
+	
   //Init screen size
   check_screen_size();
 
@@ -154,5 +216,7 @@ $(document).ready(function () {
     else
      $('.code_supp').addClass('hidden')
   });
+
+
 });
 </script>

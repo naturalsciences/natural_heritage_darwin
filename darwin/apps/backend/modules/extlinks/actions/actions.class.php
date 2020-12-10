@@ -16,22 +16,24 @@ class extLinksActions extends DarwinActions
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction(); 
     if($request->hasParameter('id'))    
     {
-      $r = Doctrine_Core::getTable( DarwinTable::getModelForTable($request->getParameter('table')) )->find($request->getParameter('id'));
+      $r = Doctrine::getTable( DarwinTable::getModelForTable($request->getParameter('table')) )->find($request->getParameter('id'));
       $this->forward404Unless($r,'No such item');     
       if(in_array($request->getParameter('table'),array_keys($this->ref_id)) )
       {
-        if(! Doctrine_Core::getTable('Specimens')->hasRights($this->ref_id[$request->getParameter('table')],$request->getParameter('id'), $this->getUser()->getId()))
+        if(! Doctrine::getTable('Specimens')->hasRights($this->ref_id[$request->getParameter('table')],$request->getParameter('id'), $this->getUser()->getId()))
           $this->forwardToSecureAction();    
       }
     } 
     if($request->hasParameter('cid'))
-      $this->links =  Doctrine_Core::getTable('ExtLinks')->find($request->getParameter('cid'));
+      $this->links =  Doctrine::getTable('ExtLinks')->find($request->getParameter('cid'));
     else
     {
      $this->links = new ExtLinks();
      $this->links->setRecordId($request->getParameter('id'));
      $this->links->setReferencedRelation($request->getParameter('table'));
     }
+    
+   
      
     $this->form = new ExtLinksForm($this->links,array('table' => $request->getParameter('table')));
     
@@ -53,4 +55,27 @@ class extLinksActions extends DarwinActions
       }
     }
   }
+  
+  //ftheeten 2017 01 09
+  public function executeSnapchatSnippet(sfWebRequest $request)
+  {
+      $id=$request->getParameter('id');
+        $this->link = Doctrine::getTable('ExtLinks')->find($id);
+   
+        $this->form = new ExtLinksForm($this->link);       
+        
+  }
+  
+    //ftheeten 2017 01 09
+  public function executeExtViewer(sfWebRequest $request)
+  {
+      $id=$request->getParameter('id');
+        $this->link = Doctrine::getTable('ExtLinks')->find($id);
+   
+        $this->form = new ExtLinksForm($this->link);       
+        
+  }
+  
+  
+  
 }

@@ -16,7 +16,6 @@
  * @property integer $parent_ref
  * @property string $path
  * @property boolean $code_auto_increment
- * @property boolean $code_auto_increment_for_insert_only
  * @property integer $code_last_value
  * @property string $code_prefix
  * @property string $code_prefix_separator
@@ -25,11 +24,10 @@
  * @property boolean $code_specimen_duplicate
  * @property boolean $is_public
  * @property string $code_mask
- * @property boolean $allow_duplicates
+ * @property boolean $loan_auto_increment
+ * @property integer $loan_last_value
  * @property boolean $code_ai_inherit
- * @property string $nagoya
- * @property integer $preferred_taxonomy
- * @property string $uid
+ * @property varchar $nagoya
  * @property People $Institution
  * @property Users $Manager
  * @property Users $Staff
@@ -38,76 +36,72 @@
  * @property Doctrine_Collection $CollectionsRights
  * @property Doctrine_Collection $Specimens
  * @property Doctrine_Collection $Imports
- * @property Doctrine_Collection $SpecimensMaincodes
+ * @property Doctrine_Collection $Loans
  * 
- * @method integer             getId()                                  Returns the current record's "id" value
- * @method enum                getCollectionType()                      Returns the current record's "collection_type" value
- * @method string              getCode()                                Returns the current record's "code" value
- * @method string              getName()                                Returns the current record's "name" value
- * @method string              getNameIndexed()                         Returns the current record's "name_indexed" value
- * @method integer             getInstitutionRef()                      Returns the current record's "institution_ref" value
- * @method integer             getMainManagerRef()                      Returns the current record's "main_manager_ref" value
- * @method integer             getStaffRef()                            Returns the current record's "staff_ref" value
- * @method integer             getParentRef()                           Returns the current record's "parent_ref" value
- * @method string              getPath()                                Returns the current record's "path" value
- * @method boolean             getCodeAutoIncrement()                   Returns the current record's "code_auto_increment" value
- * @method boolean             getCodeAutoIncrementForInsertOnly()      Returns the current record's "code_auto_increment_for_insert_only" value
- * @method integer             getCodeLastValue()                       Returns the current record's "code_last_value" value
- * @method string              getCodePrefix()                          Returns the current record's "code_prefix" value
- * @method string              getCodePrefixSeparator()                 Returns the current record's "code_prefix_separator" value
- * @method string              getCodeSuffix()                          Returns the current record's "code_suffix" value
- * @method string              getCodeSuffixSeparator()                 Returns the current record's "code_suffix_separator" value
- * @method boolean             getCodeSpecimenDuplicate()               Returns the current record's "code_specimen_duplicate" value
- * @method boolean             getIsPublic()                            Returns the current record's "is_public" value
- * @method string              getCodeMask()                            Returns the current record's "code_mask" value
- * @method boolean             getAllowDuplicates()                     Returns the current record's "allow_duplicates" value
- * @method boolean             getCodeAiInherit()                       Returns the current record's "code_ai_inherit" value
- * @method string              getNagoya()                              Returns the current record's "nagoya" value
- * @method integer             getPreferredTaxonomy()                   Returns the current record's "preferred_taxonomy" value
- * @method string              getUid()                                 Returns the current record's "uid" value
- * @method People              getInstitution()                         Returns the current record's "Institution" value
- * @method Users               getManager()                             Returns the current record's "Manager" value
- * @method Users               getStaff()                               Returns the current record's "Staff" value
- * @method Collections         getParent()                              Returns the current record's "Parent" value
- * @method Doctrine_Collection getCollections()                         Returns the current record's "Collections" collection
- * @method Doctrine_Collection getCollectionsRights()                   Returns the current record's "CollectionsRights" collection
- * @method Doctrine_Collection getSpecimens()                           Returns the current record's "Specimens" collection
- * @method Doctrine_Collection getImports()                             Returns the current record's "Imports" collection
- * @method Doctrine_Collection getSpecimensMaincodes()                  Returns the current record's "SpecimensMaincodes" collection
- * @method Collections         setId()                                  Sets the current record's "id" value
- * @method Collections         setCollectionType()                      Sets the current record's "collection_type" value
- * @method Collections         setCode()                                Sets the current record's "code" value
- * @method Collections         setName()                                Sets the current record's "name" value
- * @method Collections         setNameIndexed()                         Sets the current record's "name_indexed" value
- * @method Collections         setInstitutionRef()                      Sets the current record's "institution_ref" value
- * @method Collections         setMainManagerRef()                      Sets the current record's "main_manager_ref" value
- * @method Collections         setStaffRef()                            Sets the current record's "staff_ref" value
- * @method Collections         setParentRef()                           Sets the current record's "parent_ref" value
- * @method Collections         setPath()                                Sets the current record's "path" value
- * @method Collections         setCodeAutoIncrement()                   Sets the current record's "code_auto_increment" value
- * @method Collections         setCodeAutoIncrementForInsertOnly()      Sets the current record's "code_auto_increment_for_insert_only" value
- * @method Collections         setCodeLastValue()                       Sets the current record's "code_last_value" value
- * @method Collections         setCodePrefix()                          Sets the current record's "code_prefix" value
- * @method Collections         setCodePrefixSeparator()                 Sets the current record's "code_prefix_separator" value
- * @method Collections         setCodeSuffix()                          Sets the current record's "code_suffix" value
- * @method Collections         setCodeSuffixSeparator()                 Sets the current record's "code_suffix_separator" value
- * @method Collections         setCodeSpecimenDuplicate()               Sets the current record's "code_specimen_duplicate" value
- * @method Collections         setIsPublic()                            Sets the current record's "is_public" value
- * @method Collections         setCodeMask()                            Sets the current record's "code_mask" value
- * @method Collections         setAllowDuplicates()                     Sets the current record's "allow_duplicates" value
- * @method Collections         setCodeAiInherit()                       Sets the current record's "code_ai_inherit" value
- * @method Collections         setNagoya()                              Sets the current record's "nagoya" value
- * @method Collections         setPreferredTaxonomy()                   Sets the current record's "preferred_taxonomy" value
- * @method Collections         setUid()                                 Sets the current record's "uid" value
- * @method Collections         setInstitution()                         Sets the current record's "Institution" value
- * @method Collections         setManager()                             Sets the current record's "Manager" value
- * @method Collections         setStaff()                               Sets the current record's "Staff" value
- * @method Collections         setParent()                              Sets the current record's "Parent" value
- * @method Collections         setCollections()                         Sets the current record's "Collections" collection
- * @method Collections         setCollectionsRights()                   Sets the current record's "CollectionsRights" collection
- * @method Collections         setSpecimens()                           Sets the current record's "Specimens" collection
- * @method Collections         setImports()                             Sets the current record's "Imports" collection
- * @method Collections         setSpecimensMaincodes()                  Sets the current record's "SpecimensMaincodes" collection
+ * @method integer             getId()                      Returns the current record's "id" value
+ * @method enum                getCollectionType()          Returns the current record's "collection_type" value
+ * @method string              getCode()                    Returns the current record's "code" value
+ * @method string              getName()                    Returns the current record's "name" value
+ * @method string              getNameIndexed()             Returns the current record's "name_indexed" value
+ * @method integer             getInstitutionRef()          Returns the current record's "institution_ref" value
+ * @method integer             getMainManagerRef()          Returns the current record's "main_manager_ref" value
+ * @method integer             getStaffRef()                Returns the current record's "staff_ref" value
+ * @method integer             getParentRef()               Returns the current record's "parent_ref" value
+ * @method string              getPath()                    Returns the current record's "path" value
+ * @method boolean             getCodeAutoIncrement()       Returns the current record's "code_auto_increment" value
+ * @method integer             getCodeLastValue()           Returns the current record's "code_last_value" value
+ * @method string              getCodePrefix()              Returns the current record's "code_prefix" value
+ * @method string              getCodePrefixSeparator()     Returns the current record's "code_prefix_separator" value
+ * @method string              getCodeSuffix()              Returns the current record's "code_suffix" value
+ * @method string              getCodeSuffixSeparator()     Returns the current record's "code_suffix_separator" value
+ * @method boolean             getCodeSpecimenDuplicate()   Returns the current record's "code_specimen_duplicate" value
+ * @method boolean             getIsPublic()                Returns the current record's "is_public" value
+ * @method string              getCodeMask()                Returns the current record's "code_mask" value
+ * @method boolean             getLoanAutoIncrement()       Returns the current record's "loan_auto_increment" value
+ * @method integer             getLoanLastValue()           Returns the current record's "loan_last_value" value
+ * @method boolean             getCodeAiInherit()           Returns the current record's "code_ai_inherit" value
+ * @method varchar             getNagoya()                  Returns the current record's "nagoya" value
+ * @method People              getInstitution()             Returns the current record's "Institution" value
+ * @method Users               getManager()                 Returns the current record's "Manager" value
+ * @method Users               getStaff()                   Returns the current record's "Staff" value
+ * @method Collections         getParent()                  Returns the current record's "Parent" value
+ * @method Doctrine_Collection getCollections()             Returns the current record's "Collections" collection
+ * @method Doctrine_Collection getCollectionsRights()       Returns the current record's "CollectionsRights" collection
+ * @method Doctrine_Collection getSpecimens()               Returns the current record's "Specimens" collection
+ * @method Doctrine_Collection getImports()                 Returns the current record's "Imports" collection
+ * @method Doctrine_Collection getLoans()                   Returns the current record's "Loans" collection
+ * @method Collections         setId()                      Sets the current record's "id" value
+ * @method Collections         setCollectionType()          Sets the current record's "collection_type" value
+ * @method Collections         setCode()                    Sets the current record's "code" value
+ * @method Collections         setName()                    Sets the current record's "name" value
+ * @method Collections         setNameIndexed()             Sets the current record's "name_indexed" value
+ * @method Collections         setInstitutionRef()          Sets the current record's "institution_ref" value
+ * @method Collections         setMainManagerRef()          Sets the current record's "main_manager_ref" value
+ * @method Collections         setStaffRef()                Sets the current record's "staff_ref" value
+ * @method Collections         setParentRef()               Sets the current record's "parent_ref" value
+ * @method Collections         setPath()                    Sets the current record's "path" value
+ * @method Collections         setCodeAutoIncrement()       Sets the current record's "code_auto_increment" value
+ * @method Collections         setCodeLastValue()           Sets the current record's "code_last_value" value
+ * @method Collections         setCodePrefix()              Sets the current record's "code_prefix" value
+ * @method Collections         setCodePrefixSeparator()     Sets the current record's "code_prefix_separator" value
+ * @method Collections         setCodeSuffix()              Sets the current record's "code_suffix" value
+ * @method Collections         setCodeSuffixSeparator()     Sets the current record's "code_suffix_separator" value
+ * @method Collections         setCodeSpecimenDuplicate()   Sets the current record's "code_specimen_duplicate" value
+ * @method Collections         setIsPublic()                Sets the current record's "is_public" value
+ * @method Collections         setCodeMask()                Sets the current record's "code_mask" value
+ * @method Collections         setLoanAutoIncrement()       Sets the current record's "loan_auto_increment" value
+ * @method Collections         setLoanLastValue()           Sets the current record's "loan_last_value" value
+ * @method Collections         setCodeAiInherit()           Sets the current record's "code_ai_inherit" value
+ * @method Collections         setNagoya()                  Sets the current record's "nagoya" value
+ * @method Collections         setInstitution()             Sets the current record's "Institution" value
+ * @method Collections         setManager()                 Sets the current record's "Manager" value
+ * @method Collections         setStaff()                   Sets the current record's "Staff" value
+ * @method Collections         setParent()                  Sets the current record's "Parent" value
+ * @method Collections         setCollections()             Sets the current record's "Collections" collection
+ * @method Collections         setCollectionsRights()       Sets the current record's "CollectionsRights" collection
+ * @method Collections         setSpecimens()               Sets the current record's "Specimens" collection
+ * @method Collections         setImports()                 Sets the current record's "Imports" collection
+ * @method Collections         setLoans()                   Sets the current record's "Loans" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -127,12 +121,13 @@ abstract class BaseCollections extends DarwinModel
         $this->hasColumn('collection_type', 'enum', null, array(
              'type' => 'enum',
              'notnull' => true,
-             'default' => 'mix',
+             'default' => 'physical',
              'values' => 
              array(
-              0 => 'mix',
+              0 => 'physical',
               1 => 'observation',
-              2 => 'physical',
+              2 => 'mix',
+              3 => 'title',
              ),
              ));
         $this->hasColumn('code', 'string', null, array(
@@ -170,11 +165,6 @@ abstract class BaseCollections extends DarwinModel
              'notnull' => true,
              'default' => false,
              ));
-        $this->hasColumn('code_auto_increment_for_insert_only', 'boolean', null, array(
-             'type' => 'boolean',
-             'notnull' => true,
-             'default' => true,
-             ));
         $this->hasColumn('code_last_value', 'integer', null, array(
              'type' => 'integer',
              'notnull' => true,
@@ -205,26 +195,24 @@ abstract class BaseCollections extends DarwinModel
         $this->hasColumn('code_mask', 'string', null, array(
              'type' => 'string',
              ));
-        $this->hasColumn('allow_duplicates', 'boolean', null, array(
+        $this->hasColumn('loan_auto_increment', 'boolean', null, array(
              'type' => 'boolean',
              'notnull' => true,
              'default' => false,
+             ));
+        $this->hasColumn('loan_last_value', 'integer', null, array(
+             'type' => 'integer',
+             'notnull' => true,
+             'default' => 0,
              ));
         $this->hasColumn('code_ai_inherit', 'boolean', null, array(
              'type' => 'boolean',
              'notnull' => true,
              'default' => false,
              ));
-        $this->hasColumn('nagoya', 'string', null, array(
-             'type' => 'string',
+        $this->hasColumn('nagoya', 'varchar', null, array(
+             'type' => 'varchar',
              'notnull' => true,
-             'default' => 'not defined',
-             ));
-        $this->hasColumn('preferred_taxonomy', 'integer', null, array(
-             'type' => 'integer',
-             ));
-        $this->hasColumn('uid', 'string', null, array(
-             'type' => 'string',
              ));
     }
 
@@ -263,7 +251,7 @@ abstract class BaseCollections extends DarwinModel
              'local' => 'id',
              'foreign' => 'collection_ref'));
 
-        $this->hasMany('SpecimensMaincodes', array(
+        $this->hasMany('Loans', array(
              'local' => 'id',
              'foreign' => 'collection_ref'));
     }

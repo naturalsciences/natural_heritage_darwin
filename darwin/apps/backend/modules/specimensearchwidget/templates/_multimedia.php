@@ -1,7 +1,10 @@
 <table>
-  <thead>
     <tr>
-      <th><?php echo $form['with_multimedia'];?> <?php echo $form['with_multimedia']->renderLabel();?></th>
+      <th><?php echo $form['with_multimedia']->renderLabel();?></th>
+      <td><?php echo $form['with_multimedia'];?></td>
     </tr>
-  </thead>
+  <tr>
+      <th><?php echo $form['category']->renderLabel();?></th>
+      <td><?php echo $form['category'];?></td>
+    </tr>
 </table>

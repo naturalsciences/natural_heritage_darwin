@@ -72,7 +72,7 @@ class Gtu extends BaseGtu
     foreach($this->TagGroups as $group)
     {
       if(!$countriesOnly || ($countriesOnly && $group->getSubGroupName()=='country')) {
-        $str .= '<li><label>'.$group->getSubGroupName().'<span class="gtu_group"> - '.TagGroups::getGroup($group->getGroupName()).'</span></label><ul class="name_tags'.(($view !== null)?"_view":"").'">';
+        $str .= '<li><label>'.$group->getSubGroupName().'<span class="gtu_group"> - '.TagGroups::getGroup($group->getGroupName()).'</span></label><ul class="name_tags'.($view!=null?"_view":"").'">';
         $tags = explode(";",$group->getTagValue());
         foreach($tags as $value)
           if (strlen($value))
@@ -89,9 +89,140 @@ class Gtu extends BaseGtu
   public function getMap()
   {
     if( $this->getLatitude() != '' && $this->getLongitude()!= '')
-      return '<img class="gtu_img_loc" src="http://staticmap.openstreetmap.de/staticmap.php?&size=480x240&center='.$this->getLatitude().','.$this->getLongitude().'&zoom=5&markers='.$this->getLatitude().','.$this->getLongitude().',red-pushpin" alt="Sampling location" />';
+      return '<img class="gtu_img_loc" src="http://staticmap.openstreetmap.de/staticmap.php?&size=480x240&center='.$this->getLatitude().','.$this->getLongitude().'&zoom=6&markers='.$this->getLatitude().','.$this->getLongitude().',red-pushpin" alt="Sampling location" />';
     return '';
   }
+  
+  //ftheeten 2018 06 04
+  public function getMapOpenLayers3()
+  {
+	  if( $this->getLatitude() != '' && $this->getLongitude()!= '')
+	  {
+		return '<style >
+			p.collapse{
+				display:none;
+			}
+			</style>
+			<div id="map_container_nh_'.$this->getId().'" class="map_container_nh">
+			<div  style="width:500px;height:400px;" id="map_'.$this->getId().'" class="map_'.$this->getId().'"></div>
+				<div id="mouse-position_'.$this->getId().'"></div>
+			</div>
+			<!--jmherpers 2018 09 07-->
+			<select id="layer-select">
+			   <option value="Aerial">Aerial</option>
+			   <option value="AerialWithLabels" selected>Aerial with labels</option>
+			   <option value="Road">Road (static)</option>
+			   <option value="RoadOnDemand">Road (dynamic)</option>
+			</select>
+			 <script type="text/javascript">
+				var map;
+				//var bingBackground;
+				var view;
+				var mousePositionControl;
+				var scaleLineControl;
+				mousePositionControl= new ol.control.MousePosition({
+				     coordinateFormat: ol.coordinate.createStringXY(4),
+					projection:"EPSG:4326",
+					className: "custom-mouse-position",
+					target: document.getElementById("mouse-position_'.$this->getId().'"),
+					undefinedHTML: "&nbsp;"
+				});
+				scaleLineControl = new ol.control.ScaleLine();
+				/*bingBackground= new ol.layer.Tile({
+					preload: Infinity,
+					source: new ol.source.BingMaps({key:"Ap9VNKmWsntrnteCapydhid0fZxzbV_9pBTjok2rQZS4pi15zfBbIkJkvrZSuVnJ",  imagerySet:"AerialWithLabels" })
+				});*/
+				view= new ol.View({
+					center: [-4,15],
+					zoom: 5
+				});
+						
+				var geometry=new ol.geom.Point(['.$this->getLongitude().','.$this->getLatitude().']);
+				var style= new ol.style.Style({
+					image: new ol.style.Circle({
+						radius: 10,
+						stroke: new ol.style.Stroke({
+							color: "#fff"}),
+						fill: new ol.style.Fill({
+							color: "#3399CC"})
+					}),
+					text: new ol.style.Text({
+						text: "1",
+						fill: new ol.style.Fill({
+							color: "#fff"
+						})
+					})
+				});
+					   
+				 var iconFeature = new ol.Feature({
+					 label:"1",
+					geometry: geometry.transform("EPSG:4326", "EPSG:3857")
+				});
+							
+				var vectorSource = new ol.source.Vector({
+					features: [iconFeature]
+				});
+
+				var vectorLayer = new ol.layer.Vector({
+					source: vectorSource,
+					style: style
+				});
+				
+				//JMHerpers 2018 09 07 add other background maps
+				var styles = [
+					"Road",
+					"RoadOnDemand",
+					"Aerial",
+					"AerialWithLabels"
+				  ];
+				var layers = [];
+				var i, ii;
+				for (i = 0, ii = styles.length; i < ii; ++i) {
+					layers.push(new ol.layer.Tile({
+					  visible: false,
+					  preload: Infinity,
+					  source: new ol.source.BingMaps({
+						key: "Ap9VNKmWsntrnteCapydhid0fZxzbV_9pBTjok2rQZS4pi15zfBbIkJkvrZSuVnJ",
+						imagerySet: styles[i]
+						// use maxZoom 19 to see stretched tiles instead of the BingMaps
+						// "no photos at this zoom level" tiles
+						// maxZoom: 19
+					  })
+					}));
+				}
+	  
+				layers [styles.length] = vectorLayer;
+		
+				map=new ol.Map({
+					layers: layers,     //[bingBackground,vectorLayer],
+					target: "map_'.$this->getId().'",
+					view: view,
+					controls: ol.control.defaults({
+						attributionOptions: ({collapsible: false})
+					}).extend([mousePositionControl, scaleLineControl ])
+				});
+							 
+				var extent = vectorLayer.getSource().getExtent();
+				map.getView().fit(extent);
+				map.getView().setZoom(11);
+												
+				//JMHerpers 2018 09 07 change map background
+				var select = document.getElementById("layer-select");
+				function onChange() {
+					var style = select.value;
+					for (var i = 0, ii = layers.length; i < ii; ++i) {
+					  layers[i].setVisible(styles[i] === style);
+					}
+				}
+				select.addEventListener("change", onChange);
+				onChange();
+				////////////
+			</script>';
+		}
+    return '';
+  }
+
+  
   public function getTagsWithCode($view = null)
   {
     $str = $this->getName($view);
@@ -100,6 +231,8 @@ class Gtu extends BaseGtu
     $str .=  '<b class="code">'.$this->getCode().'</b>';
     $str .=  '<b class="lat">'.$this->getLatitude().'</b>';
     $str .=  '<b class="lon">'.$this->getLongitude().'</b>';
+    $str .=  '<b class="date_from">'.$this->getGtuFromDateMasked().'</b>';
+    $str .=  '<b class="date_to">'.$this->getGtuToDateMasked().'</b>';
 
     return $str;
   }
@@ -118,205 +251,4 @@ class Gtu extends BaseGtu
          ->where('tg.gtu_ref = ? and tg.sub_group_name_indexed = ?', array($this->_get('id'), 'country'));
     return (count($q->execute()));
   }
-  
-  //ftheeten 2018 12 12
-  public function getRelatedTemporalInformationMaskedLogic()
-  {
-    return  Doctrine_Core::getTable('Gtu')->getRelatedTemporalInformationMaskedGtuId($this->getId());
-  }  
-  
-  
-
-  
-    //ftheeten 2018 12 12
-  public function getRelatedTemporalInformationMaskedList()
-  {
-	  $returned=Array();
-      $tmp=$this->getRelatedTemporalInformationMaskedLogic();
-      foreach($tmp as $date)
-      {
-        if($date["to_mask"]>0)
-        {
-            $returned[$date["id"]]="From : ".strip_tags($date["from_masked"]). " - To : " .strip_tags($date["to_masked"]);
-        }
-        else
-        {
-            $returned[$date["id"]]="From : ".strip_tags($date["from_masked"]);
-        }
-      }
-      
-      /*usort($returned, function($a, $b) {
-        return ($a - $b);
-        });*/
-      return $returned;
-  }
-  
-   //ftheeten 2018 12 12
-  public function getRelatedTemporalInformationMasked()
-  {
-
-	  $returned=Array();
-      $tmpTemporalInformation = $this->getRelatedTemporalInformationMaskedLogic();
-      
-      if(count($tmpTemporalInformation)>0)
-      {
-     
-          foreach($tmpTemporalInformation as $key=>$item)
-          {
-                if((int)$item["from_mask"]>0||(int)$item["to_mask"]>0)
-                {
-                    
-                    $tmp=Array();
-                    //$tmp['id']=$item->getId();
-                    $tmp['from_raw']=$item["from"];
-                    $tmp['to_raw']=$item["to"];
-                    $tmp["from"]=$item["from"];//getFromDateMasked(ESC_RAW);
-                    $tmp["to"]=$item["to"]; //getToDateMasked(ESC_RAW);
-                    $tmp["from_masked"]=$item["from_masked"];
-                    $tmp["to_masked"]=$item["to_masked"];
-                    $tmp["from_mask"]=(int)$item["from_mask"];
-                    $tmp["to_mask"]=(int)$item['to_mask'];
-                    
-                    $tmp['from_year']=$item["from_year"];
-                    $tmp['from_month']=$item["from_month"];
-                    $tmp['from_day']=$item["from_day"];
-                    $tmp['from_hour']=$item["from_hour"];
-                    $tmp['from_minute']=$item["from_minute"];
-                    $tmp['from_second']=$item["from_second"];
-                    $tmp['to_year']=$item["to_year"];
-                    $tmp['to_month']=$item["to_month"];
-                    $tmp['to_day']=$item["to_day"];
-                    $tmp['to_hour']=$item["to_hour"];
-                    $tmp['to_minute']=$item["to_minute"];
-                    $tmp['to_second']=$item["to_second"];
-                    
-                    //test from data mask
-                    $msk=(int)$item["from_mask"];
-                 
-                    if($msk&1)
-                    {
-                        $tmp["from_masked_select"]=strip_tags($item["from_masked"] );
-                    }
-                    elseif($msk&2)
-                    {
-                        $tmp["from_masked_select"]=strip_tags($item["from_masked"] );
-                    }
-                    elseif($msk&4)
-                    {
-                        $tmp["from_masked_select"]=strip_tags($item["from_masked"] );
-                    }
-                    elseif($msk&8)
-                    {
-                        $tmp["from_masked_select"]=$item['from_day'].'/'.$item['from_month'].'/'.$item['from_year'];
-                    }
-                    elseif($msk&16)
-                    {
-                        $tmp["from_masked_select"]='xx/'.$item['from_month'].'/'.$item['from_year'];
-                    }
-                    elseif($msk&32)
-                    {
-                        $tmp["from_masked_select"]='xx/xx/'.$item['from_year'];
-                    }
-                    else
-                    {
-                         $tmp["from_masked_select"]='UNK';
-                    }
-                    //to
-                    $msk=(int)(int)$item["to_mask"];
-                 
-                    if($msk&1)
-                    {
-                        $tmp["to_masked_select"]=strip_tags($item["to_masked"] );
-                    }
-                    elseif($msk&2)
-                    {
-                        $tmp["to_masked_select"]=strip_tags($item["to_masked"] );
-                    }
-                    elseif($msk&4)
-                    {
-                        $tmp["to_masked_select"]=strip_tags($item["to_masked"] );
-                    }
-                    elseif($msk&8)
-                    {
-                        $tmp["to_masked_select"]=$item['to_day'].'/'.$item['to_month'].'/'.$item['to_year'];
-                    }
-                    elseif($msk&16)
-                    {
-                        $tmp["to_masked_select"]='xx/'.$item['to_month'].'/'.$item['to_year'];
-                    }
-                    elseif($msk&32)
-                    {
-                        $tmp["to_masked_select"]='xx/xx/'.$item['to_year'];
-                    }
-                    else
-                    {
-                         $tmp["to_masked_select"]='UNK';
-                    }
-
-                    $returned[]=$tmp;
-                }
-          }
-          usort($returned, function($a, $b) {
-            return ($a['from_masked'].$a['to_masked']) - ($b['from_masked'].$b['to_masked']);
-            });
-      }
-	  $returned= array_unique($returned, SORT_REGULAR);
-	  
-	  
-	  return $returned;
-  }
-  
-  
-  //2019 03 08
-  public function addNewTemporalInformation($fd_from, $fd_to=null)
-  {   
-    $temporalInformation=null;
-    $set=false;
-    if ($fd_from instanceof FuzzyDateTime)
-    {       
-      $temporalInformation= new TemporalInformation();
-      $temporalInformation->setGtuRef($this->getId());
-      $temporalInformation->setFromDate($fd_from->format('Y/m/d H:i:s'));
-      $temporalInformation->setFromDateMask($fd_from->getMask());
-      $set = True;
-    }
-    else
-    {
-     
-      $dateTime = new FuzzyDateTime($fd_from, 56, true,true);
-      if(is_array($fd_from))
-      {
-        $dateTime->setMask(FuzzyDateTime::getMaskFromDate($fd_from));
-      }
-      $temporalInformation= new TemporalInformation();      
-      $temporalInformation->setGtuRef($this->getId());
-      $temporalInformation->setFromDate($dateTime->format('Y/m/d H:i:s'));
-      $temporalInformation->setFromDateMask($dateTime->getMask());
-      $set = True;
-    }
-    if(isset($fd_from)&&isset($fd_to)&&isset($temporalInformation))
-    {
-        if ($fd_to instanceof FuzzyDateTime)
-        {          
-          $temporalInformation->setFromDate($fd_to->format('Y/m/d H:i:s'));
-          $temporalInformation->setFromDateMask($fd_to->getMask());
-          $set = True;
-        }
-        else
-        {
-          $dateTime = new FuzzyDateTime($fd_to, 56, false,true);
-          if(is_array($fd_from))
-            $dateTime->setMask(FuzzyDateTime::getMaskFromDate($fd_to));        
-          $temporalInformation->setToDate($dateTime->format('Y/m/d H:i:s'));
-          $temporalInformation->setToDateMask($dateTime->getMask());
-          $set = True;
-        }
-    }
-    if($set)
-    {
-        $temporalInformation->save();
-    }
-  }
-  
-
 }

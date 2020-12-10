@@ -14,23 +14,19 @@
  * @package    symfony
  * @subpackage form
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfFormField.class.php 22401 2009-09-25 03:49:27Z Kris.Wallsmith $
  */
 class sfFormField
 {
   protected static
     $toStringException = null;
-  
-  /** @var sfWidgetForm */
-  protected $widget = null;
-  /** @var null|sfFormField */
-  protected $parent = null;
-  /** @var string */
-  protected $name = '';
-  /** @var string */
-  protected $value = null;
-  /** @var null|sfValidatorError|sfValidatorErrorSchema */
-  protected $error = null;
+
+  protected
+    $widget = null,
+    $parent = null,
+    $name   = '',
+    $value  = null,
+    $error  = null;
 
   /**
    * Constructor.
@@ -239,7 +235,7 @@ class sfFormField
 
   /**
    * Returns the name attribute of the widget.
-   *
+   * 
    * @return string The name attribute of the widget
    */
   public function renderName()
@@ -290,7 +286,7 @@ class sfFormField
   /**
    * Returns the wrapped widget.
    *
-   * @return sfWidget|sfWidgetFormSchemaDecorator A sfWidget instance
+   * @return sfWidget A sfWidget instance
    */
   public function getWidget()
   {
@@ -324,10 +320,6 @@ class sfFormField
    */
   public function hasError()
   {
-    if ($this->error instanceof sfValidatorErrorSchema) {
-      return $this->error->count() > 0;
-    }
-    
-    return $this->error !== null;
+    return null !== $this->error && count($this->error);
   }
 }

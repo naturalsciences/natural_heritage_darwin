@@ -1,1 +1,0 @@
-<?php echo get_component('cataloguewidgetview', 'peopleSubTypes', array('table' => 'people', 'eid' => $eid));?>

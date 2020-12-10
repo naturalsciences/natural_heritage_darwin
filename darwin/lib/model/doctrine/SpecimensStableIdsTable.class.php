@@ -10,7 +10,7 @@ class SpecimensStableIdsTable extends Doctrine_Table
     /**
      * Returns an instance of this class.
      *
-     * @return SpecimensStableIdsTable The table instance
+     * @return object SpecimensStableIdsTable
      */
     public static function getInstance()
     {

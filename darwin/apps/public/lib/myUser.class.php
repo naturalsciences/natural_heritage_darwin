@@ -20,19 +20,4 @@ class myUser extends sfBasicSecurityUser
   {
     return -1;
   }
-    
-   public function isAtLeast($role)
-  {
-    return Users::ANONYMOUS >= $role;
-  }
-  
-   public function isA($role)
-  {
-    return Users::ANONYMOUS == $role;
-  }
-
-  public function getDbUserType()
-  {
-    return Users::ANONYMOUS ;
-  }
 }

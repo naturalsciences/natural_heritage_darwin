@@ -1,8 +1,7 @@
 <?php slot('title','Mass Actions');?>
-
 <div class="page" id="mass_action">
   <h1><?php echo __('Mass Actions :');?></h1>
-  <?php $errors = $form->getErrorSchema()->getErrors() ?>
+   <?php $errors = $form->getErrorSchema()->getErrors() ?>
       <?php if($form->hasGlobalErrors()||count($errors)>0):?>
         <ul class="spec_error_list">
           <?php foreach ($form->getErrorSchema()->getErrors() as $name => $error): ?>

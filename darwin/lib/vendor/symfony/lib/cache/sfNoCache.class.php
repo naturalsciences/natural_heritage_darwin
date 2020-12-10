@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- *
+ * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -14,13 +14,12 @@
  * @package    symfony
  * @subpackage cache
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfNoCache.class.php 10970 2008-08-19 19:02:38Z fabien $
  */
 class sfNoCache extends sfCache
 {
   /**
    * @see sfCache
-   * @inheritdoc
    */
   public function get($key, $default = null)
   {
@@ -29,7 +28,6 @@ class sfNoCache extends sfCache
 
   /**
    * @see sfCache
-   * @inheritdoc
    */
   public function has($key)
   {
@@ -38,7 +36,6 @@ class sfNoCache extends sfCache
 
   /**
    * @see sfCache
-   * @inheritdoc
    */
   public function set($key, $data, $lifetime = null)
   {
@@ -47,7 +44,6 @@ class sfNoCache extends sfCache
 
   /**
    * @see sfCache
-   * @inheritdoc
    */
   public function remove($key)
   {
@@ -56,7 +52,6 @@ class sfNoCache extends sfCache
 
   /**
    * @see sfCache
-   * @inheritdoc
    */
   public function removePattern($pattern)
   {
@@ -65,7 +60,6 @@ class sfNoCache extends sfCache
 
   /**
    * @see sfCache
-   * @inheritdoc
    */
   public function clean($mode = self::ALL)
   {
@@ -74,7 +68,6 @@ class sfNoCache extends sfCache
 
   /**
    * @see sfCache
-   * @inheritdoc
    */
   public function getLastModified($key)
   {
@@ -83,7 +76,6 @@ class sfNoCache extends sfCache
 
   /**
    * @see sfCache
-   * @inheritdoc
    */
   public function getTimeout($key)
   {

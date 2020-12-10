@@ -63,7 +63,14 @@ class MySavedSearchesTable extends DarwinTable
       'taxon'=>'Taxon',
       'type'=>'Type',
       'gtu'=>'Sampling Location',
+		//following field added JMHerpers 2018/02/22
+	  'gtu_location'=> 'Coordinates',
       'codes'=>'Codes',
+	  //these fields added ftheeten 2016 01 11
+	  'col_peoples' => 'Collectors',
+	  'ident_peoples' => 'Identifiers',
+	  'don_peoples' => 'Donators',
+	  //
       'chrono'=>'Chronostratigraphy',
       'ig'=>'Inv. General',
       'litho'=>'Lithostratigraphy',
@@ -75,7 +82,19 @@ class MySavedSearchesTable extends DarwinTable
 
       'individual_type' => 'Type',
       'sex' => 'Sex',
-      'state' => 'State',
+	  //these two fields added ftheeten 2015/03/31
+	  'amount_males'=> 'Amount males',
+	  'amount_females'=> 'Amount females',
+	  //end addition
+	  //following field added JMHerpers 2018/01/29
+	  'amount_juveniles'=> 'Amount juveniles',
+	  //end addition
+       //this field added ftheeten 2016/09/13
+	  'collecting_dates'=> 'Collecting dates',
+      //this field added ftheeten 2016/09/13
+	  'ecology'=> 'Ecology',
+	  //end addition
+	  'state' => 'State',
       'stage'=> 'Stage',
       'social_status' =>'Social Status',
       'rock_form'=>'Rock Form',
@@ -87,7 +106,6 @@ class MySavedSearchesTable extends DarwinTable
       'floor'=>'Floor',
       'room'=>'Room',
       'row'=>'Row',
-      'col'=>'Column',
       'shelf'=>'Shelf',
       'container'=>'Container',
       'container_type'=>'Container Type',
@@ -95,46 +113,23 @@ class MySavedSearchesTable extends DarwinTable
       'sub_container'=>'Sub Container',
       'sub_container_type'=>'Sub Container Type',
       'sub_container_storage'=>'Sub Container Storage',
-      'specimen_count'=>' Count',
-      'loans' => 'Loans'
+      'specimen_count'=> 'Count',
+      //ftheeten 2017 02 08
+      'valid_label'=>'Valid label',
     );
 
     return $columns;
   }
   
-  //ftheeten 2018 07 03
-  public function countRecursiveSQLRecords($user_id, $query_id)
+    public function getSavedSearchData($user_id, $query_id)
   {
-	  $sql="SELECT COUNT(*) from  fct_rmca_dynamic_saved_search(
-			:query_id,:user_id);";
-	  $conn = Doctrine_Manager::connection();
-	  $q = $conn->prepare($sql);
-	  $q->bindParam(":query_id", $query_id, PDO::PARAM_INT);
-	  $q->bindParam(":user_id", $user_id, PDO::PARAM_INT);
-	  $q->execute();
-	  return $q->fetch()[0];
-  }
-  
-public function getSavedSearchData($user_id, $query_id, $p_is_admin=false)
-  {  
-           
-            if($p_is_admin)
-            {
-                $is_adm="'TRUE'::BOOLEAN";
-            }
-            else
-            {
-                $is_adm="'FALSE'::BOOLEAN";            
-            }
-                
-             $sql="SELECT
+                        $sql="SELECT
 
-                       a.id as id,
+                        string_agg(DISTINCT id::varchar,'; ' order by a.id::varchar desc ) as id,
                         collection_code,
 
                         code,
                         additional_codes,
-						'".sfConfig::get('dw_root_url_uuid')."'||uuid::varchar as uuid,
                         ig_num,
                         string_agg(DISTINCT taxon_name,'; ') as taxon_name,
                         string_agg(DISTINCT author,'; ') as author,
@@ -152,7 +147,6 @@ public function getSavedSearchData($user_id, $query_id, $p_is_admin=false)
                         longitude_text,
                         latitude_text,
                         gtu_country_tag_value,
-						gtu_province_tag_value,
                         municipality,
                         region_district,
                         exact_site,
@@ -190,32 +184,8 @@ public function getSavedSearchData($user_id, $query_id, $p_is_admin=false)
 
                         string_agg(DISTINCT comment, '; ' ) as comment,
                         string_agg(DISTINCT properties_all, '; ' ) as properties_all,
-                        specimen_creation_date,
-                        CASE WHEN coll_user_type>= 4 OR is_adm is true THEN
-                         building else 'NOT_APPLICABLE' END as building,
-
-
-                             CASE WHEN coll_user_type>= 4 OR is_adm is true THEN
-                         floor else 'NOT_APPLICABLE' END as floor,
-
-                            CASE WHEN coll_user_type>= 4 OR is_adm is true THEN
-                         room else 'NOT_APPLICABLE' END as room,
-
-                             CASE WHEN coll_user_type>= 4 OR is_adm is true THEN
-                         row else 'NOT_APPLICABLE' END as row,
-
-                             CASE WHEN coll_user_type>= 4 OR is_adm is true THEN
-                         shelf else 'NOT_APPLICABLE' END as shel,
-
-                            CASE WHEN coll_user_type>= 4 OR is_adm is true THEN
-                         container else 'NOT_APPLICABLE' END as container,
-
-                             CASE WHEN coll_user_type>= 4 OR is_adm is true THEN
-                         sub_container else 'NOT_APPLICABLE' END as sub_container
-						 
-
-      
-                             
+                        specimen_creation_date
+                         
                         FROM
 
                             (SELECT 
@@ -250,7 +220,6 @@ public function getSavedSearchData($user_id, $query_id, $p_is_admin=false)
 			
                             date_part('year', i.notion_date) as identification_year, 
                             gtu_country_tag_value,
-							gtu_province_tag_value,
                             array_to_string(array_agg(DISTINCT municipality.tag), '; ') as municipality,
                             array_to_string(array_agg(DISTINCT region_district.tag), '; ') as region_district,
                             array_to_string(array_agg(DISTINCT exact_site.tag), '; ') as exact_site,
@@ -325,45 +294,29 @@ longitude_text,
                             stage,
 				state,
 				social_status,
-				specimen_part,
-				complete,
-				object_name,
+				STRING_AGG(DISTINCT sp.specimen_part, ';' ORDER BY sp.specimen_part) as specimen_part,
+				STRING_AGG(DISTINCT sp.complete::varchar, ';' ORDER BY sp.complete::varchar) as complete ,
+				string_agg(DISTINCT sp.object_name, ';' ORDER BY sp.object_name) as object_name,
 				col_meth.method,
 				col_tool.tool,
 
-                            specimen_status,
-							container_storage,
+                            string_agg(DISTINCT sp.specimen_status, ';' ORDER BY sp.specimen_status) as specimen_status,
+				
+							string_agg(DISTINCT sp.container_storage, ';' ORDER BY sp.container_storage) as container_storage,
                             
                             array_to_string(array_agg(DISTINCT comm.notion_concerned||': '||comm.comment), '| ') as comment,
                              array_to_string(array_agg(
                                 DISTINCT p.property_type||': '::varchar||p.lower_value||COALESCE('-'::varchar||p.upper_value,'')||COALESCE(' '::varchar||p.property_unit,'')),'| ')
                              as properties_all,
-                             specimen_creation_date,
+                             specimen_creation_date
 
-                             building,
-                             floor,
-                             room,
-                             row, 
-                             shelf,
-                             container,
-                             sub_container,
-                             cr.db_user_type as coll_user_type,
-							 uuid
-                            ,
-                             ".$is_adm." as IS_ADM
                             FROM specimens s
-                            INNER JOIN
-                            (
-                            SELECT fct_rmca_dynamic_saved_search as returned FROM  fct_rmca_dynamic_saved_search(
-                                :ID_Q,:ID_USER
-                              
-                            )
-                            ) f
-                            ON s.id=f.returned 
                             LEFT JOIN codes c
                                 ON s.id=c.record_id
                                 AND c.referenced_relation='specimens'
                                 AND c.code_category='main'
+                            LEFT JOIN storage_parts sp
+			        ON s.id=specimen_ref
                             LEFT JOIN codes c2
                                 ON  s.id=c2.record_id
                                 AND c2.referenced_relation='specimens'
@@ -415,11 +368,12 @@ longitude_text,
 				ON s.id= s_col_tool.specimen_ref
 			     LEFT JOIN  collecting_tools as col_tool
 				ON s_col_tool.collecting_tool_ref=col_tool.id
-		             LEFT JOIN collections_rights cr
-		             ON s.collection_ref =cr.collection_ref
-                            AND user_ref=:ID_USER
-							LEFT JOIN specimens_stable_ids
-								ON s.id=specimens_stable_ids.specimen_ref
+                            
+                            WHERE s.id in
+                                (SELECT fct_rmca_dynamic_saved_search(                               
+                                     :ID_Q, :ID_USER                               
+                                )) 
+
                             GROUP BY s.id, c.code_prefix, c.code_prefix_separator, c.code, c.code_suffix, c.code_suffix_separator, i.id , col_tool.tool, col_meth.method,
                             --2018 11 21
                             ident.given_name, ident.family_name
@@ -427,20 +381,12 @@ longitude_text,
                            ,donator.given_name, donator.family_name ,
                            coordinates_source, 
                            latitude_dms_degree, latitude_dms_minutes, latitude_dms_seconds, latitude_dms_direction, latitude,
-                           longitude_dms_degree, longitude_dms_minutes, longitude_dms_seconds, longitude_dms_direction, longitude ,
-                          
-                            building,
-                             floor,
-                             room,
-                             row, 
-                             shelf,
-                             container,
-                             sub_container, cr.db_user_type , uuid
+                           longitude_dms_degree, longitude_dms_minutes, longitude_dms_seconds, longitude_dms_direction, longitude  
                             ) a
 
 
                         GROUP BY
-						id,
+
                         collection_code,
                         code,
                         additional_codes,
@@ -448,7 +394,6 @@ longitude_text,
                         specimen_count_min,
                         specimen_count_max, 
                         gtu_country_tag_value,
-						gtu_province_tag_value,
                         municipality,
                         region_district,
                         exact_site,
@@ -484,34 +429,12 @@ longitude_text,
                         longitude_deci ,
                         latitude_deci,
 			latitude_text,
-			longitude_text,
-			 building,
-                             floor,
-                             room,
-                             row, 
-                             shelf,
-                             container,
-                             sub_container,
-                             coll_user_type, is_adm,
-							 uuid
+			longitude_text
 
                         ORDER BY code
-                         LIMIT 50000;";
-                        
-                        $conn = Doctrine_Manager::connection();
-                        $q = $conn->prepare($sql);
-                        $q->bindParam(":ID_Q", $query_id, PDO::PARAM_INT);
-                        $q->bindParam(":ID_USER", $user_id, PDO::PARAM_INT);                      
-                        $q->execute();
-    
-                        $dataset=$q->fetchAll(PDO::FETCH_ASSOC);
-                        return $dataset;
-  
-  }
-  
-   public function getSavedSearchDataTaxonomy($user_id, $query_id)
-  {
-                        $sql="SELECt DISTINCT * FROM fct_rmca_dynamic_saved_search_taxonomy(:ID_Q,:ID_USER);";
+                         --LIMIT 50000
+                         ;
+                         ";
                         
                         $conn = Doctrine_Manager::connection();
                         $q = $conn->prepare($sql);
@@ -521,62 +444,10 @@ longitude_text,
     
                         $dataset=$q->fetchAll(PDO::FETCH_ASSOC);
                         return $dataset;
-  
-  }
-  
-  public function getSavedSearchDataTaxonomyStatistics($user_id, $query_id)
-  {
-                        $sql="SELECt DISTINCT * FROM fct_rmca_dynamic_saved_search_taxonomy_statistics_detail(:ID_Q,:ID_USER) ORDER BY display_order;";
-                        
-                        $conn = Doctrine_Manager::connection();
-                        $q = $conn->prepare($sql);
-                        $q->bindParam(":ID_Q", $query_id, PDO::PARAM_INT);
-                        $q->bindParam(":ID_USER", $user_id, PDO::PARAM_INT);
-                        $q->execute();
-    
-                        $dataset=$q->fetchAll(PDO::FETCH_ASSOC);
-                        return $dataset;
-  
-  }
-  
 
-  public function getSavedSearchDataPage($user_id, $query_id, $page, $page_size, $p_is_admin)
-  {
-  
-            
-            if($p_is_admin)
-            {
-                $is_adm="'TRUE'::BOOLEAN";
-            }
-            else
-            {
-                $is_adm="'FALSE'::BOOLEAN";            
-            }
-                
-                        $sql="SELECT *  FROM  fct_rmca_dynamic_saved_search_get_specimen(:ID_Q,:ID_USER, :PREFIX, :PAGE,:SIZE,".$is_adm.");";
-                        
-                        $conn = Doctrine_Manager::connection();
-						$prefix=sfConfig::get('dw_root_url_uuid');
-                        $q = $conn->prepare($sql);
-                        $q->bindParam(":ID_Q", $query_id, PDO::PARAM_INT);
-                        $q->bindParam(":ID_USER", $user_id, PDO::PARAM_INT);  
-						$q->bindParam(":PREFIX", $prefix, PDO::PARAM_STR);
-						$q->bindParam(":PAGE", $page, PDO::PARAM_INT); 
-						$q->bindParam(":SIZE", $page_size, PDO::PARAM_INT);
-                        $q->execute();
-    
-                     
-                        $dataset=$q->fetchAll(PDO::FETCH_ASSOC);
-						
-                        return $dataset;
-  
-  }
-  
+                 
 
 
   
-  
-  
-  
-  
+  }
 }

@@ -19,14 +19,11 @@
  * @property string $formule
  * @property string $formule_indexed
  * @property string $cristal_system
- * @property integer $metadata_ref
  * @property Mineralogy $Parent
  * @property CatalogueLevels $Level
- * @property TaxonomyMetadata $TaxonomyMetadata
  * @property Doctrine_Collection $Mineralogy
  * @property Doctrine_Collection $Specimens
  * @property Doctrine_Collection $SpecimensRelationships
- * @property Doctrine_Collection $SpecimensMaincodes
  * 
  * @method integer             getId()                     Returns the current record's "id" value
  * @method string              getName()                   Returns the current record's "name" value
@@ -42,14 +39,11 @@
  * @method string              getFormule()                Returns the current record's "formule" value
  * @method string              getFormuleIndexed()         Returns the current record's "formule_indexed" value
  * @method string              getCristalSystem()          Returns the current record's "cristal_system" value
- * @method integer             getMetadataRef()            Returns the current record's "metadata_ref" value
  * @method Mineralogy          getParent()                 Returns the current record's "Parent" value
  * @method CatalogueLevels     getLevel()                  Returns the current record's "Level" value
- * @method TaxonomyMetadata    getTaxonomyMetadata()       Returns the current record's "TaxonomyMetadata" value
  * @method Doctrine_Collection getMineralogy()             Returns the current record's "Mineralogy" collection
  * @method Doctrine_Collection getSpecimens()              Returns the current record's "Specimens" collection
  * @method Doctrine_Collection getSpecimensRelationships() Returns the current record's "SpecimensRelationships" collection
- * @method Doctrine_Collection getSpecimensMaincodes()     Returns the current record's "SpecimensMaincodes" collection
  * @method Mineralogy          setId()                     Sets the current record's "id" value
  * @method Mineralogy          setName()                   Sets the current record's "name" value
  * @method Mineralogy          setNameIndexed()            Sets the current record's "name_indexed" value
@@ -64,14 +58,11 @@
  * @method Mineralogy          setFormule()                Sets the current record's "formule" value
  * @method Mineralogy          setFormuleIndexed()         Sets the current record's "formule_indexed" value
  * @method Mineralogy          setCristalSystem()          Sets the current record's "cristal_system" value
- * @method Mineralogy          setMetadataRef()            Sets the current record's "metadata_ref" value
  * @method Mineralogy          setParent()                 Sets the current record's "Parent" value
  * @method Mineralogy          setLevel()                  Sets the current record's "Level" value
- * @method Mineralogy          setTaxonomyMetadata()       Sets the current record's "TaxonomyMetadata" value
  * @method Mineralogy          setMineralogy()             Sets the current record's "Mineralogy" collection
  * @method Mineralogy          setSpecimens()              Sets the current record's "Specimens" collection
  * @method Mineralogy          setSpecimensRelationships() Sets the current record's "SpecimensRelationships" collection
- * @method Mineralogy          setSpecimensMaincodes()     Sets the current record's "SpecimensMaincodes" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -138,9 +129,6 @@ abstract class BaseMineralogy extends DarwinModel
         $this->hasColumn('cristal_system', 'string', null, array(
              'type' => 'string',
              ));
-        $this->hasColumn('metadata_ref', 'integer', null, array(
-             'type' => 'integer',
-             ));
     }
 
     public function setUp()
@@ -154,10 +142,6 @@ abstract class BaseMineralogy extends DarwinModel
              'local' => 'level_ref',
              'foreign' => 'id'));
 
-        $this->hasOne('TaxonomyMetadata', array(
-             'local' => 'metadata_ref',
-             'foreign' => 'id'));
-
         $this->hasMany('Mineralogy', array(
              'local' => 'id',
              'foreign' => 'parent_ref'));
@@ -167,10 +151,6 @@ abstract class BaseMineralogy extends DarwinModel
              'foreign' => 'mineral_ref'));
 
         $this->hasMany('SpecimensRelationships', array(
-             'local' => 'id',
-             'foreign' => 'mineral_ref'));
-
-        $this->hasMany('SpecimensMaincodes', array(
              'local' => 'id',
              'foreign' => 'mineral_ref'));
     }

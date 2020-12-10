@@ -34,7 +34,7 @@ class chronostratigraphyActions extends DarwinActions
 
   public function executeDelete(sfWebRequest $request)
   {
-    $unit = Doctrine_Core::getTable('Chronostratigraphy')->find($request->getParameter('id'));
+    $unit = Doctrine::getTable('Chronostratigraphy')->find($request->getParameter('id'));
     $this->forward404Unless(
       $unit,
       sprintf('Object chronostratigraphy does not exist (%s).', $request->getParameter('id'))
@@ -42,7 +42,7 @@ class chronostratigraphyActions extends DarwinActions
 
     if(! $request->hasParameter('confirm'))
     {
-      $this->number_child = Doctrine_Core::getTable('Chronostratigraphy')->hasChildrens('Chronostratigraphy',$unit->getId());
+      $this->number_child = Doctrine::getTable('Chronostratigraphy')->hasChildrens('Chronostratigraphy',$unit->getId());
       if($this->number_child)
       {
         $this->link_delete = 'chronostratigraphy/delete?confirm=1&id='.$unit->getId();
@@ -64,7 +64,7 @@ class chronostratigraphyActions extends DarwinActions
       $this->form->getErrorSchema()->addError($error);
       $this->loadWidgets();
       $this->setTemplate('edit');
-      $this->no_right_col = Doctrine_Core::getTable('Chronostratigraphy')->testNoRightsCollections('chrono_ref',$request->getParameter('id'), $this->getUser()->getId());
+      $this->no_right_col = Doctrine::getTable('Chronostratigraphy')->testNoRightsCollections('chrono_ref',$request->getParameter('id'), $this->getUser()->getId());
       return ;
     }
     $this->redirect('chronostratigraphy/index');
@@ -89,9 +89,9 @@ class chronostratigraphyActions extends DarwinActions
 
   public function executeEdit(sfWebRequest $request)
   {
-    $unit = Doctrine_Core::getTable('Chronostratigraphy')->find($request->getParameter('id'));
+    $unit = Doctrine::getTable('Chronostratigraphy')->find($request->getParameter('id'));
     $this->forward404Unless($unit,'Unit not Found');
-    $this->no_right_col = Doctrine_Core::getTable('Chronostratigraphy')->testNoRightsCollections('chrono_ref',$request->getParameter('id'), $this->getUser()->getId());
+    $this->no_right_col = Doctrine::getTable('Chronostratigraphy')->testNoRightsCollections('chrono_ref',$request->getParameter('id'), $this->getUser()->getId());
 
     $this->form = new ChronostratigraphyForm($unit);
     $this->loadWidgets();
@@ -99,9 +99,9 @@ class chronostratigraphyActions extends DarwinActions
 
   public function executeUpdate(sfWebRequest $request)
   {
-    $unit = Doctrine_Core::getTable('Chronostratigraphy')->find($request->getParameter('id'));
+    $unit = Doctrine::getTable('Chronostratigraphy')->find($request->getParameter('id'));
     $this->forward404Unless($unit,'Unit not Found');
-    $this->no_right_col = Doctrine_Core::getTable('Chronostratigraphy')->testNoRightsCollections('chrono_ref',$request->getParameter('id'), $this->getUser()->getId());
+    $this->no_right_col = Doctrine::getTable('Chronostratigraphy')->testNoRightsCollections('chrono_ref',$request->getParameter('id'), $this->getUser()->getId());
     $this->form = new ChronostratigraphyForm($unit);
 
     $this->processForm($request,$this->form);
@@ -138,7 +138,7 @@ class chronostratigraphyActions extends DarwinActions
 
   public function executeView(sfWebRequest $request)
   {
-    $this->chrono = Doctrine_Core::getTable('Chronostratigraphy')->find($request->getParameter('id'));
+    $this->chrono = Doctrine::getTable('Chronostratigraphy')->find($request->getParameter('id'));
     $this->forward404Unless($this->chrono,'Chrono not Found');
     $this->form = new ChronostratigraphyForm($this->chrono);
     $this->loadWidgets();

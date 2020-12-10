@@ -37,8 +37,7 @@ class storageActions extends DarwinActions
       $this->results_array['taxon_name'] = $this->fetchPossibilies('taxon_name');
       $this->results_array['lithology_name'] = $this->fetchPossibilies('lithology_name');
       // We are below the shelf
-    }
-    else {
+    } else {
       $this->currentEl = array_keys($this->elements)[$i+1];
       $this->results = $this->fetchPossibilies(array_keys($this->elements)[$i+1]);
     }
@@ -49,7 +48,7 @@ class storageActions extends DarwinActions
   }
 
   public function fetchPossibilies($el) {
-    $results = Doctrine_Core::getTable('Specimens')->findConservatories($this->getUser(), $el, $this->to_query);
+    $results = Doctrine::getTable('Specimens')->findConservatories($this->getUser(), $el, $this->to_query);
     foreach($results as $k=>$r) {
       $results[$k]['link'] = array('module' => 'storage',  'action'  => 'index' , $el => $r['item']) + $this->to_query;
       $results[$k]['search'] = array();

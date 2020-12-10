@@ -33,47 +33,6 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
     $this->validatorSchema['insurance'] = new sfValidatorPass();
     $this->widgetSchema->setNameFormat('loan_items[%s]');
 
-    $this->validatorSchema['Codes_holder'] = new sfValidatorPass();
-    $this->widgetSchema['Codes_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
-
-    $code_enable_mask_default_val = ($this->isNew());
-    $this->widgetSchema['code_enable_mask'] = new WidgetFormInputCheckboxDarwin(
-      array(
-        'default'=>$code_enable_mask_default_val,
-        'label'=>'Apply input mask ?'
-      ),
-      array('class'=>'enable_mask')
-    );
-    $this->widgetSchema['code_mask'] = new sfWidgetFormInputText(
-      array('label'=>'Mask: '),
-      array('class'=>'code_mask')
-    );
-
-    $this->widgetSchema['prefix_separator'] = new sfWidgetFormDoctrineChoice(array(
-                                                                               'model' => 'Codes',
-                                                                               'table_method' => 'getDistinctPrefixSep',
-                                                                               'method' => 'getCodePrefixSeparator',
-                                                                               'key_method' => 'getCodePrefixSeparator',
-                                                                               'add_empty' => true,
-                                                                             ));
-
-    $this->widgetSchema['prefix_separator']->setAttributes(array('class'=>'vvsmall_size'));
-
-    $this->widgetSchema['suffix_separator'] = new sfWidgetFormDoctrineChoice(array(
-                                                                               'model' => 'Codes',
-                                                                               'table_method' => 'getDistinctSuffixSep',
-                                                                               'method' => 'getCodeSuffixSeparator',
-                                                                               'key_method' => 'getCodeSuffixSeparator',
-                                                                               'add_empty' => true,
-                                                                             ));
-
-    $this->widgetSchema['suffix_separator']->setAttributes(array('class'=>'vvsmall_size'));
-
-    $this->validatorSchema['prefix_separator'] = new sfValidatorPass();
-    $this->validatorSchema['suffix_separator'] = new sfValidatorPass();
-    $this->validatorSchema['code_enable_mask'] = new sfValidatorBoolean();
-    $this->validatorSchema['code_mask'] = new sfValidatorPass();
-
     $this->validatorSchema['Comments_holder'] = new sfValidatorPass();
     $this->widgetSchema['Comments_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
 
@@ -105,7 +64,7 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
     $this->embedForm('ActorsSender',$subForm);    
     if($this->getObject()->getId() !='')
     {
-      foreach(Doctrine_Core::getTable('CataloguePeople')->findActors($this->getObject()->getId(),'sender','loan_items') as $key=>$vals)
+      foreach(Doctrine::getTable('CataloguePeople')->findActors($this->getObject()->getId(),'sender','loan_items') as $key=>$vals)
       {
         $form = new ActorsForm($vals);
         $this->embeddedForms['ActorsSender']->embedForm($key, $form);
@@ -138,7 +97,7 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
     $this->embedForm('ActorsReceiver',$subForm);    
     if($this->getObject()->getId() !='')
     {
-      foreach(Doctrine_Core::getTable('CataloguePeople')->findActors($this->getObject()->getId(),'receiver','loan_items') as $key=>$vals)
+      foreach(Doctrine::getTable('CataloguePeople')->findActors($this->getObject()->getId(),'receiver','loan_items') as $key=>$vals)
       {
         $form = new ActorsForm($vals);
         $this->embeddedForms['ActorsReceiver']->embedForm($key, $form);
@@ -161,7 +120,6 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
   public function addComments($num, $values, $order_by=0)
   {
     $options = array('referenced_relation' => 'loan_items', 'record_id' => $this->getObject()->getId());
-    $options = array_merge($values, $options);
     $this->attachEmbedRecord('Comments', new CommentsSubForm(DarwinTable::newObjectFromArray('Comments',$options)), $num);
   }
 
@@ -170,13 +128,6 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
     $options = array('referenced_relation' => 'loan_items', 'record_id' => $this->getObject()->getId());
     $options = array_merge($values, $options);
     $this->attachEmbedRecord('RelatedFiles', new MultimediaForm(DarwinTable::newObjectFromArray('Multimedia',$options)), $num);
-  }
-
-  public function addCodes($num, $values, $order_by=0)
-  {
-    $options = array('referenced_relation' => 'loan_items', 'record_id' => $this->getObject()->getId());
-    $options = array_merge($values, $options);
-    $this->attachEmbedRecord('Codes', new CodesSubForm(DarwinTable::newObjectFromArray('Codes',$options)), $num);
   }
 
   public function bind(array $taintedValues = null, array $taintedFiles = null)
@@ -232,7 +183,6 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
     }
 
     $this->bindEmbed('Insurances', 'addInsurances' , $taintedValues);
-    $this->bindEmbed('Codes', 'addCodes' , $taintedValues);
     $this->bindEmbed('Comments', 'addComments' , $taintedValues);
     $this->bindEmbed('RelatedFiles', 'addRelatedFiles' , $taintedValues);
     parent::bind($taintedValues, $taintedFiles);   
@@ -244,11 +194,10 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
     return parent::save($con);
   }
   
-  public function saveObjectEmbeddedForms($con = null, $forms = null)
+  public function saveEmbeddedForms($con = null, $forms = null)
   {
     $this->saveEmbed('Comments', 'comment' ,$forms, array('referenced_relation'=>'loan_items', 'record_id' => $this->getObject()->getId()));
     $this->saveEmbed('RelatedFiles', 'mime_type' ,$forms, array('referenced_relation'=>'loan_items', 'record_id' => $this->getObject()->getId()));
-    $this->saveEmbed('Codes', 'code' ,$forms, array('referenced_relation'=>'loan_items', 'record_id' => $this->getObject()->getId()));
     $this->saveEmbed('Insurances', 'insurance_value' ,$forms, array('referenced_relation'=>'loan_items', 'record_id' => $this->getObject()->getId()));
 
 
@@ -301,7 +250,7 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
         elseif(!is_array($value[$name]['people_sub_type'])) $form->getObject()->setPeopleSubType(array(128));        
       }
     }
-    return parent::saveObjectEmbeddedForms($con, $forms);
+    return parent::saveEmbeddedForms($con, $forms);
   }
 
   public function getJavaScripts()
@@ -309,10 +258,7 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
     $javascripts=parent::getJavascripts();
     $javascripts[]='/js/jquery-datepicker-lang.js';
     $javascripts[]='/js/button_ref.js'; 
-    $javascripts[]='/js/catalogue_people.js';
-    $javascripts[]='/js/ui.complete.js';
-    $javascripts[]='/js/jquery.inputmask.js';
-    $javascripts[]='/js/inputmask.js';
+    $javascripts[]='/js/catalogue_people.js';   
     return $javascripts;
   }
 
@@ -329,43 +275,23 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
     if($record_id === false)
       $record_id = $this->getObject()->getId();
     if( $emFieldName =='Comments' )
-      return Doctrine_Core::getTable('Comments')->findForTable('loan_items', $record_id);
+      return Doctrine::getTable('Comments')->findForTable('loan_items', $record_id);
     if( $emFieldName =='RelatedFiles' )
-      return Doctrine_Core::getTable('Multimedia')->findForTable('loan_items', $record_id);
+      return Doctrine::getTable('Multimedia')->findForTable('loan_items', $record_id);
     if( $emFieldName =='Insurances' )
-      return Doctrine_Core::getTable('Insurances')->findForTable('loan_items', $record_id);
-    if( $emFieldName =='Codes' )
-      return Doctrine_Core::getTable('Codes')->getCodesRelated('loan_items', $record_id);
+      return Doctrine::getTable('Insurances')->findForTable('loan_items', $record_id);
   }
 
   public function duplicate($id)
   {
     // reembed duplicated comment
-    $Comments = Doctrine_Core::getTable('Comments')->findForTable('loan_items',$id) ;
+    $Comments = Doctrine::getTable('Comments')->findForTable('loan_items',$id) ;
     foreach ($Comments as $key=>$val)
     {
       $comment = new Comments();
       $comment->fromArray($val->toArray());
       $form = new CommentsSubForm($comment);
       $this->attachEmbedRecord('Comments', $form, $key);
-    }
-    // reembed duplicated codes
-    $Codes = Doctrine_Core::getTable('Codes')->getCodesRelatedArray('loan_items',$id) ;
-    foreach ($Codes as $key=> $code)
-    {
-      $newCode = new Codes();
-      $newCode->fromArray($code->toArray());
-      $form = new CodesSubForm($newCode);
-      $this->attachEmbedRecord('Codes', $form, $key);
-    }
-    // reembed duplicated insurances
-    $Insurances = Doctrine_Core::getTable('Insurances')->findForTable('loan_items',$id) ;
-    foreach ($Insurances as $key=>$val)
-    {
-      $insurance = new Insurances() ;
-      $insurance->fromArray($val->toArray());
-      $form = new InsurancesSubForm($insurance);
-      $this->attachEmbedRecord('Insurances', $form, $key);
     }
   }
 
@@ -377,8 +303,6 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
       return new MultimediaForm($values);
     if( $emFieldName =='Insurances' )
       return new InsurancesSubForm($values);
-    if( $emFieldName =='Codes' )
-      return new CodesSubForm($values);
   }
 
 }

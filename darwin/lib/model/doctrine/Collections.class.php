@@ -25,6 +25,10 @@ class Collections extends BaseCollections
       return  $this->CollectionsRights[0]->getDbUserType();
     return 0;
   }
+
+
+
+
   
   protected $children = array();
   protected $parent_node = null;
@@ -70,7 +74,7 @@ class Collections extends BaseCollections
         if($t->getId() == $i_path[$i])
           return $t;
       }
-      if($t->parent_node === null) return  $t;
+      if($t->parent_node == null) return  $t;
 
       $t = $t->getParentNode();
     } while(true);
@@ -83,7 +87,7 @@ class Collections extends BaseCollections
     return false;
   }
   
-  public function detectTrueParentForAutoIncrement()
+    public function detectTrueParentForAutoIncrement()
   {
    
 
@@ -105,44 +109,6 @@ class Collections extends BaseCollections
     } while(true);
     return $this;
   }
+
   
-  public function getAutoIncrementFromParent()
-  {
-	  if($this->getCodeAutoIncrement())
-	  {
-			if($this->getCodeAiInherit())
-			{
-				$conn = Doctrine_Manager::connection();				
-				$sql = "SELECT * FROM fct_rmca_collection_get_autoincrement_hierarchy(:coll_id);";
-				$q = $conn->prepare($sql);
-             
-				$q->bindParam(":coll_id", $this->getId());
-              
-				$q->execute();
-				$item=$q->fetch(PDO::FETCH_NUM);
-             
-				return $item[0];
-    
-			}
-			else
-			{
-				return $this->getCodeLastValue();
-			}
-	  }
-	  return -1;
-  }
-  
-   public function getPathString()
-  {
-	  $conn = Doctrine_Manager::connection();				
-	  $sql = "SELECT * FROM fct_rmca_get_collection_text_path(:coll_id);";
-	  $q = $conn->prepare($sql);
-             
-	  $q->bindParam(":coll_id", $this->getId());
-              
-	 $q->execute();
-	 $item=$q->fetch(PDO::FETCH_NUM);
-             
-	  return $item[0];
-  }
 }

@@ -1,6 +1,4 @@
 <?php
-
-
 class LoginForm extends BaseForm
 {
   public function configure()
@@ -18,7 +16,7 @@ class LoginForm extends BaseForm
           'min_length' => 4, 'trim' => true),
           array('min_length' => '"%value%" must be at least %min_length% characters.')
         ),
-        'password'   => new sfValidatorString(array('required' => true)),
+        'password'   => new sfValidatorString(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('login[%s]');
@@ -32,15 +30,15 @@ class LoginForm extends BaseForm
   {
     if(! empty($values['username']) )
     {
-      $this->user = Doctrine_Core::getTable('Users')->getUserByPassword($values['username'], $values['password']);
+      $this->user = Doctrine::getTable('Users')->getUserByPassword($values['username'], $values['password']);
       if($this->user) {
         return $values;
       }
-      elseif(sfConfig::get('app_ldap_ldap_enabled', false) === true) {
+      elseif(sfConfig::get('app_ldap_ldap_enabled', false) == true) {
         $ldap = new ldapAuth();
         $values['username'] = strtolower($values['username']);
-        if( $ldap->authenticate($values['username'], $values['password']) === true ) {
-          $this->user = Doctrine_Core::getTable('Users')->getUserByLogin($values['username'], 'ldap');
+        if( $result = $ldap->authenticate($values['username'], $values['password'])) {
+          $this->user = Doctrine::getTable('Users')->getUserByLogin($values['username'], 'ldap');
           //We don't know the user yet but be is known on the LDAP
           if( !$this->user) {
 

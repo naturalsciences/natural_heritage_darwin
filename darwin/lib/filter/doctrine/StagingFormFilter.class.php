@@ -14,17 +14,22 @@ class StagingFormFilter extends BaseStagingFormFilter
   {
     $this->useFields(array());
     $this->addPagerItems();
+/*    $model = new DisplayImportDna();
+    $levels = $model->getLevels();
+    $this->widgetSchema['slevel']  = new sfWidgetFormChoice(array('expanded'=>true,'choices'=> $levels));
+    $this->validatorSchema['slevel'] = new sfValidatorChoice(array('choices' => array_keys($levels), 'required'=>false,'empty_value'=>'specimens'));
+    $this->setDefault('slevel', 'specimen');
+*/
     $this->widgetSchema['only_errors']  = new sfWidgetFormInputCheckbox();
     $this->validatorSchema['only_errors'] = new sfValidatorBoolean(array('required' => false));
     $this->setDefault('only_errors', 1);
     
-    	//ftheeten 2018 09 02
+    //ftheeten 2018 09 02
 	$this->widgetSchema['taxonomic_metadata_ref'] = new sfWidgetFormChoice(array(
       'choices' => TaxonomyMetadataTable::getAllTaxonomicMetadata( 'taxonomy_name ASC',true)  //array_merge( array(''=>'All'),TaxonomyMetadataTable::getAllTaxonomicMetadata("id ASC"))
     ));
 	 $this->widgetSchema['taxonomic_metadata_ref']->setAttributes(array('class'=>'taxonomy_metadata_ref'));
 	$this->validatorSchema['taxonomic_metadata_ref'] = new sfValidatorInteger(array('required'=>false));
-
 
     $stype = array(
       'zoology'=> 'Zoology',
@@ -48,6 +53,12 @@ class StagingFormFilter extends BaseStagingFormFilter
     }
   }
 
+  /*public function addSlevelColumnQuery(Doctrine_Query $query, $field, $value)
+  {
+     if ($value != "")
+       $query->andWhere("level = ? ", $value);
+     return $query;
+  }*/
   public function  getQuery()
   {
     $query = parent::getQuery();

@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage addon
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfPager.class.php 27747 2010-02-08 18:02:19Z Kris.Wallsmith $
  */
 abstract class sfPager implements Iterator, Countable
 {
@@ -68,7 +68,6 @@ abstract class sfPager implements Iterator, Countable
    *
    * Used internally by {@link getCurrent()}.
    *
-   * @param int $offset
    * @return mixed
    */
   abstract protected function retrieveObject($offset);
@@ -381,7 +380,7 @@ abstract class sfPager implements Iterator, Countable
    */
   public function setPage($page)
   {
-    $this->page = (int) $page;
+    $this->page = intval($page);
 
     if ($this->page <= 0)
     {

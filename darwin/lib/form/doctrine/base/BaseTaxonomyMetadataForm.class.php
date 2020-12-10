@@ -8,42 +8,45 @@
  * @package    darwin
  * @subpackage form
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
  */
-abstract class BaseTaxonomyMetadataForm extends DarwinModelForm
+abstract class BaseTaxonomyMetadataForm extends BaseFormDoctrine
 {
-  protected function setupInheritance()
+  public function setup()
   {
-    parent::setupInheritance();
+    $this->setWidgets(array(
+      'id'                    => new sfWidgetFormInputHidden(),
+      'creation_date'         => new sfWidgetFormTextarea(),
+      'creation_date_mask'    => new sfWidgetFormInputText(),
+      'import_ref'            => new sfWidgetFormInputText(),
+      'taxonomy_name'         => new sfWidgetFormTextarea(),
+      'definition'            => new sfWidgetFormTextarea(),
+      'is_reference_taxonomy' => new sfWidgetFormInputCheckbox(),
+      'source'                => new sfWidgetFormTextarea(),
+      'url_website'           => new sfWidgetFormTextarea(),
+      'url_webservice'        => new sfWidgetFormTextarea(),
+    ));
 
-    $this->widgetSchema   ['creation_date'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['creation_date'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['creation_date_mask'] = new sfWidgetFormInputText();
-    $this->validatorSchema['creation_date_mask'] = new sfValidatorInteger(array('required' => false));
-
-    $this->widgetSchema   ['import_ref'] = new sfWidgetFormInputText();
-    $this->validatorSchema['import_ref'] = new sfValidatorInteger(array('required' => false));
-
-    $this->widgetSchema   ['taxonomy_name'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['taxonomy_name'] = new sfValidatorString();
-
-    $this->widgetSchema   ['definition'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['definition'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['is_reference_taxonomy'] = new sfWidgetFormInputCheckbox();
-    $this->validatorSchema['is_reference_taxonomy'] = new sfValidatorBoolean(array('required' => false));
-
-    $this->widgetSchema   ['source'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['source'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['url_website'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['url_website'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['url_webservice'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['url_webservice'] = new sfValidatorString(array('required' => false));
+    $this->setValidators(array(
+      'id'                    => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
+      'creation_date'         => new sfValidatorString(array('required' => false)),
+      'creation_date_mask'    => new sfValidatorInteger(array('required' => false)),
+      'import_ref'            => new sfValidatorInteger(array('required' => false)),
+      'taxonomy_name'         => new sfValidatorString(),
+      'definition'            => new sfValidatorString(array('required' => false)),
+      'is_reference_taxonomy' => new sfValidatorBoolean(array('required' => false)),
+      'source'                => new sfValidatorString(array('required' => false)),
+      'url_website'           => new sfValidatorString(array('required' => false)),
+      'url_webservice'        => new sfValidatorString(array('required' => false)),
+    ));
 
     $this->widgetSchema->setNameFormat('taxonomy_metadata[%s]');
+
+    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
+
+    $this->setupInheritance();
+
+    parent::setup();
   }
 
   public function getModelName()

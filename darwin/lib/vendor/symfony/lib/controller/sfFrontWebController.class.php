@@ -18,7 +18,7 @@
  * @subpackage controller
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfFrontWebController.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
 class sfFrontWebController extends sfWebController
 {
@@ -35,7 +35,6 @@ class sfFrontWebController extends sfWebController
       sfFilter::$filterCalled = array();
 
       // determine our module and action
-      /** @var sfWebRequest $request */
       $request    = $this->context->getRequest();
       $moduleName = $request->getParameter('module');
       $actionName = $request->getParameter('action');

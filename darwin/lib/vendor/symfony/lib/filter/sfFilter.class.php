@@ -4,7 +4,7 @@
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * (c) 2004-2006 Sean Kerr <sean@code-box.org>
- *
+ * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -16,16 +16,14 @@
  * @subpackage filter
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfFilter.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
 abstract class sfFilter
 {
-  /** @var sfParameterHolder */
-  protected $parameterHolder = null;
-  /** @var sfContext */
-  protected $context = null;
+  protected
+    $parameterHolder = null,
+    $context         = null;
 
-  /** @var bool[] */
   public static
     $filterCalled    = array();
 
@@ -33,9 +31,6 @@ abstract class sfFilter
    * Class constructor.
    *
    * @see initialize()
-   *
-   * @param sfContext $context
-   * @param array     $parameters
    */
   public function __construct($context, $parameters = array())
   {
@@ -48,7 +43,7 @@ abstract class sfFilter
    * @param sfContext $context    The current application context
    * @param array     $parameters An associative array of initialization parameters
    *
-   * @return boolean|void true
+   * @return boolean true
    */
   public function initialize($context, $parameters = array())
   {

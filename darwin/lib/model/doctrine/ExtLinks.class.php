@@ -10,15 +10,22 @@
  * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: Builder.php 7490 2010-03-29 19:53:27Z jwage $
  */
-class ExtLinks extends BaseExtLinks
-{
-  private static $link_types = array(
+class ExtLinks extends BaseExtLinks{
+	 private static $link_types = array(
+     /*RBINS values values*/
+	'no'=>'',
     'ext' => 'External',
     'vc' => 'Virtual Collection',
 	'nagoya'=> 'Nagoya',
 	'ltp' => 'LTP',
-	'iiif' => 'IIIF',
+	/*RMCA values*/
 	'dna' => 'DNA link',
+	'document'=>'document',
+	'image_link'=>'image link', 
+	'html_3d_snippet'=>'html 3d snippet' , 
+	'thumbnail'=>'thumbnail',
+	'cites'=>'CITES',
+	'acquisition'=>'Acquisition documents'
     ) ;
 
   static public function getLinkTypes()
@@ -34,3 +41,5 @@ class ExtLinks extends BaseExtLinks
   }
 
 }
+		
+ 

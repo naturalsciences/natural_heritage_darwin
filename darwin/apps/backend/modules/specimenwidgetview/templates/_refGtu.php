@@ -1,5 +1,7 @@
 <!--link to OpenLayers 3 ftheeten 2018 06 04-->
  <?php if(isset($gtu)):?>
+<script language="JavaScript" type="text/javascript" src="<?php print(public_path('/openlayers/v4.x.x-dist/ol.js'));?>"></script>
+<link rel="stylesheet" href="<?php print(public_path('/openlayers/v4.x.x-dist/ol.css'));?>">
 <table class="catalogue_table_view">
   <tbody>
     <tr>
@@ -10,12 +12,15 @@
         <?php echo $spec->getStationVisible()?__("Yes"):__("No") ; ?>
       </td>
     </tr>
-    <?php /*ftheeten 2018 10 31*/ if(is_object($gtu)):?>
     <?php if(isset($gtu) && ($spec->getStationVisible() || (!$spec->getStationVisible() && $sf_user->isAtLeast(Users::ENCODER)))) : ?>
     <tr>
       <th><label><?php echo __('Sampling location code');?></label></th>
-      <td>
-        <?php echo link_to($gtu->getCode(), 'gtu/view?id='.$spec->getGtuRef()) ?>
+      <td id="specimen_gtu_ref_code">
+        <?php if($sf_user->isAtLeast(Users::ENCODER)):?>
+          <?php echo link_to($gtu->getCode(), 'gtu/view?id='.$spec->getGtuRef(), array('target' => '_blank')) ?>
+        <?php else:?>
+          <?php echo $gtu->getCode();?>
+        <?php endif;?>
       </td>
     </tr>
     <?php if($gtu->getLocation()):?>
@@ -34,14 +39,6 @@
       <td id="specimen_gtu_ref_elevation"><?php echo $gtu->getElevation().' +- '.$gtu->getElevationAccuracy().' m'; ?></td>
     </tr>
     <?php endif;?>
-    <tr>
-      <th><label><?php echo __('Date from');?></label></th>
-      <td id="specimen_gtu_date_from" class="datesNum"><?php echo $spec->getTemporalInformation()->getFromDateMasked(ESC_RAW);?></td>
-    </tr>
-    <tr>
-      <th><label><?php echo __('Date to');?></label></th>
-      <td id="specimen_gtu_date_to" class="datesNum"><?php echo $spec->getTemporalInformation()->getToDateMasked(ESC_RAW);?></td>
-    </tr>
     <tr>
       <th class="top_aligned">
         <?php echo __("Sampling location Tags") ?>
@@ -78,38 +75,59 @@
 		<div>
       </td>
     </tr>
-    <?php if (
-      isset($commentsGtu) &&
-      count($commentsGtu) != 0
-      ): ?>
-	  <tr id="specimen_gtu_related_info">
-      <th>
-        <?php echo __("Related comments") ?>
-      </th>
-      <td class="top_aligned">
-        <?php use_helper('Text');?>
-        <?php foreach($commentsGtu as $comment):?>
-          <fieldset class="opened view_mode"><legend class="view_mode"><b><?php echo __('Notion');?></b> : <?php echo __($comment->getNotionText());?></legend>
-            <?php echo auto_link_text( nl2br($comment->getComment())) ;?>
-          </fieldset>
-        <?php endforeach ; ?>
-      </td>
-    </tr>
-    <?php endif; ?>
+	<!--addition ftheeten 2014-->
+	 <tr>
+        <th class="top_aligned">
+          <?php echo __("Other information") ?>
+        </th>
+        <td>
+			 <div class="inline">
+				<?php 
+					$tmpComments = Doctrine::getTable('Comments')->findForTable('gtu',$gtu->getId());
+					
+						$flagGo=TRUE;
+						
+						
+						$nbr = count($tmpComments);
+						if(! $nbr) 
+						{
+							echo "-";
+							$flagGo=True;
+						}
+						if($flagGo===TRUE)
+						{
+							$str = '<ul  class="search_tags">';
+								foreach($tmpComments as $valC)
+								{
+								 
+									$str .= '<li><label>Comment<span class="gtu_group"> - '.$valC->getNotionConcerned().'</span></label><ul class="name_tags'.($view!=null?"_view":"").'">';
+									$str .=  '<li>' . trim($valC->getComment()).'</li>';
+									$str .= '</ul><div class="clear"></div>';
+									
+								  
+								}
+								$str .= '</ul>';
+							echo $str;
+						}
+				?>
+			</div>
+		</td>
+      </tr>	  
+	<!--end addition ftheeten 2014-->
     <?php elseif(isset($gtu) && $gtu->hasCountries()):?>
-    <tr>
-      <th class="top_aligned">
-        <?php echo __("Sampling location countries") ?>
-      </th>
-      <td>
-        <div class="inline">
-          <?php echo $gtu->getRawValue()->getName(null, true); ?>
-        </div>
-      </td>
-    </tr>
+      <tr>
+        <th class="top_aligned">
+          <?php echo __("Sampling location countries") ?>
+        </th>
+        <td>
+          <div class="inline">
+            <?php echo $gtu->getRawValue()->getName(null, true); ?>
+          </div>
+        </td>
+      </tr>
     <?php endif ; ?>
   </tbody>
-  <script  type="text/javascript">
+    <script  type="text/javascript">
 	<?php if(is_numeric($gtu->getLongitude())&&is_numeric($gtu->getLatitude())):?>
 var mousePositionControl;
 		var scaleLineControl;
@@ -236,19 +254,6 @@ var mousePositionControl;
 	init_map();
 	
 	<?php endif;?>
-    <?php endif;?>
   </script>
 </table>
-  <?php elseif(is_numeric($spec->getTemporalInformation()->getId())): ?>
-  <?php $dateTmp=$spec->getTemporalInformation();?>
-  <table>
-   <tr>
-      <th><label><?php echo __('Date from');?></label></th>
-      <td id="specimen_gtu_date_from" class="datesNum"><?php echo $dateTmp->getFromDateMasked(ESC_RAW);?></td>
-    </tr>
-    <tr>
-      <th><label><?php echo __('Date to');?></label></th>
-      <td id="specimen_gtu_date_to" class="datesNum"><?php echo $dateTmp->getToDateMasked(ESC_RAW);?></td>
-    </tr>
-  </table>
  <?php endif;?>

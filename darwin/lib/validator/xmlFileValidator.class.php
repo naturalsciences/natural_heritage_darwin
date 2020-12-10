@@ -30,12 +30,12 @@ class xmlFileValidator extends sfValidatorFile
     }
   
     //ftheeten 2017 09 07 part for tab-delimited
-    if(mime_content_type($value['tmp_name'])=="application/zip")
+	if(mime_content_type($value['tmp_name'])=="application/zip")
 	{
 		 $class = $this->getOption('validated_file_class');
         return new $class($value['name'], 'application/zip', $value['tmp_name'], $value['size'], $this->getOption('path'));
 	}
-    elseif(mime_content_type($value['tmp_name'])=="text/plain"||mime_content_type($value['tmp_name'])=="text/x-c++")
+    elseif(mime_content_type($value['tmp_name'])=="text/plain")
     {
         $delimiter=$this->getFileDelimiter($value['tmp_name'], $checkLines = 2);
         if($delimiter!=='\t')
@@ -105,25 +105,17 @@ class xmlFileValidator extends sfValidatorFile
   function getFileDelimiter($file, $checkLines = 2)
   {
         $file = new SplFileObject($file);
-        $delimiters = array(         
-          ',',          
+        $delimiters = array(
+          ',',
+          '\t',
           ';',
           '|',
-          ':', 
-          '\t',
+          ':'
         );
         $results = array();
         $i = 0;
          while($file->valid() && $i <= $checkLines){
             $line = $file->fgets();
-            if($i==0)
-            {
-                //workaround to allow one column-file
-                if(str_word_count($line)==1)
-                {
-                    return '\t';
-                }
-            }
             foreach ($delimiters as $delimiter){
                 $regExp = '/['.$delimiter.']/';
                 $fields = preg_split($regExp, $line);

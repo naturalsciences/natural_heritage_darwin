@@ -1,12 +1,11 @@
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $sf_user->getCulture() ?>" lang="<?php echo $sf_user->getCulture() ?>">
   <head>
-  <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
     <?php include_http_metas() ?>  
     <?php include_metas() ?>
     <?php include_javascripts() ?>
     <?php include_stylesheets() ?>
-    <!--ftheeten 2018 05 09-->
+     <!--ftheeten 2018 05 09-->
     <script src='https://www.google.com/recaptcha/api.js'></script>
     <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval' http://www.google.com https://www.gstatic.com  https://www.google-analytics.com http://fonts.gstatic.com">
     <title><?php include_slot('title') ?></title>
@@ -16,7 +15,7 @@
     <link rel="shortcut icon" href="/favicon.ico" />
   </head>
   <body>
-    <script>
+  <script>
      //ftheeten 2018 05 30
         function disableFrameMenu() {
         var isInIframe = (parent !== window),
@@ -118,7 +117,7 @@
           </div>
         </td>     
       </tr>
-       <?php endif;?>
+     <?php endif;?>
     </table>
     <?php if(sfConfig::get('dw_broadcast_enabled', false)):?>
       <div id="broadcast_bottom_padding"></div>

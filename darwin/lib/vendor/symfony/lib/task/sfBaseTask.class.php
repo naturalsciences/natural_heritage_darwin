@@ -14,18 +14,16 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfBaseTask.class.php 24341 2009-11-24 15:01:58Z Kris.Wallsmith $
  */
 abstract class sfBaseTask extends sfCommandApplicationTask
 {
   protected
-    $configuration   = null,
-    $pluginManager   = null,
-    $statusStartTime = null;
+    $configuration = null,
+    $pluginManager = null;
 
   /**
    * @see sfTask
-   * @inheritdoc
    */
   protected function doRun(sfCommandManager $commandManager, $options)
   {
@@ -62,7 +60,7 @@ abstract class sfBaseTask extends sfCommandApplicationTask
       $this->configuration = $this->createConfiguration($application, $env);
     }
 
-    if (!$this->withTrace())
+    if (null !== $this->commandApplication && !$this->commandApplication->withTrace())
     {
       sfConfig::set('sf_logging_enabled', false);
     }
@@ -93,7 +91,7 @@ abstract class sfBaseTask extends sfCommandApplicationTask
   {
     if (!isset($this->filesystem))
     {
-      if ($this->isVerbose())
+      if (null === $this->commandApplication || $this->commandApplication->isVerbose())
       {
         $this->filesystem = new sfFilesystem($this->dispatcher, $this->formatter);
       }
@@ -110,8 +108,6 @@ abstract class sfBaseTask extends sfCommandApplicationTask
    * Checks if the current directory is a symfony project directory.
    *
    * @return true if the current directory is a symfony project directory, false otherwise
-   *
-   * @throws sfException
    */
   public function checkProjectExists()
   {
@@ -124,11 +120,9 @@ abstract class sfBaseTask extends sfCommandApplicationTask
   /**
    * Checks if an application exists.
    *
-   * @param  string $app The application name
+   * @param  string $app  The application name
    *
    * @return bool true if the application exists, false otherwise
-   *
-   * @throws sfException
    */
   public function checkAppExists($app)
   {
@@ -141,12 +135,10 @@ abstract class sfBaseTask extends sfCommandApplicationTask
   /**
    * Checks if a module exists.
    *
-   * @param  string $app    The application name
-   * @param  string $module The module name
+   * @param  string $app     The application name
+   * @param  string $module  The module name
    *
    * @return bool true if the module exists, false otherwise
-   *
-   * @throws sfException
    */
   public function checkModuleExists($app, $module)
   {
@@ -154,51 +146,6 @@ abstract class sfBaseTask extends sfCommandApplicationTask
     {
       throw new sfException(sprintf('Module "%s/%s" does not exist.', $app, $module));
     }
-  }
-
-  /**
-   * Checks if trace mode is enabled
-   *
-   * @return boolean
-   */
-  protected function withTrace()
-  {
-    if (null !== $this->commandApplication && !$this->commandApplication->withTrace())
-    {
-      return false;
-    }
-
-    return true;
-  }
-
-  /**
-   * Checks if verbose mode is enabled
-   *
-   * @return boolean
-   */
-  protected function isVerbose()
-  {
-    if (null !== $this->commandApplication && !$this->commandApplication->isVerbose())
-    {
-      return false;
-    }
-
-    return true;
-  }
-
-  /**
-   * Checks if debug mode is enabled
-   *
-   * @return boolean
-   */
-  protected function isDebug()
-  {
-    if (null !== $this->commandApplication && !$this->commandApplication->isDebug())
-    {
-      return false;
-    }
-
-    return true;
   }
 
   /**
@@ -217,7 +164,7 @@ abstract class sfBaseTask extends sfCommandApplicationTask
 
       require_once sfConfig::get('sf_config_dir').'/ProjectConfiguration.class.php';
 
-      $configuration = ProjectConfiguration::getApplicationConfiguration($application, $env, $this->isDebug(), null, $this->dispatcher);
+      $configuration = ProjectConfiguration::getApplicationConfiguration($application, $env, true, null, $this->dispatcher);
     }
     else
     {
@@ -441,115 +388,5 @@ abstract class sfBaseTask extends sfCommandApplicationTask
     }
 
     return $task;
-  }
-
-  /**
-   * Show status of task
-   *
-   * @param integer $done
-   * @param integer $total
-   * @param integer $size
-   * @return void
-   */
-  protected function showStatus($done, $total, $size = 30)
-  {
-    // if we go over our bound, just ignore it
-    if ($done > $total)
-    {
-      $this->statusStartTime = null;
-      return;
-    }
-
-    if (null === $this->statusStartTime)
-    {
-      $this->statusStartTime = time();
-    }
-
-    $now = time();
-    $perc = (double)($done / $total);
-    $bar = floor($perc * $size);
-
-    $statusBar = "\r[";
-    $statusBar .= str_repeat('=', $bar);
-    if ($bar < $size)
-    {
-      $statusBar .= '>';
-      $statusBar .= str_repeat(' ', $size - $bar);
-    }
-    else
-    {
-      $statusBar .= "=";
-    }
-
-    $disp = number_format($perc * 100, 0);
-
-    $statusBar .= "] $disp% ($done/$total)";
-
-    $rate = $done ? ($now - $this->statusStartTime) / $done : 0;
-    $left = $total - $done;
-    $eta = round($rate * $left, 2);
-
-    $elapsed = $now - $this->statusStartTime;
-
-    $eta = $this->convertTime($eta);
-    $elapsed = $this->convertTime($elapsed);
-
-    $memory = memory_get_usage(true);
-    if ($memory>1024*1024*1024*10)
-    {
-      $memory = sprintf('%.2fGB', $memory/1024/1024/1024);
-    }
-    elseif ($memory>1024*1024*10)
-    {
-      $memory = sprintf('%.2fMB', $memory/1024/1024);
-    }
-    elseif ($memory>1024*10)
-    {
-      $memory = sprintf('%.2fkB', $memory/1024);
-    }
-    else
-    {
-      $memory = sprintf('%.2fB', $memory);
-    }
-
-    $statusBar .= ' [ remaining: '.$eta.' | elapsed: '.$elapsed.' ] (memory: '.$memory.')     ';
-
-    echo $statusBar;
-
-    // when done, send a newline
-    if ($done == $total)
-    {
-      $this->statusStartTime = null;
-      echo "\n";
-    }
-  }
-
-  /**
-   * Convert time into humain format
-   *
-   * @param integer $time
-   * @return string
-   */
-  private function convertTime($time)
-  {
-    $string = '';
-
-    if ($time > 3600)
-    {
-      $h = (int) abs($time / 3600);
-      $time -= ($h * 3600);
-      $string .= $h. ' h ';
-    }
-
-    if ($time > 60)
-    {
-      $m = (int) abs($time / 60);
-      $time -= ($m * 60);
-      $string .= $m. ' min ';
-    }
-
-    $string .= (int) $time.' sec';
-
-    return $string;
   }
 }

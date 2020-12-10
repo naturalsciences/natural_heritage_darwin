@@ -5,6 +5,16 @@
  */
 class Specimens extends BaseSpecimens
 {
+
+  //ftheeten 2016 09 22
+  private $flagStorageLinked=false;
+  public $partsAssociation=array();
+  /*public function construct()
+  {
+    sfDoctrineRecord::construct();
+    $this->flagStorageLinked=false;
+  }*/
+  
   public function getAcquisitionDateMasked ()
   {
     $dateTime = new FuzzyDateTime($this->_get('acquisition_date'), $this->_get('acquisition_date_mask'));
@@ -41,6 +51,78 @@ class Specimens extends BaseSpecimens
     }
   }
 
+    //ftheeten group date 2016 07 07
+    public function getGtuFromDateMasked ()
+  {
+    $dateTime = new FuzzyDateTime($this->_get('gtu_from_date'), $this->_get('gtu_from_date_mask'),true, true);
+    return $dateTime->getDateMasked();
+  }
+  
+  public function getGtuToDateMasked ()
+  {
+    $dateTime = new FuzzyDateTime($this->_get('gtu_to_date'), $this->_get('gtu_to_date_mask'),false, true);
+    return $dateTime->getDateMasked();
+  }
+  
+  public function getGtuFromDate()
+  {
+    $from_date = new FuzzyDateTime($this->_get('gtu_from_date'), $this->_get('gtu_from_date_mask'),true,true);
+    return $from_date->getDateTimeMaskedAsArray();
+  }
+
+  public function getGtuToDate()
+  {
+    $to_date = new FuzzyDateTime($this->_get('gtu_to_date'), $this->_get('gtu_to_date_mask'), false,true);
+    return $to_date->getDateTimeMaskedAsArray();
+  }
+
+  public function setGtuFromDate($fd)
+  {
+    if ($fd instanceof FuzzyDateTime)
+    {
+      $this->_set('gtu_from_date', $fd->format('Y/m/d H:i:s'));
+      $this->_set('gtu_from_date_mask', $fd->getMask());
+    }
+    else
+    {
+      $dateTime = new FuzzyDateTime($fd, 56, true,true);
+      if(is_array($fd))
+        $dateTime->setMask(FuzzyDateTime::getMaskFromDate($fd));
+      $this->_set('gtu_from_date', $dateTime->format('Y/m/d H:i:s'));
+      $this->_set('gtu_from_date_mask', $dateTime->getMask());
+    }
+  }
+
+  public function setGtuToDate($fd)
+  {
+    if ($fd instanceof FuzzyDateTime)
+    {
+      $this->_set('gtu_to_date', $fd->format('Y/m/d H:i:s'));
+      $this->_set('gtu_to_date_mask', $fd->getMask());
+    }
+    else
+    {
+      $dateTime = new FuzzyDateTime($fd, 56, false,true);
+      if(is_array($fd))
+        $dateTime->setMask(FuzzyDateTime::getMaskFromDate($fd));
+      $this->_set('gtu_to_date', $dateTime->format('Y/m/d H:i:s'));
+      $this->_set('gtu_to_date_mask', $dateTime->getMask());
+    }
+  }
+  
+  public function getRawGtuToDate()
+  {
+    return $this->_get('gtu_to_date');
+  }
+  
+    public function getRawGtuFromDate()
+  {
+    return $this->_get('gtu_from_date');
+  }
+
+// end group date  
+    
+
   public function setHostRelationship($value)
   {
     if($value != $this->_get('host_relationship')) {
@@ -48,6 +130,8 @@ class Specimens extends BaseSpecimens
     }
   }
 
+  //ftheeten 2016 09 21
+  /*
   public function setCategory($value)
   {
     if($value != $this->_get('category')) {
@@ -64,13 +148,13 @@ class Specimens extends BaseSpecimens
       'figurate-physical' => 'Figurate-Physical',
     );
   }
-
+*/
   public function getName()
   {
     $name = '-';
     if(! $this->isNew() && $this->_get('id')==0)
       return $name;
-    $codes = Doctrine_Core::getTable('Codes')->getCodesRelated('specimens', $this->_get('id'));
+    $codes = Doctrine::getTable('Codes')->getCodesRelated('specimens', $this->_get('id'));
     if (!$codes->count())
       return $name;
     $name = '';
@@ -118,34 +202,22 @@ class Specimens extends BaseSpecimens
     return $str;
   }
 
-  public function getOtherGtuTags()
+  public function getOtherGtuTags($is_view = false)
   {
-    $tags = explode(';',$this->getGtuCountryTagValue(''));
-    $nbr = count($tags);
-    if(! $nbr) return "-";
-    $str = '<ul class="name_tags_view">';
-    foreach($tags as $value)
-      if (strlen($value))
-        $str .= '<li>' . trim($value).'</li>';
-    $str .= '</ul>';
+    //$tags = explode(';',$this->getGtuCountryTagValue(''));
+    //rmca 2016 05 12
+    $tags = explode(';',$this->getGtuOthersTagValue(''));
 
-    return $str;
-  }
-  
-  //ftheeten 2018 10 05
-   public function getAllGtuTags()
-  {
-    $tags = explode(';',$this->getGtuCountryTagValue(''));
-    foreach(explode(";",$this->getGtuOthersTagValue()) as $value)
-    {
-        $tags[]=$value;
-    }
     $nbr = count($tags);
     if(! $nbr) return "-";
-    $str = '<ul class="name_tags_view">';
+	//JMHerpers 2018 02 23
+    //$str = '<ul class="name_tags_view">';
+	$str = '<ul>';
     foreach($tags as $value)
       if (strlen($value))
-        $str .= '<li>' . trim($value).'</li>';
+		    //JMHerpers 2018 02 23
+		  if ($value != "Africa")
+			$str .= '<li>● '.trim($value).'</li>';
     $str .= '</ul>';
 
     return $str;
@@ -226,159 +298,108 @@ class Specimens extends BaseSpecimens
   {
     return ucfirst($this->_get('rock_form'));
   }
-  
-  public function getTaxonomicIdentification()
-  {
-    return $this->getDoctrineTaxonomicIdentifications()->getTaxonomicIdentification();    
-  }
-  
-   //ftheeten group date 2018 11 30
-    public function getGtuFromDateMasked ()
-  {
-    $dateTime = new FuzzyDateTime($this->_get('gtu_from_date'), $this->_get('gtu_from_date_mask'),true, true);
-    return $dateTime->getDateMasked();
-  }
-  
-  public function getGtuToDateMasked ()
-  {
-    $dateTime = new FuzzyDateTime($this->_get('gtu_to_date'), $this->_get('gtu_to_date_mask'),false, true);
-    return $dateTime->getDateMasked();
-  }
-  
-  public function getGtuFromDate()
-  {
-    $from_date = new FuzzyDateTime($this->_get('gtu_from_date'), $this->_get('gtu_from_date_mask'),true,true);
-    return $from_date->getDateTimeMaskedAsArray();
-  }
-
-  public function getGtuToDate()
-  {
-    $to_date = new FuzzyDateTime($this->_get('gtu_to_date'), $this->_get('gtu_to_date_mask'), false,true);
-    return $to_date->getDateTimeMaskedAsArray();
-  }
-
-  public function setGtuFromDate($fd)
-  {
-    if ($fd instanceof FuzzyDateTime)
-    {
-      $this->_set('gtu_from_date', $fd->format('Y/m/d H:i:s'));
-      $this->_set('gtu_from_date_mask', $fd->getMask());
-    }
-    else
-    {
-      $dateTime = new FuzzyDateTime($fd, 56, true,true);
-      if(is_array($fd))
-        $dateTime->setMask(FuzzyDateTime::getMaskFromDate($fd));
-      $this->_set('gtu_from_date', $dateTime->format('Y/m/d H:i:s'));
-      $this->_set('gtu_from_date_mask', $dateTime->getMask());
-    }
-  }
-
-  public function setGtuToDate($fd)
-  {
-    if ($fd instanceof FuzzyDateTime)
-    {
-      $this->_set('gtu_to_date', $fd->format('Y/m/d H:i:s'));
-      $this->_set('gtu_to_date_mask', $fd->getMask());
-    }
-    else
-    {
-      $dateTime = new FuzzyDateTime($fd, 56, false,true);
-      if(is_array($fd))
-        $dateTime->setMask(FuzzyDateTime::getMaskFromDate($fd));
-      $this->_set('gtu_to_date', $dateTime->format('Y/m/d H:i:s'));
-      $this->_set('gtu_to_date_mask', $dateTime->getMask());
-    }
-  }
-  
-  public function getRawGtuToDate()
-  {
-    return $this->_get('gtu_to_date');
-  }
-  
-    public function getRawGtuFromDate()
-  {
-    return $this->_get('gtu_from_date');
-  }
 
   
-    public function getMainCode()
-   {
-		return Doctrine_Core::getTable('Specimens')->getMainCode($this->getId());
-   }
-   
-   //2020 01 14
-  public function getXMLDataCite($institution="Royal Belgian Institute for Natural Sciences (RBINS)")
+  //ftheeten 2016 09 22
+  
+   public function getStoragePartsDataset()
   {
-    
-    $collection= Doctrine_Core::getTable('Collections')->findOneById($this->getCollectionRef());
-    $returned ="";
-    $returned.="<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-    $returned.='<resource xmlns="http://datacite.org/schema/kernel-4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4/metadata.xsd">
-   ';
-    $returned.='<identifier identifierType="DOI"></identifier>
-    <creators>
-        <creator>
-            <creatorName>'.htmlspecialchars($institution).'</creatorName>
-        </creator>
-    </creators>';
-    $returned.='<subjects>
-            <subject xml:lang="en-US" schemeURI="http://dewey.info/" subjectScheme="dewey">570 Biology</subject>
-            </subjects>';
-    $returned.='<titles>
-                <title>I.G.:'.htmlspecialchars($this->getIgNum()).' '.htmlspecialchars($this->getMainCode().' '.$this->getTaxonName()).'</title>
-            </titles>';
-    $returned.='<publisher>'.htmlspecialchars($institution).'</publisher>';
-    $returned.='<publicationYear>'.substr($this->getSpecimenCreationDate(),0,4).'</publicationYear>';
-    
-    $Collectors = Doctrine_Core::getTable('CataloguePeople')->getPeopleRelated('specimens','collector',$this->getId());
-    $people=Array();
-    foreach( $Collectors as $collector_link)
-    {
-        $col=Array();
-        $collector=Doctrine_Core::getTable('People')->findOneById($collector_link->getPeopleRef());
-        $col["contributorType"]="dataCollector";
-        $col["contributorName"]=htmlspecialchars($collector->getFormatedName());
-        $col["givenName"]=htmlspecialchars($collector->getGivenName());
-        $col["familyName"]=htmlspecialchars($collector->getFamilyName());
-        $people[]=$col;
-    }
-    $Identifications = Doctrine_Core::getTable('Identifications')->getIdentificationsRelated('specimens',$this->getId()) ;
-        foreach ($Identifications as $key=>$val)
+     if($this->flagStorageLinked===false)
+     {
+        $this->partsAssociation = Doctrine::getTable('StorageParts')->findBySpecimenRef($this->_get('id'));
+        $this->flagStorageLinked=true;
+     } 
+     
+  }
+
+  //ftheeten 2016 09 22
+  
+  public function getStoragePartFieldHTML($field)
+  {
+     $returned=array();
+     if($this->flagStorageLinked===false)
+     {
+        $this->getStoragePartsDataset();
+     }
+     $recordSet= $this->partsAssociation;
+     foreach($recordSet as $specimen)
+	 {
+        $returned[]=$specimen->_get($field);
+     }
+     return implode("<br/>", $returned);
+  }
+  
+   public function getStoragePartFieldArray($field, $unique=true)
+  {
+     $returned=array();
+     if($this->flagStorageLinked===false)
+     {
+        $this->getStoragePartsDataset();
+     }
+     $recordSet= $this->partsAssociation;
+     foreach($recordSet as $specimen)
+	 {
+        if($unique==true&&in_array($specimen->_get($field), $returned)===FALSE)
         {
-          
-          $Identifier = Doctrine_Core::getTable('CataloguePeople')->getPeopleRelated('identifications', 'identifier', $val->getId()) ;
-          foreach ($Identifier as $ident_link)
-          {
-            $ident=Array();
-            $identifier=Doctrine_Core::getTable('People')->findOneById($ident_link->getPeopleRef());
-            $ident["contributorType"]="Researcher";
-            $ident["contributorName"]=htmlspecialchars($identifier->getFormatedName());
-            $ident["givenName"]=htmlspecialchars($identifier->getGivenName());
-            $ident["familyName"]=htmlspecialchars($identifier->getFamilyName());
-            $people[]=$ident;
-          }
+            $returned[]=$specimen->_get($field);
         }
-    $returned.='<Contributors>';
-    foreach($people as $ppl)
-    {
-        $returned.='<contributor contributorType="'.$ppl[contributorType].'">
-                        <contributorName>'.$ppl["contributorName"].'</contributorName>
-                        <givenName>'.$ppl["givenName"].'</givenName>
-                        <familyName>'.$ppl["familyName"].'</familyName>                        
-                    </contributor>
-                ';
-    }
-    $returned.='</Contributors>';
-    $returned.='<description xml:lang="en-US" descriptionType="Abstract">
-                    Physical object in collection '.$collection->getPathString().
-                '</description>';
-    $returned.='<resourceType resourceTypeGeneral="data-set">Web page (DaRWIN Collection Manegement system)</resourceType>';
-    $returned.='</resource>';
-    
-    return $returned;
+        else
+        {
+            $returned[]=$specimen->_get($field);
+        }
+     }
+     return  $returned;
+  }
+  
+  //ftheeten 2016 11 23
+  public function getBuilding()
+  {
+        return implode(",", $this->getStoragePartFieldArray("building") );
+  }
+  
+    //ftheeten 2016 11 23
+  public function getFloor()
+  {
+        return implode(",", $this->getStoragePartFieldArray("floor") );
+  }
+  
+      //ftheeten 2016 11 23
+  public function getRoom()
+  {
+        return implode(",", $this->getStoragePartFieldArray("room") );
+  }
+        //ftheeten 2016 11 23
+   public function getRow()
+  {
+        return implode(",", $this->getStoragePartFieldArray("row") );
+  }
+  
+          //ftheeten 2016 11 23
+   public function getShelf()
+  {
+        return implode(",", $this->getStoragePartFieldArray("shelf") );
   }
 
-// end group date  
+  //ftheeten 2017 04 28
+  public function getLoanDescription()
+  {
+    
+    if($this->getId()){
+      $loans = Doctrine::getTable('Loans')->getRelatedToSpecimen($this->getId());
+      $loan_list = array();
+      foreach($loans as $loan) {
+           $loan_list[$loan->getId()]['name']=$loan->getName();
+           $status = Doctrine::getTable('LoanStatus')->getLastLoanStatus($loan->getId()) ;
+          
+          foreach($status as $sta) {
+             $loan_list[$loan->getId()]['last_status'] = $sta->getStatus();
+          }
+      }
+      
+      return $loan_list;
+    }
+  }
+
+
 
 }

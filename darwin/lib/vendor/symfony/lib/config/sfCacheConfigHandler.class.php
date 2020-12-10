@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfCacheConfigHandler.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
 class sfCacheConfigHandler extends sfYamlConfigHandler
 {
@@ -35,7 +35,7 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
   public function execute($configFiles)
   {
     // parse the yaml
-    $this->yamlConfig = static::getConfiguration($configFiles);
+    $this->yamlConfig = self::getConfiguration($configFiles);
 
     // iterate through all action names
     $data  = array();
@@ -106,10 +106,9 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
 
   /**
    * @see sfConfigHandler
-   * @inheritdoc
    */
   static public function getConfiguration(array $configFiles)
   {
-    return static::flattenConfiguration(static::parseYamls($configFiles));
+    return self::flattenConfiguration(self::parseYamls($configFiles));
   }
 }

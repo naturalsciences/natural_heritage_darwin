@@ -4,6 +4,11 @@
 <script type="text/javascript">
   $(document).ready(function () {
     $('body').catalogue({});
+	//JMHerpers 2018 04 16
+	$('#institutions_family_name').focusout(function() 
+			{
+				$('#institutions_family_name').val($('#institutions_family_name').val().replace(/(\r\n\t|\n|\r\t)/gm," "));
+			});
   });
 </script>
 

@@ -11,6 +11,7 @@ class PropertiesTable extends DarwinTable
   * @param int $record_id id of the record
   * @return a Doctrine_collection of results
   */
+  
   //ftheeten 2019 01 18 added extra_id
   public function findForTable($table_name, $record_id, $extra_id=Array())
   {
@@ -19,11 +20,11 @@ class PropertiesTable extends DarwinTable
       ->orderBy('p.property_type ASC, p.applies_to_indexed ASC');
     $q = $this->addCatalogueReferences($q, $table_name, $record_id, 'p', true);
     
- //ftheeten 2019 01 18
+    //ftheeten 2019 01 18
     if(count($extra_id)>0)
     {
         foreach($extra_id as $item=>$id)
-        {
+        {       
             if(is_integer($id))
             {
                 $q->orWhere("p.id= ?", $id);
@@ -32,6 +33,7 @@ class PropertiesTable extends DarwinTable
     }
     return $q->execute();
   }
+
 
   /**
   * Get Distincts type of properties
@@ -81,4 +83,36 @@ class PropertiesTable extends DarwinTable
 
     return array_merge(array(''=>''),$res_unit);
   }
+  
+  
+      //ftheeten2014 03 11
+	  //to access a subproperty associated to a specimen
+	  //by filtering its type
+   public function getOneSubPropertyByType($table='specimens', $id, $type_property)
+   {
+    $query= Doctrine_Query::create()->
+    from('Properties p')->
+    where('p.record_id = ?', $id)->
+    andWhere('p.referenced_relation = ?', $table)->
+    andWhere('p.property_type = ?', $type_property);
+                                              
+    return $query->fetchOne();
+   }
+   
+   //ftheeten 2019 01 16 get propery by table
+    public function getPropertiesByTable($table='specimens', $id)
+   {
+    $query= Doctrine_Query::create()->
+    from('Properties p')->
+    where('p.record_id = ?', $id)->
+    andWhere('p.referenced_relation = ?', $table);                                              
+    return $query->execute();
+   }
+   
+            //ftheeten 2016 01 17
+   public function getYesNo()
+   {                                             
+        return Array("yes"=> "yes", "no"=> "no");
+   }
+
 }

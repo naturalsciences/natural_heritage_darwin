@@ -14,11 +14,6 @@ $(document).ready(function ()
   <table class="search">
     <tbody>
       <?php echo $form->renderGlobalErrors() ?>
-	  <!--ftheeten 2018 08 05-->
-	   <tr>
-        <th><?php echo $form['source_database']->renderLabel(); ?> :</th>
-        <td><?php echo $form['source_database']; ?></td>
-      </tr>
       <tr>
         <th><?php echo $form['uploadfield']->renderLabel() ?> :</th>
         <td>
@@ -40,7 +35,8 @@ $(document).ready(function ()
           <?php echo $form['format'] ?>
         </td>
       </tr>
-      <?php if($type != 'taxon'&&$type != 'lithostratigraphy') : ?>
+	  
+      <?php if($type != 'taxon') : ?>
       <tr>
         <th><?php echo $form['collection_ref']->renderLabel() ?> :</th>
         <td>
@@ -48,31 +44,25 @@ $(document).ready(function ()
           <?php echo $form['collection_ref'] ?>
         </td>
       </tr>
+      <!--ftheeten 2017 08 02-->
+	  
       <?php endif ?>
-      <!--ftheeten 2018 09 24-->
-      <?php if($type == 'abcd') : ?>
-          <tr>
-            <th><?php echo $form['specimen_taxonomy_ref']->renderLabel() ?> :</th>
-            <td>
-              <?php echo $form['specimen_taxonomy_ref']->renderError() ?>
-              <?php echo $form['specimen_taxonomy_ref'] ?>
-            </td>
-          </tr>
-          <tr>
-            <th><?php echo $form['enforce_code_unicity']->renderLabel() ?> :</th>
-            <td>
-              <?php echo $form['enforce_code_unicity']->renderError() ?>
-              <?php echo $form['enforce_code_unicity'] ?>
-            </td>
-          </tr>
-      <?php endif ?>
+	  <?php if($type == 'abcd') : ?>
+      <tr>
+        <th><?php echo $form['specimen_taxonomy_ref']->renderLabel() ?> :</th>
+        <td>
+          <?php echo $form['specimen_taxonomy_ref']->renderError() ?>
+          <?php echo $form['specimen_taxonomy_ref'] ?>
+        </td>
+      </tr>
+	  <?php endif ?>
       <?php if($type == 'taxon') : ?>
       <tr>
         <th><?php echo $form['exclude_invalid_entries']->renderLabel() ?> :</th>
         <td>
           <?php echo $form['exclude_invalid_entries']->renderError() ?>
           <?php echo $form['exclude_invalid_entries'] ?>
-        </td>
+        </td>        
       </tr>
       <!--ftheeten 2017 07 06-->
       <tr>
@@ -83,8 +73,7 @@ $(document).ready(function ()
         </td>         
       </tr>
       <?php endif ?>
-     <!--ftheeten 2018 09 24-->
-      <?php if($type == 'taxon') : ?>
+	  <!--ftheeten 2018 06 06-->
 	  <tr>
       <th><?php echo $form['taxonomy_kingdom']->renderLabel() ?> :</th>
         <td>
@@ -92,7 +81,15 @@ $(document).ready(function ()
           <?php echo $form['taxonomy_kingdom'] ?>
         </td>
       </tr>
-	  <?php endif ?>
+	  <?php if($type == 'abcd') : ?>
+       <tr>
+      <th><?php echo  $form['merge_gtu']->renderLabel() ;?> :</th>
+        <td>
+          <?php echo $form['merge_gtu']->renderError() ?>
+          <?php echo $form['merge_gtu'] ?>
+        </td>
+      </tr>
+	  <?php endif;?>
     </tbody>
       <tfoot>
         <tr>

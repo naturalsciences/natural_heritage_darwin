@@ -18,29 +18,10 @@
       <td><?php echo $form['mineral_level_ref'];?></td>
     </tr>
     <tr id="mineral_precise_line">
-      <td id="mineral_relation"><?php echo $form['mineral_relation'];?></td>
+      <td><?php echo $form['mineral_relation'];?></td>
       <td><?php echo $form['mineral_item_ref'];?></td>
-      <td>
-        <ul id="mineral_child_syn_included">
-          <li><?php echo $form['mineral_child_syn_included']->renderLabel();?></li>
-          <li><?php echo $form['mineral_child_syn_included'];?></li>
-        </ul>
-      </td>
     </tr>
   </tbody>
-</table>
-<table>
- <thead>
-    <tr>
-      <td>
-        
-      </td>
-      <td>&nbsp;</td>
-    </tr>
-  </thead>
-  <tbody>
-		<tr><th style="width:200px"><?php echo $form['mineralogical_identification']->renderLabel();?></th><td><?php echo $form['mineralogical_identification'];?></td></tr>
-  <tbody>
 </table>
 
 <script type="text/javascript">
@@ -50,6 +31,8 @@ $(document).ready(function () {
     $('#mineral_full_text').removeAttr('disabled') ;
     $('#mineral_precise_line').toggle() ;
     $(this).closest('table').find('#mineral_full_text_line').toggle() ;
+    $('#mineral_full_text_line').find('input:text').val("") ;
+    $('#mineral_full_text_line').find('select').val('') ;
   });
   
   $('#mineral_full_text').click(function() {
@@ -57,53 +40,16 @@ $(document).ready(function () {
     $('#mineral_full_text').attr('disabled','disabled') ;
     $('#mineral_precise_line').toggle() ;
     $(this).closest('table').find('#mineral_full_text_line').toggle() ;
+    $('#mineral_precise_line').find('input:text').val("") ;
+    $('#mineral_precise_line').find('input:hidden').val('') ;
 
-  });
+//     $('#specimen_search_filters_mineral_item_ref').val('') ;
+//     $('#specimen_search_filters_mineral_item_ref_name').val('') ;
+  }); 
   
   if($('#specimen_search_filters_mineral_name').val() != '')
   {
     $('#mineral_full_text').trigger("click") ;
   }
-
-  $('#mineral_relation ul.radio_list input').click(function () {
-    if ( $(this).val() in { child : "child", direct_child : "direct_child" } ) {
-      $('#mineral_child_syn_included').removeClass('hidden');
-    }
-    else {
-      $('#mineral_child_syn_included').addClass('hidden');
-    }
-  });
-
-  if (!($('#mineral_relation input:checked').val() in { child : "child", direct_child : "direct_child" } )) {
-    $('#mineral_child_syn_included').addClass('hidden');
-  }
-
-  $('.mineral_name').on(
-    'change',
-    function() {
-      if($(this).val() !== '') {
-        $('.mineral_autocomplete').val('');
-      }
-    }
-  );
-  
-  var url_mineral_identification="<?php echo(url_for('catalogue/mineralogyAutocomplete?'));?>";
-          var autocomplete_rmca_array=Array();
-          $('.autocomplete_mineralogy').autocomplete({
-                source: function (request, response) {
-                    $.getJSON(url_mineral_identification, {
-                                term : request.term
-                            } , 
-                            function (data) 
-                                {
-                            response($.map(data, function (value, key) {
-                            return value;
-                            }));
-                    });
-                },
-                minLength: 2,
-                delay: 200
-    });
-
 });
 </script>

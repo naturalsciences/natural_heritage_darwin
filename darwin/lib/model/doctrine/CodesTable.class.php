@@ -22,11 +22,11 @@ class CodesTable extends DarwinTable
     return $this->createFlatDistinct('codes', 'code_suffix_separator', 'code_suffix_separator')->execute();
   }
 
-  public function getCodesRelated($table='specimens', $specId = null)
+  //change ftheeten added possibility to modify order by
+  public function getCodesRelated($table='specimens', $specId = null, $p_order_by='referenced_relation, record_id, code_category ASC, code_date DESC, full_code_indexed ASC')
   {
-	  return $this->getCodesRelatedArray($table, $specId);
+	return $this->getCodesRelatedArray($table, $specId, $p_order_by);
   }
-
   /**
   * Get all codes related to an Array of id
   * @param string $table Name of the table referenced
@@ -46,7 +46,7 @@ class CodesTable extends DarwinTable
     return $q->execute();
   }
 
-  /**
+/**
    * Get all codes related to an Array of id
    * @param string $table Name of the table referenced
    * @param array $specIds Array of id of related record
@@ -65,7 +65,7 @@ class CodesTable extends DarwinTable
           orderBy('referenced_relation, record_id, code_category ASC, code_date DESC, full_code_indexed ASC');
     return $q->execute();
   }
-
+  
   /**
   * Get all codes related to an Array of id
   * @param string $table Name of the table referenced
@@ -74,10 +74,9 @@ class CodesTable extends DarwinTable
   */
   public function getCodesRelatedMultiple($table='specimens', $itemIds = array())
   {
-    if(empty($itemIds)) return array();
-    if(!is_array($itemIds)) {
-      $itemIds = array ($itemIds);
-    }
+    if(!is_array($itemIds))
+      $specIds = array($itemIds);
+        if(empty($itemIds)) return array();
     $q = Doctrine_Query::create()->
       select("record_id, code_category, concat( concat(COALESCE(code_prefix,''), COALESCE(code_prefix_separator,''),  COALESCE(code,'') ), 
         COALESCE(code_suffix_separator,''), COALESCE(code_suffix,'')) as full_code")->
@@ -88,7 +87,7 @@ class CodesTable extends DarwinTable
     return $q->execute();
   }
   
-   public function getByCodesFull( $code, $table='specimens',$case_insensitive=true)
+  public function getByCodesFull( $code, $table='specimens',$case_insensitive=true)
   {
     
 	if($case_insensitive)

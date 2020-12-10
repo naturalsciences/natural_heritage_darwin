@@ -19,13 +19,6 @@ class ImportABCDXml implements ImportModelsInterface
   private $code_prefix_separator;
   private $code_suffix;
   private $code_suffix_separator;
-  
-  private $max_xml_levels=20;
-  
-
-  
-  //private m_conn;
-  
   protected $configuration;
   
   
@@ -33,7 +26,6 @@ class ImportABCDXml implements ImportModelsInterface
   {
     $this->configuration=$p_configuration;
   }
-  
   //ftheeten 2018 09 24
   protected function csvLineIsNotEmpty($p_row)
   {
@@ -49,86 +41,6 @@ class ImportABCDXml implements ImportModelsInterface
   }
   
   
-  protected function removeEmptyTagFile( $filepath)
-  {
-     $last_doc = null;  
-     //2019 04 15 flush empty tags
-     $doc = new DOMDocument();
-     $doc->preserveWhiteSpace = false;
-     $doc->formatOutput = true;
-     $doc->load($filepath);
-     $xpath = new DOMXPath($doc); 
-     print("TRY");
-     
-     
-     $tmp_xml_str="";
-     $i=0;
-     $xml_str=$doc->saveXML();  
-     while($i<$this->max_xml_levels && strlen($xml_str)!=strlen($tmp_xml_str))
-     {
-         $doc = new DOMDocument();
-         $doc->preserveWhiteSpace = false;
-         $doc->formatOutput = true;
-         $doc->loadXML($xml_str);
-         $xpath = new DOMXPath($doc); 
-         $tmp_xml_str=$xml_str;
-         while(($nodeList = $xpath->query('//*[not(text()) and not(node())]')) && $nodeList->length > 0 ) 
-         {
-                foreach($nodeList as $node)
-                {
-                    print("REMOVE");
-                    $node->parentNode->removeChild($node);
-                }
-               
-          }
-           
-           $xml_str=$doc->saveXML();
-           $last_doc=$doc;
-           $i++;          
-     }
-   
-    print($last_doc->saveXML());     
-    $last_doc->save($filepath);
-     
-     
-  }
-  
-    protected function removeEmptyTagString($xml_str)
-  {
-      $last_doc = null;    
-     //2019 04 15 flush empty tags           
-     $tmp_xml_str="";
-     $i=0;
-     print("TEST");
-     while($i<$this->max_xml_levels && strlen($xml_str)!=strlen($tmp_xml_str))
-     {
-         $doc = new DOMDocument();
-         $doc->preserveWhiteSpace = false;
-         $doc->formatOutput = true;
-         $doc->loadXML($xml_str);
-         $xpath = new DOMXPath($doc); 
-         print("TRY");
-         $tmp_xml_str=$xml_str;
-         while(($nodeList = $xpath->query('//*[not(text()) and not(node())]')) && $nodeList->length > 0 ) 
-         {
-                foreach($nodeList as $node)
-                {
-                    print("REMOVE");
-                    $node->parentNode->removeChild($node);
-                }
-               
-          }
-           $doc->formatOutput = true;
-           $xml_str=$doc->saveXML();
-           $last_doc=$doc;
-           $i++;          
-     }
-   
-    print($last_doc->saveXML());  
-    return $last_doc->saveXML();
-     
-  }
-  
   /**
   * @function parseFile() read a 'to_be_loaded' xml file and import it, if possible in staging table
   * @var $file : the xml file to parse
@@ -137,12 +49,13 @@ class ImportABCDXml implements ImportModelsInterface
   //ftheeten 2017 08 03 added specimen_taxonomy_ref
   public function parseFile($file,$id)
   {
+     
     $this->configuration->loadHelpers(array('Darwin'));
     $this->import_id = $id ;
     //ftheeten 2017 08 03 added specimen_taxonomy_ref
-    $this->specimen_taxonomy_ref = Doctrine_Core::getTable('Imports')->find($this->import_id)->getSpecimenTaxonomyRef();
+    $this->specimen_taxonomy_ref = Doctrine::getTable('Imports')->find($this->import_id)->getSpecimenTaxonomyRef();
     //ftheeten 2017 09 13
-    $mime_type=Doctrine_Core::getTable('Imports')->find($this->import_id)->getMimeType();
+    $mime_type=Doctrine::getTable('Imports')->find($this->import_id)->getMimeType();
     //ftheeten 2017 09 13   
      //fwrite($myfile,"\n!!!!!!!!!!!!!!!!!IN PARSER!!!!!!!!!!!!!!!!!!");
 	     //jm herpers 2017 11 09 (auto increment in batches)
@@ -159,83 +72,53 @@ class ImportABCDXml implements ImportModelsInterface
 		{
 			$this->code_last_value=$this->collection_of_import->getCodeLastValue();		
 		}
-		
 	}
     $this->code_prefix=$this->collection_of_import->getCodePrefix();
-
-    $this->code_prefix_separator=$this->collection_of_import->getCodePrefixSeparator();
-    $this->code_suffix_separator=$this->collection_of_import->getCodeSuffixSeparator();
-    $this->code_suffix=$this->collection_of_import->getCodeSuffix();	
+	$this->code_prefix_separator=$this->collection_of_import->getCodePrefixSeparator();
+	$this->code_suffix_separator=$this->collection_of_import->getCodeSuffixSeparator();
+	$this->code_suffix=$this->collection_of_import->getCodeSuffix();	
     if($mime_type==="text/plain")
     {  
-    
          //      fwrite($myfile, "\n!!!!!!!!!!!!!!!!!TEXT PLAIN MODE!!!!!!!!!!!!!!!!!!");
         if (!($fp = fopen($file, "r"))) {
             return("could not open input file");
-        }       
-      
-        
+        }
        
-        $tabParser = new RMCATabDataDirect(
-            $this->configuration,
-            $this->import_id, 
-            $this->collection_of_import,  
-            $this->specimen_taxonomy_ref , 
-            $this->collection_has_autoincrement, 
-            $this->code_last_value, 
-            $this->code_prefix,
-            $this->code_prefix_separator,
-            $this->code_suffix_separator,
-            $this->code_suffix);
-       
+    
+        $tabParser=new RMCATabToABCDXml();
         $options["tab_file"] = $file;
         $tabParser->configure($options);
         $tabParser->identifyHeader($fp);
         $i=1;
-		$conn = Doctrine_Manager::connection();
-        
-		try
-		{
-			while (($row = fgetcsv($fp, 0, "\t")) !== FALSE)
-			{
-				if($this->csvLineIsNotEmpty($row))
-				{
-					if (array(null) !== $row) 
-					{ // ignore blank lines
-							//ftheeten 2018 02 28
-						 $row=  Encoding::toUTF8($row);
-						 
-						 $tabParser->parseLineAndSaveToDB($row);
-					}
-				 }
-			}
-			
-         }
-		 catch(Doctrine_Exception $ne)
-		{
-			/*print("ERROR 1");
-			$conn->rollback();
-			$import_obj = Doctrine_Core::getTable('Imports')->find($q->getId());
-            $import_obj->setErrorsInImport($ne->getMessage());
-            $import_obj->setState("error");
-            $import_obj->setWorking(FALSE);
-            $import_obj->save();*/
-			throw $ne;
-		}
-		catch(Exception $e)
-		{
-			/*print("ERROR 2");
-			$conn->rollback();
-			$import_obj = Doctrine_Core::getTable('Imports')->find($q->getId());
-            $import_obj->setErrorsInImport($ne->getMessage());
-            $import_obj->setState("error");
-            $import_obj->setWorking(FALSE);
-            $import_obj->save();*/
-			throw $e;
-		}
-		
-        fclose($fp);
-        
+        while (($row = fgetcsv($fp, 0, "\t")) !== FALSE){
+            if($this->csvLineIsNotEmpty($row))
+            {
+                if (array(null) !== $row) 
+                { // ignore blank lines
+                        //ftheeten 2018 02 28
+                     $row=  Encoding::toUTF8($row);
+                     $xml_parser = xml_parser_create();
+                    xml_set_object($xml_parser, $this) ;
+                    xml_parser_set_option($xml_parser, XML_OPTION_CASE_FOLDING, false);
+                    xml_set_element_handler($xml_parser, "startElement", "endElement");
+                    xml_set_character_data_handler($xml_parser, "characterData");
+                    $xml_conv= $tabParser->parseLineAndGetString($row);
+                    //print($xml_conv);
+                    if (!xml_parse($xml_parser, $xml_conv, feof($fp))) {
+                        return (sprintf("XML error: %s at line %d for record $i",
+                                    xml_error_string(xml_get_error_code($xml_parser)),
+                                    xml_get_current_line_number($xml_parser)));
+                    }
+                    $i++;
+                    xml_parser_free($xml_parser);
+                }
+            }
+        }
+
+         
+        //if(! $this->version_defined)
+        //  $this->errors_reported = $this->version_error_msg.$this->errors_reported;
+        return $this->errors_reported ;
     }
     else //old xml parser
     {
@@ -247,7 +130,6 @@ class ImportABCDXml implements ImportModelsInterface
         if (!($fp = fopen($file, "r"))) {
             return("could not open XML input");
         }
-         $this->removeEmptyTagFile($file); 
         while ($this->data = fread($fp, 4096)) {
             if (!xml_parse($xml_parser, $this->data, feof($fp))) {
                 return (sprintf("XML error: %s at line %d",
@@ -258,7 +140,6 @@ class ImportABCDXml implements ImportModelsInterface
         xml_parser_free($xml_parser);
         if(! $this->version_defined)
           $this->errors_reported = $this->version_error_msg.$this->errors_reported;
-        fclose($fp);
         return $this->errors_reported ;
     }
   }
@@ -277,11 +158,9 @@ class ImportABCDXml implements ImportModelsInterface
     $this->tag = $name ;
     $this->path .= "/$name" ;
     $this->cdata = '' ;
-    $this->inside_data = false ;    
-    //$this->people_type_tmp=null;
+    $this->inside_data = false ;
     switch ($name) {
       case "Accessions" : $this->object = new parsingTag() ; break;
-      case "Acquisition" : $this->object->setPeopleType("donator"); break;
       case "efg:ChronostratigraphicAttributions" : //SAME AS BELOW
       case "ChronostratigraphicAttributions" : $this->object = new ParsingCatalogue('chronostratigraphy') ; break;
       case "Country" : $this->object->tag_group_name="country" ; break;
@@ -300,7 +179,6 @@ class ImportABCDXml implements ImportModelsInterface
       case "Petrology" : $this->object = new ParsingTag("lithology") ; break;
       case "efg:RockUnit" : //SAME AS BELOW
       case "RockUnit" : $this->object = new ParsingCatalogue('lithology') ; break;
-      case "Sequence" : $this->object = new ParsingMaintenance('Sequencing') ; break;
       case "Sequence" : $this->object = new ParsingMaintenance('Sequencing') ; break;
       case "SpecimenUnit" : $this->object = new ParsingTag("unit") ; break;
       case "Unit" : $this->staging = new Staging(); $this->name = ""; $this->staging->setId($this->getStagingId()); $this->object = null;
@@ -327,7 +205,6 @@ class ImportABCDXml implements ImportModelsInterface
         case "Accuracy" : $this->getPreviousTag()=='Altitude'?$this->staging['gtu_elevation_accuracy']=$this->cdata:$this->property->property->property_accuracy=$this->cdata ; break;
         case "AcquisitionDate" : $dt =  FuzzyDateTime::getValidDate($this->cdata); if (!is_null($dt)) { $this->staging['acquisition_date'] = $dt->getDateTime(); $this->staging['acquisition_date_mask'] = $dt->getMask();} break;
         case "AcquisitionType" : $this->staging['acquisition_category'] = in_array($this->cdata,SpecimensTable::$acquisition_category)?array_search($this->cdata,SpecimensTable::$acquisition_category):'undefined' ; break;
-       // case "Acquisition" : $this->people_type_tmp=NULL; break;
         case "AppliesTo" : $this->property->setAppliesTo($this->cdata); break;
         case "AreaClass" : $this->object->tag_group_name = $this->cdata ; break;
         case "AreaName" : $this->object->tag_value = $this->cdata ; break;
@@ -368,7 +245,6 @@ class ImportABCDXml implements ImportModelsInterface
         case "dna:ExtractionDate" : $dt =  FuzzyDateTime::getValidDate($this->cdata); if (!is_null($dt)) {$this->object->maintenance->setModificationDateTime($dt->getDateTime()); $this->object->maintenance->setModificationDateMask($dt->getMask());} break;
         case "dna:ExtractionMethod" : $this->object->maintenance->setDescription($this->cdata) ; break;
         case "dna:ExtractionStaff" : $this->handlePeople($this->object->people_type,$this->cdata) ; break;
-        //case "GatheringAgent" : $this->people_type_tmp=NULL; break;
         case "dna:GenBankNumber" : $this->handleGenbankNumber($this->cdata); break;
         case "dna:RatioOfAbsorbance260_280" : $this->property = new ParsingProperties("Ratio of absorbance 260/280","DNA") ; $this->property->property->setLowerValue($this->cdata) ; $this->addProperty(true) ; break;
         case "dna:Tissue" : $this->property = new ParsingProperties("Tissue","DNA") ; $this->property->property->setLowerValue($this->cdata) ; $this->addProperty(true) ; break;
@@ -393,7 +269,7 @@ class ImportABCDXml implements ImportModelsInterface
           }
           break;
         case "HigherTaxa" : $this->object->getCatalogueParent($this->staging) ; break;
-        case "HigherTaxon" : $this->object->handleParent() ;break;
+        case "HigherTaxon" : $this->object->handleParent() ;break;;
         case "HigherTaxonName" : $this->object->higher_name = $this->cdata ;  break;
         case "HigherTaxonRank" : $this->object->higher_level = strtolower($this->cdata) ;  break;
         case "TaxonIdentified":  
@@ -472,24 +348,10 @@ class ImportABCDXml implements ImportModelsInterface
           }
           break;
         case "NamedArea" : $this->staging_tags[] = $this->object->addTagGroups(); break;
-        case "Notes" : 
-						if($this->getPreviousTag() == "Identification") 
-						{
-							$this->addComment(true,"identifications") ; 
-						}
-						elseif($this->getPreviousTag() == "Gathering") 
-						{
-							$this->addComment(true,"sampling_locations") ; 
-						}
-						else
-						{
-							$this->addComment() ; 							
-						}
-						break ;
+        case "Notes" : if($this->getPreviousTag() == "Identification") $this->addComment(true,"identifications") ; else $this->addComment() ;  break ;
         case "Parameter" : $this->property->property->setPropertyType($this->cdata); if($this->cdata == 'DNA size') $this->property->property->setAppliesTo('DNA'); break;
         case "PersonName" : $this->handlePeople($this->object->people_type,$this->people_name) ; break;
-        case "Person" :                 
-                $this->handlePeople($this->object->people_type,$this->people_name) ; break;
+        case "Person" : $this->handlePeople($this->object->people_type,$this->people_name) ; break;
         case "efg:MineralDescriptionText" : $this->addComment(true, 'mineralogy') ; break;
         case "PetrologyDescriptiveText" : //SAME AS BELOW
         case "efg:PetrologyDescriptiveText" : $this->addComment(true, 'description') ; break;
@@ -522,6 +384,7 @@ class ImportABCDXml implements ImportModelsInterface
                      elseif (strtolower($this->cdata) == 'u') $this->staging->setIndividualSex('unknown') ;
                      elseif (strtolower($this->cdata) == 'n') $this->staging->setIndividualSex('not applicable') ;
                      elseif (strtolower($this->cdata) == 'x') $this->staging->setIndividualSex('mixed') ;
+                     else $this->staging->setIndividualSex(strtolower($this->cdata)) ;
                      break;
         case "storage:Barcode" : $this->addCode("barcode") ; break ; // c'est un code avec "2dbarcode" dans le main
         case "storage:Institution" : $this->staging->setInstitutionName($this->cdata) ; break;
@@ -566,7 +429,7 @@ class ImportABCDXml implements ImportModelsInterface
         case "Version":
           $this->version_defined = true;
           $authorized = sfConfig::get('tpl_authorizedversion');
-          Doctrine_Core::getTable('Imports')->find($this->import_id)->setTemplateVersion(trim($this->version))->save();
+          Doctrine::getTable('Imports')->find($this->import_id)->setTemplateVersion(trim($this->version))->save();
           if(
             !isset( $authorized['specimens'] ) ||
             empty( $authorized['specimens'] ) ||
@@ -722,6 +585,15 @@ class ImportABCDXml implements ImportModelsInterface
           $this->staging->addRelated($this->property->property);
         }
       }
+	  elseif(strtolower($this->property->getPropertyType()) == 'n juveniles') {
+        if(ctype_digit($this->property->getLowerValue())) {
+          $this->staging->setPartCountJuvenilesMin($this->property->getLowerValue());
+          $this->staging->setPartCountJuvenilesMax($this->property->getLowerValue());
+          $this->property = null;
+        } else {
+          $this->staging->addRelated($this->property->property);
+        }
+      }
       elseif(strtolower($this->property->getPropertyType()) == 'social status') {
         $this->staging->setIndividualSocialStatus($this->property->getLowerValue()) ;
         $this->property = null;
@@ -832,8 +704,8 @@ class ImportABCDXml implements ImportModelsInterface
   //know if collection is autoincremented
   private function getCollectionOfImport()
   {
-  	 $collection_ref=Doctrine_Core::getTable('Imports')->find($this->import_id)->getCollectionRef();
-	 return Doctrine_Core::getTable('Collections')->find($collection_ref);
+  	 $collection_ref=Doctrine::getTable('Imports')->find($this->import_id)->getCollectionRef();
+	 return Doctrine::getTable('Collections')->find($collection_ref);
   }
   
   
@@ -868,6 +740,10 @@ class ImportABCDXml implements ImportModelsInterface
             $this->collection_of_import->save();
 		 }
 	 }
+     //else
+     //{
+
+     //}
 	 $this->main_code_found=FALSE;
     //ftheeten 2017 08 03
     $this->staging->fromArray(array("import_ref" => $this->import_id, "specimen_taxonomy_ref"=> $this->specimen_taxonomy_ref));
@@ -894,25 +770,22 @@ class ImportABCDXml implements ImportModelsInterface
   {
     $conn = Doctrine_Manager::connection();
     $conn->getDbh()->exec('BEGIN TRANSACTION;');
-    return $conn->fetchOne("SELECT nextval('staging_id_seq');") ;
+    $tmpId= $conn->fetchOne("SELECT nextval('staging_id_seq');") ;
+     $conn->getDbh()->exec('END TRANSACTION;');
+    //print("val\r\n");
+    //print($tmpId);
+    return $tmpId;
   }
 
   private function handlePeople($type,$names)
   {
-
     foreach(explode(";",$names) as $name)
     {
-      $name=trim($name);
-      if(isset($name))
-      {
-          if(strlen($name)>0)
-          {
-            $people = new StagingPeople() ;
-            $people->setPeopleType($type) ;
-            $people->setFormatedName($name) ;
-            $this->object->handleRelation($people,$this->staging) ;
-           }
-       }     
+      $people = new StagingPeople() ;
+      $people->setPeopleType($type) ;
+      $people->setFormatedName($name) ;
+	  $people->setImportRef($this->import_id) ;
+      $this->object->handleRelation($people,$this->staging) ;
     }
   }
   

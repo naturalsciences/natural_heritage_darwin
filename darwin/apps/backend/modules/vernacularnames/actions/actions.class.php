@@ -15,7 +15,7 @@ class vernacularnamesActions extends DarwinActions
 
     $this->forward404Unless( $request->hasParameter('id') && $request->hasParameter('table'));
 
-    $this->ref_object = Doctrine_Core::getTable(DarwinTable::getModelForTable($request->getParameter('table')))->find($request->getParameter('id'));
+    $this->ref_object = Doctrine::getTable(DarwinTable::getModelForTable($request->getParameter('table')))->find($request->getParameter('id'));
     $this->forward404Unless($this->ref_object);
     $this->form = new  GroupedVernacularNamesForm(null,array('table' => $request->getParameter('table'), 'id' => $request->getParameter('id')));
 

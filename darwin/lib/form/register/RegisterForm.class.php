@@ -138,7 +138,7 @@ class RegisterForm extends BaseUsersForm
     parent::bind($taintedValues, $taintedFiles);
   }
 
-  public function saveObjectEmbeddedForms($con = null, $forms = null)
+  public function saveEmbeddedForms($con = null, $forms = null)
   {
     if (null === $forms)
     {
@@ -155,6 +155,6 @@ class RegisterForm extends BaseUsersForm
         $form->getObject()->save();
       }
     }
-    return parent::saveObjectEmbeddedForms($con, $forms);
+    return parent::saveEmbeddedForms($con, $forms);
   }
 }

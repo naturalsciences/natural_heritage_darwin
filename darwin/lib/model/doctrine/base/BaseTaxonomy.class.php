@@ -23,7 +23,6 @@
  * @property Doctrine_Collection $Taxonomy
  * @property Doctrine_Collection $Specimens
  * @property Doctrine_Collection $SpecimensRelationships
- * @property Doctrine_Collection $SpecimensMaincodes
  * 
  * @method integer             getId()                      Returns the current record's "id" value
  * @method string              getName()                    Returns the current record's "name" value
@@ -43,7 +42,6 @@
  * @method Doctrine_Collection getTaxonomy()                Returns the current record's "Taxonomy" collection
  * @method Doctrine_Collection getSpecimens()               Returns the current record's "Specimens" collection
  * @method Doctrine_Collection getSpecimensRelationships()  Returns the current record's "SpecimensRelationships" collection
- * @method Doctrine_Collection getSpecimensMaincodes()      Returns the current record's "SpecimensMaincodes" collection
  * @method Taxonomy            setId()                      Sets the current record's "id" value
  * @method Taxonomy            setName()                    Sets the current record's "name" value
  * @method Taxonomy            setNameIndexed()             Sets the current record's "name_indexed" value
@@ -62,7 +60,6 @@
  * @method Taxonomy            setTaxonomy()                Sets the current record's "Taxonomy" collection
  * @method Taxonomy            setSpecimens()               Sets the current record's "Specimens" collection
  * @method Taxonomy            setSpecimensRelationships()  Sets the current record's "SpecimensRelationships" collection
- * @method Taxonomy            setSpecimensMaincodes()      Sets the current record's "SpecimensMaincodes" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -149,10 +146,6 @@ abstract class BaseTaxonomy extends DarwinModel
              'foreign' => 'taxon_ref'));
 
         $this->hasMany('SpecimensRelationships', array(
-             'local' => 'id',
-             'foreign' => 'taxon_ref'));
-
-        $this->hasMany('SpecimensMaincodes', array(
              'local' => 'id',
              'foreign' => 'taxon_ref'));
     }

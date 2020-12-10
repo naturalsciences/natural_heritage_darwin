@@ -12,9 +12,16 @@ class BibliographyForm extends BaseBibliographyForm
 {
   public function configure()
   {
-    $this->useFields(array('title', 'type', 'abstract','year'));
+    $this->useFields(array('title', 'type', 'doi', 'reference', 'abstract','year'));
     $this->validatorSchema['title'] = new sfValidatorString(array('required' => true, 'trim' => true));
-    $this->widgetSchema['title']->setLabel('Full Bibliographic reference');
+    $this->widgetSchema['title']->setLabel('title');
+    
+    $this->validatorSchema['reference'] = new sfValidatorString(array('required' => true, 'trim' => true));
+    $this->widgetSchema['reference']->setLabel('Bibliographical reference');
+    
+    $this->widgetSchema['doi'] = new sfWidgetFormInputText();
+    $this->validatorSchema['doi'] = new sfValidatorString(array('required' => false, 'trim' => true));
+    $this->widgetSchema['doi']->setLabel('D.O.I.');
  
     $this->validatorSchema['year'] = new sfValidatorInteger(array('required'=>false,'min'=> 0,'max' => date('Y')+2  ));
     $this->widgetSchema['year']->setAttributes(array('class'=>'small_size'));
@@ -50,7 +57,7 @@ class BibliographyForm extends BaseBibliographyForm
     if($record_id === false)
       $record_id = $this->getObject()->getId();
     if( $emFieldName =='Authors' )
-      return Doctrine_Core::getTable('CataloguePeople')->getPeopleRelated('bibliography','author', $record_id);
+      return Doctrine::getTable('CataloguePeople')->getPeopleRelated('bibliography','author', $record_id);
   }
 
   public function getEmbedRelationForm($emFieldName, $values)
@@ -62,7 +69,7 @@ class BibliographyForm extends BaseBibliographyForm
   public function duplicate($id)
   {
     // reembed duplicated authro
-    $Catalogue = Doctrine_Core::getTable('CataloguePeople')->findForTableByType('bibliography',$id) ;
+    $Catalogue = Doctrine::getTable('CataloguePeople')->findForTableByType('bibliography',$id) ;
     if(isset($Catalogue['author'])) {
       foreach ($Catalogue['author'] as $key=>$val) {
         $this->addAuthors($key, array('people_ref' => $val->getPeopleRef()),$val->getOrderBy());
@@ -70,9 +77,9 @@ class BibliographyForm extends BaseBibliographyForm
     }
   }
 
-  public function saveObjectEmbeddedForms($con = null, $forms = null)
+  public function saveEmbeddedForms($con = null, $forms = null)
   {
     $this->saveEmbed('Authors', 'people_ref', $forms, array('people_type'=>'author','referenced_relation'=>'bibliography', 'record_id' => $this->getObject()->getId()));
-    return parent::saveObjectEmbeddedForms($con, $forms);
+    return parent::saveEmbeddedForms($con, $forms);
   }
 }

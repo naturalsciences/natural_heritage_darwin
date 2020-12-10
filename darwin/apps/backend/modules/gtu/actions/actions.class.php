@@ -48,13 +48,11 @@ class gtuActions extends DarwinActions
 
       if ($this->form->isValid())
       {
-        // 2019 02 28
-        $this->referer = $request->getReferer();
-      
+        //@TODO: We need to refactor and avoid doing too much queries when format is xml
         $query = $this->form->getQuery();
         if($request->getParameter('format') == 'json' || $request->getParameter('format') == 'text')
         {
-          $query->addOrderBy($this->orderBy .' '.$this->orderDir)
+          $query->orderBy($this->orderBy .' '.$this->orderDir)
             ->andWhere('latitude is not null');
           $this->setLayout(false);
           if($request->getParameter('format') == 'json')
@@ -68,9 +66,9 @@ class gtuActions extends DarwinActions
           else
           {
             $nbr_records = $query->count();
-
+			//JMHerpers 2018 03 02 change text : "Your query retrieved %1% records out of" --> "%1% records shown out of" 
             sfContext::getInstance()->getConfiguration()->loadHelpers('I18N');
-            $str = format_number_choice('[0]No Results Retrieved|[1]Your query retrieved 1 record|(1,+Inf]Your query retrieved %1% records out of %2%',
+            $str = format_number_choice('[0]No Results Retrieved|[1]Your query retrieved 1 record|(1,+Inf]%1% records shown out of %2%',
               array('%1%' => min($nbr_records, $this->form->getValue('rec_per_page')), '%2%' =>  $nbr_records),
               $nbr_records
             );
@@ -80,7 +78,7 @@ class gtuActions extends DarwinActions
         }
         else
         {
-          $query->addOrderBy($this->orderBy .' '.$this->orderDir);
+          $query->orderBy($this->orderBy .' '.$this->orderDir);
           $this->pagerLayout = new PagerLayoutWithArrows(
             new DarwinPager(
               $query,
@@ -101,7 +99,7 @@ class gtuActions extends DarwinActions
         $gtu_ids = array();
         foreach($this->items as $i)
           $gtu_ids[] = $i->getId();
-        $tag_groups  = Doctrine_Core::getTable('TagGroups')->fetchByGtuRefs($gtu_ids);
+        $tag_groups  = Doctrine::getTable('TagGroups')->fetchByGtuRefs($gtu_ids);
         foreach($this->items as $i)
         {
           $i->TagGroups = new Doctrine_Collection('TagGroups');
@@ -129,14 +127,11 @@ class gtuActions extends DarwinActions
     $this->form = new GtuForm($gtu);
     if ($duplic)
     {
-   
-      $Tag = Doctrine_Core::getTable('TagGroups')->fetchTag($duplic) ;
+      $Tag = Doctrine::getTable('TagGroups')->fetchTag($duplic) ;
       if(count($Tag))
       {
-       
         foreach ($Tag[$duplic] as $key=>$val)
         {
-
            $tag = new TagGroups() ;
            $tag = $this->getRecordIfDuplicate($val->getId(), $tag);
            $this->form->addValue($key, $val->getGroupName(), $tag);
@@ -148,54 +143,53 @@ class gtuActions extends DarwinActions
 
   public function executeCreate(sfWebRequest $request)
   {
-	  //print("create");
-      $this->forward404Unless($request->isMethod(sfRequest::POST));
+    $this->forward404Unless($request->isMethod(sfRequest::POST));
 
-     $this->form = new GtuForm();
+    $this->form = new GtuForm();
 
-      $this->processForm($request, $this->form, 'create');
+    $this->processForm($request, $this->form, 'create');
 
     $this->setTemplate('new');
   }
 
   public function executeEdit(sfWebRequest $request)
   {
-    $this->forward404Unless($gtu = Doctrine_Core::getTable('Gtu')->find($request->getParameter('id')), sprintf('Object gtu does not exist (%s).', $request->getParameter('id')));
-    $this->no_right_col = Doctrine_Core::getTable('Gtu')->testNoRightsCollections('gtu_ref',$request->getParameter('id'), $this->getUser()->getId());
+    $this->forward404Unless($gtu = Doctrine::getTable('Gtu')->find($request->getParameter('id')), sprintf('Object gtu does not exist (%s).', $request->getParameter('id')));
+    $this->no_right_col = Doctrine::getTable('Gtu')->testNoRightsCollections('gtu_ref',$request->getParameter('id'), $this->getUser()->getId());
 
     $this->form = new GtuForm($gtu);
     $this->loadWidgets();
-    //ftheeten 2018 11 29
-     //$this->form->loadEmbedTemporalInformation();//loadEmbed('TemporalInformation');
   }
 
-  public function executeView(sfWebRequest $request)
+   //ftheeten 2015 10 16
+   public function executeView(sfWebRequest $request)
   {
-    $this->forward404Unless($this->gtu = Doctrine_Core::getTable('Gtu')->find($request->getParameter('id')), sprintf('Object gtu does not exist (%s).', $request->getParameter('id')));
-    $this->form = new GtuForm($this->gtu);
+    $this->forward404Unless($gtu = Doctrine::getTable('Gtu')->find($request->getParameter('id')), sprintf('Object gtu does not exist (%s).', $request->getParameter('id')));
+    $this->no_right_col = Doctrine::getTable('Gtu')->testNoRightsCollections('gtu_ref',$request->getParameter('id'), $this->getUser()->getId());
+
+    $this->form = new GtuForm($gtu);
     $this->loadWidgets();
   }
   
   public function executeUpdate(sfWebRequest $request)
   {
     $this->forward404Unless($request->isMethod(sfRequest::POST) || $request->isMethod(sfRequest::PUT));
-    $this->forward404Unless($gtu = Doctrine_Core::getTable('Gtu')->find($request->getParameter('id')), sprintf('Object gtu does not exist (%s).', $request->getParameter('id')));
-    $this->no_right_col = Doctrine_Core::getTable('Gtu')->testNoRightsCollections('gtu_ref',$request->getParameter('id'), $this->getUser()->getId());
+    $this->forward404Unless($gtu = Doctrine::getTable('Gtu')->find($request->getParameter('id')), sprintf('Object gtu does not exist (%s).', $request->getParameter('id')));
+    $this->no_right_col = Doctrine::getTable('Gtu')->testNoRightsCollections('gtu_ref',$request->getParameter('id'), $this->getUser()->getId());
     $this->form = new GtuForm($gtu);
 
     $this->processForm($request, $this->form, 'update');
-    $this->no_right_col = Doctrine_Core::getTable('Gtu')->testNoRightsCollections('gtu_ref',$request->getParameter('id'), $this->getUser()->getId());
+    $this->no_right_col = Doctrine::getTable('Gtu')->testNoRightsCollections('gtu_ref',$request->getParameter('id'), $this->getUser()->getId());
 
     $this->loadWidgets();
     $this->setTemplate('edit');
-  
   }
 
   public function executeDelete(sfWebRequest $request)
   {
     $request->checkCSRFProtection();
 
-    $this->forward404Unless($unit = Doctrine_Core::getTable('Gtu')->find($request->getParameter('id')), sprintf('Object gtu does not exist (%s).', $request->getParameter('id')));
+    $this->forward404Unless($unit = Doctrine::getTable('Gtu')->find($request->getParameter('id')), sprintf('Object gtu does not exist (%s).', $request->getParameter('id')));
 
     try
     {
@@ -209,7 +203,7 @@ class gtuActions extends DarwinActions
       $this->form = new GtuForm($unit);
       $this->form->getErrorSchema()->addError($error);
       $this->loadWidgets();
-      $this->no_right_col = Doctrine_Core::getTable('Gtu')->testNoRightsCollections('gtu_ref',$request->getParameter('id'), $this->getUser()->getId());
+      $this->no_right_col = Doctrine::getTable('Gtu')->testNoRightsCollections('gtu_ref',$request->getParameter('id'), $this->getUser()->getId());
       $this->setTemplate('edit');
     }
   }
@@ -221,15 +215,11 @@ class gtuActions extends DarwinActions
     {
       try
       {
-       print("valid");
         $item = $form->save();
-        print("redirect");
         $this->redirect('gtu/edit?id='.$item->getId());
-        
       }
       catch(Doctrine_Exception $ne)
       {
-      print("error");
         if($action == 'create') {
           //If Problem in saving embed forms set dirty state
           $form->getObject()->state('TDIRTY');
@@ -239,15 +229,11 @@ class gtuActions extends DarwinActions
         $form->getErrorSchema()->addError($error);
       }
     }
-    else
-    {
-        print("invalid");
-    }
   }
 
   public function executePurposeTag(sfWebRequest $request)
   {
-    $this->tags = Doctrine_Core::getTable('TagGroups')->getPropositions($request->getParameter('value'), $request->getParameter('group_name'), $request->getParameter('sub_group_name'));
+    $this->tags = Doctrine::getTable('TagGroups')->getPropositions($request->getParameter('value'), $request->getParameter('group_name'), $request->getParameter('sub_group_name'));
   }
 
   public function executeAddGroup(sfWebRequest $request)
@@ -256,7 +242,7 @@ class gtuActions extends DarwinActions
     $gtu = null;
 
     if($request->hasParameter('id') && $request->getParameter('id'))
-      $gtu = Doctrine_Core::getTable('Gtu')->find($request->getParameter('id') );
+      $gtu = Doctrine::getTable('Gtu')->find($request->getParameter('id') );
 
     $form = new GtuForm($gtu);
     $form->addValue($number, $request->getParameter('group'));
@@ -280,9 +266,9 @@ class gtuActions extends DarwinActions
     $gtu = false;
     if($request->hasParameter('id') && $request->getParameter('id'))
     {
-      $spec = Doctrine_Core::getTable('Specimens')->fetchOneWithRights($request->getParameter('id'), $this->getUser());
+      $spec = Doctrine::getTable('Specimens')->fetchOneWithRights($request->getParameter('id'), $this->getUser());
       if($spec->getHasEncodingRights() || $this->getUser()->isAtLeast(Users::ADMIN))
-        $gtu = Doctrine_Core::getTable('Gtu')->find($spec->getGtuRef() );
+        $gtu = Doctrine::getTable('Gtu')->find($spec->getGtuRef() );
       else
         $this->forwardToSecureAction();
     }
@@ -292,47 +278,54 @@ class gtuActions extends DarwinActions
     $str = '<ul  class="search_tags">';
     foreach($gtu->TagGroups as $group)
     {
-      $str .= '<li><label>'.$group->getSubGroupName().'<span class="gtu_group"> - '.TagGroups::getGroup($group->getGroupName()).'</span></label>';
-      if($request->hasParameter('view')) $str .= '<ul class="name_tags_view">' ;
-      else $str .= '<ul class="name_tags">' ;
+      //rmca 2016 05 12: added class gtu_supp to allow expanding all
+	  //jmherpers 2018 02 22
+	  //$str .= '<li class="gtu_supp"><label>'.$group->getSubGroupName().'<span class="gtu_group"> - '.TagGroups::getGroup($group->getGroupName()).'</span></label>';
+      $str .= '<li class="gtu_supp"><label>'.$group->getSubGroupName().'</label>';
+      if($request->hasParameter('view'))
+      { 
+		//jmherpers 2018 02 22
+		//$str .= '<ul class="name_tags_view">' ;
+		$str .= '<ul>' ;
+      }
+      else 
+      {
+        $str .= '<ul class="name_tags">' ;
+      }
       $tags = explode(";",$group->getTagValue());
       foreach($tags as $value)
+      {
         if (strlen($value))
+        {
           $str .=  '<li>' . trim($value).'</li>';
+        }
+      }
       $str .= '</ul><div class="clear" />';
     }
-    if($gtu->getLocation()){
-      $str .= '<li><label>Lat./Long.: </label>'.round($gtu->getLatitude(),6).'/'.round($gtu->getLongitude(),6).'</li>';
-    }
-    if ($gtu->getElevation()){
-      $str .= '<li><label>Alt.: </label>'.$gtu->getElevation().' +- '.$gtu->getElevationAccuracy().' m</li>';
-    }
+	//jmherpers 2018 02 22
+    //if($gtu->getLocation()){
+      //$str .= '<li><label>Lat./Long.: </label>'.round($gtu->getLatitude(),6).'/'.round($gtu->getLongitude(),6).'</li>';
+	//  $str .= '<li><label>Lat.: </label>'.round($gtu->getLatitude(),6).'</li>';
+	//  $str .= '<li><label>Long.: </label>'.round($gtu->getLongitude(),6).'</li>';
+    //}
+    //if ($gtu->getElevation()){
+    //  $str .= '<li><label>Alt.: </label>'.$gtu->getElevation().' +- '.$gtu->getElevationAccuracy().' m</li>';
+    //}
+	//ftheeten 2015 03 10
+	// if ($spec->getGtuFromDateMasked() && $spec->getGtuFromDateMask())
+    //    {
+    //  		$str .= '<li><label>Date from.: </label>'.$spec->getGtuFromDateMasked().'</li>';
+    //	}
+	//ftheeten 2015 03 10
+	// if ($spec->getGtuToDateMasked() && $spec->getGtuToDateMask())
+	// {
+    //         $str .= '<li><label>Date to.: </label>'.$spec->getGtuToDateMasked().'</li>';
+    //	 }
     $str .= '</ul><div class="clear" />';
     return $this->renderText($str);
   }
   
-  //ftheeten 2018 11 29
-    protected function getGtuForm(sfWebRequest $request, $fwd404=false, $parameter='id', $options=array())
-  {
-    $spec = null;
-
-    if ($fwd404)
-      $this->forward404Unless($spec = Doctrine_Core::getTable('Gtu')->find($request->getParameter($parameter,0)));
-    elseif($request->hasParameter($parameter) && $request->getParameter($parameter))
-      $spec = Doctrine_Core::getTable('Gtu')->find($request->getParameter($parameter));
-
-    $form = new GtuForm($spec, $options);
-    return $form;
-  }
-       //ftheeten 2018 08 08
-   public function executeGetLastEncodedId(sfWebRequest $request)
-   {
-          $this->getResponse()->setContentType('application/json');
-		return  $this->renderText(json_encode(array("id"=>$_SESSION["gtu_id"])));
-        
-  }
-  
-    public function executeGetTagSubGroup(sfWebRequest $request)
+   public function executeGetTagSubGroup(sfWebRequest $request)
   {
     $results=Array();
     if($request->hasParameter('tag') )
@@ -343,53 +336,5 @@ class gtuActions extends DarwinActions
      $this->getResponse()->setContentType('application/json');
     return  $this->renderText(json_encode($results));
   
-  }
-  
-  public function executeJsonTranslation(sfWebRequest $request)
-  {
-	$results=Array();
-	if($request->hasParameter('tag') )
-    {
-        $tag=$request->getParameter('tag');
-	    $results=Doctrine_Core::getTable('Gtu')->callTranslateService($tag);
-    }
-	 $this->getResponse()->setContentType('application/json');
-     return  $this->renderText(json_encode($results));
-  }
-   
-   public function executeJsonTranslationWfsGeom(sfWebRequest $request)
-  {
-	$results=Array();
-	if($request->hasParameter('layer') && $layer=$request->hasParameter('ids') )
-    {
-        $layer=$request->getParameter('layer');
-		$ids=$request->getParameter('ids');
-	    $results=Doctrine_Core::getTable('Gtu')->callTranslateServiceWfsGeometry($layer, $ids);
-    }
-	 $this->getResponse()->setContentType('application/json');
-     return  $this->renderText(json_encode($results));
-  }
-  
-  public function executeGtuTranslation(sfWebRequest $request)
-  {
-	 $this->form = new TranslateForm();
-	$results=Array();
-	$this->tag="";
-	if($request->hasParameter('tag') )
-    {
-        $this->tag=$request->getParameter('tag');
-    }  
-  }
-  
-  public function executeGtuTranslationWfsGeom(sfWebRequest $request)
-  {
-	 $this->form = new TranslateWfsGeomForm();
-	$results=Array();
-	$this->tag="";
-	if($request->hasParameter('layer') && $layer=$request->hasParameter('ids') )
-    {
-        $this->layer=$request->getParameter('layer');
-		$this->ids=$request->getParameter('ids');	   
-    }  
   }
 }

@@ -11,6 +11,7 @@ class RMCATabToTaxonomyXml
     //ftheeten 2018 11 28
     public function __construct($p_import)
     {
+		print("CONS");
         $this->m_import=$p_import;
     }
     
@@ -19,7 +20,7 @@ class RMCATabToTaxonomyXml
     {
         foreach($this->fields as $key=>$fieldname)
         {
-            $this->fields_conversion[trim(strtolower(str_replace(" ", "",str_replace("_", "", $fieldname))))]=trim(strtolower($fieldname));
+            $this->fields_conversion[trim(strtolower(str_replace("_", "", $fieldname)))]=trim(strtolower($fieldname));
         }
         $this->fields_conversion["authoryear"]="author_team_and_year";
     }    
@@ -248,28 +249,24 @@ class RMCATabToTaxonomyXml
 						{
                             $first_char=substr(trim($explodedVal[0]),0,1);
 							
-							//if more than one word and 1st char uppercase
-							if(count($explodedVal)>1)//&&strtoupper($first_char)==$first_char)
+							if(count($explodedVal)>1&&strtoupper($first_char)==$first_char)
 							{
-							
-								//tab_for_full_name is an array
+								
 								$tab_for_full_name=$explodedVal;
 								
 							}
+                           
                             else
                             {
-								//concatenate arrays ? probably genus= Canis species = lupus
                                 $tab_for_full_name=array_merge($tab_for_full_name,$explodedVal );
                                 
                             }
-							//if last rank and author in specific species
 							if($key_absolute==$last_rank&&array_key_exists("author_team_and_year",$this->headers_inverted))
 								{
 									
 									$author=$p_row[$this->headers_inverted["author_team_and_year"]];
 									
 									$author=trim($author);
-									//added to array
 									if(!in_array($author, $tab_for_full_name))
 									{
 										$tab_for_full_name[]=$author;
@@ -331,14 +328,7 @@ class RMCATabToTaxonomyXml
 							}
 							elseif(count($explodedVal)>1)
 							{
-								//$species=$explodedVal[count($explodedVal)-1];
-								//ftheeten 2019 02 07
-								$tmp=Array();
-								for($i=1;$i<count($explodedVal);$i++)
-								{
-									$tmp[]=trim($explodedVal[$i]);
-								}
-								$species=implode(" ",$tmp);
+								$species=$explodedVal[count($explodedVal)-1];                           
 							}
 						   
 						}
@@ -412,7 +402,7 @@ class RMCATabToTaxonomyXml
             }
        }
 
-        print($dom->saveXML($dom, LIBXML_NOEMPTYTAG ));
+      
         return $dom->saveXML($dom, LIBXML_NOEMPTYTAG );
     }
 
@@ -456,7 +446,7 @@ class RMCATabToTaxonomyXml
             
             //ftheeten 2018 22 18 (to simplify field names)
            //print("TEST $value\n");
-            $value=trim(strtolower(str_replace(" ", "",str_replace("_", "", $value))));
+            $value=trim(strtolower($value));
            //print("CONVERTED $value\n");
            if(array_key_exists($value,$this->fields_conversion))
            {

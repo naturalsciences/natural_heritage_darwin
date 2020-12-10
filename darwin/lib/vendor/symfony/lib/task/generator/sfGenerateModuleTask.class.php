@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-require_once(__DIR__.'/sfGeneratorBaseTask.class.php');
+require_once(dirname(__FILE__).'/sfGeneratorBaseTask.class.php');
 
 /**
  * Generates a new module.
@@ -16,7 +16,7 @@ require_once(__DIR__.'/sfGeneratorBaseTask.class.php');
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfGenerateModuleTask.class.php 23922 2009-11-14 14:58:38Z fabien $
  */
 class sfGenerateModuleTask extends sfGeneratorBaseTask
 {
@@ -96,7 +96,7 @@ EOF;
     }
     else
     {
-      $skeletonDir = __DIR__.'/skeleton/module';
+      $skeletonDir = dirname(__FILE__).'/skeleton/module';
     }
 
     // create basic application structure

@@ -16,10 +16,6 @@
  * @property string $subject
  * @property string $query_where
  * @property string $query_parameters
- * @property integer $current_page
- * @property integer $page_size
- * @property integer $nb_records
- * @property boolean $download_lock
  * @property Users $User
  * 
  * @method integer         getId()                       Returns the current record's "id" value
@@ -33,10 +29,6 @@
  * @method string          getSubject()                  Returns the current record's "subject" value
  * @method string          getQueryWhere()               Returns the current record's "query_where" value
  * @method string          getQueryParameters()          Returns the current record's "query_parameters" value
- * @method integer         getCurrentPage()              Returns the current record's "current_page" value
- * @method integer         getPageSize()                 Returns the current record's "page_size" value
- * @method integer         getNbRecords()                Returns the current record's "nb_records" value
- * @method boolean         getDownloadLock()             Returns the current record's "download_lock" value
  * @method Users           getUser()                     Returns the current record's "User" value
  * @method MySavedSearches setId()                       Sets the current record's "id" value
  * @method MySavedSearches setUserRef()                  Sets the current record's "user_ref" value
@@ -49,10 +41,6 @@
  * @method MySavedSearches setSubject()                  Sets the current record's "subject" value
  * @method MySavedSearches setQueryWhere()               Sets the current record's "query_where" value
  * @method MySavedSearches setQueryParameters()          Sets the current record's "query_parameters" value
- * @method MySavedSearches setCurrentPage()              Sets the current record's "current_page" value
- * @method MySavedSearches setPageSize()                 Sets the current record's "page_size" value
- * @method MySavedSearches setNbRecords()                Sets the current record's "nb_records" value
- * @method MySavedSearches setDownloadLock()             Sets the current record's "download_lock" value
  * @method MySavedSearches setUser()                     Sets the current record's "User" value
  * 
  * @package    darwin
@@ -111,26 +99,6 @@ abstract class BaseMySavedSearches extends DarwinModel
         $this->hasColumn('query_parameters', 'string', null, array(
              'type' => 'string',
              'notnull' => true,
-             ));
-        $this->hasColumn('current_page', 'integer', null, array(
-             'type' => 'integer',
-             'notnull' => true,
-             'default' => 0,
-             ));
-        $this->hasColumn('page_size', 'integer', null, array(
-             'type' => 'integer',
-             'notnull' => true,
-             'default' => 10000,
-             ));
-        $this->hasColumn('nb_records', 'integer', null, array(
-             'type' => 'integer',
-             'notnull' => true,
-             'default' => 0,
-             ));
-        $this->hasColumn('download_lock', 'boolean', null, array(
-             'type' => 'boolean',
-             'notnull' => true,
-             'default' => false,
              ));
     }
 

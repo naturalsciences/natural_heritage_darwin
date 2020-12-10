@@ -38,7 +38,7 @@ class Igs extends BaseIgs
       $this->_set('ig_date_mask', $dateTime->getMask());
     }
   }
-     
+  
     //ftheeten 2018 04 10
   public function countSpecimens()
   {
@@ -81,6 +81,5 @@ class Igs extends BaseIgs
     }
     
   }
-
 
 }

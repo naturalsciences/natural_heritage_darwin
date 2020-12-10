@@ -93,9 +93,7 @@ class MineralogyFormFilter extends BaseMineralogyFormFilter
 
   public function doBuildQuery(array $values)
   {
-    $query = DQ::create()
-      ->select('m.*, d.taxonomy_name as taxonomy_name')
-      ->from('Mineralogy m')->leftJoin("m.TaxonomyMetadata d ON m.metadata_ref=d.id");
+    $query = parent::doBuildQuery($values);
     $this->addNamingColumnQuery($query, 'mineralogy', 'name_indexed', $values['name']);
     $this->addRelationItemColumnQuery($query, $values);
     $query->andWhere("id != 0 ")

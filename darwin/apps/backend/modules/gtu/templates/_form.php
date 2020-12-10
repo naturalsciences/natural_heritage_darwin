@@ -25,20 +25,50 @@ $(document).ready(function ()
           <?php echo $form['code']->renderError() ?>
           <?php echo $form['code'] ?>
         </td>
+		<!--rmca 2016 06 21-->
+		<td>
+			 <a  class="take_specimen_code button_rmca" >Take specimen code</a>
+		</td>
+        <td>
+			 <a  class="take_gtu_code button_rmca" >Take location code</a>
+		</td>
+        <td>
+			 <a  class="take_ig_code button_rmca" >Take IG code</a>
+		</td>
       </tr>
+     
     </tbody>
 </table>
-<!--JMHerpers 2019 05 29-->
+<!--rmca 2018 05 04-->
 <table style="margin-top:20px; margin-bottom: 20px">
+	<tr>
+		<th class="top_aligned"><?php echo __("Country") ?></th>
+		<td>          
+			<?php echo $form['iso3166_text']->renderError() ?>
+			<?php echo $form['iso3166_text'] ?>
+			<?php echo __("ISO 3166-1") ?>
+			<?php echo $form['iso3166']->renderError() ?>
+			<?php echo $form['iso3166'] ?>
+		</td>
+	</tr>
+	<tr>
+		<th class="top_aligned"><?php echo __("Administrative subdivision") ?></th>
+		<td>
+			<?php echo $form['iso3166_subdivision_text']->renderError() ?>
+			<?php echo $form['iso3166_subdivision_text'] ?>
+			<?php echo __("ISO 3166-2") ?>
+			<?php echo $form['iso3166_subdivision']->renderError() ?>
+			<?php echo $form['iso3166_subdivision'] ?>
+		</td>
+	</tr>
 	<tr>
         <th><?php echo $form['nagoya']->renderLabel() ?></th>
         <td>
 			<?php echo $form['nagoya']->renderError() ?>
 			<?php echo $form['nagoya'] ?>
-			
-			<a href=location.protocol + '//' + location.host + "/"+ location.pathname.split("/")[1] + "/"+ location.pathname.split("/")[2] +"/help/nagoya_countries.html" target="popup" onclick="window.open(location.protocol + '//' + '<?php print(parse_url(sfContext::getInstance()->getRequest()->getUri(),PHP_URL_HOST ));?>' +'/help/nagoya_countries.html','popup','width=1150,height=800'); return false;" style="display: inline-block;">
+			<a href=location.protocol + '//' + location.host + "/help/nagoya_countries.html" target="popup" onclick="window.open(location.protocol + '//' + location.host +  '/help/nagoya_countries.html','popup','width=1150,height=800'); return false;" style="display: inline-block;">
 				<?php echo image_tag('info.png',"title=nagoya_info class=nagoya_info id=nagoya");?>
-			</a>
+			</a> 
         </td>
 	</tr>
 </table>
@@ -61,7 +91,19 @@ foreach($form['newVal'] as $group)
   $tag_grouped[$type][] = $group;
 }
 ?>
+<br/>
 <div id="gtu_group_screen">
+  <div class="gtu_groups_add">
+    <select id="groups_select">
+      <option value=""></option>
+      <?php foreach(TagGroups::getGroups() as $k => $v):?>
+        <option value="<?php echo $k;?>"><?php echo $v;?></option>
+      <?php endforeach;?>
+    </select>
+    <a href="<?php echo url_for('gtu/addGroup'. ($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>" id="add_group"><?php echo __('Add Group');?></a>
+  </div>
+
+<!-- ftheeten 2018 03 15 moved down the select list-->  
 <div class="tag_parts_screen" alt="<?php echo url_for('gtu/addGroup'. ($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>">
 <?php foreach($tag_grouped as  $group_key => $sub_forms):?>
   <fieldset alt="<?php echo $group_key;?>">
@@ -75,26 +117,14 @@ foreach($form['newVal'] as $group)
   </fieldset>
 <?php endforeach;?>
 </div>
-
-
-  <div class="gtu_groups_add">
-    <select id="groups_select">
-      <option value=""></option>
-      <?php foreach(TagGroups::getGroups() as $k => $v):?>
-        <option value="<?php echo $k;?>"><?php echo $v;?></option>
-      <?php endforeach;?>
-    </select>
-    <a href="<?php echo url_for('gtu/addGroup'. ($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>" id="add_group"><?php echo __('Add Group');?></a>
-  </div>
-
 </div>
     
   <fieldset id="location">
     <legend><?php echo __('Localisation');?></legend>
     <div id="reverse_tags" style="display: none;"><ul></ul><br class="clear" /></div>
-    <div>
+	<div>
 		<!--DMS/DD selector  ftheeten 2015 05 05-->
-		<b><?php echo $form['coordinates_source']->renderLabel() ;?><?php echo $form['coordinates_source']->renderError() ?></b><br/><?php echo $form['coordinates_source'];?> <?php echo image_tag('remove.png', array("class"=> "delete_coords")); ;?>
+		<b><?php echo $form['coordinates_source']->renderLabel() ;?><?php echo $form['coordinates_source']->renderError() ?></b><br/><?php echo $form['coordinates_source'];?>  <?php echo image_tag('remove.png', array("class"=> "delete_coords")); ;?>
 		
 	</div>
     <table>
@@ -176,36 +206,34 @@ foreach($form['newVal'] as $group)
 			<td><strong><?php echo __('m');?></strong><!-- <?php echo image_tag('remove.png', 'alt=Delete class=clear_prop'); ?>--></td>
 			<td></td>
 		</tr>
-      <tr>        
-        <th><?php echo $form['elevation']->renderLabel(); ?><?php echo $form['elevation']->renderError() ?></th>
-        <th><?php echo $form['elevation_accuracy']->renderLabel() ;?><?php echo $form['elevation_accuracy']->renderError() ?></th>
-        <th></th>
-      </tr>
-      <tr>        
-        <td><?php echo $form['elevation'];?></td>
-        <td><?php echo $form['elevation_accuracy'];?></td>
-        <td><strong><?php echo __('m');?></strong> <?php echo image_tag('remove.png', 'alt=Delete class=clear_prop'); ?></td>
-      </tr>
-      <tr>
-        <td colspan="3"><div style="width:100%; height:400px;" id="map"></div></td>
-        <td>
-
-<script type="text/javascript">
-$(document).ready(function () {
-
-  initEditMap("map");
-  
-  <?php if($form->getObject()->getLongitude() != ''):?>
-    map.setView([<?php echo $form->getObject()->getLatitude();?>,<?php echo $form->getObject()->getLongitude();?>], 12);
-  <?php else:?>
-    map.setView([0,0], 2);
-  <?php endif;?>
-});
-</script>
-</td>
-      </tr>
+	    <tr>
+			<th><?php echo $form['elevation']->renderLabel(); ?><?php echo $form['elevation']->renderError() ?></th>
+			<th><!--<?php echo $form['elevation_unit']->renderLabel(); ?>--><?php echo $form['elevation_unit']->renderError() ?></th>
+			<th><?php echo $form['elevation_accuracy']->renderLabel() ;?><?php echo $form['elevation_accuracy']->renderError() ?></th>
+			<th></th>
+		</tr>
+		<tr>
+			<td><?php echo $form['elevation'];?></td>
+			<td><?php echo $form['elevation_unit'];?></td>
+			<td><?php echo $form['elevation_accuracy'];?></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td colspan="3"><div style="width:100%; height:400px;" id="map"></div></td>
+			<td>
+				<script type="text/javascript">
+					$(document).ready(function () {
+					  initEditMap("map");
+					  <?php if($form->getObject()->getLongitude() != ''):?>
+						map.setView([<?php echo $form->getObject()->getLatitude();?>,<?php echo $form->getObject()->getLongitude();?>], 12);
+					  <?php else:?>
+						map.setView([0,0], 2);
+					  <?php endif;?>
+					});
+				</script>
+			</td>
+		</tr>
     </table>
-
   </fieldset>
 
   <table>
@@ -215,13 +243,13 @@ $(document).ready(function () {
           <?php echo $form->renderHiddenFields(true) ?>
 
           <?php if (!$form->getObject()->isNew()): ?>
-            <?php echo link_to(__('New Gtu'), 'gtu/new') ?>
-            &nbsp;<?php echo link_to(__('Duplicate Gtu'), 'gtu/new?duplicate_id='.$form->getObject()->getId()) ?>
+				<?php echo link_to(__('New Gtu'), 'gtu/new') ?>
+				&nbsp;<?php echo link_to(__('Duplicate Gtu'), 'gtu/new?duplicate_id='.$form->getObject()->getId()) ?>
           <?php endif?>
 
           &nbsp;<a href="<?php echo url_for('gtu/index') ?>"><?php echo __('Cancel');?></a>
           <?php if (!$form->getObject()->isNew()): ?>
-            &nbsp;<?php echo link_to(__('Delete'), 'gtu/delete?id='.$form->getObject()->getId(), array('method' => 'delete', 'confirm' => 'Are you sure?')) ?>
+				&nbsp;<?php echo link_to(__('Delete'), 'gtu/delete?id='.$form->getObject()->getId(), array('method' => 'delete', 'confirm' => 'Are you sure?')) ?>
           <?php endif; ?>
           <input id="submit" type="submit" value="<?php echo __('Save');?>" />
         </td>
@@ -232,36 +260,30 @@ $(document).ready(function () {
 
 
 <script  type="text/javascript">
-    
+//ftheeten 2016 02 05
+var showDMSCoordinates;
+var coordViewMode=true;
+//ftheeten 2018 03 15
+<?php if($form->getObject()->isNew()): ?>
+var boolAdministrativeArea2=false;
+var boolArea3=false;
+var boolArea4=false;
+var boolHabitat5=false;
+var iso3166Selected;
+<?php endif; ?>
+
+//ftheeten 2016 02 05
+$( "form" ).submit(function( event ) {
+  window.opener.$("#gtu_filters_code").val($("#gtu_code").val());
+  });
+ 
+
 
 $(document).ready(function () {
-
-
-    $('.counter_date').text($('#gtu_temporal_information option').size()+" Value(s)");
-    /*$('.add_date').live('click', function(event)
-        {
-            //document.forms[0].submit();
-           //$("#submit").click();
-            //$("#submit").click();
-          // event.preventDefault();
-        }
-    );*/
-    
-     /*$('.remove_date').live('click', function(event)
-        {
-            
-             
-            $('#gtu_delete_mode').prop('checked', true);            
-            $("#submit").click();
-            //document.forms[0].submit();
-            event.preventDefault();
-        }
-    );*/
-    
-    //ftheeten 2016 02 05
+//ftheeten 2016 02 05
 
 	showDMSCoordinates=false;
-    
+
     $('.tag_parts_screen .clear_prop').live('click', function()
     {
       parent_el = $(this).closest('li');
@@ -273,8 +295,7 @@ $(document).ready(function () {
       {
 	      sub_groups.closest('fieldset').hide();
       	disableUsedGroups();
-      }	
-         
+      }
     });
 
    
@@ -282,11 +303,18 @@ $(document).ready(function () {
     disableUsedGroups();
     $('.purposed_tags li').live('click', function()
     {
+
       input_el = $(this).parent().closest('li').find('input[id$="_tag_value"]');
-      if(input_el.val().match("\;\s*$"))
+      /*if(input_el.val().match("\;\s*$"))
+	  {
         input_el.val( input_el.val() + $(this).text() );
-      else
+      }
+	  else
+	  {
         input_el.val( input_el.val() + " ; " +$(this).text() );
+	  }*/
+	  //ftheeten 2016 03 11
+	  input_el.val( $(this).text() );
       input_el.trigger('click');
     });
 
@@ -328,9 +356,119 @@ $(document).ready(function () {
       addSubGroup( $(this).closest('fieldset').attr('alt'));
     });
     
-        //ftheeten 2016 09 15
+    //ftheeten 2016 09 15
     checkCoordSourceState();
 	
+	<?php if($form->getObject()->isNew()): ?>
+	//ftheeten 2018 03 15
+	var initAdminstrativeGroupsOnLoad=function()
+	{
+		addGroup("administrative area");			
+
+	}
+	initAdminstrativeGroupsOnLoad();
+	<?php endif; ?>
+    
+    //ftheeten 2018 05 04
+
+ 
+        $('.iso3166').autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: "http://darwin/natural_heritage_webservice/service_nh_iso3166.php",
+                dataType: 'json',
+                data: { query: "iso3166_list", namepattern:request.term },
+                success: function (data) {
+                    data.unshift({'iso3166_code': request.term, 'iso3166_name': request.term});
+                    response(data.map(function (value) {
+                        return {
+                            'label': value.iso3166_name,
+                            'value': value.iso3166_code
+                        };  
+                    }));
+                } 
+            }); 
+        },
+
+        select : function(event, ui)
+         {
+              event.preventDefault();
+              set_iso3166(event, ui);
+              $(".iso3166_value").val(ui.item.value);
+              
+              ui.item.value = ui.item.label;
+              $('.iso3166').val(ui.item.value);              
+                return false;
+              
+        },        
+       minLength: 2
+    });
+    var set_iso3166= function(e, ui) {
+       $( "select[name*='sub_group_name']" ).each( 
+        
+            function()
+            {                
+                if($(this).val().toLowerCase()=="country")
+                {
+                    
+                    var idx = $(this).attr('id').match(/\d+/)[0];                    
+                    $("#gtu_newVal_"+idx+"_tag_value").val(ui.item.label);
+                    $("#gtu_TagGroups_"+idx+"_tag_value").val(ui.item.label);             
+   
+                }
+            }
+        );
+    };
+    
+    $('.iso3166_subdivision').autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: "http://darwin/natural_heritage_webservice/service_nh_iso3166.php",
+                dataType: 'json',
+                data: { query: "subdivisions_list", namepattern:request.term, iso3166:$('.iso3166_value').val()},
+                success: function (data) {
+                    data.unshift({'returned_code': request.term, 'returned': request.term});
+                    response(data.map(function (value) {
+                        return {
+                            'label': value.returned,
+                            'value': value.returned_code
+                        };  
+                    }));
+                } 
+            }); 
+        },
+        select : function(event, ui)
+         {
+              event.preventDefault();
+              set_iso3166_subdivision(event, ui);
+              $(".iso3166_subdivision_value").val(ui.item.value);
+              
+              ui.item.value = ui.item.label;
+              $('.iso3166_subdivision').val(ui.item.value);              
+                return false;
+              
+        },          
+        minLength: 2
+    });
+    
+      var set_iso3166_subdivision= function(e, ui)  {
+       $( "select[name*='sub_group_name']" ).each( 
+        
+            function()
+            {                
+                if($(this).val().toLowerCase()=="region or district")
+                {
+                    
+                    var idx = $(this).attr('id').match(/\d+/)[0];                    
+                    $("#gtu_newVal_"+idx+"_tag_value").val(ui.item.label);
+                    $("#gtu_TagGroups_"+idx+"_tag_value").val(ui.item.label);
+                }
+            }
+        );
+    };
+   
+    
+
 
 });
 
@@ -364,6 +502,7 @@ function addSubGroup(selected_group, default_type, value)
 
 function addTagToGroup(group, sub_group, tag)
 {
+    console.log('brol '+group + '-'+sub_group);
 
   if($('fieldset[alt="'+group+'"] .complete_widget input, fieldset[alt="'+group+'"] .complete_widget option:selected').filter(function()
     { return $(this).is(':visible') && $(this).val() == sub_group; }).length == 0)
@@ -392,7 +531,6 @@ function disableUsedGroups()
 
 function addGroup(g_val, sub_group, value)
 {
-
   if(g_val != '')
   {
     hideForRefresh('#gtu_group_screen');
@@ -408,6 +546,7 @@ function addGroup(g_val, sub_group, value)
           fld = '<fieldset alt="'+ g_val +'"><legend>' + g_name + '</legend><ul></ul><a class="sub_group"><?php echo __('Add Sub Group');?></a></fieldset>';
           $('.tag_parts_screen').append(fld);    
         }
+        //@TODO: What if not in select?
         html.find('select').val(sub_group);
         fld_set = $('fieldset[alt="'+g_val+'"]');
 
@@ -427,122 +566,12 @@ function addGroup(g_val, sub_group, value)
 }
 
 
-//add predfined tag groups
-//ftheeten 2018 08 08
 
-//THIS part to prefil tags
-<?php if($form->getObject()->isNew()&&strpos( $_SERVER['REQUEST_URI'],"new")&&strpos( $_SERVER['REQUEST_URI'],"duplicate_id")===FALSE): ?>		
 
-          //ftheeten 2018 08 08
-     var admLoaded=false;     
-     var countryLoaded=false; 
-     var provinceLoadedAdm=false; 
-     var provinceLoaded=false; 
-       
-     var hydrographicLoaded=false;
-     var seaLoadedAdm=false; 
-     var seaLoaded=false;
-
-     var populatedLoaded=false;
-     var populatedPlaceLoadedAdm=false; 
-     var populatedPlaceLoaded=false;
-
-     var tagGroupFillListener=function()
-     {
-         if($('#gtu_newVal_0_sub_group_name').length)
-       {
-           if(!countryLoaded)
-           {
-               
-                $('#gtu_newVal_0_sub_group_name').val('country');
-                countryLoaded=true;
-           }
-           if(!provinceLoaded)
-           {
-                if(!provinceLoadedAdm)
-                {
-                    provinceLoadedAdm=true;
-                    addGroup("administrative area");
-                }
-                if($('#gtu_newVal_1_sub_group_name').length)
-                {                    
-                    $('#gtu_newVal_1_sub_group_name').val('province');
-                    provinceLoaded=true;
-                    //launch hydrographic after all administrative displayed, otherwise HTML confused in HTML ids    
-                   if(!hydrographicLoaded)
-                   {                 
-                        addGroup("hydrographic");
-                        hydrographicLoaded=true;
-                   }
-                }
-                
-               
-           }
-           
-           if(!seaLoaded)
-           {
-                if(!seaLoadedAdm)
-                {
-                    seaLoadedAdm=true;                   
-                }
-                if($('#gtu_newVal_2_sub_group_name').length)
-                {                    
-                    $('#gtu_newVal_2_sub_group_name').val('sea');
-                    seaLoaded=true;
-                    //launch populated after all hydrographic displayed, otherwise HTML confused in HTML ids    
-                   if(!populatedLoaded)
-                   {                 
-                        addGroup("populated");
-                        populatedLoaded=true;
-                   }
-                }
-                
-           }
-           
-           if(!populatedPlaceLoaded)
-           {
-                if(!populatedPlaceLoadedAdm)
-                {
-                    populatedPlaceLoadedAdm=true;                   
-                }
-                if($('#gtu_newVal_3_sub_group_name').length)
-                {                    
-                    $('#gtu_newVal_3_sub_group_name').val('populated place');
-                    populatedPlaceLoaded=true;
-                     //next tag group to be prefilled HERE
-                }
-                
-           }
-           
-           
-       }
-     }    
-     
-     $(document).ajaxComplete(function(){
-        tagGroupFillListener();
-    }); 
-    
-    var addPredefinedTagGroups=function()
-    {
-       if(!admLoaded)
-       {
-      
-        addGroup("administrative area");
-        admLoaded=true;
-       }
-       
-       
-    }
-    
-    addPredefinedTagGroups();
-<?php endif;?>    
-
-/////THIS part for DMS
 
 //ftheeten 2016 09 05
 function checkCoordSourceState()
 {
-
     var selected=$( ".coordinates_source" ).val();
 		
 		var showDMS='display: table-cell';
@@ -797,7 +826,6 @@ function detectBothValCoordExisting()
 $(".UTM2DDGeneralOnLeave").change(
 	function(event)
 	{
-
 		convertUTM();
 
 	}
@@ -900,7 +928,80 @@ function initUTM(name, zone, direction )
             drawPoint(latlng, accu );
         }
 		
-	    $(".delete_coords").click(
+		//ftheeten 2018 03 15 to add country, municipality and exact sites widgets
+        var addTags= function()
+         {
+            if ( $( "#gtu_newVal_0_sub_group_name" ).length ) 
+				{ 
+					$('#gtu_newVal_0_sub_group_name').val("Country");
+					if(!boolAdministrativeArea2)
+					{
+						addGroup("administrative area");
+						boolAdministrativeArea2=true;
+					}
+				}
+                
+                
+                
+				if ( $( "#gtu_newVal_1_sub_group_name" ).length ) 
+				{ 
+					$('#gtu_newVal_1_sub_group_name').val("Municipality");
+					if(!boolArea3)
+					{
+						addGroup("administrative area");
+						boolArea3=true;
+					}
+					
+				}
+                
+                if ( $( "#gtu_newVal_2_sub_group_name" ).length ) 
+				{ 
+					$('#gtu_newVal_2_sub_group_name').val("Region or district");
+					if(!boolArea4)
+					{
+						addGroup("area");
+						boolArea4=true;
+					}
+					
+				}
+                
+        
+				
+				if ( $( "#gtu_newVal_3_sub_group_name" ).length ) 
+				{ 
+					$('#gtu_newVal_3_sub_group_name').val("Exact site");
+                   if(!boolHabitat5)
+					{
+						addGroup("habitat");
+						boolHabitat5=true;
+					}				
+					
+				}
+                
+                if ( $( "#gtu_newVal_4_sub_group_name" ).length ) 
+				{ 
+					$('#gtu_newVal_4_sub_group_name').val("ecology");                  
+					
+				}
+         }
+        
+		$(document).ajaxComplete(
+		
+			function()
+			{
+                    
+                    
+				<?php if($form->getObject()->isNew()&&strpos( $_SERVER['REQUEST_URI'],"new")&&strpos( $_SERVER['REQUEST_URI'],"duplicate_id")===FALSE): ?>		
+                    addTags();
+				<?php endif; ?>	
+				
+				
+			}
+		
+		);
+		
+			
+			$(".delete_coords").click(
 				function()
 				{
 					console.log("delete");
@@ -909,7 +1010,4 @@ function initUTM(name, zone, direction )
 					$(".UTM2DDGeneralOnLeave").val("");
 				}
 			);
-		
-
-	
 </script>

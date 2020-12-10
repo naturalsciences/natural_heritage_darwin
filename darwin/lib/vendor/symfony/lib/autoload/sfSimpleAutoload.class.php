@@ -17,7 +17,7 @@
  * @package    symfony
  * @subpackage autoload
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfSimpleAutoload.class.php 23205 2009-10-20 13:20:17Z Kris.Wallsmith $
  */
 class sfSimpleAutoload
 {
@@ -65,8 +65,6 @@ class sfSimpleAutoload
    * Register sfSimpleAutoload in spl autoloader.
    *
    * @return void
-   *
-   * @throws sfException
    */
   static public function register()
   {
@@ -288,7 +286,7 @@ class sfSimpleAutoload
       $this->cacheChanged = true;
     }
 
-    preg_match_all('~^\s*(?:abstract\s+|final\s+)?(?:class|interface|trait)\s+(\w+)~mi', file_get_contents($file), $classes);
+    preg_match_all('~^\s*(?:abstract\s+|final\s+)?(?:class|interface)\s+(\w+)~mi', file_get_contents($file), $classes);
     foreach ($classes[1] as $class)
     {
       $this->classes[strtolower($class)] = $file;
@@ -328,7 +326,7 @@ class sfSimpleAutoload
    * Loads configuration from the supplied files.
    *
    * @param array $files An array of autoload.yml files
-   *
+   * 
    * @see sfAutoloadConfigHandler
    */
   public function loadConfiguration(array $files)

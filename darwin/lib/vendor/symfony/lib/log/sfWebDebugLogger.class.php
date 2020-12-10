@@ -14,16 +14,14 @@
  * @package    symfony
  * @subpackage log
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfWebDebugLogger.class.php 30790 2010-08-31 13:23:50Z Kris.Wallsmith $
  */
 class sfWebDebugLogger extends sfVarLogger
 {
-  /** @var sfContext */
-  protected $context       = null;
-  /** @var string */
-  protected $webDebugClass = null;
-  /** @var sfWebDebug */
-  protected $webDebug      = null;
+  protected
+    $context       = null,
+    $webDebugClass = null,
+    $webDebug      = null;
 
   /**
    * Initializes this logger.
@@ -35,7 +33,7 @@ class sfWebDebugLogger extends sfVarLogger
    * @param  sfEventDispatcher $dispatcher  A sfEventDispatcher instance
    * @param  array             $options     An array of options.
    *
-   * @return void
+   * @return Boolean           true, if initialization completes successfully, otherwise false.
    *
    * @see sfVarLogger
    */
@@ -53,7 +51,7 @@ class sfWebDebugLogger extends sfVarLogger
 
     $this->registerErrorHandler();
 
-    parent::initialize($dispatcher, $options);
+    return parent::initialize($dispatcher, $options);
   }
 
   /**
@@ -76,8 +74,6 @@ class sfWebDebugLogger extends sfVarLogger
    * @param string $errfile    The filename that the error was raised in, as a string.
    * @param string $errline    The line number the error was raised at, as an integer.
    * @param array  $errcontext An array that points to the active symbol table at the point the error occurred.
-   *
-   * @return bool
    */
   public function handlePhpError($errno, $errstr, $errfile, $errline, $errcontext = array())
   {
@@ -108,7 +104,7 @@ class sfWebDebugLogger extends sfVarLogger
 
   /**
    * Listens for the context.load_factories event.
-   *
+   * 
    * @param sfEvent $event
    */
   public function listenForLoadFactories(sfEvent $event)
@@ -151,7 +147,6 @@ class sfWebDebugLogger extends sfVarLogger
     // * if not rendering to the client
     // * if HTTP headers only
     $response = $event->getSubject();
-    /** @var sfWebRequest $request */
     $request  = $this->context->getRequest();
     if (
       null === $this->webDebug

@@ -6,30 +6,39 @@
  * @package    darwin
  * @subpackage filter
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
  */
-abstract class BaseBibliographyFormFilter extends DarwinModelFormFilter
+abstract class BaseBibliographyFormFilter extends BaseFormFilterDoctrine
 {
-  protected function setupInheritance()
+  public function setup()
   {
-    parent::setupInheritance();
+    $this->setWidgets(array(
+      'title'         => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'title_indexed' => new sfWidgetFormFilterInput(),
+      'type'          => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'abstract'      => new sfWidgetFormFilterInput(),
+      'year'          => new sfWidgetFormFilterInput(),
+      'reference'     => new sfWidgetFormFilterInput(),
+      'doi'           => new sfWidgetFormFilterInput(),
+    ));
 
-    $this->widgetSchema   ['title'] = new sfWidgetFormFilterInput(array('with_empty' => false));
-    $this->validatorSchema['title'] = new sfValidatorPass(array('required' => false));
-
-    $this->widgetSchema   ['title_indexed'] = new sfWidgetFormFilterInput();
-    $this->validatorSchema['title_indexed'] = new sfValidatorPass(array('required' => false));
-
-    $this->widgetSchema   ['type'] = new sfWidgetFormFilterInput(array('with_empty' => false));
-    $this->validatorSchema['type'] = new sfValidatorPass(array('required' => false));
-
-    $this->widgetSchema   ['abstract'] = new sfWidgetFormFilterInput();
-    $this->validatorSchema['abstract'] = new sfValidatorPass(array('required' => false));
-
-    $this->widgetSchema   ['year'] = new sfWidgetFormFilterInput();
-    $this->validatorSchema['year'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
+    $this->setValidators(array(
+      'title'         => new sfValidatorPass(array('required' => false)),
+      'title_indexed' => new sfValidatorPass(array('required' => false)),
+      'type'          => new sfValidatorPass(array('required' => false)),
+      'abstract'      => new sfValidatorPass(array('required' => false)),
+      'year'          => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
+      'reference'     => new sfValidatorPass(array('required' => false)),
+      'doi'           => new sfValidatorPass(array('required' => false)),
+    ));
 
     $this->widgetSchema->setNameFormat('bibliography_filters[%s]');
+
+    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
+
+    $this->setupInheritance();
+
+    parent::setup();
   }
 
   public function getModelName()
@@ -39,12 +48,15 @@ abstract class BaseBibliographyFormFilter extends DarwinModelFormFilter
 
   public function getFields()
   {
-    return array_merge(parent::getFields(), array(
-      'title' => 'Text',
+    return array(
+      'id'            => 'Number',
+      'title'         => 'Text',
       'title_indexed' => 'Text',
-      'type' => 'Text',
-      'abstract' => 'Text',
-      'year' => 'Number',
-    ));
+      'type'          => 'Text',
+      'abstract'      => 'Text',
+      'year'          => 'Number',
+      'reference'     => 'Text',
+      'doi'           => 'Text',
+    );
   }
 }

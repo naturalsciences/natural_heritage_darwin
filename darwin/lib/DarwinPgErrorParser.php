@@ -1,9 +1,12 @@
 <?php
 class DarwinPgErrorParser
 {
+  // @TODO What happens when language of database is not english... Shouldn't we use invariable parts of message such as SQLSTATE[] and constraint names... ?
   protected $nat_exception = null;
 
   protected static $errorRegexps = array(
+  	//rmca 2018 05 22 (errors on coordinates")
+	'/ERROR:  new row for relation "gtu" violates check constraint "rmca_check_dms.*"/i' => 'Issue in coordinates, please check',
     '/Author still used as author/i' => 'This Person is still referenced as an author',
     '/Impossible to impact children names/i' => 'Impossible to impact children names',
     '/Still Manager in some Collections/i' => 'This user is still Manager in some Collections',
@@ -89,6 +92,10 @@ class DarwinPgErrorParser
     '/\bfk_specimens_accompanying_mineralogy\b/' => 'This mineral is referenced as accompanying element',
     '/\bfk_specimens_accompanying_taxonomy\b/' => 'This taxon is referenced as accompanying element',
     '/\bunq_staging_tag_groups\b/' => 'This tag group already exists',
+    //rmca 2016 06 24 (check "check_auto_increment_code_in_loan()")
+    '/\bCOLLECTION NOT FOUND OR HAS NO SPECIMEN\b/' => 'The collection of the loan has no specimen',
+
+
   );
 
   public function __construct(Doctrine_Exception $e)
