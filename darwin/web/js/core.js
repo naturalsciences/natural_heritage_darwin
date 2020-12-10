@@ -1,93 +1,3 @@
-var date_to_set={};
-         //global
-var datenagoya = new Date(2014,9,12);
-
-    //attention month -1 javascript flaw
- var LastDayOfMonth=function(Year, Month) {
-            var dateTmp= new Date( (new Date(Year, Month,1))-1 );
-            return dateTmp.getDate();
-}     
-  
-function calculate_date_range_generic(jquery_prefix)
-{
-    var returned={}
-    var date_from=null;
-    var date_to=null;
-    
-    //var dnull = new Date(1900,01,01);
-    var year_from=$(jquery_prefix + "_from_date_year").val();
-    var month_from="01";
-    var day_from="01";
-
-    var year_to='';
-    var month_to="12";
-    var day_to="31";
-    date_to_set[jquery_prefix]=false;
-
-
-    if($(jquery_prefix + "_from_date_year").val().length>0) 
-    {
-        //calculte automatically date to only if never set manually
-        if(! date_to_set[jquery_prefix])
-        {
-            year_to=year_from;           
-        }
-    }
-
-    if($(jquery_prefix + "_from_date_month").val().length>0) 
-    {
-        
-        month_from = $(jquery_prefix + "_from_date_month").val();
-        if(! date_to_set[jquery_prefix])
-        {
-            month_to=month_from;
-            day_to=LastDayOfMonth(year_to, month_to);
-        }
-    }
-    if($(jquery_prefix + "_from_date_day").val().length>0) 
-    {
-        
-        day_from = $(jquery_prefix + "_from_date_day").val();
-        if(! date_to_set[jquery_prefix])
-        {
-            day_to = day_from;
-        }
-    }
-
-    //attention date -1 in Jacvascript as this is an array
-     date_from = new Date( year_from, parseInt(month_from) - 1, day_from);
-
-    if($(jquery_prefix + "_to_date_year").val())
-    {
-        year_to=$(jquery_prefix + "_to_date_year").val();
-         date_to_set[jquery_prefix]=true;
-    }
-
-    if($(jquery_prefix + "_to_date_month").val())
-    {
-       month_to=$(jquery_prefix + "_to_date_month").val();
-        date_to_set[jquery_prefix]=true;
-    }
-
-    if($(jquery_prefix + "_to_date_day").val())
-    {
-      day_to=$(jquery_prefix + "_to_date_day").val();
-      date_to_set[jquery_prefix]=true;
-    }
-
-     date_to = new Date( year_to, parseInt(month_to) - 1, day_to);
-
-    //detect reset
-    if($(jquery_prefix + "_from_date_year").val().length==0)
-    {
-        date_from=null;            
-    }
-
-    returned["date_from"]=date_from;
-    returned["date_to"]=date_to;
-    return returned;
-}
-
 function getIdInClasses(el)
 {
     var classes = $(el).attr("class").split(" ");
@@ -236,19 +146,11 @@ function clearSelection(el)
 
 function result_choose ()
 {
-    el = $(this).closest('tr');
-    ref_element_id = getIdInClasses(el);
-    ref_element_name = el.find('span.item_name').text();
-    ref_level_name = el.find('span.level_name').text();
-    if(typeof fct_update=="function")
-    {
-        fct_update(ref_element_id, ref_element_name, ref_level_name);
-    }
-    else
-    {
-        $('.result_choose').die('click');
-        $('body').trigger('close_modal');
-    }
+  el = $(this).closest('tr');
+  ref_element_id = getIdInClasses(el);
+  ref_element_name = el.find('span.item_name').text();
+  $('.result_choose').die('click');
+  $('body').trigger('close_modal');
 }
 
 function objectsAreSame(x, y) {
@@ -373,7 +275,6 @@ $.fn.customRadioCheck = function() {
 };
 }());
 
-
     //ftheeten 2018 09 18
     function onElementInserted(containerSelector, elementSelector, callback) {
 
@@ -396,8 +297,7 @@ $.fn.customRadioCheck = function() {
 
         }
         
-        
-    //ftheeten 2018 11 26
+    //ftheetebn 2018 11 26
     var select2SetOption=function(selector, valueToCopy, textToCopy)
     {
           var newOption = new Option( textToCopy, valueToCopy, true, true);
@@ -412,6 +312,7 @@ $.fn.customRadioCheck = function() {
                                
          $(selector).select2("data", data, true);
     }
+    
     
     //ftheeten 2019 02 04
     var getUrlParameter = function getUrlParameter(sParam) {
@@ -529,6 +430,8 @@ $.fn.customRadioCheck = function() {
 		);
 	});
     
+    //IMPORTANT IF SERVER RUNS ON HTTPS
+    
     var detect_https=function(url)
     {
         if (location.protocol == "https:") 
@@ -538,28 +441,29 @@ $.fn.customRadioCheck = function() {
         return url;
     }
     
-    function GetNagoyaDateAcquisition()
-    {
+    // NAGOYA BLOCK
     
-        var year_from=$("#specimen_acquisition_date_year").val();
-        var month_from="01";
-        var day_from="01";    
+    function GetNagoyaCollection(url, p_id){
+		$.getJSON( 
+			url,
+			{id: p_id},
+			function(data) {
+				if(data.nagoya == "yes"){
+					$('#coll').val("ok");
+				}else if(data.nagoya == "no"){
+						$('#coll').val("nok");
+				}else{
+					$('#coll').val("");
+				}
+			}
+		);
+	};
         
-        if($("#specimen_acquisition_date_month").val().length>0)
-        {
-            month_from=$("#specimen_acquisition_date_month").val();
-        }
-        
-        if($("#specimen_acquisition_date_day").val().length>0)
-        {
-            day_from=$("#specimen_acquisition_date_day").val();
-        }
-        
-		var d1 = new Date(year_from,parseInt(month_from)-1,day_from);
-		var d2 = datenagoya;
+	function GetNagoyaDateAcquisition(){
+		var d1 = new Date( $("#specimen_acquisition_date_year").val(),$("#specimen_acquisition_date_month").val()-1,$("#specimen_acquisition_date_day").val());
+		var d2 = new Date(2014,9,12);
 		var dnull = new Date(1899,10,30);
 		
-       
 		if(d1 > d2){
 		//	if(confirm("Enable Nagoya on this specimen")){
 			$('#date_acq').val("ok");
@@ -569,77 +473,29 @@ $.fn.customRadioCheck = function() {
 			$('#date_acq').val("nok");
 		}
 		if(d1.getTime() === dnull.getTime()){
-			$('#date_acq').val("");
+			$('#date_acq').val("not defined");
 		}
-        fillcheckandlabels(1);
+		//alert("1date_acq="+$('#date_acq').val());
+	}
+	
+    function GetNagoyaDateSampling(){
+		var datefrom = new Date( $("#specimen_gtu_from_date_year").val(),$("#specimen_gtu_from_date_month").val()-1,$("#specimen_gtu_from_date_day").val());
+		var dateto = new Date( $("#specimen_gtu_to_date_year").val(),$("#specimen_gtu_to_date_month").val()-1,$("#specimen_gtu_to_date_day").val());
+		var datenagoya = new Date(2014,9,12);
+		var dnull = new Date(1899,10,30);
+		
+		if(datefrom > datenagoya || dateto > datenagoya){
+			$('#date_sampl').val("ok");
+		}else{
+			$('#date_sampl').val("nok");
+		}
+		if(dateto.getTime() === dnull.getTime() && datefrom.getTime() === dnull.getTime()){
+			$('#date_sampl').val("not defined");
+		}
+		//alert("date_sampl="+$('#date_sampl').val());
 	}
     
-         var GetNagoyaCollection=function(url)
-         {           
-			
-			$.getJSON( 
-				url,
-				{id: $("#specimen_collection_ref").val()},
-				function(data) 
-                {
-
-					if(data.nagoya == "yes")
-                    {
-                       
-                        $('#coll').val("ok");
-                        
-					}
-                    else if(data.nagoya == "no")
-                    {
-                       
-						$('#coll').val("nok");
-                       
-					}
-                    else
-                    {                       
-						$('#coll').val("");
-                        
-                       
-					}
-                    fillcheckandlabels(1);
-				}
-			)
-           
-		};
-        
-    
-
-       
-     
-       
-       function GetNagoyaDateSampling(jquery_prefix)
-       {
-            var array_dates=calculate_date_range_generic(jquery_prefix);
-            var date_from=array_dates["date_from"];
-            var date_to=array_dates["date_to"];
-            
-           
-             
-            if(date_from >= datenagoya || date_to >= datenagoya)
-            {
-                $('#date_sampl').val("ok");
-                //console.log("SAMPLING IS NAGOYA");
-            }
-            else
-            {
-                $('#date_sampl').val("nok");
-                //console.log("SAMPLING IS NOT NAGOYA");
-            }
-            if(date_to === null && date_from === null ){
-                $('#date_sampl').val("");
-                //console.log("SAMPLING NAGOYA UNK");
-            }
-       }
-        
-        
-    
-    	function GetNagoyaGTU()
-        {
+    function GetNagoyaGTU(){
 		if ($("#specimen_gtu_ref_code").html() !== $gtu_ref_code || $gtu_ref_code == "") {
 			var url=location.protocol + '//' + "<?php print(parse_url(sfContext::getInstance()->getRequest()->getUri(),PHP_URL_HOST ));?>" + "/backend.php/specimen/getNagoyaGTU";
 			$.getJSON( 
@@ -657,17 +513,16 @@ $.fn.customRadioCheck = function() {
 			);
 		}
 	}
-    
-    function fillcheckandlabels($origin) 
-    { 
-       
-
+	
+	function fillcheckandlabels($origin) { 
 		if (	$('#coll').val()=="ok" && $('#gtu').val()=="ok"  && 	($('#date_sampl').val()=="ok" || $('#date_acq').val()=="ok") )
 		{
-			
-	
-			   $('#specimen_nagoya option[value="yes"]').attr('selected','selected');
-
+				console.log("A");
+				//if (($origin == 0 & $isnew)| $origin == 1){
+					//$('.nagoya').prop( "checked", true );	
+					$('#specimen_nagoya option[value="yes"]').attr('selected','selected');
+				//	alert("yes");
+				//}
 				$(".nagoya_uncheck").hide();
 				$(".nagoya_check").show();
 				$(".nagoya_doc").show();
@@ -680,10 +535,13 @@ $.fn.customRadioCheck = function() {
 		}
 		else if (	$('#coll').val()=="nok" || $('#gtu').val()=="nok" || ($('#date_sampl').val()=="nok" && $('#date_acq').val()=="nok") )
 		{
-				
-				
-					$('#specimen_nagoya option[value="no"]').attr('selected','selected');
-
+				console.log("B");
+				//}else{
+					//if (($origin == 0 & $isnew)| $origin == 1){
+						//$('.nagoya').prop( "checked", false );	
+						$('#specimen_nagoya option[value="no"]').attr('selected','selected');
+					//	alert("no");
+					//}
 					$(".nagoya_uncheck").show();
 					$(".nagoya_check").hide();
 					$(".nagoya_doc").hide();
@@ -715,10 +573,12 @@ $.fn.customRadioCheck = function() {
 					}
 			//}
 		}else{	
-	
-
-			$('#specimen_nagoya option[value="not defined"]').attr('selected','selected');
-	
+console.log("C");		
+			//if (($origin == 0 & $isnew)| $origin == 1){
+				//$('.nagoya').prop( "checked", false );	
+				$('#specimen_nagoya option[value="not defined"]').attr('selected','selected');
+			//	alert("not defined");
+			//}
 			$(".nagoya_uncheck").hide();
 			$(".nagoya_check").hide();
 			$(".nagoya_doc").hide();
@@ -741,7 +601,8 @@ $.fn.customRadioCheck = function() {
 				$("#GTU_label").text("- Sampling location is NOT in a area concerned by Nagoya protocol");
 			}
 		//	alert($('#date_sampl').val() +" ---  " + $('#date_acq').val());
-
+		console.log($('#date_sampl').val());
+		console.log($('#date_acq').val());
 			if($('#date_sampl').val()=="not defined" || $('#date_acq').val()=="not defined") {
 				
 				$("#dates_label").text("- Date of acquisition and/or collect are NOT filled");
@@ -753,14 +614,5 @@ $.fn.customRadioCheck = function() {
 		}	
 	};
     
-        //ftheeten 2018 04 10
-    var urlParam= function(name){
-            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
-            if (results==null){
-               return null;
-            }
-            else{
-               return decodeURI(results[1]) || 0;
-            }
-        }  
+    // NAGOYA BLOCK
 	

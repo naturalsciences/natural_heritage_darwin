@@ -9,7 +9,7 @@
     <h1><?php echo __('My saved searches');?></h1>
   <?php endif;?>
 
-  <table class="saved_searches">
+  <table style="width:75%" class="saved_searches">
   <tbody>
   <?php foreach($searches as $search):?>
     <tr class="r_id_<?php echo $search->getId();?>">
@@ -41,27 +41,29 @@
          <?php if($sf_user->isAtLeast(Users::ENCODER)):?>
          <td class="rurl_container">
             <select class="url_report">
-            <option value=<?php echo(url_for("savesearch/downloadSpec")."/user_id/".sfContext::getInstance()->getUser()->getId()."/query_id/".$search->getId())?>>
-            Tab-delimited (specimens)
-            </option> 
-            <option value=<?php echo(url_for("savesearch/downloadSpecLabels")."/user_id/".sfContext::getInstance()->getUser()->getId()."/query_id/".$search->getId())?>>
-            Tab-delimited (specimens - labels )
-            </option> 
-            <option value=<?php echo(url_for("savesearch/downloadTaxonomy")."/type_file/taxonomy/user_id/".sfContext::getInstance()->getUser()->getId()."/query_id/".$search->getId())?>>
-            Tab-delimited (taxonomy)
+            <option value=<?php echo("http://172.16.11.138:8080/pentaho/api/repos/%3Apublic%3ADarwin2%3AReports_excel%3Areport_excel_page.prpt/report?ID_USER=".sfContext::getInstance()->getUser()->getId()."&ID_Q=".$search->getId()."&userid=report&password=report&output-target=table%2Fexcel%3Bpage-mode%3Dflow&accepted-page=-1&showParameters=true&renderMode=REPORT&htmlProportionalWidth=false")?>>
+            Excel (specimens)
+            </option>          
+         
+             <option value=<?php echo("http://172.16.11.138:8080/pentaho/api/repos/%3Apublic%3ADarwin2%3AReports_excel%3Areport_excel_taxonomy.prpt/report?ID_USER=".sfContext::getInstance()->getUser()->getId()."&ID_Q=".$search->getId()."&userid=report&password=report&output-target=table%2Fexcel%3Bpage-mode%3Dflow&accepted-page=-1&showParameters=true&renderMode=REPORT&htmlProportionalWidth=false")?>>
+            Excel (taxonomy)
             </option>
-			<option value=<?php echo(url_for("savesearch/downloadTaxonomy")."/type_file/taxonomy_count/user_id/".sfContext::getInstance()->getUser()->getId()."/query_id/".$search->getId())?>>
-            Tab-delimited (taxonomy : statistics)
-            </option> 			
+            <option value=<?php echo("http://172.16.11.138:8080/pentaho/api/repos/%3Apublic%3ADarwin2%3AReports_rtf%3Areport_inverts_rtf.prpt/report?ID_USER=".sfContext::getInstance()->getUser()->getId()."&ID_Q=".$search->getId()."&userid=report&password=report&output-target=table%2Frtf%3Bpage-mode%3Dflow&accepted-page=-1&showParameters=true&renderMode=REPORT&htmlProportionalWidth=false")?>>
+            RTF publications Invertebrates
+            </option>
             </select>
+            
+            
          </td>
-		   
+         <td class="report_pager" >
+            Page : <input type="number" name="page_excel" id="page_excel" value="1" style="width:30px"/>
+            Size : <input type="text" name="size_excel" id="size_excel" value="50000" style="width:40px"/>
+         </td>   
          <td>
             <input id="report_link" class="save_search report_link" value="Get report" type="button">
          </td>
          <td>
-		    <?php print(link_to(image_tag('gis.png',array('title'=>'Export GeoJSON')),url_for("savesearch/geojson")."?query_id=".$search->getId()."&user_id=".sfContext::getInstance()->getUser()->getId())); ?>
-          
+            <a id="geojson_link" target="_blank" href="<?php print(url_for("savesearch/geojson"));?>?query_id=<?php print($search->getId());?>&user_id=<?php print(sfContext::getInstance()->getUser()->getId()); ?>">GIS Layer (.geojson)</a>
          </td>
          <?php endif;?>
     </tr>
@@ -157,12 +159,40 @@ $(document).ready(function () {
     return false;
  });
  
-  //ftheeten 2016 10 2016
+ //ftheeten 2016 10 2016
  $(".report_link").click(function(event){
     
     var url_report = $(this).closest('tr').children("td.rurl_container").find(".url_report").val();
+    //ftheeten 2018 12 11
+    var size=$(this).closest('tr').find("#size_excel").val();
+    var page=$(this).closest('tr').find("#page_excel").val();
+    
+    if(url_report.includes("report_excel_page"))
+    {        
+        url_report=url_report+"&PAGE="+page+"&SIZE="+size;
+    }
+    
+    
     window.open(url_report, '_blank');
  });
+ 
+ $(".url_report").change(
+    function()
+    {
+        
+        var tmpVal=$(".url_report").val();
+        if(tmpVal.includes("report_excel_page"))
+        {
+            $(".report_pager").css("display","inline");
+        }
+        else
+        {
+            $(".report_pager").css("display","none");
+        }
+    }
+ );
 
+
+ 
 });
 </script>

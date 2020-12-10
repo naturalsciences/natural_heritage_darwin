@@ -15,7 +15,7 @@
  * @package    symfony
  * @subpackage doctrine
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfDoctrineRecordI18nFilter.class.php 24337 2009-11-24 14:37:03Z Kris.Wallsmith $
  */
 class sfDoctrineRecordI18nFilter extends Doctrine_Record_Filter
 {
@@ -51,13 +51,14 @@ class sfDoctrineRecordI18nFilter extends Doctrine_Record_Filter
   public function filterGet(Doctrine_Record $record, $name)
   {
     $culture = sfDoctrineRecord::getDefaultCulture();
-    if (isset($record['Translation'][$culture]) && '' != $record['Translation'][$culture][$name])
+    if (isset($record['Translation'][$culture]))
     {
       return $record['Translation'][$culture][$name];
     }
-
-    $defaultCulture = sfConfig::get('sf_default_culture');
-
-    return $record['Translation'][$defaultCulture][$name];
+    else
+    {
+      $defaultCulture = sfConfig::get('sf_default_culture');
+      return $record['Translation'][$defaultCulture][$name];
+    }
   }
 }

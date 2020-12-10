@@ -175,19 +175,9 @@ ul.spec_error_list, ul.error_list
 }
 
 .col_name:hover {
-  /*background-color: #ececec;*/
-  /*#ftheeten 2019 11 20 */
-  background-color: #ececff;
-  border-style: groove;
-   border-width: 2px;
+  background-color: #ececec;
 }
 
-/*#ftheeten 2019 11 20 */
-ul.checkbox_list li:hover {
-  background-color: #ececff;
-  border-style: groove;
-  border-width: 2px;
-}
 img.clear_prop, img.tree_cmd {
   cursor:pointer;
   vertical-align:middle;
@@ -200,7 +190,14 @@ img.clear_prop, img.tree_cmd {
   display:none;
 }
 .treelist ul, .treelist ul li {
-  margin-left: 8px;
+  margin-left: 15px;
+}
+/* JMHerpers 2018 06 19 added ul ul and ul ul ul */
+.treelist ul ul{
+  margin-left: 25px;
+}
+.treelist ul ul ul{
+  margin-left: 35px;
 }
  .treelist ul li {
   padding-top: 8px;
@@ -219,6 +216,13 @@ img.clear_prop, img.tree_cmd {
 {
   vertical-align: middle;
   display: inline-block;
+}
+
+/* JMHerpers 2018 04 05 */
+.complete_widget select 
+{
+	
+    max-width:420px;
 }
 
 /** widgetFormButtonRef **/
@@ -250,7 +254,7 @@ img.clear_prop, img.tree_cmd {
   cursor:pointer;
 }
 
-.but_text, .but_text_multiple
+.but_text
 {
   background-color:#A9ABAA;
   float:left;
@@ -265,7 +269,7 @@ img.clear_prop, img.tree_cmd {
   font-weight: normal;
 }
 
-a.but_text, a.but_more, a.but_text_multiple
+a.but_text, a.but_more
 {
   text-decoration:none;
   color:black;
@@ -309,9 +313,6 @@ form th, form tr > td
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   vertical-align: middle;
-  /*madam 2019 01 28*/
-  table-layout:fixed;
-  width: 100%;
 }
 
 .search h3, .tree
@@ -372,7 +373,6 @@ input[type="submit"][class="search_submit"]
   color:white;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
-  float:right;
 }
 
 
@@ -596,11 +596,6 @@ input[type="text"].xlarge_size
   margin-left:0.05em;
 }
 
-div.results_container.but_ref_multiple {
-  float: right;
-  width: 99%;
-}
-
 .invalid
 {
   color:#C11C1C;
@@ -671,14 +666,15 @@ a.bt_close
 {
   text-align: left;
 }
-.datesNum em, #properties table em, .table_view table em, .catalogue_table em, .catalogue_table_view em
+.datesNum em, #properties table em
 {
   color:#C1C1C1;
   font-style:normal;
 }
+
 .check_right
 {
- float:right !important ;
+ float:right
 }
 .edit
 {
@@ -709,7 +705,8 @@ a.bt_close
   text-align:center;
 }
 
-.result_choose, .result_choose_coll_rights, .result_choose_collector, .result_choose_identifier
+/*** ftheeten 2016 06 07 added result_chose_all ***/
+.result_choose, .result_choose_coll_rights, .result_choose_collector, .result_choose_identifier, .result_choose_all
 {
   background-color:#5BAABD;
   color:white;
@@ -1125,7 +1122,6 @@ border-bottom: none ;
   width: 100px;
   margin-left:0.5em;
   margin-right:0.5em;
-  vertical-align: middle;
 }
 
 .property_values thead th
@@ -1972,7 +1968,7 @@ li.tag_size_5 { font-size: 20px; }
   display: table;
 }
 
-a.sub_group
+a.sub_group,  a.button_rmca
 {
 
   padding: 2px;
@@ -2889,16 +2885,15 @@ body .ui-tooltip, body .qtip
 .ui-autocomplete-loading { background: white url('/images/loader.gif') right center no-repeat; }
 
 .ui-autocomplete {
-		max-height: 150px;
+		max-height: 200px;
+		overflow-y: scroll;
 		/* prevent horizontal scrollbar */
 		overflow-x: hidden;
-    /* add vertical scrollbar */
-		overflow-y: scroll;
+		overflow:scroll;
 		/* add padding to account for vertical scrollbar */
 		padding-right: 20px;
-    position: absolute; 
-    cursor: default; 
-}
+	}
+.ui-autocomplete { position: absolute; cursor: default; }
 
 input.complete_missing {
   border: 1px solid red;
@@ -3114,9 +3109,12 @@ a.but_more{
   float:none;
   display:inline;
 }
+
 .complete_ref input.ui-autocomplete-input
 {
-  width: 300px;
+	/* JMHerpers 2018 04 16*/
+  width: 80%;
+  max-width:500px;
 }
 
 .treelist > h2 {
@@ -3245,7 +3243,7 @@ tr.spec_ident_collectors_data
   padding-bottom: 4px;
 }
 
-#float_button .submit_image
+ #float_button .submit_image
 {
   border-bottom: 1px solid #525A20;
   cursor: pointer;
@@ -3257,32 +3255,76 @@ tr.spec_ident_collectors_data
   border-bottom: 1px solid white;
 }
 
-.main_codes_display {
-  margin: 0 0 4px 0;
-  letter-spacing: 0.05em;
-  list-style: none;
-}
-
-div#mask_display {
-  width:97%;
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-div.mask_display {
-  font-weight:bold;
-  text-align:center;
-  vertical-align:middle;
-  padding-bottom:10px;
-}
-
-fieldset.opened.view_mode, fieldset.opened.view_mode > legend.view_mode {
-  border: 1px solid #5BAABD;
-}
-
-input[readonly]
+/* JMHerpers 2018 04 05 for lines under*/
+.sex_Top_Bordered
 {
-    background-color:	 #d1e0e0;
+  border-top: 2px solid #33FF00;
+  border-left: 2px solid #33CC00;
+  border-right: 2px solid #33FF00;
+ 
+}
+
+.sex_Middle_Bordered
+{ 
+  border-left: 2px solid #33CC00;
+  border-right: 2px solid #33FF00;
+  border-spacing: 2px;
+
+  
+}
+
+.sex_Bottom_Bordered
+{ 
+  border-bottom: 2px solid #33CC00;
+  border-left: 2px solid #33CC00;
+  border-right: 2px solid #33FF00;
+  border-spacing: 2px;
+  
+}
+
+ a.button_loan {
+  border:1px solid #C1CC33;
+  background-color:#C1CF56;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  padding:2px;
+  color:#525A20;
+  text-decoration: none;
+  font-size:90%;
+}
+
+.label_spec_part
+{
+  max-width: 90%;
+  width: 90%;
+}
+
+table.specpart_loans th
+{
+  border:1px solid #C1CC33;
+  background-color: #f1fbf1;
+}
+table.specpart_loans td
+{
+  border:1px solid #C1CC33;
+  background-color: #f1fbf1;
+}
+
+.loanlines_titles
+{
+	background-color: #a4d94d;
+}
+
+tr.loanlines_top td
+{
+	border-top:3pt solid #C1CC33;
+	background-color: #f1fbf1;
+}
+
+tr.loanlines_bottom td
+{
+	border-bottom:3pt solid #C1CC33;
+	background-color: #f1fbf1;
 }
 
 .spec_results tr:hover{
@@ -3290,3 +3332,4 @@ input[readonly]
   border-style: groove;
    border-width: 2px;
 }
+

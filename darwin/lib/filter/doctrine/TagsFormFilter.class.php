@@ -12,5 +12,6 @@ class TagsFormFilter extends BaseTagsFormFilter
 {
   public function configure()
   {
+	
   }
 }

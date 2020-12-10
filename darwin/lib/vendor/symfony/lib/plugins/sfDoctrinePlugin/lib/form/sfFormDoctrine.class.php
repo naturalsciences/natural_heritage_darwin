@@ -18,18 +18,17 @@
  * @subpackage form
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfFormDoctrine.class.php 32740 2011-07-09 09:24:03Z fabien $
  */
 abstract class sfFormDoctrine extends sfFormObject
 {
   /**
    * Constructor.
    *
-   * @param mixed  $object     A object used to initialize default values
-   * @param array  $options    An array of options
-   * @param string $CSRFSecret A CSRF secret (false to disable CSRF protection, null to use the global CSRF secret)
+   * @param mixed  A object used to initialize default values
+   * @param array  An array of options
+   * @param string A CSRF secret (false to disable CSRF protection, null to use the global CSRF secret)
    *
-   * @throws sfException
    * @see sfForm
    */
   public function __construct($object = null, $options = array(), $CSRFSecret = null)
@@ -67,10 +66,8 @@ abstract class sfFormDoctrine extends sfFormObject
   /**
    * Embeds i18n objects into the current form.
    *
-   * @param array  $cultures  An array of cultures
-   * @param string $decorator A HTML decorator for the embedded form
-   *
-   * @throws sfException
+   * @param array   $cultures   An array of cultures
+   * @param string  $decorator  A HTML decorator for the embedded form
    */
   public function embedI18n($cultures, $decorator = null)
   {
@@ -101,11 +98,11 @@ abstract class sfFormDoctrine extends sfFormObject
    *     $userForm = new UserForm($user);
    *     $userForm->embedRelation('Groups AS groups');
    *
-   * @param string $relationName   The name of the relation and an optional alias
-   * @param string $formClass      The name of the form class to use
-   * @param array  $formArgs       Arguments to pass to the constructor (related object will be shifted onto the front)
-   * @param string $innerDecorator A HTML decorator for each embedded form
-   * @param string $decorator      A HTML decorator for the main embedded form
+   * @param  string $relationName  The name of the relation and an optional alias
+   * @param  string $formClass     The name of the form class to use
+   * @param  array  $formArguments Arguments to pass to the constructor (related object will be shifted onto the front)
+   * @param string  $innerDecorator A HTML decorator for each embedded form
+   * @param string  $decorator      A HTML decorator for the main embedded form
    *
    * @throws InvalidArgumentException If the relationship is not a collection
    */
@@ -164,10 +161,6 @@ abstract class sfFormDoctrine extends sfFormObject
    * from the array of cleaned up values.
    *
    * @see sfFormObject
-   *
-   * @param array $values
-   *
-   * @return array
    */
   public function processValues($values)
   {
@@ -194,7 +187,7 @@ abstract class sfFormDoctrine extends sfFormObject
         if ($this->validatorSchema[$field] instanceof sfValidatorFile)
         {
           $values[$field] = $this->processUploadedFile($field, null, $valuesToProcess);
-        }
+        }          
       }
     }
 
@@ -235,7 +228,6 @@ abstract class sfFormDoctrine extends sfFormObject
    * Returns the primary key name of the i18n model.
    *
    * @return string The primary key name of the i18n model
-   * @throws sfException
    */
   public function getI18nModelPrimaryKeyName()
   {
@@ -349,20 +341,7 @@ abstract class sfFormDoctrine extends sfFormObject
     }
 
     $directory = $this->validatorSchema[$field]->getOption('path');
-    $filename = $this->getObject()->$field;
-
-    // this is needed if the form is embedded, in which case
-    // the parent form has already changed the value of the field
-    if (!is_string($filename))
-    {
-      $oldValues = $this->getObject()->getModified(true, false);
-      if (isset($oldValues[$field]))
-      {
-        $filename = $oldValues[$field];
-      }
-    }
-
-    if ($directory && $filename && is_file($file = $directory.'/'.$filename))
+    if ($directory && is_file($file = $directory.'/'.$this->getObject()->$field))
     {
       unlink($file);
     }
@@ -403,6 +382,11 @@ abstract class sfFormDoctrine extends sfFormObject
     {
       return $file->save($this->getObject()->$method($file));
     }
+    else if (method_exists($this->getObject(), $method = sprintf('generate%sFilename', $field)))
+    {
+      // this non-camelized method name has been deprecated
+      return $file->save($this->getObject()->$method($file));
+    }
     else
     {
       return $file->save();
@@ -418,11 +402,11 @@ abstract class sfFormDoctrine extends sfFormObject
 
   /**
    * Returns the name of the related model.
-   *
+   * 
    * @param string $alias A relation alias
-   *
+   * 
    * @return string
-   *
+   * 
    * @throws InvalidArgumentException If no relation with the supplied alias exists on the current model
    */
   protected function getRelatedModelName($alias)

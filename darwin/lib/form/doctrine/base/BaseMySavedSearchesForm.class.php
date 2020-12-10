@@ -8,60 +8,47 @@
  * @package    darwin
  * @subpackage form
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
  */
-abstract class BaseMySavedSearchesForm extends DarwinModelForm
+abstract class BaseMySavedSearchesForm extends BaseFormDoctrine
 {
-  protected function setupInheritance()
+  public function setup()
   {
-    parent::setupInheritance();
+    $this->setWidgets(array(
+      'id'                       => new sfWidgetFormInputHidden(),
+      'user_ref'                 => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('User'), 'add_empty' => false)),
+      'name'                     => new sfWidgetFormTextarea(),
+      'search_criterias'         => new sfWidgetFormTextarea(),
+      'favorite'                 => new sfWidgetFormInputCheckbox(),
+      'is_only_id'               => new sfWidgetFormInputCheckbox(),
+      'modification_date_time'   => new sfWidgetFormTextarea(),
+      'visible_fields_in_result' => new sfWidgetFormTextarea(),
+      'subject'                  => new sfWidgetFormTextarea(),
+      'query_where'              => new sfWidgetFormTextarea(),
+      'query_parameters'         => new sfWidgetFormTextarea(),
+    ));
 
-    $this->widgetSchema   ['user_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('User'), 'add_empty' => false));
-    $this->validatorSchema['user_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('User'), 'column' => 'id'));
-
-    $this->widgetSchema   ['name'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['name'] = new sfValidatorString();
-
-    $this->widgetSchema   ['search_criterias'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['search_criterias'] = new sfValidatorString();
-
-    $this->widgetSchema   ['favorite'] = new sfWidgetFormInputCheckbox();
-    $this->validatorSchema['favorite'] = new sfValidatorBoolean(array('required' => false));
-
-    $this->widgetSchema   ['is_only_id'] = new sfWidgetFormInputCheckbox();
-    $this->validatorSchema['is_only_id'] = new sfValidatorBoolean(array('required' => false));
-
-    $this->widgetSchema   ['modification_date_time'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['modification_date_time'] = new sfValidatorString();
-
-    $this->widgetSchema   ['visible_fields_in_result'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['visible_fields_in_result'] = new sfValidatorString();
-
-    $this->widgetSchema   ['subject'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['subject'] = new sfValidatorString();
-
-    $this->widgetSchema   ['query_where'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['query_where'] = new sfValidatorString();
-
-    $this->widgetSchema   ['query_parameters'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['query_parameters'] = new sfValidatorString();
-
-    $this->widgetSchema   ['current_page'] = new sfWidgetFormInputText();
-    $this->validatorSchema['current_page'] = new sfValidatorInteger(array('required' => false));
-
-    $this->widgetSchema   ['page_size'] = new sfWidgetFormInputText();
-    $this->validatorSchema['page_size'] = new sfValidatorInteger(array('required' => false));
-
-    $this->widgetSchema   ['nb_records'] = new sfWidgetFormInputText();
-    $this->validatorSchema['nb_records'] = new sfValidatorInteger(array('required' => false));
-
-    $this->widgetSchema   ['download_lock'] = new sfWidgetFormInputCheckbox();
-    $this->validatorSchema['download_lock'] = new sfValidatorBoolean(array('required' => false));
-
-    $this->widgetSchema   ['user_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('User'), 'add_empty' => false));
-    $this->validatorSchema['user_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('User'), 'column' => 'id'));
+    $this->setValidators(array(
+      'id'                       => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
+      'user_ref'                 => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('User'))),
+      'name'                     => new sfValidatorString(),
+      'search_criterias'         => new sfValidatorString(),
+      'favorite'                 => new sfValidatorBoolean(array('required' => false)),
+      'is_only_id'               => new sfValidatorBoolean(array('required' => false)),
+      'modification_date_time'   => new sfValidatorString(),
+      'visible_fields_in_result' => new sfValidatorString(),
+      'subject'                  => new sfValidatorString(),
+      'query_where'              => new sfValidatorString(),
+      'query_parameters'         => new sfValidatorString(),
+    ));
 
     $this->widgetSchema->setNameFormat('my_saved_searches[%s]');
+
+    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
+
+    $this->setupInheritance();
+
+    parent::setup();
   }
 
   public function getModelName()

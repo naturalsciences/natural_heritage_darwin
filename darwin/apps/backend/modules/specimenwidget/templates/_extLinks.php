@@ -1,8 +1,7 @@
 <table class="property_values extlinks"  id="spec_ident_extlink">
     <thead style="<?php echo ($form['ExtLinks']->count() || $form['newExtLinks']->count())?'':'display: none;';?>" class="spec_ident_extlinks_head">
     <tr>   
-      <th><?php echo __('Url');?></th>
-      <th><?php echo __('Comment');?></th>
+        <th colspan="3"></th>
       <th><?php echo $form['ExtLinks_holder'];?></th>
     </tr>
   </thead>
@@ -55,31 +54,5 @@ $(document).ready(function () {
         $(this).closest('table.extlinks').find('thead').show();
         return false;
     }); 
-    
-    onElementInserted("body",".clear_link",
-            function(e)
-            {
-               
-                $(e).click(function() {
-                      
-                      var idex=$(e).attr("id").replace("clear_extlinks_", "");
-                     
-                      parent_el = $(e).closest('tbody');
-                      parentTableId = $(parent_el).closest('table').attr('id');
-                      $(parent_el).find('input[id$=\"_'+idex+'\"]').val('');      
-                      $(parent_el).hide();	  
-                          visibles = $('table#'+parentTableId+' tbody.spec_ident_extlinks_data:visible').size();
-                          if(!visibles)
-                          {
-                            $(e).closest('table#'+parentTableId).find('thead').hide();
-                            
-                          }
-                      
-                })
-          
-                                
-            }
-        );
-    
 });
 </script>

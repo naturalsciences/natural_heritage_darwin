@@ -1,7 +1,7 @@
 <?php if($form['user_ref']->getValue()!=""):?>
     <tr id="user_<?php echo $row_num; ?>">
       <td><?php if($form['user_ref']->getValue()) : ?>
-      <?php echo image_tag(Doctrine_Core::getTable('Users')->find($form['user_ref']->getValue())
+      <?php echo image_tag(Doctrine::getTable('Users')->find($form['user_ref']->getValue())
                                ->getCorrespondingImage()) ; ?>
           <?php endif ; ?>
       </td>

@@ -17,7 +17,7 @@
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfDoctrineRecord.class.php 29659 2010-05-28 16:49:48Z Kris.Wallsmith $
  */
 abstract class sfDoctrineRecord extends Doctrine_Record
 {
@@ -207,23 +207,17 @@ abstract class sfDoctrineRecord extends Doctrine_Record
   }
 
   /**
-   * Get the Doctrine date value as a PHP DateTime object, null if the value is not set
+   * Get the Doctrine date value as a PHP DateTime object
    *
    * @param string $dateFieldName   The field name to get the DateTime object for
-   *
-   * @return DateTime|null $dateTime     The instance of PHPs DateTime
-   * @throws sfException if the field is not one of date, datetime, or timestamp types
+   * @return DateTime $dateTime     The instance of PHPs DateTime
    */
   public function getDateTimeObject($dateFieldName)
   {
     $type = $this->getTable()->getTypeOf($dateFieldName);
     if ($type == 'date' || $type == 'timestamp' || $type == 'datetime')
     {
-      $datetime = $this->get($dateFieldName);
-      if ($datetime)
-      {
-        return new DateTime($datetime);
-      }
+      return new DateTime($this->get($dateFieldName));
     }
     else
     {
@@ -236,19 +230,13 @@ abstract class sfDoctrineRecord extends Doctrine_Record
    *
    * @param string $dateFieldName       The field name to set the date for
    * @param DateTime $dateTimeObject    The DateTime instance to use to set the value
-   *
-   * @return sfDoctrineRecord
-   * @throws sfException if the field is not one of date, datetime, or timestamp types
+   * @return void
    */
-  public function setDateTimeObject($dateFieldName, DateTime $dateTimeObject = null)
+  public function setDateTimeObject($dateFieldName, DateTime $dateTimeObject)
   {
     $type = $this->getTable()->getTypeOf($dateFieldName);
     if ($type == 'date' || $type == 'timestamp' || $type == 'datetime')
     {
-      if (null === $dateTimeObject)
-      {
-        return $this->set($dateFieldName, null);
-      }
       return $this->set($dateFieldName, $dateTimeObject->format('Y-m-d H:i:s'));
     }
     else

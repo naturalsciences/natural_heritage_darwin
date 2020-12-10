@@ -36,7 +36,6 @@
     </td>
    </tr>
 </tbody>
-
 <script type="text/javascript">
   $(document).ready(function () {
     $("#clear_accompanying_unit_<?php echo $rownum;?>").click( function()
@@ -51,15 +50,19 @@
         $(this).closest('table.property_values').find('thead').hide();
       }
     });
+
     $('#specimens_accompanying_<?php echo $rownum;?> .unit_type select').change(function()
     {
       type = $(this).val();
       top_row = $('#specimens_accompanying_<?php echo $rownum;?>');
       top_row.find('.unit_choose > div').hide();
       top_row.find('.unit_' + type).show();
+
       top_row.find('.extd_info').hide();
       top_row.find('.extd_info_'+ type).show();
+
     });
+
      $('#specimens_accompanying_<?php echo $rownum;?> .unit_type select').change();
   });
 </script>

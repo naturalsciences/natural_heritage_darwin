@@ -4,11 +4,7 @@
 <div class="page">
   <h1 class="edit_mode"><?php echo __('Edit People');?></h1>
   <?php include_partial('form', array('form' => $form)) ?>
-	<?php include_partial('widgets/float_button', array('form' => $form,
-																											'module' => 'people',
-																											'search_module'=>'people/index',
-																											'save_button_id' => 'submit')
-	); ?>
+
   <?php include_partial('widgets/screen', array(
 	'widgets' => $widgets,
 	'category' => 'peoplewidget',

@@ -15,7 +15,7 @@
  * @package    symfony
  * @subpackage addon
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfData.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
 abstract class sfData
 {
@@ -53,7 +53,7 @@ abstract class sfData
   protected function doLoadDataFromFile($file)
   {
     // import new datas
-    $data = sfYaml::load($file, sfConfig::get('sf_charset', 'UTF-8'));
+    $data = sfYaml::load($file);
 
     $this->loadDataFromArray($data);
   }

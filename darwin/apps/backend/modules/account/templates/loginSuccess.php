@@ -1,4 +1,18 @@
 <h1 id="login"><?php echo __("This application requires an authentification.");?></h1>
+<style>
+
+.ul_logo
+{
+    margin-top:5%;
+    vertical-align: bottom;
+    text-align: center;
+}
+.ul_logo li
+{
+    display:inline-block;
+    margin-right:30px;
+}
+</style>
 <div class="login">
     <?php echo form_tag('account/login');?>
       <table>
@@ -41,4 +55,12 @@
         </tr>
       </tbody>
     </table>
+</div>
+<div class="div_logo">
+ <ul class="ul_logo">
+    <li><img src="./images/rmca.svg"></img></li>
+    <li><img src="./images/rbins.png"></img></li>
+    <li><img src="./images/belspo.jpg"></img></li>
+    <li><img src="./images/CBD_logo_EN_CMYK.png"></img></li>
+ </ul>
 </div>

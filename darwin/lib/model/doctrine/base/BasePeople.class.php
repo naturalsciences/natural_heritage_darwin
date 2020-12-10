@@ -23,7 +23,6 @@
  * @property integer $activity_date_from_mask
  * @property string $activity_date_to
  * @property integer $activity_date_to_mask
- * @property IdentifiersPeople $IdentifiersPeople
  * @property Doctrine_Collection $CataloguePeople
  * @property Doctrine_Collection $Users
  * @property Doctrine_Collection $PeopleLanguages
@@ -32,9 +31,9 @@
  * @property Doctrine_Collection $PeopleAddresses
  * @property Doctrine_Collection $Collections
  * @property Doctrine_Collection $CollectionMaintenance
+ * @property Doctrine_Collection $StorageParts
  * @property Doctrine_Collection $Insurances
  * @property Doctrine_Collection $StagingPeople
- * @property Doctrine_Collection $PeopleSubTypes
  * 
  * @method integer             getId()                      Returns the current record's "id" value
  * @method boolean             getIsPhysical()              Returns the current record's "is_physical" value
@@ -54,7 +53,6 @@
  * @method integer             getActivityDateFromMask()    Returns the current record's "activity_date_from_mask" value
  * @method string              getActivityDateTo()          Returns the current record's "activity_date_to" value
  * @method integer             getActivityDateToMask()      Returns the current record's "activity_date_to_mask" value
- * @method IdentifiersPeople   getIdentifiersPeople()       Returns the current record's "IdentifiersPeople" value
  * @method Doctrine_Collection getCataloguePeople()         Returns the current record's "CataloguePeople" collection
  * @method Doctrine_Collection getUsers()                   Returns the current record's "Users" collection
  * @method Doctrine_Collection getPeopleLanguages()         Returns the current record's "PeopleLanguages" collection
@@ -63,9 +61,9 @@
  * @method Doctrine_Collection getPeopleAddresses()         Returns the current record's "PeopleAddresses" collection
  * @method Doctrine_Collection getCollections()             Returns the current record's "Collections" collection
  * @method Doctrine_Collection getCollectionMaintenance()   Returns the current record's "CollectionMaintenance" collection
+ * @method Doctrine_Collection getStorageParts()            Returns the current record's "StorageParts" collection
  * @method Doctrine_Collection getInsurances()              Returns the current record's "Insurances" collection
  * @method Doctrine_Collection getStagingPeople()           Returns the current record's "StagingPeople" collection
- * @method Doctrine_Collection getPeopleSubTypes()          Returns the current record's "PeopleSubTypes" collection
  * @method People              setId()                      Sets the current record's "id" value
  * @method People              setIsPhysical()              Sets the current record's "is_physical" value
  * @method People              setSubType()                 Sets the current record's "sub_type" value
@@ -84,7 +82,6 @@
  * @method People              setActivityDateFromMask()    Sets the current record's "activity_date_from_mask" value
  * @method People              setActivityDateTo()          Sets the current record's "activity_date_to" value
  * @method People              setActivityDateToMask()      Sets the current record's "activity_date_to_mask" value
- * @method People              setIdentifiersPeople()       Sets the current record's "IdentifiersPeople" value
  * @method People              setCataloguePeople()         Sets the current record's "CataloguePeople" collection
  * @method People              setUsers()                   Sets the current record's "Users" collection
  * @method People              setPeopleLanguages()         Sets the current record's "PeopleLanguages" collection
@@ -93,9 +90,9 @@
  * @method People              setPeopleAddresses()         Sets the current record's "PeopleAddresses" collection
  * @method People              setCollections()             Sets the current record's "Collections" collection
  * @method People              setCollectionMaintenance()   Sets the current record's "CollectionMaintenance" collection
+ * @method People              setStorageParts()            Sets the current record's "StorageParts" collection
  * @method People              setInsurances()              Sets the current record's "Insurances" collection
  * @method People              setStagingPeople()           Sets the current record's "StagingPeople" collection
- * @method People              setPeopleSubTypes()          Sets the current record's "PeopleSubTypes" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -191,10 +188,6 @@ abstract class BasePeople extends DarwinModel
     public function setUp()
     {
         parent::setUp();
-        $this->hasOne('IdentifiersPeople', array(
-             'local' => 'id',
-             'foreign' => 'record_id'));
-
         $this->hasMany('CataloguePeople', array(
              'local' => 'id',
              'foreign' => 'people_ref'));
@@ -227,15 +220,15 @@ abstract class BasePeople extends DarwinModel
              'local' => 'id',
              'foreign' => 'people_ref'));
 
+        $this->hasMany('StorageParts', array(
+             'local' => 'id',
+             'foreign' => 'institution_ref'));
+
         $this->hasMany('Insurances', array(
              'local' => 'id',
              'foreign' => 'insurer_ref'));
 
         $this->hasMany('StagingPeople', array(
-             'local' => 'id',
-             'foreign' => 'people_ref'));
-
-        $this->hasMany('PeopleSubTypes', array(
              'local' => 'id',
              'foreign' => 'people_ref'));
     }

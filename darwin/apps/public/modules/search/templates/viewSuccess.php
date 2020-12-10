@@ -1,18 +1,13 @@
 <?php slot('title', __('View Specimens') .  ( $specimen->getTaxonRef()  ? " : ".$specimen->getTaxonName() : ""));  ?>
 
 <div class="page viewer">
-  <?php
-	$ig=$specimen->getIgNum(); $spec_num=$specimen->getMainCode();
-  ?>
-  <?php if(strlen($specimen->getIgNum()??'')>0||strlen($specimen->getIgNum()??'')>0):?>
-	<h1><?php echo __("I.G. Number : ");?><?php echo (strlen($specimen->getIgNum()??'')>0 ?  $specimen->getIgNum():'No I.G. Num' );?><br/><?php echo __("Number in Collection : ");?><?php echo (strlen($specimen->getIgNum()??'')>0 ?  $specimen->getMainCode():'No main code' );?> </h1>
-  <?php endif;?>
-  <h2 class="title"><?php echo __("Collection") ?></h2>
+  <h1><?php echo __("Specimen Record");?><?php echo (": p".$specimen->getId());?></h1>
+    <h2 class="title"><?php echo __("Collection") ?></h2>
     <div class="borded right_padded">
       <table>
         <tbody>
           <tr>
-            <td class="line">			
+            <td class="line">
                 <span class="pager_nav"><?php echo __("Name") ; ?>: </span><span><?php echo $specimen->getCollectionName() ; ?></span>
                 <?php echo image_tag('info.png',"title=info class=info id=collection_info");?>
               <div id="collection_tree" class="tree"></div>
@@ -257,7 +252,7 @@
     <div class="borded right_padded">
       <table class="caract_table">
         <tr>
-          <td><span class="pager_nav"><?php echo __("Individual Count") ; ?> :</span></td>
+          <td><span class="pager_nav"><?php echo __("Number of items") ; ?> :</span></td>
           <td><span>
             <?php if($specimen->getSpecimenCountMin() == $specimen->getSpecimenCountMax())
                 echo ($specimen->getSpecimenCountMin()==""?"-":$specimen->getSpecimenCountMin()) ;
@@ -312,12 +307,6 @@
               <span>-</span>
             <?php endif ; ?>
           </td>
-        <tr>
-            <td><span class="pager_nav"><?php echo __("UUID") ; ?> :</span></td>
-            <td>
-            <span><?php echo (count($specimen->getSpecimensStableIds())>0?($specimen->getSpecimensStableIds()->getUuid()):"") ; ?></span>
-          </td>
-        </tr>
         </tr>
             <?php if(count($properties)) : ?>
         <tr>
@@ -358,12 +347,12 @@
                 </tbody>
               </table>
           </td>
-        </tr>        
+        </tr>
+
         <?php endif ; ?>
         <?php if($specimen->getObjectName()!=""):?>
-        <tr><td colspan="2"><h3></h3></td></tr>
         <tr>
-          <td><span class="pager_nav"><?php echo __("Object name") ; ?> :</span></td>
+          <td><span class="pager_nav"><?php echo __("Name") ; ?> :</span></td>
           <td>
             <span><?php echo $specimen->getObjectName(); ?></span>
           </td>
@@ -382,29 +371,14 @@
 
     </div>
 
-    <?php if(isset($comments) && count($comments)) : ?>
-    <h2 class="title"><?php echo __("Associated comment") ?></h2>
-    <div class="borded right_padded">
-      <table class="caract_table">
-        <?php foreach ($comments as $comment) : ?>
-        <tr>
-          <td><span class="pager_nav"><?php echo $comment->getNotionText() ; ?> :</span></td>
-          <td><?php echo $comment->getComment(); ?></td>
-        </tr>
-      <?php endforeach ; ?>
-      </table>
-    </div>
-    <?php endif ; ?>
-
     <h2 class="title"><?php echo __("You think there's a mistake ? please suggest us a correction") ?></h2>
     <div class="suggestion_zone">
       <?php include_partial('suggestion', array('form' => $form,'id'=> $specimen->getId())) ; ?>
     </div>
-  <?php if(!$full) : ?>
-  <div class="check_right">    
+
+  <div class="check_right">
     <input type="button" id="close_butt" value="<?php echo __('Close this record'); ?>">
   </div>
-  <?php endif ; ?>  
   <script type="text/javascript">
     $(document).ready(function() {
       $('#close_butt').click(function(){

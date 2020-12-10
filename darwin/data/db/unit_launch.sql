@@ -1,4 +1,4 @@
-\set ECHO none
+\set ECHO
 \set QUIET 1
 -- Turn off echo and keep things quiet.
 

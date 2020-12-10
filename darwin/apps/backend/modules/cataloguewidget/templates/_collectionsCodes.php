@@ -6,13 +6,11 @@
       <th class="centered"><?php echo __('Code suffix sep.');?></th>
       <th><?php echo __('Code suffix');?></th>
       <th class="centered"><?php echo __('Auto incremented ?');?></th>
-      <th class="centered"><?php echo __('...for new spec. only ?');?></th>
-            <!--ftheeten 2018 04 26-->
+      <!--ftheeten 2018 04 26-->
       <th class="centered"><?php echo __('Last value');?></th>
       <!--ftheeten 2018 04 26-->
       <th class="centered"><?php echo __('Inherits autoincrement from parent');?></th>
       <th class="centered"><?php echo __('Duplicate specimen codes');?></th>
-      <th class="centered"><?php echo __('Code mask');?></th>
       <th></th>
       <th></th>
     </tr>
@@ -34,21 +32,9 @@
       <td class="centered">
         <?php echo ($collCodes->getCodeAutoIncrement())?image_tag('checkbox_checked_green.png'):image_tag('checkbox_unchecked_green.png'); ?>
       </td>
-      <td class="centered">
-        <?php echo ($collCodes->getCodeAutoIncrementForInsertOnly())?image_tag('checkbox_checked_green.png'):image_tag('checkbox_unchecked_green.png'); ?>
-      </td>
        <!--ftheeten 2018 04 26-->
       <td class="centered">
-        <?php 
-			if($collCodes->getCodeAutoIncrement()&&$collCodes->getCodeAiInherit())
-			{
-				echo($collCodes->getAutoIncrementFromParent()." (parent value) <br/>".$collCodes->getCodeLastValue(). " (in collection)");
-			}
-			else
-			{
-				echo $collCodes->getCodeLastValue();
-			}
-		?>
+        <?php echo $collCodes->getCodeLastValue();?>
       </td>
        <!--ftheeten 2018 04 26-->
       <td class="centered">
@@ -57,14 +43,11 @@
       <td class="centered">
         <?php echo ($collCodes->getCodeSpecimenDuplicate())?image_tag('checkbox_checked_green.png'):image_tag('checkbox_unchecked_green.png'); ?>
       </td>
-      <td class="centered">
-        <?php echo $collCodes->getCodeMask();?>
-      </td>
-      <td class="widget_row_delete">
+      <td class="widget_row_delete">    
         <a class="link_catalogue" title="<?php echo __('Edit default specimen codes prefix and suffix');?>" href="<?php echo url_for('collection/addSpecCodes?id='.$eid); ?>">
           <?php echo image_tag('edit.png'); ?>
         </a>
-      </td>
+      </td>     
       <td class="widget_row_delete">
         <a class="widget_row_delete" href="<?php echo url_for('collection/deleteSpecCodes?id='.$eid);?>" title="<?php echo __('Are you sure ?') ?>"><?php echo image_tag('remove.png'); ?>
         </a>

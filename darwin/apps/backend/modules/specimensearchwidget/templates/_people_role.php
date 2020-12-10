@@ -16,24 +16,7 @@
     </tr>
   </tbody>
 </table>
-<table>
-<tr>
-<th>
-<?php echo __("Identifier") ?>
-</th>
-<th>
-<?php echo __("role") ?>
-</th>
-</tr>
-<tr>
-<td>
-<?php echo $form['people_protocol'] ; ?>&nbsp;<?php echo $form['people_identifier'] ; ?>
-</td>
-<td>
-<?php echo $form['people_identifier_role'] ; ?>
-</td>
-</tr>
-</table>
+
 <script type="text/javascript">
 
   

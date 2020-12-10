@@ -17,7 +17,7 @@ class maintenancesActions extends DarwinActions
     if($this->getUser()->isAtLeast(Users::ADMIN)) return true ;
     if($request->hasParameter('id'))
     {
-      $this->forward404Unless($maintenance = Doctrine_Core::getTable('CollectionMaintenance')->find($request->getParameter('id'))) ;
+      $this->forward404Unless($maintenance = Doctrine::getTable('CollectionMaintenance')->find($request->getParameter('id'))) ;
       $table = $maintenance->getReferencedRelation() ;
       $record_id = $maintenance->getRecordId() ;
     }  
@@ -28,7 +28,7 @@ class maintenancesActions extends DarwinActions
     }
     if($table == 'loans')
     {
-      $right = Doctrine_Core::getTable('loanRights')->isAllowed($this->getUser()->getId(),$record_id) ;
+      $right = Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$record_id) ;
       if(!$right && !$this->getUser()->isAtLeast(Users::MANAGER))
         $this->forwardToSecureAction();
       if($right==="view") 
@@ -37,8 +37,8 @@ class maintenancesActions extends DarwinActions
     }
     elseif($table == 'loan_items')
     {
-      $loanitem = Doctrine_Core::getTable('LoanItems')->find($record_id) ;
-      $right = Doctrine_Core::getTable('loanRights')->isAllowed($this->getUser()->getId(),$loanitem->getLoanRef()) ;
+      $loanitem = Doctrine::getTable('LoanItems')->find($record_id) ;
+      $right = Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$loanitem->getLoanRef()) ;
       if(!$right && !$this->getUser()->isAtLeast(Users::MANAGER))
         $this->forwardToSecureAction();
       if($right==="view")
@@ -49,29 +49,12 @@ class maintenancesActions extends DarwinActions
     else return 'view' ;
   }
   
-  protected function getMaintenancesForm(sfWebRequest $request, $fwd404=false, $parameter='id', $options=array())
+  protected function getMaintenancesForm(sfWebRequest $request, $fwd404=false, $parameter='id')
   {
     $maintenances = null;
     if($request->hasParameter($parameter))
-      $maintenances = Doctrine_Core::getTable('CollectionMaintenance')->find($request->getParameter($parameter) );
-
-    if (
-        in_array($request->getParameter('table'), array('loans','loan_items')) ||
-        in_array($maintenances->getReferencedRelation(), array('loans','loan_items'))
-    ) {
-      $i18n = $this->getContext()->getI18N();
-      $options = array('forced_action_observation_options'=>array(
-        'approval'=>$i18n->__('approval'),
-        'checked_by'=>$i18n->__('Checked by'),
-        'organized_by'=>$i18n->__('organized_by'),
-        'preparation'=>$i18n->__('preparation'),
-        'received_by'=>$i18n->__('Received by'),
-        'received_back_by'=>$i18n->__('Return received by'),
-        'checked_back_by'=>$i18n->__('Return checked by'),
-      ));
-    }
-
-    $form = new MaintenanceForm($maintenances, $options);
+      $maintenances = Doctrine::getTable('CollectionMaintenance')->find($request->getParameter($parameter) );      
+    $form = new MaintenanceForm($maintenances);
     return $form ;
   }    
 
@@ -80,16 +63,16 @@ class maintenancesActions extends DarwinActions
   {
     if($this->checkRight($request) !== true) $this->forwardTosecureAction();
     $this->forward404Unless($request->getParameter('record_id'));
-    $this->forward404Unless($request->getParameter('table'));
-    $this->form = $this->getMaintenancesForm($request, false,'');
-    $this->loadWidgets();
+    $this->forward404Unless($request->getParameter('table'));    
+    $this->form = new MaintenanceForm();
+    $this->loadWidgets();          
   } 
   
   public function executeCreate(sfWebRequest $request)
   {
     if($this->checkRight($request) !== true) $this->forwardTosecureAction();  
     if(!$request->isMethod('post')) $this->forwardTosecureAction();
-    $this->form = $this->getMaintenancesForm($request);
+    $this->form = new MaintenanceForm();
     $this->form->getObject()->setReferencedRelation($request->getParameter('table'));
     $this->form->getObject()->setRecordId($request->getParameter('record_id'));    
     $this->processForm($request, $this->form);
@@ -110,8 +93,8 @@ class maintenancesActions extends DarwinActions
   public function executeView(sfWebRequest $request)
   {
     if($this->checkRight($request) === false) $this->forwardTosecureAction();  
-    $this->forward404Unless($this->maintenance = Doctrine_Core::getTable('CollectionMaintenance')->find($request->getParameter('id')));    
-    $this->loadWidgets();
+    $this->forward404Unless($this->maintenance = Doctrine::getTable('CollectionMaintenance')->find($request->getParameter('id')));    
+    $this->loadWidgets();    
   } 
     
   public function executeUpdate(sfWebRequest $request)
@@ -174,10 +157,10 @@ class maintenancesActions extends DarwinActions
 
   public function executeDelmaintenance(sfWebRequest $request)
   {
-    $maint = Doctrine_Core::getTable('CollectionMaintenance')->find($request->getParameter('id'));
+    $maint = Doctrine::getTable('CollectionMaintenance')->find($request->getParameter('id'));
     $this->forward404Unless($maint);
     if($maint->getReferencedRelation() == 'loan_items') {
-      $loan_item = Doctrine_Core::getTable('LoanItems')->find($maint->getRecordId());
+      $loan_item = Doctrine::getTable('LoanItems')->find($maint->getRecordId());
       $loan_ref = $loan_item->getLoanRef();
     }
     if($maint->getReferencedRelation() == 'loans') {
@@ -185,8 +168,7 @@ class maintenancesActions extends DarwinActions
     }
     $this->forward404Unless(isset($loan_ref));
 
-    $rights = $this->getUser()->isAtLeast(Users::ADMIN) || Doctrine_Core::getTable('loanRights')->isAllowed($this->getUser()->getId(), $loan_ref );
-
+    $rights = $this->getUser()->isAtLeast(Users::ADMIN) && Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(), $loan_ref );
     if(! $rights === true)
       $this->forwardToSecureAction();
 

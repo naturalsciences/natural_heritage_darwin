@@ -8,75 +8,59 @@
  * @package    darwin
  * @subpackage form
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
  */
-abstract class BaseMultimediaForm extends DarwinModelForm
+abstract class BaseMultimediaForm extends BaseFormDoctrine
 {
-  protected function setupInheritance()
+  public function setup()
   {
-    parent::setupInheritance();
+    $this->setWidgets(array(
+      'id'                  => new sfWidgetFormInputHidden(),
+      'referenced_relation' => new sfWidgetFormTextarea(),
+      'record_id'           => new sfWidgetFormInputText(),
+      'is_digital'          => new sfWidgetFormInputCheckbox(),
+      'type'                => new sfWidgetFormTextarea(),
+      'sub_type'            => new sfWidgetFormTextarea(),
+      'title'               => new sfWidgetFormTextarea(),
+      'description'         => new sfWidgetFormTextarea(),
+      'uri'                 => new sfWidgetFormTextarea(),
+      'filename'            => new sfWidgetFormInputText(),
+      'search_indexed'      => new sfWidgetFormTextarea(),
+      'creation_date'       => new sfWidgetFormTextarea(),
+      'creation_date_mask'  => new sfWidgetFormInputText(),
+      'mime_type'           => new sfWidgetFormTextarea(),
+      'visible'             => new sfWidgetFormInputCheckbox(),
+      'publishable'         => new sfWidgetFormInputCheckbox(),
+      'extracted_info'      => new sfWidgetFormTextarea(),
+    ));
 
-    $this->widgetSchema   ['referenced_relation'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['referenced_relation'] = new sfValidatorString();
-
-    $this->widgetSchema   ['record_id'] = new sfWidgetFormInputText();
-    $this->validatorSchema['record_id'] = new sfValidatorInteger(array('required' => false));
-
-    $this->widgetSchema   ['is_digital'] = new sfWidgetFormInputCheckbox();
-    $this->validatorSchema['is_digital'] = new sfValidatorBoolean(array('required' => false));
-
-    $this->widgetSchema   ['type'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['type'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['sub_type'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['sub_type'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['title'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['title'] = new sfValidatorString();
-
-    $this->widgetSchema   ['description'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['description'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['uri'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['uri'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['filename'] = new sfWidgetFormInputText();
-    $this->validatorSchema['filename'] = new sfValidatorPass(array('required' => false));
-
-    $this->widgetSchema   ['search_indexed'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['search_indexed'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['creation_date'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['creation_date'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['creation_date_mask'] = new sfWidgetFormInputText();
-    $this->validatorSchema['creation_date_mask'] = new sfValidatorInteger(array('required' => false));
-
-    $this->widgetSchema   ['mime_type'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['mime_type'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['visible'] = new sfWidgetFormInputCheckbox();
-    $this->validatorSchema['visible'] = new sfValidatorBoolean(array('required' => false));
-
-    $this->widgetSchema   ['publishable'] = new sfWidgetFormInputCheckbox();
-    $this->validatorSchema['publishable'] = new sfValidatorBoolean(array('required' => false));
-
-    $this->widgetSchema   ['extracted_info'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['extracted_info'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['technical_parameters'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['technical_parameters'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['external_uri'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['external_uri'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['internet_protocol'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['internet_protocol'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['field_observations'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['field_observations'] = new sfValidatorString(array('required' => false));
+    $this->setValidators(array(
+      'id'                  => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
+      'referenced_relation' => new sfValidatorString(),
+      'record_id'           => new sfValidatorInteger(array('required' => false)),
+      'is_digital'          => new sfValidatorBoolean(array('required' => false)),
+      'type'                => new sfValidatorString(array('required' => false)),
+      'sub_type'            => new sfValidatorString(array('required' => false)),
+      'title'               => new sfValidatorString(),
+      'description'         => new sfValidatorString(array('required' => false)),
+      'uri'                 => new sfValidatorString(array('required' => false)),
+      'filename'            => new sfValidatorPass(array('required' => false)),
+      'search_indexed'      => new sfValidatorString(array('required' => false)),
+      'creation_date'       => new sfValidatorString(array('required' => false)),
+      'creation_date_mask'  => new sfValidatorInteger(array('required' => false)),
+      'mime_type'           => new sfValidatorString(array('required' => false)),
+      'visible'             => new sfValidatorBoolean(array('required' => false)),
+      'publishable'         => new sfValidatorBoolean(array('required' => false)),
+      'extracted_info'      => new sfValidatorString(array('required' => false)),
+    ));
 
     $this->widgetSchema->setNameFormat('multimedia[%s]');
+
+    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
+
+    $this->setupInheritance();
+
+    parent::setup();
   }
 
   public function getModelName()

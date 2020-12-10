@@ -2,3 +2,6 @@ newSuccess:
   javascripts: [collections.js]
 editSuccess:
   javascripts: [collections.js]
+statisticsSuccess:
+  javascripts: [collections.js]
+

@@ -9,7 +9,7 @@
  */
 
 $app = 'i18n';
-if (!include(__DIR__.'/../bootstrap/functional.php'))
+if (!include(dirname(__FILE__).'/../bootstrap/functional.php'))
 {
   return;
 }

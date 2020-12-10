@@ -16,7 +16,7 @@ require_once 'PEAR/Config.php';
  * @package    symfony
  * @subpackage plugin
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfPearConfig.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
 class sfPearConfig extends PEAR_Config
 {
@@ -24,6 +24,8 @@ class sfPearConfig extends PEAR_Config
   {
     $class = 'sfPearRest'.str_replace('.', '', $version);
 
-    return new $class($this, $options);
+    $remote = new $class($this, $options);
+
+    return $remote;
   }
 }

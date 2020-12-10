@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfFilesystem.class.php 31247 2010-10-26 12:26:15Z fabien $
  */
 class sfFilesystem
 {
@@ -46,8 +46,6 @@ class sfFilesystem
    * @param string $originFile  The original filename
    * @param string $targetFile  The target filename
    * @param array  $options     An array of options
-   *
-   * @return bool
    */
   public function copy($originFile, $targetFile, $options = array())
   {
@@ -67,17 +65,14 @@ class sfFilesystem
     {
       $statTarget = stat($targetFile);
       $stat_origin = stat($originFile);
-      $mostRecent = ($stat_origin['mtime'] > $statTarget['mtime']);
+      $mostRecent = ($stat_origin['mtime'] > $statTarget['mtime']) ? true : false;
     }
 
     if ($options['override'] || !file_exists($targetFile) || $mostRecent)
     {
       $this->logSection('file+', $targetFile);
-
-      return copy($originFile, $targetFile);
+      copy($originFile, $targetFile);
     }
-
-    return true;
   }
 
   /**
@@ -181,10 +176,6 @@ class sfFilesystem
    *
    * @param string $origin  The origin filename
    * @param string $target  The new filename
-   *
-   * @return bool
-   *
-   * @throws sfException
    */
   public function rename($origin, $target)
   {
@@ -195,8 +186,7 @@ class sfFilesystem
     }
 
     $this->logSection('rename', $origin.' > '.$target);
-
-    return rename($origin, $target);
+    rename($origin, $target);
   }
 
   /**
@@ -259,8 +249,6 @@ class sfFilesystem
    * @param string   $targetDir  The target directory
    * @param sfFinder $finder     An sfFinder instance
    * @param array    $options    An array of options (see copy())
-   *
-   * @throws sfException
    */
   public function mirror($originDir, $targetDir, $finder, $options = array())
   {
@@ -414,7 +402,7 @@ class sfFilesystem
    * @param string $to   The target directory
    *
    * @return string
-   */
+   */ 
   protected function calculateRelativeDir($from, $to)
   {
     $from = $this->canonicalizePath($from);
@@ -461,7 +449,7 @@ class sfFilesystem
   }
 
   /**
-   * @param string $path A filesystem path
+   * @param string A filesystem path
    *
    * @return string
    */

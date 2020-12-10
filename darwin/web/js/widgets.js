@@ -205,5 +205,57 @@
       (new $.widgets_screen(this, options));
     });
   };
+  
+  //ftheeten 2016 11 23
+  $.reverse_year_in_select=function(ctrlname)
+  {
+    var selected=$( ctrlname).val();
+    var $select = $(ctrlname);
+    var options = $select.find('option');
+
+    // turn the nodelist into an array and reverse it
+    options = [].slice.call(options);
+
+    
+    
+     if(options.length>=3)
+     {
+        
+        if($(options[2]).val()>$(options[1]).val())
+        {
+            if($(options[0]).text()=="yyyy")
+            {
+                options=options.splice(0,1).concat(options.reverse());
+            }
+            else
+            {
+                options=options.reverse();
+            }
+            // empty the select
+            $select.empty();
+
+            // add each option back
+            $.each(options, function (i, el) {
+              $select.append($(el));
+            });
+            
+            if($.trim(selected).length>0)
+            {
+                 
+                 $select.val(selected);
+            }
+            else
+            {
+                
+                $select.val($(ctrlname+" option:first").val());
+            }
+         }
+        
+          
+         
+     }
+
+
+  }
 
 })(jQuery);

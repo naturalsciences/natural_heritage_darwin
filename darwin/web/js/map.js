@@ -63,6 +63,9 @@ function setPointFromEvent( e ) {
 
   $('#gtu_latitude').val(pt.lat)
   $('#gtu_longitude').val(pt.lng)
+  
+    //ftheeten 2015 06 02
+  $(".convertDD2DMSGeneral").mouseleave();
 
   drawPoint(pt, $('#gtu_lat_long_accuracy').val());
   fetchElevation(pt);
@@ -126,6 +129,7 @@ function initSearchMap() {
   });
 
   $('#show_as_map').click(function(){
+
     if($(this).is(':checked')) {
       $('#map_search_form').show();
       map.invalidateSize();
@@ -189,6 +193,7 @@ function initSearchMap() {
   
     //ftheeten 2015 08 03
   //button rectangle
+  
    var drawnItems = new L.FeatureGroup();
         map.addLayer(drawnItems);
 

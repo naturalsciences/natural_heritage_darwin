@@ -19,43 +19,17 @@
       </td>
     </tr>
   </tfoot>
-  <?php if(strpos($_SERVER['REQUEST_URI'], '/edit/')):?>
-<?php if(count($spec_related_inverse)>0): ?>
-<tr><td>Inverse relationship<td></tr>
-<?php endif;  ?>
-<?php foreach($spec_related_inverse as $val):?>
-  <tr>
-    <td><?php echo $val->getRelationshipType() ; ?></td>
-<!--ftheeten 2018 02 13 : add getTaxonName and reorganize layout-->
-      <?php if($val->getUnitType()=="specimens") : ?>
-        <td>
-			<a target="_blank" href="<?php echo url_for('specimen/edit?id='.$val->getSpecimenRef()) ?>"><?php echo __('Specimen'); ?> : <?php echo $val->Specimen->getName(); ?></a>
-			</br>
-			<?php echo $val->Specimen->getTaxonName(); ?>
-		</td>
-		<!--ftheeten 2015 09 10-->
-		<td>
-				<?php echo ucfirst($val->Specimen->getSpecimenCreationDate())?'Date created: '.$val->Specimen->getSpecimenCreationDate():'';?>
-	    </td>
-		
-      <?php endif ; ?>
-    
-    <td>
-    </td>
-  </tr>
-  <?php endforeach;?>
-<?php endif;?>
 </table>
- <br/><br/>
-
-	
-<a  target="_blank" href="<?php print(url_for("specimensearch/search/is_choose/",true)."/1?specimen_search_filters[related_ref]=".$eid);?>">View all related specimens</a>
+<br/><br/>
+<a  target="_blank" href="<?php print(url_for("specimensearch/search/is_choose/",true)."/1?".http_build_query(array("specimen_search_filters[related_ref]"=>$eid)));?>">View all related specimens</a>
 <?php echo $form['SpecimensRelationships_holder'];?>
 <script  type="text/javascript">
 $(document).ready(function () {
+
     $('#add_relship').click(function()
     {
         hideForRefresh('#SpecimensRelationships');
+
         parent_el = $(this).closest('table.property_values');
         $.ajax(
         {
@@ -69,9 +43,7 @@ $(document).ready(function () {
           }
         });
         return false;
-    }
-	);
-
+    });
 
 });
 </script>

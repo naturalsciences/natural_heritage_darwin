@@ -6,33 +6,37 @@
  * @package    darwin
  * @subpackage filter
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
  */
-abstract class BaseSpecimensStableIdsFormFilter extends DarwinModelFormFilter
+abstract class BaseSpecimensStableIdsFormFilter extends BaseFormFilterDoctrine
 {
-  protected function setupInheritance()
+  public function setup()
   {
-    parent::setupInheritance();
+    $this->setWidgets(array(
+      'id'           => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'specimen_ref' => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'original_id'  => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'uuid'         => new sfWidgetFormFilterInput(),
+      'doi'          => new sfWidgetFormFilterInput(),
+      'specimen_fk'  => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Specimens'), 'add_empty' => true)),
+    ));
 
-    $this->widgetSchema   ['specimen_ref'] = new sfWidgetFormFilterInput(array('with_empty' => false));
-    $this->validatorSchema['specimen_ref'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
-
-    $this->widgetSchema   ['original_id'] = new sfWidgetFormFilterInput(array('with_empty' => false));
-    $this->validatorSchema['original_id'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
-
-    $this->widgetSchema   ['uuid'] = new sfWidgetFormFilterInput();
-    $this->validatorSchema['uuid'] = new sfValidatorPass(array('required' => false));
-
-    $this->widgetSchema   ['doi'] = new sfWidgetFormFilterInput();
-    $this->validatorSchema['doi'] = new sfValidatorPass(array('required' => false));
-
-    $this->widgetSchema   ['specimen_fk'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Specimens'), 'add_empty' => true));
-    $this->validatorSchema['specimen_fk'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Specimens'), 'column' => 'id'));
-
-    $this->widgetSchema   ['specimen_fk'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Specimens'), 'add_empty' => true));
-    $this->validatorSchema['specimen_fk'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Specimens'), 'column' => 'id'));
+    $this->setValidators(array(
+      'id'           => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
+      'specimen_ref' => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
+      'original_id'  => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
+      'uuid'         => new sfValidatorPass(array('required' => false)),
+      'doi'          => new sfValidatorPass(array('required' => false)),
+      'specimen_fk'  => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Specimens'), 'column' => 'id')),
+    ));
 
     $this->widgetSchema->setNameFormat('specimens_stable_ids_filters[%s]');
+
+    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
+
+    $this->setupInheritance();
+
+    parent::setup();
   }
 
   public function getModelName()
@@ -42,13 +46,13 @@ abstract class BaseSpecimensStableIdsFormFilter extends DarwinModelFormFilter
 
   public function getFields()
   {
-    return array_merge(parent::getFields(), array(
+    return array(
+      'id'           => 'Number',
       'specimen_ref' => 'Number',
-      'original_id' => 'Number',
-      'uuid' => 'Text',
-      'doi' => 'Text',
-      'specimen_fk' => 'ForeignKey',
-      'specimen_fk' => 'ForeignKey',
-    ));
+      'original_id'  => 'Number',
+      'uuid'         => 'Text',
+      'doi'          => 'Text',
+      'specimen_fk'  => 'ForeignKey',
+    );
   }
 }

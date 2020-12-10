@@ -15,35 +15,25 @@ class peoplewidgetViewComponents extends sfComponents
 
   public function executeAddress()
   {
-    $this->addresses =  Doctrine_Core::getTable('PeopleAddresses')->fetchByPeople($this->eid);
+    $this->addresses =  Doctrine::getTable('PeopleAddresses')->fetchByPeople($this->eid);
   }
   
   public function executeComm()
   {
-    $this->comms =  Doctrine_Core::getTable('PeopleComm')->fetchByPeople($this->eid);
+    $this->comms =  Doctrine::getTable('PeopleComm')->fetchByPeople($this->eid);
   }
   
   public function executeLang()
   {
-    $this->langs =  Doctrine_Core::getTable('PeopleLanguages')->fetchByPeople($this->eid);
+    $this->langs =  Doctrine::getTable('PeopleLanguages')->fetchByPeople($this->eid);
   }
   
   public function executeRelation()
   {
-    $this->relations  = Doctrine_Core::getTable('PeopleRelationships')->findAllRelated($this->eid);
+    $this->relations  = Doctrine::getTable('PeopleRelationships')->findAllRelated($this->eid);
   }
   public function executeInformativeWorkflow()
   {
-    $this->informativeWorkflow = Doctrine_Core::getTable('InformativeWorkflow')->findForTable($this->table, $this->eid);
-  } 
-
-  public function executeIdentifiers()
-  {
-	  
-  }
-  
-  public function executePeopleSubTypes()
-  {
-	  
+    $this->informativeWorkflow = Doctrine::getTable('InformativeWorkflow')->findForTable($this->table, $this->eid);
   }  
 }

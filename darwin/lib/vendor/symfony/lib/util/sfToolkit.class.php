@@ -16,7 +16,7 @@
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfToolkit.class.php 29525 2010-05-19 13:01:43Z fabien $
  */
 class sfToolkit
 {
@@ -126,7 +126,7 @@ class sfToolkit
   /**
    * Determine if a filesystem path is absolute.
    *
-   * @param  string $path  A filesystem path.
+   * @param  path $path  A filesystem path.
    *
    * @return bool true, if the path is absolute, otherwise false.
    */
@@ -274,7 +274,7 @@ class sfToolkit
   public static function stringToArray($string)
   {
     preg_match_all('/
-      \s*((?:\w+-)*\w+)     # key                               \\1
+      \s*(\w+)              # key                               \\1
       \s*=\s*               # =
       (\'|")?               # values may be included in \' or " \\2
       (.*?)                 # value                             \\3
@@ -348,14 +348,7 @@ class sfToolkit
    */
   public static function replaceConstants($value)
   {
-    if (!is_string($value))
-    {
-      return $value;
-    }
-
-    return preg_replace_callback('/%(.+?)%/', function ($v) {
-      return sfConfig::has(strtolower($v[1])) ? sfConfig::get(strtolower($v[1])) : '%'.$v[1].'%';
-    }, $value);
+    return is_string($value) ? preg_replace_callback('/%(.+?)%/', create_function('$v', 'return sfConfig::has(strtolower($v[1])) ? sfConfig::get(strtolower($v[1])) : "%{$v[1]}%";'), $value) : $value;
   }
 
   /**
@@ -366,7 +359,23 @@ class sfToolkit
    */
   public static function pregtr($search, $replacePairs)
   {
-    return preg_replace(array_keys($replacePairs), array_values($replacePairs), $search);
+    //return preg_replace(array_keys($replacePairs), array_values($replacePairs), $search);
+		foreach($replacePairs as $pattern => $replacement)
+	  {
+		if (preg_match('/(.*)e$/', $pattern, $matches))
+		{
+		  $pattern = $matches[1];
+		  $search = preg_replace_callback($pattern, function ($matches) use ($replacement) {
+			preg_match("/('::'\.)?([a-z]*)\('\\\\([0-9]{1})'\)/", $replacement, $match);
+			return ($match[1]==''?'':'::').call_user_func($match[2], $matches[$match[3]]);
+		  }, $search);
+		}
+		else
+		{
+		  $search = preg_replace($pattern, $replacement, $search);
+		}
+	  }
+	  return $search;
   }
 
   /**
@@ -380,7 +389,7 @@ class sfToolkit
     static $isEmpty = true;
     foreach ($array as $value)
     {
-      $isEmpty = is_array($value) ? self::isArrayValuesEmpty($value) : '' === (string)$value;
+      $isEmpty = (is_array($value)) ? self::isArrayValuesEmpty($value) : (strlen($value) == 0);
       if (!$isEmpty)
       {
         break;
@@ -508,7 +517,7 @@ class sfToolkit
    */
   public static function getPhpCli()
   {
-    $path = getenv('PATH') ?: getenv('Path');
+    $path = getenv('PATH') ? getenv('PATH') : getenv('Path');
     $suffixes = DIRECTORY_SEPARATOR == '\\' ? (getenv('PATHEXT') ? explode(PATH_SEPARATOR, getenv('PATHEXT')) : array('.exe', '.bat', '.cmd', '.com')) : array('');
     foreach (array('php5', 'php') as $phpCli)
     {
@@ -613,6 +622,6 @@ class sfToolkit
         throw new InvalidArgumentException(sprintf('Unrecognized position: "%s"', $position));
     }
 
-    return set_include_path(implode(PATH_SEPARATOR, $paths));
+    return set_include_path(join(PATH_SEPARATOR, $paths));
   }
 }

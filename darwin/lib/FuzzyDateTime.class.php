@@ -447,7 +447,7 @@ class FuzzyDateTime extends DateTime
    */
   public function getDateMasked($tag='em', $format=null)
   {
-    if ($format === null )
+    if ($format==null)
     {
       $format = $this->dateFormat;
       if ($this->getWithTime())
@@ -515,6 +515,7 @@ class FuzzyDateTime extends DateTime
     $pattern = '/^(\d\d\d\d)(\-(0[1-9]|1[012])(\-((0[1-9])|1\d|2\d|3[01])(T(0\d|1\d|2[0-3])(:([0-5]\d)(:([0-5]\d))?))?)?)?|\-\-(0[1-9]|1[012])(\-(0[1-9]|1\d|2\d|3[01]))?|\-\-\-(0[1-9]|1\d|2\d|3[01])/';
 
     if(preg_match($pattern, $date, $matches)) {
+
       $date_part = array('year'=>$matches[1], 'month'=>'', 'day'=>'', 'hour'=>'', 'minute'=>'', 'second'=>'');
       if(isset($matches[3]))
         $date_part['month'] = $matches[3];

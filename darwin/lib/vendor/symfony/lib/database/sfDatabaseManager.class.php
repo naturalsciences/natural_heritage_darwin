@@ -18,21 +18,18 @@
  * @subpackage database
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfDatabaseManager.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
 class sfDatabaseManager
 {
-  /** @var sfProjectConfiguration */
-  protected $configuration = null;
-  protected $databases = array();
+  protected
+    $configuration = null,
+    $databases     = array();
 
   /**
    * Class constructor.
    *
    * @see initialize()
-   *
-   * @param sfProjectConfiguration $configuration
-   * @param array                  $options
    */
   public function __construct(sfProjectConfiguration $configuration, $options = array())
   {
@@ -49,7 +46,7 @@ class sfDatabaseManager
    *
    * @param sfProjectConfiguration $configuration A sfProjectConfiguration instance
    *
-   * @return void
+   * @return bool true, if initialization completes successfully, otherwise false
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfDatabaseManager object
    */

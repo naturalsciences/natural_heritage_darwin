@@ -6,7 +6,7 @@
  * @package    darwin
  * @subpackage filter
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfDoctrineFormFilterGeneratedInheritanceTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
  */
 abstract class BaseLoanActorsFormFilter extends CataloguePeopleFormFilter
 {
@@ -14,21 +14,11 @@ abstract class BaseLoanActorsFormFilter extends CataloguePeopleFormFilter
   {
     parent::setupInheritance();
 
-    $this->widgetSchema   ['record_id'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Loans'), 'add_empty' => true));
-    $this->validatorSchema['record_id'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Loans'), 'column' => 'id'));
-
     $this->widgetSchema->setNameFormat('loan_actors_filters[%s]');
   }
 
   public function getModelName()
   {
     return 'LoanActors';
-  }
-
-  public function getFields()
-  {
-    return array_merge(parent::getFields(), array(
-      'record_id' => 'ForeignKey',
-    ));
   }
 }

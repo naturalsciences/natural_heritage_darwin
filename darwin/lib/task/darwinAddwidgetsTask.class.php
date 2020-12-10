@@ -39,7 +39,7 @@ EOF;
     if($options['name'] && !$options['category'])
     {
       $this->logSection('Incomplete command', sprintf('If you want to add specific widget, you have to give de --name option AND the --category option'),null, 'ERROR') ;
-      throw new Exception('Incomplete command');
+      exit() ;
     }
     // initialize the database connection
     $databaseManager = new sfDatabaseManager($this->configuration);
@@ -54,7 +54,7 @@ EOF;
 
     foreach($userIds as $key=>$value)
     {
-      $user = Doctrine_Core::getTable('Users')->find($value);
+      $user = Doctrine::getTable('Users')->find($value);
       if(! $user) {
         $this->logSection('Not Found', sprintf('User %d not found, are you in the right env?',$value));
         continue;

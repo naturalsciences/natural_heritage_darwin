@@ -22,8 +22,7 @@ class UsersTrackingTable extends DarwinTable
       ->from('UsersTracking r')
       ->where('r.user_ref = ?',$user_id)
       ->orderBy('r.modification_date_time desc')
-      #ftheeten 2018 05 09
-      ->orderBy('r.id');      
+      ->orderBy('r.id desc');
     return $q;
   }
 
@@ -42,11 +41,12 @@ class UsersTrackingTable extends DarwinTable
     if($range=='year') $days = 365;
 
     $statement = $conn->prepare("SELECT X.dates, count(id) as nbr
-                                 FROM ( select current_date - s.a as dates from generate_series(0, :days ) as s(a) ) as X
-                                 LEFT JOIN users_tracking u ON (X.dates = modification_date_time::date AND u.user_ref= :user_id )
-                                 GROUP BY X.dates
-                                 ORDER BY X.dates");
-    $statement->execute(array('days' => $days, 'user_id' => $user_id));
+      FROM  ( select current_date - s.a as dates from generate_series(0,".$days.") as s(a) ) as X
+        LEFT JOIN users_tracking u on (X.dates = modification_date_time::date AND u.user_ref= :user_id )
+      GROUP BY X.dates
+      ORDER BY X.dates
+    ");
+    $statement->execute(array('user_id' => $user_id));
     $resultset = $statement->fetchAll(PDO::FETCH_ASSOC);
     $datas = array();
     foreach($resultset as $row)
@@ -65,17 +65,5 @@ class UsersTrackingTable extends DarwinTable
       ->andWhere('r.record_id = ?',$id)
       ->orderBy('r.modification_date_time desc');
     return $q->execute();
-  }
-  
-  //2020 01 15
-  public function getCreationDate($table, $id)
-  {
-    $q = Doctrine_Query::create()
-      ->from('UsersTracking r')
-      ->innerJoin('r.Users')
-      ->where('r.referenced_relation = ?',$table)
-      ->andWhere('r.record_id = ?',$id)
-      ->andWhere('r.action = ?',"insert")
-      ->orderBy('r.modification_date_time desc');
   }
 }

@@ -13,7 +13,8 @@ class MaintenanceForm extends BaseCollectionMaintenanceForm
   {
 	$this->useFields(array('id','people_ref', 'category', 'action_observation', 'description','modification_date_time'));
 
-    $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')));
+	//JMHerpers 2018 02 15 Inversion of max and Min to have most recent dates on top
+	$yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')),intval(sfConfig::get('dw_yearRangeMin')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
     $minDate = new FuzzyDateTime(strval(min($yearsKeyVal)).'/1/1 0:0:0');
     $maxDate = new FuzzyDateTime(strval(max($yearsKeyVal)).'/12/31 23:59:59');
@@ -50,7 +51,6 @@ class MaintenanceForm extends BaseCollectionMaintenanceForm
       'box_title' => $this->getI18N()->__('Choose Yourself'),
       'complete_url' => 'catalogue/completeName?table=people',
     ));
-    $this->widgetSchema['people_ref']->setLabel('Person');
 
     $this->widgetSchema['parts_ids'] = new sfWidgetFormInputHidden();
     $this->validatorSchema['parts_ids'] = new sfValidatorString(array('required' => false, 'empty_value' => ''));
@@ -58,16 +58,6 @@ class MaintenanceForm extends BaseCollectionMaintenanceForm
     $this->widgetSchema['category'] = new sfWidgetFormChoice(array('choices' => array('action' => 'Action', 'observation'=>'Observation')));
     $this->widgetSchema['category']->setLabel('Type');
 
-    $forced_choices = false;
-    $default = null;
-    if(
-        isset($this->options['forced_action_observation_options'])
-        && is_array($this->options['forced_action_observation_options'])
-        && count($this->options['forced_action_observation_options']) > 0
-    ) {
-      $forced_choices = $this->options['forced_action_observation_options'];
-      $default = current(array_keys($forced_choices));
-    }
     $this->widgetSchema['action_observation'] = new widgetFormSelectComplete(array(
       'model' => 'CollectionMaintenance',
       'table_method' => 'getDistinctActions',
@@ -76,8 +66,6 @@ class MaintenanceForm extends BaseCollectionMaintenanceForm
       'add_empty' => false,
       'change_label' => 'Pick an action in the list',
       'add_label' => 'Add another action',
-      'forced_choices'=>$forced_choices,
-      'default'=>$default,
     ));
 
     $this->widgetSchema['action_observation']->setLabel('Action / Observation');
@@ -102,11 +90,11 @@ class MaintenanceForm extends BaseCollectionMaintenanceForm
     if($record_id === false)
       $record_id = $this->getObject()->getId();
     if( $emFieldName =='Comments' )
-      return Doctrine_Core::getTable('Comments')->findForTable('collection_maintenance', $record_id);
+      return Doctrine::getTable('Comments')->findForTable('collection_maintenance', $record_id);
     if( $emFieldName =='ExtLinks' )
-      return Doctrine_Core::getTable('ExtLinks')->findForTable('collection_maintenance', $record_id);
+      return Doctrine::getTable('ExtLinks')->findForTable('collection_maintenance', $record_id);
     if( $emFieldName =='RelatedFiles' )
-      return Doctrine_Core::getTable('Multimedia')->findForTable('collection_maintenance', $record_id);
+      return Doctrine::getTable('Multimedia')->findForTable('collection_maintenance', $record_id);
   }
 
   public function addExtLinks($num, $obj=null)
@@ -137,13 +125,13 @@ class MaintenanceForm extends BaseCollectionMaintenanceForm
     parent::bind($taintedValues, $taintedFiles);
   }
 
-  public function saveObjectEmbeddedForms($con = null, $forms = null)
+  public function saveEmbeddedForms($con = null, $forms = null)
   {
     $this->saveEmbed('Comments', 'comment' ,$forms, array('referenced_relation'=>'collection_maintenance', 'record_id' => $this->getObject()->getId()));
     $this->saveEmbed('ExtLinks', 'url' ,$forms, array('referenced_relation'=>'collection_maintenance', 'record_id' => $this->getObject()->getId()));
     $this->saveEmbed('RelatedFiles', 'mime_type' ,$forms, array('referenced_relation'=>'collection_maintenance', 'record_id' => $this->getObject()->getId()));
 
-    return parent::saveObjectEmbeddedForms($con, $forms);
+    return parent::saveEmbeddedForms($con, $forms);
   }
 
   public function getEmbedRelationForm($emFieldName, $values)

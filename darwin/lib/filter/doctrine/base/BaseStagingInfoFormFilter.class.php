@@ -6,24 +6,29 @@
  * @package    darwin
  * @subpackage filter
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
  */
-abstract class BaseStagingInfoFormFilter extends DarwinModelFormFilter
+abstract class BaseStagingInfoFormFilter extends BaseFormFilterDoctrine
 {
-  protected function setupInheritance()
+  public function setup()
   {
-    parent::setupInheritance();
+    $this->setWidgets(array(
+      'staging_ref'         => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Staging'), 'add_empty' => true)),
+      'referenced_relation' => new sfWidgetFormFilterInput(array('with_empty' => false)),
+    ));
 
-    $this->widgetSchema   ['staging_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Staging'), 'add_empty' => true));
-    $this->validatorSchema['staging_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Staging'), 'column' => 'id'));
-
-    $this->widgetSchema   ['referenced_relation'] = new sfWidgetFormFilterInput(array('with_empty' => false));
-    $this->validatorSchema['referenced_relation'] = new sfValidatorPass(array('required' => false));
-
-    $this->widgetSchema   ['staging_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Staging'), 'add_empty' => true));
-    $this->validatorSchema['staging_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Staging'), 'column' => 'id'));
+    $this->setValidators(array(
+      'staging_ref'         => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Staging'), 'column' => 'id')),
+      'referenced_relation' => new sfValidatorPass(array('required' => false)),
+    ));
 
     $this->widgetSchema->setNameFormat('staging_info_filters[%s]');
+
+    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
+
+    $this->setupInheritance();
+
+    parent::setup();
   }
 
   public function getModelName()
@@ -33,10 +38,10 @@ abstract class BaseStagingInfoFormFilter extends DarwinModelFormFilter
 
   public function getFields()
   {
-    return array_merge(parent::getFields(), array(
-      'staging_ref' => 'ForeignKey',
+    return array(
+      'id'                  => 'Number',
+      'staging_ref'         => 'ForeignKey',
       'referenced_relation' => 'Text',
-      'staging_ref' => 'ForeignKey',
-    ));
+    );
   }
 }

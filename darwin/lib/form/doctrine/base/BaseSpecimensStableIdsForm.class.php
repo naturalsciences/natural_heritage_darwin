@@ -8,33 +8,37 @@
  * @package    darwin
  * @subpackage form
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
  */
-abstract class BaseSpecimensStableIdsForm extends DarwinModelForm
+abstract class BaseSpecimensStableIdsForm extends BaseFormDoctrine
 {
-  protected function setupInheritance()
+  public function setup()
   {
-    parent::setupInheritance();
+    $this->setWidgets(array(
+      'id'           => new sfWidgetFormInputText(),
+      'specimen_ref' => new sfWidgetFormInputText(),
+      'original_id'  => new sfWidgetFormInputText(),
+      'uuid'         => new sfWidgetFormTextarea(),
+      'doi'          => new sfWidgetFormTextarea(),
+      'specimen_fk'  => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Specimens'), 'add_empty' => false)),
+    ));
 
-    $this->widgetSchema   ['specimen_ref'] = new sfWidgetFormInputText();
-    $this->validatorSchema['specimen_ref'] = new sfValidatorInteger();
-
-    $this->widgetSchema   ['original_id'] = new sfWidgetFormInputText();
-    $this->validatorSchema['original_id'] = new sfValidatorInteger();
-
-    $this->widgetSchema   ['uuid'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['uuid'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['doi'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['doi'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['specimen_fk'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Specimens'), 'add_empty' => false));
-    $this->validatorSchema['specimen_fk'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Specimens'), 'column' => 'id'));
-
-    $this->widgetSchema   ['specimen_fk'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Specimens'), 'add_empty' => false));
-    $this->validatorSchema['specimen_fk'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Specimens'), 'column' => 'id'));
+    $this->setValidators(array(
+      'id'           => new sfValidatorInteger(),
+      'specimen_ref' => new sfValidatorInteger(),
+      'original_id'  => new sfValidatorInteger(),
+      'uuid'         => new sfValidatorString(array('required' => false)),
+      'doi'          => new sfValidatorString(array('required' => false)),
+      'specimen_fk'  => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Specimens'))),
+    ));
 
     $this->widgetSchema->setNameFormat('specimens_stable_ids[%s]');
+
+    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
+
+    $this->setupInheritance();
+
+    parent::setup();
   }
 
   public function getModelName()

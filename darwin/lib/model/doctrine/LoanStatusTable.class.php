@@ -96,6 +96,19 @@ class LoanStatusTable extends DarwinTable
          orderBy('id desc');
     return $q->execute();
   }
+  
+  //ftheeten 2017 04 28
+    public function getLastLoanStatus($loan_ref)
+  {
+    $q = Doctrine_Query::create()
+       ->from('LoanStatus')    
+       ->orderBy('modification_date_time DESC')       
+       ->where('loan_ref= ?', $loan_ref)
+       ->andWhere('is_last = TRUE');
+    $q->limit(1) ;
+    return $q->execute();       
+  }
+  
 
 }
 

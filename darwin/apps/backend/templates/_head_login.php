@@ -1,3 +1,4 @@
+<!--ftheeten 2018 04 22-->
 <?php
     $flagMenu="on";
     
@@ -9,21 +10,21 @@
             $flagMenu="off";
         }
     }
-    elseif(array_key_exists("menu", $_SESSION[$_SERVER['HTTP_REFERER']]))
+    elseif(array_key_exists("menu", $_SESSION))
     {       
-        if($_SESSION[$_SERVER['HTTP_REFERER']]['menu']=="off")
+        if($_SESSION['menu']=="off")
         {
             $flagMenu="off";
         }
         
     }
-    $_SESSION[$_SERVER['HTTP_REFERER']]['menu']= $flagMenu;  
+    $_SESSION['menu']= $flagMenu;  
 ?>
-<?php if($flagMenu!="off"):?>
+<?php if($flagMenu!="off"|| $_SERVER["HTTP_REFERER"]!=sfConfig::get('dw_domain_disable_menu')):?>
 <?php 
-if(array_key_exists("menu", $_SESSION[$_SERVER['HTTP_REFERER']]))
+if(array_key_exists("menu", $_SESSION))
 {
-    unset($_SESSION[$_SERVER['HTTP_REFERER']]['menu']);
+    unset($_SESSION['menu']);
 }
 ?>
 <td class="header_menu">
@@ -43,7 +44,6 @@ if(array_key_exists("menu", $_SESSION[$_SERVER['HTTP_REFERER']]))
           <ul class="menu_link">
             <li><?php echo link_to(__('Zoological Search'),$sf_context->getConfiguration()->generatePublicUrl('search', array(), $sf_request));?></li>
             <li><?php echo link_to(__('Geo/Paleo Search'),$sf_context->getConfiguration()->generatePublicUrl('geoSearch', array(), $sf_request));?></li>
-			<li><?php echo link_to(__('Collections'),$sf_context->getConfiguration()->generatePublicUrl('collections', array(), $sf_request));?></li>
             <li><?php echo link_to(__('Take a tour'),$sf_context->getConfiguration()->generatePublicUrl('tour', array(), $sf_request));?></li>
             <li><?php echo link_to(__('Contacts'),$sf_context->getConfiguration()->generatePublicUrl('contact', array(), $sf_request));?></li>
           </ul>

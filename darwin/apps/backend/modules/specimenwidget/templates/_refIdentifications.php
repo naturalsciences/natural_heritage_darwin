@@ -1,10 +1,10 @@
 <script  type="text/javascript">
 
-
 function forceIdentifiersHelper(e,ui)
 {
    $(".ui-state-highlight").html("<td colspan='3' style='line-height:"+ui.item[0].offsetHeight+"px'>&nbsp;</td>");
 }
+
 
 
 function reOrderIdentifiers(tableId)
@@ -80,25 +80,51 @@ $(document).ready(function () {
             $(parent_el).append(html);
             $(parent_el).find('thead.spec_ident_head:hidden').show();
             showAfterRefresh('#refIdentifications');
+                    //ftheeten 2016 11 29
+                //?php if(sfContext::getInstance()->getActionName()=="new"||sfContext::getInstance()->getActionName()=="edit"):?>
+                //        $('.to_date').each(function ()
+                //        {
+                //            if(/specimen_(new){0,1}Identification(s){0,1}_[0-9]+_notion_date_year/.test($(this).attr('id')))
+                //            {
+                //                $.reverse_year_in_select("#"+$(this).attr('id'));
+                //            }
+                //        });
+              //?php endif;?>
           }
         });
+        
+
         return false;
     });    
 
-       
+  
+});
 
-
-    });
-    
     //ftheeten 2018 09 18
+    /*function onElementInserted(containerSelector, elementSelector, callback) {
 
+            var onMutationsObserved = function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.addedNodes.length) {
+                        var elements = $(mutation.addedNodes).find(elementSelector);
+                        for (var i = 0, len = elements.length; i < len; i++) {
+                            callback(elements[i]);
+                        }
+                    }
+                });
+            };
+
+            var target = $(containerSelector)[0];
+            var config = { childList: true, subtree: true };
+            var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+            var observer = new MutationObserver(onMutationsObserved);    
+            observer.observe(target, config);
+
+        }*/
 
         onElementInserted('body', '.identification_subject', function(element)
         {
             $(element).val($("#specimen_taxon_ref_name").val());
         }
-        );
+     );
 </script>
-
-
-

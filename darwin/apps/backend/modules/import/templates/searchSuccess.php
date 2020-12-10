@@ -12,12 +12,12 @@
       <table class="results">
         <thead>
           <tr>
-            <th><a class="sort" href="<?php echo url_for($s_url.'&orderby=id'.( ($orderBy=='id' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
+		  <th><a class="sort" href="<?php echo url_for($s_url.'&orderby=id'.( ($orderBy=='id' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
                 <?php echo __("id");?>
                 <?php  echo $orderSign ?>
               </a></th>
             <th></th>
-            <?php if($format != 'taxon'&&$format != 'lithostratigraphy') : ?>
+            <?php if($format != 'taxon') : ?>
             <th>
               <a class="sort" href="<?php echo url_for($s_url.'&orderby=name'.( ($orderBy=='name' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
                 <?php echo __('Collection');?>
@@ -31,11 +31,6 @@
                 <?php if($orderBy=='filename') echo $orderSign ?>
               </a>
             </th>
-			<?php if($format == 'taxon') : ?>
-				<th>
-					Taxonomical hierarchy
-				</th>
-			 <?php endif ?>
             <th>
               <a class="sort" href="<?php echo url_for($s_url.'&orderby=state'.( ($orderBy=='state' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
                 <?php echo __('Status');?>
@@ -53,23 +48,19 @@
                 <th ><?php echo __("View data") ; ?></th>
             <?php endif;?>
             <th colspan="4"><?php echo __("Actions") ; ?></th>
+            
           </tr>
         </thead>
         <tbody>
           <?php foreach($imports as $import):?>
             <tr class="rid_<?php echo $import->getId(); ?>">
-              
-              <td><?php echo __($import->getId());?></td>
+			<td><?php echo __($import->getId());?></td>
               <td></td>
-              <?php if($format != 'taxon'&&$format != 'lithostratigraphy') : ?><td><?php echo $import->Collections->getName();?></td><?php endif ; ?>
+              <?php if($format != 'taxon') : ?>
+				<td><?php echo $import->Collections->getName();?></td>
+			  <?php endif ; ?>
               <td><?php echo $import->getFilename();?></td>
-			  <?php if($format == 'taxon') : ?>
-				<td>
-					<?php echo __(Doctrine_Core::getTable("TaxonomyMetadata")->find($import->getSpecimenTaxonomyRef()) ? Doctrine_Core::getTable("TaxonomyMetadata")->find($import->getSpecimenTaxonomyRef())->getTaxonomyName() : "Not Found");?>
-				</td>
-			 <?php endif ?>
-              <td><?php echo __($import->getStateName());?>
-              </td>
+              <td><?php echo __($import->getStateName());?></td>
               <td><?php echo $import->getLastModifiedDate(ESC_RAW);?></td>
               <td>
                 <?php if(! in_array($import->getState(),array('loading','loaded','to_be_loaded','error')) ):?>
@@ -85,38 +76,53 @@
               <?php if($format == 'abcd') : ?>
                 <td><a href="<?php print(url_for("specimensearch/search/1"))."?specimen_search_filters[import_ref]=".$import->getId()."&specimen_search_filters[rec_per_page]=50";?>" target="_blank">import n° <?php print($import->getId());?></a><td>
               <?php endif;?>
-			  <!--ftheeten 2018 08 06-->
-             
-			   <?php if($format == 'locality'&& $import->getState() == 'loaded') : ?>
-               
-                <td><?php echo link_to("Load GTU in DB",'import/loadGtuInDB?id='.$import->getId()); ?></td>
-               <?php elseif($format == 'lithostratigraphy'&& $import->getState() == 'loaded') : ?>
-                <td><?php echo link_to("Load Lithostratigraphy in DB",'import/loadLithoInDB?id='.$import->getId()); ?></td>
-               <?php endif ; ?>
               <?php if ($import->getState() == 'error') : ?>
-              <td colspan="2">
+				<td colspan="2">
                   <?php echo link_to(image_tag('warning.png',array('title'=>__('View errors while importing'))),'import/viewError?id='.$import->getId());?>
-              </td>
+				</td>
               <?php else : ?>
-              <td>
-			   <!--ftheeten 2018 09 25 update for locality-->
-                <?php if ($import->isEditableState()&&$format == 'abcd') : ?>
-                  <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit import'))),'staging/index?import='.$import->getId());?>
-				<?php elseif ($format == 'locality'&& $import->getState() != 'processing'&& $import->getState() != 'aloaded') : ?>
-				<?php echo link_to(image_tag('edit.png',array('title'=>__('Edit import'))),'import/viewUnimportedGtu?id='.$import->getId()); ?>
-                <?php elseif ($format == 'taxon'&& ($import->getState() == 'finished')||$import->isEditableState()) : ?>
-                   <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit import'))),'import/viewUnimportedTaxa?id='.$import->getId()); ?>
-               <?php elseif ($format == 'lithostratigraphy'&& ($import->getState() == 'finished')||$import->isEditableState()) : ?>
-                   <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit import'))),'import/viewUnimportedLitho?id='.$import->getId()); ?>
-				<?php else: ?>
-				NOT EDITABLE
+			      <!--2019 03 19-->
+				  <?php if ($format == 'taxon'&& ($import->getState() == 'finished'||$import->isEditableState())) : ?>
+                   <td><?php echo link_to(image_tag('edit.png',array('title'=>__('Edit import'))),'import/viewUnimportedTaxa?id='.$import->getId()); ?></td>
+                  <?php endif;?>
+				  <!--ftheeten 2017 08 29-->
+                <?php if (($import->getWorking()) && !(trim($import->getStateName()) == "Finished")): ?>
+                    <td>WORKING, PLEASE WAIT</td>
+                <?php elseif ($import->isEditableState()) : ?>
+					<td>
+					 <!--ftheeten 2017 02 27 replace icon by name-->
+						<?php echo link_to(__('Check import'),'staging/index?import='.$import->getId());?>
+					</td>
+						<!--ftheeten 2017 08 28-->
+                <?php elseif($import->getState()==="to_be_loaded") : ?>
+					<td>
+						<?php if($format == 'files') : ?> 
+							<?php echo link_to("Import files",'import/loadfiles?id='.$import->getId()); ?>
+						<?php elseif($format == 'links') : ?> 
+							<?php echo link_to("Import links",'import/loadlinks?id='.$import->getId()); ?>
+						<?php else : ?> 
+							<?php echo link_to("Load in staging",'import/loadstaging?id='.$import->getId()); ?>
+						<?php endif ; ?> 
+					</td>
+						<!--ftheeten 2017 08 28-->
+                <?php elseif($import->getState()==="loaded") : ?>
+					<td>
+						<?php echo link_to("Check import",'import/checkstaging?id='.$import->getId()); ?>
+					</td>
+					<!--ftheeten 2017 08 28 (end)-->
+                <?php else : ?>
+					<td/>
                 <?php endif ; ?>
-              </td>
-              <td>
-                <?php if ($import->isEditableState()&&$format=="abcd") : ?>
-                  <?php echo link_to(image_tag('checkbox_checked.png',array('title'=>__('Import "Ok" lines'))),'staging/markok?import='.$import->getId());?>
-                <?php endif ; ?>
-              </td>
+              
+				<td>
+                
+                    <?php if (($import->getWorking()) && !(trim($import->getStateName()) == "Finished")): ?>
+                            <td></td>
+					<?php elseif ($import->isEditableState()) : ?>
+					<!--ftheeten 2017 02 27 replace icon by name-->
+						<?php echo link_to(__('Import "Ok" lines'),'staging/markok?import='.$import->getId());?>
+					<?php endif ; ?>
+				</td>
               <?php endif ; ?>
               <?php if (!in_array($import->getState(),array('apending','aprocessing','aloaded'))) : ?>
               <td>
@@ -126,24 +132,9 @@
               </td>
               <td>
                 <?php echo link_to(image_tag('remove.png', array("title" => __("Delete"))), 'import/delete?id='.$import->getId(),'class=remove_import');?>
-              </td>             
-             <?php endif ; ?>
-			 <?php if($import->getState()==="to_be_loaded"&& !$import->getWorking()  &&  $format == 'files') :?>
-			 <td>
-                    <?php echo link_to("Load files",'import/loadfiles?id='.$import->getId()); ?>
-			</td>
-			 <?php elseif($import->getState()==="to_be_loaded"&& !$import->getWorking()  &&  $format == 'links') :?>
-			 <td>
-                    <?php echo link_to("Load links",'import/loadlinks?id='.$import->getId()); ?>
-			</td>
-             <?php elseif($import->getState()==="to_be_loaded"&& !$import->getWorking() ) : ?>
-                <td>
-                    <?php echo link_to("Load in staging",'import/loadstaging?id='.$import->getId()); ?>
-				</td>
-             <?php elseif($import->getState()==="loaded"&& $format != 'locality'&& $format != 'lithostratigraphy') : ?>
-					<td>
-						<?php echo link_to("Check import",'import/checkstaging?id='.$import->getId()); ?>
-					</td>   
+              </td>
+             <?php else : ?>
+             <td colspan="2">-</td>
              <?php endif ; ?>
             </tr>
           <?php endforeach;?>

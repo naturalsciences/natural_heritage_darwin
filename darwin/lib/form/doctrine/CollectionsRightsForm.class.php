@@ -16,7 +16,7 @@ class CollectionsRightsForm extends BaseCollectionsRightsForm
     $user_id=isset($option) ? $this->options['user_id'] : $this->getObject()->getUserRef() ;
     $this->widgetSchema['user_ref'] = new sfWidgetFormInputHidden();
     if($user_id == 0 ) $this->widgetSchema['user_ref']->setLabel('nobody') ;
-    else $this->widgetSchema['user_ref']->setLabel(Doctrine_Core::getTable('Users')->findUser($user_id)->getFormatedName()) ;
+    else $this->widgetSchema['user_ref']->setLabel(Doctrine::getTable('Users')->findUser($user_id)->getFormatedName()) ;
     $this->widgetSchema['db_user_type'] = new sfWidgetFormChoice(array(
       'choices' =>  Users::getTypes(array('screen' => 2,'db_user_type' => Users::ADMIN)),
     ));    

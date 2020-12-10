@@ -8,33 +8,47 @@
  * @package    darwin
  * @subpackage form
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
  */
-abstract class BaseExtLinksForm extends DarwinModelForm
+abstract class BaseExtLinksForm extends BaseFormDoctrine
 {
-  protected function setupInheritance()
+  public function setup()
   {
-    parent::setupInheritance();
+    $this->setWidgets(array(
+      'id'                  => new sfWidgetFormInputHidden(),
+      'referenced_relation' => new sfWidgetFormTextarea(),
+      'record_id'           => new sfWidgetFormInputText(),
+      'url'                 => new sfWidgetFormTextarea(),
+      'comment'             => new sfWidgetFormTextarea(),
+      'comment_indexed'     => new sfWidgetFormTextarea(),
+      'category'            => new sfWidgetFormTextarea(),
+      'contributor'         => new sfWidgetFormTextarea(),
+      'disclaimer'          => new sfWidgetFormTextarea(),
+      'license'             => new sfWidgetFormTextarea(),
+      'display_order'       => new sfWidgetFormInputText(),
+    ));
 
-    $this->widgetSchema   ['referenced_relation'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['referenced_relation'] = new sfValidatorString();
-
-    $this->widgetSchema   ['record_id'] = new sfWidgetFormInputText();
-    $this->validatorSchema['record_id'] = new sfValidatorInteger();
-
-    $this->widgetSchema   ['url'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['url'] = new sfValidatorString();
-
-    $this->widgetSchema   ['type'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['type'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['comment'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['comment'] = new sfValidatorString();
-
-    $this->widgetSchema   ['comment_indexed'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['comment_indexed'] = new sfValidatorString(array('required' => false));
+    $this->setValidators(array(
+      'id'                  => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
+      'referenced_relation' => new sfValidatorString(),
+      'record_id'           => new sfValidatorInteger(),
+      'url'                 => new sfValidatorString(),
+      'comment'             => new sfValidatorString(array('required' => false)),
+      'comment_indexed'     => new sfValidatorString(array('required' => false)),
+      'category'            => new sfValidatorString(array('required' => false)),
+      'contributor'         => new sfValidatorString(array('required' => false)),
+      'disclaimer'          => new sfValidatorString(array('required' => false)),
+      'license'             => new sfValidatorString(array('required' => false)),
+      'display_order'       => new sfValidatorInteger(array('required' => false)),
+    ));
 
     $this->widgetSchema->setNameFormat('ext_links[%s]');
+
+    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
+
+    $this->setupInheritance();
+
+    parent::setup();
   }
 
   public function getModelName()

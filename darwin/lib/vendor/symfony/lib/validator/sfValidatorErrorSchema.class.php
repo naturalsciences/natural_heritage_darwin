@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfValidatorErrorSchema.class.php 22446 2009-09-26 07:55:47Z fabien $
  */
 class sfValidatorErrorSchema extends sfValidatorError implements ArrayAccess, Iterator, Countable
 {
@@ -28,7 +28,7 @@ class sfValidatorErrorSchema extends sfValidatorError implements ArrayAccess, It
    * Constructor.
    *
    * @param sfValidatorBase $validator  An sfValidatorBase instance
-   * @param array           $errors     An array of errors, depreciated
+   * @param array           $errors     An array of errors
    */
   public function __construct(sfValidatorBase $validator, $errors = array())
   {
@@ -39,10 +39,7 @@ class sfValidatorErrorSchema extends sfValidatorError implements ArrayAccess, It
     $this->code    = '';
     $this->message = '';
 
-    foreach ($errors as $name => $error)
-    {
-      $this->addError($error, is_numeric($name) ? null : $name);
-    }
+    $this->addErrors($errors);
   }
 
   /**
@@ -57,7 +54,7 @@ class sfValidatorErrorSchema extends sfValidatorError implements ArrayAccess, It
    */
   public function addError(sfValidatorError $error, $name = null)
   {
-    if (null === $name)
+    if (null === $name || is_integer($name))
     {
       if ($error instanceof sfValidatorErrorSchema)
       {
@@ -69,24 +66,35 @@ class sfValidatorErrorSchema extends sfValidatorError implements ArrayAccess, It
         $this->errors[] = $error;
       }
     }
-    else if (isset($this->namedErrors[$name]))
-    {
-      if (!$this->namedErrors[$name] instanceof sfValidatorErrorSchema)
-      {
-        $current = $this->namedErrors[$name];
-        $this->namedErrors[$name] = new sfValidatorErrorSchema($current->getValidator());
-        $this->namedErrors[$name]->addError($current);
-      }
-
-      $method = $error instanceof sfValidatorErrorSchema ? 'addErrors' : 'addError';
-      $this->namedErrors[$name]->$method($error);
-
-      $this->errors[$name] = $this->namedErrors[$name];
-    }
     else
     {
-      $this->namedErrors[$name] = $error;
-      $this->errors[$name] = $error;
+      if (!isset($this->namedErrors[$name]) && !$error instanceof sfValidatorErrorSchema)
+      {
+        $this->namedErrors[$name] = $error;
+        $this->errors[$name] = $error;
+      }
+      else
+      {
+        if (!isset($this->namedErrors[$name]))
+        {
+          $this->namedErrors[$name] = new sfValidatorErrorSchema($error->getValidator());
+          $this->errors[$name] = new sfValidatorErrorSchema($error->getValidator());
+        }
+        else if (!$this->namedErrors[$name] instanceof sfValidatorErrorSchema)
+        {
+          $current = $this->namedErrors[$name];
+          $this->namedErrors[$name] = new sfValidatorErrorSchema($current->getValidator());
+          $this->errors[$name] = new sfValidatorErrorSchema($current->getValidator());
+
+          $method = $current instanceof sfValidatorErrorSchema ? 'addErrors' : 'addError';
+          $this->namedErrors[$name]->$method($current);
+          $this->errors[$name]->$method($current);
+        }
+
+        $method = $error instanceof sfValidatorErrorSchema ? 'addErrors' : 'addError';
+        $this->namedErrors[$name]->$method($error);
+        $this->errors[$name]->$method($error);
+      }
     }
 
     $this->updateCode();
@@ -96,22 +104,32 @@ class sfValidatorErrorSchema extends sfValidatorError implements ArrayAccess, It
   }
 
   /**
-   * Adds a collection of errors.
+   * Adds an array of errors.
    *
-   * @param sfValidatorErrorSchema $errorsAn sfValidatorErrorSchema instance
+   * @param array $errors  An array of sfValidatorError instances
    *
    * @return sfValidatorErrorSchema The current error schema instance
    */
-  public function addErrors(sfValidatorErrorSchema $errors)
+  public function addErrors($errors)
   {
-    foreach ($errors->getGlobalErrors() as $error)
+    if ($errors instanceof sfValidatorErrorSchema)
     {
-      $this->addError($error);
-    }
+      foreach ($errors->getGlobalErrors() as $error)
+      {
+        $this->addError($error);
+      }
 
-    foreach ($errors->getNamedErrors() as $name => $error)
+      foreach ($errors->getNamedErrors() as $name => $error)
+      {
+        $this->addError($error, (string) $name);
+      }
+    }
+    else
     {
-      $this->addError($error, $name);
+      foreach ($errors as $name => $error)
+      {
+        $this->addError($error, $name);
+      }
     }
 
     return $this;
@@ -130,7 +148,7 @@ class sfValidatorErrorSchema extends sfValidatorError implements ArrayAccess, It
   /**
    * Gets an array of all named errors
    *
-   * @return sfValidatorError[] An array of sfValidatorError instances
+   * @return array An array of sfValidatorError instances
    */
   public function getNamedErrors()
   {
@@ -283,8 +301,8 @@ class sfValidatorErrorSchema extends sfValidatorError implements ArrayAccess, It
   protected function updateCode()
   {
     $this->code = implode(' ', array_merge(
-      array_map(function($e) { /** @var $e sfValidatorError */ return $e->getCode(); }, $this->globalErrors),
-      array_map(function($n, $e) { /** @var $e sfValidatorError */ return $n.' ['.$e->getCode().']'; }, array_keys($this->namedErrors), array_values($this->namedErrors))
+      array_map(create_function('$e', 'return $e->getCode();'), $this->globalErrors),
+      array_map(create_function('$n,$e', 'return $n.\' [\'.$e->getCode().\']\';'), array_keys($this->namedErrors), array_values($this->namedErrors))
     ));
   }
 
@@ -294,8 +312,8 @@ class sfValidatorErrorSchema extends sfValidatorError implements ArrayAccess, It
   protected function updateMessage()
   {
     $this->message = implode(' ', array_merge(
-      array_map(function($e) { /** @var $e sfValidatorError */ return $e->getMessage(); }, $this->globalErrors),
-      array_map(function($n, $e) { /** @var $e sfValidatorError */ return $n.' ['.$e->getMessage().']'; }, array_keys($this->namedErrors), array_values($this->namedErrors))
+      array_map(create_function('$e', 'return $e->getMessage();'), $this->globalErrors),
+      array_map(create_function('$n,$e', 'return $n.\' [\'.$e->getMessage().\']\';'), array_keys($this->namedErrors), array_values($this->namedErrors))
     ));
   }
 

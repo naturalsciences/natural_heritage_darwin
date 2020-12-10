@@ -8,39 +8,37 @@
  * @package    darwin
  * @subpackage form
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
  */
-abstract class BaseTagsForm extends DarwinModelForm
+abstract class BaseTagsForm extends BaseFormDoctrine
 {
-  protected function setupInheritance()
+  public function setup()
   {
-    parent::setupInheritance();
+    $this->setWidgets(array(
+      'gtu_ref'        => new sfWidgetFormInputHidden(),
+      'group_ref'      => new sfWidgetFormInputHidden(),
+      'tag'            => new sfWidgetFormTextarea(),
+      'group_type'     => new sfWidgetFormTextarea(),
+      'sub_group_type' => new sfWidgetFormTextarea(),
+      'tag_indexed'    => new sfWidgetFormInputHidden(),
+    ));
 
-    $this->widgetSchema   ['gtu_ref'] = new sfWidgetFormInputHidden();
-    $this->validatorSchema['gtu_ref'] = new sfValidatorChoice(array('choices' => array($this->getObject()->get('gtu_ref')), 'empty_value' => $this->getObject()->get('gtu_ref'), 'required' => false));
-
-    $this->widgetSchema   ['group_ref'] = new sfWidgetFormInputHidden();
-    $this->validatorSchema['group_ref'] = new sfValidatorChoice(array('choices' => array($this->getObject()->get('group_ref')), 'empty_value' => $this->getObject()->get('group_ref'), 'required' => false));
-
-    $this->widgetSchema   ['tag'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['tag'] = new sfValidatorString();
-
-    $this->widgetSchema   ['group_type'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['group_type'] = new sfValidatorString();
-
-    $this->widgetSchema   ['sub_group_type'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['sub_group_type'] = new sfValidatorString();
-
-    $this->widgetSchema   ['tag_indexed'] = new sfWidgetFormInputHidden();
-    $this->validatorSchema['tag_indexed'] = new sfValidatorChoice(array('choices' => array($this->getObject()->get('tag_indexed')), 'empty_value' => $this->getObject()->get('tag_indexed'), 'required' => false));
-
-    $this->widgetSchema   ['group_ref'] = new sfWidgetFormInputHidden();
-    $this->validatorSchema['group_ref'] = new sfValidatorChoice(array('choices' => array($this->getObject()->get('group_ref')), 'empty_value' => $this->getObject()->get('group_ref'), 'required' => false));
-
-    $this->widgetSchema   ['gtu_ref'] = new sfWidgetFormInputHidden();
-    $this->validatorSchema['gtu_ref'] = new sfValidatorChoice(array('choices' => array($this->getObject()->get('gtu_ref')), 'empty_value' => $this->getObject()->get('gtu_ref'), 'required' => false));
+    $this->setValidators(array(
+      'gtu_ref'        => new sfValidatorChoice(array('choices' => array($this->getObject()->get('gtu_ref')), 'empty_value' => $this->getObject()->get('gtu_ref'), 'required' => false)),
+      'group_ref'      => new sfValidatorChoice(array('choices' => array($this->getObject()->get('group_ref')), 'empty_value' => $this->getObject()->get('group_ref'), 'required' => false)),
+      'tag'            => new sfValidatorString(),
+      'group_type'     => new sfValidatorString(),
+      'sub_group_type' => new sfValidatorString(),
+      'tag_indexed'    => new sfValidatorChoice(array('choices' => array($this->getObject()->get('tag_indexed')), 'empty_value' => $this->getObject()->get('tag_indexed'), 'required' => false)),
+    ));
 
     $this->widgetSchema->setNameFormat('tags[%s]');
+
+    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
+
+    $this->setupInheritance();
+
+    parent::setup();
   }
 
   public function getModelName()

@@ -13,13 +13,15 @@
 
       <?php echo $form->renderGlobalErrors();?>
         <table <?php if(! count($form['LoanItems']) && ! count($form['newLoanItems'])) echo 'class="hidden"';?> id="items_table">
-        <thead>
+        <thead class="loanlines_titles">
           <tr>
+		   <!--JMHerpers 2018 04 19-->
             <th></th>
-            <th><?php echo __('Darwin Part') ;?></th>
-            <th><?php echo __('Darwin Part Main Code(s)') ;?></th>
-            <th><?php echo __('I.g. Num');?></th>
+            <th><?php echo __('Item') ;?></th>
+            <th><?php echo __('Main Code') ;?></th>
+            <th><?php echo __('Taxon');?></th>
             <th><?php echo __('Details') ;?></th>
+			<th></th>
             <th><?php echo __('Expedition / Return') ;?></th>
             <th></th>
             <th></th>
@@ -37,30 +39,52 @@
        </table>
 
         <div class="warn_message <?php if(count($form['LoanItems']) ||  count($form['newLoanItems'])) echo 'hidden'?>">
-          <?php echo __('There is currently no items in your loan. Do not forget to add them.');?></div>
-
-        <div class="form_buttons">
-          <div id="checking" class="hidden">
-            <input type="button" id="add_maint_items" value="<?php echo __('Add Maintenance for checked');?>" />
-            <input type="button" id="del_checked_items" value="<?php echo __('Delete checked items');?>" />
-          </div>
-          <a href="<?php echo url_for('loan/addLoanItem?id='.$loan->getId()) ?>" id="add_item"><?php echo __('Add item');?></a>
-          &nbsp;
-          <a href="<?php echo url_for('specimen/choosePinned') ?>" id="add_multiple_pin"><?php echo __('Add multiple items');?></a>
-          &nbsp;
-          <?php echo link_to(__('Back to Loan'), 'loan/edit?id='.$loan->getId()) ?>
-          <a href="<?php echo url_for('loan/index') ?>"><?php echo __('Cancel');?></a>
-
-          <input id="submit" type="submit" value="<?php echo __('Save');?>" />
+			<?php echo __('There is currently no items in your loan. Do not forget to add them.');?>
+		</div>
+        <!--ftheeten 2016 11 25--> 
+        <div class="form_buttons">         
+			<b><?php echo __('Label code');?></b> 
+			<?php echo $form['code_part']->render();?>
+			<input type="button" style="display:none" class="add_loan_item" value="<?php echo __('Add item'); ?>"></input>
+			<?php echo $form['selected_id']->render();?>
         </div>
-
+        <div class="form_buttons">
+			<div id="checking" class="hidden">
+				<input type="button" id="add_maint_items" value="<?php echo __('Add Maintenance for checked');?>" />
+				<input type="button" id="del_checked_items" value="<?php echo __('Delete checked items');?>" />
+			</div>
+            <!--<a href="<?php echo url_for('loan/addLoanItem?id='.$loan->getId()) ?>" id="add_item"><?php echo __('Add item');?></a>-->
+            &nbsp;
+            <a href="<?php echo url_for('specimen/choosePinned') ?>" id="add_multiple_pin"><?php echo __('Add multiple items');?></a>
+            &nbsp;
+			<?php echo link_to(__('Back to Loan'), 'loan/edit?id='.$loan->getId()) ?>
+			<a href="<?php echo url_for('loan/index') ?>"><?php echo __('Cancel');?></a>
+			<input type="button" id="submit_jquery" name="submit_jquery" value="<?php echo __('Add items and save');?>" />
+			<input style="display:none" id="submit" type="submit" />
+        </div>
       </form>
 
 
 <script  type="text/javascript">
 $(document).ready(function () {
-    $('.select_chk_box').click( function(event)
-    {
+	
+    //rmca 2018 12 03
+	$("#submit_jquery").click(function(){
+			if($(".autocomplete_for_code").val().length>0){
+				$(".add_loan_item").click();				
+			}
+			$("#submit").click();
+	});
+	
+	//rmca 2018 12 03
+	$("#tab_0").click(function(event){
+		event.preventDefault();
+		console.log("tab_0");
+		$("#submit_jquery").click();
+		window.open($("#tab_0").attr("href"),"_self");
+	})
+
+    $('.select_chk_box').click( function(event) {
       if ($('.select_chk_box:checked').length > 0) $("#checking").show() ;
       else $("#checking").hide() ;
     });
@@ -173,8 +197,10 @@ $(document).ready(function () {
     hideForRefresh('.loan_overview_form') ;
     $.ajax(
     {
+      //ftheeten 2016 06 09 (because issue with "$(ref_table).find('tr').length" on series)
+       async: false,
       type: "GET",
-      url: $('#add_item').attr('href')+ '/num/' + ( 0+$(ref_table).find('tr').length)+'/specimen_ref/'+spec_id,
+      url: '<?php echo url_for('loan/addLoanItem?id='.$loan->getId()) ?>'+ '/num/' + ( 0+$(ref_table).find('tr').length)+'/specimen_ref/'+spec_id,
       success: function(html)
       {
         ref_table.append(html);
@@ -187,6 +213,39 @@ $(document).ready(function () {
     return true;
   }
   $(".loan_overview_form").catalogue_people({add_button: '#add_multiple_pin', q_tip_text: 'Choose Darwin Item',update_row_fct: addPinned });
+  
+  //ftheeten 2016 22 25
+  	 var url="<?php echo(url_for('catalogue/codesTaxonAutocompleteForLoans?'));?>";
+
+	  $('.autocomplete_for_code').autocomplete({
+     
+		source: function (request, response) {
+            $.getJSON(url, {
+						term : request.term,
+						collections: <?php echo($loan->getCollectionRef());?>
+					} , 
+					function (data) 
+						{
+					response($.map(data, function (value, key) {
+                    return value;
+                    }));
+			});
+		},
+        select: function (event, ui) {
+      
+                $(".catch_selection").val(ui.item.id)        
+        },
+		minLength: 2,
+		delay: 100
+	});
+    
+    $('.add_loan_item').click(
+        function()
+        {
+            
+            addPinned($(".catch_selection").val(),"");
+        }
+    );
 });
 
 

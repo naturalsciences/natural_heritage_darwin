@@ -6,27 +6,33 @@
  * @package    darwin
  * @subpackage filter
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
  */
-abstract class BaseClassificationKeywordsFormFilter extends DarwinModelFormFilter
+abstract class BaseClassificationKeywordsFormFilter extends BaseFormFilterDoctrine
 {
-  protected function setupInheritance()
+  public function setup()
   {
-    parent::setupInheritance();
+    $this->setWidgets(array(
+      'referenced_relation' => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'record_id'           => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'keyword_type'        => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'keyword'             => new sfWidgetFormFilterInput(array('with_empty' => false)),
+    ));
 
-    $this->widgetSchema   ['referenced_relation'] = new sfWidgetFormFilterInput(array('with_empty' => false));
-    $this->validatorSchema['referenced_relation'] = new sfValidatorPass(array('required' => false));
-
-    $this->widgetSchema   ['record_id'] = new sfWidgetFormFilterInput(array('with_empty' => false));
-    $this->validatorSchema['record_id'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
-
-    $this->widgetSchema   ['keyword_type'] = new sfWidgetFormFilterInput(array('with_empty' => false));
-    $this->validatorSchema['keyword_type'] = new sfValidatorPass(array('required' => false));
-
-    $this->widgetSchema   ['keyword'] = new sfWidgetFormFilterInput(array('with_empty' => false));
-    $this->validatorSchema['keyword'] = new sfValidatorPass(array('required' => false));
+    $this->setValidators(array(
+      'referenced_relation' => new sfValidatorPass(array('required' => false)),
+      'record_id'           => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
+      'keyword_type'        => new sfValidatorPass(array('required' => false)),
+      'keyword'             => new sfValidatorPass(array('required' => false)),
+    ));
 
     $this->widgetSchema->setNameFormat('classification_keywords_filters[%s]');
+
+    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
+
+    $this->setupInheritance();
+
+    parent::setup();
   }
 
   public function getModelName()
@@ -36,11 +42,12 @@ abstract class BaseClassificationKeywordsFormFilter extends DarwinModelFormFilte
 
   public function getFields()
   {
-    return array_merge(parent::getFields(), array(
+    return array(
+      'id'                  => 'Number',
       'referenced_relation' => 'Text',
-      'record_id' => 'Number',
-      'keyword_type' => 'Text',
-      'keyword' => 'Text',
-    ));
+      'record_id'           => 'Number',
+      'keyword_type'        => 'Text',
+      'keyword'             => 'Text',
+    );
   }
 }

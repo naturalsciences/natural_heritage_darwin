@@ -15,7 +15,7 @@ class GroupedVernacularNamesForm extends BaseForm
     if(isset($this->options['no_load']))
       $names = array();
     else
-      $names = Doctrine_Core::getTable('VernacularNames')->findForTable($this->options['table'], $this->options['id']);
+      $names = Doctrine::getTable('VernacularNames')->findForTable($this->options['table'], $this->options['id']);
     foreach ($names as $index => $childObject)
     {
       $form = new VernacularNamesForm($childObject);

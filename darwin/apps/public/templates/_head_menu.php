@@ -19,7 +19,8 @@
         }
         else
         {
-           
+            console.log("try");
+             console.log("http://<?php print(parse_url(sfContext::getInstance()->getRequest()->getUri(),PHP_URL_HOST ));?>/search/disableMenu?menu=on");
              $.ajax({
                   url: "http://<?php print(parse_url(sfContext::getInstance()->getRequest()->getUri(),PHP_URL_HOST ));?>/search/disableMenu?menu=on",              
                 }).done(function() {
@@ -57,24 +58,23 @@
             $flagMenu="off";
         }
     }
-    elseif(array_key_exists("menu", $_SESSION[$_SERVER['HTTP_REFERER']]))
+    elseif(array_key_exists("menu", $_SESSION))
     {       
-        if($_SESSION[$_SERVER['menu']]=="off")
+        if($_SESSION['menu']=="off")
         {
             $flagMenu="off";
         }
         
     }
-    $_SESSION[$_SERVER['HTTP_REFERER']]['menu']= $flagMenu;  
+    $_SESSION['menu']= $flagMenu;  
 ?>
 <?php if($flagMenu!="off" ):?>
 <?php 
-if(array_key_exists("menu", $_SESSION[$_SERVER['HTTP_REFERER']]))
+if(array_key_exists("menu", $_SESSION))
 {
-    unset($_SESSION[$_SERVER['HTTP_REFERER']]['menu']);
+    unset($_SESSION['menu']);
 }
 ?>
-
 <td class="header_menu">
   <div class="menu_top">
     <table>
@@ -91,8 +91,7 @@ if(array_key_exists("menu", $_SESSION[$_SERVER['HTTP_REFERER']]))
         <td colspan="2">
           <ul class="menu_link">
             <li><?php echo link_to(__('Zoological Search'),'@search');?></li>
-            <li><?php echo link_to(__('Geo/Paleo Search'),'@geoSearch');?></li>	
-			<li><?php echo link_to(__('Collections'),'@collections');?></li>				
+            <li><?php echo link_to(__('Geo/Paleo Search'),'@geoSearch');?></li>
             <li><?php echo link_to(__('Take a tour'),'@tour');?></li>
             <li><?php echo link_to(__('Contacts'),'@contact');?></li>
           </ul>
@@ -115,4 +114,4 @@ if(array_key_exists("menu", $_SESSION[$_SERVER['HTTP_REFERER']]))
   <?php include_component('login','MenuLogin') ; ?>
 
 </td>
-<?php endif;?>  
+<?php endif;?>   

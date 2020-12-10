@@ -1,8 +1,0 @@
-all:
-  doctrine:
-    class:        sfDoctrineDatabase
-    param:
-      dsn:        pgsql:host=127.0.0.1;dbname=darwin2
-      username:   darwin2
-      password:   darwin2
-

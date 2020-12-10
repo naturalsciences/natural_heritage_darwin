@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfSimpleYamlConfigHandler.class.php 9085 2008-05-20 01:53:23Z Carl.Vondrick $
  */
 class sfSimpleYamlConfigHandler extends sfYamlConfigHandler
 {
@@ -27,7 +27,7 @@ class sfSimpleYamlConfigHandler extends sfYamlConfigHandler
    */
   public function execute($configFiles)
   {
-    $config = static::getConfiguration($configFiles);
+    $config = self::getConfiguration($configFiles);
 
     // compile data
     $retval = "<?php\n".
@@ -40,10 +40,9 @@ class sfSimpleYamlConfigHandler extends sfYamlConfigHandler
 
   /**
    * @see sfConfigHandler
-   * @inheritdoc
    */
   static public function getConfiguration(array $configFiles)
   {
-    return static::parseYamls($configFiles);
+    return self::parseYamls($configFiles);
   }
 }

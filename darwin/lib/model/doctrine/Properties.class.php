@@ -135,6 +135,18 @@ class Properties extends BaseProperties
     $date = new FuzzyDateTime($this->_get('date_to'),$this->_get('date_to_mask'),true, true);
     return $date->getDateTimeMaskedAsArray();
   }
+  
+  //ftheeten 2019 01 30
+    public function getDateToRaw()
+  {    
+    return $this->_get('date_to');
+  }
+  
+  public function getDateFromRaw()
+  {    
+    return $this->_get('date_from');
+  }
+  
 
   /** 
   * Get date From as array with masked values
@@ -146,18 +158,6 @@ class Properties extends BaseProperties
     $date = new FuzzyDateTime($this->_get('date_from'),$this->_get('date_from_mask'),false, true);
     return $date->getDateTimeMaskedAsArray();
   }
-  
-    //ftheeten 2019 01 30
-    public function getDateToRaw()
-  {    
-    return $this->_get('date_to');
-  }
-  
-  public function getDateFromRaw()
-  {    
-    return $this->_get('date_from');
-  }
-  
   
   public function setPropertyTemplate($template)
   {

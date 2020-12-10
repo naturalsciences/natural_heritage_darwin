@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfPluginBaseTask.class.php 19273 2009-06-15 12:47:22Z fabien $
  */
 abstract class sfPluginBaseTask extends sfBaseTask
 {

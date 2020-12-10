@@ -34,12 +34,9 @@ $browser->
     checkElement('.board_col:first .widget',11)->
     checkElement('.board_col:first .widget:first .widget_top_bar span','/Collection/')->
     checkElement('.board_col:first .widget:nth-child(2) .widget_top_bar span','/Codes/')->
-    checkElement('.board_col:first .widget:nth-child(2) .widget_content thead tr',4)->
-    checkElement('.board_col:first .widget:nth-child(2) .widget_content thead tr:first th',1)->
-    checkElement('.board_col:first .widget:nth-child(2) .widget_content thead tr:first th','/Mask:/')->
-    checkElement('.board_col:first .widget:nth-child(2) .widget_content thead tr:nth-child(2) th',1)->
-    checkElement('.board_col:first .widget:nth-child(2) .widget_content thead tr:nth-child(3) th',7)->
-    checkElement('.board_col:first .widget:nth-child(2) .widget_content thead tr:nth-child(4) th',5)->
+    checkElement('.board_col:first .widget:nth-child(2) .widget_content thead tr',2)->
+    checkElement('.board_col:first .widget:nth-child(2) .widget_content thead tr:first th',7)->
+    checkElement('.board_col:first .widget:nth-child(2) .widget_content thead tr:nth-child(2) th',5)->
     checkElement('.board_col:last .widget:first .widget_top_bar span','/Acquisition/')->
     checkElement('.board_col:last .widget:nth-child(2) .widget_top_bar span','/Expedition/')->
     checkElement('.board_col:last .widget:nth-child(3) .widget_top_bar span','/I.G. number/')->
@@ -146,7 +143,8 @@ $browser->
   with('response')->begin()->
     matches('/ok/')->
   end()->
-  info('4.4 - Check getTaxon action call without arguments')->  
+  info('5 - Check getTaxon action call')->
+  info('5.1 - ...without arguments')->  
   get('specimen/getTaxon')->
   with('response')->begin()->
     isStatusCode(404)->
@@ -155,9 +153,7 @@ $browser->
 $num = 5;
 
 $browser->
-  info('5. - Check AddCode method call')->
-  info('5.1 - First add...')->
-  info('informations given are'.print_r(array('id'=>$specId, 'num'=>$num, 'collectionId'=>$collectionId)))->
+  info('5.4 - Check AddCode method call')->
   get('specimen/addCode', array('id'=>$specId, 'num'=>$num, 'collectionId'=>$collectionId))->
   with('response')->begin()->
     isStatusCode()->
@@ -165,23 +161,6 @@ $browser->
     checkElement('tr td:nth-child(2) input#specimen_newCodes_'.$num.'_code_prefix',1)->
     checkElement('tr td:nth-child(3) div#specimen_newCodes_'.$num.'_code_prefix_separator_parent',1)->
     checkElement('tr td:nth-child(4) input#specimen_newCodes_'.$num.'_code',1)->
-    checkElement('tr td:nth-child(4) input[value="124"]',1)->
-    checkElement('tr td:nth-child(5) div#specimen_newCodes_'.$num.'_code_suffix_separator_parent',1)->
-    checkElement('tr td:nth-child(6) input#specimen_newCodes_'.$num.'_code_suffix',1)->
-  end();
-
-$num +=1;
-
-$browser->
-  info('5.2 - Check AddCode auto-incrementation method call')->
-  get('specimen/addCode', array('id'=>$specId, 'num'=>$num, 'collectionId'=>$collectionId))->
-  with('response')->begin()->
-    isStatusCode()->
-    checkElement('tr td:first select#specimen_newCodes_'.$num.'_code_category',1)->
-    checkElement('tr td:nth-child(2) input#specimen_newCodes_'.$num.'_code_prefix',1)->
-    checkElement('tr td:nth-child(3) div#specimen_newCodes_'.$num.'_code_prefix_separator_parent',1)->
-    checkElement('tr td:nth-child(4) input#specimen_newCodes_'.$num.'_code',1)->
-    checkElement('tr td:nth-child(4) input[value="125"]',1)->
     checkElement('tr td:nth-child(5) div#specimen_newCodes_'.$num.'_code_suffix_separator_parent',1)->
     checkElement('tr td:nth-child(6) input#specimen_newCodes_'.$num.'_code_suffix',1)->
   end();

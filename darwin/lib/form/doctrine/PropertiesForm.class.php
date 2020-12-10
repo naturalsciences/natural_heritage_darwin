@@ -26,8 +26,9 @@ class PropertiesForm extends BasePropertiesForm
       'is_quantitative',
     ));
 
-    $yearsKeyVal = range(1400, intval(sfConfig::get('dw_yearRangeMax')));
-    $years = array_reverse(array_combine($yearsKeyVal, $yearsKeyVal),true);
+					//JMHerpers 2018 02 15 Inversion of max and Min to have most recent dates on top
+	$yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')),intval(sfConfig::get('dw_yearRangeMin')));
+    $years = array_combine($yearsKeyVal, $yearsKeyVal);
     $minDate = new FuzzyDateTime(strval(min($yearsKeyVal)).'/1/1 0:0:0');
     $maxDate = new FuzzyDateTime(strval(max($yearsKeyVal)).'/12/31 23:59:59');
     $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
@@ -106,7 +107,7 @@ class PropertiesForm extends BasePropertiesForm
     ));
 
     if(! $this->getObject()->isNew() || isset($this->options['hasmodel']))
-      $this->widgetSchema['applies_to']->setOption('forced_choices', Doctrine_Core::getTable('Properties')->getDistinctApplies($this->getObject()->getPropertyType()) );
+      $this->widgetSchema['applies_to']->setOption('forced_choices', Doctrine::getTable('Properties')->getDistinctApplies($this->getObject()->getPropertyType()) );
     else
       $this->widgetSchema['applies_to']->setOption('forced_choices',array(''=>''));
 
@@ -117,7 +118,7 @@ class PropertiesForm extends BasePropertiesForm
     ));
 
     if(! $this->getObject()->isNew() || isset($this->options['hasmodel']))
-      $this->widgetSchema['property_unit']->setOption('forced_choices', Doctrine_Core::getTable('Properties')->getDistinctUnit($this->getObject()->getPropertyType()) );
+      $this->widgetSchema['property_unit']->setOption('forced_choices', Doctrine::getTable('Properties')->getDistinctUnit($this->getObject()->getPropertyType()) );
     else
       $this->widgetSchema['property_unit']->setOption('forced_choices',array(''=>''));
 

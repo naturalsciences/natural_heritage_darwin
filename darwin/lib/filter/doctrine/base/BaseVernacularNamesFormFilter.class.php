@@ -6,30 +6,35 @@
  * @package    darwin
  * @subpackage filter
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
  */
-abstract class BaseVernacularNamesFormFilter extends DarwinModelFormFilter
+abstract class BaseVernacularNamesFormFilter extends BaseFormFilterDoctrine
 {
-  protected function setupInheritance()
+  public function setup()
   {
-    parent::setupInheritance();
+    $this->setWidgets(array(
+      'referenced_relation' => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'record_id'           => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'community'           => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'name'                => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'name_indexed'        => new sfWidgetFormFilterInput(),
+    ));
 
-    $this->widgetSchema   ['referenced_relation'] = new sfWidgetFormFilterInput(array('with_empty' => false));
-    $this->validatorSchema['referenced_relation'] = new sfValidatorPass(array('required' => false));
-
-    $this->widgetSchema   ['record_id'] = new sfWidgetFormFilterInput(array('with_empty' => false));
-    $this->validatorSchema['record_id'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
-
-    $this->widgetSchema   ['community'] = new sfWidgetFormFilterInput(array('with_empty' => false));
-    $this->validatorSchema['community'] = new sfValidatorPass(array('required' => false));
-
-    $this->widgetSchema   ['name'] = new sfWidgetFormFilterInput(array('with_empty' => false));
-    $this->validatorSchema['name'] = new sfValidatorPass(array('required' => false));
-
-    $this->widgetSchema   ['name_indexed'] = new sfWidgetFormFilterInput();
-    $this->validatorSchema['name_indexed'] = new sfValidatorPass(array('required' => false));
+    $this->setValidators(array(
+      'referenced_relation' => new sfValidatorPass(array('required' => false)),
+      'record_id'           => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
+      'community'           => new sfValidatorPass(array('required' => false)),
+      'name'                => new sfValidatorPass(array('required' => false)),
+      'name_indexed'        => new sfValidatorPass(array('required' => false)),
+    ));
 
     $this->widgetSchema->setNameFormat('vernacular_names_filters[%s]');
+
+    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
+
+    $this->setupInheritance();
+
+    parent::setup();
   }
 
   public function getModelName()
@@ -39,12 +44,13 @@ abstract class BaseVernacularNamesFormFilter extends DarwinModelFormFilter
 
   public function getFields()
   {
-    return array_merge(parent::getFields(), array(
+    return array(
+      'id'                  => 'Number',
       'referenced_relation' => 'Text',
-      'record_id' => 'Number',
-      'community' => 'Text',
-      'name' => 'Text',
-      'name_indexed' => 'Text',
-    ));
+      'record_id'           => 'Number',
+      'community'           => 'Text',
+      'name'                => 'Text',
+      'name_indexed'        => 'Text',
+    );
   }
 }

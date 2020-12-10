@@ -2,7 +2,7 @@ all:
   .general:
     salt: salt
     yearRangeMin: 1700
-    yearRangeMax:  2038
+    yearRangeMax:  <?php echo date('Y')+2 ."\n"; ?>
     dateUpperBound: '2038/12/31'
     dateLowerBound: '0001/01/01'
     yearUpperBound: '2038'
@@ -11,23 +11,14 @@ all:
     catalogueRecLimit: 200
     queryTimeout: 30000
     defaultInstitutionRef: ~
+	collect_to_print_thermic: '6,13'
     tagsDisplayLimit: 10
     tagsLowerLimit: 4
     tempFilePath: '/tmp/temp_file'
-    #rmca 2016 02 22
-    disableXSDValidation: true
+    disableXSDValidation: false
     domain_disable_menu: http://collections.naturalsciences.be/darwin/
-    root_url_wfs: https://darwin.naturalsciences.be/geoserver/
-	root_url_uuid: https://darwin.naturalsciences.be/darwin/search/view/uuid/
-	php_console: 'php7.2'
-    wfs_layers: 
-           rbins_natural_earth_adm: "Natural Earth Administrative"
-           rbins_natural_earth_physical: "Natural Earth Physical"
-           rbins_osm: "Open Street Map"	
-           rbins_generic: "RBINS Other layers"
-    bing_key: "Ap3eFRefFd94_D4cqsicw-Fk1-d4kRat9pstTO4oo_i9anyUqrfQcqL9Ew9CJahg"
-    iiif_viewer: "https://darwinweb.africamuseum.be/mirador/index.php?manifest="	
-    
+    bing_key: "Ap3eFRefFd94_D4cqsicw-Fk1-d4kRat9pstTO4oo_i9anyUqrfQcqL9Ew9CJahg"  
+
   mailer:
     sender: your_send_email@example.com
 

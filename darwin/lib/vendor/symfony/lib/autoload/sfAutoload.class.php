@@ -17,7 +17,7 @@
  * @package    symfony
  * @subpackage autoload
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfAutoload.class.php 23205 2009-10-20 13:20:17Z Kris.Wallsmith $
  */
 class sfAutoload
 {
@@ -36,7 +36,7 @@ class sfAutoload
   /**
    * Retrieves the singleton instance of this class.
    *
-   * @return sfAutoload A sfAutoload implementation instance.
+   * @return sfCoreAutoload A sfCoreAutoload implementation instance.
    */
   static public function getInstance()
   {
@@ -52,8 +52,6 @@ class sfAutoload
    * Register sfAutoload in spl autoloader.
    *
    * @return void
-   *
-   * @throws sfException
    */
   static public function register()
   {
@@ -126,29 +124,18 @@ class sfAutoload
     }
 
     self::$freshCache = true;
-    if (is_file($configuration->getConfigCache()->getCacheName('config/autoload.yml')))
+    if (file_exists($configuration->getConfigCache()->getCacheName('config/autoload.yml')))
     {
       self::$freshCache = false;
       if ($force)
       {
-        if (file_exists($configuration->getConfigCache()->getCacheName('config/autoload.yml')))
-        {
-          unlink($configuration->getConfigCache()->getCacheName('config/autoload.yml'));
-        }
+        unlink($configuration->getConfigCache()->getCacheName('config/autoload.yml'));
       }
     }
 
     $file = $configuration->getConfigCache()->checkConfig('config/autoload.yml');
 
-    if ($force && defined('HHVM_VERSION'))
-    {
-      // workaround for https://github.com/facebook/hhvm/issues/1447
-      $this->classes = eval(str_replace('<?php', '', file_get_contents($file)));
-    }
-    else
-    {
-      $this->classes = include $file;
-    }
+    $this->classes = include($file);
 
     foreach ($this->overriden as $class => $path)
     {
@@ -188,7 +175,7 @@ class sfAutoload
     $class = strtolower($class);
 
     // class already exists
-    if (class_exists($class, false) || interface_exists($class, false) || (function_exists('trait_exists') && trait_exists($class, false)))
+    if (class_exists($class, false) || interface_exists($class, false))
     {
       return true;
     }

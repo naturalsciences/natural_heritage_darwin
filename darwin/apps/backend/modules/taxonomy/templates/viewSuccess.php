@@ -45,11 +45,24 @@ $(document).ready(function ()
   		    <?php if($form['extinct']->getValue()) echo __("Yes") ; else echo __("No") ;?>
         </td>
       </tr>
-	  <!--jmherpers 2019 04 25-->
+	  	  <!--jmherpers 2019 04 25-->
 	  <tr>
         <th><?php echo $form['cites']->renderLabel() ?></th>
         <td>
   		    <?php if($form['cites']->getValue()) echo __("Yes") ; else echo __("No") ;?>
+        </td>
+      </tr>
+      <tr>
+        <th><?php echo $form['sensitive_info_withheld']->renderLabel() ?></th>
+        <td>
+  		    <?php if($form['sensitive_info_withheld']->getValue()) echo __("Yes") ; else echo __("No") ;?>
+        </td>
+      </tr>
+      <!--ftheeten-->
+      <tr>
+        <th><?php echo $form['metadata_ref']->renderLabel() ?></th>
+        <td>
+  		    <?php echo __($taxon->getTaxonomyMetadataName());?> <?php if($taxon->getIsReferenceTaxonomy()) echo __("(Reference)") ; else echo __("(Non reference)") ;?>
         </td>
       </tr>
       <tr>
@@ -72,7 +85,7 @@ $(document).ready(function ()
     search_data = <?php echo json_encode(array('specimen_search_filters[taxa_list]' => $taxon->getId(), 'specimen_search_filters[taxon_relation]' => 'equal' ));?>;
     $('.link_to_search').click(function (event){
       event.preventDefault();
-      postToUrl($(this).attr('href'), search_data, true);
+      postToUrl($(this).attr('href'), search_data);
     });
   });
 </script></td>

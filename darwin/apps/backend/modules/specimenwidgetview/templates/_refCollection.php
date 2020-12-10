@@ -11,12 +11,7 @@
         <?php echo $spec->getCollections()->getName(); ?>
       </td>
     </tr>
-    <tr>
-      <th><?php echo __("Specimen category ") ?></th>
-      <td>
-       <?php echo $spec->getCategory() ; ?>
-      </td>
-    </tr>
+    <!--ftheeten 2016 08 25 removed category-->
   </tbody>
 </table>
 <script type="text/javascript">

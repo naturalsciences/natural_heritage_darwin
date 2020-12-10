@@ -10,8 +10,9 @@
   </div>
 
   <div class="tag_encod">
-    <?php echo $form['international_name']->renderError(); ?>
-    <?php echo $form['international_name'];?>
+    <!--ftheeten 2018 03 05 hide international name-->
+    <!--<?php echo $form['international_name']->renderError(); ?>
+    <?php echo $form['international_name'];?>-->
 
     <?php echo $form['tag_value']->renderError(); ?>
     <?php echo $form['tag_value'];?>

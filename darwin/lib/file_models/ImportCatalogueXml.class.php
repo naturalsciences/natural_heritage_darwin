@@ -31,10 +31,10 @@ class ImportCatalogueXml implements ImportModelsInterface
   {
     $this->import_id = $id ;
 	    //ftheeten 2017 07026
-	$importTmp=Doctrine_Core::getTable('Imports')->find($this->import_id);
-	$taxonomyMetadataTmp=Doctrine_Core::getTable('TaxonomyMetadata')->find($importTmp->getSpecimenTaxonomyRef());
+	$importTmp=Doctrine::getTable('Imports')->find($this->import_id);
+	$taxonomyMetadataTmp=Doctrine::getTable('TaxonomyMetadata')->find($importTmp->getSpecimenTaxonomyRef());
     //ftheeten 2018 03 22
-    $mime_type=Doctrine_Core::getTable('Imports')->find($this->import_id)->getMimeType();
+    $mime_type=Doctrine::getTable('Imports')->find($this->import_id)->getMimeType();
     $this->taxonomy_name=$taxonomyMetadataTmp->getTaxonomyName();
     $this->creation_date=$taxonomyMetadataTmp->getCreationDate();
     $this->creation_date_mask=$taxonomyMetadataTmp->getCreationDateMask();
@@ -43,10 +43,9 @@ class ImportCatalogueXml implements ImportModelsInterface
     $this->definition_taxonomy=$taxonomyMetadataTmp->getDefinition();
     $this->url_website_taxonomy=$taxonomyMetadataTmp->getUrlWebsite();
     $this->url_webservice_taxonomy=$taxonomyMetadataTmp->getUrlWebservice();
-    //ftheeten 2019 02 05
-	if(strpos(strtolower($mime_type),"text/")==0&&strtolower($mime_type)!="text/xml")
+    //ftheeten 2018 03 21
+	if($mime_type==="text/plain")
     {
-        //print("GO_CSV");
         if (!($fp = fopen($file, "r"))) {
             return("could not open input file");
         }
@@ -85,7 +84,7 @@ class ImportCatalogueXml implements ImportModelsInterface
         return $this->errors_reported ;
     }
     //back to old XML parser
-    elseif(strpos(strtolower($mime_type),"xml")>=0)
+    else
     {
         $xml_parser = xml_parser_create();
         xml_set_object($xml_parser, $this) ;
@@ -152,7 +151,7 @@ class ImportCatalogueXml implements ImportModelsInterface
         case "Version":
           $this->version_defined = true;
           $authorized = sfConfig::get('tpl_authorizedversion');
-          Doctrine_Core::getTable('Imports')->find($this->import_id)->setTemplateVersion(trim($this->version))->save();
+          Doctrine::getTable('Imports')->find($this->import_id)->setTemplateVersion(trim($this->version))->save();
           if(
               !isset( $authorized['taxonomy'] ) ||
               empty( $authorized['taxonomy'] ) ||
@@ -200,7 +199,7 @@ class ImportCatalogueXml implements ImportModelsInterface
   
   private function saveUnit()
   {
-    //print("SAVE");
+  
     $this->staging_catalogue->fromArray(array("import_ref" => $this->import_id, "parent_ref" => $this->parent
     //ftheeten 2017 07 06
     ,"taxonomy_name"=> $this->taxonomy_name, "creation_date"=> $this->creation_date
@@ -220,19 +219,14 @@ class ImportCatalogueXml implements ImportModelsInterface
 	print($this->staging_catalogue->getName());*/
     try
     {
-      //  print("try");
       $result = $this->staging_catalogue->save() ;
 	  //print("\r\nSave\r\n");
       foreach($result as $key => $error)
-      {
-        //print("debug");
         $this->errors_reported .= $error ;
-      }
       $this->parent = $this->staging_catalogue->getId() ;
     }
     catch(Doctrine_Exception $ne)
     {
-      //print("debug 2");
       $e = new DarwinPgErrorParser($ne);
       $this->errors_reported .= "Unit ".$this->staging_catalogue->getName()." object were not saved: ".$e->getMessage().";";
     }

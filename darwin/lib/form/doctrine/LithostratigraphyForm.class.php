@@ -39,7 +39,6 @@ class LithostratigraphyForm extends BaseLithostratigraphyForm
       'button_is_hidden' => true,
       'nullable' => true,
       'complete_url' => 'catalogue/completeName?table=lithostratigraphy',
-      'field_level_id' => $this->widgetSchema->generateId($this->widgetSchema->generateName('level_ref')),
     ));
     $this->widgetSchema['local_naming'] = new sfWidgetFormInputCheckbox();
     $this->widgetSchema->setLabels(array(

@@ -1,12 +1,8 @@
 <?php include_stylesheets_for_form($form) ?>
 <?php include_javascripts_for_form($form) ?>
-<?php
-	$flagMenu=detect_menu_hidden();
-?>
 <div class="catalogue_ig">
   <?php echo form_tag('igs/search'.( isset($is_choose) ? '?is_choose='.$is_choose : '') , array('class'=>'search_form','id'=>'igs_filter'));?>
   <div class="container">
-    <div  style="text-align:right"><input class="search_submit get_tab" type="button" name="search" value="<?php echo __('Get tab-delimited'); ?>"/></div>
     <table class="search" id="<?php echo ($is_choose)?'search_and_choose':'search' ?>">
       <thead>
         <tr>
@@ -37,7 +33,7 @@
         <td><?php echo $form['role_ref'];?></td> 
         </tr>
         <tr>
-         <td><input class="search_submit" type="submit" name="search" value="<?php echo __('Search'); ?>" /></td>		 
+         <td><input class="search_submit" type="submit" name="search" value="<?php echo __('Search'); ?>" /></td>
         </tr>
       </tbody>
     </table>
@@ -45,7 +41,7 @@
       <div class="search_results_content">
       </div>
     </div>
-    <?php if($sf_user->isAtLeast(Users::ENCODER)&&$flagMenu):?> <div class='new_link'><a <?php echo !(isset($is_choose) && $is_choose)?'':'target="_blank"';?> href="<?php echo url_for('igs/new') ?>"><?php echo __('New');?></a></div><?php endif;?>
+    <?php if($sf_user->isAtLeast(Users::ENCODER)):?> <div class='new_link'><a <?php echo !(isset($is_choose) && $is_choose)?'':'target="_blank"';?> href="<?php echo url_for('igs/new') ?>"><?php echo __('New');?></a></div><?php endif;?>
   </div>
 </form>
 </div>
@@ -122,39 +118,5 @@
    open(url+'?'+data);
     return false;
   });
-  
-  $(".get_tab").click(
-	function()
-	{
-		
-
-		var $tmp=$('form:first');
-		
-		var new_target="<?php echo url_for('igs/downloadTab') ?>";		
-		var $inputs = $('form:first :input');
-        var form = document.createElement("form");
-		form.hidden=true;
-		form.setAttribute("method", "post");
-		form.setAttribute("action", new_target);
-
-		form.setAttribute("target", "view");
-
-		
-		$inputs.each(function() {
-			var hiddenField = document.createElement("input"); 
-			
-			hiddenField.setAttribute("name", this.name);
-			hiddenField.setAttribute("value", $(this).val());
-			
-			form.appendChild(hiddenField);
-		});
-		
-		document.body.appendChild(form);
-
-		window.open('', 'view');
-
-		form.submit();
-	}
-  );
 });
 </script>

@@ -13,8 +13,8 @@ class IdentificationsForm extends BaseIdentificationsForm
   {
 
     $this->useFields(array('id', 'referenced_relation', 'record_id', 'notion_date', 'notion_concerned', 'value_defined', 'determination_status', 'order_by'));
-
-    $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')), intval(sfConfig::get('dw_yearRangeMin')));
+	//JMHerpers 2018 02 15 Inversion of max and Min to have most recent dates on top
+    $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')),intval(sfConfig::get('dw_yearRangeMin')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
     $dateText = array('year'=>'yyyy', 'month'=>'mm', 'day'=>'dd');
     $minDate = new FuzzyDateTime(strval(min($yearsKeyVal).'/01/01'));
@@ -53,12 +53,12 @@ class IdentificationsForm extends BaseIdentificationsForm
     $this->widgetSchema['value_defined'] = new sfWidgetFormInput();
     //ftheeten 2018 09 18 new class identification_subject
     $this->widgetSchema['value_defined']->setAttributes(array('class'=>'xlsmall_size identification_subject'));
-    $this->validatorSchema['value_defined'] = new sfValidatorString(array('required' => true, 'trim'=>true), array("required"=>"Identification subjet is missing"));
+    $this->validatorSchema['value_defined'] = new sfValidatorString(array('required' => false, 'trim'=>true));
     $this->widgetSchema['determination_status'] = new widgetFormSelectComplete(array(
         'model' => 'Identifications',
-        'table_method' => 'getDistinctDeterminationStatus',
-        'method' => 'getDeterminationStatus',
-        'key_method' => 'getDeterminationStatus',
+        'table_method' => Array('method'=> 'getDistinctDeterminationStatus', 'parameters' => array(/*$this->options['ref_relation']*/)),
+		'method' => 'getDeterminationStatus',
+        'key_method' => 'getId',
         'add_empty' => true,
         'change_label' => '',
         'add_label' => '',
@@ -72,7 +72,7 @@ class IdentificationsForm extends BaseIdentificationsForm
     
     $subForm = new sfForm();
     $this->embedForm('Identifiers',$subForm);   
-    foreach(Doctrine_Core::getTable('CataloguePeople')->getPeopleRelated('identifications', 'identifier', $this->getObject()->getId()) as $key=>$vals)
+    foreach(Doctrine::getTable('CataloguePeople')->getPeopleRelated('identifications', 'identifier', $this->getObject()->getId()) as $key=>$vals)
     {
       $form = new IdentifiersForm($vals);
       $this->embeddedForms['Identifiers']->embedForm($key, $form);

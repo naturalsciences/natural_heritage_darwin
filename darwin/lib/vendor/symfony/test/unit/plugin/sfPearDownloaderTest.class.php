@@ -16,7 +16,7 @@ require_once 'PEAR/Downloader.php';
  * @package    symfony
  * @subpackage plugin
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfPearDownloaderTest.class.php 5250 2007-09-24 08:11:50Z fabien $
  */
 class sfPearDownloaderTest extends sfPearDownloader
 {

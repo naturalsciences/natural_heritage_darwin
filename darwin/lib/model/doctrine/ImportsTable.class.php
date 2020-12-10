@@ -19,17 +19,25 @@ class ImportsTable extends Doctrine_Table
 
   public function markOk($id)
   {
+    //print("\n MARK OK \n");
+    //print($id);
     $conn = Doctrine_Manager::connection();
     $prepared_sql = $conn->prepare("UPDATE staging s1
                                     SET to_import = TRUE
                                     WHERE status = ''
                                       AND import_ref = ?"
     );
+    //print("AAAAAA");
+    //$debug=Doctrine_Core::getTable('Imports')->findOneById($id);
+    //print($debug->getState());
     $prepared_sql->execute(array(intval($id)));
     $q = Doctrine_Query::create()->update('Imports');
     $q->andwhere('id = ? ',$id)
       ->set('state', '?','processing')
       ->execute();
+      // print("BBBBB");
+         //$debug=Doctrine_Core::getTable('Imports')->findOneById($id);
+    //print($debug->getState());
   }
 
   public function getNumberOfLines($record_ids)
@@ -40,19 +48,6 @@ class ImportsTable extends Doctrine_Table
     $result = $conn->fetchAssoc("SELECT import_ref as id, COUNT(*) as cnt
                                   FROM staging r
                                   WHERE import_ref = ANY('{ $ids_list_as_string }'::int[])
-                                  GROUP BY import_ref");
-    return $result;
-  }
-  
-  //ftheeten 2018 09 25
-    public function getNumberOfLinesGtu($record_ids)
-  {
-    if(! count($record_ids)) return array();
-    $conn = Doctrine_Manager::connection();
-    $ids_list_as_string = implode(',',$record_ids);
-    $result = $conn->fetchAssoc("SELECT import_ref as id, COUNT(*) as cnt
-                                  FROM staging_gtu r
-                                  WHERE import_ref = ANY('{ $ids_list_as_string }'::int[]) AND imported=FALSE
                                   GROUP BY import_ref");
     return $result;
   }
@@ -73,15 +68,26 @@ class ImportsTable extends Doctrine_Table
       ->execute();
   }
 
-  public function getWithImports($id)
+  public function getWithImports($id, $mode="AND")
   {    
+  
     $q = Doctrine_Query::create()
       ->From('Imports i')
-      ->andwhere('exists(select 1 from staging where to_import = true and import_ref = i.id)')
-      ->andWhere("state = 'aprocessing'");
-    if(!empty($id) && ctype_digit($id) && $id > 0) {
-      $q->andWhere("i.id = ?", $id);
-    }
+     //->andwhere('exists(select 1 from staging where to_import = true and import_ref = i.id)')
+	  //ftheeten 2017 09 30
+	  ->andwhere('exists(select 1 from staging where import_ref = i.id)')
+      ;
+    if(!empty($id) && ctype_digit($id) && $id > 0) 
+	{
+	  if($mode=="OR")
+	  {
+		  $q->andWhere("i.id = ?", $id);
+	  }
+	  else
+      {
+		 $q->andWhere("state = 'aprocessing'")->andWhere("i.id = ?", $id);
+      }
+	}
 
     return $q->execute();
   }
@@ -110,7 +116,7 @@ class ImportsTable extends Doctrine_Table
     $items = $q->execute();
 
     $ids = $items->toKeyValueArray("id", "id");
-
+    
     if(count($ids))
     {
       $ids_list_as_string = implode(',', $ids);
@@ -158,26 +164,6 @@ class ImportsTable extends Doctrine_Table
               ->set('p.state','?','pending')
                ->where('p.id = ? ', $import_ref)
               ->execute();
-    }
-	
-	 //2019 03 14
-    public function updateExpeditionInStaging($import_ref, $old_exp_name, $new_exp_id)
-    {
-        
-        Doctrine_Query::create()
-              ->update('imports p')
-              ->set('p.state','?','aprocessing')
-               ->where('p.id = ? ', $import_ref)
-              ->execute();     
-        $conn = Doctrine_Manager::connection();
-        $sql = "UPDATE staging set expedition_ref=:new, status = status - 'expedition'::text  WHERE import_ref =:import AND expedition_name= :old;";
-        $q = $conn->prepare($sql);
-		$q->execute(array(':import'=> $import_ref, ':old' => $old_exp_name, ':new' => $new_exp_id ));
-        
-        Doctrine_Query::create()
-              ->update('imports p')
-              ->set('p.state','?','pending')
-               ->where('p.id = ? ', $import_ref)
-              ->execute();
+	     
     }
 }

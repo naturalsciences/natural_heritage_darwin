@@ -6,7 +6,7 @@
  * @package    project
  * @subpackage view
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: actions.class.php 4937 2007-08-30 08:40:10Z fabien $
  */
 class presentationActions extends sfActions
 {

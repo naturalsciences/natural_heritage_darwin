@@ -8,39 +8,41 @@
  * @package    darwin
  * @subpackage form
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
  */
-abstract class BaseUsersLoginInfosForm extends DarwinModelForm
+abstract class BaseUsersLoginInfosForm extends BaseFormDoctrine
 {
-  protected function setupInheritance()
+  public function setup()
   {
-    parent::setupInheritance();
+    $this->setWidgets(array(
+      'id'           => new sfWidgetFormInputHidden(),
+      'user_ref'     => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('User'), 'add_empty' => false)),
+      'login_type'   => new sfWidgetFormTextarea(),
+      'user_name'    => new sfWidgetFormTextarea(),
+      'password'     => new sfWidgetFormTextarea(),
+      'login_system' => new sfWidgetFormTextarea(),
+      'renew_hash'   => new sfWidgetFormTextarea(),
+      'last_seen'    => new sfWidgetFormTextarea(),
+    ));
 
-    $this->widgetSchema   ['user_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('User'), 'add_empty' => false));
-    $this->validatorSchema['user_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('User'), 'column' => 'id'));
-
-    $this->widgetSchema   ['login_type'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['login_type'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['user_name'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['user_name'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['password'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['password'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['login_system'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['login_system'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['renew_hash'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['renew_hash'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['last_seen'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['last_seen'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['user_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('User'), 'add_empty' => false));
-    $this->validatorSchema['user_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('User'), 'column' => 'id'));
+    $this->setValidators(array(
+      'id'           => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
+      'user_ref'     => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('User'))),
+      'login_type'   => new sfValidatorString(array('required' => false)),
+      'user_name'    => new sfValidatorString(array('required' => false)),
+      'password'     => new sfValidatorString(array('required' => false)),
+      'login_system' => new sfValidatorString(array('required' => false)),
+      'renew_hash'   => new sfValidatorString(array('required' => false)),
+      'last_seen'    => new sfValidatorString(array('required' => false)),
+    ));
 
     $this->widgetSchema->setNameFormat('users_login_infos[%s]');
+
+    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
+
+    $this->setupInheritance();
+
+    parent::setup();
   }
 
   public function getModelName()

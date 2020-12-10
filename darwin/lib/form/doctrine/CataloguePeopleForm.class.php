@@ -13,7 +13,8 @@ class CataloguePeopleForm extends BaseCataloguePeopleForm
   {
     $this->widgetSchema['referenced_relation'] = new sfWidgetFormInputHidden();
     $this->widgetSchema['record_id'] = new sfWidgetFormInputHidden();
-
+    //ftheeten 2020 09 10 bug pass validation to save
+    $this->validatorSchema['record_id'] = new sfValidatorPass();
     $this->widgetSchema['people_ref'] = new widgetFormJQueryDLookup(
       array(
             'model' => 'People',
@@ -50,7 +51,7 @@ class CataloguePeopleForm extends BaseCataloguePeopleForm
       $this->widgetSchema['people_sub_type']->setDefault('Main Author');
     else
       $this->widgetSchema['people_sub_type']->setDefault('General');
-    $this->widgetSchema['people_sub_type']->setOption('forced_choices', Doctrine_Core::getTable('CataloguePeople')->getDistinctSubType($this->getObject()->getPeopleType()) );
+    $this->widgetSchema['people_sub_type']->setOption('forced_choices', Doctrine::getTable('CataloguePeople')->getDistinctSubType($this->getObject()->getPeopleType()) );
 
     $this->widgetSchema->setLabels(array('people_type' => $this->getI18N()->__('Type'),
                                          'people_sub_type' => $this->getI18N()->__('Sub-Type'),
@@ -66,6 +67,6 @@ class CataloguePeopleForm extends BaseCataloguePeopleForm
   
   public function forceSubType()
   {
-    $this->widgetSchema['people_sub_type']->setOption('forced_choices', Doctrine_Core::getTable('CataloguePeople')->getDistinctSubType($this->getObject()->getPeopleType()) );
+    $this->widgetSchema['people_sub_type']->setOption('forced_choices', Doctrine::getTable('CataloguePeople')->getDistinctSubType($this->getObject()->getPeopleType()) );
   }
 }

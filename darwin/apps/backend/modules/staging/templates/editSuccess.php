@@ -2,8 +2,7 @@
 <?php include_stylesheets_for_form($form) ?>
 <?php include_javascripts_for_form($form) ?>
 <div class="page">
-  <?php $has_gtu=false; ?>
-  <?php $has_expedition=false; ?>
+ <?php $has_gtu=false; ?>
   <?php echo form_tag('staging/update?id='.$form->getObject()->getId(), array('class'=>'edition','method'=>'post'));?>
   <?php if($form->hasGlobalErrors()):?>
     <ul class="spec_error_list">
@@ -19,8 +18,7 @@
     </p>
   <?php else : ?>
     <?php foreach($fields as $key => $array) : ?>
-    <?php if($key=="gtu") { $has_gtu=true ;} ;?>
-	<?php if($key=="expedition") { $has_expedition=true ;} ;?>
+	<?php if($key=="gtu") { $has_gtu=true ;} ;?>
       <?php if($key == 'duplicate') : ?>
       <fieldset>
         <ul class="error_list">
@@ -62,27 +60,25 @@
           ?>
             <?php if (count($catalogues) > 0) : ?><ul class="taxon_parent"><?php echo __("import_taxon_parent_info") ; ?><?php endif; ?>
             <?php foreach($catalogues as $level => $catalogue) : ?>
-              <?php $lvl_name = $key.'_level_name';
+              <li>
+                <div class="<?php echo $catalogue['class'] != ''? 'line_ok':'line_not_ok'; ?>"></div>
+                <?php $lvl_name = $key.'_level_name';
                       $lvl_name = $$lvl_name;
                       if($key == 'taxon') $link_url = 'taxonomy';
                       if($key == 'mineral') $link_url = 'mineralogy';
                       if($key == 'litho') $link_url = 'lithostratigraphy';
                       if($key == 'lithology') $link_url = 'lithology';
                       if($key == 'chrono') $link_url = 'chronostratigraphy';
-              ?>
-              <li class="rid_<?php echo $catalogue['class'] != ''?$catalogue['class']:'' ; ?>" data-catalogue="<?php echo $link_url ; ?>">                
-                <div class="<?php echo $catalogue['class'] != ''? 'line_ok':'line_not_ok'; ?>"></div>
-                <?php if ($catalogue['class'] != '') echo image_tag('info.png',"title=info class=info") ;?>
+                ?>
                 <?php if($catalogue['level_sys_name'] == $lvl_name) echo '<strong>';?>
                 <?php if($catalogue['class'] == ''):?>
-                  <a target="_blank" href="<?php echo url_for($link_url.'/new').'?'.$link_url.'[name]='.urlencode($catalogue['name']).'&'.$link_url.'[level_ref]='.$catalogue['level_ref'] ; ?>">
+                  <a target="_blank" href="<?php echo url_for($link_url.'/new').'?'.$link_url.'[name]='.$catalogue['name'].'&'.$link_url.'[level_ref]='.$catalogue['level_ref'] ; ?>">
                     <?php echo $catalogue['name']." (".$level.")";?>
                   </a>
                 <?php else:?>
                   <?php echo link_to($catalogue['name']." (".$level.")", $link_url.'/view?id='.$catalogue['class']) ; ?>
-                <?php endif;?>                
+                <?php endif;?>
                 <?php if($catalogue['level_sys_name'] == $lvl_name) echo '</strong>';?>
-                <div class="tree"></div>
               </li>
             <?php endforeach ; ?>
             </ul>
@@ -96,11 +92,8 @@
     </div>
     <p class="form_buttons right_aligned error">
       <a href="<?php echo url_for('staging/index?import='.$form->getObject()->getImportRef()) ?>" id="spec_cancel"><?php echo __('Back');?></a>
-      <?php if($has_gtu):?>
+	  <?php if($has_gtu):?>
         <a  id="align_all_gtu"><?php echo __('Update all similar GTUs');?></a>
-      <?php endif;?>
-	  <?php if($has_expedition):?>
-        <a  id="align_all_expeditions"><?php echo __('Update all similar Expeditions');?></a>
       <?php endif;?>
       <input type="submit" value="<?php echo __('Update');?>" id="submit"/>
     </p>
@@ -113,47 +106,23 @@ $(document).ready(function () {
   {
     $(this).parent().find('input').val(0);
   });
-
-  $('.taxon_parent li .info').click(function()
-  {    
-    item_row=$(this).closest('li');
-    catalogue='<?php echo url_for('catalogue/tree');?>'+'/table/'+item_row.attr('data-catalogue') ;
-    if(item_row.find('.tree').is(":hidden"))
-    {
-      $.get(catalogue+'/id/'+getIdInClasses(item_row),function (html){
-        item_row.find('.tree').html(html).slideDown();
-      });
-    }
-    $('.tree').slideUp();
-  });
   
   //ftheeten 2018 10 01
   <?php if(is_numeric($form->getObject()->getSpecimenTaxonomyRef())):?>
   onElementInserted('body', '.col_check_metadata_ref', function(element)
         {
-            //document.getElementById('searchCatalogue_metadata_ref').value;            
+            //document.getElementById('searchCatalogue_metadata_ref').value=<?php print($form->getObject()->getSpecimenTaxonomyRef());?>;
             $(".col_check_metadata_ref option[value='<?php print($form->getObject()->getSpecimenTaxonomyRef());?>']").prop('selected', true);
             
         });
    <?php endif;?>
    
-   //2019 03 14
+     //2019 03 14
    $("#align_all_gtu").on("click", function (e) {
             //$('#contactsFrom').attr('action', "/test1");
             //$("#contactsFrom").submit();
             var target=document.forms[0].action;
             target=target.replace('/update/', '/updateallgtus/');            
-            document.forms[0].action=target;
-            var tmpForm=document.forms[0];
-            $("#submit").click();
-            e.preventDefault();
-        });
-		
-	$("#align_all_expeditions").on("click", function (e) {
-            //$('#contactsFrom').attr('action', "/test1");
-            //$("#contactsFrom").submit();
-            var target=document.forms[0].action;
-            target=target.replace('/update/', '/updateallexpeditions/');            
             document.forms[0].action=target;
             var tmpForm=document.forms[0];
             $("#submit").click();

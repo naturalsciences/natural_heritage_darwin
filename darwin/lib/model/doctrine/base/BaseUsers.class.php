@@ -20,8 +20,8 @@
  * @property integer $db_user_type
  * @property integer $people_id
  * @property string $selected_lang
+ * @property string $user_ip
  * @property People $People
- * @property IdentifiersUsers $IdentifiersUsers
  * @property Doctrine_Collection $UsersComm
  * @property Doctrine_Collection $UsersAddresses
  * @property Doctrine_Collection $UsersLoginInfos
@@ -35,7 +35,6 @@
  * @property Doctrine_Collection $Imports
  * @property Doctrine_Collection $LoanRights
  * @property Doctrine_Collection $LoanStatus
- * @property Doctrine_Collection $Reports
  * 
  * @method integer             getId()                    Returns the current record's "id" value
  * @method boolean             getIsPhysical()            Returns the current record's "is_physical" value
@@ -52,8 +51,8 @@
  * @method integer             getDbUserType()            Returns the current record's "db_user_type" value
  * @method integer             getPeopleId()              Returns the current record's "people_id" value
  * @method string              getSelectedLang()          Returns the current record's "selected_lang" value
+ * @method string              getUserIp()                Returns the current record's "user_ip" value
  * @method People              getPeople()                Returns the current record's "People" value
- * @method IdentifiersUsers    getIdentifiersUsers()      Returns the current record's "IdentifiersUsers" value
  * @method Doctrine_Collection getUsersComm()             Returns the current record's "UsersComm" collection
  * @method Doctrine_Collection getUsersAddresses()        Returns the current record's "UsersAddresses" collection
  * @method Doctrine_Collection getUsersLoginInfos()       Returns the current record's "UsersLoginInfos" collection
@@ -67,7 +66,6 @@
  * @method Doctrine_Collection getImports()               Returns the current record's "Imports" collection
  * @method Doctrine_Collection getLoanRights()            Returns the current record's "LoanRights" collection
  * @method Doctrine_Collection getLoanStatus()            Returns the current record's "LoanStatus" collection
- * @method Doctrine_Collection getReports()               Returns the current record's "Reports" collection
  * @method Users               setId()                    Sets the current record's "id" value
  * @method Users               setIsPhysical()            Sets the current record's "is_physical" value
  * @method Users               setSubType()               Sets the current record's "sub_type" value
@@ -83,8 +81,8 @@
  * @method Users               setDbUserType()            Sets the current record's "db_user_type" value
  * @method Users               setPeopleId()              Sets the current record's "people_id" value
  * @method Users               setSelectedLang()          Sets the current record's "selected_lang" value
+ * @method Users               setUserIp()                Sets the current record's "user_ip" value
  * @method Users               setPeople()                Sets the current record's "People" value
- * @method Users               setIdentifiersUsers()      Sets the current record's "IdentifiersUsers" value
  * @method Users               setUsersComm()             Sets the current record's "UsersComm" collection
  * @method Users               setUsersAddresses()        Sets the current record's "UsersAddresses" collection
  * @method Users               setUsersLoginInfos()       Sets the current record's "UsersLoginInfos" collection
@@ -98,7 +96,6 @@
  * @method Users               setImports()               Sets the current record's "Imports" collection
  * @method Users               setLoanRights()            Sets the current record's "LoanRights" collection
  * @method Users               setLoanStatus()            Sets the current record's "LoanStatus" collection
- * @method Users               setReports()               Sets the current record's "Reports" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -172,6 +169,11 @@ abstract class BaseUsers extends DarwinModel
              'notnull' => true,
              'default' => 'en',
              ));
+        $this->hasColumn('user_ip', 'string', null, array(
+             'type' => 'string',
+             'notnull' => true,
+             'default' => '',
+             ));
     }
 
     public function setUp()
@@ -180,10 +182,6 @@ abstract class BaseUsers extends DarwinModel
         $this->hasOne('People', array(
              'local' => 'people_id',
              'foreign' => 'id'));
-
-        $this->hasOne('IdentifiersUsers', array(
-             'local' => 'id',
-             'foreign' => 'record_id'));
 
         $this->hasMany('UsersComm', array(
              'local' => 'id',
@@ -234,10 +232,6 @@ abstract class BaseUsers extends DarwinModel
              'foreign' => 'user_ref'));
 
         $this->hasMany('LoanStatus', array(
-             'local' => 'id',
-             'foreign' => 'user_ref'));
-
-        $this->hasMany('Reports', array(
              'local' => 'id',
              'foreign' => 'user_ref'));
     }

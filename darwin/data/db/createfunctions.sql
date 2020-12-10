@@ -90,8 +90,6 @@ $$ LANGUAGE plpgsql IMMUTABLE;
 */
 CREATE OR REPLACE FUNCTION fct_cpy_fullToIndex() RETURNS trigger
 AS $$
-DECLARE
-  codeNum varchar;
 BEGIN
         IF TG_TABLE_NAME = 'properties' THEN
                 NEW.applies_to_indexed := COALESCE(fullToIndex(NEW.applies_to),'');
@@ -118,11 +116,10 @@ BEGIN
                 NEW.name_formated_indexed := fulltoindex(coalesce(NEW.given_name,'') || coalesce(NEW.family_name,''));
                 NEW.formated_name_unique := COALESCE(toUniqueStr(NEW.formated_name),'');
         ELSIF TG_TABLE_NAME = 'codes' THEN
-                codeNum := coalesce(trim(regexp_replace(NEW.code, '[^0-9]','','g')), '');
-                IF codeNum = '' THEN
-                  NEW.code_num := 0;
+                IF NEW.code ~ '^[0-9]+$' THEN
+                    NEW.code_num := NEW.code;
                 ELSE
-                  NEW.code_num := codeNum::bigint;
+                    NEW.code_num := null;
                 END IF;
                 NEW.full_code_indexed := fullToIndex(COALESCE(NEW.code_prefix,'') || COALESCE(NEW.code::text,'') || COALESCE(NEW.code_suffix,'') );
         ELSIF TG_TABLE_NAME = 'tag_groups' THEN
@@ -155,7 +152,7 @@ BEGIN
         ELSIF TG_TABLE_NAME = 'specimens' THEN
                 NEW.object_name_indexed := fullToIndex(COALESCE(NEW.object_name,'') );
         END IF;
-  RETURN NEW;
+	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -258,11 +255,11 @@ BEGIN
     IF NEW.id != OLD.id THEN
       UPDATE template_table_record_ref SET record_id = NEW.id WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
     END IF;
-  ELSEIF TG_OP = 'DELETE' THEN
+  ELSE
     DELETE FROM template_table_record_ref where referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
   END IF;
-  RETURN NULL;
- END;
+  RETURN OLD;
+END;
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION fct_remove_array_elem(IN in_array anyarray, IN elem anyarray,OUT out_array anyarray)
@@ -539,26 +536,20 @@ DECLARE
   tbl_row RECORD;
   new_val varchar;
   old_val varchar;
-  returnedRow RECORD;
 BEGIN
-  IF TG_OP IN ('INSERT', 'UPDATE') THEN
-    returnedRow := NEW;
-  ELSE
-    returnedRow := OLD;
-  END IF;
-  SELECT COALESCE(CASE WHEN get_setting('darwin.track_level') = '' THEN NULL ELSE get_setting('darwin.track_level') END,'10')::integer INTO track_level;
+  SELECT COALESCE(get_setting('darwin.track_level'),'10')::integer INTO track_level;
   IF track_level = 0 THEN --NO Tracking
-    RETURN returnedRow;
+    RETURN NEW;
   ELSIF track_level = 1 THEN -- Track Only Main tables
     IF TG_TABLE_NAME::text NOT IN ('specimens', 'taxonomy', 'chronostratigraphy', 'lithostratigraphy',
-      'mineralogy', 'lithology', 'people', 'loans', 'loan_items') THEN
-      RETURN returnedRow;
+      'mineralogy', 'lithology', 'people') THEN
+      RETURN NEW;
     END IF;
   END IF;
 
-  SELECT COALESCE(CASE WHEN get_setting('darwin.userid') = '' THEN NULL ELSE get_setting('darwin.userid') END,'0')::integer INTO user_id;
+  SELECT COALESCE(get_setting('darwin.userid'),'0')::integer INTO user_id;
   IF user_id = 0 OR  user_id = -1 THEN
-    RETURN returnedRow;
+    RETURN NEW;
   END IF;
 
   IF TG_OP = 'INSERT' THEN
@@ -993,12 +984,13 @@ $$;
 CREATE OR REPLACE FUNCTION fct_cpy_unified_values () RETURNS TRIGGER
 language plpgsql
 AS
+
 $$
 DECLARE
   property_line properties%ROWTYPE;
 BEGIN
-  NEW.lower_value_unified = convert_to_unified(NEW.lower_value, NEW.property_unit);
-  NEW.upper_value_unified = convert_to_unified(CASE WHEN NEW.upper_value = '' THEN NEW.lower_value ELSE NEW.upper_value END, NEW.property_unit);
+  NEW.lower_value_unified = convert_to_unified(NEW.lower_value, NEW.property_unit, NEW.property_type);
+  NEW.upper_value_unified = convert_to_unified(CASE WHEN NEW.upper_value = '' THEN NEW.lower_value ELSE NEW.upper_value END, NEW.property_unit, NEW.property_type);
   RETURN NEW;
 END;
 $$;
@@ -1906,24 +1898,22 @@ BEGIN
 END;
 $$;
 
+
 CREATE OR REPLACE FUNCTION fct_filter_encodable_row(ids varchar, col_name varchar, user_id integer) RETURNS SETOF integer
 AS $$
-with user_right as (
-    select db_user_type
-    from users
-    where id = $3
-)
-select id
-from specimens
-where id in (select X::int from regexp_split_to_table($1, ',' ) as X)
-      and case
-          when (select db_user_type from user_right) = 8 then
-            TRUE
-          else
-            collection_ref in (select X FROM fct_search_authorized_encoding_collections($3) as X)
-          end
-      and $2 = 'spec_ref';
-$$ LANGUAGE sql;
+DECLARE
+  rec_id integer;
+BEGIN
+    IF col_name = 'spec_ref' THEN
+      FOR rec_id IN SELECT id FROM specimens WHERE id in (select X::int from regexp_split_to_table(ids, ',' ) as X)
+            AND collection_ref in (select X FROM fct_search_authorized_encoding_collections(user_id) as X)
+      LOOP
+        return next rec_id;
+      END LOOP;
+    END IF;
+
+END;
+$$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION fct_cpy_updateMyWidgetsColl() RETURNS TRIGGER
 language plpgsql
@@ -2460,9 +2450,10 @@ BEGIN
 END;
 $$ language plpgsql;
 
+
 CREATE OR REPLACE FUNCTION get_import_row() RETURNS integer AS $$
 
-UPDATE imports SET state = 'aloaded' FROM (
+UPDATE imports SET state = 'loading' FROM (
   SELECT * FROM (
     SELECT  * FROM imports i1 WHERE i1.state = 'to_be_loaded' ORDER BY i1.created_at asc, id asc OFFSET 0 --thats important
   ) i2
@@ -2525,7 +2516,7 @@ BEGIN
   IF catalogue_table = 'mineralogy' THEN
     OPEN ref FOR EXECUTE 'SELECT * FROM ' || catalogue_table || ' t
     INNER JOIN catalogue_levels c on t.level_ref = c.id
-    WHERE name_indexed like fullToIndex(' || quote_literal( field_name) || ') || ''%'' AND  level_sys_name = CASE WHEN ' || quote_literal(field_level_name) || ' = '''' THEN level_sys_name ELSE ' || quote_literal(field_level_name) || ' END
+    WHERE name_indexed like fullToIndex(' || quote_literal( field_name) || ') AND  level_sys_name = CASE WHEN ' || quote_literal(field_level_name) || ' = '''' THEN level_sys_name ELSE ' || quote_literal(field_level_name) || ' END
     LIMIT 2';
     LOOP
       FETCH ref INTO ref_record;
@@ -2539,7 +2530,7 @@ BEGIN
   ELSE
     OPEN ref FOR EXECUTE 'SELECT * FROM ' || catalogue_table || ' t
     INNER JOIN catalogue_levels c on t.level_ref = c.id
-    WHERE name_indexed = fullToIndex(' || quote_literal( field_name) || ') AND  level_sys_name = CASE WHEN ' || quote_literal(field_level_name) || ' = '''' THEN level_sys_name ELSE ' || quote_literal(field_level_name) || ' END
+    WHERE name_indexed like fullToIndex(' || quote_literal( field_name) || ') || ''%'' AND  level_sys_name = CASE WHEN ' || quote_literal(field_level_name) || ' = '''' THEN level_sys_name ELSE ' || quote_literal(field_level_name) || ' END
     LIMIT 2';
     LOOP
       FETCH ref INTO ref_record;
@@ -2575,6 +2566,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION fct_imp_checker_manager(line staging)  RETURNS boolean
 AS $$
 BEGIN
+
   IF line.taxon_name IS NOT NULL AND line.taxon_name is distinct from '' AND line.taxon_ref is null THEN
     PERFORM fct_imp_create_catalogues_and_parents(line, 'taxonomy','taxon');
     PERFORM fct_imp_checker_catalogue(line,'taxonomy','taxon');
@@ -2595,6 +2587,8 @@ BEGIN
   IF line.litho_name IS NOT NULL AND line.litho_name is distinct from '' AND line.litho_ref is null THEN
     PERFORM fct_imp_checker_catalogue(line,'lithostratigraphy','litho');
   END IF;
+
+
 
   PERFORM fct_imp_checker_igs(line);
   PERFORM fct_imp_checker_expeditions(line);
@@ -2743,204 +2737,98 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION fct_imp_checker_expeditions(line staging, import boolean default false) RETURNS boolean
+CREATE OR REPLACE FUNCTION fct_imp_checker_expeditions(line staging, import boolean default false)  RETURNS boolean
 AS $$
 DECLARE
-  result_nbr integer :=0;
-  ref_record RECORD;
   ref_rec integer :=0;
-  ref refcursor;
 BEGIN
   IF line.expedition_name is null OR line.expedition_name ='' OR line.expedition_ref is not null THEN
     RETURN true;
   END IF;
-  OPEN ref FOR select * from expeditions where name_indexed = fulltoindex(line.expedition_name) ;
-  LOOP
-    FETCH ref INTO ref_record ;
-    IF NOT FOUND THEN
-      EXIT ;
-    END IF;
-    ref_rec = ref_record.id ;
-    result_nbr := result_nbr +1;
-  END LOOP ;
-  IF result_nbr = 0 THEN
-    IF import THEN
-      INSERT INTO expeditions (name, expedition_from_date, expedition_to_date, expedition_from_date_mask,expedition_to_date_mask)
-      VALUES (
-        line.expedition_name, COALESCE(line.expedition_from_date,'01/01/0001'),
-        COALESCE(line.expedition_to_date,'31/12/2038'), COALESCE(line.expedition_from_date_mask,0),
-        COALESCE(line.expedition_to_date_mask,0)
-      )
-      RETURNING id INTO line.expedition_ref;
 
-      ref_rec := line.expedition_ref;
-      PERFORM fct_imp_checker_staging_info(line, 'expeditions');
-    ELSE
-      RETURN TRUE;
-    END IF;
+  select id into ref_rec from expeditions where name_indexed = fulltoindex(line.expedition_name) and
+    expedition_from_date = COALESCE(line.expedition_from_date,'01/01/0001') AND
+    expedition_to_date = COALESCE(line.expedition_to_date,'31/12/2038');
+  IF NOT FOUND THEN
+      IF import THEN
+        INSERT INTO expeditions (name, expedition_from_date, expedition_to_date, expedition_from_date_mask,expedition_to_date_mask)
+        VALUES (
+          line.expedition_name, COALESCE(line.expedition_from_date,'01/01/0001'),
+          COALESCE(line.expedition_to_date,'31/12/2038'), COALESCE(line.expedition_from_date_mask,0),
+          COALESCE(line.expedition_to_date_mask,0)
+        )
+        RETURNING id INTO line.expedition_ref;
+
+        ref_rec := line.expedition_ref;
+        PERFORM fct_imp_checker_staging_info(line, 'expeditions');
+      ELSE
+        RETURN TRUE;
+      END IF;
   END IF;
-  IF result_nbr >= 2 THEN
-    UPDATE staging SET status = (status || ('expedition' => 'too_much')) where id= line.id;
-    RETURN true;
-  END IF;
-/* So result_nbr = 1 ! */
+
   UPDATE staging SET status = delete(status,'expedition'), expedition_ref = ref_rec where id=line.id;
 
   RETURN true;
 END;
 $$ LANGUAGE plpgsql;
 
+
+
 CREATE OR REPLACE FUNCTION fct_imp_checker_gtu(line staging, import boolean default false)  RETURNS boolean
 AS $$
 DECLARE
   ref_rec integer :=0;
   tags staging_tag_groups ;
-  tags_tag RECORD;
-  update_count integer;
-  tag_groups_line RECORD;
 BEGIN
-  IF import THEN
-    /* If gtu_ref already defined, that means that check was already
-       made for the line and there's no need to reassociate it
-    */
-    IF line.gtu_ref is not null THEN
-      RETURN true;
-    END IF;
-    /* If no code is given, not even from date and not even tags (tag_groups here),
-       that means there's not enough information to associate a gtu
-    */
-    IF (line.gtu_code is null OR COALESCE(fullToIndex(line.gtu_code),'')  = '') AND (line.gtu_from_date is null) AND NOT EXISTS (select 1 from staging_tag_groups g where g.staging_ref = line.id ) THEN
-      RETURN true;
-    END IF;
-    /* Otherwise, we should try to associate a gtu_ref */
-    select substr.id into ref_rec from (
-       /* This part try to select gtu id for line.gtu_code NULL or line.gtu_code = '' making the comparison on all the
-          other fields ensuring uniqueness (latitude, longitude, from_date and to_date)
-          The criteria position('import/' in code) > 0 filter also on the already imported gtu without code only
-       */
-       select id from gtu g where
-         position('import/' in code) > 0 AND
-         COALESCE(latitude,0) = COALESCE(line.gtu_latitude,0) AND
-         COALESCE(longitude,0) = COALESCE(line.gtu_longitude,0) AND
-         COALESCE(fullToIndex(line.gtu_code), '') = '' AND
-         fct_mask_date(gtu_from_date,gtu_from_date_mask) = fct_mask_date(COALESCE(line.gtu_from_date, '01/01/0001')::timestamp,line.gtu_from_date_mask) AND
-         fct_mask_date(gtu_to_date,gtu_to_date_mask) = fct_mask_date(COALESCE(line.gtu_to_date, '31/12/2038')::timestamp,line.gtu_to_date_mask) AND
-         COALESCE(elevation,0) = COALESCE(line.gtu_elevation,0)
-         /* if we're not in the case of already imported gtu without code,
-            we've got to find a gtu that correspond to the criterias of the current line
-         */
-       union
-       select id from gtu g where
-         position('import/' in code) = 0 AND
-         COALESCE(latitude,0) = COALESCE(line.gtu_latitude,0) AND
-         COALESCE(longitude,0) = COALESCE(line.gtu_longitude,0) AND
-         COALESCE(fullToIndex(code),'') = COALESCE(fullToIndex(line.gtu_code),'') AND
-         fct_mask_date(gtu_from_date,gtu_from_date_mask) = fct_mask_date(COALESCE(line.gtu_from_date, '01/01/0001')::timestamp,line.gtu_from_date_mask) AND
-         fct_mask_date(gtu_to_date,gtu_to_date_mask) = fct_mask_date(COALESCE(line.gtu_to_date, '31/12/2038')::timestamp,line.gtu_to_date_mask) AND
-         COALESCE(elevation,0) = COALESCE(line.gtu_elevation,0)
-       LIMIT 1
-      ) as substr
-    WHERE substr.id != 0 LIMIT 1;
+  IF line.gtu_ref is not null THEN
+    RETURN true;
+  END IF;
+  IF (line.gtu_code is null OR line.gtu_code  = '') AND (line.gtu_from_date is null OR line.gtu_code  = '') AND NOT EXISTS (select 1 from staging_tag_groups g where g.staging_ref = line.id ) THEN
+    RETURN true;
+  END IF;
 
-    /* If no corresponding gtu found and we've chosen to import... insert the new gtu */
-    IF NOT FOUND THEN
-      INSERT into gtu
-      (code,
-       gtu_from_date_mask,
-       gtu_from_date,
-       gtu_to_date_mask,
-       gtu_to_date,
-       latitude,
-       longitude,
-       lat_long_accuracy,
-       elevation,
-       elevation_accuracy
-      )
-      VALUES
-        (
-          CASE COALESCE(fullToIndex(line.gtu_code),'') WHEN '' THEN 'import/'|| line.import_ref || '/' || line.id ELSE line.gtu_code END,
-          COALESCE(line.gtu_from_date_mask,0),
-          COALESCE(line.gtu_from_date, '01/01/0001'),
-          COALESCE(line.gtu_to_date_mask,0),
-          COALESCE(line.gtu_to_date, '31/12/2038'),
-          line.gtu_latitude,
-          line.gtu_longitude,
-          line.gtu_lat_long_accuracy,
-          line.gtu_elevation,
-          line.gtu_elevation_accuracy
-        )
-      RETURNING id INTO line.gtu_ref;
-      /* The new id is returned in line.gtu_ref and stored in ref_rec so it can be used further on */
-      ref_rec := line.gtu_ref;
-      /* Browse all tags to try importing them one by one and associate them with the newly created gtu */
-      FOR tags IN SELECT * FROM staging_tag_groups WHERE staging_ref = line.id LOOP
+    select id into ref_rec from gtu g where
+      COALESCE(latitude,0) = COALESCE(line.gtu_latitude,0) AND
+      COALESCE(longitude,0) = COALESCE(line.gtu_longitude,0) AND
+      gtu_from_date = COALESCE(line.gtu_from_date, '01/01/0001') AND
+      gtu_to_date = COALESCE(line.gtu_to_date, '31/12/2038') AND
+      fullToIndex(code) = fullToIndex(line.gtu_code)
+
+      AND id != 0 LIMIT 1;
+
+
+
+  IF NOT FOUND THEN
+      IF import THEN
+        INSERT into gtu
+          (code, gtu_from_date_mask, gtu_from_date,gtu_to_date_mask, gtu_to_date, latitude, longitude, lat_long_accuracy, elevation, elevation_accuracy)
+        VALUES
+          (COALESCE(line.gtu_code,'import/'|| line.import_ref || '/' || line.id ), COALESCE(line.gtu_from_date_mask,0), COALESCE(line.gtu_from_date, '01/01/0001'),
+          COALESCE(line.gtu_to_date_mask,0), COALESCE(line.gtu_to_date, '31/12/2038')
+          , line.gtu_latitude, line.gtu_longitude, line.gtu_lat_long_accuracy, line.gtu_elevation, line.gtu_elevation_accuracy)
+        RETURNING id INTO line.gtu_ref;
+        ref_rec := line.gtu_ref;
+        FOR tags IN SELECT * FROM staging_tag_groups WHERE staging_ref = line.id LOOP
         BEGIN
           INSERT INTO tag_groups (gtu_ref, group_name, sub_group_name, tag_value)
-            SELECT ref_rec,tags.group_name, tags.sub_group_name, tags.tag_value;
-          EXCEPTION WHEN OTHERS THEN
-            RAISE NOTICE 'Error in fct_imp_checker_gtu (case non existing gtu): %', SQLERRM;
-            /* Do nothing and continue */
+            Values(ref_rec,tags.group_name, tags.sub_group_name, tags.tag_value );
+        --  DELETE FROM staging_tag_groups WHERE staging_ref = line.id;
+          EXCEPTION WHEN unique_violation THEN
+            RAISE EXCEPTION 'An error occured: %', SQLERRM;
         END ;
-      END LOOP ;
-    ELSE
-      /* Define gtu_ref of the line object, so it can be used afterwards in the perform to bring correctly
-         the additional comments and additional properties
-      */
-      line.gtu_ref = ref_rec;
-      /* ELSE ADDED HERE TO CHECK IF THE TAGS (and the staging infos) OF THE EXISTING GTU EXISTS TOO */
-      /* This case happens when a gtu that correspond to info entered in staging has been found */
-      /* Browse all tags to try importing them one by one and associate them with the newly created gtu */
-      FOR tags IN SELECT * FROM staging_tag_groups WHERE staging_ref = line.id LOOP
-        /* We split all the tags entered by ; as it's the case in the interface */
-        FOR tags_tag IN SELECT trim(regexp_split_to_table(tags.tag_value, E';+')) as value LOOP
-          BEGIN
-            /* We use an upsert here.
-               Ideally, we should use locking, but we consider it's isolated.
-             */
-            UPDATE tag_groups
-            SET tag_value = tag_value || ';' || tags.tag_value
-            WHERE gtu_ref = ref_rec
-                  AND group_name_indexed = fullToIndex(tags.group_name)
-                  AND sub_group_name_indexed = fullToIndex(tags.sub_group_name)
-                  AND fullToIndex(tags_tag.value) NOT IN (SELECT fullToIndex(regexp_split_to_table(tag_value, E';+')));
-            GET DIAGNOSTICS update_count = ROW_COUNT;
-            IF update_count = 0 THEN
-              INSERT INTO tag_groups (gtu_ref, group_name, sub_group_name, tag_value)
-                SELECT ref_rec,tags.group_name, tags.sub_group_name, tags_tag.value
-                WHERE NOT EXISTS (SELECT id
-                                  FROM tag_groups
-                                  WHERE gtu_ref = ref_rec
-                                        AND group_name_indexed = fullToIndex(tags.group_name)
-                                        AND sub_group_name_indexed = fullToIndex(tags.sub_group_name)
-                                  LIMIT 1
-                );
-            END IF;
-            EXCEPTION WHEN OTHERS THEN
-              RAISE NOTICE 'Error in fct_imp_checker_gtu (case from existing gtu): %', SQLERRM;
-              RAISE NOTICE 'gtu_ref is %', ref_rec;
-              RAISE NOTICE 'group name is %', tags.group_name;
-              RAISE NOTICE 'subgroup name is %', tags.sub_group_name;
-              RAISE NOTICE 'tag value is %', tags_tag.value;
-              /* Do nothing here */
-          END ;
-        END LOOP;
-      END LOOP ;
-    END IF;
-    /* Execute (perform = execute without any output) the update of reference_relation
-       for the current staging line and for the gtu type of relationship.
-       Referenced relation currently named 'staging_info' is replaced by gtu
-       and record_id currently set to line.id (staging id) is replaced by line.gtu_ref (id of the new gtu created)
-    */
-    PERFORM fct_imp_checker_staging_info(line, 'gtu');
-
-    /* Associate the gtu_ref in the staging and erase in hstore status the gtu tag signaling gtu has still to be treated */
-    UPDATE staging SET status = delete(status,'gtu'), gtu_ref = ref_rec where id=line.id;
-
+        END LOOP ;
+        PERFORM fct_imp_checker_staging_info(line, 'gtu');
+      ELSE
+        RETURN TRUE;
+      END IF;
   END IF;
+
+  UPDATE staging SET status = delete(status,'gtu'), gtu_ref = ref_rec where id=line.id;
 
   RETURN true;
 END;
 $$ LANGUAGE plpgsql;
+
 
 CREATE OR REPLACE FUNCTION fct_look_for_people(fullname text) RETURNS integer
 AS $$
@@ -3124,10 +3012,10 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
 CREATE OR REPLACE FUNCTION fct_importer_abcd(req_import_ref integer)  RETURNS boolean
 AS $$
 DECLARE
-  userid integer;
   rec_id integer;
   people_id integer;
   all_line RECORD ;
@@ -3137,52 +3025,13 @@ DECLARE
   staging_line staging;
   id_to_delete integer ARRAY;
   id_to_keep integer ARRAY ;
-  collection collections%ROWTYPE;
-  code_count integer;
+--   collection int;
 BEGIN
-  SELECT * INTO collection FROM collections WHERE id = (SELECT collection_ref FROM imports WHERE id = req_import_ref AND is_finished = FALSE LIMIT 1);
-  select user_ref into userid from imports where id=req_import_ref ;
-  PERFORM set_config('darwin.userid',userid::varchar, false) ;
-  INSERT INTO classification_keywords (referenced_relation, record_id, keyword_type, keyword)
-          (
-            SELECT DISTINCT ON (referenced_relation, taxon_ref, keyword_type, keyword_indexed)
-                  'taxonomy',
-                  taxon_ref,
-                  keyword_type,
-                  "keyword"
-            FROM staging INNER JOIN classification_keywords as ckmain ON ckmain.referenced_relation = 'staging'
-                                                                     AND staging.id = ckmain.record_id
-                         INNER JOIN imports as i ON i.id = staging.import_ref
-            WHERE import_ref = req_import_ref
-              AND to_import=true
-              AND status = ''::hstore
-              AND i.is_finished =  FALSE
-              AND NOT EXISTS (
-                              SELECT 1
-                              FROM classification_keywords
-                              WHERE referenced_relation = 'taxonomy'
-                                AND record_id = staging.taxon_ref
-                                AND keyword_type = ckmain.keyword_type
-                                AND keyword_indexed = ckmain.keyword_indexed
-              )
-          );
-  EXECUTE 'DELETE FROM classification_keywords
-           WHERE referenced_relation = ''staging''
-             AND record_id IN (
-                                SELECT s.id
-                                FROM staging s INNER JOIN imports i ON  s.import_ref = i.id
-                                WHERE import_ref = $1
-                                  AND to_import=true
-                                  AND status = ''''::hstore
-                                  AND i.is_finished =  FALSE
-                             )'
-  USING req_import_ref;
   FOR all_line IN SELECT * from staging s INNER JOIN imports i on  s.import_ref = i.id
       WHERE import_ref = req_import_ref AND to_import=true and status = ''::hstore AND i.is_finished =  FALSE
   LOOP
     BEGIN
       -- I know it's dumb but....
-      -- @ToDo: We need to correct this to avoid reselecting from the staging table !!!
       select * into staging_line from staging where id = all_line.id;
       PERFORM fct_imp_checker_igs(staging_line, true);
       PERFORM fct_imp_checker_expeditions(staging_line, true);
@@ -3212,38 +3061,17 @@ BEGIN
         UPDATE collection_maintenance set people_ref=people_id where id=maintenance_line.id ;
         DELETE FROM staging_people where referenced_relation='collection_maintenance' AND record_id=maintenance_line.id ;
       END LOOP;
-
-      SELECT COUNT(*) INTO code_count FROM codes WHERE referenced_relation = 'staging' AND record_id = line.id AND code_category = 'main' AND code IS NOT NULL;
-      IF code_count = 0 THEN
-        PERFORM fct_after_save_add_code(all_line.collection_ref, rec_id);
-      ELSE
-        UPDATE codes SET referenced_relation = 'specimens', 
-                         record_id = rec_id, 
-                         code_prefix = CASE WHEN code_prefix IS NULL THEN collection.code_prefix ELSE code_prefix END,
-                         code_prefix_separator = CASE WHEN code_prefix_separator IS NULL THEN collection.code_prefix_separator ELSE code_prefix_separator END,
-                         code_suffix = CASE WHEN code_suffix IS NULL THEN collection.code_suffix ELSE code_suffix END,
-                         code_suffix_separator = CASE WHEN code_suffix_separator IS NULL THEN collection.code_suffix_separator ELSE code_suffix_separator END
-        WHERE referenced_relation = 'staging'
-          AND record_id = line.id
-          AND code_category = 'main';
-      END IF;
-
       UPDATE template_table_record_ref SET referenced_relation ='specimens', record_id = rec_id where referenced_relation ='staging' and record_id = line.id;
       --UPDATE collection_maintenance SET referenced_relation ='specimens', record_id = rec_id where referenced_relation ='staging' and record_id = line.id;
       -- Import identifiers whitch identification have been updated to specimen
       INSERT INTO catalogue_people(id, referenced_relation, record_id, people_type, people_sub_type, order_by, people_ref)
-        SELECT nextval('catalogue_people_id_seq'), s.referenced_relation, s.record_id, s.people_type, s.people_sub_type, s.order_by, s.people_ref 
-        FROM staging_people s, identifications i 
-        WHERE i.id = s.record_id AND s.referenced_relation = 'identifications' AND i.record_id = rec_id AND i.referenced_relation = 'specimens' ;
+      SELECT nextval('catalogue_people_id_seq'), s.referenced_relation, s.record_id, s.people_type, s.people_sub_type, s.order_by, s.people_ref FROM staging_people s, identifications i WHERE i.id = s.record_id AND s.referenced_relation = 'identifications' AND i.record_id = rec_id AND i.referenced_relation = 'specimens' ;
       DELETE FROM staging_people where id in (SELECT s.id FROM staging_people s, identifications i WHERE i.id = s.record_id AND s.referenced_relation = 'identifications' AND i.record_id = rec_id AND i.referenced_relation = 'specimens' ) ;
       -- Import collecting_methods
       INSERT INTO specimen_collecting_methods(id, specimen_ref, collecting_method_ref)
-        SELECT nextval('specimen_collecting_methods_id_seq'), rec_id, collecting_method_ref 
-        FROM staging_collecting_methods 
-        WHERE staging_ref = line.id;
-      
+      SELECT nextval('specimen_collecting_methods_id_seq'), rec_id, collecting_method_ref FROM staging_collecting_methods WHERE staging_ref = line.id;
       DELETE FROM staging_collecting_methods where staging_ref = line.id;
-      UPDATE staging set spec_ref=rec_id WHERE id=all_line.id;
+      UPDATE staging set spec_ref=rec_id WHERE id=all_line.id ;
 
       FOR people_line IN SELECT * from staging_people WHERE referenced_relation = 'specimens'
       LOOP
@@ -3334,40 +3162,40 @@ BEGIN
   IF get_setting('darwin.upd_imp_ref') is null OR  get_setting('darwin.upd_imp_ref') = '' THEN
     PERFORM set_config('darwin.upd_imp_ref', 'ok', true);
     IF OLD.taxon_ref IS DISTINCT FROM NEW.taxon_ref AND  NEW.taxon_ref is not null THEN
-      SELECT t.id ,t.name, t.level_ref , cl.level_sys_name, t.status, t.extinct
-      INTO NEW.taxon_ref,NEW.taxon_name, NEW.taxon_level_ref, NEW.taxon_level_name, NEW.taxon_status, NEW.taxon_extinct
-      FROM taxonomy t, catalogue_levels cl
-      WHERE cl.id=t.level_ref AND t.id = NEW.taxon_ref;
+        SELECT t.id ,t.name, t.level_ref , cl.level_sys_name, t.status, t.extinct
+        INTO NEW.taxon_ref,NEW.taxon_name, NEW.taxon_level_ref, NEW.taxon_level_name, NEW.taxon_status, NEW.taxon_extinct
+        FROM taxonomy t, catalogue_levels cl
+        WHERE cl.id=t.level_ref AND t.id = NEW.taxon_ref;
 
-      UPDATE staging set taxon_ref=NEW.taxon_ref, taxon_name = new.taxon_name, taxon_level_ref=new.taxon_level_ref,
-        taxon_level_name=new.taxon_level_name, taxon_status=new.taxon_status, taxon_extinct=new.taxon_extinct,
-        status = delete(status,'taxon')
+        UPDATE staging set taxon_ref=NEW.taxon_ref, taxon_name = new.taxon_name, taxon_level_ref=new.taxon_level_ref,
+          taxon_level_name=new.taxon_level_name, taxon_status=new.taxon_status, taxon_extinct=new.taxon_extinct,
+          status = delete(status,'taxon')
 
-      WHERE
-        taxon_name  IS NOT DISTINCT FROM  old.taxon_name AND  taxon_level_ref IS NOT DISTINCT FROM old.taxon_level_ref AND
-        taxon_level_name IS NOT DISTINCT FROM old.taxon_level_name AND  taxon_status IS NOT DISTINCT FROM old.taxon_status
-        AND  taxon_extinct IS NOT DISTINCT FROM old.taxon_extinct
-        AND import_ref = NEW.import_ref;
-      NEW.status = delete(NEW.status,'taxon');
+        WHERE
+          taxon_name  IS NOT DISTINCT FROM  old.taxon_name AND  taxon_level_ref IS NOT DISTINCT FROM old.taxon_level_ref AND
+          taxon_level_name IS NOT DISTINCT FROM old.taxon_level_name AND  taxon_status IS NOT DISTINCT FROM old.taxon_status
+          AND  taxon_extinct IS NOT DISTINCT FROM old.taxon_extinct
+          AND import_ref = NEW.import_ref;
+        NEW.status = delete(NEW.status,'taxon');
     END IF;
 
     IF OLD.chrono_ref IS DISTINCT FROM NEW.chrono_ref  AND  NEW.chrono_ref is not null THEN
       SELECT c.id, c.name, c.level_ref, cl.level_name, c.status, c.local_naming, c.color, c.upper_bound, c.lower_bound
-      INTO NEW.chrono_ref, NEW.chrono_name, NEW.chrono_level_ref, NEW.chrono_level_name, NEW.chrono_status, NEW.chrono_local, NEW.chrono_color, NEW.chrono_upper_bound, NEW.chrono_lower_bound
-      FROM chronostratigraphy c, catalogue_levels cl
-      WHERE cl.id=c.level_ref AND c.id = NEW.chrono_ref ;
+        INTO NEW.chrono_ref, NEW.chrono_name, NEW.chrono_level_ref, NEW.chrono_level_name, NEW.chrono_status, NEW.chrono_local, NEW.chrono_color, NEW.chrono_upper_bound, NEW.chrono_lower_bound
+        FROM chronostratigraphy c, catalogue_levels cl
+        WHERE cl.id=c.level_ref AND c.id = NEW.chrono_ref ;
 
-      UPDATE staging set chrono_ref=NEW.chrono_ref, chrono_name = NEW.chrono_name, chrono_level_ref=NEW.chrono_level_ref, chrono_level_name=NEW.chrono_level_name, chrono_status=NEW.chrono_status,
+        UPDATE staging set chrono_ref=NEW.chrono_ref, chrono_name = NEW.chrono_name, chrono_level_ref=NEW.chrono_level_ref, chrono_level_name=NEW.chrono_level_name, chrono_status=NEW.chrono_status,
         chrono_local=NEW.chrono_local, chrono_color=NEW.chrono_color, chrono_upper_bound=NEW.chrono_upper_bound, chrono_lower_bound=NEW.chrono_lower_bound,
         status = delete(status,'chrono')
 
-      WHERE
+        WHERE
         chrono_name  IS NOT DISTINCT FROM  OLD.chrono_name AND  chrono_level_ref IS NOT DISTINCT FROM OLD.chrono_level_ref AND
         chrono_level_name IS NOT DISTINCT FROM OLD.chrono_level_name AND  chrono_status IS NOT DISTINCT FROM OLD.chrono_status AND
         chrono_local IS NOT DISTINCT FROM OLD.chrono_local AND  chrono_color IS NOT DISTINCT FROM OLD.chrono_color AND
         chrono_upper_bound IS NOT DISTINCT FROM OLD.chrono_upper_bound AND  chrono_lower_bound IS NOT DISTINCT FROM OLD.chrono_lower_bound
         AND import_ref = NEW.import_ref;
-      NEW.status = delete(NEW.status,'chrono');
+        NEW.status = delete(NEW.status,'chrono');
 
     END IF;
 
@@ -3387,7 +3215,7 @@ BEGIN
         litho_level_name IS NOT DISTINCT FROM  OLD.litho_level_name AND
         litho_status IS NOT DISTINCT FROM  OLD.litho_status AND litho_local IS NOT DISTINCT FROM  OLD.litho_local AND litho_color IS NOT DISTINCT FROM OLD.litho_color
         AND import_ref = NEW.import_ref;
-      NEW.status = delete(NEW.status,'litho');
+        NEW.status = delete(NEW.status,'litho');
 
     END IF;
 
@@ -3409,7 +3237,7 @@ BEGIN
         lithology_level_name IS NOT DISTINCT FROM OLD.lithology_level_name AND  lithology_status IS NOT DISTINCT FROM OLD.lithology_status AND  lithology_local IS NOT DISTINCT FROM OLD.lithology_local AND
         lithology_color IS NOT DISTINCT FROM OLD.lithology_color
         AND import_ref = NEW.import_ref;
-      NEW.status = delete(NEW.status,'lithology');
+        NEW.status = delete(NEW.status,'lithology');
 
     END IF;
 
@@ -3432,7 +3260,7 @@ BEGIN
         mineral_color IS NOT DISTINCT FROM OLD.mineral_color AND  mineral_path IS NOT DISTINCT FROM OLD.mineral_path
         AND import_ref = NEW.import_ref;
 
-      NEW.status = delete(NEW.status,'mineral');
+        NEW.status = delete(NEW.status,'mineral');
 
     END IF;
 
@@ -3444,14 +3272,13 @@ BEGIN
 
       UPDATE staging set
         expedition_ref=NEW.expedition_ref, expedition_name=NEW.expedition_name, expedition_from_date=NEW.expedition_from_date,
-        expedition_to_date=NEW.expedition_to_date, expedition_from_date_mask=NEW.expedition_from_date_mask , expedition_to_date_mask=NEW.expedition_to_date_mask,
-        status = delete(status,'expedition')
+        expedition_to_date=NEW.expedition_to_date, expedition_from_date_mask=NEW.expedition_from_date_mask , expedition_to_date_mask=NEW.expedition_to_date_mask
       WHERE
         expedition_name IS NOT DISTINCT FROM OLD.expedition_name AND  expedition_from_date IS NOT DISTINCT FROM OLD.expedition_from_date AND
         expedition_to_date IS NOT DISTINCT FROM OLD.expedition_to_date AND  expedition_from_date_mask IS NOT DISTINCT FROM OLD.expedition_from_date_mask  AND
         expedition_to_date_mask IS NOT DISTINCT FROM OLD.expedition_to_date_mask
         AND import_ref = NEW.import_ref;
-      NEW.status = delete(NEW.status,'expedition');
+
     END IF;
 
     IF OLD.institution_ref IS DISTINCT FROM NEW.institution_ref  AND  NEW.institution_ref is not null THEN
@@ -3459,11 +3286,11 @@ BEGIN
 
       UPDATE staging set institution_ref = NEW.institution_ref, institution_name=NEW.institution_name,
         status = delete(status,'institution')
-      WHERE
+        WHERE
         institution_name IS NOT DISTINCT FROM OLD.institution_name
         AND import_ref = NEW.import_ref;
 
-      NEW.status = delete(NEW.status,'institution');
+        NEW.status = delete(NEW.status,'institution');
 
     END IF;
 
@@ -3473,210 +3300,84 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION fct_imp_checker_staging_info_comments (targeted_referenced_relation template_table_record_ref.referenced_relation%TYPE,
-                                                                  targeted_record_id template_table_record_ref.record_id%TYPE,
-                                                                  new_referenced_relation template_table_record_ref.referenced_relation%TYPE,
-                                                                  new_record_id template_table_record_ref.record_id%TYPE
-) RETURNS VOID
-AS $$
-UPDATE comments as mc
-SET referenced_relation = $3, record_id = $4
-WHERE mc.referenced_relation = $1
-  AND record_id = $2
-  AND NOT EXISTS(SELECT 1
-                 FROM comments AS sc
-                 WHERE sc.referenced_relation = $3
-                       AND sc.record_id = $4
-                       AND sc.notion_concerned = mc.notion_concerned
-                       AND sc.comment_indexed = mc.comment_indexed
-                 LIMIT 1
-                );
-$$ LANGUAGE SQL;
-
-CREATE OR REPLACE FUNCTION fct_imp_checker_staging_info_properties (targeted_referenced_relation template_table_record_ref.referenced_relation%TYPE,
-                                                                    targeted_record_id template_table_record_ref.record_id%TYPE,
-                                                                    new_referenced_relation template_table_record_ref.referenced_relation%TYPE,
-                                                                    new_record_id template_table_record_ref.record_id%TYPE
-) RETURNS VOID
-AS $$
-UPDATE properties as mp
-SET referenced_relation = $3, record_id = $4
-WHERE mp.referenced_relation = $1
-  AND record_id = $2
-  AND NOT EXISTS(SELECT 1
-                 FROM properties AS sp
-                 WHERE sp.referenced_relation = $3
-                       AND sp.record_id = $4
-                       AND sp.property_type = mp.property_type
-                       AND sp.applies_to = mp.applies_to
-                       AND sp.date_from_mask = mp.date_from_mask
-                       AND sp.date_from = mp.date_from
-                       AND sp.date_to_mask = mp.date_to_mask
-                       AND sp.date_to = mp.date_to
-                       AND sp.is_quantitative = mp.is_quantitative
-                       AND sp.property_unit = mp.property_unit
-                       AND sp.method_indexed = mp.method_indexed
-                       AND sp.lower_value = mp.lower_value
-                       AND sp.upper_value = mp.upper_value
-                       AND sp.property_accuracy = mp.property_accuracy
-                );
-$$ LANGUAGE SQL;
-
-CREATE OR REPLACE FUNCTION fct_imp_checker_staging_info_ext_links (targeted_referenced_relation template_table_record_ref.referenced_relation%TYPE,
-                                                                   targeted_record_id template_table_record_ref.record_id%TYPE,
-                                                                   new_referenced_relation template_table_record_ref.referenced_relation%TYPE,
-                                                                   new_record_id template_table_record_ref.record_id%TYPE
-) RETURNS VOID
-AS $$
-UPDATE ext_links as mel
-SET referenced_relation = $3, record_id = $4
-WHERE mel.referenced_relation = $1
-  AND record_id = $2
-  AND NOT EXISTS(SELECT 1
-                 FROM ext_links AS sel
-                 WHERE sel.referenced_relation = $3
-                       AND sel.record_id = $4
-                       AND sel.url = mel.url
-                );
-$$ LANGUAGE SQL;
-
-CREATE OR REPLACE FUNCTION fct_imp_checker_staging_info_multimedia (targeted_referenced_relation template_table_record_ref.referenced_relation%TYPE,
-                                                                    targeted_record_id template_table_record_ref.record_id%TYPE,
-                                                                    new_referenced_relation template_table_record_ref.referenced_relation%TYPE,
-                                                                    new_record_id template_table_record_ref.record_id%TYPE
-) RETURNS VOID
-AS $$
-UPDATE multimedia as mm
-SET referenced_relation = $3, record_id = $4
-WHERE mm.referenced_relation = $1
-  AND record_id = $2
-  AND NOT EXISTS(SELECT 1
-                 FROM multimedia AS sm
-                 WHERE sm.referenced_relation = $3
-                       AND sm.record_id = $4
-                       AND sm.mime_type = mm.mime_type
-                       AND sm.search_indexed = mm.search_indexed
-                );
-$$ LANGUAGE SQL;
-
-CREATE OR REPLACE FUNCTION fct_imp_checker_staging_info_insurances (targeted_referenced_relation template_table_record_ref.referenced_relation%TYPE,
-                                                                    targeted_record_id template_table_record_ref.record_id%TYPE,
-                                                                    new_referenced_relation template_table_record_ref.referenced_relation%TYPE,
-                                                                    new_record_id template_table_record_ref.record_id%TYPE
-) RETURNS VOID
-AS $$
-UPDATE insurances as mi
-SET referenced_relation = $3, record_id = $4
-WHERE mi.referenced_relation = $1
-  AND record_id = $2
-  AND NOT EXISTS(SELECT 1
-                 FROM insurances AS si
-                 WHERE si.referenced_relation = $3
-                   AND si.record_id = $4
-                   AND si.insurance_value = mi.insurance_value
-                   AND si.insurance_currency = mi.insurance_currency
-                   AND si.date_from_mask = mi.date_from_mask
-                   AND si.date_from = mi.date_from
-                   AND si.date_to_mask = mi.date_to_mask
-                   AND si.date_to = mi.date_to
-                   AND COALESCE(si.insurer_ref,0) = COALESCE(mi.insurer_ref,0)
-                );
-$$ LANGUAGE SQL;
-
 CREATE OR REPLACE FUNCTION fct_imp_checker_staging_info(line staging, st_type text) RETURNS boolean
 AS $$
 DECLARE
   info_line staging_info ;
   record_line RECORD ;
 BEGIN
-  FOR info_line IN select * from staging_info WHERE staging_ref = line.id AND referenced_relation = st_type
+
+  FOR info_line IN select * from staging_info i WHERE i.staging_ref = line.id AND i.referenced_relation = st_type
   LOOP
+    BEGIN
     CASE info_line.referenced_relation
       WHEN 'gtu' THEN
-      IF line.gtu_ref IS NOT NULL THEN
-
-        PERFORM fct_imp_checker_staging_info_comments('staging_info', info_line.id, info_line.referenced_relation, line.gtu_ref);
-        PERFORM fct_imp_checker_staging_info_ext_links('staging_info', info_line.id, info_line.referenced_relation, line.gtu_ref);
-
-        PERFORM fct_imp_checker_staging_info_properties('staging_info', info_line.id, info_line.referenced_relation, line.gtu_ref);
-        PERFORM fct_imp_checker_staging_info_multimedia('staging_info', info_line.id, info_line.referenced_relation, line.gtu_ref);
-
-      END IF;
+        IF line.gtu_ref IS NOT NULL THEN
+          FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
+          LOOP
+            UPDATE template_table_record_ref set referenced_relation='gtu', record_id=line.gtu_ref where referenced_relation='staging_info' and record_id=info_line.id;
+          END LOOP ;
+        END IF;
       WHEN 'taxonomy' THEN
-      IF line.taxon_ref IS NOT NULL THEN
-
-        PERFORM fct_imp_checker_staging_info_comments('staging_info', info_line.id, info_line.referenced_relation, line.taxon_ref);
-        PERFORM fct_imp_checker_staging_info_ext_links('staging_info', info_line.id, info_line.referenced_relation, line.taxon_ref);
-
-        PERFORM fct_imp_checker_staging_info_properties('staging_info', info_line.id, info_line.referenced_relation, line.taxon_ref);
-        PERFORM fct_imp_checker_staging_info_multimedia('staging_info', info_line.id, info_line.referenced_relation, line.taxon_ref);
-
-      END IF;
+        IF line.taxon_ref IS NOT NULL THEN
+          FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
+          LOOP
+            UPDATE template_table_record_ref set referenced_relation='taxonomy', record_id=line.taxon_ref where referenced_relation='staging_info' and record_id=info_line.id;
+          END LOOP ;
+        END IF;
       WHEN 'expeditions' THEN
-      IF line.expedition_ref IS NOT NULL THEN
-
-        PERFORM fct_imp_checker_staging_info_comments('staging_info', info_line.id, info_line.referenced_relation, line.expedition_ref);
-        PERFORM fct_imp_checker_staging_info_ext_links('staging_info', info_line.id, info_line.referenced_relation, line.expedition_ref);
-
-        PERFORM fct_imp_checker_staging_info_multimedia('staging_info', info_line.id, info_line.referenced_relation, line.expedition_ref);
-
-      END IF;
+        IF line.expedition_ref IS NOT NULL THEN
+          FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
+          LOOP
+            UPDATE template_table_record_ref set referenced_relation='expeditions', record_id=line.expedition_ref where referenced_relation='staging_info' and record_id=info_line.id;
+          END LOOP ;
+        END IF;
       WHEN 'lithostratigraphy' THEN
-      IF line.litho_ref IS NOT NULL THEN
-
-        PERFORM fct_imp_checker_staging_info_comments('staging_info', info_line.id, info_line.referenced_relation, line.litho_ref);
-        PERFORM fct_imp_checker_staging_info_ext_links('staging_info', info_line.id, info_line.referenced_relation, line.litho_ref);
-
-        PERFORM fct_imp_checker_staging_info_properties('staging_info', info_line.id, info_line.referenced_relation, line.litho_ref);
-        PERFORM fct_imp_checker_staging_info_multimedia('staging_info', info_line.id, info_line.referenced_relation, line.litho_ref);
-
-      END IF;
+        IF line.litho_ref IS NOT NULL THEN
+          FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
+          LOOP
+            UPDATE template_table_record_ref set referenced_relation='lithostratigraphy', record_id=line.litho_ref where referenced_relation='staging_info' and record_id=info_line.id;
+          END LOOP ;
+        END IF;
       WHEN 'lithology' THEN
-      IF line.lithology_ref IS NOT NULL THEN
-
-        PERFORM fct_imp_checker_staging_info_comments('staging_info', info_line.id, info_line.referenced_relation, line.lithology_ref);
-        PERFORM fct_imp_checker_staging_info_ext_links('staging_info', info_line.id, info_line.referenced_relation, line.lithology_ref);
-
-        PERFORM fct_imp_checker_staging_info_properties('staging_info', info_line.id, info_line.referenced_relation, line.lithology_ref);
-        PERFORM fct_imp_checker_staging_info_multimedia('staging_info', info_line.id, info_line.referenced_relation, line.lithology_ref);
-
-      END IF;
+        IF line.lithology_ref IS NOT NULL THEN
+          FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
+          LOOP
+            UPDATE template_table_record_ref set referenced_relation='lithology', record_id=line.lithology_ref where referenced_relation='staging_info' and record_id=info_line.id;
+          END LOOP ;
+        END IF;
       WHEN 'chronostratigraphy' THEN
-      IF line.chrono_ref IS NOT NULL THEN
-
-        PERFORM fct_imp_checker_staging_info_comments('staging_info', info_line.id, info_line.referenced_relation, line.chrono_ref);
-        PERFORM fct_imp_checker_staging_info_ext_links('staging_info', info_line.id, info_line.referenced_relation, line.chrono_ref);
-
-        PERFORM fct_imp_checker_staging_info_properties('staging_info', info_line.id, info_line.referenced_relation, line.chrono_ref);
-        PERFORM fct_imp_checker_staging_info_multimedia('staging_info', info_line.id, info_line.referenced_relation, line.chrono_ref);
-
-      END IF;
+        IF line.chrono_ref IS NOT NULL THEN
+          FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
+          LOOP
+            UPDATE template_table_record_ref set referenced_relation='chronostratigraphy', record_id=line.chrono_ref where id=record_line.id ;
+          END LOOP ;
+        END IF;
       WHEN 'mineralogy' THEN
-      IF line.mineral_ref IS NOT NULL THEN
-
-        PERFORM fct_imp_checker_staging_info_comments('staging_info', info_line.id, info_line.referenced_relation, line.mineral_ref);
-        PERFORM fct_imp_checker_staging_info_ext_links('staging_info', info_line.id, info_line.referenced_relation, line.mineral_ref);
-
-        PERFORM fct_imp_checker_staging_info_properties('staging_info', info_line.id, info_line.referenced_relation, line.mineral_ref);
-        PERFORM fct_imp_checker_staging_info_multimedia('staging_info', info_line.id, info_line.referenced_relation, line.mineral_ref);
-
-      END IF;
+        IF line.mineral_ref IS NOT NULL THEN
+          FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
+          LOOP
+            UPDATE template_table_record_ref set referenced_relation='mineralogy', record_id=line.mineral_ref where referenced_relation='staging_info' and record_id=info_line.id;
+          END LOOP ;
+        END IF;
       WHEN 'igs' THEN
-      IF line.ig_ref IS NOT NULL THEN
-
-        PERFORM fct_imp_checker_staging_info_comments('staging_info', info_line.id, info_line.referenced_relation, line.ig_ref);
-        PERFORM fct_imp_checker_staging_info_ext_links('staging_info', info_line.id, info_line.referenced_relation, line.ig_ref);
-
-        PERFORM fct_imp_checker_staging_info_insurances('staging_info', info_line.id, info_line.referenced_relation, line.ig_ref);
-
-      END IF;
-    ELSE continue ;
-    END CASE ;
+        IF line.ig_ref IS NOT NULL THEN
+          FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
+          LOOP
+            UPDATE template_table_record_ref set referenced_relation='igs', record_id=line.ig_ref where referenced_relation='staging_info' and record_id=info_line.id;
+          END LOOP ;
+        END IF;
+      ELSE continue ;
+      END CASE ;
+      EXCEPTION WHEN unique_violation THEN
+        RAISE NOTICE 'An error occured: %', SQLERRM;
+      END ;
   END LOOP;
   DELETE FROM staging_info WHERE staging_ref = line.id ;
   RETURN true;
 END;
 $$ LANGUAGE plpgsql;
+
 
 CREATE OR REPLACE FUNCTION fct_imp_checker_staging_relationship() RETURNS integer ARRAY
 AS $$
@@ -3889,6 +3590,9 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql IMMUTABLE;
 
+
+
+
 CREATE OR REPLACE FUNCTION point_equal ( POINT, POINT )
 RETURNS boolean AS
 'SELECT
@@ -3896,6 +3600,26 @@ CASE WHEN $1[0] = $2[0] AND $1[1] = $2[1] THEN true
 ELSE false END;'
 LANGUAGE SQL IMMUTABLE;
 
+CREATE OR REPLACE FUNCTION check_auto_increment_code_in_spec() RETURNS trigger 
+AS $$
+DECLARE 
+  col collections;
+  code RECORD;
+  number integer ;
+BEGIN
+code = NEW ;
+  IF code.referenced_relation = 'specimens' THEN
+    SELECT c.* INTO col FROM collections c JOIN specimens s ON s.collection_ref=c.id WHERE s.id=code.record_id;  
+    IF col.code_auto_increment = TRUE AND isnumeric(code.code) THEN 
+      number := code.code::integer ;
+      IF number > col.code_last_value THEN
+        UPDATE collections set code_last_value = number WHERE id=col.id ;
+      END IF;
+    END IF;
+  END IF ;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION isnumeric(text) RETURNS BOOLEAN AS $$
 DECLARE x NUMERIC;
@@ -3909,2592 +3633,3 @@ $$ LANGUAGE plpgsql IMMUTABLE;
 
 
 CREATE OPERATOR =  (LEFTARG = POINT,  RIGHTARG = POINT, PROCEDURE = point_equal);
-
-CREATE OR REPLACE FUNCTION check_auto_increment_code_in_spec()
-  RETURNS trigger AS
-  $BODY$
-DECLARE
-  col collections%ROWTYPE;
-  number BIGINT ;
-BEGIN
-  IF TG_OP != 'DELETE' THEN
-    IF NEW.referenced_relation = 'specimens' THEN
-      SELECT c.* INTO col FROM collections c INNER JOIN specimens s ON s.collection_ref=c.id WHERE s.id=NEW.record_id;
-      IF FOUND THEN
-        IF NEW.code_category = 'main' THEN
-          IF isnumeric(NEW.code) AND strpos(NEW.code, 'E') = 0 THEN
-            number := NEW.code::bigint;
-            IF number > col.code_last_value THEN
-              UPDATE collections set code_last_value = number WHERE id=col.id ;
-            END IF;
-          ELSE
-            UPDATE collections
-            SET code_last_value = (SELECT max(code_num)
-                                   FROM codes inner join specimens
-                                     ON codes.referenced_relation = 'specimens'
-                                     AND codes.record_id = specimens.id
-                                   WHERE codes.code_category = 'main'
-                                     AND specimens.collection_ref = col.id
-                                     AND codes.code_num IS NOT NULL
-                                  )
-            WHERE id = col.id
-              AND EXISTS (SELECT 1
-                          FROM codes inner join specimens
-                            ON codes.referenced_relation = 'specimens'
-                            AND codes.record_id = specimens.id
-                          WHERE codes.code_category = 'main'
-                            AND specimens.collection_ref = col.id
-                            AND codes.code_num IS NOT NULL
-                          LIMIT 1
-                         );
-            IF NOT FOUND THEN
-              UPDATE collections
-              SET code_last_value = DEFAULT
-              WHERE id=col.id;
-            END IF;
-          END IF;
-        ELSEIF TG_OP = 'UPDATE' THEN
-          IF OLD.code_category = 'main' THEN
-            IF isnumeric(OLD.code) AND strpos(OLD.code, 'E') = 0 THEN
-              number := OLD.code::bigint;
-              IF number = col.code_last_value THEN
-                UPDATE collections
-                SET code_last_value = (SELECT max(code_num)
-                                       FROM codes inner join specimens
-                                         ON codes.referenced_relation = 'specimens'
-                                         AND codes.record_id = specimens.id
-                                       WHERE codes.code_category = 'main'
-                                         AND specimens.collection_ref = col.id
-                                         AND codes.code_num IS NOT NULL
-                                      )
-                WHERE id = col.id
-                  AND EXISTS (SELECT 1
-                              FROM codes inner join specimens
-                                ON codes.referenced_relation = 'specimens'
-                                AND codes.record_id = specimens.id
-                              WHERE codes.code_category = 'main'
-                                AND specimens.collection_ref = col.id
-                                AND codes.code_num IS NOT NULL
-                              LIMIT 1
-                             );
-                IF NOT FOUND THEN
-                  UPDATE collections
-                  SET code_last_value = DEFAULT
-                  WHERE id=col.id;
-                END IF;
-              END IF;
-            END IF;
-          END IF;
-        END IF;
-      END IF;
-    END IF ;
-    RETURN NEW;
-  ELSE
-    IF OLD.referenced_relation = 'specimens' AND OLD.code_category = 'main' THEN
-      SELECT c.* INTO col FROM collections c INNER JOIN specimens s ON s.collection_ref=c.id WHERE s.id=OLD.record_id;
-      IF FOUND AND isnumeric(OLD.code) AND strpos(OLD.code, 'E') = 0 THEN
-        UPDATE collections
-        SET code_last_value = (SELECT max(code_num)
-                               FROM codes INNER JOIN specimens
-                                 ON  codes.referenced_relation = 'specimens'
-                                 AND codes.record_id = specimens.id
-                               WHERE codes.code_category = 'main'
-                                 AND specimens.collection_ref = col.id
-                                 AND codes.code_num IS NOT NULL
-                              )
-        WHERE id=col.id
-          AND EXISTS (SELECT 1
-                      FROM codes inner join specimens
-                        ON codes.referenced_relation = 'specimens'
-                        AND codes.record_id = specimens.id
-                      WHERE codes.code_category = 'main'
-                        AND specimens.collection_ref = col.id
-                        AND codes.code_num IS NOT NULL
-                      LIMIT 1
-                     );
-        IF NOT FOUND THEN
-          UPDATE collections
-          SET code_last_value = DEFAULT
-          WHERE id=col.id;
-        END IF;
-      END IF;
-    END IF ;
-    RETURN OLD;
-  END IF;
-END;
-$BODY$
-LANGUAGE plpgsql VOLATILE
-COST 100;
-
-CREATE OR REPLACE FUNCTION fct_after_save_add_code(IN collectionId collections.id%TYPE, IN specimenId specimens.id%TYPE) RETURNS integer
-AS $$
-DECLARE
-  col collections%ROWTYPE;
-BEGIN
-  SELECT c.* INTO col FROM collections c WHERE c.id = collectionId;
-  IF FOUND THEN
-    IF col.code_auto_increment = TRUE THEN
-      INSERT INTO codes (referenced_relation, record_id, code_prefix, code_prefix_separator, code, code_suffix_separator, code_suffix)
-      SELECT 'specimens', specimenId, col.code_prefix, col.code_prefix_separator, (col.code_last_value+1)::varchar, col.code_suffix_separator, col.code_suffix
-      WHERE NOT EXISTS (SELECT 1 
-                        FROM codes 
-                        WHERE referenced_relation = 'specimens'
-                          AND record_id = specimenId
-                          AND code_category = 'main'
-                          AND code_num IS NOT NULL
-                        LIMIT 1
-                       );
-    END IF;
-  END IF;
-  RETURN 0;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION update_collections_code_last_val() RETURNS trigger 
-AS $$
-BEGIN
-  UPDATE collections 
-  SET code_last_value = (SELECT max(code_num) 
-                         FROM codes 
-                         INNER JOIN specimens 
-                           ON codes.referenced_relation = 'specimens' 
-                           AND codes.record_id = specimens.id
-                           AND codes.code_category = 'main'
-                         WHERE specimens.collection_ref = NEW.collection_ref
-                           AND codes.code_num IS NOT NULL
-                        )
-  WHERE id = NEW.collection_ref
-    AND EXISTS (SELECT 1
-                FROM codes inner join specimens
-                  ON codes.referenced_relation = 'specimens'
-                  AND codes.record_id = specimens.id
-                WHERE codes.code_category = 'main'
-                  AND specimens.collection_ref = NEW.collection_ref
-                  AND codes.code_num IS NOT NULL
-                LIMIT 1
-               );
-  UPDATE collections 
-  SET code_last_value = (SELECT max(code_num) 
-                         FROM codes 
-                         INNER JOIN specimens 
-                           ON codes.referenced_relation = 'specimens' 
-                           AND codes.record_id = specimens.id
-                           AND codes.code_category = 'main'
-                         WHERE specimens.collection_ref = OLD.collection_ref
-                           AND codes.code_num IS NOT NULL
-                        )
-  WHERE id = OLD.collection_ref
-    AND EXISTS (SELECT 1
-                FROM codes inner join specimens
-                  ON codes.referenced_relation = 'specimens'
-                  AND codes.record_id = specimens.id
-                WHERE codes.code_category = 'main'
-                  AND specimens.collection_ref = OLD.collection_ref
-                  AND codes.code_num IS NOT NULL
-                LIMIT 1
-               );
-  IF NOT FOUND THEN
-    UPDATE collections
-    SET code_last_value = DEFAULT
-    WHERE id = OLD.collection_ref;
-  END IF;
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION update_collections_code_last_val_after_spec_del() RETURNS trigger 
-AS $$
-BEGIN
-  UPDATE collections 
-  SET code_last_value = (SELECT max(code_num) 
-                         FROM codes 
-                         INNER JOIN specimens 
-                           ON codes.referenced_relation = 'specimens' 
-                           AND codes.record_id = specimens.id
-                           AND codes.code_category = 'main'
-                         WHERE specimens.collection_ref = OLD.collection_ref
-                           AND specimens.id != OLD.id
-                           AND codes.code_num IS NOT NULL
-                        )
-  WHERE id = OLD.collection_ref
-    AND EXISTS (SELECT 1
-                FROM codes inner join specimens
-                  ON codes.referenced_relation = 'specimens'
-                  AND codes.record_id = specimens.id
-                WHERE codes.code_category = 'main'
-                  AND specimens.collection_ref = OLD.collection_ref
-                  AND specimens.id != OLD.id
-                  AND codes.code_num IS NOT NULL
-                LIMIT 1
-               );
-  IF NOT FOUND THEN
-    UPDATE collections
-    SET code_last_value = DEFAULT
-    WHERE id = OLD.collection_ref;
-  END IF;
-  RETURN NULL;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION fct_importer_catalogue(req_import_ref integer,referenced_relation text,exclude_invalid_entries boolean default false) RETURNS BOOLEAN
-LANGUAGE plpgsql
-AS
-  $$
-  DECLARE
-    staging_catalogue_line staging_catalogue;
-    where_clause_complement_1 text := ' ';
-    where_clause_complement_2 text := ' ';
-    where_clause_complement_3 text := ' ';
-    where_clause_complement_3_bis text := ' ';
-    where_clause_complement_4 text := ' ';
-    where_clause_complement_5 text := ' ';
-    where_clause_exclude_invalid text := ' ';
-    recCatalogue RECORD;
-    parent_path template_classifications.path%TYPE;
-    parentRef staging_catalogue.parent_ref%TYPE;
-    parent_level catalogue_levels.id%TYPE;
-    catalogueRef staging_catalogue.catalogue_ref%TYPE;
-    levelRef staging_catalogue.level_ref%TYPE;
-    error_msg TEXT := '';
-    children_move_forward BOOLEAN := FALSE;
-    level_naming TEXT;
-    tempSQL TEXT;
-  BEGIN
-    -- Browse all staging_catalogue lines
-    FOR staging_catalogue_line IN SELECT * from staging_catalogue WHERE import_ref = req_import_ref ORDER BY level_ref, fullToIndex(name)
-    LOOP
-      IF trim(touniquestr(staging_catalogue_line.name)) = '' THEN
-        RAISE EXCEPTION E'Case 0, Could not import this file, % is not a valid name.\nStaging Catalogue Line: %', staging_catalogue_line.name, staging_catalogue_line.id;
-      END IF;
-      SELECT parent_ref, catalogue_ref, level_ref INTO parentRef, catalogueRef, levelRef FROM staging_catalogue WHERE id = staging_catalogue_line.id;
-      IF catalogueRef IS NULL THEN
-        -- Check if we're at a top taxonomic entry in the template/staging_catalogue line
-        IF parentRef IS NULL THEN
-          -- If top entry, we have not parent defined and we therefore have no other filtering criteria
-          where_clause_complement_1 := ' ';
-          where_clause_complement_2 := ' ';
-          where_clause_complement_3 := ' ';
-          where_clause_complement_3_bis := ' ';
-        ELSE
-          -- If a child entry, we've got to use the informations from the already matched or created parent
-          where_clause_complement_1 := '  AND tax.parent_ref = ' || parentRef || ' ';
-          where_clause_complement_2 := '  AND tax.parent_ref != ' || parentRef || ' ';
-          -- Select the path from parent catalogue unit
-          EXECUTE 'SELECT path, level_ref FROM ' || quote_ident(referenced_relation) || ' WHERE id = $1'
-          INTO parent_path, parent_level
-          USING parentRef;
-          where_clause_complement_3 := '  AND position (' || quote_literal(parent_path) || ' IN tax.path) = 1 ';
-          where_clause_complement_3_bis := '  AND (select t2.level_ref from ' || quote_ident(referenced_relation) || ' as t2 where t2.id = tax.parent_ref) > ' || parent_level || ' ';
-        END IF;
-        where_clause_complement_4 := '  AND left(substring(tax.name from length(trim(' ||
-                                     quote_literal(staging_catalogue_line.name) || '))+1),1) IN (' ||
-                                     quote_literal(' ') || ', ' || quote_literal(',') || ') ';
-        where_clause_complement_5 := '  AND left(substring(' || quote_literal(staging_catalogue_line.name) ||
-                                     ' from length(trim(tax.name))+1),1) IN (' ||
-                                     quote_literal(' ') || ', ' || quote_literal(',') || ') ';
-        -- Set the invalid where clause if asked
-        IF exclude_invalid_entries = TRUE THEN
-          where_clause_exclude_invalid := '  AND tax.status != ' || quote_literal('invalid') || ' ';
-        END IF;
-        -- Check a perfect match entry
-        -- Take care here, a limit 1 has been set, we only kept the EXIT in case the limit would be accidently removed
-        FOR recCatalogue IN EXECUTE 'SELECT COUNT(id) OVER () as total_count, * ' ||
-                                    'FROM ' || quote_ident(referenced_relation) || ' as tax ' ||
-                                    'WHERE tax.level_ref = $1 ' ||
-                                    '  AND tax.name_indexed = fullToIndex( $2 ) ' ||
-                                    where_clause_exclude_invalid ||
-                                    where_clause_complement_1 ||
-                                    'LIMIT 1;'
-        USING staging_catalogue_line.level_ref, staging_catalogue_line.name
-        LOOP
-          -- If more than one entry found, we set an error...
-          IF recCatalogue.total_count > 1 THEN
-            RAISE EXCEPTION E'Case 1, Could not import this file, % exists more than 1 time in DaRWIN, correct the catalogue (or file) to import this tree.\nStaging Catalogue Line: %', staging_catalogue_line.name, staging_catalogue_line.id;
-          END IF;
-          EXIT;
-        END LOOP;
-        -- No perfect match occured with the same parent (if it applies - doesn't apply for top taxonomic entry in template)
-        IF NOT FOUND THEN
-          -- For this step, as it depends upon the existence of a parent, we test well we are on that case
-          -- It concerns a perfect match with parents differents but with a path common
-          -- That means, if only one entry exists, that they are the same but with a more detailed hierarchy in the
-          -- already existing entry
-          IF parentRef IS NOT NULL THEN
-            FOR recCatalogue IN EXECUTE 'SELECT COUNT(id) OVER () as total_count, * ' ||
-                                        'FROM ' || quote_ident(referenced_relation) || ' as tax ' ||
-                                        'WHERE tax.level_ref = $1 ' ||
-                                        '  AND tax.name_indexed = fullToIndex( $2 ) ' ||
-                                        where_clause_exclude_invalid ||
-                                        where_clause_complement_2 ||
-                                        where_clause_complement_3 ||
-                                        where_clause_complement_3_bis ||
-                                        'LIMIT 1;'
-            USING staging_catalogue_line.level_ref, staging_catalogue_line.name
-            LOOP
-              -- If for this kind of perfect match with different parent but kind of same path start, we get multiple
-              -- possibilities, then fail
-              IF recCatalogue.total_count > 1 THEN
-                RAISE EXCEPTION E'Case 2, Could not import this file, % exists more than 1 time in DaRWIN, correct the catalogue (or file) to import this tree.\nStaging Catalogue Line: %', staging_catalogue_line.name, staging_catalogue_line.id;
-              END IF;
-              EXIT;
-            END LOOP;
-            -- If it gave no result, we've got to move forward and try the next option
-            IF NOT FOUND THEN
-              children_move_forward := TRUE;
-            END IF;
-          END IF;
-          IF parentRef IS NULL OR children_move_forward = TRUE THEN
-            -- This next option try a fuzzy match, with, if it's a child entry in the template, a verification that
-            -- the parent specified in the template and the path of the potential corresponding entry in catalogue
-            -- have a common path...
-            tempSQL := 'SELECT COUNT(id) OVER () as total_count, * ' ||
-                       'FROM ' || quote_ident(referenced_relation) || ' as tax ' ||
-                       'WHERE tax.level_ref = $1 ' ||
-                       '  AND tax.name_indexed LIKE fullToIndex( $2 ) || ' || quote_literal('%') ||
-                       where_clause_exclude_invalid ||
-                       where_clause_complement_3 ||
-                       where_clause_complement_4;
-            IF parentRef IS NOT NULL THEN
-              tempSQL := tempSQL || where_clause_complement_1;
-            END IF;
-            tempSQL := tempSQL || 'LIMIT 1;';
-            FOR recCatalogue IN EXECUTE tempSQL
-            USING staging_catalogue_line.level_ref, staging_catalogue_line.name
-            LOOP
-              -- If we're on the case of a top entry in the template, we cannot afford the problem of multiple entries
-              IF recCatalogue.total_count > 1 THEN
-                RAISE EXCEPTION E'Case 3, Could not import this file, % exists more than 1 time in DaRWIN, correct the catalogue (or file) to import this tree.\nStaging Catalogue Line: %', staging_catalogue_line.name, staging_catalogue_line.id;
-              END IF;
-              EXIT;
-            END LOOP;
-            -- Last chance is to try to find if the entry in DaRWIN shouldn't be completed
-            -- This entry should be "alone" of its kind - check the NOT EXIST clause
-            IF NOT FOUND THEN
-              FOR recCatalogue IN EXECUTE 'SELECT COUNT(id) OVER () as total_count, * ' ||
-                                          'FROM ' || quote_ident(referenced_relation) || ' as tax ' ||
-                                          'WHERE tax.level_ref = $1 ' ||
-                                          '  AND position(tax.name_indexed IN fullToIndex( $2 )) = 1 ' ||
-                                          where_clause_exclude_invalid ||
-                                          '  AND NOT EXISTS (SELECT 1 ' ||
-                                          '                  FROM ' || quote_ident(referenced_relation) || ' as stax ' ||
-                                          '                  WHERE stax.id != tax.id ' ||
-                                          '                  AND stax.level_ref = tax.level_ref ' ||
-                                          '                  AND stax.path = tax.path ' ||
-                                          '                  AND stax.name_indexed LIKE tax.name_indexed || ' || quote_literal('%') ||
-                                          '                  LIMIT 1 ' ||
-                                          '                 ) ' ||
-                                          where_clause_complement_3 ||
-                                          where_clause_complement_5 ||
-                                          'LIMIT 1;'
-              USING staging_catalogue_line.level_ref, staging_catalogue_line.name
-              LOOP
-                IF recCatalogue.total_count > 1 THEN
-                  RAISE EXCEPTION E'Case 4, Could not import this file, % exists more than 1 time in DaRWIN, correct the catalogue (or file) to import this tree.\nStaging Catalogue Line: %', staging_catalogue_line.name, staging_catalogue_line.id;
-                ELSE
-                  -- If only one entry is found, we can replace the name of this entry
-                  EXECUTE 'UPDATE ' || quote_ident(referenced_relation) || ' ' ||
-                          'SET name = ' || quote_literal(staging_catalogue_line.name) || ' ' ||
-                          'WHERE id = ' || recCatalogue.id || ';';
-                END IF;
-                EXIT;
-              END LOOP;
-              IF NOT FOUND THEN
-                IF parentRef IS NOT NULL THEN
-                  EXECUTE 'INSERT INTO ' || quote_ident(referenced_relation) || '(id,name,level_ref,parent_ref) ' ||
-                          'VALUES(DEFAULT,$1,$2,$3) ' ||
-                          'RETURNING *;'
-                  INTO recCatalogue
-                  USING staging_catalogue_line.name,staging_catalogue_line.level_ref,parentRef;
-                -- tell to update the staging line to set the catalogue_ref with the id found
-                ELSE
-                  SELECT level_name INTO level_naming FROM catalogue_levels WHERE id = staging_catalogue_line.level_ref;
-                  RAISE EXCEPTION 'Could not import this file, % (level %) does not exist in DaRWIN and cannot be attached, correct your file or create this % manually', staging_catalogue_line.name,  level_naming, quote_ident(referenced_relation);
-                END IF;
-              END IF;
-            END IF;
-          END IF;
-        END IF;
-        -- update the staging line to set the catalogue_ref with the id found
-        -- update the staging children lines
-        WITH staging_catalogue_updated(updated_id/*, catalogue_ref_updated*/) AS (
-          UPDATE staging_catalogue as sc
-          SET catalogue_ref = recCatalogue.id
-          WHERE sc.import_ref = staging_catalogue_line.import_ref
-                AND sc.name = staging_catalogue_line.name
-                AND sc.level_ref = staging_catalogue_line.level_ref
-          RETURNING id
-        )
-        UPDATE staging_catalogue as msc
-        SET parent_ref = recCatalogue.id,
-          parent_updated = TRUE
-        WHERE msc.import_ref = staging_catalogue_line.import_ref
-              AND msc.parent_ref IN (
-          SELECT updated_id FROM staging_catalogue_updated
-        )
-              AND parent_updated = FALSE;
-      END IF;
-      children_move_forward := FALSE;
-    END LOOP;
-    RETURN TRUE;
-    EXCEPTION WHEN OTHERS THEN
-    IF SQLERRM = 'This record does not follow the level hierarchy' THEN
-      SELECT level_name INTO level_naming FROM catalogue_levels WHERE id = staging_catalogue_line.level_ref;
-      RAISE EXCEPTION E'Could not import this file, % (level %) does not follow the accepted level hierarchy in DaRWIN an cannot be attached nor created.\nPlease correct your file.\nStaging Catalogue Line: %', staging_catalogue_line.name,  level_naming, staging_catalogue_line.id;
-    ELSE
-      RAISE EXCEPTION '%', SQLERRM;
-    END IF;
-  END;
-  $$;
-
-CREATE OR REPLACE FUNCTION fct_listing_taxonomy (IN nbr_records INTEGER, VARIADIC taxon_ids INTEGER[])
-  RETURNS TABLE ("referenced_by_at_least_one_specimen" INTEGER,
-  "domain" TEXT,
-  "kingdom" TEXT,
-  "super_phylum" TEXT,
-  "phylum" TEXT,
-  "sub_phylum" TEXT,
-  "infra_phylum" TEXT,
-  "super_cohort_botany" TEXT,
-  "cohort_botany" TEXT,
-  "sub_cohort_botany" TEXT,
-  "infra_cohort_botany" TEXT,
-  "super_class" TEXT,
-  "class" TEXT,
-  "sub_class" TEXT,
-  "infra_class" TEXT,
-  "super_division" TEXT,
-  "division" TEXT,
-  "sub_division" TEXT,
-  "infra_division" TEXT,
-  "super_legion" TEXT,
-  "legion" TEXT,
-  "sub_legion" TEXT,
-  "infra_legion" TEXT,
-  "super_cohort_zoology" TEXT,
-  "cohort_zoology" TEXT,
-  "sub_cohort_zoology" TEXT,
-  "infra_cohort_zoology" TEXT,
-  "super_order" TEXT,
-  "order" TEXT,
-  "sub_order" TEXT,
-  "infra_order" TEXT,
-  "section_zoology" TEXT,
-  "sub_section_zoology" TEXT,
-  "super_family" TEXT,
-  "family" TEXT,
-  "sub_family" TEXT,
-  "infra_family" TEXT,
-  "super_tribe" TEXT,
-  "tribe" TEXT,
-  "sub_tribe" TEXT,
-  "infra_tribe" TEXT,
-  "genus" TEXT,
-  "sub_genus" TEXT,
-  "section_botany" TEXT,
-  "sub_section_botany" TEXT,
-  "serie" TEXT,
-  "sub_serie" TEXT,
-  "super_species" TEXT,
-  "species" TEXT,
-  "sub_species" TEXT,
-  "variety" TEXT,
-  "sub_variety" TEXT,
-  "form" TEXT,
-  "sub_form" TEXT,
-  "abberans" TEXT
-  )
-AS $$
-  DECLARE
-    select_sql_part TEXT; -- Variable dedicated to store the select part of sql
-    from_sql_part TEXT;
-    where_sql_part TEXT;  -- Variable dedicated to store the where part of sql - this part being dynamically constructed
-    where_first_list_of_ids TEXT; -- Will store the list of taxon ids as string with comma as separation delimiter
-    where_second_sql TEXT; -- Will store the second part of the where clause dynamically constructed
-    order_by_sql_part TEXT;
-    limit_sql_part TEXT DEFAULT '';
-    taxon_id INTEGER;
-    recTaxonomic_levels RECORD;
-  BEGIN
-    -- First, test that there's at least one taxon to search the hierarchy from
-    IF array_length(taxon_ids, 1) > 0 THEN
-      -- Compose the list of taxon ids as comma separated string
-      where_first_list_of_ids := array_to_string(taxon_ids, ',');
-      -- Loop through these taxon ids to compose the second part of the sql where clause
-      FOREACH taxon_id IN ARRAY taxon_ids LOOP
-        where_second_sql := 'or strpos	(tax.path, (select ssstax.path || ssstax.id
-                                                    from taxonomy ssstax
-                                                    where ssstax.id = ' || taxon_id || '
-                                                   )
-                                        ) != 0 ';
-        where_sql_part := COALESCE(where_sql_part, '') || where_second_sql;
-      END LOOP;
-      where_sql_part := 'where tax.id in (select sstax.id
-                                          from taxonomy sstax
-                                          where sstax.id in (' || where_first_list_of_ids || ')
-                                         ) ' ||  where_sql_part;
-      select_sql_part := 'select distinct on ((tax.path || tax.id), tax.level_ref)
-                          case
-                            when specimens.id is null then 0
-                            else 1
-                          end as "referenced_by_at_least_one_specimen", ';
-      -- Browse all taxonomic levels and for each of them, include a select clause
-      FOR recTaxonomic_levels IN SELECT id, level_sys_name FROM catalogue_levels WHERE level_type = 'taxonomy' ORDER BY level_order, id LOOP
-        select_sql_part := select_sql_part ||
-                           '(select subtax.name
-                             from taxonomy as subtax inner join (select unnest(string_to_array(substring(tax.path || tax.id from 2), ' || CHR(39) || CHR(47) || CHR(39) || ')) as id) as taxids
-                             on subtax.id = taxids.id::integer
-                             where taxids.id != ' || CHR(39) || CHR(39) || '
-                               and subtax.level_ref = ' || recTaxonomic_levels.id || '
-                            )::text as "' || recTaxonomic_levels.level_sys_name || '" ,';
-      END LOOP;
-      select_sql_part := substring(select_sql_part for (length(select_sql_part) - 1));
-      from_sql_part := 'from taxonomy as tax left join specimens on tax.id = specimens.taxon_ref ';
-      order_by_sql_part := 'order by (tax.path || tax.id), tax.level_ref ';
-      -- Get a limit part only if set
-      IF nbr_records IS NOT NULL AND nbr_records != 0 THEN
-        limit_sql_part := 'limit ' || nbr_records;
-      END IF;
-    END IF;
-    RETURN QUERY EXECUTE select_sql_part || from_sql_part || where_sql_part || order_by_sql_part || limit_sql_part;
-  EXCEPTION WHEN OTHERS THEN
-    RAISE NOTICE 'Error is %', SQLERRM;
-    RETURN;
-  END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION fct_listing_zoology (IN nbr_records INTEGER, VARIADIC taxon_ids INTEGER[])
-  RETURNS TABLE ("referenced_by_at_least_one_specimen" INTEGER,
-  "domain" TEXT,
-  "kingdom" TEXT,
-  "super_phylum" TEXT,
-  "phylum" TEXT,
-  "sub_phylum" TEXT,
-  "infra_phylum" TEXT,
-  "super_class" TEXT,
-  "class" TEXT,
-  "sub_class" TEXT,
-  "infra_class" TEXT,
-  "super_division" TEXT,
-  "division" TEXT,
-  "sub_division" TEXT,
-  "infra_division" TEXT,
-  "super_legion" TEXT,
-  "legion" TEXT,
-  "sub_legion" TEXT,
-  "infra_legion" TEXT,
-  "super_cohort_zoology" TEXT,
-  "cohort_zoology" TEXT,
-  "sub_cohort_zoology" TEXT,
-  "infra_cohort_zoology" TEXT,
-  "super_order" TEXT,
-  "order" TEXT,
-  "sub_order" TEXT,
-  "infra_order" TEXT,
-  "section_zoology" TEXT,
-  "sub_section_zoology" TEXT,
-  "super_family" TEXT,
-  "family" TEXT,
-  "sub_family" TEXT,
-  "infra_family" TEXT,
-  "super_tribe" TEXT,
-  "tribe" TEXT,
-  "sub_tribe" TEXT,
-  "infra_tribe" TEXT,
-  "genus" TEXT,
-  "sub_genus" TEXT,
-  "serie" TEXT,
-  "sub_serie" TEXT,
-  "super_species" TEXT,
-  "species" TEXT,
-  "sub_species" TEXT,
-  "variety" TEXT,
-  "sub_variety" TEXT,
-  "form" TEXT,
-  "sub_form" TEXT,
-  "abberans" TEXT
-  )
-AS $$
-  SELECT "referenced_by_at_least_one_specimen","domain","kingdom","super_phylum","phylum","sub_phylum","infra_phylum","super_class","class","sub_class","infra_class","super_division","division","sub_division","infra_division","super_legion","legion","sub_legion","infra_legion","super_cohort_zoology","cohort_zoology","sub_cohort_zoology","infra_cohort_zoology","super_order","order","sub_order","infra_order","section_zoology","sub_section_zoology","super_family","family","sub_family","infra_family","super_tribe","tribe","sub_tribe","infra_tribe","genus","sub_genus","serie","sub_serie","super_species","species","sub_species","variety","sub_variety","form","sub_form","abberans" from fct_listing_taxonomy($1, variadic $2);
-$$ LANGUAGE SQL;
-
-CREATE OR REPLACE FUNCTION fct_listing_botany (IN nbr_records INTEGER, VARIADIC taxon_ids INTEGER[])
-  RETURNS TABLE ("referenced_by_at_least_one_specimen" INTEGER,
-  "domain" TEXT,
-  "kingdom" TEXT,
-  "super_phylum" TEXT,
-  "phylum" TEXT,
-  "sub_phylum" TEXT,
-  "infra_phylum" TEXT,
-  "super_cohort_botany" TEXT,
-  "cohort_botany" TEXT,
-  "sub_cohort_botany" TEXT,
-  "infra_cohort_botany" TEXT,
-  "super_class" TEXT,
-  "class" TEXT,
-  "sub_class" TEXT,
-  "infra_class" TEXT,
-  "super_division" TEXT,
-  "division" TEXT,
-  "sub_division" TEXT,
-  "infra_division" TEXT,
-  "super_legion" TEXT,
-  "legion" TEXT,
-  "sub_legion" TEXT,
-  "infra_legion" TEXT,
-  "super_order" TEXT,
-  "order" TEXT,
-  "sub_order" TEXT,
-  "infra_order" TEXT,
-  "super_family" TEXT,
-  "family" TEXT,
-  "sub_family" TEXT,
-  "infra_family" TEXT,
-  "super_tribe" TEXT,
-  "tribe" TEXT,
-  "sub_tribe" TEXT,
-  "infra_tribe" TEXT,
-  "genus" TEXT,
-  "sub_genus" TEXT,
-  "section_botany" TEXT,
-  "sub_section_botany" TEXT,
-  "serie" TEXT,
-  "sub_serie" TEXT,
-  "super_species" TEXT,
-  "species" TEXT,
-  "sub_species" TEXT,
-  "variety" TEXT,
-  "sub_variety" TEXT,
-  "form" TEXT,
-  "sub_form" TEXT,
-  "abberans" TEXT
-  )
-AS $$
-  SELECT "referenced_by_at_least_one_specimen","domain","kingdom","super_phylum","phylum","sub_phylum","infra_phylum","super_cohort_botany","cohort_botany","sub_cohort_botany","infra_cohort_botany","super_class","class","sub_class","infra_class","super_division","division","sub_division","infra_division","super_legion","legion","sub_legion","infra_legion","super_order","order","sub_order","infra_order","super_family","family","sub_family","infra_family","super_tribe","tribe","sub_tribe","infra_tribe","genus","sub_genus","section_botany","sub_section_botany","serie","sub_serie","super_species","species","sub_species","variety","sub_variety","form","sub_form","abberans" from fct_listing_taxonomy($1, variadic $2);
-$$ LANGUAGE SQL;
-
-CREATE OR REPLACE FUNCTION fct_listing_chronostratigraphy (IN nbr_records INTEGER, VARIADIC chrono_unit_ids INTEGER[])
-  RETURNS TABLE ("referenced_by_at_least_one_specimen" INTEGER,
-  "eon" TEXT,
-  "era" TEXT,
-  "sub_era" TEXT,
-  "system" TEXT,
-  "serie" TEXT,
-  "stage" TEXT,
-  "sub_stage" TEXT,
-  "sub_level_1" TEXT,
-  "sub_level_2" TEXT
-  )
-AS $$
-  DECLARE
-    select_sql_part TEXT; -- Variable dedicated to store the select part of sql
-    from_sql_part TEXT;
-    where_sql_part TEXT;  -- Variable dedicated to store the where part of sql - this part being dynamically constructed
-    where_first_list_of_ids TEXT; -- Will store the list of chrono_unit ids as string with comma as separation delimiter
-    where_second_sql TEXT; -- Will store the second part of the where clause dynamically constructed
-    order_by_sql_part TEXT;
-    limit_sql_part TEXT DEFAULT '';
-    chrono_unit_id INTEGER;
-    recChronostratigraphic_levels RECORD;
-  BEGIN
-    -- First, test that there's at least one chrono_unit to search the hierarchy from
-    IF array_length(chrono_unit_ids, 1) > 0 THEN
-      -- Compose the list of chrono_unit ids as comma separated string
-      where_first_list_of_ids := array_to_string(chrono_unit_ids, ',');
-      -- Loop through these chrono_unit ids to compose the second part of the sql where clause
-      FOREACH chrono_unit_id IN ARRAY chrono_unit_ids LOOP
-        where_second_sql := 'or strpos	(chronos.path, (select ssschronos.path || ssschronos.id
-                                                    from chronostratigraphy ssschronos
-                                                    where ssschronos.id = ' || chrono_unit_id || '
-                                                   )
-                                        ) != 0 ';
-        where_sql_part := COALESCE(where_sql_part, '') || where_second_sql;
-      END LOOP;
-      where_sql_part := 'where chronos.id in (select sschronos.id
-                                          from chronostratigraphy sschronos
-                                          where sschronos.id in (' || where_first_list_of_ids || ')
-                                         ) ' ||  where_sql_part;
-      select_sql_part := 'select distinct on ((chronos.path || chronos.id), chronos.level_ref)
-                          case
-                            when specimens.id is null then 0
-                            else 1
-                          end as "referenced_by_at_least_one_specimen", ';
-      -- Browse all chronostratigraphic levels and for each of them, include a select clause
-      FOR recChronostratigraphic_levels IN SELECT id, level_sys_name FROM catalogue_levels WHERE level_type = 'chronostratigraphy' ORDER BY level_order, id LOOP
-        select_sql_part := select_sql_part ||
-                           '(select subchronos.name
-                             from chronostratigraphy as subchronos inner join (select unnest(string_to_array(substring(chronos.path || chronos.id from 2), ' || CHR(39) || CHR(47) || CHR(39) || ')) as id) as chronosids
-                             on subchronos.id = chronosids.id::integer
-                             where chronosids.id != ' || CHR(39) || CHR(39) || '
-                               and subchronos.level_ref = ' || recChronostratigraphic_levels.id || '
-                            )::text as "' || recChronostratigraphic_levels.level_sys_name || '" ,';
-      END LOOP;
-      select_sql_part := substring(select_sql_part for (length(select_sql_part) - 1));
-      from_sql_part := 'from chronostratigraphy as chronos left join specimens on chronos.id = specimens.chrono_ref ';
-      order_by_sql_part := 'order by (chronos.path || chronos.id), chronos.level_ref ';
-      -- Get a limit part only if set
-      IF nbr_records IS NOT NULL AND nbr_records != 0 THEN
-        limit_sql_part := 'limit ' || nbr_records;
-      END IF;
-    END IF;
-    RETURN QUERY EXECUTE select_sql_part || from_sql_part || where_sql_part || order_by_sql_part || limit_sql_part;
-  EXCEPTION WHEN OTHERS THEN
-    RAISE NOTICE 'Error is %', SQLERRM;
-    RETURN;
-  END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION fct_listing_lithostratigraphy (IN nbr_records INTEGER, VARIADIC litho_unit_ids INTEGER[])
-  RETURNS TABLE ("referenced_by_at_least_one_specimen" INTEGER,
-  "supergroup" TEXT,
-  "group" TEXT,
-  "formation" TEXT,
-  "member" TEXT,
-  "layer" TEXT,
-  "sub_level_1" TEXT,
-  "sub_level_2" TEXT
-  )
-AS $$
-  DECLARE
-    select_sql_part TEXT; -- Variable dedicated to store the select part of sql
-    from_sql_part TEXT;
-    where_sql_part TEXT;  -- Variable dedicated to store the where part of sql - this part being dynamically constructed
-    where_first_list_of_ids TEXT; -- Will store the list of litho_unit ids as string with comma as separation delimiter
-    where_second_sql TEXT; -- Will store the second part of the where clause dynamically constructed
-    order_by_sql_part TEXT;
-    limit_sql_part TEXT DEFAULT '';
-    litho_unit_id INTEGER;
-    reclithostratigraphic_levels RECORD;
-  BEGIN
-    -- First, test that there's at least one litho_unit to search the hierarchy from
-    IF array_length(litho_unit_ids, 1) > 0 THEN
-      -- Compose the list of litho_unit ids as comma separated string
-      where_first_list_of_ids := array_to_string(litho_unit_ids, ',');
-      -- Loop through these litho_unit ids to compose the second part of the sql where clause
-      FOREACH litho_unit_id IN ARRAY litho_unit_ids LOOP
-        where_second_sql := 'or strpos	(lithos.path, (select ssslithos.path || ssslithos.id
-                                                    from lithostratigraphy ssslithos
-                                                    where ssslithos.id = ' || litho_unit_id || '
-                                                   )
-                                        ) != 0 ';
-        where_sql_part := COALESCE(where_sql_part, '') || where_second_sql;
-      END LOOP;
-      where_sql_part := 'where lithos.id in (select sslithos.id
-                                          from lithostratigraphy sslithos
-                                          where sslithos.id in (' || where_first_list_of_ids || ')
-                                         ) ' ||  where_sql_part;
-      select_sql_part := 'select distinct on ((lithos.path || lithos.id), lithos.level_ref)
-                          case
-                            when specimens.id is null then 0
-                            else 1
-                          end as "referenced_by_at_least_one_specimen", ';
-      -- Browse all lithostratigraphic levels and for each of them, include a select clause
-      FOR reclithostratigraphic_levels IN SELECT id, level_sys_name FROM catalogue_levels WHERE level_type = 'lithostratigraphy' ORDER BY level_order, id LOOP
-        select_sql_part := select_sql_part ||
-                           '(select sublithos.name
-                             from lithostratigraphy as sublithos inner join (select unnest(string_to_array(substring(lithos.path || lithos.id from 2), ' || CHR(39) || CHR(47) || CHR(39) || ')) as id) as lithosids
-                             on sublithos.id = lithosids.id::integer
-                             where lithosids.id != ' || CHR(39) || CHR(39) || '
-                               and sublithos.level_ref = ' || reclithostratigraphic_levels.id || '
-                            )::text as "' || reclithostratigraphic_levels.level_sys_name || '" ,';
-      END LOOP;
-      select_sql_part := substring(select_sql_part for (length(select_sql_part) - 1));
-      from_sql_part := 'from lithostratigraphy as lithos left join specimens on lithos.id = specimens.litho_ref ';
-      order_by_sql_part := 'order by (lithos.path || lithos.id), lithos.level_ref ';
-      -- Get a limit part only if set
-      IF nbr_records IS NOT NULL AND nbr_records != 0 THEN
-        limit_sql_part := 'limit ' || nbr_records;
-      END IF;
-    END IF;
-    RETURN QUERY EXECUTE select_sql_part || from_sql_part || where_sql_part || order_by_sql_part || limit_sql_part;
-  EXCEPTION WHEN OTHERS THEN
-    RAISE NOTICE 'Error is %', SQLERRM;
-    RETURN;
-  END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION fct_listing_mineralogy (IN nbr_records INTEGER, VARIADIC mineralo_unit_ids INTEGER[])
-  RETURNS TABLE ("referenced_by_at_least_one_specimen" INTEGER,
-  "unit_class" TEXT,
-  "unit_sub_class" TEXT,
-  "unit_series" TEXT,
-  "unit_variety" TEXT
-  )
-AS $$
-  DECLARE
-    select_sql_part TEXT; -- Variable dedicated to store the select part of sql
-    from_sql_part TEXT;
-    where_sql_part TEXT;  -- Variable dedicated to store the where part of sql - this part being dynamically constructed
-    where_first_list_of_ids TEXT; -- Will store the list of mineralo_unit ids as string with comma as separation delimiter
-    where_second_sql TEXT; -- Will store the second part of the where clause dynamically constructed
-    order_by_sql_part TEXT;
-    limit_sql_part TEXT DEFAULT '';
-    mineralo_unit_id INTEGER;
-    recmineralogic_levels RECORD;
-  BEGIN
-    -- First, test that there's at least one mineralo_unit to search the hierarchy from
-    IF array_length(mineralo_unit_ids, 1) > 0 THEN
-      -- Compose the list of mineralo_unit ids as comma separated string
-      where_first_list_of_ids := array_to_string(mineralo_unit_ids, ',');
-      -- Loop through these mineralo_unit ids to compose the second part of the sql where clause
-      FOREACH mineralo_unit_id IN ARRAY mineralo_unit_ids LOOP
-        where_second_sql := 'or strpos	(mineralos.path, (select sssmineralos.path || sssmineralos.id
-                                                    from mineralogy sssmineralos
-                                                    where sssmineralos.id = ' || mineralo_unit_id || '
-                                                   )
-                                        ) != 0 ';
-        where_sql_part := COALESCE(where_sql_part, '') || where_second_sql;
-      END LOOP;
-      where_sql_part := 'where mineralos.id in (select ssmineralos.id
-                                          from mineralogy ssmineralos
-                                          where ssmineralos.id in (' || where_first_list_of_ids || ')
-                                         ) ' ||  where_sql_part;
-      select_sql_part := 'select distinct on ((mineralos.path || mineralos.id), mineralos.level_ref)
-                          case
-                            when specimens.id is null then 0
-                            else 1
-                          end as "referenced_by_at_least_one_specimen", ';
-      -- Browse all mineralogic levels and for each of them, include a select clause
-      FOR recmineralogic_levels IN SELECT id, level_sys_name FROM catalogue_levels WHERE level_type = 'mineralogy' ORDER BY level_order, id LOOP
-        select_sql_part := select_sql_part ||
-                           '(select submineralos.name
-                             from mineralogy as submineralos inner join (select unnest(string_to_array(substring(mineralos.path || mineralos.id from 2), ' || CHR(39) || CHR(47) || CHR(39) || ')) as id) as mineralosids
-                             on submineralos.id = mineralosids.id::integer
-                             where mineralosids.id != ' || CHR(39) || CHR(39) || '
-                               and submineralos.level_ref = ' || recmineralogic_levels.id || '
-                            )::text as "' || recmineralogic_levels.level_sys_name || '" ,';
-      END LOOP;
-      select_sql_part := substring(select_sql_part for (length(select_sql_part) - 1));
-      from_sql_part := 'from mineralogy as mineralos left join specimens on mineralos.id = specimens.mineral_ref ';
-      order_by_sql_part := 'order by (mineralos.path || mineralos.id), mineralos.level_ref ';
-      -- Get a limit part only if set
-      IF nbr_records IS NOT NULL AND nbr_records != 0 THEN
-        limit_sql_part := 'limit ' || nbr_records;
-      END IF;
-    END IF;
-    RETURN QUERY EXECUTE select_sql_part || from_sql_part || where_sql_part || order_by_sql_part || limit_sql_part;
-  EXCEPTION WHEN OTHERS THEN
-    RAISE NOTICE 'Error is %', SQLERRM;
-    RETURN;
-  END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION fct_listing_lithology (IN nbr_records INTEGER, VARIADIC litholo_unit_ids INTEGER[])
-  RETURNS TABLE ("referenced_by_at_least_one_specimen" INTEGER,
-  "unit_main_group" TEXT,
-  "unit_group" TEXT,
-  "unit_sub_group" TEXT,
-  "unit_rock" TEXT,
-  "unit_main_class" TEXT,
-  "unit_class" TEXT,
-  "unit_clan" TEXT,
-  "unit_category" TEXT
-  )
-AS $$
-  DECLARE
-    select_sql_part TEXT; -- Variable dedicated to store the select part of sql
-    from_sql_part TEXT;
-    where_sql_part TEXT;  -- Variable dedicated to store the where part of sql - this part being dynamically constructed
-    where_first_list_of_ids TEXT; -- Will store the list of litholo_unit ids as string with comma as separation delimiter
-    where_second_sql TEXT; -- Will store the second part of the where clause dynamically constructed
-    order_by_sql_part TEXT;
-    limit_sql_part TEXT DEFAULT '';
-    litholo_unit_id INTEGER;
-    reclithologic_levels RECORD;
-  BEGIN
-    -- First, test that there's at least one litholo_unit to search the hierarchy from
-    IF array_length(litholo_unit_ids, 1) > 0 THEN
-      -- Compose the list of litholo_unit ids as comma separated string
-      where_first_list_of_ids := array_to_string(litholo_unit_ids, ',');
-      -- Loop through these litholo_unit ids to compose the second part of the sql where clause
-      FOREACH litholo_unit_id IN ARRAY litholo_unit_ids LOOP
-        where_second_sql := 'or strpos	(litholos.path, (select ssslitholos.path || ssslitholos.id
-                                                    from lithology ssslitholos
-                                                    where ssslitholos.id = ' || litholo_unit_id || '
-                                                   )
-                                        ) != 0 ';
-        where_sql_part := COALESCE(where_sql_part, '') || where_second_sql;
-      END LOOP;
-      where_sql_part := 'where litholos.id in (select sslitholos.id
-                                          from lithology sslitholos
-                                          where sslitholos.id in (' || where_first_list_of_ids || ')
-                                         ) ' ||  where_sql_part;
-      select_sql_part := 'select distinct on ((litholos.path || litholos.id), litholos.level_ref)
-                          case
-                            when specimens.id is null then 0
-                            else 1
-                          end as "referenced_by_at_least_one_specimen", ';
-      -- Browse all lithologic levels and for each of them, include a select clause
-      FOR reclithologic_levels IN SELECT id, level_sys_name FROM catalogue_levels WHERE level_type = 'lithology' ORDER BY level_order, id LOOP
-        select_sql_part := select_sql_part ||
-                           '(select sublitholos.name
-                             from lithology as sublitholos inner join (select unnest(string_to_array(substring(litholos.path || litholos.id from 2), ' || CHR(39) || CHR(47) || CHR(39) || ')) as id) as litholosids
-                             on sublitholos.id = litholosids.id::integer
-                             where litholosids.id != ' || CHR(39) || CHR(39) || '
-                               and sublitholos.level_ref = ' || reclithologic_levels.id || '
-                            )::text as "' || reclithologic_levels.level_sys_name || '" ,';
-      END LOOP;
-      select_sql_part := substring(select_sql_part for (length(select_sql_part) - 1));
-      from_sql_part := 'from lithology as litholos left join specimens on litholos.id = specimens.lithology_ref ';
-      order_by_sql_part := 'order by (litholos.path || litholos.id), litholos.level_ref ';
-      -- Get a limit part only if set
-      IF nbr_records IS NOT NULL AND nbr_records != 0 THEN
-        limit_sql_part := 'limit ' || nbr_records;
-      END IF;
-    END IF;
-    RETURN QUERY EXECUTE select_sql_part || from_sql_part || where_sql_part || order_by_sql_part || limit_sql_part;
-  EXCEPTION WHEN OTHERS THEN
-    RAISE NOTICE 'Error is %', SQLERRM;
-    RETURN;
-  END;
-$$ LANGUAGE plpgsql;
-
-/* Reporting Functions */
-create or replace function fct_report_loans_transporters (loan_id loans.id%TYPE, transporter_side TEXT DEFAULT 'sender', lang TEXT DEFAULT 'en')
-  returns
-    table
-    (
-    transport_dispatched_by TEXT,
-    transport_transporter_names TEXT,
-    transport_track_ids TEXT
-    )
-AS
-  $$
-    with
-    transporters as (
-        select
-          case
-          when cp.people_type = 'sender' then
-            case
-              when $3 = 'fr' then
-                'prêteur'
-              when $3 = 'nl' then
-                'lener'
-              else
-                'loaner'
-            end
-          else
-            case
-              when $3 = 'fr' then
-                'emprunteur'
-              when $3 = 'nl' then
-                'lener'
-              else
-                'borrower'
-            end
-          end as transport_dispatched_by,
-          p.formated_name as transport_transporter_name
-        from loans inner join catalogue_people cp
-                   on cp.referenced_relation = 'loans'
-                      and cp.record_id = loans.id
-                      and cp.people_type IN ('sender', 'receiver')
-                      and people_sub_type::integer&64 != 0
-                   inner join people p on cp.people_ref = p.id
-        where loans.id = $1
-          and case
-                when $2 IN ('sender', 'loaner') then
-                  cp.people_type = 'sender'
-                when $2 IN ('receiver', 'borrower') then
-                  cp.people_type = 'receiver'
-              else
-                  false
-              end
-        order by cp.people_type, cp.order_by
-    )
-    select distinct on (transport_dispatched_by)
-      transport_dispatched_by,
-      trim(array_to_string(array_agg(transport_transporter_name) OVER (PARTITION BY transport_dispatched_by), ', '), ', ') as transport_transporter_names,
-      case
-        when transport_dispatched_by = 'loaner' then
-          (
-            select trim(array_to_string(array_agg(lower_value), ', '), ', ') as tracking_id
-            from properties
-            where referenced_relation = 'loans'
-              and record_id = $1
-              and fullToIndex(property_type) = 'trackingid'
-              and applies_to_indexed = 'sender'
-            group by fullToIndex(property_type)
-            limit 1
-          )
-        else
-        (
-          select trim(array_to_string(array_agg(lower_value), ', '), ', ') as tracking_id
-          from properties
-          where referenced_relation = 'loans'
-                and record_id = $1
-                and fullToIndex(property_type) = 'trackingid'
-                and applies_to_indexed = 'receiver'
-          group by fullToIndex(property_type)
-          limit 1
-        )
-      end as transport_track_ids
-    from transporters;
-  $$
-language SQL;
-
-create or replace function fct_report_loans_return_to (loan_id loans.id%TYPE, lang TEXT default 'en')
-  returns
-    TABLE
-    (
-    return_message TEXT
-    )
-AS
-  $$
-  with communications as
-  (
-      select entry, comm_type, tag
-      from collection_maintenance
-        inner join people on collection_maintenance.people_ref = people.id
-        inner join people_comm on people.id = people_comm.person_user_ref
-      where referenced_relation = 'loans'
-            and record_id = $1
-            and action_observation = 'approval'
-            and strpos(tag, 'work') > 0
-  )
-  select
-    case
-      when $2 = 'fr' then
-        'Veuillez retourner une copie de ce formulaire par FAX au '
-      when $2 = 'nl' then
-        'Stuur een kopie van dit formulier per fax naar '
-      else
-        'Return a copy of this form by FAX at '
-    end ||
-    coalesce((select trim(array_to_string(array_agg(entry), ', '), ', ') from communications where comm_type = 'phone/fax' and strpos(tag, 'fax') > 0), '+32(0)2.627.41.13.') ||
-    coalesce((select
-                case
-                  when $2 = 'fr' then
-                    E'\nou par email à '
-                  when $2 = 'nl' then
-                    E'\nof bij email naar '
-                  else
-                    E'\nor by email at '
-                end
-                || trim(array_to_string(array_agg(entry), ', '), ', ') from communications where comm_type = 'e-mail'
-             ), ''
-            ) as return_message
-  $$
-language sql;
-
-create or replace function fct_report_loans_maintenances (loan_id loans.id%TYPE, maintenance_type TEXT)
-  returns
-    table
-    (
-    maintenance_date TEXT,
-    maintenance_people TEXT,
-    maintenance_people_functions TEXT
-    )
-AS
-  $$
-    with maintenance_people as (
-        SELECT
-          DISTINCT ON (maintenance_date, formated_name)
-          CASE
-          WHEN modification_date_time IN ('0001-01-01' :: TIMESTAMP, '2038-12-31' :: TIMESTAMP)
-            THEN
-              NULL
-          ELSE
-            TO_CHAR(modification_date_time, 'DD/MM/YYYY')
-          END::TEXT                                      AS maintenance_date,
-          regexp_replace(formated_name, '\s+', ' ', 'g') AS formated_name,
-          case
-            when person_user_role = '' then
-              '*'
-            else
-              person_user_role
-          end::text AS people_function
-        FROM
-          collection_maintenance
-          INNER JOIN people
-            ON collection_maintenance.people_ref = people.id
-          LEFT JOIN people_relationships pr
-            ON people.id = pr.person_2_ref
-               AND pr.relationship_type IN ('works for', 'belongs to')
-        WHERE collection_maintenance.referenced_relation = 'loans'
-          AND collection_maintenance.record_id = $1
-          AND collection_maintenance.action_observation = $2
-        ORDER BY
-          maintenance_date DESC,
-          formated_name,
-          pr.activity_date_to DESC,
-          pr.activity_date_from DESC,
-          case when person_user_role = '' then 'zzz' else person_user_role end::TEXT
-    )
-    select distinct on (maintenance_date)
-      maintenance_date,
-      trim(array_to_string(array_agg(formated_name) OVER (PARTITION BY maintenance_date), ', '), ', ') as maintenance_people,
-      case
-        when trim(array_to_string(array_agg(people_function) OVER (PARTITION BY maintenance_date), ', '), ', ') = '*' then
-          null
-        else
-          trim(array_to_string(array_agg(people_function) OVER (PARTITION BY maintenance_date), ', '), ', ')
-      end as maintenance_people
-    from maintenance_people
-    order by maintenance_date desc;
-  $$
-language sql;
-
-create or replace function fct_report_loans_addresses (loan_id loans.id%TYPE, target_copy TEXT)
-  returns
-    table
-    (
-    people_name text,
-    institution_name text,
-    address text
-    )
-AS
-  $$
-  with
-  people_infos as
-  (
-    select regexp_replace(p.formated_name, '\s+', ' ', 'g') as formated_name,
-          regexp_replace(pp.formated_name, '\s+', ' ', 'g') as institution_name,
-          case
-          when (ppa.entry is not null
-                AND trim(ppa.entry) != ''
-                AND ppa.locality is not null
-                AND trim(ppa.locality) != ''
-                AND ppa.country is not null
-                AND trim(ppa.country) != ''
-          ) then
-            ppa.entry ||
-            case when (ppa.po_box is not null AND trim(ppa.po_box) != '') then
-              ', ' || ppa.po_box
-            else
-              ''
-            end ||
-            case when (ppa.extended_address is not null AND trim(ppa.extended_address) != '') then
-              E'\n' || ppa.extended_address
-            else
-              ''
-            end ||
-            case when (ppa.zip_code is not null AND trim(ppa.zip_code) != '') then
-              E'\n' || ppa.zip_code || ' ' || ppa.locality ||
-              case when (ppa.region is not null and trim(ppa.region) != '') then
-                ' - ' || ppa.region
-              else
-                ''
-              end
-            else
-              E'\n' || ppa.locality ||
-              case when (ppa.region is not null and trim(ppa.region) != '') then
-                ' - ' || ppa.region
-              else
-                ''
-              end
-            end ||
-            E'\n' || ppa.country
-          when (pa.entry is not null
-                     AND trim(pa.entry) != ''
-                     AND pa.locality is not null
-                     AND trim(pa.locality) != ''
-                     AND pa.country is not null
-                     AND trim(pa.country) != ''
-          ) then
-            pa.entry ||
-            case when (pa.po_box is not null AND trim(pa.po_box) != '') then
-              ', ' || pa.po_box
-            else
-              ''
-            end ||
-            case when (pa.extended_address is not null AND trim(pa.extended_address) != '') then
-              E'\n' || pa.extended_address
-            else
-              ''
-            end ||
-            case when (pa.zip_code is not null AND trim(pa.zip_code) != '') then
-              E'\n' || pa.zip_code || ' ' || pa.locality ||
-              case when (pa.region is not null and trim(pa.region) != '') then
-                ' - ' || pa.region
-              else
-                ''
-              end
-            else
-              E'\n' || pa.locality ||
-              case when (pa.region is not null and trim(pa.region) != '') then
-                ' - ' || pa.region
-              else
-                ''
-              end
-            end ||
-            E'\n' || pa.country
-          else
-            null
-          end::text as address
-    from catalogue_people cp inner join people p on cp.people_ref = p.id
-                             left join people_addresses pa on p.id = pa.person_user_ref and strpos(pa.tag, 'work') > 0
-                             left join (
-                                        people_relationships pr
-                                        inner join
-                                        people pp on pr.person_1_ref = pp.id and NOT pp.is_physical
-                                        inner join people_addresses ppa on pp.id = ppa.person_user_ref
-                                       ) on pr.person_2_ref = p.id and pr.relationship_type IN ('works for', 'belongs to')
-    where referenced_relation = 'loans'
-      and record_id = $1
-      and people_type = 'receiver'
-      and case when $2 IN ('Responsible copy', 'Copie responsable', 'Verantwoordelijk copie') then
-            people_sub_type::integer&2 != 0
-          else
-            people_sub_type::integer&4 != 0
-          end
-      and p.is_physical
-    order by order_by,(strpos(pa.tag, 'work') > 0),pr.activity_date_from desc
-  ),
-  institution_address as
-  (
-    select p.formated_name::text as name,
-          case when (pa.entry is not null
-                     AND trim(pa.entry) != ''
-                     AND pa.locality is not null
-                     AND trim(pa.locality) != ''
-                     AND pa.country is not null
-                     AND trim(pa.country) != ''
-                    ) then
-              pa.entry ||
-              case when (pa.po_box is not null AND trim(pa.po_box) != '') then
-                  ', ' || pa.po_box
-              else
-                  ''
-              end ||
-              case when (pa.extended_address is not null AND trim(pa.extended_address) != '') then
-                  E'\n' || pa.extended_address
-              else
-                  ''
-              end ||
-              case when (pa.zip_code is not null AND trim(pa.zip_code) != '') then
-                  E'\n' || pa.zip_code || ' ' || pa.locality ||
-                  case when (pa.region is not null and trim(pa.region) != '') then
-                    ' - ' || pa.region
-                  else
-                    ''
-                  end
-              else
-                  E'\n' || pa.locality ||
-                  case when (pa.region is not null and trim(pa.region) != '') then
-                  ' - ' || pa.region
-                  else
-                  ''
-                  end
-              end ||
-              E'\n' || pa.country
-          else
-              null
-          end as address
-    from catalogue_people cp inner join people p on cp.people_ref = p.id
-                             left join people_addresses pa on p.id = pa.person_user_ref
-    where referenced_relation = 'loans'
-      and record_id = $1
-      and people_type = 'receiver'
-      and case when $2 IN ('Responsible copy', 'Copie responsable', 'Verantwoordelijk copie') then
-            people_sub_type::integer&2 != 0
-          else
-            people_sub_type::integer&4 != 0
-          end
-      and NOT p.is_physical
-    order by order_by
-    limit 1
-  )
-  select
-    array_to_string(array(select distinct on (formated_name) formated_name from people_infos),', ') as people_name,
-    coalesce(
-        (select name from institution_address),
-        (select institution_name from people_infos where institution_name is not null limit 1)
-    ) as institution_name,
-    coalesce(
-        (select address from institution_address),
-        (select address from people_infos where address is not null limit 1)
-    ) as address
-$$
-language sql;
-
-create or replace function fct_report_loans_forms (loan_id integer, full_target_list text, short_target_list text, selected_target_list text, targeted_catalogues text, with_addr boolean default false, lang text default 'en')
-  returns TABLE (
-  target_copy TEXT,
-  loan_id loans.id%TYPE,
-  loan_name loans.name%TYPE,
-  loan_description loans.description%TYPE,
-  loan_purposes TEXT,
-  loan_conditions TEXT,
-  loan_reception_conditions TEXT,
-  loan_return_conditions TEXT,
-  loan_from_date TEXT,
-  loan_to_date TEXT,
-  loan_extended_to_date TEXT,
-  loan_receiver_name text,
-  loan_receiver_institution_name text,
-  loan_receiver_address text,
-  loan_items_id TEXT,
-  loan_items_name loan_items.details%TYPE,
-  loan_items_description comments.comment%TYPE,
-  loan_items_value insurances.insurance_value%TYPE,
-  loan_phantom_id TEXT,
-  loan_rbins_phantom_id TEXT
-  )
-AS
-  $$
-select vals.val as target_copy,
-       loans.id,
-       loans.name,
-       loans.description,
-       (select array_to_string(array_agg(comment), E'\n') from comments where referenced_relation = 'loans' and record_id = $1 and notion_concerned = 'usage') as loan_purposes,
-       (select array_to_string(array_agg(comment), E'\n') from comments where referenced_relation = 'loans' and record_id = $1 and notion_concerned = 'state_observation') as loan_conditions,
-       (select array_to_string(array_agg(comment), E'\n') from comments where referenced_relation = 'loans' and record_id = $1 and notion_concerned = 'reception_state_observation') as loan_reception_conditions,
-       (select array_to_string(array_agg(comment), E'\n') from comments where referenced_relation = 'loans' and record_id = $1 and notion_concerned = 'return_state_observation') as loan_return_conditions,
-       to_char(loans.from_date,'DD/MM/YYYY'),
-       to_char(loans.to_date,'DD/MM/YYYY'),
-       to_char(loans.extended_to_date,'DD/MM/YYYY'),
-       case
-        when $6 then
-          (select people_name from fct_report_loans_addresses($1,vals.val))::text
-        else
-          ''::text
-       end as loan_receiver_name,
-       case
-        when $6 then
-          (select institution_name from fct_report_loans_addresses($1,vals.val))
-        else
-          ''::text
-       end as loan_receiver_institution_name,
-       case
-        when $6 then
-          (select address from fct_report_loans_addresses($1,vals.val))
-        else
-          ''::text
-       end as loan_receiver_address,
-       case
-        when specimen_ref is null then
-          coalesce (
-              (
-                select
-                  case
-                    when $7 = 'fr' then
-                      'Codes temporaires: '
-                    when $7 = 'nl' then
-                      'Tijdelijke codes: '
-                    else
-                      'Temporary codes: '
-                  end
-                  ||
-                  trim(
-                       array_to_string(
-                           array_agg(
-                                       case
-                                       when coalesce(code_prefix,'') != '' then
-                                         code_prefix || coalesce(code_prefix_separator,'')
-                                       else
-                                         ''
-                                       end ||
-                                       coalesce(code,'') ||
-                                       case
-                                       when coalesce(code_suffix,'') != '' then
-                                         coalesce(code_suffix_separator,'') || code_suffix
-                                       else
-                                         ''
-                                       end
-                                     ),
-                           ', '
-                       ),
-                       ', '
-                  )
-                from codes
-                where referenced_relation = 'loan_items'
-                      and record_id = loan_items.id
-                      and code_category = 'main'
-                limit 3
-              ), '')
-        else
-          'RBINS ID: ' || specimens.id  ||
-          coalesce (
-          (
-            select E'\nCodes: ' || trim(array_to_string(array_agg(
-              case
-                when coalesce(code_prefix,'') != '' then
-                  code_prefix || coalesce(code_prefix_separator,'')
-                else
-                  ''
-              end ||
-              coalesce(code,'') ||
-              case
-              when coalesce(code_suffix,'') != '' then
-                coalesce(code_suffix_separator,'') || code_suffix
-              else
-                ''
-              end
-            ), ', '), ', ')
-            from codes
-            where referenced_relation = 'specimens'
-              and record_id = specimens.id
-              and code_category = 'main'
-            limit 3
-          ), '')
-       end as loan_items_id,
-       case
-        when loan_items.specimen_ref is null then
-          loan_items.details
-        else
-           trim(
-             CASE
-             WHEN 'taxonomy' = ANY (string_to_array(trim($5, '[]'), ', ')) AND coalesce(taxon_name, '') != ''
-               THEN
-                 taxon_name || E'\n'
-             ELSE
-               E'\n'
-             END ||
-             CASE
-             WHEN 'chronostratigraphy' = ANY (string_to_array(trim($5, '[]'), ', ')) AND coalesce(chrono_name, '') != ''
-               THEN
-                 chrono_name || E'\n'
-             ELSE
-               E'\n'
-             END ||
-             CASE
-             WHEN 'lithostratigraphy' = ANY (string_to_array(trim($5, '[]'), ', ')) AND coalesce(litho_name, '') != ''
-               THEN
-                 litho_name || E'\n'
-             ELSE
-               E'\n'
-             END ||
-             CASE
-             WHEN 'lithology' = ANY (string_to_array(trim($5, '[]'), ', ')) AND coalesce(lithology_name, '') != ''
-               THEN
-                 lithology_name || E'\n'
-             ELSE
-               E'\n'
-             END ||
-             CASE
-             WHEN 'mineralogy' = ANY (string_to_array(trim($5, '[]'), ', ')) AND coalesce(mineral_name, '') != ''
-               THEN
-                 mineral_name || E'\n'
-             ELSE
-               E'\n'
-             END
-           ,E'\n')
-        end::text as loan_items_name,
-        coalesce
-        (
-           (
-             select trim(array_to_string(array_agg(comment), E'\n'), E'\n')
-             from comments
-             where referenced_relation = 'loan_items'
-               and record_id = loan_items.id
-               and notion_concerned = 'description'
-             limit 3
-           )
-          ,
-           (
-             select trim(array_to_string(array_agg(comment), E'\n'), E'\n')
-             from comments
-             where referenced_relation = 'specimens'
-                   and record_id = loan_items.specimen_ref
-                   and notion_concerned = 'description'
-             limit 3
-           )
-        ) as loan_items_description,
-        coalesce
-       (
-            (
-              select insurance_value
-              from insurances
-              where referenced_relation = 'loan_items'
-                and record_id = loan_items.id
-                and insurance_currency = '€'
-                order by date_to desc
-              limit 1
-            )
-          ,
-            (
-              select insurance_value
-              from insurances
-              where referenced_relation = 'specimens'
-                    and record_id = loan_items.specimen_ref
-                    and insurance_currency = '€'
-              order by date_to desc
-              limit 1
-            )
-        ) as loan_items_value,
-       case
-        when vals.val IN ('RBINS copy', 'Copie RBINS', 'RBINS copie') then
-         loan_items.id::text
-        else
-         trim(coalesce(to_char(loans.from_date,'YY/MM-'),'') || loans.name || '-' || row_number() over (PARTITION BY vals.val ORDER BY vals.val_index, loans.id, loan_items.id))
-       end as loan_phantom_id,
-       case
-        when vals.val IN ('RBINS copy', 'Copie RBINS', 'RBINS copie') then
-          case
-            when $7 = 'fr' then
-              'ID item prêté: '
-            when $7 = 'nl' then
-              'ID geleend item: '
-            else
-              'Loan item ID: '
-          end
-          ||  loan_items.id || E'\n' ||
-          case
-            when $7 = 'fr' then
-              'ID Fantôme: '
-            else
-              'Phantom ID: '
-          end
-          || trim(coalesce(to_char(loans.from_date,'YY/MM-'),'') || loans.name || '-' || row_number() over (PARTITION BY vals.val ORDER BY vals.val_index, loans.id, loan_items.id))
-        else
-          null::text
-       end as loan_rbins_phantom_id
-from ( select unnest(array_vals.val) as val, generate_series(1,array_vals.val_index) as val_index
-       from (select case when exists ( select 1
-                                       from catalogue_people
-                                       where referenced_relation = 'loans'
-                                         and record_id = $1
-                                         and people_type = 'receiver'
-                                         and people_sub_type::integer&2 != 0
-                                       limit 1
-                                     ) then
-                      string_to_array(trim($2,'[]'), ', ')
-                    else
-                      string_to_array(trim($3,'[]'), ', ')
-                    end as val,
-                    case when exists ( select 1
-                                       from catalogue_people
-                                       where referenced_relation = 'loans'
-                                         and record_id = $1
-                                         and people_type = 'receiver'
-                                         and people_sub_type::integer&2 != 0
-                                       limit 1
-                                     ) then
-                      array_length(string_to_array(trim($2,'[]'), ', '),1)
-                    else
-                      array_length(string_to_array(trim($3,'[]'), ', '),1)
-                    end as val_index
-            ) as array_vals
-     ) as vals,
-loans
-inner join loan_items on loans.id = loan_items.loan_ref
-left join specimens on loan_items.specimen_ref = specimens.id
-where loans.id = $1
-  and exists(select 1
-             from catalogue_people
-             where referenced_relation = 'loans'
-               and record_id = $1
-               and people_type = 'receiver'
-               and people_sub_type::integer&4 != 0
-             limit 1
-            )
-  and vals.val IN ( select unnest(string_to_array(trim($4,'[]'), ', ')) )
-order by vals.val_index,loans.id,row_number() over (PARTITION BY vals.val ORDER BY vals.val_index, loans.id, loan_items.id);
-$$
-language sql;
-
-CREATE OR REPLACE FUNCTION fct_duplicate_loans (loan_id loans.id%TYPE) RETURNS loans.id%TYPE
-  AS
-  $$
-  DECLARE
-    new_loan_id loans.id%TYPE;
-    new_loan_item_id loan_items.id%TYPE;
-    rec_loan_items RECORD;
-  BEGIN
-    INSERT INTO loans (name, description)
-      (SELECT name, description FROM loans WHERE id = loan_id)
-    RETURNING id INTO new_loan_id;
-    INSERT INTO loan_rights (loan_ref, user_ref, has_encoding_right)
-      (SELECT new_loan_id, user_ref, has_encoding_right from loan_rights where loan_ref = loan_id);
-    INSERT INTO catalogue_people (referenced_relation, record_id, people_type, people_sub_type, order_by, people_ref)
-      (
-        SELECT referenced_relation, new_loan_id, people_type, people_sub_type, order_by, people_ref
-        FROM catalogue_people
-        WHERE referenced_relation = 'loans'
-          AND record_id = loan_id
-      );
-    INSERT INTO insurances (referenced_relation,
-                            record_id,
-                            insurance_value,
-                            insurance_currency,
-                            insurer_ref,
-                            date_from_mask,
-                            date_from,
-                            date_to_mask,
-                            date_to,
-                            contact_ref)
-      (SELECT
-         referenced_relation,
-         new_loan_id,
-         insurance_value,
-         insurance_currency,
-         insurer_ref,
-         date_from_mask,
-         date_from,
-         date_to_mask,
-         date_to,
-         contact_ref
-       FROM insurances
-        WHERE referenced_relation = 'loans'
-          AND record_id = loan_id
-      );
-    INSERT INTO comments (referenced_relation, record_id, notion_concerned, comment)
-      (SELECT referenced_relation, new_loan_id, notion_concerned, comment from comments where referenced_relation = 'loans' AND record_id = loan_id);
-    INSERT INTO properties (
-      referenced_relation,
-      record_id,
-      property_type,
-      applies_to,
-      date_from_mask,
-      date_from,
-      date_to_mask,
-      date_to,
-      is_quantitative,
-      property_unit,
-      method,
-      lower_value,
-      upper_value,
-      property_accuracy
-    )
-      (
-        SELECT
-          referenced_relation,
-          new_loan_id,
-          property_type,
-          applies_to,
-          date_from_mask,
-          date_from,
-          date_to_mask,
-          date_to,
-          is_quantitative,
-          property_unit,
-          method,
-          lower_value,
-          upper_value,
-          property_accuracy
-        FROM properties
-        WHERE referenced_relation = 'loans'
-          AND record_id = loan_id
-      );
-    FOR rec_loan_items IN SELECT id FROM loan_items WHERE loan_ref = loan_id
-      LOOP
-        INSERT INTO loan_items (loan_ref, ig_ref, specimen_ref, details)
-          (SELECT new_loan_id, ig_ref, specimen_ref, details FROM loan_items WHERE id = rec_loan_items.id)
-        RETURNING id INTO new_loan_item_id;
-        INSERT INTO catalogue_people (referenced_relation, record_id, people_type, people_sub_type, order_by, people_ref)
-          (
-            SELECT referenced_relation, new_loan_item_id, people_type, people_sub_type, order_by, people_ref
-            FROM catalogue_people
-            WHERE referenced_relation = 'loan_items'
-                  AND record_id = rec_loan_items.id
-          );
-        INSERT INTO codes (
-          referenced_relation,
-          record_id,
-          code_category,
-          code_prefix,
-          code_prefix_separator,
-          code,
-          code_suffix_separator,
-          code_suffix,
-          code_date,
-          code_date_mask
-        )
-        (
-          SELECT
-           referenced_relation,
-           new_loan_item_id,
-           code_category,
-           code_prefix,
-           code_prefix_separator,
-           code,
-           code_suffix_separator,
-           code_suffix,
-           code_date,
-           code_date_mask
-          FROM codes
-          WHERE referenced_relation = 'loan_items'
-            AND record_id = rec_loan_items.id
-        );
-        INSERT INTO insurances (referenced_relation,
-                                record_id,
-                                insurance_value,
-                                insurance_currency,
-                                insurer_ref,
-                                date_from_mask,
-                                date_from,
-                                date_to_mask,
-                                date_to,
-                                contact_ref)
-          (SELECT
-             referenced_relation,
-             new_loan_item_id,
-             insurance_value,
-             insurance_currency,
-             insurer_ref,
-             date_from_mask,
-             date_from,
-             date_to_mask,
-             date_to,
-             contact_ref
-           FROM insurances
-           WHERE referenced_relation = 'loan_items'
-                 AND record_id = rec_loan_items.id
-          );
-        INSERT INTO comments (referenced_relation, record_id, notion_concerned, comment)
-          (SELECT referenced_relation, new_loan_item_id, notion_concerned, comment from comments where referenced_relation = 'loan_items' AND record_id = rec_loan_items.id);
-        INSERT INTO properties (
-          referenced_relation,
-          record_id,
-          property_type,
-          applies_to,
-          date_from_mask,
-          date_from,
-          date_to_mask,
-          date_to,
-          is_quantitative,
-          property_unit,
-          method,
-          lower_value,
-          upper_value,
-          property_accuracy
-        )
-          (
-            SELECT
-              referenced_relation,
-              new_loan_item_id,
-              property_type,
-              applies_to,
-              date_from_mask,
-              date_from,
-              date_to_mask,
-              date_to,
-              is_quantitative,
-              property_unit,
-              method,
-              lower_value,
-              upper_value,
-              property_accuracy
-            FROM properties
-            WHERE referenced_relation = 'loan_items'
-                  AND record_id = rec_loan_items.id
-          );
-      END LOOP;
-    RETURN new_loan_id;
-  EXCEPTION
-    WHEN OTHERS THEN
-      RETURN 0;
-  END;
-  $$
-  LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION fct_update_import()
-  RETURNS trigger AS
-$BODY$
-BEGIN
-  if OLD.state IS DISTINCT FROM NEW.state THEN
-  UPDATE imports set updated_at= now() where id=NEW.id ;
-  END IF ;
-  return new ;
-END;
-$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-
-CREATE OR REPLACE FUNCTION fct_clean_staging_catalogue ( importRef staging_catalogue.import_ref%TYPE ) RETURNS BOOLEAN LANGUAGE plpgsql
-AS
-  $$
-  DECLARE
-    recDistinctStagingCatalogue RECORD;
-  BEGIN
-    FOR recDistinctStagingCatalogue IN SELECT DISTINCT ON (level_ref, fullToIndex(name), name)
-                                       id, import_ref, name, level_ref
-                                       FROM
-                                         (
-                                           SELECT
-                                             id,
-                                             import_ref,
-                                             name,
-                                             level_ref
-                                           FROM staging_catalogue
-                                           WHERE import_ref = importRef
-                                           ORDER BY level_ref, fullToIndex(name), id
-                                         ) as subqry
-    LOOP
-      UPDATE staging_catalogue
-      SET parent_ref = recDistinctStagingCatalogue.id
-      WHERE
-        import_ref = importRef
-        AND parent_ref IN
-            (
-              SELECT id
-              FROM staging_catalogue
-              WHERE import_ref = importRef
-                AND name = recDistinctStagingCatalogue.name
-                AND level_ref = recDistinctStagingCatalogue.level_ref
-                AND id != recDistinctStagingCatalogue.id
-            );
-      DELETE FROM staging_catalogue
-      WHERE import_ref = importRef
-            and name = recDistinctStagingCatalogue.name
-            and level_ref = recDistinctStagingCatalogue.level_ref
-            and id != recDistinctStagingCatalogue.id;
-    END LOOP;
-    RETURN TRUE;
-  EXCEPTION
-    WHEN OTHERS THEN
-      RAISE WARNING 'Error:%', SQLERRM;
-      RETURN FALSE;
-  END;
-$$;
-
--- Statistics functions
-DROP TYPE IF EXISTS stats_collections CASCADE;
-
-create type stats_collections as (collection varchar, new_items bigint, updated_items bigint, new_types bigint, updated_types bigint, new_species bigint);
-
---alter type stats_collections owner to darwin2;
---alter function stats_collections_encoding (collections.id%TYPE, timestamp, timestamp) owner to darwin2;
-
-create or replace function stats_collections_encoding_optimistics (collections.id%TYPE, timestamp, timestamp) returns setof stats_collections language sql immutable as $$
-WITH users_statistics AS
-(
-  WITH users_stats AS
-  (
-      SELECT DISTINCT
-        collection_ref      AS "Collection ID",
-        (
-          SELECT
-        '/'
-        ||
-        array_to_string(
-            array_agg(
-                sc.name),
-            '/')
-        ||
-        '/'
-        ||
-        collection_name
-          FROM
-            collections AS sc
-            INNER JOIN
-            (SELECT
-               unnest(
-                   string_to_array(
-                       trim(
-                           collection_path,
-                           '/'),
-                       '/')) :: BIGINT AS id) AS scc
-              ON
-                sc.id = scc.id
-        )                   AS "Collection Path",
-        main_ut.action      AS "Action",
-        CASE WHEN
-          main_s.type
-          =
-          'specimen'
-          THEN 'non type'
-        ELSE 'type' END     AS "Type",
-        count(*)
-        OVER (
-          PARTITION BY
-            collection_ref,
-            action
-        )                   AS "Action Count",
-        count(*)
-        OVER (
-          PARTITION BY
-            collection_ref,
-            action,
-            CASE WHEN
-              main_s.type = 'specimen'
-              THEN 'non type'
-            ELSE 'type' END
-        )                   AS "Type Count"
-      FROM users_tracking AS main_ut
-        INNER JOIN specimens AS main_s
-          ON main_ut.record_id = main_s.id
-             AND main_ut.modification_date_time BETWEEN $2 :: TIMESTAMP AND $3 :: TIMESTAMP
-             AND main_ut.referenced_relation = 'specimens'
-      WHERE
-        CASE
-        WHEN 0 != $1
-          THEN
-            collection_ref IN (SELECT id
-                               FROM collections
-                               WHERE id = $1 OR path LIKE '%/' || $1 || '/%')
-        ELSE
-          TRUE
-        END
-        AND main_ut.action != 'delete'
-      ORDER BY "Collection Path", "Action", "Type"
-  )
-  SELECT
-    users_stats."Collection Path",
-    users_stats."Action",
-    users_stats."Type",
-    users_stats."Action Count",
-    users_stats."Type Count",
-    new_species."New species"
-  FROM users_stats
-    LEFT JOIN
-    (
-      SELECT
-        s.collection_ref,
-        count(DISTINCT tax.id) AS "New species"
-        FROM
-        (users_tracking AS ut INNER JOIN taxonomy AS tax
-            ON ut.referenced_relation = 'taxonomy'
-               AND ut.action = 'insert'
-               AND ut.record_id = tax.id
-               AND tax.level_ref > 47
-               AND ut.modification_date_time BETWEEN $2 :: TIMESTAMP AND $3 :: TIMESTAMP
-          ) INNER JOIN
-        (specimens AS s INNER JOIN users_tracking AS ust
-            ON ust.referenced_relation = 'specimens'
-               AND ust.action = 'insert'
-               AND ust.record_id = s.id
-               AND ust.modification_date_time BETWEEN $2 :: TIMESTAMP AND $3 :: TIMESTAMP
-          ) ON s.taxon_ref = tax.id
-      GROUP BY s.collection_ref
-    ) AS new_species
-      ON users_stats."Collection ID" = new_species.collection_ref
-)
-SELECT DISTINCT
-  us."Collection Path",
-  coalesce (
-      (
-        SELECT DISTINCT "Action Count"
-        FROM users_statistics as sus
-        WHERE sus."Collection Path" = us."Collection Path"
-              AND sus."Action" = 'insert'
-      ),
-      0
-  ) as "Insertion count",
-  coalesce(
-      (
-        SELECT DISTINCT "Action Count"
-        FROM users_statistics as sus
-        WHERE sus."Collection Path" = us."Collection Path"
-              AND sus."Action" = 'update'
-      ),
-      0
-  ) as "Update count",
-  coalesce(
-      (
-        SELECT DISTINCT "Type Count"
-        FROM users_statistics as sus
-        WHERE sus."Collection Path" = us."Collection Path"
-              AND sus."Action" = 'insert'
-              AND sus."Type" = 'type'
-      ),
-      0
-  ) as "Inserted Type count",
-  coalesce(
-      (
-        SELECT DISTINCT "Type Count"
-        FROM users_statistics as sus
-        WHERE sus."Collection Path" = us."Collection Path"
-              AND sus."Action" = 'update'
-              AND sus."Type" = 'type'
-      ),
-      0
-  ) as "Updated Type count",
-  coalesce(us."New species", 0) as "New species"
-FROM users_statistics as us
-ORDER BY us."Collection Path"
-$$;
-
-create or replace function stats_collections_encoding_optimistics (collections.id%TYPE, text, text) returns setof stats_collections language sql immutable as $$
-  select * from stats_collections_encoding_optimistics($1, $2::timestamp, $3::timestamp);
-$$;
-
-create or replace function stats_collections_encoding (collections.id%TYPE, timestamp, timestamp) returns setof stats_collections language sql immutable as $$
-WITH users_statistics AS
-(
-  WITH users_stats AS
-  (
-      SELECT DISTINCT
-        collection_ref AS "Collection ID",
-        (
-          SELECT
-        '/'
-        ||
-        array_to_string(
-            array_agg(
-                sc.name),
-            '/')
-        ||
-        '/'
-        ||
-        collection_name
-          FROM
-            collections AS sc
-            INNER JOIN
-            (SELECT
-               unnest(
-                   string_to_array(
-                       trim(
-                           collection_path,
-                           '/'),
-                       '/')) :: BIGINT AS id) AS scc
-              ON
-                sc.id = scc.id
-        ) AS "Collection Path",
-        main_ut.action AS "Action",
-        CASE WHEN
-          main_s.type
-          =
-          'specimen'
-          THEN 'non type'
-        ELSE 'type' END AS "Type",
-        main_s.id
-      FROM users_tracking AS main_ut
-        INNER JOIN specimens AS main_s
-          ON main_ut.record_id = main_s.id
-             AND main_ut.modification_date_time BETWEEN $2 :: TIMESTAMP AND $3 :: TIMESTAMP
-             AND main_ut.referenced_relation = 'specimens'
-      WHERE
-        CASE
-        WHEN 0 != $1
-          THEN
-            collection_ref IN (SELECT id
-                               FROM collections
-                               WHERE id = $1 OR path LIKE '%/' || $1 || '/%')
-        ELSE
-          TRUE
-        END
-        AND main_ut.action != 'delete'
-      ORDER BY "Collection Path", "Action", "Type"
-  )
-  SELECT DISTINCT
-    users_stats."Collection Path",
-    users_stats."Action",
-    users_stats."Type",
-    coalesce(count(*) over (partition by "Collection ID", "Action"),0) as "Action Count",
-    coalesce(count(*) over (partition by "Collection ID", "Action", "Type"),0) as "Type Count",
-    coalesce(new_species."New species",0) as "New species"
-  FROM users_stats
-    LEFT JOIN
-    (
-      SELECT
-        s.collection_ref,
-        count(DISTINCT tax.id) AS "New species"
-      FROM
-        (users_tracking AS ut INNER JOIN taxonomy AS tax
-            ON ut.referenced_relation = 'taxonomy'
-               AND ut.action = 'insert'
-               AND ut.record_id = tax.id
-               AND tax.level_ref > 47
-               AND ut.modification_date_time BETWEEN $2 :: TIMESTAMP AND $3 :: TIMESTAMP
-          ) INNER JOIN
-        (specimens AS s INNER JOIN users_tracking AS ust
-            ON ust.referenced_relation = 'specimens'
-               AND ust.action = 'insert'
-               AND ust.record_id = s.id
-               AND ust.modification_date_time BETWEEN $2 :: TIMESTAMP AND $3 :: TIMESTAMP
-          ) ON s.taxon_ref = tax.id
-      GROUP BY s.collection_ref
-    ) AS new_species
-      ON users_stats."Collection ID" = new_species.collection_ref
-)
-SELECT DISTINCT
-  us."Collection Path",
-  coalesce (
-      (
-        SELECT DISTINCT "Action Count"
-        FROM users_statistics as sus
-        WHERE sus."Collection Path" = us."Collection Path"
-              AND sus."Action" = 'insert'
-      ),
-      0
-  ) as "Insertion count",
-  coalesce(
-      (
-        SELECT DISTINCT "Action Count"
-        FROM users_statistics as sus
-        WHERE sus."Collection Path" = us."Collection Path"
-              AND sus."Action" = 'update'
-      ),
-      0
-  ) as "Update count",
-  coalesce(
-      (
-        SELECT DISTINCT "Type Count"
-        FROM users_statistics as sus
-        WHERE sus."Collection Path" = us."Collection Path"
-              AND sus."Action" = 'insert'
-              AND sus."Type" = 'type'
-      ),
-      0
-  ) as "Inserted Type count",
-  coalesce(
-      (
-        SELECT DISTINCT "Type Count"
-        FROM users_statistics as sus
-        WHERE sus."Collection Path" = us."Collection Path"
-              AND sus."Action" = 'update'
-              AND sus."Type" = 'type'
-      ),
-      0
-  ) as "Updated Type count",
-  coalesce(us."New species", 0) as "New species"
-FROM users_statistics as us
-ORDER BY us."Collection Path"
-$$;
-
-create or replace function stats_collections_encoding(collections.id%TYPE, text, text) returns setof stats_collections language sql immutable as $$
-select * from stats_collections_encoding($1, $2::timestamp, $3::timestamp);
-$$;
-
-DROP TYPE IF EXISTS encoders_stats_collections CASCADE;
-
-create type encoders_stats_collections as (encoder TEXT, collection_path TEXT, new_items bigint, updated_items bigint, new_types bigint, updated_types bigint, new_species bigint);
---alter type encoders_stats_collections owner to darwin2;
-
-CREATE OR REPLACE function stats_encoders_encoding_optimistics (top_collection collections.id%TYPE, users_array TEXT, from_date TIMESTAMP, to_date TIMESTAMP)
-  RETURNS setof encoders_stats_collections
-language SQL as
-$$
-WITH users_statistics AS
-(
-  WITH users_stats AS
-  (
-      SELECT DISTINCT
-        users.id            AS "User ID",
-        users.formated_name AS "User",
-        collection_ref      AS "Collection ID",
-        (
-          SELECT
-        '/'
-        ||
-        array_to_string(
-            array_agg(
-                sc.name),
-            '/')
-        ||
-        '/'
-        ||
-        collection_name
-          FROM
-            collections AS sc
-            INNER JOIN
-            (SELECT
-               unnest(
-                   string_to_array(
-                       trim(
-                           collection_path,
-                           '/'),
-                       '/')) :: BIGINT AS id) AS scc
-              ON
-                sc.id = scc.id
-        )                   AS "Collection Path",
-        main_ut.action      AS "Action",
-        CASE WHEN
-          main_s.type
-          =
-          'specimen'
-          THEN 'non type'
-        ELSE 'type' END     AS "Type",
-        count(*)
-        OVER (
-          PARTITION BY
-            users.id,
-            collection_ref,
-            action
-        )                   AS "Action Count",
-        count(*)
-        OVER (
-          PARTITION BY
-            users.id,
-            collection_ref,
-            action,
-            CASE WHEN
-              main_s.type = 'specimen'
-              THEN 'non type'
-            ELSE 'type' END
-        )                   AS "Type Count"
-      FROM users
-        INNER JOIN users_tracking AS main_ut
-          ON users.id = main_ut.user_ref
-             AND main_ut.modification_date_time BETWEEN $3 :: TIMESTAMP AND $4 :: TIMESTAMP
-             AND main_ut.referenced_relation = 'specimens'
-        INNER JOIN specimens AS main_s
-          ON main_ut.record_id = main_s.id
-      WHERE CASE
-            WHEN '0' = ( select unnest(string_to_array(trim($2,'[]'), ', ')) limit 1 )
-              THEN
-                TRUE
-            ELSE
-              users.id::text IN ( select unnest(string_to_array(trim($2,'[]'), ', ')) )
-            END
-            AND
-            CASE
-            WHEN 0 != $1
-              THEN
-                collection_ref IN (SELECT id
-                                   FROM collections
-                                   WHERE id = $1 OR path LIKE '%/' || $1 || '/%')
-            ELSE
-              TRUE
-            END
-            AND main_ut.action != 'delete'
-      ORDER BY "User", "Collection Path", "Action", "Type"
-  )
-  SELECT
-    users_stats."User",
-    users_stats."Collection Path",
-    users_stats."Action",
-    users_stats."Type",
-    users_stats."Action Count",
-    users_stats."Type Count",
-    new_species."New species encoded by the encoder used in this collection"
-  FROM users_stats
-    LEFT JOIN
-    (
-      SELECT
-        s.collection_ref,
-        ut.user_ref            AS "User ID",
-        count(DISTINCT tax.id) AS "New species encoded by the encoder used in this collection"
-      FROM
-        (users_tracking AS ut INNER JOIN taxonomy AS tax
-            ON ut.referenced_relation = 'taxonomy'
-               AND ut.action = 'insert'
-               AND ut.record_id = tax.id
-               AND tax.level_ref > 47
-               AND ut.modification_date_time BETWEEN $3 :: TIMESTAMP AND $4 :: TIMESTAMP
-          ) INNER JOIN
-        (specimens AS s INNER JOIN users_tracking AS ust
-            ON ust.referenced_relation = 'specimens'
-               AND ust.action = 'insert'
-               AND ust.record_id = s.id
-               AND ust.modification_date_time BETWEEN $3 :: TIMESTAMP AND $4 :: TIMESTAMP
-          ) ON s.taxon_ref = tax.id
-      GROUP BY s.collection_ref, ut.user_ref
-    ) AS new_species
-      ON users_stats."Collection ID" = new_species.collection_ref
-         AND users_stats."User ID" = new_species."User ID"
-)
-SELECT DISTINCT
-  us."User", us."Collection Path",
-  coalesce (
-    (
-      SELECT DISTINCT "Action Count"
-      FROM users_statistics as sus
-      WHERE sus."User" = us."User"
-            AND sus."Collection Path" = us."Collection Path"
-            AND sus."Action" = 'insert'
-    ),0
-  ) as "Insertion count",
-  coalesce(
-    (
-      SELECT DISTINCT "Action Count"
-      FROM users_statistics as sus
-      WHERE sus."User" = us."User"
-            AND sus."Collection Path" = us."Collection Path"
-            AND sus."Action" = 'update'
-    ),0
-  ) as "Update count",
-  coalesce (
-    (
-      SELECT DISTINCT "Type Count"
-      FROM users_statistics as sus
-      WHERE sus."User" = us."User"
-            AND sus."Collection Path" = us."Collection Path"
-            AND sus."Action" = 'insert'
-            AND sus."Type" = 'type'
-    ),0
-  ) as "Inserted Type count",
-  coalesce(
-    (
-      SELECT DISTINCT "Type Count"
-      FROM users_statistics as sus
-      WHERE sus."User" = us."User"
-            AND sus."Collection Path" = us."Collection Path"
-            AND sus."Action" = 'update'
-            AND sus."Type" = 'type'
-    ),0
-  ) as "Update Type count",
-  coalesce(us."New species encoded by the encoder used in this collection",0) as "New species encoded by the encoder used in this collection"
-FROM users_statistics as us
-ORDER BY us."User", us."Collection Path"
-$$;
-
-CREATE OR REPLACE function stats_encoders_encoding_optimistics (top_collection collections.id%TYPE, users_array TEXT, from_date TEXT, to_date TEXT)
-  RETURNS setof encoders_stats_collections
-language SQL as
-  $$
-    SELECT * FROM stats_encoders_encoding_optimistics ($1, $2, $3::timestamp, $4::timestamp);
-  $$;
-
-CREATE OR REPLACE function stats_encoders_encoding (top_collection collections.id%TYPE, users_array TEXT, from_date TIMESTAMP, to_date TIMESTAMP)
-  RETURNS setof encoders_stats_collections
-language SQL as
-$$
-WITH users_statistics AS
-(
-  WITH users_stats AS
-  (
-      SELECT DISTINCT
-        users.id            AS "User ID",
-        users.formated_name AS "User",
-        collection_ref      AS "Collection ID",
-        (
-          SELECT
-        '/'
-        ||
-        array_to_string(
-            array_agg(
-                sc.name),
-            '/')
-        ||
-        '/'
-        ||
-        collection_name
-          FROM
-            collections AS sc
-            INNER JOIN
-            (SELECT
-               unnest(
-                   string_to_array(
-                       trim(
-                           collection_path,
-                           '/'),
-                       '/')) :: BIGINT AS id) AS scc
-              ON
-                sc.id = scc.id
-        )                   AS "Collection Path",
-        main_ut.action      AS "Action",
-        CASE WHEN
-          main_s.type
-          =
-          'specimen'
-          THEN 'non type'
-        ELSE 'type' END     AS "Type",
-        main_s.id
-      FROM users
-        INNER JOIN users_tracking AS main_ut
-          ON users.id = main_ut.user_ref
-             AND main_ut.modification_date_time BETWEEN $3 :: TIMESTAMP AND $4 :: TIMESTAMP
-             AND main_ut.referenced_relation = 'specimens'
-        INNER JOIN specimens AS main_s
-          ON main_ut.record_id = main_s.id
-      WHERE CASE
-            WHEN '0' = ( select unnest(string_to_array(trim($2,'[]'), ', ')) limit 1 )
-              THEN
-                TRUE
-            ELSE
-              users.id::text IN ( select unnest(string_to_array(trim($2,'[]'), ', ')) )
-            END
-            AND
-            CASE
-            WHEN 0 != $1
-              THEN
-                collection_ref IN (SELECT id
-                                   FROM collections
-                                   WHERE id = $1 OR path LIKE '%/' || $1 || '/%')
-            ELSE
-              TRUE
-            END
-            AND main_ut.action != 'delete'
-      ORDER BY "User", "Collection Path", "Action", "Type"
-  )
-  SELECT DISTINCT
-    users_stats."User",
-    users_stats."Collection Path",
-    users_stats."Action",
-    users_stats."Type",
-    coalesce(count(*) over (partition by users_stats."User ID", "Collection ID", "Action"),0) as "Action Count",
-    coalesce(count(*) over (partition by users_stats."User ID", "Collection ID", "Action", "Type"),0) as "Type Count",
-    coalesce(new_species."New species encoded by the encoder used in this collection",0) as "New species encoded by the encoder used in this collection"
-  FROM users_stats
-    LEFT JOIN
-    (
-      SELECT
-        s.collection_ref,
-        ut.user_ref            AS "User ID",
-        count(DISTINCT tax.id) AS "New species encoded by the encoder used in this collection"
-      FROM
-        (users_tracking AS ut INNER JOIN taxonomy AS tax
-            ON ut.referenced_relation = 'taxonomy'
-               AND ut.action = 'insert'
-               AND ut.record_id = tax.id
-               AND tax.level_ref > 47
-               AND ut.modification_date_time BETWEEN $3 :: TIMESTAMP AND $4 :: TIMESTAMP
-          ) INNER JOIN
-        (specimens AS s INNER JOIN users_tracking AS ust
-            ON ust.referenced_relation = 'specimens'
-               AND ust.action = 'insert'
-               AND ust.record_id = s.id
-               AND ust.modification_date_time BETWEEN $3 :: TIMESTAMP AND $4 :: TIMESTAMP
-          ) ON s.taxon_ref = tax.id
-      GROUP BY s.collection_ref, ut.user_ref
-    ) AS new_species
-      ON users_stats."Collection ID" = new_species.collection_ref
-         AND users_stats."User ID" = new_species."User ID"
-)
-SELECT DISTINCT
-  us."User", us."Collection Path",
-  coalesce (
-    (
-      SELECT DISTINCT "Action Count"
-      FROM users_statistics as sus
-      WHERE sus."User" = us."User"
-            AND sus."Collection Path" = us."Collection Path"
-            AND sus."Action" = 'insert'
-    ),0
-  ) as "Insertion count",
-  coalesce (
-    (
-      SELECT DISTINCT "Action Count"
-      FROM users_statistics as sus
-      WHERE sus."User" = us."User"
-            AND sus."Collection Path" = us."Collection Path"
-            AND sus."Action" = 'update'
-    ),0
-  ) as "Update count",
-  coalesce (
-    (
-      SELECT DISTINCT "Type Count"
-      FROM users_statistics as sus
-      WHERE sus."User" = us."User"
-            AND sus."Collection Path" = us."Collection Path"
-            AND sus."Action" = 'insert'
-            AND sus."Type" = 'type'
-    ),0
-  ) as "Inserted Type count",
-  coalesce (
-    (
-      SELECT DISTINCT "Type Count"
-      FROM users_statistics as sus
-      WHERE sus."User" = us."User"
-            AND sus."Collection Path" = us."Collection Path"
-            AND sus."Action" = 'update'
-            AND sus."Type" = 'type'
-    ),0
-  ) as "Update Type count",
-  coalesce(us."New species encoded by the encoder used in this collection",0) as "New species encoded by the encoder used in this collection"
-FROM users_statistics as us
-ORDER BY us."User", us."Collection Path"
-$$;
-
-CREATE OR REPLACE function stats_encoders_encoding (top_collection collections.id%TYPE, users_array TEXT, from_date TEXT, to_date TEXT)
-  RETURNS setof encoders_stats_collections
-language SQL as
-$$
-SELECT * FROM stats_encoders_encoding ($1, $2, $3::timestamp, $4::timestamp);
-$$;
-
-CREATE OR REPLACE FUNCTION fct_catalogue_import_keywords_update()
-  RETURNS TRIGGER LANGUAGE plpgsql AS
-$$
-  DECLARE
-    booContinue BOOLEAN := FALSE;
-    intDiag INTEGER;
-  BEGIN
-    IF TG_TABLE_NAME = 'staging_catalogue' THEN
-      IF TG_OP IN ('INSERT', 'UPDATE') THEN
-        IF COALESCE(NEW.catalogue_ref,0) != 0 AND COALESCE(NEW.level_ref,0) != 0 THEN
-          UPDATE classification_keywords as mck
-            SET
-              referenced_relation = (
-                SELECT level_type
-                FROM catalogue_levels
-                WHERE id = NEW.level_ref
-              ),
-              record_id = NEW.catalogue_ref
-          WHERE mck.referenced_relation = TG_TABLE_NAME
-            AND mck.record_id = NEW.id
-            AND NOT EXISTS (
-              SELECT 1
-              FROM classification_keywords as sck
-              WHERE sck.referenced_relation = (
-                  SELECT level_type
-                  FROM catalogue_levels
-                  WHERE id = NEW.level_ref
-                )
-                AND sck.record_id = NEW.catalogue_ref
-                AND sck.keyword_type = mck.keyword_type
-                AND sck.keyword_indexed = mck.keyword_indexed
-              );
-        END IF;
-        RETURN NEW;
-      ELSE
-        DELETE FROM classification_keywords
-        WHERE referenced_relation = 'staging_catalogue'
-              AND record_id = OLD.id;
-        RETURN NULL;
-      END IF;
-    ELSEIF TG_TABLE_NAME = 'staging' THEN
-      IF TG_OP IN ('INSERT', 'UPDATE') THEN
-        IF COALESCE(NEW.taxon_ref,0) != 0 AND COALESCE(NEW.taxon_level_ref,0) != 0 THEN
-          IF TG_OP = 'UPDATE' THEN
-            IF COALESCE(NEW.taxon_ref,0) != COALESCE(OLD.taxon_ref,0) THEN
-              booContinue := TRUE;
-            END IF;
-          ELSE
-            booContinue := TRUE;
-          END IF;
-          IF booContinue = TRUE THEN
-            UPDATE classification_keywords as mck
-            SET
-              referenced_relation = 'taxonomy',
-              record_id = NEW.taxon_ref
-            WHERE mck.referenced_relation = TG_TABLE_NAME
-                  AND mck.record_id = NEW.id
-                  AND mck.keyword_type IN (
-                                            'GenusOrMonomial',
-                                            'Subgenus',
-                                            'SpeciesEpithet',
-                                            'FirstEpiteth',
-                                            'SubspeciesEpithet',
-                                            'InfraspecificEpithet',
-                                            'AuthorTeamAndYear',
-                                            'AuthorTeam',
-                                            'AuthorTeamOriginalAndYear',
-                                            'AuthorTeamParenthesisAndYear',
-                                            'SubgenusAuthorAndYear',
-                                            'CultivarGroupName',
-                                            'CultivarName',
-                                            'Breed',
-                                            'CombinationAuthorTeamAndYear',
-                                            'NamedIndividual'
-                                          )
-                  AND NOT EXISTS (
-                                  SELECT 1
-                                  FROM classification_keywords as sck
-                                  WHERE sck.referenced_relation = 'taxonomy'
-                                        AND sck.record_id = NEW.taxon_ref
-                                        AND sck.keyword_type = mck.keyword_type
-                                        AND sck.keyword_indexed = mck.keyword_indexed
-            );
-          END IF;
-        ELSEIF COALESCE(NEW.mineral_ref,0) != 0 AND COALESCE(NEW.mineral_level_ref,0) != 0 THEN
-          IF TG_OP = 'UPDATE' THEN
-            IF COALESCE(NEW.mineral_ref,0) != COALESCE(OLD.mineral_ref,0) THEN
-              booContinue := TRUE;
-            END IF;
-          ELSE
-            booContinue := TRUE;
-          END IF;
-          IF booContinue = TRUE THEN
-            UPDATE classification_keywords as mck
-            SET
-              referenced_relation = 'mineralogy',
-              record_id = NEW.mineral_ref
-            WHERE mck.referenced_relation = TG_TABLE_NAME
-                  AND mck.record_id = NEW.id
-                  AND mck.keyword_type IN (
-                                            'AuthorTeamAndYear',
-                                            'AuthorTeam',
-                                            'NamedIndividual'
-                                          )
-                  AND NOT EXISTS (
-                                  SELECT 1
-                                  FROM classification_keywords as sck
-                                  WHERE sck.referenced_relation = 'mineralogy'
-                                        AND sck.record_id = NEW.mineral_ref
-                                        AND sck.keyword_type = mck.keyword_type
-                                        AND sck.keyword_indexed = mck.keyword_indexed
-            );
-          END IF;
-        END IF;
-        RETURN NEW;
-      ELSE
-        DELETE FROM classification_keywords
-        WHERE referenced_relation = 'staging'
-              AND record_id = OLD.id;
-        RETURN NULL;
-      END IF;
-    END IF;
-  END;
-$$;

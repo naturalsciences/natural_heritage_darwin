@@ -1,6 +1,4 @@
 <?php
-  error_reporting(E_ERROR | E_PARSE);
-  
 class DarwinActions extends sfActions
 {
 
@@ -20,7 +18,7 @@ class DarwinActions extends sfActions
     $this->forward404Unless($request->hasParameter('table') && array_key_exists ($request->getParameter('table',''),self::$correspondingTable));
 
     if($request->hasParameter('id'))
-      $tableRecord = Doctrine_Core::getTable(self::$correspondingTable[$request->getParameter('table')])->find($request->getParameter('id',0));
+      $tableRecord = Doctrine::getTable(self::$correspondingTable[$request->getParameter('table')])->find($request->getParameter('id',0));
 
     if($request->getParameter('table','')== 'loans')
     {
@@ -84,14 +82,12 @@ class DarwinActions extends sfActions
   protected function loadWidgets($id = null,$collection = null)
   {
     $this->__set('widgetCategory',$this->widgetCategory);
-    if($id === null) {
-      $id = $this->getUser()->getId();
-    }
-    $this->widgets = Doctrine_Core::getTable('MyWidgets')
-      ->setUserRef($id)
+    if($id == null) $id = $this->getUser()->getId();
+    $this->widgets = Doctrine::getTable('MyWidgets')
+      ->setUserRef($this->getUser()->getId())
       ->setDbUserType($this->getUser()->getDbUserType())
       ->getWidgets($this->widgetCategory, $collection);
-    $this->widget_list = Doctrine_Core::getTable('MyWidgets')->sortWidgets($this->widgets, $this->getI18N());
+    $this->widget_list = Doctrine::getTable('MyWidgets')->sortWidgets($this->widgets, $this->getI18N());
     if(! $this->widgets) $this->widgets=array();   
   }
 
@@ -114,7 +110,7 @@ class DarwinActions extends sfActions
     $this->getResponse()->setStatusCode(403);
     throw new sfStopException();
   }
-
+  
   protected function getRecordIfDuplicate($id , $obj, $is_spec = false)
   {
     if ($id)
@@ -150,6 +146,9 @@ class DarwinActions extends sfActions
         break ;
        case 'Specimens' :
         $obj->setAcquisitionDate(new FuzzyDateTime($check->getAcquisitionDate(),$check->getAcquisitionDateMask()) );
+        //ftheeten 2016 07 07
+        $obj->setGtuFromDate(new FuzzyDateTime($check->getGtuFromDate(),$check->getGtuFromDateMask()) );
+        $obj->setGtuToDate(new FuzzyDateTime($check->getGtuToDate(),$check->getGtuToDateMask()) );
         break ;
        default: break ;
       }
@@ -157,18 +156,122 @@ class DarwinActions extends sfActions
     return $obj ;
   }
   
-  protected function executeDisplay_statistics_specimens_main(sfWebRequest $request, $hide_private=false)
+    //ftheeten 2017 10 09	
+	protected function getIDFromCollectionNumber(sfWebRequest $request)
+	{
+		
+		 //ftheeten 2017 10 09
+		$tmp_id=NULL;
+		$initialized=false;
+		//2020 01 10
+        if(null!==($request->getParameter('original_id')))
+		{
+			if(strlen($request->getParameter('original_id')))
+			{			  
+              $stable = Doctrine_Core::getTable('SpecimensStableIds')->findOneBySpecimenRef((int) $request->getParameter('original_id'));
+              $this->specimen = Doctrine_Core::getTable('Specimens')->findOneById($stable->getSpecimenRef());
+              $tmp_id=Array($this->specimen->getId());
+			  $initialized=true;
+			}
+		}
+        elseif(null!==($request->getParameter('uuid')))
+		{
+			if(strlen($request->getParameter('uuid')))
+			{
+			  $stable = Doctrine_Core::getTable('SpecimensStableIds')->findOneByUuid($request->getParameter('uuid'));
+              $this->specimen = Doctrine_Core::getTable('Specimens')->findOneById($stable->getSpecimenRef());
+              $tmp_id=Array($this->specimen->getId());
+			  $initialized=true;
+			}
+		}
+		elseif(null!==($request->getParameter('id')))
+		{
+			if(strlen($request->getParameter('id')))
+			{
+			  $tmp_id=$request->getParameter('id');
+			  $initialized=true;
+			}
+		}
+		if($initialized==false)
+		{
+			if(null!==($request->getParameter('specimennumber')))
+			{
+				if(strlen($request->getParameter('specimennumber')))
+				{	
+					$tmp_id=Doctrine::getTable('Specimens')->getSpecimenIDCorrespondingToMainCollectionNumber($request->getParameter('specimennumber'));
+					$initialized=true;
+				}
+			}
+			
+		}
+		return $tmp_id;
+	}
+    
+    //ftheeten 2017 11 24
+    protected function getSpecimenJSON(sfWebRequest $request)
+    {
+    
+        if($request->hasParameter('specimennumber'))
+		{
+       
+            $results=Doctrine::getTable('Specimens')->getJSON($request->getParameter('specimennumber'));
+            
+            return  $results;
+            
+        }
+        return Array();
+    }
+    
+    //ftheeten 2017 11 24
+    protected function getCollectionJSON(sfWebRequest $request)
+    {
+    
+         
+       
+        $size=50; 
+        $page=1;
+       
+        if($request->hasParameter('collection'))
+		{
+            $collection_code=$request->getParameter('collection');
+            $host=$request->getHost();
+            $prefix_service="/public.php/search/getjson?specimennumber=" ;            
+           
+            if($request->hasParameter('size'))
+            {
+                 $size=$request->getParameter('size');
+            }
+             if($request->hasParameter('page'))
+            {
+                 $page=$request->getParameter('page');
+            }
+            $results=Doctrine::getTable('Specimens')->getSpecimensInCollectionsJSON($collection_code, $host, $size, $page);
+            return  $results;
+            
+        }
+        return Array();
+    }
+    
+    //ftheeten 2017 12 04
+    protected function getAllCollectionsAccessPointJSON(sfWebRequest $request)
+    {
+        $host=$request->getHost();
+        $results=Doctrine::getTable('Specimens')->getCollectionsAllAccessPointsJSON( $host);
+        return  $results;
+    }
+    
+      protected function executeDisplay_statistics_specimens_main(sfWebRequest $request)
   {
-    $idCollections="/";
+    $idCollection="/";
     $year="";
     $creation_date_min="";
     $creation_date_max="";
     $ig_num="";
     $includeSubcollection=false;
     $detailSubCollections=false;
-    if($request->hasParameter("collectionids"))
+    if($request->hasParameter("collectionid"))
     {
-        $idCollections=$request->getParameter("collectionids");
+        $idCollection=$request->getParameter("collectionid");
     }
     
     if($request->hasParameter("ig_num"))
@@ -208,8 +311,7 @@ class DarwinActions extends sfActions
         }
     }
     
-    $items=Doctrine_Core::getTable('Collections')->countSpecimens($idCollections, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections, $hide_private, $this->getUser()) ;
-     
+    $items=Doctrine::getTable('Collections')->countSpecimens($idCollection, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections) ;
     if(count($items)>1)
     {
         
@@ -244,24 +346,24 @@ class DarwinActions extends sfActions
         $items[]=$sum;
         
     }
-  
+    
     return $items;
     
   }
   
   //ftheeten 2018 04 30
-   protected function execute_statistics_generic(sfWebRequest $request, $table_name, $hide_private=false)
+   protected function execute_statistics_generic(sfWebRequest $request, $table_name)
   {
-    $idCollections="/";
+    $idCollection="/";
     $year="";
     $creation_date_min="";
     $creation_date_max="";
     $ig_num="";
     $includeSubcollection=false;
     $detailSubCollections=false;
-    if($request->hasParameter("collectionids"))
+    if($request->hasParameter("collectionid"))
     {
-        $idCollections=$request->getParameter("collectionids");
+        $idCollection=$request->getParameter("collectionid");
     }
     
     if($request->hasParameter("ig_num"))
@@ -302,12 +404,18 @@ class DarwinActions extends sfActions
     }
     if($table_name=="types")
     {
-        $items=Doctrine_Core::getTable('Collections')->countTypeSpecimens($idCollections, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections, $hide_private, $this->getUser()) ;
+        $items=Doctrine::getTable('Collections')->countTypeSpecimens($idCollection, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections) ;
     }
     elseif($table_name=="taxa")
     {
-        $items=Doctrine_Core::getTable('Collections')->countTaxaInSpecimen($idCollections, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections, $hide_private,$this->getUser()) ;
+        $items=Doctrine::getTable('Collections')->countTaxaInSpecimen($idCollection, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections) ;
     }
+    elseif($table_name=="highertaxa")
+    {
+        $items=Doctrine::getTable('Collections')->countHigherTaxa($idCollection, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections) ;
+        return $items;
+    }
+    
     if(count($items)>1)
     {
         
@@ -350,155 +458,5 @@ class DarwinActions extends sfActions
     return $items;
     
   }
-  
-      //ftheeten 2017 10 09	
-	protected function getIDFromCollectionNumber(sfWebRequest $request)
-	{
-		
-		 //ftheeten 2017 10 09
-		$tmp_id=NULL;
-		$initialized=false;
-        //2020 01 10
-        if(null!==($request->getParameter('original_id')))
-		{
-			if(strlen($request->getParameter('original_id')))
-			{			  
-              $stable = Doctrine_Core::getTable('SpecimensStableIds')->findOneBySpecimenRef((int) $request->getParameter('original_id'));
-              $this->specimen = Doctrine_Core::getTable('Specimens')->findOneById($stable->getSpecimenRef());
-              $tmp_id=Array($this->specimen->getId());
-			  $initialized=true;
-			}
-		}
-        elseif(null!==($request->getParameter('uuid')))
-		{
-			if(strlen($request->getParameter('uuid')))
-			{
-			  $stable = Doctrine_Core::getTable('SpecimensStableIds')->findOneByUuid($request->getParameter('uuid'));
-              $this->specimen = Doctrine_Core::getTable('Specimens')->findOneById($stable->getSpecimenRef());
-              $tmp_id=Array($this->specimen->getId());
-			  $initialized=true;
-			}
-		}
-		elseif(null!==($request->getParameter('id')))
-		{
-			if(strlen($request->getParameter('id')))
-			{
-			  $tmp_id=Array($request->getParameter('id'));
-			  $initialized=true;
-			}
-		}
-		if($initialized==false)
-		{
-			if(null!==($request->getParameter('specimennumber')))
-			{
-				if(strlen($request->getParameter('specimennumber')))
-				{	
-					$tmp_id=Doctrine_Core::getTable('Specimens')->getSpecimenIDCorrespondingToMainCollectionNumber($request->getParameter('specimennumber'));
-					$initialized=true;
-				}
-			}
-			
-		}
-		return $tmp_id;
-	}
     
-     //ftheeten 2017 11 24
-    protected function getSpecimenJSON(sfWebRequest $request)
-    {
-    
-        if($request->hasParameter('specimennumber'))
-		{
-       
-            $results=Doctrine_Core::getTable('Specimens')->getJSON("NUMBER",$request->getParameter('specimennumber'));
-            
-            return  $results;
-            
-        }
-        elseif($request->hasParameter('id'))
-		{
-       
-            $results=Doctrine_Core::getTable('Specimens')->getJSON("ID",$request->getParameter('id'));
-            
-            return  $results;
-            
-        }
-        return Array();
-    }
-    
-    //ftheeten 2017 11 24
-    protected function getCollectionJSON(sfWebRequest $request)
-    {
-    
-         
-        
-        $size=50; 
-        $page=1;
-       
-        if($request->hasParameter('collection'))
-		{
- 
-            $collection_code=$request->getParameter('collection');
-            $host=$request->getHost();
-            $prefix_service="/public.php/search/getjson?specimennumber=" ;            
-           
-            if($request->hasParameter('size'))
-            {
-           
-                 $size=$request->getParameter('size');
-            }
-             if($request->hasParameter('page'))
-            {
-
-                 $page=$request->getParameter('page');
-            }
-   
-            $results=Doctrine_Core::getTable('Specimens')->getSpecimensInCollectionsJSON($collection_code, $host, $size, $page);
-      
-            return  $results;
-            
-        }
-  
-        return Array();
-    }
-    
-    //ftheeten 2017 12 04
-    protected function getAllCollectionsAccessPointJSON(sfWebRequest $request)
-    {
-        $host=$request->getHost();
-        $results=Doctrine_Core::getTable('Specimens')->getCollectionsAllAccessPointsJSON( $host);
-        return  $results;
-    }
-	
-	    protected function getInstitutionIdentifierJSON(sfWebRequest $request)
-    {
-    
-        if($request->hasParameter('identifier_protocol')&&$request->hasParameter('identifier_value'))
-		{
-            $host=$request->getHost();
-            $results=Doctrine_Core::getTable('Specimens')->getSpecimensInInstitutionJSON($request->getParameter('identifier_protocol'),$request->getParameter('identifier_value'), $host);
-            
-            return  $results;
-            
-        }
-       
-        return Array();
-    }
-	
-	protected function getPeopleIdentifierJSON(sfWebRequest $request)
-    {
-    
-        if($request->hasParameter('identifier_protocol')&&$request->hasParameter('identifier_value'))
-		{
-            $host=$request->getHost();
-            $results=Doctrine_Core::getTable('Specimens')->getSpecimensForIdentifiersPeopleJSON($request->getParameter('identifier_protocol'),$request->getParameter('identifier_value'), $request->getParameter('identifier_role',''), $host);
-            
-            return  $results;
-            
-        }
-       
-        return Array();
-    }
-    
-    
-   
 }

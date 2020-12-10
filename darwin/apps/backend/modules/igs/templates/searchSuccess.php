@@ -30,7 +30,11 @@
             <th><?php echo __('Total count'); ?></th>
             <!--ftheeten 2018 04 10-->
             <th><?php echo __('Count by collection'); ?></th>            
-            <!--ftheeten 2016 10 28 -->             
+            <!--ftheeten 2016 10 28 -->
+             <?php if($sf_user->isAtLeast(Users::ENCODER)):?>
+                <th>Report</th>
+                <th>&nbsp;</th>
+            <?php endif;?>
             <th>&nbsp;</th>
             <!--ftheeten 2018 04 10-->
             <th>&nbsp;</th>
@@ -55,6 +59,14 @@
                 </td>
               <!--ftheeten 2016 10 28 -->
               <?php if($sf_user->isAtLeast(Users::ENCODER)):?>
+              <td class="rurl_container">
+                    <select class="url_report">
+                        <option value=<?php echo("http://172.16.11.138:8080/pentaho/api/repos/%3Apublic%3ADarwin2%3Areports_ig%3Arapport_ig_ichtyo.prpt/report?REPORT_KEY=".$igs->getId()."&userid=report&password=report&output-target=pageable%2Fpdf&accepted-page=-1&showParameters=true&renderMode=REPORT&htmlProportionalWidth=false")?>>PDF</option>
+                    </select>
+              </td>
+               <td>
+                    <input id="report_link" class="save_search report_link" value="Get report" type="button">
+                </td>
                 <td class="<?php echo (! $is_choose)?'edit':'choose';?>">
                 <?php if(! $is_choose):?>
                   <?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>

@@ -18,7 +18,7 @@
  * @package    symfony
  * @subpackage view
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfViewCacheManager.class.php 32699 2011-07-01 06:58:02Z fabien $
  */
 class sfViewCacheManager
 {
@@ -307,7 +307,7 @@ class sfViewCacheManager
     {
       foreach ($options['vary'] as $key => $name)
       {
-        $options['vary'][$key] = str_replace('_', '-', strtolower($name));
+        $options['vary'][$key] = strtr(strtolower($name), '_', '-');
       }
     }
 

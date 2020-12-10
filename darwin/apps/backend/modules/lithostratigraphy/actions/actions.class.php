@@ -32,7 +32,7 @@ class lithostratigraphyActions extends DarwinActions
 
   public function executeDelete(sfWebRequest $request)
   {
-    $unit = Doctrine_Core::getTable('Lithostratigraphy')->find($request->getParameter('id'));
+    $unit = Doctrine::getTable('Lithostratigraphy')->find($request->getParameter('id'));
     $this->forward404Unless(
       $unit,
       sprintf('Object lithostratigraphy does not exist (%s).', $request->getParameter('id'))
@@ -40,7 +40,7 @@ class lithostratigraphyActions extends DarwinActions
 
     if(! $request->hasParameter('confirm'))
     {
-      $this->number_child = Doctrine_Core::getTable('Lithostratigraphy')->hasChildrens('Lithostratigraphy',$unit->getId());
+      $this->number_child = Doctrine::getTable('Lithostratigraphy')->hasChildrens('Lithostratigraphy',$unit->getId());
       if($this->number_child)
       {
         $this->link_delete = 'lithostratigraphy/delete?confirm=1&id='.$unit->getId();
@@ -63,7 +63,7 @@ class lithostratigraphyActions extends DarwinActions
       $this->form->getErrorSchema()->addError($error);
       $this->loadWidgets();
       $this->setTemplate('edit');
-      $this->no_right_col = Doctrine_Core::getTable('Lithostratigraphy')->testNoRightsCollections('litho_ref',$request->getParameter('id'), $this->getUser()->getId());
+      $this->no_right_col = Doctrine::getTable('Lithostratigraphy')->testNoRightsCollections('litho_ref',$request->getParameter('id'), $this->getUser()->getId());
 
     }
   }
@@ -86,18 +86,18 @@ class lithostratigraphyActions extends DarwinActions
 
   public function executeEdit(sfWebRequest $request)
   {
-    $unit = Doctrine_Core::getTable('Lithostratigraphy')->find($request->getParameter('id'));
+    $unit = Doctrine::getTable('Lithostratigraphy')->find($request->getParameter('id'));
     $this->forward404Unless($unit,'Unit not Found');
-    $this->no_right_col = Doctrine_Core::getTable('Lithostratigraphy')->testNoRightsCollections('litho_ref',$request->getParameter('id'), $this->getUser()->getId());
+    $this->no_right_col = Doctrine::getTable('Lithostratigraphy')->testNoRightsCollections('litho_ref',$request->getParameter('id'), $this->getUser()->getId());
     $this->form = new LithostratigraphyForm($unit);
     $this->loadWidgets();
   }
 
   public function executeUpdate(sfWebRequest $request)
   {
-    $unit = Doctrine_Core::getTable('Lithostratigraphy')->find($request->getParameter('id'));
+    $unit = Doctrine::getTable('Lithostratigraphy')->find($request->getParameter('id'));
     $this->forward404Unless($unit,'Unit not Found');
-    $this->no_right_col = Doctrine_Core::getTable('Lithostratigraphy')->testNoRightsCollections('litho_ref',$request->getParameter('id'), $this->getUser()->getId());
+    $this->no_right_col = Doctrine::getTable('Lithostratigraphy')->testNoRightsCollections('litho_ref',$request->getParameter('id'), $this->getUser()->getId());
     $this->form = new LithostratigraphyForm($unit);
 
     $this->processForm($request,$this->form);
@@ -132,7 +132,7 @@ class lithostratigraphyActions extends DarwinActions
 
   public function executeView(sfWebRequest $request)
   {
-    $this->litho = Doctrine_Core::getTable('Lithostratigraphy')->find($request->getParameter('id'));
+    $this->litho = Doctrine::getTable('Lithostratigraphy')->find($request->getParameter('id'));
     $this->forward404Unless($this->litho,'Lithostratigraphic unit not Found');
     $this->form = new LithostratigraphyForm($this->litho);
     $this->loadWidgets();

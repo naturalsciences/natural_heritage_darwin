@@ -14,12 +14,6 @@
         <?php endif; ?>
       <?php endif?>
       <?php echo image_tag('save.png',array('class' => 'submit_image', 'title'=> __('Save'))) ; ?>
-	  <?php 
-		/*if(strpos($_SERVER['REQUEST_URI'], "/duplicate_id/"))
-		{
-			print(image_tag('calendar_erase.gif',array('class' => 'remove_date', 'title'=> __('Remove date'))));
-		}*/
-		?>
     </p>
     <script type="text/javascript">
     $(document).ready(function () {
@@ -40,20 +34,30 @@
         );
       <?php endif;?>
     });
-	
-	$('.remove_date').click(
-		function()
-		{
-			$(".from_date, .to_date").each(
-				function()
-				{
-					 $(this)[0].selectedIndex = 0;
+    </script>
+<?php elseif(isset($module)): ?>
 
-				}
-			);
-		}
-	);
-    
+    <p id="float_button">      
+      <?php echo link_to(image_tag('previous.png'),  $module.'/index',array('title' => __('Cancel'))) ; ?>
+      <?php if (!$form->getObject()->isNew()): ?>
+        <?php echo link_to(image_tag('individual_expand.png'),  $module.'/new',array('title' => __('New '.$module))) ; ?>
+        <?php echo link_to(image_tag('duplicate.png'), $module.'/new?duplicate_id='.$form->getObject()->getId(), array('title'=> __('Duplicate '.$module))) ; ?>
+        <?php echo link_to(image_tag('remove.png'), $module.'/delete?id='.$form->getObject()->getId(), array('method' => 'delete', 'confirm' => __('Are you sure?'),'title'=>__('Delete'))) ;?>
+      <?php endif?>
+      <?php echo image_tag('save.png',array('class' => 'submit_image', 'title'=> __('Save'))) ; ?>
+    </p>
+    <script type="text/javascript">
+    $(document).ready(function () {
 
+      <?php if($module=="loan"): ?>;
+        $('.submit_image').click(function() {
+        $('#submit_loan').trigger('click') ;
+      }) ;
+      <?php else:?>
+      $('.submit_image').click(function() {
+        $('#submit_spec_f1').trigger('click') ;
+      }) ;
+      <?php endif;?>
+    });
     </script>
 <?php endif; ?>

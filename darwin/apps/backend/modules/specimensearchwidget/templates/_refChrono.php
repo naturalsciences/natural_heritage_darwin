@@ -17,27 +17,21 @@
       <td><?php echo $form['chrono_level_ref'];?></td>
     </tr>
     <tr id="chrono_precise_line">
-      <td id="chrono_relation"><?php echo $form['chrono_relation'];?></td>
-      <td><?php echo $form['chrono_item_ref'];?></td>     
+      <td><?php echo $form['chrono_relation'];?></td>
+      <td><?php echo $form['chrono_item_ref'];?></td>
     </tr>
   </tbody>
 </table>
 
 <script type="text/javascript">
 $(document).ready(function () {
-  //ftheeten 20190307
-  $('#chrono_precise_line :checkbox').each(
-    function()
-    {
-           $(this).prop('checked', true);
-    }
-    );
-
   $('#chrono_precise').click(function() {
     $('#chrono_precise').attr('disabled','disabled') ;
     $('#chrono_full_text').removeAttr('disabled') ;
     $('#chrono_precise_line').toggle() ;
     $(this).closest('table').find('#chrono_full_text_line').toggle() ;
+    $('#chrono_full_text_line').find('input:text').val("") ;
+    $('#chrono_full_text_line').find('select').val('') ;
   });
   
   $('#chrono_full_text').click(function() {
@@ -45,35 +39,16 @@ $(document).ready(function () {
     $('#chrono_full_text').attr('disabled','disabled') ;
     $('#chrono_precise_line').toggle() ;
     $(this).closest('table').find('#chrono_full_text_line').toggle() ;
+    $('#chrono_precise_line').find('input:text').val("") ;
+    $('#chrono_precise_line').find('input:hidden').val('') ;
 
+//     $('#specimen_search_filters_chrono_item_ref').val('') ;
+//     $('#specimen_search_filters_chrono_item_ref_name').val('') ;
   }); 
   
   if($('#specimen_search_filters_chrono_name').val() != '')
   {
     $('#chrono_full_text').trigger("click") ;
   }
-
-  $('#chrono_relation ul.radio_list input').click(function () {
-    if ( $(this).val() in { child : "child", direct_child : "direct_child" } ) {
-      $('#chrono_child_syn_included').removeClass('hidden');
-    }
-    else {
-      $('#chrono_child_syn_included').addClass('hidden');
-    }
-  });
-
-  if (!($('#chrono_relation input:checked').val() in { child : "child", direct_child : "direct_child" } )) {
-    $('#chrono_child_syn_included').addClass('hidden');
-  }
-
-  $('.chrono_name').on(
-    'change',
-    function() {
-      if($(this).val() !== '') {
-        $('.chrono_autocomplete').val('');
-      }
-    }
-  );
-
 });
 </script>

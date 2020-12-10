@@ -39,12 +39,12 @@ class WidgetRightsForm extends sfForm
 	      $delete_right[] = $old ;
     }
     if (count($insert_right) > 0) {
-      Doctrine_Core::getTable('MyWidgets')->
+      Doctrine::getTable('MyWidgets')->
         setUserRef($this->options['user_ref'])->
         doUpdateWidgetRight($this->options['collection_ref'], $insert_right,'insert');
     }
     if (count($delete_right) > 0) {
-      Doctrine_Core::getTable('MyWidgets')->
+      Doctrine::getTable('MyWidgets')->
         setUserRef($this->options['user_ref'])->
         doUpdateWidgetRight($this->options['collection_ref'],$delete_right,'delete');
     }

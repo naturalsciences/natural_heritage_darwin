@@ -75,17 +75,6 @@ usr2:
    visible: true
    title_perso: Addresses
    all_public: true
-   
-usr3:
-   col_num: 1
-   category: users_widget
-   group_name: identifiers
-   mandatory: false
-   order_by: 5
-   opened: true
-   visible: true
-   title_perso: Identifiers
-   all_public: true
 
 sps1:
    col_num: 1
@@ -340,16 +329,16 @@ sps23:
    title_perso: People role
    all_public: true
 
-sps24:
-   col_num: 2
-   category: specimensearch_widget
-   group_name: part
-   mandatory: false
-   order_by: 12
-   opened: true
-   visible: false
-   title_perso: Part
-   all_public: true
+#sps24:
+#   col_num: 2
+#   category: specimensearch_widget
+#   group_name: part
+#   mandatory: false
+#   order_by: 12
+#   opened: true
+#   visible: false
+#   title_perso: Part
+#   all_public: true
 
 sps25:
    col_num: 2
@@ -373,29 +362,67 @@ sps26:
    title_perso: Comments
    all_public: true
 
+#ftheeten 2016 06 22   
 sps27:
    col_num: 2
    category: specimensearch_widget
-   group_name: statusAndCount
+   group_name: specimenCount
    mandatory: false
    order_by: 15
-   opened: true
-   visible: true
-   title_perso: Specimen Status / Count
+   opened: false
+   visible: false
+   title_perso: Specimen count
    all_public: true
-   
+
+#ftheeten 2016 07 05   
+sps27:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: ecology
+   mandatory: false
+   order_by: 15
+   opened: false
+   visible: false
+   title_perso: Ecology
+   all_public: true
+
+#ftheeten 2016 07 07   
 sps28:
    col_num: 2
    category: specimensearch_widget
-   group_name: identification
+   group_name: gtuDate
    mandatory: false
-   order_by: 11
-   opened: true
+   order_by: 15
+   opened: false
    visible: false
-   title_perso: Identification
-   all_public: true
-   
+   title_perso: Gathering date
+   all_public: true 
 
+#ftheeten 20170502  
+sps29:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: loans
+   mandatory: false
+   order_by: 15
+   opened: false
+   visible: false
+   title_perso: Loans
+   all_public: true
+
+#ftheeten 20170502  
+#jmherpers 20171215 title_perso
+sps30:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: storageParts
+   mandatory: false
+   order_by: 15
+   opened: false
+   visible: false
+   title_perso: Storage place for specimen parts
+   all_public: true        
+   
 #jmherpers 20190506
 sps31:
    col_num: 1
@@ -407,7 +434,7 @@ sps31:
    visible: false
    title_perso: Nagoya
    all_public: true
-
+   
 sps32:
    col_num: 1
    category: specimensearch_widget
@@ -418,6 +445,7 @@ sps32:
    visible: false
    title_perso: External links
    all_public: true
+
    
 sw1:
    col_num: 1
@@ -728,21 +756,46 @@ sw33:
    visible: false
    title_perso: Historic
    all_public: true
-
-#2019 03 31
+   
+#ftheeten 2016 06 29
 sw34:
+   col_num: 1
+   category: specimen_widget
+   group_name: ecology
+   mandatory: false
+   order_by: 2
+   opened: true
+   visible: true
+   title_perso: Ecology
+   all_public: true
+
+#ftheeten 2016 07 07
+sw35:
    col_num: 1
    category: specimen_widget
    group_name: gtuDate
    mandatory: false
    order_by: 2
-   opened: false
-   visible: false
-   title_perso: Date
+   opened: true
+   visible: true
+   title_perso: Gathering date
+   all_public: true
+   
+#ftheeten 2016 08 22
+#jmherpers 20171215 title_perso
+sw36:
+   col_num: 1
+   category: specimen_widget
+   group_name: storageParts
+   mandatory: false
+   order_by: 2
+   opened: true
+   visible: true
+   title_perso: Storage place for specimen parts
    all_public: true
 
 #jmherpers 20190506
-sw35:
+sw37:
   col_num: 1
   category: specimen_widget
   group_name: nagoya
@@ -751,11 +804,7 @@ sw35:
   opened: true
   visible: true
   title_perso: Nagoya
-  all_public: true      
-
-   
-
-   
+  all_public: true
 
 tw1:
    col_num: 1
@@ -1360,19 +1409,6 @@ pe9:
    visible: true
    title_perso: Related Files
    all_public: true
-   
-pe10:
-   col_num: 1
-   category: people_widget
-   group_name: identifiers
-   mandatory: false
-   order_by: 10
-   opened: true
-   visible: true
-   title_perso: Identifiers
-   all_public: true
-
-
 
 ins1:
    col_num: 1
@@ -1439,29 +1475,6 @@ ins8:
    visible: true
    title_perso: Related Files
    all_public: true
-   
-ins9:
-   col_num: 2
-   category: people_institution_widget
-   group_name: identifiers
-   mandatory: false
-   order_by: 9
-   opened: true
-   visible: true
-   title_perso: Identifiers
-   all_public: true
-
-ins10:
-   col_num: 2
-   category: people_institution_widget
-   group_name: peopleSubTypes
-   mandatory: false
-   order_by: 10
-   opened: true
-   visible: true
-   title_perso: People category
-   all_public: true
-
 
 bib2:
    col_num: 1
@@ -1694,17 +1707,6 @@ litw8:
    title_perso: Maintenances
    all_public: true
 
-litw9:
-   col_num: 1
-   category: loanitem_widget
-   group_name: refCodes
-   order_by: 5
-   opened: true
-   visible: true
-   is_available: true
-   title_perso: Codes
-   all_public: true
-
 m1:
    col_num: 1
    category: maintenances_widget
@@ -1770,7 +1772,8 @@ ig3:
    visible: true
    title_perso: External Links
    all_public: true
-
+   
+#ftheeten 2019 01 24
 ig4:
    col_num: 1
    category: catalogue_igs_widget
@@ -1868,18 +1871,6 @@ gtu5:
    opened: true
    visible: true
    title_perso: Related Files
-   all_public: true
- 
-#ftheeten 2019 03 31
-gtu6:
-   col_num: 1
-   category: catalogue_gtu_widget
-   group_name: gtuTemporalInformation
-   mandatory: false
-   order_by: 6
-   opened: true
-   visible: true
-   title_perso: Collecting dates
    all_public: true
 
 u1wmetto1:

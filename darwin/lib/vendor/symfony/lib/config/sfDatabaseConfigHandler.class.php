@@ -18,7 +18,7 @@
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfDatabaseConfigHandler.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
 class sfDatabaseConfigHandler extends sfYamlConfigHandler
 {
@@ -74,7 +74,7 @@ class sfDatabaseConfigHandler extends sfYamlConfigHandler
   protected function parse($configFiles)
   {
     // parse the yaml
-    $config = static::getConfiguration($configFiles);
+    $config = self::getConfiguration($configFiles);
 
     // init our data and includes arrays
     $data      = array();
@@ -131,17 +131,16 @@ class sfDatabaseConfigHandler extends sfYamlConfigHandler
 
   /**
    * @see sfConfigHandler
-   * @inheritdoc
    */
   static public function getConfiguration(array $configFiles)
   {
-    $config = static::replaceConstants(static::flattenConfigurationWithEnvironment(static::parseYamls($configFiles)));
+    $config = self::replaceConstants(self::flattenConfigurationWithEnvironment(self::parseYamls($configFiles)));
 
     foreach ($config as $name => $dbConfig)
     {
       if (isset($dbConfig['file']))
       {
-        $config[$name]['file'] = static::replacePath($dbConfig['file']);
+        $config[$name]['file'] = self::replacePath($dbConfig['file']);
       }
     }
 

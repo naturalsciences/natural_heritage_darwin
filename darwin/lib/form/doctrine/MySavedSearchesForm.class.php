@@ -29,7 +29,7 @@ class MySavedSearchesForm extends BaseMySavedSearchesForm
     if($this->getObject()->getName() == "")
       $this->widgetSchema['name']->setDefault($default_name) ;
 
-    $choices = Doctrine_Core::getTable('MySavedSearches')->getAllFields($this->object->getSubject(),$this->options['is_reg_user']) ;
+    $choices = Doctrine::getTable('MySavedSearches')->getAllFields($this->object->getSubject(),$this->options['is_reg_user']) ;
     $choices = $this->translateValues($choices);
     $this->widgetSchema['visible_fields_in_result'] = new sfWidgetFormChoice(array(
       'choices' => $choices, 
@@ -46,11 +46,12 @@ class MySavedSearchesForm extends BaseMySavedSearchesForm
     $this->validatorSchema['modification_date_time'] = new sfValidatorString(array('required' => false)) ;
     $this->validatorSchema['user_ref'] = new sfValidatorString(array('required' => false)) ;
     
-        //ftheeten 2016 06 08
+    //ftheeten 2016 06 08
     $this->widgetSchema['query_where'] = new sfWidgetFormInputText() ;
     $this->validatorSchema['query_where'] = new sfValidatorString(array('required' => false)) ;
     $this->widgetSchema['query_parameters'] = new sfWidgetFormInputText() ;
     $this->validatorSchema['query_parameters'] = new sfValidatorString(array('required' => false)) ;
+    
     
   }
   
@@ -72,7 +73,7 @@ class MySavedSearchesForm extends BaseMySavedSearchesForm
   {
     if(isset($taintedValues['subject']) && in_array($taintedValues['subject'], array('specimen')))
     {
-      $choices = Doctrine_Core::getTable('MySavedSearches')->getAllFields($taintedValues['subject']) ;
+      $choices = Doctrine::getTable('MySavedSearches')->getAllFields($taintedValues['subject']) ;
       $choices = array_keys($choices);
       $this->validatorSchema['visible_fields_in_result'] = new sfValidatorChoice(array('choices' => $choices,'multiple' => true));
     }
@@ -86,6 +87,7 @@ class MySavedSearchesForm extends BaseMySavedSearchesForm
     $string_fields = implode('|',$values['visible_fields_in_result']) ;
     $this->getObject()->setModificationDateTime(date('d/m/Y H:i:s'));
     $this->getObject()->setVisibleFieldsInResult($string_fields) ;
+    
     //ftheeten 2016 06 08
     $this->setParamsToSaveQuery();
     $this->getObject()->save();
@@ -94,7 +96,9 @@ class MySavedSearchesForm extends BaseMySavedSearchesForm
     $this->cleanParamsToSaveQuery();
   }
   
-    //ftheeten 2016 06 08
+  
+  
+  //ftheeten 2016 06 08
   function setParamsToSaveQuery()
   {
     

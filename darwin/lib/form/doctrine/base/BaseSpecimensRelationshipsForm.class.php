@@ -8,63 +8,49 @@
  * @package    darwin
  * @subpackage form
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
  */
-abstract class BaseSpecimensRelationshipsForm extends DarwinModelForm
+abstract class BaseSpecimensRelationshipsForm extends BaseFormDoctrine
 {
-  protected function setupInheritance()
+  public function setup()
   {
-    parent::setupInheritance();
+    $this->setWidgets(array(
+      'id'                   => new sfWidgetFormInputHidden(),
+      'specimen_ref'         => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Specimen'), 'add_empty' => false)),
+      'taxon_ref'            => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Taxonomy'), 'add_empty' => true)),
+      'mineral_ref'          => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Mineralogy'), 'add_empty' => true)),
+      'specimen_related_ref' => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('SpecimenRelated'), 'add_empty' => true)),
+      'relationship_type'    => new sfWidgetFormTextarea(),
+      'unit_type'            => new sfWidgetFormTextarea(),
+      'quantity'             => new sfWidgetFormInputText(),
+      'unit'                 => new sfWidgetFormTextarea(),
+      'institution_ref'      => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Institutions'), 'add_empty' => true)),
+      'source_name'          => new sfWidgetFormTextarea(),
+      'source_id'            => new sfWidgetFormTextarea(),
+    ));
 
-    $this->widgetSchema   ['specimen_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Specimen'), 'add_empty' => false));
-    $this->validatorSchema['specimen_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Specimen'), 'column' => 'id'));
-
-    $this->widgetSchema   ['taxon_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Taxonomy'), 'add_empty' => true));
-    $this->validatorSchema['taxon_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Taxonomy'), 'column' => 'id', 'required' => false));
-
-    $this->widgetSchema   ['mineral_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Mineralogy'), 'add_empty' => true));
-    $this->validatorSchema['mineral_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Mineralogy'), 'column' => 'id', 'required' => false));
-
-    $this->widgetSchema   ['specimen_related_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('SpecimenRelated'), 'add_empty' => true));
-    $this->validatorSchema['specimen_related_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('SpecimenRelated'), 'column' => 'id', 'required' => false));
-
-    $this->widgetSchema   ['relationship_type'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['relationship_type'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['unit_type'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['unit_type'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['quantity'] = new sfWidgetFormInputText();
-    $this->validatorSchema['quantity'] = new sfValidatorNumber(array('required' => false));
-
-    $this->widgetSchema   ['unit'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['unit'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['institution_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Institutions'), 'add_empty' => true));
-    $this->validatorSchema['institution_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Institutions'), 'column' => 'id', 'required' => false));
-
-    $this->widgetSchema   ['source_name'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['source_name'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['source_id'] = new sfWidgetFormTextarea();
-    $this->validatorSchema['source_id'] = new sfValidatorString(array('required' => false));
-
-    $this->widgetSchema   ['specimen_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Specimen'), 'add_empty' => false));
-    $this->validatorSchema['specimen_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Specimen'), 'column' => 'id'));
-
-    $this->widgetSchema   ['specimen_related_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('SpecimenRelated'), 'add_empty' => true));
-    $this->validatorSchema['specimen_related_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('SpecimenRelated'), 'column' => 'id', 'required' => false));
-
-    $this->widgetSchema   ['taxon_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Taxonomy'), 'add_empty' => true));
-    $this->validatorSchema['taxon_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Taxonomy'), 'column' => 'id', 'required' => false));
-
-    $this->widgetSchema   ['mineral_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Mineralogy'), 'add_empty' => true));
-    $this->validatorSchema['mineral_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Mineralogy'), 'column' => 'id', 'required' => false));
-
-    $this->widgetSchema   ['institution_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Institutions'), 'add_empty' => true));
-    $this->validatorSchema['institution_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Institutions'), 'column' => 'id', 'required' => false));
+    $this->setValidators(array(
+      'id'                   => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
+      'specimen_ref'         => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Specimen'))),
+      'taxon_ref'            => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Taxonomy'), 'required' => false)),
+      'mineral_ref'          => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Mineralogy'), 'required' => false)),
+      'specimen_related_ref' => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('SpecimenRelated'), 'required' => false)),
+      'relationship_type'    => new sfValidatorString(array('required' => false)),
+      'unit_type'            => new sfValidatorString(array('required' => false)),
+      'quantity'             => new sfValidatorNumber(array('required' => false)),
+      'unit'                 => new sfValidatorString(array('required' => false)),
+      'institution_ref'      => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Institutions'), 'required' => false)),
+      'source_name'          => new sfValidatorString(array('required' => false)),
+      'source_id'            => new sfValidatorString(array('required' => false)),
+    ));
 
     $this->widgetSchema->setNameFormat('specimens_relationships[%s]');
+
+    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
+
+    $this->setupInheritance();
+
+    parent::setup();
   }
 
   public function getModelName()

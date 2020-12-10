@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/sfDoctrineBaseTask.class.php');
  * @package    symfony
  * @subpackage doctrine
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfDoctrineCreateModelTablesTask.class.php 23922 2009-11-14 14:58:38Z fabien $
  */
 class sfDoctrineCreateModelTables extends sfDoctrineBaseTask
 {
@@ -29,7 +29,6 @@ class sfDoctrineCreateModelTables extends sfDoctrineBaseTask
     $this->addOptions(array(
       new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', 'frontend'),
       new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
-      new sfCommandOption('skip-build', null, sfCommandOption::PARAMETER_NONE, 'Skip the doctrine:build-model task.')
     ));
 
     $this->namespace = 'doctrine';
@@ -47,13 +46,10 @@ EOF;
   {
     $databaseManager = new sfDatabaseManager($this->configuration);
 
-    if (!$options['skip-build'])
-    {
-      $buildModel = new sfDoctrineBuildModelTask($this->dispatcher, $this->formatter);
-      $buildModel->setCommandApplication($this->commandApplication);
-      $buildModel->setConfiguration($this->configuration);
-      $buildModel->run();
-    }
+    $buildModel = new sfDoctrineBuildModelTask($this->dispatcher, $this->formatter);
+    $buildModel->setCommandApplication($this->commandApplication);
+    $buildModel->setConfiguration($this->configuration);
+    $ret = $buildModel->run();
 
     $connections = array();
     $models = $arguments['models'];

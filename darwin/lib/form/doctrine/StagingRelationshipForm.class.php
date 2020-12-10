@@ -15,7 +15,7 @@ class StagingRelationshipForm extends BaseStagingRelationshipForm
     $name = $this->getObject()->getInstitutionName() ;
     $this->widgetSchema['institution_ref'] = new widgetFormButtonRef(array(
        'model' => 'Institutions',
-       'link_url' => 'institution/choose?with_js=1&name='.$name,
+       'link_url' => 'institution/choose?with_js=1',
        'method' => 'getFamilyName',
        'box_title' => $this->getI18N()->__('Choose Institution'),
        'nullable' => false,

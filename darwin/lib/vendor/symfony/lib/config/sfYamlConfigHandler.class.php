@@ -15,12 +15,12 @@
  * @package    symfony
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfYamlConfigHandler.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
 abstract class sfYamlConfigHandler extends sfConfigHandler
 {
-  /** @var array */
-  protected $yamlConfig = null;
+  protected
+    $yamlConfig = null;
 
   /**
    * Parses an array of YAMLs files and merges them in one configuration array.
@@ -36,7 +36,7 @@ abstract class sfYamlConfigHandler extends sfConfigHandler
     {
       // the first level is an environment and its value must be an array
       $values = array();
-      foreach (static::parseYaml($configFile) as $env => $value)
+      foreach (self::parseYaml($configFile) as $env => $value)
       {
         if (null !== $value)
         {
@@ -55,7 +55,7 @@ abstract class sfYamlConfigHandler extends sfConfigHandler
    *
    * @param string $configFile An absolute filesystem path to a configuration file
    *
-   * @return string|array A parsed .yml configuration
+   * @return string A parsed .yml configuration
    *
    * @throws sfConfigurationException If a requested configuration file does not exist or is not readable
    * @throws sfParseException If a requested configuration file is improperly formatted
@@ -69,7 +69,7 @@ abstract class sfYamlConfigHandler extends sfConfigHandler
     }
 
     // parse our config
-    $config = sfYaml::load($configFile, sfConfig::get('sf_charset', 'UTF-8'));
+    $config = sfYaml::load($configFile);
 
     if ($config === false)
     {
@@ -86,7 +86,7 @@ abstract class sfYamlConfigHandler extends sfConfigHandler
    * @param string $keyName  The key name
    * @param string $category The category name
    *
-   * @return array The value associated with this key name and category
+   * @return string The value associated with this key name and category
    */
   protected function mergeConfigValue($keyName, $category)
   {

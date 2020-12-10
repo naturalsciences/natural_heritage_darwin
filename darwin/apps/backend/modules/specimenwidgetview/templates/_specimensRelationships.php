@@ -1,4 +1,5 @@
 <table class="catalogue_table_view">
+
   <thead style="<?php echo ($spec_related->count()?'':'display: none;');?>">
     <tr>
       <th>
@@ -24,7 +25,13 @@
       <?php elseif($val->getUnitType()=="specimens") : ?>
        <td><a href="<?php echo url_for('specimen/view?id='.$val->getSpecimenRelatedRef()) ; ?>"><?php echo __('Specimen'); ?> : <?php echo $val->SpecimenRelated->getName(); ?></a>
 	   <br> <?php echo $val->SpecimenRelated->getTaxonName(); ?>
-	   </td>			
+	   </td>
+		
+			<!--ftheeten 2015 09 10-->
+				<td> <?php echo ucfirst($val->SpecimenRelated->getLabelCreatedOn())?'Date created: '.$val->SpecimenRelated->getLabelCreatedOn():'';?></td>
+								<!--JMHerpers 2018 02 14 : more readable valid sentence-->
+				<td> <?php echo ucfirst($val->SpecimenRelated->getValidLabel()===FALSE)?'Not valid':'Valid';?></td>
+			<!--ftheeten 2015 09 10-->	
       <?php elseif($val->getUnitType()=="external") : ?>
         <td> <?php echo $val->getSourceName();?> ID: <?php echo $val->getSourceId();?></td>
       <?php endif ; ?>
@@ -43,6 +50,7 @@
 <!--  Insert Inverse relationship-->
 <?php if($spec_related_inverse->count()>0): ?>
 <br><b>Inverse relationships:</b><br/><br/>
+
 <table class="catalogue_table_view">
   <thead style="<?php echo ($spec_related_inverse->count()?'':'display: none;');?>">
     <tr>
@@ -67,9 +75,13 @@
 		</td>
 		<!--ftheeten 2015 09 10-->
 		<td>
-				<?php echo ucfirst($val->Specimen->getSpecimenCreationDate())?'Date created: '.$val->Specimen->getSpecimenCreationDate():'';?>
+				<?php echo ucfirst($val->Specimen->getLabelCreatedOn())?'Date created: '.$val->Specimen->getLabelCreatedOn():'';?>
 	    </td>
-		
+		<td>
+					<!--JMHerpers 2018 02 14 : more readable valid sentence-->
+				<?php echo ucfirst($val->Specimen->getValidLabel()===FALSE)?'Not valid':'Valid';?>
+			<!--ftheeten 2015 09 10-->	
+		</td>
       <?php endif ; ?>
     
     <td>
@@ -77,6 +89,7 @@
   </tr>
   <?php endforeach;?>
 </table>
- <?php endif;?>
-  <br/><br/>
-<a  target="_blank" href="<?php print(url_for("specimensearch/search/is_choose/",true)."/1?specimen_search_filters[related_ref]=".$eid);?>">View all related specimens</a>
+<br/><br/>
+<a  target="_blank" href="<?php print(url_for("specimensearch/search/is_choose/",true)."/1?".http_build_query(array("specimen_search_filters[related_ref]"=>$eid)));?>">View all related specimens</a>
+
+<?php endif;?>

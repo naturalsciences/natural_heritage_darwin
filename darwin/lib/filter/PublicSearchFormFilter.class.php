@@ -91,19 +91,19 @@ class PublicSearchFormFilter extends BaseSpecimensFormFilter
                                   );
     $this->widgetSchema['col_fields'] = new sfWidgetFormInputHidden();
     $this->widgetSchema['search_type'] = new sfWidgetFormInputHidden();
+//     $this->setDefault('col_fields','collection|gtu|sex|stage|type');
     $this->widgetSchema['collection_ref'] = new sfWidgetCollectionList(array('choices' => array()));
     $this->widgetSchema['collection_ref']->addOption('public_only',true);
     $this->validatorSchema['collection_ref'] = new sfValidatorPass(); //Avoid duplicate the query
+    
+    //ftheeten 2018 05 29
+	$this->widgetSchema['include_sub_collections'] = new sfWidgetFormInputCheckbox();
+  	////ftheeten 2018 05 29
+	$this->validatorSchema['include_sub_collections'] = new sfValidatorPass();
 
     $this->validatorSchema['col_fields'] = new sfValidatorString(array('required' => false,
                                                                  'trim' => true
                                                                 ));
-                                                                
-                                                                    //ftheeten 2018 05 29
-	$this->widgetSchema['include_sub_collections'] = new sfWidgetFormInputCheckbox();
-  	////ftheeten 2018 05 29
-	$this->validatorSchema['include_sub_collections'] = new sfValidatorPass();
-                                                                
     $this->validatorSchema['search_type'] = new sfValidatorString(array('required' => false));
      $this->validatorSchema['gtu_code'] = new sfValidatorString(array('required' => false,
                                                                  'trim' => true
@@ -183,17 +183,7 @@ class PublicSearchFormFilter extends BaseSpecimensFormFilter
         'expanded' => true,
         'add_empty' => false,
     ));
-    
-  
     $this->validatorSchema['stage'] = new sfValidatorPass();
-    
-      //ftheeten 2018 10 29
-    $this->widgetSchema['codes'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
-    $this->validatorSchema['codes'] = new sfValidatorPass();
-     $this->widgetSchema['ig_num'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
-    $this->validatorSchema['ig_num'] = new sfValidatorPass();
-    $this->widgetSchema['_csrf_token'] = new sfWidgetFormInputHidden();
-    $this->validatorSchema['_csrf_token'] = new sfValidatorPass();
 
 
 
@@ -207,46 +197,6 @@ class PublicSearchFormFilter extends BaseSpecimensFormFilter
     $this->validatorSchema['current_page'] = new sfValidatorInteger(array('required'=>false,'empty_value'=>1));
 /** New Pagin System ***/
     $this->widgetSchema->setNameFormat('specimen_search_filters[%s]');
-	
-    $protocol_tmp=Doctrine_Core::getTable("Identifiers")->getDistinctProtocol();
-	$this->widgetSchema['institution_protocol'] = new sfWidgetFormChoice(array(
-       "choices"=> $protocol_tmp
-    ));
-    $this->validatorSchema['institution_protocol'] = new sfValidatorChoice(
-        array(
-         "choices"=> $protocol_tmp,
-         'multiple' => false,
-         "required"=>false
-         )
-    );
-	
-	$this->widgetSchema['institution_identifier'] = new sfWidgetFormInput();
-	$this->validatorSchema['institution_identifier'] = new sfValidatorPass();
-	
-	$this->widgetSchema['people_protocol'] = new sfWidgetFormChoice(array(
-       "choices"=> $protocol_tmp
-    ));
-    $this->validatorSchema['people_protocol'] =  new sfValidatorChoice(
-        array(
-         "choices"=> $protocol_tmp,
-         'multiple' => false,
-         "required"=>false
-         )
-    );
-	
-	$this->widgetSchema['people_identifier'] = new sfWidgetFormInput();
-	$this->validatorSchema['people_identifier'] = new sfValidatorPass();
-	
-	$this->widgetSchema['people_identifier_role'] = new sfWidgetFormChoice(array(
-       "choices"=> array(""=>"", "collector"=> "Collector", "determinator"=> "Determinator", "donator"=> "Donator")
-    ));
-	$this->validatorSchema['people_identifier_role'] =  new sfValidatorChoice(
-        array(
-         "choices"=> array("collector", "", "determinator", "donator"),
-         'multiple' => false,
-         "required"=>false
-         )
-    );
   }
 
   public function addSexColumnQuery($query, $field, $val)
@@ -301,7 +251,6 @@ class PublicSearchFormFilter extends BaseSpecimensFormFilter
         }
     return $query;
   }
-  
   public function addCommonNamesColumnQuery($query,$relation, $field, $val)
   {
     $query->andWhere($field.' IN ('.$this->ListIdByWord($relation,$val).')');
@@ -321,8 +270,13 @@ class PublicSearchFormFilter extends BaseSpecimensFormFilter
 
   public function doBuildQuery(array $values)
   {
+  
+    //ftheeten 2018 05 29
+    $this->value=$values;
     $query = Doctrine_Query::create()
-      ->from('Specimens s');
+        //ftheeten 2016 10 13
+        //->from('Specimens s');
+        ->from('SpecimensStoragePartsView s');
     $this->options['query'] = $query;
     $query = parent::doBuildQuery($values);
     if ($values['taxon_level_ref'] != '') $query->andWhere('taxon_level_ref = ?', intval($values['taxon_level_ref']));
@@ -340,12 +294,10 @@ class PublicSearchFormFilter extends BaseSpecimensFormFilter
     $this->addNamingColumnQuery($query, 'lithostratigraphy', 'litho_name_indexed', $values['litho_name'],'s','litho_name_indexed');
     $this->addNamingColumnQuery($query, 'lithology', 'lithology_name_indexed', $values['lithology_name'],'s','lithology_name_indexed');
     $this->addNamingColumnQuery($query, 'mineralogy', 'mineral_name_indexed', $values['mineral_name'],'s','mineral_name_indexed');
+    
     $query->andWhere('collection_is_public = true') ;
     if($values['tags'] != '') $query->andWhere("gtu_country_tag_indexed && getTagsIndexedAsArray(?)",$values['tags']);
     $query->limit($this->getCatalogueRecLimits());
-	
-	$this->addInstitutionIdentifierQuery($query,   $values["institution_protocol"], $values["institution_identifier"]);
-	$this->addPeopleIdentifierQuery($query, $values["people_protocol"], $values["people_identifier"],$values["people_identifier_role"]);
     return $query;
   }
 
@@ -353,99 +305,4 @@ class PublicSearchFormFilter extends BaseSpecimensFormFilter
   {
     return $this->getQuery()->orderby($this->getValue('order_by') . ' ' . $this->getValue('order_dir').'');
   }
-  
-  //ftheeten 2018 10 29
-  public function addCodesColumnQuery($query, $field, $val)
-  {
-    $sql=Array();
-    $sql_params = array();
-    foreach(explode(";",$val) as $code)
-    {
-
-        if(trim($code)  != '') {          
-          $sql[] = "EXISTS(select 1 from codes where referenced_relation='specimens' and record_id = s.id AND full_code_indexed ilike '%' || fulltoindex(?) || '%' )";
-          $sql_params[] = $code;
-          $has_query = true;
-        }
-        
-    }
-    if($has_query)
-    {
-          $query->addWhere("(".implode(" OR ", $sql).")", $sql_params);
-    }
-    return $query ;
-  }
-  
-  //ftheeten 2018 10 29
-  public function addIgNumColumnQuery($query, $field, $val)
-  {    
-    
-    $sql=Array();
-    $sql_params = array();
-    foreach(explode(";",$val) as $code)
-    {
-
-        if(trim($code)  != '') {          
-          $sql[] = "ig_num_indexed like fullToIndex(?) ";
-          $sql_params[] = $code;
-          $has_query = true;
-        }
-        
-    }
-    if($has_query)
-    {
-          $query->addWhere("(".implode(" OR ", $sql).")", $sql_params);
-    }
-    return $query ;
-  }
-  
-    public function addInstitutionIdentifierQuery($query,  $protocol, $identifier)
-  {
-	  if(strlen($protocol)>0&&strlen($identifier)>0)
-	  {
-		   $query->andWhere("EXISTS (select i.id  from Identifiers i where s.institution_ref = i.record_id AND referenced_relation = 'people' AND LOWER(i.protocol)=? AND i.value=?)",array(strtolower($protocol), $identifier));
-	  }
-	  return $query;
-  }
-  
-  public function addPeopleIdentifierQuery($query,  $protocol, $identifier, $role="collector")
-  {
-	  if(strlen($protocol)>0&&strlen($identifier)>0)
-	  {
-		  $sql_params=Array();
-		  $id=Doctrine_Core::getTable('Identifiers')->getLinkedId($protocol, $identifier, "people");
-		  if($id!==null)
-		  {
-			  if($role == 'determinator')
-			  {
-				$build_query = "? =any(spec_ident_ids) " ;
-				$sql_params[]=$id;
-				
-			  }
-			  elseif($role == 'collector')
-			  {
-				 
-				  $build_query = "(? =any(spec_coll_ids) OR EXISTS (SELECT cp.id FROM CataloguePeople cp WHERE cp.referenced_relation= 'expeditions' AND cp.people_ref=? AND s.expedition_ref=cp.record_id ))" ;
-				  $sql_params=array($id, $id);
-
-			  }
-			  elseif($role == 'donator')
-			  {
-				$build_query .= "? =any(spec_don_sel_ids) " ;
-				$sql_params[]=$id;
-			  }
-			  else
-			  {
-				  $build_query = "(? =any(spec_coll_ids||spec_ident_ids||spec_don_sel_ids) OR EXISTS (SELECT cp.id FROM CataloguePeople cp WHERE cp.referenced_relation= 'expeditions' AND cp.people_ref=? AND s.expedition_ref=cp.record_id ))" ;
-				  $sql_params=array($id, $id);
-
-			  }
-			  $query->andWhere($build_query, $sql_params ) ;
-		  }
-	  
-	  }
-	  return $query;
-	  
-  }
-
 }

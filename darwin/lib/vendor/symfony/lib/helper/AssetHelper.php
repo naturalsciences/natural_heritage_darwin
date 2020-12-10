@@ -16,7 +16,7 @@
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     David Heinemeier Hansson
- * @version    SVN: $Id$
+ * @version    SVN: $Id: AssetHelper.php 33121 2011-10-07 12:29:09Z fabien $
  */
 
 /**
@@ -365,9 +365,7 @@ function image_tag($source, $options = array())
 
   if (isset($options['size']))
   {
-    list($width, $height) = explode('x', $options['size'], 2);
-    $options['height'] = $height;
-    $options['width'] = $width;
+    list($options['width'], $options['height']) = explode('x', $options['size'], 2);
     unset($options['size']);
   }
 
@@ -516,16 +514,6 @@ function include_javascripts()
 }
 
 /**
- * Clear all javascripts of the response object.
- *
- * @see sfResponse->clearJavascripts()
- */
-function clear_javascripts()
-{
-  sfContext::getInstance()->getResponse()->clearJavascripts();
-}
-
-/**
  * Returns <link> tags for all stylesheets configured in view.yml or added to the response object.
  *
  * You can use this helper to decide the location of stylesheets in pages.
@@ -556,15 +544,6 @@ function get_stylesheets()
 function include_stylesheets()
 {
   echo get_stylesheets();
-}
-
-/* Clear all stylesheets of the response object.
- *
- * @see sfResponse->clearStylesheets()
- */
-function clear_stylesheets()
-{
-  sfContext::getInstance()->getResponse()->clearStylesheets();
 }
 
 /**
@@ -642,7 +621,7 @@ function _dynamic_path($uri, $format, $absolute = false)
 function get_javascripts_for_form(sfForm $form)
 {
   $html = '';
-  foreach ($form->getJavaScripts() as $file)
+  foreach ($form->getJavascripts() as $file)
   {
     $html .= javascript_include_tag($file);
   }
@@ -669,7 +648,7 @@ function use_javascripts_for_form(sfForm $form)
 {
   $response = sfContext::getInstance()->getResponse();
 
-  foreach ($form->getJavaScripts() as $file)
+  foreach ($form->getJavascripts() as $file)
   {
     $response->addJavascript($file);
   }

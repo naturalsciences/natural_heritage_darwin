@@ -68,7 +68,7 @@ class DarwinTable extends Doctrine_Table
       ->select('count(id)')
       ->from($table.' t')
       ->where('t.parent_ref = ?',$id);
-    return $q->execute(null, Doctrine_Core::HYDRATE_SINGLE_SCALAR);
+    return $q->execute(null, Doctrine::HYDRATE_SINGLE_SCALAR);
   }
 
   protected function getI18N()
@@ -124,7 +124,7 @@ class DarwinTable extends Doctrine_Table
       ->select('dict_value as '.$new_col)
       ->where('dict_field = ?', $column)
       ->andwhere('referenced_relation = ?', $table)
-      ->orderBy("darwin2.fct_rcma_sort_letter_before_numbers(dict_value)  ASC");
+      ->orderBy("$new_col ASC");
     return $q;
   }
   public function createFlatDistinctDepend($table, $column, $depend, $new_col='item')
@@ -149,7 +149,7 @@ class DarwinTable extends Doctrine_Table
   */
   public function findWithParents($id)
   {
-    $self_unit = Doctrine_Core::getTable($this->getTableName())->find($id);
+    $self_unit = Doctrine::getTable($this->getTableName())->find($id);
     $ids = explode('/', $self_unit->getPath().$self_unit->getId());
 
     array_shift($ids); //Removing the first blank element
@@ -160,7 +160,7 @@ class DarwinTable extends Doctrine_Table
       $q->innerJoin('t.Level l');
 
     $q->whereIn('id', $ids)
-      ->orderBy('path ASC');
+      ->orderBy('t.level_ref ASC');
     return $q->execute();
   }
 
@@ -255,7 +255,7 @@ class DarwinTable extends Doctrine_Table
     return $noRights;
   }
 
-  /**
+    /**
   * Get list of possible upper levels
   * @param $conn Doctrine Connection
   * @param $level the level used to get the possible upper ones
@@ -275,7 +275,7 @@ class DarwinTable extends Doctrine_Table
     }
     return $puls;
   }
-
+  
   /**
   * Find item for autocompletion
   * @param $user The User object for right management
@@ -285,9 +285,9 @@ class DarwinTable extends Doctrine_Table
   * @param $level the level used to get the possible upper ones
   * @return Array of results
   */
-  public function completeAsArray($user, $needle, $exact, $limit = 30, $level)
+  //ftheeten added default to level 2016 11 04
+  public function completeAsArray($user, $needle, $exact, $limit = 30, $level='', $agg=false)
   {
-
     $conn_MGR = Doctrine_Manager::connection();
     $q = Doctrine_Query::create()
       ->from($this->getTableName(). ' i')
@@ -311,10 +311,13 @@ class DarwinTable extends Doctrine_Table
     $result = array();
     foreach($q_results as $item) {
       $result[] = array('label' => $item->getName(), 'name_indexed'=> $item->getNameIndexed(), 'value'=> $item->getId() );
+    }    
+    if($agg)
+    {
+       $result=$this->arrayStringAgg($result, Array("value"));
     }
     return $result;
   }
-
 
 
   /**
@@ -322,27 +325,20 @@ class DarwinTable extends Doctrine_Table
   * @param $user The User object for right management
   * @param $needle the string entered by the user for search
   * @param $exact bool are we searching the exact term or more or less fuzzy
-  * @param $limit int limit the number of results
-  * @param $level the level used to get the possible upper ones
   * @return Array of results
   */
-  public function completeWithLevelAsArray($user, $needle, $exact, $limit = 30, $level)
+  public function completeWithLevelAsArray($user, $needle, $exact, $limit = 30)
   {
     $conn_MGR = Doctrine_Manager::connection();
       $q = Doctrine_Query::create()
       ->from($this->getTableName(). ' i')
       ->innerJoin('i.Level l')
-      ->orderBy('l.level_order DESC, name ASC')
+      ->orderBy('l.level_order ASC, name ASC')
       ->limit($limit);
     if($exact)
       $q->andWhere("name = ?",$needle);
     else
       $q->andWhere("name_indexed like concat(fulltoindex(".$conn_MGR->quote($needle, 'string')."),'%') ");
-    if ($level && $level != '') {
-      $puls = $this->getPossibleUpperLevels($level);
-        if(count($puls))
-          $q->andWhereIn('l.id', $puls);
-    }
     $q_results = $q->execute();
     $result = array();
     foreach($q_results as $item) {
@@ -381,6 +377,7 @@ class DarwinTable extends Doctrine_Table
     return $object;
   }
 
+
   public function getLevelParents($table, $parents)
     {
       $catalogue_level =array();
@@ -394,7 +391,7 @@ class DarwinTable extends Doctrine_Table
         $q = Doctrine_Query::create()
           ->from($table.' t')
           ->innerjoin('t.Level l')
-          ->where('t.name_indexed ilike fulltoindex(?)', $parents[$catalogue->getLevelSysName()])
+          ->where('t.name_indexed ilike fulltoindex(?) || \'%\' ', $parents[$catalogue->getLevelSysName()])
           ->andWhere('l.level_sys_name = ?', $catalogue->getLevelSysName());
         $elem = $q->fetchOne();
         $catalogue_level[$catalogue->getLevelName()] = array(
@@ -405,21 +402,67 @@ class DarwinTable extends Doctrine_Table
       }
       return($catalogue_level) ;
   }
-
-  public function getCatalogueUnits($ids) {
-    $results = array();
-    if(is_array($ids) && count($ids)) {
-      $table = $this->getTableName();
-      $q = Doctrine_Query::create()
-        ->select('i.id, i.name, l.level_name')
-        ->from($table. ' i')
-        ->innerJoin('i.Level l')
-        ->whereIn('i.id',$ids);
-      $q_results = $q->execute();
-      foreach($q_results as $result) {
-        $results[] = array("id"=>$result->getId(), "name"=>$result->getName(), "level_name"=>$result->getLevel()->getLevelName());
-      }
+  
+  //ftheeten 2018 10 01
+    protected function arrayStringAgg($array, $group_fields)
+  {
+    $returned=Array();
+    $tmp_distinct_keys=Array();
+    $tmp_merged_keys=Array();
+    foreach($array as $key=> $row)
+    {
+        $tmp=Array();
+        $tmpKeyArray=Array();
+        $merged_values=Array();
+        $distinct_values=Array();
+        foreach($row as $field=>$val)
+        {
+            if(!in_array($field, $group_fields))
+            {
+           
+                 $tmpKeyArray[$field]=$field.":".$val;
+                 $distinct_values[$field]=$val;
+            }
+            else
+            {
+                
+                $merged_values[$field]=Array($val);
+            }
+        }
+       
+        ksort($tmpKeyArray);
+        ksort($merged_values);
+        $newKey=implode("|",$tmpKeyArray);
+        if(array_key_exists($newKey, $tmp_distinct_keys))
+        {
+            foreach( $group_fields as $field)
+            {
+                    $tmp_merged_keys[$newKey][$field][]=$merged_values[$field][0];
+            }
+        }
+        else
+        {
+            $tmp_distinct_keys[$newKey]=$distinct_values;
+            $tmp_merged_keys[$newKey]=$merged_values;
+        }        
     }
-    return $results;
+
+    $i=0;
+    foreach($tmp_merged_keys as $key=>$vals)
+    {
+        $newVals=Array();
+        foreach($vals as $key2=>$vals2)
+        {
+            $newVals[$key2]=implode(";",$vals2);
+        }
+         $tmp_merged_keys[$key]=$newVals;
+    }
+    foreach($tmp_distinct_keys as $key=>$nested_array)
+    {
+
+            $returned[$i]=array_merge($tmp_distinct_keys[$key],$tmp_merged_keys[$key]);
+            $i++;
+     }
+    return $returned;
   }
 }

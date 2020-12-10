@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage debug
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfWebDebug.class.php 32890 2011-08-05 07:44:44Z fabien $
  */
 class sfWebDebug
 {
@@ -137,7 +137,6 @@ class sfWebDebug
    * Gets an option value by name.
    *
    * @param string $name The option name
-   * @param mixed  $default
    *
    * @return mixed The option value
    */
@@ -208,7 +207,7 @@ class sfWebDebug
           $titles[] = sprintf('<li%s><a title="%s" href="%s"%s>%s</a></li>',
             $panel->getStatus() ? ' class="sfWebDebug'.ucfirst($this->getPriority($panel->getStatus())).'"' : '',
             $panel->getPanelTitle(),
-            $panel->getTitleUrl() ?: '#',
+            $panel->getTitleUrl() ? $panel->getTitleUrl() : '#',
             $panel->getTitleUrl() ? '' : ' onclick="sfWebDebugShowDetailsFor(\''.$id.'\'); return false;"',
             $title
           );
@@ -270,7 +269,7 @@ class sfWebDebug
   /**
    * Gets the javascript code to inject in the head tag.
    *
-   * @return string The javascript code
+   * @param string The javascript code
    */
   public function getJavascript()
   {
@@ -424,7 +423,7 @@ EOF;
   /**
    * Gets the stylesheet code to inject in the head tag.
    *
-   * @return string The stylesheet code
+   * @param string The stylesheet code
    */
   public function getStylesheet()
   {

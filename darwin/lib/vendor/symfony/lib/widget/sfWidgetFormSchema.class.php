@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfWidgetFormSchema.class.php 26870 2010-01-19 10:34:52Z fabien $
  */
 class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
 {
@@ -500,11 +500,9 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
       throw new InvalidArgumentException(sprintf('The field named "%s" does not exist.', $name));
     }
 
-    if ($errors && $widget instanceof sfWidgetFormSchema && !$errors instanceof sfValidatorErrorSchema)
+    if ($widget instanceof sfWidgetFormSchema && $errors && !$errors instanceof sfValidatorErrorSchema)
     {
-      $schema = new sfValidatorErrorSchema($errors->getValidator());
-      $schema->addError($errors);
-      $errors = $schema;
+      $errors = new sfValidatorErrorSchema($errors->getValidator(), array($errors));
     }
 
     // we clone the widget because we want to change the id format temporarily
@@ -535,7 +533,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
 
     if (!is_array($values) && !$values instanceof ArrayAccess)
     {
-      throw new InvalidArgumentException('You must pass an array of values or an instanceof ArrayAccess to render a widget schema');
+      throw new InvalidArgumentException('You must pass an array of values to render a widget schema');
     }
 
     $formFormat = $this->getFormFormatter();
@@ -561,7 +559,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
         $field = $this->renderField($name, $value, $widgetAttributes, $error);
 
         // don't add a label tag and errors if we embed a form schema
-        $label = $widget instanceof sfWidgetFormSchema ? $formFormat->generateLabelName($name) : $formFormat->generateLabel($name);
+        $label = $widget instanceof sfWidgetFormSchema ? $this->getFormFormatter()->generateLabelName($name) : $this->getFormFormatter()->generateLabel($name);
         $error = $widget instanceof sfWidgetFormSchema ? array() : $error;
 
         $rows[] = $formFormat->formatRow($label, $field, $error, $this->getHelp($name));
@@ -582,7 +580,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
       $rows[0] = implode("\n", $hiddenRows);
     }
 
-    return $formFormat->formatErrorRow($this->getGlobalErrors($errors)).implode('', $rows);
+    return $this->getFormFormatter()->formatErrorRow($this->getGlobalErrors($errors)).implode('', $rows);
   }
 
   /**
@@ -611,7 +609,6 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
     // errors for hidden fields
     foreach ($this->positions as $name)
     {
-      /** @var $this sfWidgetForm[] */
       if ($this[$name] instanceof sfWidgetForm && $this[$name]->isHidden())
       {
         if (isset($errors[$name]))
@@ -724,7 +721,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   /**
    * Returns an array of fields.
    *
-   * @return sfWidget[] An array of sfWidget instance
+   * @return sfWidget An array of sfWidget instance
    */
   public function getFields()
   {
@@ -790,7 +787,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
    *  * sfWidgetFormSchema::FIRST
    *
    * @param string   $field  The field name to move
-   * @param string   $action The action (see above for all possible actions)
+   * @param constant $action The action (see above for all possible actions)
    * @param string   $pivot  The field name used for AFTER and BEFORE actions
    *
    * @throws InvalidArgumentException when field not exist
@@ -823,7 +820,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
         array_unshift($this->positions, $field);
         break;
       case sfWidgetFormSchema::LAST:
-        $this->positions []= $field;
+        array_push($this->positions, $field);
         break;
       case sfWidgetFormSchema::BEFORE:
         if (null === $pivot)

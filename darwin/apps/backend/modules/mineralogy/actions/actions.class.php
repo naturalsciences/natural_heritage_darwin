@@ -32,7 +32,7 @@ class mineralogyActions extends DarwinActions
 
   public function executeDelete(sfWebRequest $request)
   {
-    $unit = Doctrine_Core::getTable('Mineralogy')->find($request->getParameter('id'));
+    $unit = Doctrine::getTable('Mineralogy')->find($request->getParameter('id'));
     $this->forward404Unless(
       $unit,
       sprintf('Object mineralogy does not exist (%s).', $request->getParameter('id'))
@@ -40,7 +40,7 @@ class mineralogyActions extends DarwinActions
 
     if(! $request->hasParameter('confirm'))
     {
-      $this->number_child = Doctrine_Core::getTable('Mineralogy')->hasChildrens('Mineralogy',$unit->getId());
+      $this->number_child = Doctrine::getTable('Mineralogy')->hasChildrens('Mineralogy',$unit->getId());
       if($this->number_child)
       {
         $this->link_delete = 'mineralogy/delete?confirm=1&id='.$unit->getId();
@@ -62,7 +62,7 @@ class mineralogyActions extends DarwinActions
       $this->form = new MineralogyForm($unit);
       $this->form->getErrorSchema()->addError($error);
       $this->loadWidgets();
-      $this->no_right_col = Doctrine_Core::getTable('Mineralogy')->testNoRightsCollections('mineral_ref',$request->getParameter('id'), $this->getUser()->getId());
+      $this->no_right_col = Doctrine::getTable('Mineralogy')->testNoRightsCollections('mineral_ref',$request->getParameter('id'), $this->getUser()->getId());
       $this->setTemplate('edit');
     }
   }
@@ -84,18 +84,18 @@ class mineralogyActions extends DarwinActions
 
   public function executeEdit(sfWebRequest $request)
   {
-    $unit = Doctrine_Core::getTable('Mineralogy')->find($request->getParameter('id'));
+    $unit = Doctrine::getTable('Mineralogy')->find($request->getParameter('id'));
     $this->forward404Unless($unit,'Unit not Found');
-    $this->no_right_col = Doctrine_Core::getTable('Mineralogy')->testNoRightsCollections('mineral_ref',$request->getParameter('id'), $this->getUser()->getId());
+    $this->no_right_col = Doctrine::getTable('Mineralogy')->testNoRightsCollections('mineral_ref',$request->getParameter('id'), $this->getUser()->getId());
     $this->form = new MineralogyForm($unit);
     $this->loadWidgets();
   }
 
   public function executeUpdate(sfWebRequest $request)
   {
-    $unit = Doctrine_Core::getTable('Mineralogy')->find($request->getParameter('id'));
+    $unit = Doctrine::getTable('Mineralogy')->find($request->getParameter('id'));
     $this->forward404Unless($unit,'Unit not Found');
-    $this->no_right_col = Doctrine_Core::getTable('Mineralogy')->testNoRightsCollections('mineral_ref',$request->getParameter('id'), $this->getUser()->getId());
+    $this->no_right_col = Doctrine::getTable('Mineralogy')->testNoRightsCollections('mineral_ref',$request->getParameter('id'), $this->getUser()->getId());
     $this->form = new MineralogyForm($unit);
 
     $this->processForm($request,$this->form);
@@ -137,7 +137,7 @@ class mineralogyActions extends DarwinActions
     // Triggers the search ID function
     if($request->getParameter('searchedCrit', '') !== '')
     {
-      $unitId = Doctrine_Core::getTable('Mineralogy')->findOneByCode($request->getParameter('searchedCrit'));
+      $unitId = Doctrine::getTable('Mineralogy')->findOneByCode($request->getParameter('searchedCrit'));
       if ($unitId)
         return $this->renderText($unitId->getCode());
       else
@@ -153,7 +153,7 @@ class mineralogyActions extends DarwinActions
     // Triggers the search ID function
     if($request->getParameter('q', '') !== '' && $request->getParameter('limit', '') !== '')
     {
-      $codes = Doctrine_Core::getTable('Mineralogy')->fetchByCodeLimited($request->getParameter('q'), $request->getParameter('limit'));
+      $codes = Doctrine::getTable('Mineralogy')->fetchByCodeLimited($request->getParameter('q'), $request->getParameter('limit'));
       if ($codes)
       {
         $values=array();
@@ -170,7 +170,7 @@ class mineralogyActions extends DarwinActions
   }
   public function executeView(sfWebRequest $request)
   {
-    $this->mineral = Doctrine_Core::getTable('Mineralogy')->find($request->getParameter('id'));
+    $this->mineral = Doctrine::getTable('Mineralogy')->find($request->getParameter('id'));
     $this->forward404Unless($this->mineral,'Mineralogic unit not Found');
     $this->form = new MineralogyForm($this->mineral);
     $this->loadWidgets();

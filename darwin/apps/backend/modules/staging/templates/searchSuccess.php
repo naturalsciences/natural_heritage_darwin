@@ -48,7 +48,7 @@
             <?php endif;?>
           </td>
           <td><?php echo $row['linked_info'];?></td>
-          <td class="<?php echo $row->getStatusFor("code");?>">
+          <td>
             <ul class="codes">
               <?php foreach($row['codes'] as $k=>$v):?>
                 <li>
@@ -109,15 +109,22 @@ $(document).ready(function () {
 			$(".check_link").attr("href", url_link);
 		}
    );
+  
 });
 </script>
 <?php endif;?>
   <div class="blue_link float_left"><?php echo link_to(__('Back to Import'), 'import/index');?></div>
-  <!--ftheeten 2017 08 30-->
+  <!--ftheeten 2016 12 07-->
+  <!--<div class="blue_link float_left">
+  <?php //echo link_to(__('Import "Ok" lines'), 'staging/markok?import='.$import->getId() );
+  ?></div>&#x09;-->
+<?php if(count($search)!==0 && $search_type=='zoology'):?> 
+    <!--ftheeten 2017 08 30-->
    <div class="blue_link float_left"><?php echo link_to(__('Try to create missing peoples'), 'staging/createPeoples?import='.$import->getId() );?></div>
-  <div class="blue_link float_left"><?php echo link_to(__('Recheck'), 'staging/recheck?import='.$import->getId().'&full_check=true', array("class"=> "check_link"));?></div>
-  <div class="blue_link float_left"><?php echo link_to(__('Import "Ok" lines'), 'staging/markok?import='.$import->getId() , array("class"=> "ok_link"));?></div>&#x09;
-
+    <!--ftheeten 2018 02 26-->
+   <div class="blue_link float_left"><?php echo link_to(__('Recheck'), 'staging/recheck?import='.$import->getId().'&full_check=true', array("class"=> "check_link"));?></div>
+   <div class="blue_link float_left"><?php echo link_to(__('Import verified records'), 'staging/markok?import='.$import->getId(), array("class"=> "ok_link"));?></div>
+<?php endif;?>
 <?php //Else not valid form
   else:?>
   <?php echo $form['only_errors']->renderError() ?>

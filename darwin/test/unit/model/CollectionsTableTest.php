@@ -1,6 +1,6 @@
 <?php 
 include(dirname(__FILE__).'/../../bootstrap/Doctrine.php');
-$t = new lime_test(12, new lime_output_color());
+$t = new lime_test(11, new lime_output_color());
 
 $t->info('fetchByInstitutionList');
 
@@ -43,10 +43,4 @@ $t->is(count($list3), 3, 'Vertebrates have 3 children collections ');
 $collection = Doctrine::getTable('Collections')->findOneByName('Vertebrates');
 $collectionId = $collection->getId();
 $value = Doctrine::getTable('Collections')->getAndUpdateLastCode($collectionId);
-$t->is(is_numeric($value), true, 'Updated value of "code_last_value" for collection "Vertebrates" is well a number...');
-$t->is(($value>0), true, '... and a number above 0');
-
-$t->info('afterSaveAddCode');
-
-print(Doctrine::getTable('Collections')->afterSaveAddCode(134, 1));
-print('Collection id is: '.$collectionId);
+$t->is($value, 1, 'Updated value of "code_last_value" for collection "Vertebrates" is well "1"');

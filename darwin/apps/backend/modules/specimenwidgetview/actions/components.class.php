@@ -14,10 +14,7 @@ class specimenwidgetviewComponents extends sfComponents
   protected function defineObject()
   {
     if(! isset($this->spec) )
-		$this->spec = Doctrine_Core::getTable('Specimens')->find($this->eid);
-		//2019 04 26
-		$this->metad = Doctrine_Core::getTable('TaxonomyMetadata')->find($this->spec->getTaxonomy()->getMetadataRef());
-
+      $this->spec = Doctrine::getTable('Specimens')->find($this->eid);
   }
   public function executeType()
   {
@@ -25,11 +22,6 @@ class specimenwidgetviewComponents extends sfComponents
   }
 
   public function executeSex()
-  {
-    $this->defineObject();
-  }
-  
-  public function executeNagoya()
   {
     $this->defineObject();
   }
@@ -56,7 +48,7 @@ class specimenwidgetviewComponents extends sfComponents
 
   public function executeRefDonators()
   {
-    $this->Donators = Doctrine_Core::getTable('CataloguePeople')->getPeopleRelated('specimens','donator',$this->eid) ;
+    $this->Donators = Doctrine::getTable('CataloguePeople')->getPeopleRelated('specimens','donator',$this->eid) ;
   }
 
   public function executeRefExpedition()
@@ -76,12 +68,12 @@ class specimenwidgetviewComponents extends sfComponents
 
   public function executeTool()
   {
-    $this->form = Doctrine_Core::getTable('SpecimensTools')->getToolName($this->eid) ;
+    $this->form = Doctrine::getTable('SpecimensTools')->getToolName($this->eid) ;
   }
 
   public function executeMethod()
   {
-    $this->form = Doctrine_Core::getTable('SpecimensMethods')->getMethodName($this->eid) ;
+    $this->form = Doctrine::getTable('SpecimensMethods')->getMethodName($this->eid) ;
   }
 
   public function executeRefTaxon()
@@ -114,26 +106,29 @@ class specimenwidgetviewComponents extends sfComponents
     $this->defineObject();
     if($this->spec->getGtuRef())
     {
-      $this->gtu = Doctrine_Core::getTable('Gtu')->find($this->spec->getGtuRef());
+      $this->gtu = Doctrine::getTable('Gtu')->find($this->spec->getGtuRef());
       //ftheeten 2015 07 01 to display the exact site on the main page
-      $this->commentsGtu = Doctrine_Core::getTable('Comments')->findForTable('gtu',$this->spec->getGtuRef()) ;
+      $this->commentsGtu = Doctrine::getTable('Comments')->findForTable('gtu',$this->spec->getGtuRef()) ;
     }
   }
 
   public function executeRefCodes()
   {
-    $this->stable = Doctrine_Core::getTable('SpecimensStableIds')->findOneBySpecimenRef($this->eid);
-    $this->Codes  = Doctrine_Core::getTable('Codes')->getCodesRelatedArray('specimens',$this->eid) ;
+    //ftheeten 2017 02 10
+	$this->stable = Doctrine_Core::getTable('SpecimensStableIds')->findOneBySpecimenRef($this->eid);
+    $this->specCode = Doctrine::getTable('Specimens')->find($this->eid);
+    $this->Codes = Doctrine::getTable('Codes')->getCodesRelatedArray('specimens',$this->eid) ;
   }
 
   public function executeRefMainCodes()
   {
-    $this->Codes = Doctrine_Core::getTable('Codes')->getMainCodesRelatedArray('specimens',$this->eid);
+	$this->stable = Doctrine_Core::getTable('SpecimensStableIds')->findOneBySpecimenRef($this->eid);
+    $this->Codes = Doctrine::getTable('Codes')->getMainCodesRelatedArray('specimens',$this->eid);
   }
 
   public function executeRefCollectors()
   {
-    $this->Collectors = Doctrine_Core::getTable('CataloguePeople')->getPeopleRelated('specimens','collector',$this->eid) ;
+    $this->Collectors = Doctrine::getTable('CataloguePeople')->getPeopleRelated('specimens','collector',$this->eid) ;
   }
 
   public function executeRefProperties()
@@ -142,16 +137,16 @@ class specimenwidgetviewComponents extends sfComponents
 
   public function executeRefComment()
   {
-    $this->Comments = Doctrine_Core::getTable('Comments')->findForTable('specimens',$this->eid) ;
+    $this->Comments = Doctrine::getTable('Comments')->findForTable('specimens',$this->eid) ;
   }
 
   public function executeRefIdentifications()
   {
-    $this->identifications = Doctrine_Core::getTable('Identifications')->getIdentificationsRelated('specimens',$this->eid) ;
+    $this->identifications = Doctrine::getTable('Identifications')->getIdentificationsRelated('specimens',$this->eid) ;
     $this->people = array() ;
     foreach ($this->identifications as $key=>$val)
     {
-      $Identifier = Doctrine_Core::getTable('CataloguePeople')->getPeopleRelated('identifications', 'identifier', $val->getId()) ;
+      $Identifier = Doctrine::getTable('CataloguePeople')->getPeopleRelated('identifications', 'identifier', $val->getId()) ;
       $this->people[$val->getId()] = array();
       foreach ($Identifier as $key2=>$val2)
       {
@@ -165,14 +160,14 @@ class specimenwidgetviewComponents extends sfComponents
 
   public function executeSpecimensRelationships()
   {
-    $this->spec_related = Doctrine_Core::getTable("SpecimensRelationships")->findBySpecimenRef($this->eid);
-    $this->spec_related_inverse = Doctrine_Core::getTable("SpecimensRelationships")->findByRelatedSpecimenRef($this->eid);
+    $this->spec_related = Doctrine::getTable("SpecimensRelationships")->findBySpecimenRef($this->eid);
+    $this->spec_related_inverse = Doctrine::getTable("SpecimensRelationships")->findByRelatedSpecimenRef($this->eid);
   }
 
   public function executeRefRelatedFiles()
   {
     $this->atLeastOneFileVisible = $this->getUser()->isAtLeast(Users::ENCODER);
-    $this->files = Doctrine_Core::getTable('Multimedia')->findForTable('specimens', $this->eid, !($this->atLeastOneFileVisible));
+    $this->files = Doctrine::getTable('Multimedia')->findForTable('specimens', $this->eid, !($this->atLeastOneFileVisible));
     if(!($this->atLeastOneFileVisible)) {
       $this->atLeastOneFileVisible = ($this->files->count()>0);
     }
@@ -186,7 +181,7 @@ class specimenwidgetviewComponents extends sfComponents
 
   public function executeBiblio()
   {
-    $this->Biblios = Doctrine_Core::getTable('CatalogueBibliography')->findForTable('specimens', $this->eid);
+    $this->Biblios = Doctrine::getTable('CatalogueBibliography')->findForTable('specimens', $this->eid);
   }
 
 
@@ -197,6 +192,22 @@ class specimenwidgetviewComponents extends sfComponents
       $this->accuracy = "Exact" ;
     else
       $this->accuracy = "Imprecise" ;
+      
+    //ftheeten 2016 06 22
+    if ($this->spec->getSpecimenCountMalesMin() === $this->spec->getSpecimenCountMalesMax())
+      $this->accuracy_males = "Exact" ;
+    else
+      $this->accuracy_males = "Imprecise" ;
+    
+    if ($this->spec->getSpecimenCountFemalesMin() === $this->spec->getSpecimenCountFemalesMax())
+      $this->accuracy_females = "Exact" ;
+    else
+      $this->accuracy_females = "Imprecise" ;
+      
+    if ($this->spec->getSpecimenCountJuvenilesMin() === $this->spec->getSpecimenCountJuvenilesMax())
+      $this->accuracy_juveniles = "Exact" ;
+    else
+      $this->accuracy_juveniles = "Imprecise" ;
   }
 
   public function executeSpecPart()
@@ -221,12 +232,12 @@ class specimenwidgetviewComponents extends sfComponents
 
   public function executeRefInsurances()
   {
-    $this->Insurances = Doctrine_Core::getTable('Insurances')->findForTable('specimens',$this->eid) ;
+    $this->Insurances = Doctrine::getTable('Insurances')->findForTable('specimens',$this->eid) ;
   }
 
   public function executeMaintenance()
   {
-    $this->maintenances = Doctrine_Core::getTable('CollectionMaintenance')->getRelatedArray('specimens', array($this->eid));
+    $this->maintenances = Doctrine::getTable('CollectionMaintenance')->getRelatedArray('specimens', array($this->eid));
   }
   public function executeHistoric()
   {
@@ -236,11 +247,29 @@ class specimenwidgetviewComponents extends sfComponents
   {
     $this->defineObject();
   }
+  //ftheeten 2016 06 29
+  public function executeEcology()
+  {
+     $this->Ecology = Doctrine::getTable('Comments')->findForTableByNotion('specimens',$this->eid, "ecology") ;
+
+  }
   
-    //ftheeten 2018 11 30
+  //ftheeten 2016 07 07  public function executeContainer()
    public function executeGtuDate()
   {
     $this->defineObject();
   }
   
+  //ftheeten 2016 08 25
+  public function executeStorageParts()
+  {
+      $this->storageParts = Doctrine::getTable('StorageParts')->findBySpecimenRef($this->eid) ;
+    //$this->defineObject();
+  }
+  
+  public function executeNagoya()
+  {
+    $this->defineObject();
+  }
+
 }

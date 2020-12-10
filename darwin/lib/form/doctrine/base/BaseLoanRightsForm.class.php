@@ -8,30 +8,33 @@
  * @package    darwin
  * @subpackage form
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
  */
-abstract class BaseLoanRightsForm extends DarwinModelForm
+abstract class BaseLoanRightsForm extends BaseFormDoctrine
 {
-  protected function setupInheritance()
+  public function setup()
   {
-    parent::setupInheritance();
+    $this->setWidgets(array(
+      'id'                 => new sfWidgetFormInputHidden(),
+      'loan_ref'           => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Loan'), 'add_empty' => false)),
+      'user_ref'           => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('User'), 'add_empty' => false)),
+      'has_encoding_right' => new sfWidgetFormInputCheckbox(),
+    ));
 
-    $this->widgetSchema   ['loan_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Loan'), 'add_empty' => false));
-    $this->validatorSchema['loan_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Loan'), 'column' => 'id'));
-
-    $this->widgetSchema   ['user_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('User'), 'add_empty' => false));
-    $this->validatorSchema['user_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('User'), 'column' => 'id'));
-
-    $this->widgetSchema   ['has_encoding_right'] = new sfWidgetFormInputCheckbox();
-    $this->validatorSchema['has_encoding_right'] = new sfValidatorBoolean(array('required' => false));
-
-    $this->widgetSchema   ['loan_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Loan'), 'add_empty' => false));
-    $this->validatorSchema['loan_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Loan'), 'column' => 'id'));
-
-    $this->widgetSchema   ['user_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('User'), 'add_empty' => false));
-    $this->validatorSchema['user_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('User'), 'column' => 'id'));
+    $this->setValidators(array(
+      'id'                 => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
+      'loan_ref'           => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Loan'))),
+      'user_ref'           => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('User'))),
+      'has_encoding_right' => new sfValidatorBoolean(array('required' => false)),
+    ));
 
     $this->widgetSchema->setNameFormat('loan_rights[%s]');
+
+    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
+
+    $this->setupInheritance();
+
+    parent::setup();
   }
 
   public function getModelName()

@@ -24,8 +24,14 @@ class RMCATabToABCDXml
         $fields[] = "socialStatus";
         $fields[] = "CollectedBy";
         $fields[] = "SamplingCode";
+		//JMHerpers 2019 0808
+		$fields[] = "juvenileCount";
+		$fields[] = "Continent";
         $fields[] = "Country";
+		$fields[] = "Province";
+		$fields[] = "Municipality";
         $fields[] = "LocalityText";
+		$fields[] = "exact_site";
         
         //2018 04 11
         $fields[] = "accessionNumber";
@@ -39,6 +45,8 @@ class RMCATabToABCDXml
         $fields[] = "depthInMeters";
         $fields[] = "expedition_project";
         $fields[] = "lifeStage";
+		//JMHerpers 2019 0808
+		$fields[] = "sex";
         $fields[] = "fixation";
         $fields[] = "conservation";
         $fields[] = "samplingMethod";
@@ -147,20 +155,7 @@ class RMCATabToABCDXml
             $fields[] = "sitePropertyValue".$i;
         }
         
-        //2019 03 01 paleo
-        
-        $fields[] = "GeologicalEpoch";
-        $fields[] = "GeologicalAge";
-        $fields[] = "GeologicalAge2";
-        
-      //2019 03 05 lithostratigraphy
-        
-        $fields[] = "lithostratigraphyGroup";
-        $fields[] = "lithostratigraphyFormation";
-        $fields[] = "lithostratigraphyMember";
-        $fields[] = "lithostratigraphyBed";
-        $fields[] = "lithostratigraphyInformalName";
-        
+		
 		$fields[] = "Notes";
         return $fields;
     }
@@ -387,26 +382,22 @@ class RMCATabToABCDXml
                     if(array_key_exists(strtolower($prefix."Month"), $this->headers_inverted)) 
                     {
 						$monthdate = $p_valueArray[$this->headers_inverted[strtolower($prefix."Month")]];
-						if (is_numeric($monthdate)) 
+						$monthdate=trim($monthdate);
+						if(preg_match("/\d+/", $monthdate)!==FALSE)
                         {
-							if((int)$monthdate < 10&&strlen((string)$monthdate)==1){
-								$dateTmp=$dateTmp."-"."0".$monthdate;
-							}else{
-								$dateTmp=$dateTmp."-".$monthdate;
-							}
+							 $monthdate=str_pad($monthdate,2,"0",STR_PAD_LEFT);
+                             $dateTmp=$dateTmp."-".$monthdate ;
 						
                             //day
                             if(array_key_exists(strtolower($prefix."Day"), $this->headers_inverted)) 
-                            {
+                            {                                
 								$daydate = $p_valueArray[$this->headers_inverted[strtolower($prefix."Day")]];
-                                if (is_numeric($daydate)) 
+                                $daydate=trim($daydate);
+                                if(preg_match("/\d+/", $daydate)!==FALSE)
                                 {
-                                    if($daydate <10&&strlen((string)$daydate==1)){
-										$dateTmp=$dateTmp."-"."0".$daydate;
-									}else{
-										$dateTmp=$dateTmp."-".$daydate ;
-									}
-                                }
+                                    $daydate=str_pad($daydate,2,"0",STR_PAD_LEFT);
+                                    $dateTmp=$dateTmp."-".$daydate ;
+                                }                                
                             }
                         }
                     }
@@ -679,7 +670,40 @@ class RMCATabToABCDXml
                 $this->testAndAppendTag($named_area, "Country", "AreaName", $p_valueArray);
             }
         }
-        
+		
+		//JMHerpers 2019 0808
+		if (array_key_exists(strtolower("Province"), $this->headers_inverted)) {
+            if (strlen(trim($p_valueArray[$this->headers_inverted[strtolower("Province")]]))>0)
+            {
+                $named_area = $this->testAndAppendTag($gathering_tag, null, "NamedAreas/NamedArea", null, null, true);
+                $this->testAndAppendTag($named_area, null, "AreaClass", null, "Province");
+                $this->testAndAppendTag($named_area, "Province", "AreaName", $p_valueArray);
+            }
+        }
+		if (array_key_exists(strtolower("Municipality"), $this->headers_inverted)) {
+            if (strlen(trim($p_valueArray[$this->headers_inverted[strtolower("Municipality")]]))>0)
+            {
+                $named_area = $this->testAndAppendTag($gathering_tag, null, "NamedAreas/NamedArea", null, null, true);
+                $this->testAndAppendTag($named_area, null, "AreaClass", null, "Municipality");
+                $this->testAndAppendTag($named_area, "Municipality", "AreaName", $p_valueArray);
+            }
+        }
+		if (array_key_exists(strtolower("Continent"), $this->headers_inverted)) {
+            if (strlen(trim($p_valueArray[$this->headers_inverted[strtolower("Continent")]]))>0)
+            {
+                $named_area = $this->testAndAppendTag($gathering_tag, null, "NamedAreas/NamedArea", null, null, true);
+                $this->testAndAppendTag($named_area, null, "AreaClass", null, "Continent");
+                $this->testAndAppendTag($named_area, "Continent", "AreaName", $p_valueArray);
+            }
+        }
+		if (array_key_exists(strtolower("exact_site"), $this->headers_inverted)) {
+            if (strlen(trim($p_valueArray[$this->headers_inverted[strtolower("exact_site")]]))>0)
+            {
+                $named_area = $this->testAndAppendTag($gathering_tag, null, "NamedAreas/NamedArea", null, null, true);
+                $this->testAndAppendTag($named_area, null, "AreaClass", null, "exact_site");
+                $this->testAndAppendTag($named_area, "exact_site", "AreaName", $p_valueArray);
+            }
+        }
         //ftheeten 2018 04 12
         if (array_key_exists(strtolower("elevationInMeters"), $this->headers_inverted)) {
             if (is_numeric($p_valueArray[$this->headers_inverted[strtolower("elevationInMeters")]])) {
@@ -823,6 +847,12 @@ class RMCATabToABCDXml
     {       
         $this->testAndAppendTag($p_parentElement, "lifeStage", "ZoologicalUnit/PhasesOrStages/PhaseOrStage", $p_valueArray);        
     }
+	
+	//2020 01 28
+	public function addSex($p_parentElement, $p_valueArray)
+    {       
+        $this->testAndAppendTag($p_parentElement, "sex", "Sex", $p_valueArray);        
+    }
     
      //2018 04 11 
     public function addSamplingMethod($p_parentElement, $p_valueArray)
@@ -880,76 +910,6 @@ class RMCATabToABCDXml
         //person
         $this->testAndAppendTag($acquisitionNode, "acquiredFrom", "AcquiredFrom/Person/FullName", $p_valueArray);
         
-    }
-    
-    //2019 03 01 
-    public function addPaleontology($p_parentElement, $p_valueArray)
-    {
-        if (array_key_exists(strtolower("GeologicalEpoch"), $this->headers_inverted)||array_key_exists(strtolower("GeologicalAge"), $this->headers_inverted)||array_key_exists(strtolower("GeologicalAge2"), $this->headers_inverted )) 
-        {
-            $namespace_efg= "http://www.synthesys.info/ABCDEFG/1.0";
-            $extensionForPaleontology         = $this->testAndAppendTag($p_parentElement, null, "UnitExtension", null, null, true);
-            $paleoNode         = $this->testAndAppendTag($extensionForPaleontology, null, "efg:EarthScienceSpecimen", null, null, true, $namespace_efg);
-            $chronoGroupNode         = $this->testAndAppendTag($paleoNode, null,"efg:ChronostratigraphicAttributions", null, null, true, $namespace_efg); 
-            if (array_key_exists(strtolower("GeologicalEpoch") , $this->headers_inverted))
-            {
-                $interm_node=$this->testAndAppendTag($chronoGroupNode, null, "efg:ChronostratigraphicAttribution", null, null, true, $namespace_efg);
-                $this->testAndAppendTag($interm_node, null, "efg:ChronoStratigraphicDivision", null, "Epoch/Serie", false, $namespace_efg);
-                $this->testAndAppendTag($interm_node, "GeologicalEpoch", "efg:ChronostratigraphicName", $p_valueArray, null, false, $namespace_efg);
-            }
-            if (array_key_exists(strtolower("GeologicalAge") , $this->headers_inverted))
-            {
-                $interm_node=$this->testAndAppendTag($chronoGroupNode, null, "efg:ChronostratigraphicAttribution", null, null, true, $namespace_efg);
-                $this->testAndAppendTag($interm_node, null, "efg:ChronoStratigraphicDivision", null, "Age/Stage", false, $namespace_efg);
-                $this->testAndAppendTag($interm_node, "GeologicalAge", "efg:ChronostratigraphicName", $p_valueArray, null, false, $namespace_efg);
-            }
-            if (array_key_exists(strtolower("GeologicalAge2") , $this->headers_inverted))
-            {
-                $interm_node=$this->testAndAppendTag($chronoGroupNode, null, "efg:ChronostratigraphicAttribution", null, null, true, $namespace_efg);
-                $this->testAndAppendTag($interm_node, null, "efg:ChronoStratigraphicDivision", null, "Age/Stage", false, $namespace_efg);
-                $this->testAndAppendTag($interm_node, "GeologicalAge2", "efg:ChronostratigraphicName", $p_valueArray, null, false, $namespace_efg);
-            }
-        }
-    }
-    
-    //ftheeten 2019 03 05
-    public function addLithostratigraphy($p_parentElement, $p_valueArray)
-    {
-        if (array_key_exists(strtolower("lithostratigraphyGroup"), $this->headers_inverted)||array_key_exists(strtolower("lithostratigraphyFormation"), $this->headers_inverted)||array_key_exists(strtolower("lithostratigraphyMember"), $this->headers_inverted )||array_key_exists(strtolower("lithostratigraphyBed"), $this->headers_inverted )||array_key_exists(strtolower("lithostratigraphyInformalName"), $this->headers_inverted )) 
-        {
-             $namespace_efg= "http://www.synthesys.info/ABCDEFG/1.0";
-            $extensionForPaleontology         = $this->testAndAppendTag($p_parentElement, null, "UnitExtension", null, null, true);
-            $paleoNode         = $this->testAndAppendTag($extensionForPaleontology, null, "efg:EarthScienceSpecimen", null, null, true, $namespace_efg);
-            $lithoGroupNode         = $this->testAndAppendTag($paleoNode, null,"efg:UnitStratigraphicDetermination", null, null, true, $namespace_efg); 
-            $lithoGroupNode2         = $this->testAndAppendTag($lithoGroupNode, null,"efg:LithostratigraphicAttributions", null, null, true, $namespace_efg);
-            $lithoGroupNode3         = $this->testAndAppendTag($lithoGroupNode2, null,"efg:LithostratigraphicAttribution", null, null, true, $namespace_efg);
-            if (array_key_exists(strtolower("lithostratigraphyGroup") , $this->headers_inverted))
-            {
-                $this->testAndAppendTag($lithoGroupNode3, "lithostratigraphyGroup", "efg:Group", $p_valueArray, null, false, $namespace_efg);
-            }
-            
-             if (array_key_exists(strtolower("lithostratigraphyFormation") , $this->headers_inverted))
-            {
-                $this->testAndAppendTag($lithoGroupNode3, "lithostratigraphyFormation", "efg:Formation", $p_valueArray, null, false, $namespace_efg);
-            }
-            
-            if (array_key_exists(strtolower("lithostratigraphyMember") , $this->headers_inverted))
-            {
-                $this->testAndAppendTag($lithoGroupNode3, "lithostratigraphyMember", "efg:Member", $p_valueArray, null, false, $namespace_efg);
-            }
-            
-            if (array_key_exists(strtolower("lithostratigraphyBed") , $this->headers_inverted))
-            {
-                $this->testAndAppendTag($lithoGroupNode3, "lithostratigraphyBed", "efg:Bed", $p_valueArray, null, false, $namespace_efg);
-            }
-            
-            if (array_key_exists(strtolower("lithostratigraphyInformalName") , $this->headers_inverted))
-            {
-                $this->testAndAppendTag($lithoGroupNode3, "lithostratigraphyInformalName", "efg:InformalLithostratigraphicName", $p_valueArray, null, false, $namespace_efg);
-            }
-            
-            
-        }
     }
     
     public function identifyHeader($p_handle)
@@ -1038,11 +998,16 @@ class RMCATabToABCDXml
         $this->addExpedition($unit, $p_row);
         $this->addCollectionDates($specimenGatheringNode, $p_row, $dom);
         $this->addSamplingMethod($unit, $p_row);
+		
+		//ftheeten 2020 01 01
+		$this->addStage($unit, $p_row);
+		$this->addSex($unit, $p_row);
             
         $measurements_tag = $this->testAndAppendTag($unit, null, "MeasurementsOrFacts", null, null, true);
         $this->addMeasurement($measurements_tag, $p_row, "totalNumber", "N total");
         $this->addMeasurement($measurements_tag, $p_row, "maleCount", "N males");
         $this->addMeasurement($measurements_tag, $p_row, "femaleCount", "N females");
+		$this->addMeasurement($measurements_tag, $p_row, "juvenileCount", "N juveniles");
         $this->addMeasurement($measurements_tag, $p_row, "sexUnknownCount", "N sex unknown");
         $this->addMeasurement($measurements_tag, $p_row, "socialStatus", "Social status");
         $this->addMeasurement($measurements_tag, $p_row, "HostClass", "Host - Class");
@@ -1062,8 +1027,7 @@ class RMCATabToABCDXml
         $this->addMeasurement($measurements_tag, $p_row, "ParasiteFamily", "Parasite - Family");
         $this->addMeasurement($measurements_tag, $p_row, "ParasiteGenus", "Parasite - Genus");
 		$this->addMeasurement($measurements_tag, $p_row, "ParasiteSpecies", "Parasite - Species");
-		$this->addMeasurement($measurements_tag, $p_row, "ParasiteSpecies", "Host - Species");
-		$this->addMeasurement($measurements_tag, $p_row, "ParasiteSubSpecies", "Host - Subspecies");
+		$this->addMeasurement($measurements_tag, $p_row, "ParasiteSubSpecies", "Parasite - Subspecies");
         $this->addMeasurement($measurements_tag, $p_row, "ParasiteFullScientificName", "Parasite - Taxon name");
         $this->addMeasurement($measurements_tag, $p_row, "ParasiteRemark", "Parasite - Remark");
         $this->addMeasurement($measurements_tag, $p_row, "ParasiteAuthority", "Parasite - Authority");
@@ -1094,11 +1058,7 @@ class RMCATabToABCDXml
         $this->addStorage($unit, $p_row);
         $this->addNotes($unit, $p_row);
         
-        //2019 03 01
-        $this->addPaleontology($unit, $p_row);
-        $this->addLithostratigraphy($unit, $p_row);
-        
-       //ftheeten 2018 10 31
+              //ftheeten 2018 10 31
        $xpath = new DOMXPath($dom);
 
         foreach( $xpath->query('//*[not(node())]') as $node ) {
@@ -1106,7 +1066,7 @@ class RMCATabToABCDXml
         }
         
         
-        print($dom->saveXML($root, LIBXML_NOEMPTYTAG ));
+        //print($dom->saveXML($root, LIBXML_NOEMPTYTAG ));
        
         return $dom->saveXML($root, LIBXML_NOEMPTYTAG );
     }

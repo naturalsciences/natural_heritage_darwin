@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfWidgetFormI18nTime.class.php 9046 2008-05-19 08:13:51Z FabianLange $
  */
 class sfWidgetFormI18nTime extends sfWidgetFormTime
 {

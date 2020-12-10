@@ -67,4 +67,3 @@ insert into collections_rights (collection_ref, user_ref, db_user_type) values (
 
 
 -- Then sudo -u postgres pg_dumpall -c -o -U postgres | gzip -c > /var/www/db_dumps/demo_db.gz
-

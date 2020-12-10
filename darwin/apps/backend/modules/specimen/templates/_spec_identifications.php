@@ -1,6 +1,4 @@
-<?php if($form['notion_concerned']->getValue()!=""||
-//ftheeten 2018 09 06
-sfContext::getInstance()->getActionName()=="addIdentification"||sfContext::getInstance()->getActionName()=="edit"):?>
+<?php if($form['notion_concerned']->getValue()!=""):?>
 <tbody class="spec_ident_data" id="spec_ident_data_<?php echo $row_num;?>">
   <?php if($form->hasError()): ?>
   <tr>
@@ -76,13 +74,11 @@ sfContext::getInstance()->getActionName()=="addIdentification"||sfContext::getIn
       $(parent_el).find('select').append("<option value=''></option>").val('');
 
       $(parent_el).hide();
-	  $(parent_el).remove();
       reOrderIdent();
       visibles = $('table#identifications tbody.spec_ident_data:visible').size();
       if(!visibles)
       {
         $(this).closest('table#identifications').find('thead.spec_ident_head').hide();
-		$(this).closest('table#identifications').find('thead.spec_ident_head').remove();
       }
     });
 
@@ -104,14 +100,17 @@ sfContext::getInstance()->getActionName()=="addIdentification"||sfContext::getIn
           $('table#identifications #spec_ident_identifiers_<?php echo $row_num;?> thead').show();
           $('table#identifications #spec_ident_identifiers_<?php echo $row_num;?>').addClass('green_border');
 	  showAfterRefresh($('.ui-tooltip-content .page')) ; 
-        }
-      });
-      
-      //ftheeten 2016 02 24
+	  
+	  //ftheeten 2016 02 24
 
 	  position_to_Scroll=$('#refIdentifications').offset().top;
 	 $('body').trigger('close_modal');
 	  $('body').parent().scrollTop(position_to_Scroll);
+
+        }
+		
+      });
+	  
       return true;
     }
 
@@ -120,7 +119,18 @@ sfContext::getInstance()->getActionName()=="addIdentification"||sfContext::getIn
       handle: '.spec_ident_identifiers_handle',
       update_row_fct: addIdentifierForIdentification<?php echo $row_num;?>
       });
-
+      
+      //?php if(sfContext::getInstance()->getActionName()=="new"||sfContext::getInstance()->getActionName()=="edit"):?>
+        //ftheeten 2016 11 29
+             //$('.to_date').each(function ()
+             //           {
+             //               if(/specimen_(new){0,1}Identification(s){0,1}_[0-9]+_notion_date_year/.test($(this).attr('id')))
+             //               {
+             //                   $.reverse_year_in_select("#"+$(this).attr('id'));
+             //               }
+             //           }
+             //       );
+      //?php endif;?>
 
 });
 </script></td>

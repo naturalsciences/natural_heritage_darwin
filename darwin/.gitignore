@@ -1,0 +1,16 @@
+cache/*
+data/feed/*.xml
+data/stats/*.yml
+!cache/.gitignore
+log/*
+!log/.gitignore
+config/databases.yml
+config/darwin.yml
+config/app.yml
+web/favicon.ico
+uploads/*
+*~
+*.*~ 
+*.kate-swp
+./.gitignore
+apps/public/config/databases.yml

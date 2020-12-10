@@ -30,7 +30,6 @@ $(document).ready(
                 $("#criteria_butt").click();
             }
        );
-       
      }
    );
 

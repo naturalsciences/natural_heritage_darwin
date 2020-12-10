@@ -64,12 +64,12 @@ class specimensearchwidgetComponents extends sfComponents
   {
     $this->defineForm();
   }
-
+  
   public function executeNagoya()
   {
     $this->defineForm();
   }
-  
+
   public function executeStage()
   {
     $this->defineForm();
@@ -161,20 +161,33 @@ class specimensearchwidgetComponents extends sfComponents
   {
     $this->defineForm();
   }
-  public function executeStatusAndCount()
+  
+  //ftheeten 2016 06 22
+   public function executeSpecimenCount()
   {
-    $this->defineForm() ;
+    $this->defineForm();
   }
   
-    
-   //ftheeten 2018 11 30
+    //ftheeten 2016 07 05 
+   public function executeEcology()
+  {
+    $this->defineForm();
+  }
+  
+      //ftheeten 2016 07 08 
    public function executeGtuDate()
   {
     $this->defineForm();
   }
   
-     //ftheeten 2019 06 24
-   public function executeIdentification()
+      //ftheeten 2016 07 05 
+   public function executeStorageParts()
+  {
+    $this->defineForm();
+  }
+  
+        //ftheeten 2017 04 27
+   public function executeLoans()
   {
     $this->defineForm();
   }

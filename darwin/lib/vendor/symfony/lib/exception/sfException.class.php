@@ -4,25 +4,24 @@
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * (c) 2004-2006 Sean Kerr <sean@code-box.org>
- *
+ * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
 /**
- * sfException is the base class for all symfony related throwables and
+ * sfException is the base class for all symfony related exceptions and
  * provides an additional method for printing up a detailed view of an
- * throwable.
+ * exception.
  *
  * @package    symfony
  * @subpackage exception
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfException.class.php 33539 2012-09-19 05:36:02Z fabien $
  */
 class sfException extends Exception
 {
-  /** @var Exception|Throwable|null */
   protected
     $wrappedException = null;
 
@@ -30,13 +29,13 @@ class sfException extends Exception
     $lastException = null;
 
   /**
-   * Wraps an Throwable.
+   * Wraps an Exception.
    *
-   * @param Exception|Throwable $e An Throwable instance
+   * @param Exception $e An Exception instance
    *
-   * @return sfException An sfException instance that wraps the given Throwable object
+   * @return sfException An sfException instance that wraps the given Exception object
    */
-  static public function createFromException($e)
+  static public function createFromException(Exception $e)
   {
     $exception = new sfException(sprintf('Wrapped %s: %s', get_class($e), $e->getMessage()));
     $exception->setWrappedException($e);
@@ -48,9 +47,9 @@ class sfException extends Exception
   /**
    * Sets the wrapped exception.
    *
-   * @param Exception|Throwable $e A Throwable instance
+   * @param Exception $e An Exception instance
    */
-  public function setWrappedException($e)
+  public function setWrappedException(Exception $e)
   {
     $this->wrappedException = $e;
 
@@ -58,9 +57,9 @@ class sfException extends Exception
   }
 
   /**
-   * Gets the last wrapped throwable.
+   * Gets the last wrapped exception.
    *
-   * @return Exception|Throwable An Throwable instance
+   * @return Exception An Exception instance
    */
   static public function getLastException()
   {
@@ -72,9 +71,9 @@ class sfException extends Exception
    */
   static public function clearLastException()
   {
-    self::$lastException = null;
+  	self::$lastException = null;
   }
-
+  
   /**
    * Prints the stack trace for this exception.
    */
@@ -102,31 +101,18 @@ class sfException extends Exception
       }
 
       if (sfConfig::get('sf_compressed')) {
-        ob_start('ob_gzhandler');
+          ob_start('ob_gzhandler');
       }
 
       header('HTTP/1.0 500 Internal Server Error');
     }
 
-    if (version_compare(PHP_VERSION, '7.0.0') >= 0)
+    try
     {
-      try
-      {
-        $this->outputStackTrace($exception);
-      }
-      catch (Throwable $e)
-      {
-      }
+      $this->outputStackTrace($exception);
     }
-    else
+    catch (Exception $e)
     {
-      try
-      {
-        $this->outputStackTrace($exception);
-      }
-      catch (Exception $e)
-      {
-      }
     }
 
     if (!sfConfig::get('sf_test'))
@@ -137,9 +123,8 @@ class sfException extends Exception
 
   /**
    * Gets the stack trace for this exception.
-   * @param Exception|Throwable $exception
    */
-  static protected function outputStackTrace($exception)
+  static protected function outputStackTrace(Exception $exception)
   {
     $format = 'html';
     $code   = '500';
@@ -148,15 +133,11 @@ class sfException extends Exception
     $response = null;
     if (class_exists('sfContext', false) && sfContext::hasInstance() && is_object($request = sfContext::getInstance()->getRequest()) && is_object($response = sfContext::getInstance()->getResponse()))
     {
-      /** @var $request sfWebRequest */
-      /** @var $response sfWebResponse */
-
       $dispatcher = sfContext::getInstance()->getEventDispatcher();
 
       if (sfConfig::get('sf_logging_enabled'))
       {
-        $priority = $exception instanceof sfError404Exception ? sfLogger::ERR : sfLogger::CRIT;
-        $dispatcher->notify(new sfEvent($exception, 'application.log', array($exception->getMessage(), 'priority' => $priority)));
+        $dispatcher->notify(new sfEvent($exception, 'application.log', array($exception->getMessage(), 'priority' => sfLogger::ERR)));
       }
 
       $event = $dispatcher->notifyUntil(new sfEvent($exception, 'application.throw_exception'));
@@ -214,7 +195,7 @@ class sfException extends Exception
       }
     }
 
-    // when using CLI, we force the format to be TXT. Compare exactly to
+    // when using CLI, we force the format to be TXT. Compare exactly to 
     // the string 'cli' because the php 5.4 server is identified by 'cli-server'
     if ('cli' == PHP_SAPI)
     {
@@ -262,7 +243,6 @@ class sfException extends Exception
 
       return;
     }
-
   }
 
   /**
@@ -279,7 +259,7 @@ class sfException extends Exception
     $templatePaths = array(
       sfConfig::get('sf_app_config_dir').'/error',
       sfConfig::get('sf_config_dir').'/error',
-      __DIR__.'/data',
+      dirname(__FILE__).'/data',
     );
 
     $template = sprintf('%s.%s.php', $debug ? 'exception' : 'error', $format);
@@ -297,8 +277,8 @@ class sfException extends Exception
   /**
    * Returns an array of exception traces.
    *
-   * @param Exception|Throwable $exception  An Throwable implementation instance
-   * @param string              $format     The trace format (txt or html)
+   * @param Exception $exception  An Exception implementation instance
+   * @param string    $format     The trace format (txt or html)
    *
    * @return array An array of traces
    */
@@ -417,7 +397,7 @@ class sfException extends Exception
       {
         $formattedValue = $value;
       }
-
+      
       $result[] = is_int($key) ? $formattedValue : sprintf("'%s' => %s", self::escape($key), $formattedValue);
     }
 
@@ -426,12 +406,12 @@ class sfException extends Exception
 
   /**
    * Formats a file path.
-   *
+   * 
    * @param  string  $file   An absolute file path
    * @param  integer $line   The line number
    * @param  string  $format The output format (txt or html)
    * @param  string  $text   Use this text for the link rather than the file path
-   *
+   * 
    * @return string
    */
   static protected function formatFile($file, $line, $format = 'html', $text = null)
@@ -463,7 +443,7 @@ class sfException extends Exception
     {
       return $value;
     }
-
+    
     return htmlspecialchars($value, ENT_QUOTES, sfConfig::get('sf_charset', 'UTF-8'));
   }
 }

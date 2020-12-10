@@ -169,7 +169,7 @@ class RMCATabImportLinks
 							if($p_type!==null)
 							{
 								//!assume types are lowercase
-								$link->setType(strtolower($p_type));
+								$link->setCategory(strtolower($p_type));
 							}
 							if($p_comment!==null)
 							{

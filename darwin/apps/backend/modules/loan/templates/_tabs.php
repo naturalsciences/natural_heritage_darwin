@@ -3,28 +3,28 @@
   <?php if($loan->isNew()):?>
     <a class="enabled selected" id="tab_0"> &lt; <?php echo __('New loan');?> &gt; </a>
     <a class="disabled" id="tab_1"><?php echo __('Items overview');?></a>
-    <a class="disabled" id="tab_2"><?php echo __('Edit item');?></a>
+    <!--<a class="disabled" id="tab_2"><?php echo __('Edit item');?></a>-->
 
   <?php elseif(!$loan->isNew() && !isset($item) && !isset($items)):?>
     <a class="enabled selected with_actions" id="tab_0"> &lt; <?php echo __('Edit loan');?> &gt; </a>
     <?php include_partial('loan/itemactions', array('source' => 'loan', 'action'=>'edit','id'=>$loan->getId())); ?>
     <?php echo link_to(__('Items overview'), 'loan/overview?id='.$loan->getId(), array('class'=>'enabled with_actions', 'id'=> 'tab_1'));?>
     <?php include_partial('loan/itemactions', array('source' => 'loan','action'=>'overview','id'=>$loan->getId())); ?>
-    <a class="disabled" id="tab_2"><?php echo __('Edit item');?></a>
+   <!-- <a class="disabled" id="tab_2"><?php echo __('Edit item');?></a>-->
 
   <?php elseif(!$loan->isNew() && isset($items) ):?>
     <?php echo link_to( __('Edit loan' ), 'loan/edit?id='.$loan->getId(), array('class'=>'enabled with_actions', 'id'=> 'tab_0'));?>
     <?php include_partial('loan/itemactions', array('source' => 'loan', 'action'=>'edit','id'=>$loan->getId())); ?>
     <a class="enabled selected with_actions" id="tab_1"> &lt; <?php echo __('Items overview');?>  &gt; </a>
     <?php include_partial('loan/itemactions', array('source' => 'loan','action'=>'overview','id'=>$loan->getId())); ?>
-    <a class="disabled" id="tab_2"><?php echo __('Edit item');?></a>
+   <!-- <a class="disabled" id="tab_2"><?php echo __('Edit item');?></a>-->
 
   <?php elseif(!$loan->isNew() && isset($item)):?>
     <?php echo link_to(__('Edit loan'), 'loan/edit?id='.$loan->getId(), array('class'=>'enabled with_actions', 'id'=> 'tab_0'));?>
     <?php include_partial('loan/itemactions', array('source' => 'loan', 'action'=>'edit','id'=>$loan->getId())); ?>
     <?php echo link_to(__('Items overview'), 'loan/overview?id='.$loan->getId(), array('class'=>'enabled with_actions', 'id'=> 'tab_1'));?>
     <?php include_partial('loan/itemactions', array('source' => 'loan','action'=>'overview','id'=>$loan->getId())); ?>
-    <a class="enabled selected with_actions" id="tab_2"> &lt; <?php echo __('Edit item');?> &gt; </a>
+    <!--<a class="enabled selected with_actions" id="tab_2"> &lt; <?php echo __('Edit item');?> &gt; </a>-->
     <?php include_partial('loan/itemactions', array('source' => 'loanitem','action'=>'edit','id'=>$item->getId())); ?>
   <?php endif;?>
 </div>
@@ -38,21 +38,21 @@
     <?php include_partial('loan/itemactions', array('source' => 'loan', 'action'=>'view','id'=>$loan->getId())); ?>
     <?php echo link_to(__('Items overview'), 'loan/overviewView?id='.$loan->getId(), array('class'=>'enabled with_actions', 'id'=> 'tab_1'));?>
     <?php include_partial('loan/itemactions', array('source' => 'loan','action'=>'overviewView','id'=>$loan->getId())); ?>
-    <a class="disabled" id="tab_2"><?php echo __('View item');?></a>
+   <!-- <a class="disabled" id="tab_2"><?php echo __('View item');?></a>-->
 
   <?php elseif(!$loan->isNew() && isset($items) ):?>
     <?php echo link_to(__('View loan'), 'loan/view?id='.$loan->getId(), array('class'=>'enabled with_actions', 'id'=> 'tab_0'));?>
     <?php include_partial('loan/itemactions', array('source' => 'loan', 'action'=>'view','id'=>$loan->getId())); ?>
     <a class="enabled selected with_actions" id="tab_1"> &lt; <?php echo __('Items overview');?>  &gt; </a>
     <?php include_partial('loan/itemactions', array('source' => 'loan','action'=>'overviewView','id'=>$loan->getId())); ?>
-    <a class="disabled" id="tab_2"><?php echo __('View item');?></a>
+  <!--  <a class="disabled" id="tab_2"><?php echo __('View item');?></a>-->
 
   <?php elseif(!$loan->isNew() && isset($item)):?>
     <?php echo link_to(__('View loan'), 'loan/view?id='.$loan->getId(), array('class'=>'enabled with_actions', 'id'=> 'tab_0'));?>
     <?php include_partial('loan/itemactions', array('source' => 'loan', 'action'=>'view','id'=>$loan->getId())); ?>
     <?php echo link_to(__('Items overview'), 'loan/overviewView?id='.$loan->getId(), array('class'=>'enabled with_actions', 'id'=> 'tab_1'));?>
     <?php include_partial('loan/itemactions', array('source' => 'loan','action'=>'overviewView','id'=>$loan->getId())); ?>
-    <a class="enabled selected with_actions" id="tab_2"> &lt; <?php echo __('View item');?> &gt; </a>
+  <!--  <a class="enabled selected with_actions" id="tab_2"> &lt; <?php echo __('View item');?> &gt; </a> -->
     <?php include_partial('loan/itemactions', array('source' => 'loanitem','action'=>'view','id'=>$item->getId())); ?>
   <?php endif;?>
 </div>

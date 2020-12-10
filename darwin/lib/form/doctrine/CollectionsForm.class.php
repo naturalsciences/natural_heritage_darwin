@@ -11,12 +11,6 @@ class CollectionsForm extends BaseCollectionsForm
 {
   public function configure()
   {
-          	//JMHerpers 4/9/2019
-	static $nagoyaanswers = array(
-		"yes" 		=> "Yes",
-		"no" 		=> "No",
-		"not defined"     	=> "Not defined"
-	);
     $this->useFields(array(
       'is_public',
       'code',
@@ -26,21 +20,15 @@ class CollectionsForm extends BaseCollectionsForm
       'staff_ref',
       'parent_ref',
       'collection_type',
-      //ftheeten 2018 08 08
-      'allow_duplicates',
 	  //JMHerpers 2019 05 20
-	   'nagoya',
-	   'uid'
+		'nagoya'
     ));
 
     $this->widgetSchema['is_public'] = new sfWidgetFormInputCheckbox(array ('default' => 'true'), array('title' => 'checked = public'));
     $this->validatorSchema['is_public'] = new sfValidatorBoolean() ;
     $this->widgetSchema['code'] = new sfWidgetFormInputText();
     $this->widgetSchema['code']->setAttributes(array('class'=>'small_size'));
-    $this->widgetSchema['uid'] = new sfWidgetFormInputText();
-	$this->widgetSchema['uid']->setLabel("Unique identifier");
-    $this->widgetSchema['uid']->setAttributes(array('class'=>'small_size', "readonly"=>"readonly"));
-	$this->widgetSchema['name'] = new sfWidgetFormInputText();
+    $this->widgetSchema['name'] = new sfWidgetFormInputText();
     $this->widgetSchema['name']->setAttributes(array('class'=>'medium_size'));
     $this->widgetSchema['institution_ref'] = new widgetFormCompleteButtonRef(array(
       'model' => 'Institutions',
@@ -68,6 +56,7 @@ class CollectionsForm extends BaseCollectionsForm
       'complete_url' => 'catalogue/completeName?table=users',
      ));
     $this->widgetSchema['staff_ref']->setLabel('Staff Member');
+//      $this->validatorSchema['staff_ref'] = new sfValidatorInteger(array('required' => false)) ;
 
     $this->widgetSchema['main_manager_ref']->setLabel('Conservator');
 
@@ -80,25 +69,21 @@ class CollectionsForm extends BaseCollectionsForm
       'is_public' => "Uncheck this option if you want your collection to be private. So this collection won't be visible in the public interface neither by simply registered user",
       'main_manager_ref' => "Specify the main manager for this collection, you can add other manager on the rights table below", )
     );
-
-    $this->validatorSchema['collection_type'] = new sfValidatorChoice(array('choices' => array('mix' => 'mix', 'observation' => 'observation', 'physical' => 'physical'), 'required' => true));
+	//jmherpers 2018 06 19
+    $this->validatorSchema['collection_type'] = new sfValidatorChoice(array('choices' => array('mix' => 'mix', 'observation' => 'observation', 'physical' => 'physical', 'title' => 'title'), 'required' => true));
 
     if(! $this->getObject()->isNew() || isset($this->options['duplicate']))
-      $this->widgetSchema['parent_ref']->setOption('choices', Doctrine_Core::getTable('Collections')->getDistinctCollectionByInstitution($this->getObject()->getInstitutionRef()) );
+      $this->widgetSchema['parent_ref']->setOption('choices', Doctrine::getTable('Collections')->getDistinctCollectionByInstitution($this->getObject()->getInstitutionRef()) );
     elseif(isset($this->options['new_with_error']))
-      $this->widgetSchema['parent_ref']->setOption('choices', Doctrine_Core::getTable('Collections')->getDistinctCollectionByInstitution($this->options['institution']));
+      $this->widgetSchema['parent_ref']->setOption('choices', Doctrine::getTable('Collections')->getDistinctCollectionByInstitution($this->options['institution']));
 
     $this->validatorSchema->setPostValidator(
       new sfValidatorCallback(array('callback' => array($this, 'checkSelfAttached')))
     );
-    
-    //ftheeten 2018 08 08
-    $this->widgetSchema['allow_duplicates'] = new sfWidgetFormInputCheckbox(array ('default' => 'false'));
-    $this->validatorSchema['allow_duplicates'] = new sfValidatorBoolean() ;
 
     $subForm = new sfForm();
     $this->embedForm('CollectionsRights',$subForm);
-    foreach(Doctrine_Core::getTable('CollectionsRights')->getAllUserRef($this->getObject()->getId()) as $key=>$vals)
+    foreach(Doctrine::getTable('CollectionsRights')->getAllUserRef($this->getObject()->getId()) as $key=>$vals)
     {
       $form = new CollectionsRightsForm($vals);
       $this->embeddedForms['CollectionsRights']->embedForm($key, $form);
@@ -106,21 +91,17 @@ class CollectionsForm extends BaseCollectionsForm
     //Re-embedding the container
     $this->embedForm('CollectionsRights', $this->embeddedForms['CollectionsRights']);
 
-	//jmherpers 20190506
-    $this->widgetSchema['nagoya'] = new sfWidgetFormChoice(array(
+	//JMHerpers 4/9/2019
+	static $nagoyaanswers = array(
+		"yes" 		=> "Yes",
+		"no" 		=> "No",
+		"not defined"     	=> "Not defined"
+	);
+ 
+	$this->widgetSchema['nagoya'] = new sfWidgetFormChoice(array(
       'choices' =>  $nagoyaanswers,
     ));
 	$this->setDefault('nagoya', "not defined");
-	$this->validatorSchema['nagoya'] = new sfValidatorChoice(array('choices' => array_keys($nagoyaanswers), 'required' => true));
-    
-	
-	
-	$this->validatorSchema['uid'] = new sfValidatorString(array('required'=>false));
-	
-	$this->widgetSchema['preferred_taxonomy'] = new sfWidgetFormChoice(array(
-      'choices' => TaxonomyMetadataTable::getAllTaxonomicMetadata( 'id ASC',true)  //array_merge( array(''=>'All'),TaxonomyMetadataTable::getAllTaxonomicMetadata("id ASC"))
-    ));
-	$this->validatorSchema['preferred_taxonomy'] = new sfValidatorInteger(array('required'=>false));
 	
     $subForm = new sfForm();
     $this->embedForm('newVal',$subForm);
@@ -166,7 +147,7 @@ class CollectionsForm extends BaseCollectionsForm
     parent::bind($taintedValues, $taintedFiles);
   }
 
-  public function saveObjectEmbeddedForms($con = null, $forms = null)
+  public function saveEmbeddedForms($con = null, $forms = null)
   {
     if (null === $forms) {
       $value = $this->getValue('CollectionsRights');
@@ -174,6 +155,10 @@ class CollectionsForm extends BaseCollectionsForm
       {
         if (!isset($value[$name]['user_ref']))
         {
+          /* DO BE DONE WITH A TRIGGER
+          if ($form->getObject()->getDbUserType() == Users::REGISTERED_USER ) // so we have to delete widget right for this guy
+          Doctrine::getTable('MyWidgets')->setUserRef($form->getObject()->getUserRef())->doUpdateWidgetRight($form->getObject()->getCollectionRef());
+          */
           $form->getObject()->delete();
           unset($this->embeddedForms['CollectionsRights'][$name]);
         }
@@ -188,6 +173,6 @@ class CollectionsForm extends BaseCollectionsForm
         }
       }
     }
-    return parent::saveObjectEmbeddedForms($con, $forms);
+    return parent::saveEmbeddedForms($con, $forms);
   }
 }

@@ -18,87 +18,84 @@
  * @property string $errors_in_import
  * @property string $template_version
  * @property boolean $exclude_invalid_entries
+ * @property string $taxonomy_name
+ * @property boolean $is_reference_taxonomy
+ * @property string $source_taxonomy
  * @property string $creation_date
  * @property integer $creation_date_mask
+ * @property string $definition_taxonomy
+ * @property string $url_website_taxonomy
+ * @property string $url_webservice_taxonomy
+ * @property integer $specimen_taxonomy_ref
  * @property boolean $working
  * @property string $mime_type
- * @property boolean $gtu_include_date
- * @property boolean $gtu_tags_in_merge
- * @property boolean $sensitive_information_withheld
- * @property string $source_database
  * @property string $taxonomy_kingdom
- * @property integer $specimen_taxonomy_ref
- * @property string $history_taxonomy
- * @property integer $collection_ref_for_gtu
- * @property boolean $enforce_code_unicity
+ * @property boolean $merge_gtu
  * @property Collections $Collections
  * @property Users $Users
  * @property Doctrine_Collection $Staging
  * @property Doctrine_Collection $StagingCatalogue
- * @property Doctrine_Collection $StagingGtu
  * 
- * @method integer             getId()                             Returns the current record's "id" value
- * @method string              getFilename()                       Returns the current record's "filename" value
- * @method integer             getUserRef()                        Returns the current record's "user_ref" value
- * @method string              getFormat()                         Returns the current record's "format" value
- * @method integer             getCollectionRef()                  Returns the current record's "collection_ref" value
- * @method string              getState()                          Returns the current record's "state" value
- * @method string              getCreatedAt()                      Returns the current record's "created_at" value
- * @method string              getUpdatedAt()                      Returns the current record's "updated_at" value
- * @method integer             getInitialCount()                   Returns the current record's "initial_count" value
- * @method boolean             getIsFinished()                     Returns the current record's "is_finished" value
- * @method string              getErrorsInImport()                 Returns the current record's "errors_in_import" value
- * @method string              getTemplateVersion()                Returns the current record's "template_version" value
- * @method boolean             getExcludeInvalidEntries()          Returns the current record's "exclude_invalid_entries" value
- * @method string              getCreationDate()                   Returns the current record's "creation_date" value
- * @method integer             getCreationDateMask()               Returns the current record's "creation_date_mask" value
- * @method boolean             getWorking()                        Returns the current record's "working" value
- * @method string              getMimeType()                       Returns the current record's "mime_type" value
- * @method boolean             getGtuIncludeDate()                 Returns the current record's "gtu_include_date" value
- * @method boolean             getGtuTagsInMerge()                 Returns the current record's "gtu_tags_in_merge" value
- * @method boolean             getSensitiveInformationWithheld()   Returns the current record's "sensitive_information_withheld" value
- * @method string              getSourceDatabase()                 Returns the current record's "source_database" value
- * @method string              getTaxonomyKingdom()                Returns the current record's "taxonomy_kingdom" value
- * @method integer             getSpecimenTaxonomyRef()            Returns the current record's "specimen_taxonomy_ref" value
- * @method string              getHistoryTaxonomy()                Returns the current record's "history_taxonomy" value
- * @method integer             getCollectionRefForGtu()            Returns the current record's "collection_ref_for_gtu" value
- * @method boolean             getEnforceCodeUnicity()             Returns the current record's "enforce_code_unicity" value
- * @method Collections         getCollections()                    Returns the current record's "Collections" value
- * @method Users               getUsers()                          Returns the current record's "Users" value
- * @method Doctrine_Collection getStaging()                        Returns the current record's "Staging" collection
- * @method Doctrine_Collection getStagingCatalogue()               Returns the current record's "StagingCatalogue" collection
- * @method Doctrine_Collection getStagingGtu()                     Returns the current record's "StagingGtu" collection
- * @method Imports             setId()                             Sets the current record's "id" value
- * @method Imports             setFilename()                       Sets the current record's "filename" value
- * @method Imports             setUserRef()                        Sets the current record's "user_ref" value
- * @method Imports             setFormat()                         Sets the current record's "format" value
- * @method Imports             setCollectionRef()                  Sets the current record's "collection_ref" value
- * @method Imports             setState()                          Sets the current record's "state" value
- * @method Imports             setCreatedAt()                      Sets the current record's "created_at" value
- * @method Imports             setUpdatedAt()                      Sets the current record's "updated_at" value
- * @method Imports             setInitialCount()                   Sets the current record's "initial_count" value
- * @method Imports             setIsFinished()                     Sets the current record's "is_finished" value
- * @method Imports             setErrorsInImport()                 Sets the current record's "errors_in_import" value
- * @method Imports             setTemplateVersion()                Sets the current record's "template_version" value
- * @method Imports             setExcludeInvalidEntries()          Sets the current record's "exclude_invalid_entries" value
- * @method Imports             setCreationDate()                   Sets the current record's "creation_date" value
- * @method Imports             setCreationDateMask()               Sets the current record's "creation_date_mask" value
- * @method Imports             setWorking()                        Sets the current record's "working" value
- * @method Imports             setMimeType()                       Sets the current record's "mime_type" value
- * @method Imports             setGtuIncludeDate()                 Sets the current record's "gtu_include_date" value
- * @method Imports             setGtuTagsInMerge()                 Sets the current record's "gtu_tags_in_merge" value
- * @method Imports             setSensitiveInformationWithheld()   Sets the current record's "sensitive_information_withheld" value
- * @method Imports             setSourceDatabase()                 Sets the current record's "source_database" value
- * @method Imports             setTaxonomyKingdom()                Sets the current record's "taxonomy_kingdom" value
- * @method Imports             setSpecimenTaxonomyRef()            Sets the current record's "specimen_taxonomy_ref" value
- * @method Imports             setHistoryTaxonomy()                Sets the current record's "history_taxonomy" value
- * @method Imports             setCollectionRefForGtu()            Sets the current record's "collection_ref_for_gtu" value
- * @method Imports             setEnforceCodeUnicity()             Sets the current record's "enforce_code_unicity" value
- * @method Imports             setCollections()                    Sets the current record's "Collections" value
- * @method Imports             setUsers()                          Sets the current record's "Users" value
- * @method Imports             setStaging()                        Sets the current record's "Staging" collection
- * @method Imports             setStagingCatalogue()               Sets the current record's "StagingCatalogue" collection
- * @method Imports             setStagingGtu()                     Sets the current record's "StagingGtu" collection
+ * @method integer             getId()                      Returns the current record's "id" value
+ * @method string              getFilename()                Returns the current record's "filename" value
+ * @method integer             getUserRef()                 Returns the current record's "user_ref" value
+ * @method string              getFormat()                  Returns the current record's "format" value
+ * @method integer             getCollectionRef()           Returns the current record's "collection_ref" value
+ * @method string              getState()                   Returns the current record's "state" value
+ * @method string              getCreatedAt()               Returns the current record's "created_at" value
+ * @method string              getUpdatedAt()               Returns the current record's "updated_at" value
+ * @method integer             getInitialCount()            Returns the current record's "initial_count" value
+ * @method boolean             getIsFinished()              Returns the current record's "is_finished" value
+ * @method string              getErrorsInImport()          Returns the current record's "errors_in_import" value
+ * @method string              getTemplateVersion()         Returns the current record's "template_version" value
+ * @method boolean             getExcludeInvalidEntries()   Returns the current record's "exclude_invalid_entries" value
+ * @method string              getTaxonomyName()            Returns the current record's "taxonomy_name" value
+ * @method boolean             getIsReferenceTaxonomy()     Returns the current record's "is_reference_taxonomy" value
+ * @method string              getSourceTaxonomy()          Returns the current record's "source_taxonomy" value
+ * @method string              getCreationDate()            Returns the current record's "creation_date" value
+ * @method integer             getCreationDateMask()        Returns the current record's "creation_date_mask" value
+ * @method string              getDefinitionTaxonomy()      Returns the current record's "definition_taxonomy" value
+ * @method string              getUrlWebsiteTaxonomy()      Returns the current record's "url_website_taxonomy" value
+ * @method string              getUrlWebserviceTaxonomy()   Returns the current record's "url_webservice_taxonomy" value
+ * @method integer             getSpecimenTaxonomyRef()     Returns the current record's "specimen_taxonomy_ref" value
+ * @method boolean             getWorking()                 Returns the current record's "working" value
+ * @method string              getMimeType()                Returns the current record's "mime_type" value
+ * @method string              getTaxonomyKingdom()         Returns the current record's "taxonomy_kingdom" value
+ * @method boolean             getMergeGtu()                Returns the current record's "merge_gtu" value
+ * @method Collections         getCollections()             Returns the current record's "Collections" value
+ * @method Users               getUsers()                   Returns the current record's "Users" value
+ * @method Doctrine_Collection getStaging()                 Returns the current record's "Staging" collection
+ * @method Doctrine_Collection getStagingCatalogue()        Returns the current record's "StagingCatalogue" collection
+ * @method Imports             setId()                      Sets the current record's "id" value
+ * @method Imports             setFilename()                Sets the current record's "filename" value
+ * @method Imports             setUserRef()                 Sets the current record's "user_ref" value
+ * @method Imports             setFormat()                  Sets the current record's "format" value
+ * @method Imports             setCollectionRef()           Sets the current record's "collection_ref" value
+ * @method Imports             setState()                   Sets the current record's "state" value
+ * @method Imports             setCreatedAt()               Sets the current record's "created_at" value
+ * @method Imports             setUpdatedAt()               Sets the current record's "updated_at" value
+ * @method Imports             setInitialCount()            Sets the current record's "initial_count" value
+ * @method Imports             setIsFinished()              Sets the current record's "is_finished" value
+ * @method Imports             setErrorsInImport()          Sets the current record's "errors_in_import" value
+ * @method Imports             setTemplateVersion()         Sets the current record's "template_version" value
+ * @method Imports             setExcludeInvalidEntries()   Sets the current record's "exclude_invalid_entries" value
+ * @method Imports             setTaxonomyName()            Sets the current record's "taxonomy_name" value
+ * @method Imports             setIsReferenceTaxonomy()     Sets the current record's "is_reference_taxonomy" value
+ * @method Imports             setSourceTaxonomy()          Sets the current record's "source_taxonomy" value
+ * @method Imports             setCreationDate()            Sets the current record's "creation_date" value
+ * @method Imports             setCreationDateMask()        Sets the current record's "creation_date_mask" value
+ * @method Imports             setDefinitionTaxonomy()      Sets the current record's "definition_taxonomy" value
+ * @method Imports             setUrlWebsiteTaxonomy()      Sets the current record's "url_website_taxonomy" value
+ * @method Imports             setUrlWebserviceTaxonomy()   Sets the current record's "url_webservice_taxonomy" value
+ * @method Imports             setSpecimenTaxonomyRef()     Sets the current record's "specimen_taxonomy_ref" value
+ * @method Imports             setWorking()                 Sets the current record's "working" value
+ * @method Imports             setMimeType()                Sets the current record's "mime_type" value
+ * @method Imports             setTaxonomyKingdom()         Sets the current record's "taxonomy_kingdom" value
+ * @method Imports             setMergeGtu()                Sets the current record's "merge_gtu" value
+ * @method Imports             setCollections()             Sets the current record's "Collections" value
+ * @method Imports             setUsers()                   Sets the current record's "Users" value
+ * @method Imports             setStaging()                 Sets the current record's "Staging" collection
+ * @method Imports             setStagingCatalogue()        Sets the current record's "StagingCatalogue" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -129,7 +126,7 @@ abstract class BaseImports extends DarwinModel
              ));
         $this->hasColumn('collection_ref', 'integer', null, array(
              'type' => 'integer',
-             'notnull' => true,
+             'notnull' => false,
              ));
         $this->hasColumn('state', 'string', null, array(
              'type' => 'string',
@@ -164,6 +161,17 @@ abstract class BaseImports extends DarwinModel
              'notnull' => true,
              'default' => false,
              ));
+        $this->hasColumn('taxonomy_name', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('is_reference_taxonomy', 'boolean', null, array(
+             'type' => 'boolean',
+             'default' => true,
+             ));
+        $this->hasColumn('source_taxonomy', 'string', null, array(
+             'type' => 'string',
+             'notnull' => false,
+             ));
         $this->hasColumn('creation_date', 'string', null, array(
              'type' => 'string',
              ));
@@ -171,42 +179,30 @@ abstract class BaseImports extends DarwinModel
              'type' => 'integer',
              'default' => 0,
              ));
+        $this->hasColumn('definition_taxonomy', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('url_website_taxonomy', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('url_webservice_taxonomy', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('specimen_taxonomy_ref', 'integer', null, array(
+             'type' => 'integer',
+             ));
         $this->hasColumn('working', 'boolean', null, array(
              'type' => 'boolean',
              ));
         $this->hasColumn('mime_type', 'string', null, array(
              'type' => 'string',
              ));
-        $this->hasColumn('gtu_include_date', 'boolean', null, array(
-             'type' => 'boolean',
-             'default' => false,
-             ));
-        $this->hasColumn('gtu_tags_in_merge', 'boolean', null, array(
-             'type' => 'boolean',
-             'default' => false,
-             ));
-        $this->hasColumn('sensitive_information_withheld', 'boolean', null, array(
-             'type' => 'boolean',
-             'default' => false,
-             ));
-        $this->hasColumn('source_database', 'string', null, array(
-             'type' => 'string',
-             ));
         $this->hasColumn('taxonomy_kingdom', 'string', null, array(
              'type' => 'string',
              ));
-        $this->hasColumn('specimen_taxonomy_ref', 'integer', null, array(
-             'type' => 'integer',
-             ));
-        $this->hasColumn('history_taxonomy', 'string', null, array(
-             'type' => 'string',
-             ));
-        $this->hasColumn('collection_ref_for_gtu', 'integer', null, array(
-             'type' => 'integer',
-             'notnull' => true,
-             ));
-        $this->hasColumn('enforce_code_unicity', 'boolean', null, array(
+        $this->hasColumn('merge_gtu', 'boolean', null, array(
              'type' => 'boolean',
+             'default' => false,
              ));
     }
 
@@ -226,10 +222,6 @@ abstract class BaseImports extends DarwinModel
              'foreign' => 'import_ref'));
 
         $this->hasMany('StagingCatalogue', array(
-             'local' => 'id',
-             'foreign' => 'import_ref'));
-
-        $this->hasMany('StagingGtu', array(
              'local' => 'id',
              'foreign' => 'import_ref'));
     }

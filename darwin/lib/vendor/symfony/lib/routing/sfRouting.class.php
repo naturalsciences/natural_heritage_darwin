@@ -14,25 +14,20 @@
  * @package    symfony
  * @subpackage routing
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfRouting.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
 abstract class sfRouting
 {
-  /** @var sfEventDispatcher */
-  protected $dispatcher = null;
-  /** @var sfCache|null */
-  protected $cache = null;
-  protected $defaultParameters = array();
-  protected $options = array();
+  protected
+    $dispatcher        = null,
+    $cache             = null,
+    $defaultParameters = array(),
+    $options           = array();
 
   /**
    * Class constructor.
    *
    * @see initialize()
-   *
-   * @param sfEventDispatcher $dispatcher
-   * @param sfCache           $cache
-   * @param array             $options
    */
   public function __construct(sfEventDispatcher $dispatcher, sfCache $cache = null, $options = array())
   {
@@ -137,15 +132,6 @@ abstract class sfRouting
   abstract public function getRoutes();
 
   /**
-   * Gets route from given name
-   *
-   * @param  string $name The route name
-   *
-   * @return sfRoute
-   */
-  abstract public function getRoute($name);
-
-  /**
    * Sets the compiled route array.
    *
    * @param  array $routes  The route array
@@ -246,10 +232,9 @@ abstract class sfRouting
   /**
    * Listens to the request.filter_parameters event.
    *
-   * @param  sfEvent $event An sfEvent instance
-   * @param  array   $parameters
+   * @param  sfEvent $event       An sfEvent instance
    *
-   * @return array $parameters  An array of parameters for the event
+   * @return array   $parameters  An array of parameters for the event
    */
   public function filterParametersEvent(sfEvent $event, $parameters)
   {

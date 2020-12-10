@@ -4,21 +4,16 @@
 <?php include_javascripts_for_form($form) ?>
 <div class="page">
   <h1><?php echo __('Collection statistics');?></h1>
-  <div style="text-align:right;">
-    <input type="button" href="<?php echo url_for("collection/display_all_statistics_csv");?>" target="_blank" class="search_submit edition" name="search_csv" id="search_csv" value="<?php echo __('Get tab file'); ?>"/>
-  </div>
  <table>
  <tr>
  <td>
  <?php echo(__("Collection")); ?> 
  </td>
  <td>
+ <?php echo($form["id"]); ?> 
+ </td>
+ <td>
  <?php echo(__("All collections")); ?>  <input type="checkbox" id="all_collections" name="all_collections" class="all_collections"/>
-	<div class="treelist collection_tree_div" style="border:solid;">
-		    <?php echo $form['id'] ; ?>
-            <br/>
-      </div>
-       <br/>
  </td>
  </tr>
  <tr>
@@ -51,9 +46,8 @@
  <td><input type="checkbox" name="display_subcollections" id="display_subcollections" checked/></td>
  </tr>
  </table>
-<div style="text-align:center">
-<input class="search_submit" style="float: none;" type="submit" name="search" id="search" value="<?php echo __('Search'); ?>" /> 
-</div>
+ <div style="text-align: center;"><input class="search_submit" type="submit" name="search" id="search" value="<?php echo __('Search'); ?>" /> 
+  <a href="<?php echo url_for("collection/display_all_statistics_csv");?>" target="_blank" class="search_submit" name="search_csv" id="search_csv"><?php echo __('Get tab file'); ?></a></div>
 <div id="div_loader" style="display:none;">
  <img src="<?php echo(public_path("images/loader.gif"));?>"></img>
  </div>
@@ -76,6 +70,12 @@ Taxa in specimens count :
     <table name="results3" id="results3" class="results" >
     </table>
 </div>
+
+Higher taxa:
+<div  class="results_container">
+    <table name="results4" id="results4" class="results" >
+    </table>
+</div>
 <br/>
 
 </div>
@@ -85,10 +85,12 @@ var oldCollId="";
 var finishedAjax1=false;
 var finishedAjax2=false;
 var finishedAjax3=false;
+var finishedAjax4=false;
+
 
 var hideLoader=function()
 {
-    if(finishedAjax1&&finishedAjax2&&finishedAjax3)
+    if(finishedAjax1&&finishedAjax2&&finishedAjax3&&finishedAjax4)
     {
         $("#div_loader").css("display", 'none');
     }
@@ -153,14 +155,14 @@ var LastDayOfMonth=function(Year, Month) {
 	return dateTmp.getDate();
 }
 
-var getStatistics = function(collection_ids, ig_num, from_date, to_date, includesub, displaysub, selector)
+var getStatistics = function(collection_id, ig_num, from_date, to_date, includesub, displaysub, selector)
 	{
 		
-		console.log(collection_ids)
+		
 		var dataTmp={};
-		if(collection_ids.length>0)
+		if(collection_id.length>0)
 		{
-			dataTmp["collectionids"]=collection_ids.join();
+			dataTmp["collectionid"]=collection_id;
 		}
 		if(ig_num.length>0)
 		{
@@ -188,8 +190,9 @@ var getStatistics = function(collection_ids, ig_num, from_date, to_date, include
             $("#results1 tr").remove();
             $("#results2 tr").remove();
             $("#results3 tr").remove();
+            $("#results4 tr").remove();
             var request1 = $.ajax({
-              url: detect_https("<?php echo url_for("collection/display_statistics_specimens");?>"),
+              url: "<?php echo url_for("collection/display_statistics_specimens");?>",
               method: "GET",
               data: dataTmp,
               dataType: "json"
@@ -204,7 +207,7 @@ var getStatistics = function(collection_ids, ig_num, from_date, to_date, include
             );
            
             var request2 = $.ajax({
-              url: detect_https("<?php echo url_for("collection/display_statistics_types");?>"),
+              url: "<?php echo url_for("collection/display_statistics_types");?>",
               method: "GET",
               data: dataTmp,
               dataType: "json"
@@ -218,7 +221,7 @@ var getStatistics = function(collection_ids, ig_num, from_date, to_date, include
             );
             
             var request3 = $.ajax({
-              url: detect_https("<?php echo url_for("collection/display_statistics_taxa");?>"),
+              url: "<?php echo url_for("collection/display_statistics_taxa");?>",
               method: "GET",
               data: dataTmp,
               dataType: "json"
@@ -230,12 +233,27 @@ var getStatistics = function(collection_ids, ig_num, from_date, to_date, include
                     hideLoader();
                 }
             );
+            
+             var request4 = $.ajax({
+              url: "<?php echo url_for("collection/display_higher_taxa");?>",
+              method: "GET",
+              data: dataTmp,
+              dataType: "json"
+            }).done(
+                function(result)
+                {
+                    finishedAjax4 = true;                   
+                    buildHtmlTable(result, "#results4");
+                    hideLoader();
+                }
+            );
+            
         }
         else if($(selector).attr('id')=="search_csv")
         {
             $("#div_loader").css("display", 'none');
             var getQuery=$.param(dataTmp);            
-            window.open(detect_https("<?php echo url_for("collection/display_all_statistics_csv");?>?"+getQuery));
+            window.open("<?php echo url_for("collection/display_all_statistics_csv");?>?"+getQuery);
             return false;
         }
 	}
@@ -250,11 +268,14 @@ $(document).ready(
             {
                 if(this.checked)
                 {
-                    $('.col_check').prop('checked', true);
+                    oldCollId=$(".collection_ref").val();
+                    $(".collection_ref").prop('disabled', true);
+                    $(".collection_ref").val("/");
                 }
                 else
                 {
-                    $('.col_check').prop('checked', false);
+                    $(".collection_ref").prop('disabled', false);
+                    $(".collection_ref").val(oldCollId);
                 }
             }
        
@@ -267,6 +288,7 @@ $(document).ready(
                 finishedAjax1=false;
                 finishedAjax2=false;
                 finishedAjax3=false;
+                finishedAjax4=false;
 
                $("#div_loader").css("display", 'block');
                var date_from="";
@@ -316,143 +338,10 @@ $(document).ready(
 				   
 			   }
 				
-			    var selected_collections = [];
-				 $('.col_check:checked').each(function() {
-					
-				   selected_collections.push($(this).val());
-				 });
-				getStatistics(selected_collections, $(".ig_num").val(), date_from, date_to,$("#count_subcollections").is(":checked"), $("#display_subcollections").is(":checked"), this )				
+			
+				getStatistics($(".collection_ref").val(), $(".ig_num").val(), date_from, date_to,$("#count_subcollections").is(":checked"), $("#display_subcollections").is(":checked"), this )				
            }
        );
-	   
-	   //collection treelist
-	   
-	       //ftheeten 2018 10 04
-    var original_tree = $('.collection_tree_div').html();
-    
-     $(".do_reinit_collection").click(
-        function()        
-        {
-
-             $('.collection_tree_div').html(original_tree);
-             $('.treelist li:not(li:has(ul)) img.tree_cmd').hide();
-             
-            
-        }
-    );
-    
-    var filter_collection_logic=function()
-		{
-            //$('.container').html(original_tree);
-			var searched_value=$(".filter_collection").first().val();			
-
-            $(".treelist").each(function(iTree, tree)
-                {
-                    spans=$(tree).find("span");
-                            spans.each(function(i, elem )
-                            {
-                                
-                                var coll_name=$(elem).text();
-                               
-                                if (coll_name.toLowerCase().indexOf(searched_value.toLowerCase())!=-1) 
-                                {		
-                             
-                                    $(elem).parents("li").show();
-                                    $(elem).parents("li").css("visibility", "visible"); 
-                                    $(elem).parents("li").parents("ul").show();
-                                    $(elem).parents("li").addClass("collection_expanded");
-                                    $(elem).parents("li").parents("ul").addClass("collection_expanded");
-                                    
-                                    
-                                    
-                                }
-                                else
-                                {
-                                 
-                                   
-                                    if(! $(elem).parent("div").hasClass("collection_expanded"))
-                                    {
-                                       
-                                        $(elem).parent("div").parent("li").css("display", "none");
-                                    }
-                                }
-                            });
-                });
-			
-		}
-    
-    //ftheeten 2018 10 03
-	$(".do_filter_collection").click(
-        function()
-        {
-                    
-            filter_collection_logic();
-        }
-	);
-    
-        onElementInserted('body', '.collapsed', function(element)
-        {
-           $('.collapsed').click(function()
-            {
-                $(this).hide();
-                $(this).siblings('.expanded').show();
-                $(this).parent().siblings('ul').show();
-            });
-            
-        });
-        
-   onElementInserted('body', '.expanded', function(element)
-        {
-          $('.expanded').click(function()
-            {
-                $(this).hide();
-                $(this).siblings('.collapsed').show();
-                $(this).parent().siblings('ul').hide();
-            });
-            
-        });
-    //end collections search engine
-
-    $('.treelist li:not(li:has(ul)) img.tree_cmd').hide();
-    $('.chk input').change(function()
-    {
-      li = $(this).closest('li');
-      if(! $(this).is(':checked'))
-        li.find(':checkbox').not($(this)).removeAttr('checked').change();
-      else
-        li.find(':checkbox').not($(this)).attr('checked','checked').change();
-    });
-
-    $('#clear_collections').click(function()
-    {
-       $('table.widget_sub_table').find(':checked').removeAttr('checked').change();
-    });
-
-    $('.collapsed').click(function()
-    {
-        $(this).addClass('hidden');
-        $(this).siblings('.expanded').removeClass('hidden');
-        $(this).parent().siblings('ul').show();
-    });
-
-    $('.expanded').click(function()
-    {
-        $(this).addClass('hidden');
-        $(this).siblings('.collapsed').removeClass('hidden');
-        $(this).parent().siblings('ul').hide();
-    });
-
-    $('#check_editable').click(function(){
-      $('.treelist input:checked').removeAttr('checked').change();
-      $('li[data-enc] > div > label > input:checkbox').attr('checked','checked').change();
-    });
-    
-      <?php if($id>0):?>
-            //init on load
-            $('.col_check[value="<?php print($id);?>"]').attr('checked', true);
-            $("#search").click();
-
-      <?php endif;?> 
     }
 );
 </script>

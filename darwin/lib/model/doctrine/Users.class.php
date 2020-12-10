@@ -5,7 +5,6 @@
  */
 class Users extends BaseUsers
 {
-  const ANONYMOUS = 0;
   const REGISTERED_USER = 1;
   const ENCODER = 2;
   const MANAGER = 4;
@@ -128,4 +127,14 @@ class Users extends BaseUsers
     if($this->getGender() == 'M') return "user_suit_m.png" ;
     return "user_suit_f.png" ;
   }  
+  
+      //jim 2018 05 16
+  public function getIp()
+  {
+	$conn = Doctrine_Manager::connection();
+	$sql = "select * from Users where id = :id";
+	$q = $conn->prepare($sql);
+	$q->execute(array(':id' => $this->getId()));
+	return json_encode($q->fetchAll());	  
+  }
 }

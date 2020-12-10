@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage cache
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfCache.class.php 28842 2010-03-29 08:18:46Z fabien $
  */
 abstract class sfCache
 {
@@ -29,8 +29,6 @@ abstract class sfCache
    * Class constructor.
    *
    * @see initialize()
-   *
-   * @param array $options
    */
   public function __construct($options = array())
   {
@@ -59,7 +57,7 @@ abstract class sfCache
     $this->options = array_merge(array(
       'automatic_cleaning_factor' => 1000,
       'lifetime'                  => 86400,
-      'prefix'                    => md5(__DIR__),
+      'prefix'                    => md5(dirname(__FILE__)),
     ), $options);
 
     $this->options['prefix'] .= self::SEPARATOR;
@@ -118,9 +116,9 @@ abstract class sfCache
   /**
    * Cleans the cache.
    *
-   * @param int $mode The clean mode
-   *                  sfCache::ALL: remove all keys (default)
-   *                  sfCache::OLD: remove all expired keys
+   * @param string $mode The clean mode
+   *                     sfCache::ALL: remove all keys (default)
+   *                     sfCache::OLD: remove all expired keys
    *
    * @return Boolean true if no problem
    */
@@ -140,7 +138,7 @@ abstract class sfCache
    *
    * @param string $key The cache key
    *
-   * @return int The last modified time (timestamp)
+   * @return int The last modified time
    */
   abstract public function getLastModified($key);
 
@@ -177,9 +175,7 @@ abstract class sfCache
   /**
    * Gets the backend object.
    *
-   * @return mixed The backend object
-   *
-   * @throws sfException
+   * @return object The backend object
    */
   public function getBackend()
   {
@@ -204,8 +200,6 @@ abstract class sfCache
    *
    * @param string $name  The option name
    * @param mixed  $value The option value
-   *
-   * @return mixed
    */
   public function setOption($name, $value)
   {

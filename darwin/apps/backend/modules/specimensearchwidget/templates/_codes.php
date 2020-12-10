@@ -1,10 +1,22 @@
 <div>
 <table id="code_search" class="full_size">
   <thead>
+	<!--added ftheeten RMCA 2015 01 07-->
+    <tr>
+      <td colspan="6" style="text-align:center">
+		Valid label:<br/><div style="display: inline-block;text-align:center"><?php echo $form['valid_label'];?></div></td>
+     </td>
+	</tr>
     <tr>
       <td colspan="6">
 		Boolean Selector:<?php echo $form['code_boolean'];?></td>
-     </td>    
+     </td>
+	</tr>
+	<tr>
+	   <td colspan="6">
+		<div style="font-weight:bold; text-align:center; vertical-align:middle; padding-bottom:10px;">Exact match:<?php echo $form['code_exact_match'];?></div>
+		</td>
+	</tr>    
   </thead>
   <tbody>
     <?php foreach($form['Codes'] as $i => $code):?>
@@ -14,46 +26,36 @@
         <td colspan="2"></td>
         <td colspan="5"><?php echo image_tag('add_blue.png'). link_to(__('Add code'),'specimensearch/addCode', array('class'=>'add_search_code'));?></td>
       </tr>
-     </tbody> 
-    </table>
-</div>
+   </tbody>
+</table>
 <div>
 <table class="full_size">
     <thead>
-     <!--ftheeten 2018 11 22--->
-        <tr>
+         <tr>
             <th><?php echo $form['codes_list']->renderLabel();?> : </th>
             <th style="font-style: italic;"><?php echo $form['exact_codes_list']->renderLabel();?> :</th>
-          </tr>
-     </thead>
-     <tbody>
+         </tr>
+    </thead>
+    <tbody>
+      <!--ftheeten 2018 11 22--->
         <tr>
-           <td><select name="select2_codes" id="select2_codes" multiple="multiple"></select><?php echo $form['codes_list'];?></td>        
+            <td><select name="select2_codes" id="select2_codes" multiple="multiple"></select><?php echo $form['codes_list'];?></td>        
             <td><?php echo $form['exact_codes_list'];?></td>        
         </tr>
-      <!---->
+        <!---->
   </tbody>
 </table>
 </div>
- 
 <script  type="text/javascript">
 
-
-
+var autocomplete_rmca_array=Array();
+var select2_input;
 function checkBetween()
 {
   if( $('#code_search tbody .between_col:visible').length)
-  {
     $('#code_search thead .between_col').show();
-    //console.log("between");
-    //$('#code_search thead .autocomplete_for_code').hide();
-  }
   else
-  {
     $('#code_search thead .between_col').hide();
-    //    console.log("regular");
-    //$('#code_search thead .autocomplete_for_code').show();
-  }
 }
 
 $(document).ready(function () {
@@ -70,7 +72,6 @@ $(document).ready(function () {
       {
         $('#code_search > tbody .and_row').before(html);
         $('#code_search > tbody tr:not(.and_row):last .between_col').hide();
-        $('#code_search > tbody tr:not(.and_row):last .standard_code_col').show();
         showAfterRefresh('#codes');
       }
     });
@@ -82,7 +83,6 @@ $(document).ready(function () {
     tr = $(this).closest('tr');
     tr.find('.next').show();
     tr.find('.between_col').hide();
-    console.log("SHOW");
     tr.find('.autocomplete_for_code').show();
     checkBetween();
     $(this).hide();
@@ -98,12 +98,8 @@ $(document).ready(function () {
     tr.find('.prev').show();
     tr.find('.between_col').show();
     $('#code_search thead .between_col').show();
-    console.log("HIDE");
     tr.find('.autocomplete_for_code').hide();
     $(this).hide();
-    //table = tr.closest('table');    
-    //table.find('.standard_code_col').hide();
-    
   })
 
   $('#code_search tbody tr').each(function(i)
@@ -113,7 +109,8 @@ $(document).ready(function () {
   });
   checkBetween();
   
-    //ftheeten 2015 06 08
+  
+  //ftheeten 2015 06 08
   //autocomplete for codes number
   
   function initCollectionCheck()
@@ -131,7 +128,10 @@ $(document).ready(function () {
         }
   );
   
-  var getCodeUrl=function()
+    
+    //ftheeten 2018 11 22
+    
+       var getCodeUrl=function()
        {
             return "<?php echo(url_for('catalogue/codesAutocomplete?'));?>";
        };
@@ -225,10 +225,11 @@ $(document).ready(function () {
                 <?php else:?>
                     $("#specimen_search_filters_exact_codes_list").prop("checked",false);
                 <?php endif;?>
-            <?php endif;?>             
+            <?php endif;?>        
         <?php endif;?>
         
         initCollectionCheck();
+       
 
 });
 </script>

@@ -11,22 +11,28 @@ class GtuForm extends BaseGtuForm
 {
   public function configure()
   {
-  
-  	static $nagoyaanswers = array(
-		"yes" 		=> "Yes",
-		"no" 		=> "No",
-		"not defined"     	=> "Not defined"
-	);
     $this->useFields(array('code', 'gtu_from_date', 'gtu_to_date', 'latitude', 'longitude',
-      'lat_long_accuracy', 'elevation', 'elevation_accuracy',
-        //ftheeten 2018 08 08
-      'coordinates_source',
-	  'latitude_dms_degree', 'latitude_dms_minutes', 'latitude_dms_seconds','longitude_dms_degree', 'longitude_dms_minutes', 
-	  'longitude_dms_seconds', 'latitude_utm', 'longitude_utm', 'utm_zone', 'latitude_dms_direction', 'longitude_dms_direction',
-	  'nagoya' ));
+      'lat_long_accuracy', 'elevation', 'elevation_accuracy', 'coordinates_source',
+	  'latitude_dms_degree', 'latitude_dms_minutes', 'latitude_dms_seconds','longitude_dms_degree', 'longitude_dms_minutes',
+      'longitude_dms_seconds', 'latitude_utm', 'longitude_utm', 'utm_zone', 'latitude_dms_direction',
+      'longitude_dms_direction', 'elevation_unit'
+       ,'iso3166', 'iso3166_subdivision','nagoya' ));
 
     $this->widgetSchema['code'] = new sfWidgetFormInput();
-    $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')), intval(sfConfig::get('dw_yearRangeMin')));
+    //ftheeten 2018 04/05
+    $this->widgetSchema['iso3166'] = new sfWidgetFormInputText();
+    $this->widgetSchema['iso3166']->setAttributes(array('class'=>'iso3166_value vsmall_size', 'readonly'=>'readonly', 'style'=>'background-color:grey'));
+    $this->widgetSchema['iso3166_subdivision'] = new sfWidgetFormInputText();;
+    $this->widgetSchema['iso3166_subdivision']->setAttributes(array('class'=>'iso3166_subdivision_value vsmall_size', 'readonly'=>'readonly', 'style'=>'background-color:grey'));
+    $this->widgetSchema['iso3166_text'] = new sfWidgetFormInputText();
+    $this->widgetSchema['iso3166_text']->setLabel(' Country code (ISO 3166)');
+    $this->widgetSchema['iso3166_text']->setAttributes(array('class'=>'iso3166'));
+    $this->validatorSchema['iso3166_text'] = new sfValidatorPass();
+    $this->widgetSchema['iso3166_subdivision_text'] = new sfWidgetFormInputText();
+    $this->widgetSchema['iso3166_subdivision_text']->setAttributes(array('class'=>'iso3166_subdivision'));
+    $this->validatorSchema['iso3166_subdivision_text'] = new sfValidatorPass();
+	//JMHerpers 2018 02 15 Inversion of max and Min to have most recent dates on top
+	$yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')),intval(sfConfig::get('dw_yearRangeMin')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
     $dateText = array('year'=>'yyyy', 'month'=>'mm', 'day'=>'dd');
     $minDate = new FuzzyDateTime(strval(min($yearsKeyVal).'/01/01'));
@@ -79,10 +85,11 @@ class GtuForm extends BaseGtuForm
       ),
       array('invalid' => 'Date provided is not valid',)
     );
-    
-    	//this group ftheeten 2016 02 05
-    $this->widgetSchema['coordinates_source']= new sfWidgetFormChoice(array('choices'=>array('DD'=> 'Decimal', 'DMS'=>'Degrees Minutes Seconds', 'UTM'=>'UTM', 'ISSUE'=>'Issue (to check)')));
-	$this->widgetSchema['coordinates_source']->setAttributes(array('class'=>'coordinates_source'));
+	
+	
+		//this group ftheeten 2016 02 05
+	$this->widgetSchema['coordinates_source']= new sfWidgetFormChoice(array('choices'=>array('DD'=> 'Decimal', 'DMS'=>'Degrees Minutes Seconds', 'UTM'=>'UTM', 'ISSUE'=>'Issue (to check)')));
+		$this->widgetSchema['coordinates_source']->setAttributes(array('class'=>'coordinates_source'));
 	$this->widgetSchema['coordinates_source']->setDefault(array(0));
 	//$this->validatorSchema['coordinates_source'] = new sfValidatorPass();
 	$this->widgetSchema['latitude']->setAttributes(array('class'=>'convertDMS2DDLat convertDD2DMSGeneral'));
@@ -252,14 +259,28 @@ class GtuForm extends BaseGtuForm
 	
 	)));
     
-    $this->widgetSchema['utm_zone']->setAttributes(array('class'=>'UTM2DDGeneralOnLeave UTMZone'));
+    
+    
+    //new sfWidgetFormInputText();
+	$this->widgetSchema['utm_zone']->setAttributes(array('class'=>'UTM2DDGeneralOnLeave UTMZone'));
+	//$this->validatorSchema['utm_zone'] = new sfValidatorPass();
+	//end group
+    
+    //ftheeten 2016 07 05
+    $this->widgetSchema['ecology']=new sfWidgetFormTextarea();
+	$this->validatorSchema['ecology'] = new sfValidatorPass();
 
     $this->widgetSchema['lat_long_accuracy']->setLabel('Accuracy');
     $this->widgetSchema['elevation_accuracy']->setLabel('Accuracy');
+    //$this->widgetSchema['elevation_unit'] = new sfWidgetFormInputText(array(),array('style'=>'width:10px'));
+    // 2018 02 20 JMHerpers remove array('' =>''
+	$this->widgetSchema['elevation_unit'] = new  sfWidgetFormChoice(array('choices' => array('m' => 'm', 'ft'=>'ft')));
+    $this->widgetSchema['elevation_unit']->setLabel('Elevation Unit');
+    //$this->validatorSchema['elevation_unit'] = new sfValidatorString();
     $this->validatorSchema['latitude'] = new sfValidatorNumber(array('required'=>false,'trim' => true, 'min' => '-90', 'max'=>'90'));
     $this->validatorSchema['longitude'] = new sfValidatorNumber(array('required'=>false,'trim' => true, 'min' => '-180', 'max'=>'180'));
     $this->validatorSchema['lat_long_accuracy'] = new sfValidatorNumber(array('required'=>false,'trim' => true, 'min' => '0.0000001'));
-    $this->validatorSchema['elevation_accuracy'] = new sfValidatorNumber(array('required'=>false, 'trim' => true, 'min' => '0.0000001'));
+    $this->validatorSchema['elevation_accuracy'] = new sfValidatorNumber(array('required'=>false, 'trim' => true, 'min' => '0'));
     $this->validatorSchema->setPostValidator(
       new sfValidatorAnd(array(
         new sfValidatorSchemaCompare(
@@ -269,92 +290,48 @@ class GtuForm extends BaseGtuForm
           array('throw_global_error' => true),
           array('invalid'=>'The "begin" date cannot be above the "end" date.')
         ),
-        new sfValidatorCallback(array('callback'=> array($this, 'checkLatLong'))),
-        new sfValidatorCallback(array('callback'=> array($this, 'checkElevation'))),
-        new sfValidatorCallback(array('callback' => array($this, 'checkDateNoBound')))
+        //new sfValidatorCallback(array('callback'=> array($this, 'checkLatLong'))),
+        //new sfValidatorCallback(array('callback'=> array($this, 'checkElevation'))),
+        new sfValidatorCallback(array('callback'=> array($this, 'checkElevationUnit')))
       )
     ));
-    
 
-
-     $this->widgetSchema['temporal_information'] =  new sfWidgetFormChoice(array(
-      'choices' =>  $this->getObject()->getRelatedTemporalInformationMaskedList()  
-    ));
-    
-    $this->validatorSchema['temporal_information'] = new sfValidatorPass();
-    
-    
-    $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')), intval(sfConfig::get('dw_yearRangeMin')));
-    $years = array_combine($yearsKeyVal, $yearsKeyVal);
-    $dateText = array('year'=>'yyyy', 'month'=>'mm', 'day'=>'dd', 'hour'=>'hh', 'minute'=>'mm', 'second'=>'ss');
-    $minDate = new FuzzyDateTime(strval('0001/01/01'));
-    $maxDate = new FuzzyDateTime(strval(max($yearsKeyVal).'/12/31'));
-    $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
-    $dateUpperBound = new FuzzyDateTime(sfConfig::get('dw_dateUpperBound'));
-    $this->widgetSchema['new_from_date'] = new widgetFormJQueryFuzzyDate(array(
-      'culture'=>$this->getCurrentCulture(),
-      'image'=>'/images/calendar.gif',
-      'format' => '%day%/%month%/%year%',
-      'years' => $years,
-      'empty_values' => $dateText,
-      'with_time' => true
-      ),
-      array('class' => 'from_date')
-    );
-
-    $this->widgetSchema['new_to_date'] = new widgetFormJQueryFuzzyDate(array(
-      'culture'=>$this->getCurrentCulture(),
-      'image'=>'/images/calendar.gif',
-      'format' => '%day%/%month%/%year%',
-      'years' => $years,
-      'empty_values' => $dateText,
-      'with_time' => true
-      ),
-      array('class' => 'to_date')
-    );
-
-    $this->validatorSchema['new_from_date'] = new fuzzyNullableDateValidator(array(
-      'required' => false,
-      'from_date' => true,
-      'min' => $minDate,
-      'max' => $maxDate,
-      'empty_value' => $dateLowerBound,
-      'with_time' => true
-      ),
-      array('invalid' => 'Date provided is not valid',)
-    );
-
-    $this->validatorSchema['new_to_date'] = new fuzzyNullableDateValidator(array(
-      'required' => false,
-      'from_date' => false,
-      'min' => $minDate,
-      'max' => $maxDate,
-      'empty_value' => $dateUpperBound,
-      'with_time' => true
-      ),
-      array('invalid' => 'Date provided is not valid',)
-    );
-    
 	//jmherpers 20190508
-    $this->widgetSchema['nagoya'] = new sfWidgetFormChoice(array(
+	//$this->widgetSchema['nagoya'] = new sfWidgetFormInputCheckbox(array ('default' => 'true'));
+    //$this->validatorSchema['nagoya'] = new sfValidatorBoolean() ;
+	
+	//JMHerpers 4/9/2019
+	static $nagoyaanswers = array(
+		"yes" 		=> "Yes",
+		"no" 		=> "No",
+		"not defined"     	=> "Not defined"
+	);
+ 
+	$this->widgetSchema['nagoya'] = new sfWidgetFormChoice(array(
       'choices' =>  $nagoyaanswers,
     ));
 	$this->setDefault('nagoya', "not defined");
-	$this->validatorSchema['nagoya'] = new sfValidatorChoice(array('choices' => array_keys($nagoyaanswers), 'required' => true));
 	
-    $this->widgetSchema['delete_mode'] = new sfWidgetFormInputCheckbox();
-
-    $this->validatorSchema['delete_mode'] = new sfValidatorPass();
-
-
     $subForm = new sfForm();
     $this->embedForm('newVal',$subForm);
     $this->embedRelation('TagGroups');
-    
-   
-
-         
   }
+
+
+  //pvignaux 2016/03/04
+  public function checkElevationUnit($validator, $values)
+  {
+
+    if($values['elevation'] != '' && $values['elevation_unit'] == '')
+    {
+   
+ $error = new sfValidatorError($validator, 'You must enter an unit for the elevation.' );
+      throw new sfvalidatorErrorSchema($validator, array('elevation_unit' => $error));
+
+    }
+    return $values;
+  }
+
 
   public function checkElevation($validator, $values)
   {
@@ -377,11 +354,12 @@ class GtuForm extends BaseGtuForm
         if($values['latitude'] == '') $field = 'latitude';
         throw new sfvalidatorErrorSchema($validator, array($field => $error));
       }
-      if($values['lat_long_accuracy'] == '')
+	  //ftheeten 2016 02 05
+      /*if($values['lat_long_accuracy'] == '')
       {
         $error = new sfValidatorError($validator, 'You must enter an accuracy for your position');
         throw new sfvalidatorErrorSchema($validator, array('lat_long_accuracy' => $error));
-      }
+      }*/
     }
     return $values;
   }
@@ -403,10 +381,8 @@ class GtuForm extends BaseGtuForm
       $this->embedForm('newVal', $this->embeddedForms['newVal']);
    }
 
-
     public function bind(array $taintedValues = null, array $taintedFiles = null)
     {
-
       if(isset($taintedValues['newVal']))
       {
         foreach($taintedValues['newVal'] as $key=>$newVal)
@@ -417,23 +393,12 @@ class GtuForm extends BaseGtuForm
           }
         }
       }
-	  
-
-       //ftheeten 2019 03 08
-      //$this->saveDate($taintedValues, $taintedFiles);
-        $this->deleteDate($taintedValues, $taintedFiles);
-      //ftheeten 2018 11 29
-
-
       parent::bind($taintedValues, $taintedFiles);
-     
-      
     }
 
-    public function saveObjectEmbeddedForms($con = null, $forms = null)
+    public function saveEmbeddedForms($con = null, $forms = null)
     {
 
-      $_SESSION["gtu_id"]= $this->getObject()->getId();
       if (null === $forms)
       {
         $value = $this->getValue('newVal');
@@ -455,80 +420,19 @@ class GtuForm extends BaseGtuForm
             unset($this->embeddedForms['TagGroups'][$name]);
           }
         }
-		
       }
-     
-      return parent::saveObjectEmbeddedForms($con, $forms);
+      return parent::saveEmbeddedForms($con, $forms);
     }
-    
 
-  
-  //ftheeten 2018 11 29
-  public function getEmbedRecords($emFieldName, $record_id = false)
-  {
-
-     if($record_id === false)
-     {
-        $record_id = $this->getObject()->getId();
-     }
-	 
-
-  }
-  
-    //ftheeten 2018 11 29
-  
-  public function getEmbedRelationForm($emFieldName, $values)
-  {   
-    
-  }
-  
-
-  /*public function saveDate(array $taintedValues = null, array $taintedFiles = null)
-  {
-    $this->getObject()->addNewTemporalInformation($taintedValues["new_from_date"], $taintedValues["new_to_date"]);
-  }*/
-  
-  public function deleteDate(array $taintedValues = null, array $taintedFiles = null)
-  {
-
-    if(isset($taintedValues["delete_mode"])&&is_numeric($taintedValues["temporal_information"]))
-    {
-
-        if(strtolower($taintedValues["delete_mode"])=="on")
-        {   
-            Doctrine_Core::getTable('TemporalInformation')->deleteTemporalInformation($taintedValues["temporal_information"]);
-        }
-    }
-  }
-  
-  public function checkDateNoBound($validator, $taintedValues, $arguments)
-  {
-    if(isset($taintedValues["delete_mode"])&&is_numeric($taintedValues["temporal_information"]))
-    {
- 
-        if(strtolower($taintedValues["delete_mode"])=="on")        {
-           
-            $cpt=Doctrine_Core::getTable('TemporalInformation')->countTemporalInformationBoundtoSpecimen($taintedValues["temporal_information"]);
-            
-            if($cpt>0)
-            {
-                
-                throw new sfValidatorError($validator, "Cannot delete date as it is linked to specimens");
-            }
-           
-        }
-	}
-
-     return $taintedValues;;
-  }
-  
   public function getJavaScripts()
   {
     $javascripts=parent::getJavascripts();
     $javascripts[]='/leaflet/leaflet.js';
     $javascripts[]='/js/map.js';
-    //ftheeten 2016 02 05
+	//ftheeten 2016 02 05
     $javascripts[]='/proj4js-2.3.12/proj4js-2.3.12/dist/proj4-src.js';
+		//ftheeten 2018 04 04
+	// $javascripts[]='openlayers/v4.x.x-dist/ol.js';
     return $javascripts;
   }
 

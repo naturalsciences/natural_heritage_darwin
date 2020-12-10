@@ -66,20 +66,20 @@ class igsActions extends DarwinActions
 
   public function executeEdit(sfWebRequest $request)
   {
-    $igs = Doctrine_Core::getTable('Igs')->find(array($request->getParameter('id')));
+    $igs = Doctrine::getTable('Igs')->find(array($request->getParameter('id')));
     $this->forward404Unless($igs, sprintf('Object I.G. does not exist (%s).', $request->getParameter('id')));
-    $this->no_right_col = Doctrine_Core::getTable('Igs')->testNoRightsCollections('ig_ref',$request->getParameter('id'), $this->getUser()->getId());
+    $this->no_right_col = Doctrine::getTable('Igs')->testNoRightsCollections('ig_ref',$request->getParameter('id'), $this->getUser()->getId());
     $this->form = new igsForm($igs);
     $this->loadWidgets();
   }
 
   public function executeUpdate(sfWebRequest $request)
   {
-    $igs = Doctrine_Core::getTable('Igs')->find(array($request->getParameter('id')));
+    $igs = Doctrine::getTable('Igs')->find(array($request->getParameter('id')));
 
     $this->forward404Unless($request->isMethod(sfRequest::POST) || $request->isMethod(sfRequest::PUT));
     $this->forward404Unless($igs, sprintf('Object I.G. does not exist (%s).', $request->getParameter('id')));
-    $this->no_right_col = Doctrine_Core::getTable('Igs')->testNoRightsCollections('ig_ref',$request->getParameter('id'), $this->getUser()->getId());
+    $this->no_right_col = Doctrine::getTable('Igs')->testNoRightsCollections('ig_ref',$request->getParameter('id'), $this->getUser()->getId());
     $this->form = new igsForm($igs);
 
     $this->processForm($request, $this->form);
@@ -90,7 +90,7 @@ class igsActions extends DarwinActions
   public function executeDelete(sfWebRequest $request)
   {
     $request->checkCSRFProtection();
-    $igs = Doctrine_Core::getTable('igs')->find(array($request->getParameter('id')));
+    $igs = Doctrine::getTable('igs')->find(array($request->getParameter('id')));
     $this->forward404Unless($igs, sprintf('Object I.G. does not exist (%s).', $request->getParameter('id')));
     try
     {
@@ -126,7 +126,7 @@ class igsActions extends DarwinActions
     // Triggers the search ID function
     if( $ig_num !== '')
     {
-      $igId = Doctrine_Core::getTable('Igs')->findOneByIgNum($ig_num);
+      $igId = Doctrine::getTable('Igs')->findOneByIgNum($ig_num);
       if ($igId)
         return $this->renderText($igId->getId());
       else
@@ -142,7 +142,7 @@ class igsActions extends DarwinActions
     // Triggers the search ID function
     if($request->getParameter('q', '') !== '' && $request->getParameter('limit', '') !== '')
     {
-      $igIds = Doctrine_Core::getTable('Igs')->fetchByIgNumLimited($request->getParameter('q'), $request->getParameter('limit'));
+      $igIds = Doctrine::getTable('Igs')->fetchByIgNumLimited($request->getParameter('q'), $request->getParameter('limit'));
       if ($igIds)
       {
         $values=array();
@@ -174,7 +174,6 @@ class igsActions extends DarwinActions
       if ($form->isValid())
       {
         $query = $form->getQuery()->orderby($this->orderBy . ' ' . $this->orderDir);
-	
         // Define in one line a pager Layout based on a PagerLayoutWithArrows object
         // This pager layout is based on a Doctrine_Pager, itself based on a customed Doctrine_Query object (call to the getIgLike method of IgTable class)
         $this->pagerLayout = new PagerLayoutWithArrows(new DarwinPager($query,
@@ -192,7 +191,7 @@ class igsActions extends DarwinActions
         $this->comments = array() ;
         foreach($this->igss as $i)
           $comment_ids[] = $i->getId();
-        $comments_groups  = Doctrine_Core::getTable('Comments')->getRelatedComment('igs',$comment_ids);
+        $comments_groups  = Doctrine::getTable('Comments')->getRelatedComment('igs',$comment_ids);
         foreach($comments_groups as $comment)
         {
           if(isset($this->comments[$comment->getRecordId()])) $this->comments[$comment->getRecordId()] .= '/'.$comment->getComment() ;
@@ -223,7 +222,7 @@ class igsActions extends DarwinActions
         $e = new DarwinPgErrorParser($ne);
         $extd_message = '';
         if(preg_match('/unique constraint "unq_igs"/i',$ne->getMessage())) {
-          $dup_igs = Doctrine_Core::getTable('Igs')->findDuplicate($form->getObject());
+          $dup_igs = Doctrine::getTable('Igs')->findDuplicate($form->getObject());
           if(!$dup_igs) {
             $this->logMessage('Duplicate Igs not found: '. json_encode($form->getObject()->toArray()), 'err');
           }
@@ -244,7 +243,7 @@ class igsActions extends DarwinActions
   }
   public function executeView(sfWebRequest $request)
   {
-    $this->igs = Doctrine_Core::getTable('igs')->find($request->getParameter('id'));
+    $this->igs = Doctrine::getTable('igs')->find($request->getParameter('id'));
     $this->forward404Unless($this->igs,'IG not Found');
     $this->form = new igsForm($this->igs);
     $this->loadWidgets();
@@ -269,73 +268,5 @@ class igsActions extends DarwinActions
         return($error);
       }
     }
-  }
-  
-  public function executeDownloadTab(sfWebRequest $request)
-  {
-	   if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
-	   
-	   $this->getResponse()->setHttpHeader('Content-type','text/tab-separated-values');
-		$this->getResponse()->setHttpHeader('Content-disposition','attachment; filename="darwin_ig_statistics.txt"');
-		$this->getResponse()->setHttpHeader('Pragma', 'no-cache');
-		$this->getResponse()->setHttpHeader('Expires', '0');
-		
-		$this->getResponse()->sendHttpHeaders(); //edited to add the missed sendHttpHeaders
-		//$this->getResponse()->setContent($returned);
-		$this->getResponse()->sendContent();   
-	    //$q=$query->execute();
-		//$items=$q->fetchAll(PDO::FETCH_ASSOC);
-		
-		 $form = new IgsFormFilter();
-		if($request->getParameter('searchIg','') !== '')
-		{
-		  // Bind form with data contained in searchIg array
-		  $form->bind($request->getParameter('searchIg'));
-		  // Test that the form binded is still valid (no errors)
-		  if ($form->isValid())
-		  {
-			$query = $form->getQuery();			
-			 $igss = $query->execute();
-			 $comment_ids = array();
-			 $comments=Array();
-			 foreach($igss as $i)
-			 {
-				
-				$comment_ids[] = $i->getId();
-			 }
-			$comments_groups  = Doctrine_Core::getTable('Comments')->getRelatedComment('igs',$comment_ids);
-			foreach($comments_groups as $comment)
-			{
-			  if(isset($comments[$comment->getRecordId()])) $comments[$comment->getRecordId()] .= '/'.$comment->getComment() ;
-			  else $comments[$comment->getRecordId()] = $comment->getComment() ;
-			}
-			
-			$result=Array();
-			foreach($igss as $igs)
-			{
-					$line=Array();
-					$line[]=$igs->getId();
-					$line[]=$igs->getIgNum();
-					$line[]=$igs->getIgDateMasked();
-					if(isset($comments[$igs->getId()]))
-					{
-						 $line[]=preg_replace('/\r\n?/', ".", $comments[$igs->getId()]);
-					}
-					else
-					{
-						$line[]="";
-					}
-					$line[]=$igs->countSpecimens();
-					$line[]=$igs->countSpecimensByCollectionsString();
-					$result[]=implode("\t", $line);
-			}
-			print(implode("\t", array("id","I.G. Num.", "date_html_mask", "Comments", "NB. specimens", "Specimens By collections"))."\r\n");
-			print(implode("\r\n", $result));
-			
-		  }
-		}
-		
-		return sfView::NONE;           
-	  
   }
 }

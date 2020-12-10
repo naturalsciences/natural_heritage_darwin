@@ -12,5 +12,7 @@ class TagsForm extends BaseTagsForm
 {
   public function configure()
   {
+  
+
   }
 }

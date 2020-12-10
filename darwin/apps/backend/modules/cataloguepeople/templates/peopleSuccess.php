@@ -9,7 +9,10 @@
   </tr>
   <tr>
     <th><?php echo $form['people_type']->renderLabel();?>:</th>
-    <td>
+    <td>    
+     <!--ftheeten : had to add referenced relation and record_id-->
+      <?php echo $form['referenced_relation'];?>
+      <?php echo $form['record_id'];?>
       <?php echo $form['people_type']->renderError(); ?>
       <?php echo $form['people_type'];?>
     </td>

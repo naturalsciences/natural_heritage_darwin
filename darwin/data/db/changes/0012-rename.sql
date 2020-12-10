@@ -54,5 +54,4 @@ alter table catalogue_relationships enable trigger trg_trk_log_table_catalogue_r
 
 drop function migrate_current_name();
 
-commit;
-
+--commit;

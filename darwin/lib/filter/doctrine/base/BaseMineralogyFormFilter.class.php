@@ -6,66 +6,51 @@
  * @package    darwin
  * @subpackage filter
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
  */
-abstract class BaseMineralogyFormFilter extends DarwinModelFormFilter
+abstract class BaseMineralogyFormFilter extends BaseFormFilterDoctrine
 {
-  protected function setupInheritance()
+  public function setup()
   {
-    parent::setupInheritance();
+    $this->setWidgets(array(
+      'name'            => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'name_indexed'    => new sfWidgetFormFilterInput(),
+      'level_ref'       => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Level'), 'add_empty' => true)),
+      'status'          => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'local_naming'    => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
+      'color'           => new sfWidgetFormFilterInput(),
+      'path'            => new sfWidgetFormFilterInput(),
+      'parent_ref'      => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'add_empty' => true)),
+      'code'            => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'classification'  => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'formule'         => new sfWidgetFormFilterInput(),
+      'formule_indexed' => new sfWidgetFormFilterInput(),
+      'cristal_system'  => new sfWidgetFormFilterInput(),
+    ));
 
-    $this->widgetSchema   ['name'] = new sfWidgetFormFilterInput(array('with_empty' => false));
-    $this->validatorSchema['name'] = new sfValidatorPass(array('required' => false));
-
-    $this->widgetSchema   ['name_indexed'] = new sfWidgetFormFilterInput();
-    $this->validatorSchema['name_indexed'] = new sfValidatorPass(array('required' => false));
-
-    $this->widgetSchema   ['level_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Level'), 'add_empty' => true));
-    $this->validatorSchema['level_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Level'), 'column' => 'id'));
-
-    $this->widgetSchema   ['status'] = new sfWidgetFormFilterInput(array('with_empty' => false));
-    $this->validatorSchema['status'] = new sfValidatorPass(array('required' => false));
-
-    $this->widgetSchema   ['local_naming'] = new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no')));
-    $this->validatorSchema['local_naming'] = new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0)));
-
-    $this->widgetSchema   ['color'] = new sfWidgetFormFilterInput();
-    $this->validatorSchema['color'] = new sfValidatorPass(array('required' => false));
-
-    $this->widgetSchema   ['path'] = new sfWidgetFormFilterInput();
-    $this->validatorSchema['path'] = new sfValidatorPass(array('required' => false));
-
-    $this->widgetSchema   ['parent_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'add_empty' => true));
-    $this->validatorSchema['parent_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Parent'), 'column' => 'id'));
-
-    $this->widgetSchema   ['code'] = new sfWidgetFormFilterInput(array('with_empty' => false));
-    $this->validatorSchema['code'] = new sfValidatorPass(array('required' => false));
-
-    $this->widgetSchema   ['classification'] = new sfWidgetFormFilterInput(array('with_empty' => false));
-    $this->validatorSchema['classification'] = new sfValidatorPass(array('required' => false));
-
-    $this->widgetSchema   ['formule'] = new sfWidgetFormFilterInput();
-    $this->validatorSchema['formule'] = new sfValidatorPass(array('required' => false));
-
-    $this->widgetSchema   ['formule_indexed'] = new sfWidgetFormFilterInput();
-    $this->validatorSchema['formule_indexed'] = new sfValidatorPass(array('required' => false));
-
-    $this->widgetSchema   ['cristal_system'] = new sfWidgetFormFilterInput();
-    $this->validatorSchema['cristal_system'] = new sfValidatorPass(array('required' => false));
-
-    $this->widgetSchema   ['metadata_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('TaxonomyMetadata'), 'add_empty' => true));
-    $this->validatorSchema['metadata_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('TaxonomyMetadata'), 'column' => 'id'));
-
-    $this->widgetSchema   ['parent_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'add_empty' => true));
-    $this->validatorSchema['parent_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Parent'), 'column' => 'id'));
-
-    $this->widgetSchema   ['level_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Level'), 'add_empty' => true));
-    $this->validatorSchema['level_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Level'), 'column' => 'id'));
-
-    $this->widgetSchema   ['metadata_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('TaxonomyMetadata'), 'add_empty' => true));
-    $this->validatorSchema['metadata_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('TaxonomyMetadata'), 'column' => 'id'));
+    $this->setValidators(array(
+      'name'            => new sfValidatorPass(array('required' => false)),
+      'name_indexed'    => new sfValidatorPass(array('required' => false)),
+      'level_ref'       => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Level'), 'column' => 'id')),
+      'status'          => new sfValidatorPass(array('required' => false)),
+      'local_naming'    => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
+      'color'           => new sfValidatorPass(array('required' => false)),
+      'path'            => new sfValidatorPass(array('required' => false)),
+      'parent_ref'      => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Parent'), 'column' => 'id')),
+      'code'            => new sfValidatorPass(array('required' => false)),
+      'classification'  => new sfValidatorPass(array('required' => false)),
+      'formule'         => new sfValidatorPass(array('required' => false)),
+      'formule_indexed' => new sfValidatorPass(array('required' => false)),
+      'cristal_system'  => new sfValidatorPass(array('required' => false)),
+    ));
 
     $this->widgetSchema->setNameFormat('mineralogy_filters[%s]');
+
+    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
+
+    $this->setupInheritance();
+
+    parent::setup();
   }
 
   public function getModelName()
@@ -75,24 +60,21 @@ abstract class BaseMineralogyFormFilter extends DarwinModelFormFilter
 
   public function getFields()
   {
-    return array_merge(parent::getFields(), array(
-      'name' => 'Text',
-      'name_indexed' => 'Text',
-      'level_ref' => 'ForeignKey',
-      'status' => 'Text',
-      'local_naming' => 'Boolean',
-      'color' => 'Text',
-      'path' => 'Text',
-      'parent_ref' => 'ForeignKey',
-      'code' => 'Text',
-      'classification' => 'Text',
-      'formule' => 'Text',
+    return array(
+      'id'              => 'Number',
+      'name'            => 'Text',
+      'name_indexed'    => 'Text',
+      'level_ref'       => 'ForeignKey',
+      'status'          => 'Text',
+      'local_naming'    => 'Boolean',
+      'color'           => 'Text',
+      'path'            => 'Text',
+      'parent_ref'      => 'ForeignKey',
+      'code'            => 'Text',
+      'classification'  => 'Text',
+      'formule'         => 'Text',
       'formule_indexed' => 'Text',
-      'cristal_system' => 'Text',
-      'metadata_ref' => 'ForeignKey',
-      'parent_ref' => 'ForeignKey',
-      'level_ref' => 'ForeignKey',
-      'metadata_ref' => 'ForeignKey',
-    ));
+      'cristal_system'  => 'Text',
+    );
   }
 }

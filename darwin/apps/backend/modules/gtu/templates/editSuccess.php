@@ -8,10 +8,10 @@
     <?php endif;?>
   <?php include_partial('form', array('form' => $form)) ?>
   <?php include_partial('widgets/float_button', array('form' => $form,
-                                                      'module' => 'gtu',
-                                                      'search_module'=>'gtu/index',
-                                                      'save_button_id' => 'submit')
-  ); ?>
+                                                        'module' => 'gtu',
+                                                        'search_module'=>'gtu/index',
+                                                        'save_button_id' => 'submit')
+    ); ?>
  <?php include_partial('widgets/screen', array(
 	'widgets' => $widgets,
 	'category' => 'cataloguewidget',

@@ -2,14 +2,14 @@ dev:
   doctrine:
     class: sfDoctrineDatabase
     param:
-      dsn: 'pgsql:host=localhost;dbname=darwin2_rbins_test'
-      username: darwin2
-      password: darwin@123 
+      dsn: 'pgsql:host=my_host;dbname=darwin2'
+      username: mydarwin2reader
+      password: mydarwin2readerpassword 
            
 prod:
   doctrine:
     class: sfDoctrineDatabase
     param:
-      dsn: 'pgsql:host=localhost;dbname=darwin2_rbins_test'
-      username: darwin2
-      password: darwin@123 
+      dsn: 'pgsql:host=my_host;dbname=darwin2'
+      username: mydarwin2reader
+      password: mydarwin2readerpassword

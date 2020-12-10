@@ -8,7 +8,7 @@
  * @package    ##PROJECT_NAME##
  * @subpackage form
  * @author     ##AUTHOR_NAME##
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
  */
 abstract class Base<?php echo $this->modelName ?>Form extends <?php echo $this->getFormClassToExtend().PHP_EOL ?>
 {
@@ -74,32 +74,36 @@ abstract class Base<?php echo $this->modelName ?>Form extends <?php echo $this->
 <?php endforeach; ?>
   }
 
-  protected function doUpdateObject($values)
+  protected function doSave($con = null)
   {
 <?php foreach ($this->getManyToManyRelations() as $relation): ?>
-    $this->update<?php echo $relation['alias'] ?>List($values);
+    $this->save<?php echo $relation['alias'] ?>List($con);
 <?php endforeach; ?>
 
-    parent::doUpdateObject($values);
+    parent::doSave($con);
   }
 
 <?php foreach ($this->getManyToManyRelations() as $relation): ?>
-  public function update<?php echo $relation['alias'] ?>List($values)
+  public function save<?php echo $relation['alias'] ?>List($con = null)
   {
+    if (!$this->isValid())
+    {
+      throw $this->getErrorSchema();
+    }
+
     if (!isset($this->widgetSchema['<?php echo $this->underscore($relation['alias']) ?>_list']))
     {
       // somebody has unset this widget
       return;
     }
 
-    if (!array_key_exists('<?php echo $this->underscore($relation['alias']) ?>_list', $values))
+    if (null === $con)
     {
-      // no values for this widget
-      return;
+      $con = $this->getConnection();
     }
 
     $existing = $this->object-><?php echo $relation['alias']; ?>->getPrimaryKeys();
-    $values = $values['<?php echo $this->underscore($relation['alias']) ?>_list'];
+    $values = $this->getValue('<?php echo $this->underscore($relation['alias']) ?>_list');
     if (!is_array($values))
     {
       $values = array();

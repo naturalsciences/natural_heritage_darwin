@@ -14,17 +14,17 @@
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @version    SVN: $Id: sfModelGenerator.class.php 25459 2009-12-16 13:08:43Z fabien $
  */
 abstract class sfModelGenerator extends sfGenerator
 {
-  /** @var sfModelGeneratorConfiguration */
-  protected $configuration = null;
-  protected $primaryKey = array();
-  protected $modelClass = '';
-  protected $params = array();
-  protected $config = array();
-  protected $formObject = null;
+  protected
+    $configuration = null,
+    $primaryKey    = array(),
+    $modelClass    = '',
+    $params        = array(),
+    $config        = array(),
+    $formObject    = null;
 
   /**
    * Generates classes and templates in cache.
@@ -32,8 +32,6 @@ abstract class sfModelGenerator extends sfGenerator
    * @param array $params The parameters
    *
    * @return string The data to put in configuration cache
-   *
-   * @throws sfConfigurationException
    */
   public function generate($params = array())
   {
@@ -137,6 +135,7 @@ abstract class sfModelGenerator extends sfGenerator
    * Returns PHP code for primary keys parameters.
    *
    * @param integer $indent The indentation value
+   * @param string  $callee The function to call
    *
    * @return string The PHP code
    */
@@ -155,7 +154,6 @@ abstract class sfModelGenerator extends sfGenerator
    * Returns PHP code to add to a URL for primary keys.
    *
    * @param string $prefix The prefix value
-   * @param bool   $full
    *
    * @return string PHP code
    */
@@ -179,7 +177,7 @@ abstract class sfModelGenerator extends sfGenerator
     return implode(".'&", $params);
   }
 
-  /**
+  /** 
    * Configures this generator.
    */
   abstract protected function configure();
@@ -357,9 +355,6 @@ EOF;
    * Validates the basic structure of the parameters.
    *
    * @param array $params An array of parameters
-   *
-   * @throws sfInitializationException
-   * @throws sfParseException
    */
   protected function validateParameters($params)
   {
@@ -436,8 +431,6 @@ EOF;
 
   /**
    * Returns the URL for a given action.
-   *
-   * @param string $action
    *
    * @return string The URL related to a given action
    */

@@ -71,10 +71,11 @@ class TaxonomyForm extends BaseTaxonomyForm
         //ftheeten 2017 07 03 for double taxonomy
      $this->widgetSchema['sensitive_info_withheld'] = new sfWidgetFormInputCheckbox();
     $this->validatorSchema['sensitive_info_withheld'] = new sfValidatorBoolean(array('required' => false));
-
+	
 	//JM Herpers 2019 04 25
 	 $this->widgetSchema['cites']->setAttributes(array('class'=>'cites'));
 	 $this->validatorSchema['cites'] = new sfValidatorBoolean();
+
   }
 
 }

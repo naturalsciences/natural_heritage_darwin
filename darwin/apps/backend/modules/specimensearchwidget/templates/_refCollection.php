@@ -1,6 +1,6 @@
 <script type="text/javascript">
 $(document).ready(function () {
-    //ftheeten 2018 10 04
+        //ftheeten 2018 10 04
     var original_tree = $('.collection_tree_div').html();
     
      $(".do_reinit_collection").click(
@@ -130,7 +130,7 @@ $(document).ready(function () {
 <table class="widget_sub_table">
   <tr>
     <td>
-      <div class="treelist collection_tree_div">
+      <div class="treelist">
 		    <?php echo $form['collection_ref'] ; ?>
       </div>
       <div class="check_right">
@@ -143,3 +143,4 @@ $(document).ready(function () {
 	  </td>
 	</tr>
 </table>
+

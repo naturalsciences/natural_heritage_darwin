@@ -20,26 +20,7 @@ class peopleActions extends DarwinActions
 
   public function executeIndex(sfWebRequest $request)
   {
-	  
-	if($request->getParameter('identifier_protocol', '') != ''&&$request->getParameter('identifier_value', ''))
-	{
-		
-		if($request->getParameter('format', '')=='application/json')
-		{
-			$this->getResponse()->setHttpHeader('Content-type','application/json');
-		    $this->setLayout('json');
-			$res_json=Doctrine_Core::getTable('People')->getPeopleAsArrayIdentifier($request->getParameter('identifier_protocol'),$request->getParameter('identifier_value'));			
-			return $this->renderText(json_encode($res_json));
-		}
-		else
-		{
-			$this->form = new PeopleFormFilter(array("protocol"=>$request->getParameter('identifier_protocol'), "identifier"=>$request->getParameter('identifier_value')));
-		}
-	}
-	else
-	{
-		$this->form = new PeopleFormFilter();
-	}
+    $this->form = new PeopleFormFilter();
   }
 
   public function executeSearchBoth(sfWebRequest $request)
@@ -81,8 +62,8 @@ class peopleActions extends DarwinActions
 
   public function executeDetails(sfWebRequest $request)
   {
-    $this->item = Doctrine_Core::getTable('People')->find($request->getParameter('id'));
-    $this->relations = Doctrine_Core::getTable('PeopleRelationships')->findAllRelated($request->getParameter('id'));
+    $this->item = Doctrine::getTable('People')->find($request->getParameter('id'));
+    $this->relations = Doctrine::getTable('PeopleRelationships')->findAllRelated($request->getParameter('id'));
   }
 
   public function executeNew(sfWebRequest $request)
@@ -109,7 +90,7 @@ class peopleActions extends DarwinActions
   public function executeEdit(sfWebRequest $request)
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();   
-    $this->forward404Unless($people = Doctrine_Core::getTable('People')->findPeople($request->getParameter('id')), sprintf('people does not exist (%s).', $request->getParameter('id')));
+    $this->forward404Unless($people = Doctrine::getTable('People')->findPeople($request->getParameter('id')), sprintf('people does not exist (%s).', $request->getParameter('id')));
     $this->form = new PeopleForm($people);
     $this->loadWidgets();
   }
@@ -118,7 +99,7 @@ class peopleActions extends DarwinActions
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
     $this->forward404Unless($request->isMethod(sfRequest::POST) || $request->isMethod(sfRequest::PUT));
-    $this->forward404Unless($people = Doctrine_Core::getTable('People')->findPeople($request->getParameter('id')), sprintf('people does not exist (%s).', $request->getParameter('id')));
+    $this->forward404Unless($people = Doctrine::getTable('People')->findPeople($request->getParameter('id')), sprintf('people does not exist (%s).', $request->getParameter('id')));
     $this->form = new PeopleForm($people);
 
     $this->processForm($request, $this->form);
@@ -131,7 +112,7 @@ class peopleActions extends DarwinActions
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();   
     $request->checkCSRFProtection();
 
-    $this->forward404Unless($people = Doctrine_Core::getTable('People')->findPeople($request->getParameter('id')), sprintf('people does not exist (%s).', $request->getParameter('id')));
+    $this->forward404Unless($people = Doctrine::getTable('People')->findPeople($request->getParameter('id')), sprintf('people does not exist (%s).', $request->getParameter('id')));
     try{
         $people->delete();
 	$this->redirect('people/index');
@@ -173,7 +154,7 @@ class peopleActions extends DarwinActions
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();   
     if($request->hasParameter('id'))
-      $this->address =  Doctrine_Core::getTable('PeopleAddresses')->find($request->getParameter('id'));
+      $this->address =  Doctrine::getTable('PeopleAddresses')->find($request->getParameter('id'));
     else
     {
      $this->address = new PeopleAddresses();
@@ -203,14 +184,14 @@ class peopleActions extends DarwinActions
 
   public function executeGetTags(sfWebRequest $request)
   {
-    $this->array_possible = Doctrine_Core::getTable('PeopleComm')->getTags($request->getParameter('type'));
+    $this->array_possible = Doctrine::getTable('PeopleComm')->getTags($request->getParameter('type'));
   }
 
   public function executeComm(sfWebRequest $request)
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();   
     if($request->hasParameter('id'))
-      $this->comm =  Doctrine_Core::getTable('PeopleComm')->find($request->getParameter('id'));
+      $this->comm =  Doctrine::getTable('PeopleComm')->find($request->getParameter('id'));
     else
     {
      $this->comm = new PeopleComm();
@@ -241,7 +222,7 @@ class peopleActions extends DarwinActions
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();   
     if($request->hasParameter('id'))
-      $this->lang =  Doctrine_Core::getTable('PeopleLanguages')->find($request->getParameter('id'));
+      $this->lang =  Doctrine::getTable('PeopleLanguages')->find($request->getParameter('id'));
     else
     {
      $this->lang = new PeopleLanguages();
@@ -258,7 +239,7 @@ class peopleActions extends DarwinActions
 	      try {
 	        if($this->form->getValue('preferred_language') && ! $this->lang->getPreferredLanguage())
 	        {
-	          Doctrine_Core::getTable('PeopleLanguages')->removeOldPreferredLang($request->getParameter('ref_id'));
+	          Doctrine::getTable('PeopleLanguages')->removeOldPreferredLang($request->getParameter('ref_id'));
 	        }
 	        $this->form->save();
 	        return $this->renderText('ok');
@@ -276,14 +257,14 @@ class peopleActions extends DarwinActions
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();   
     if($request->hasParameter('id')) {
-      $this->relation =  Doctrine_Core::getTable('PeopleRelationships')->find($request->getParameter('id'));
-      $this->is_physical = Doctrine_Core::getTable('People')->find($request->getParameter('ref_id'))->getIsPhysical();
+      $this->relation =  Doctrine::getTable('PeopleRelationships')->find($request->getParameter('id'));
+      $this->is_physical = Doctrine::getTable('People')->find($request->getParameter('ref_id'))->getIsPhysical();
     }
     else
     {
      $this->relation = new PeopleRelationships();
      $this->relation->setPerson_2Ref($request->getParameter('ref_id'));
-     $this->is_physical = Doctrine_Core::getTable('People')->find($request->getParameter('ref_id'))->getIsPhysical();
+     $this->is_physical = Doctrine::getTable('People')->find($request->getParameter('ref_id'))->getIsPhysical();
     }
 
     $this->form = new PeopleRelationshipsForm($this->relation);
@@ -310,14 +291,14 @@ class peopleActions extends DarwinActions
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
     $this->level = $request->getParameter('level',1);
-    $this->relations  = Doctrine_Core::getTable('PeopleRelationships')->findAllRelated($request->getParameter('id'));
+    $this->relations  = Doctrine::getTable('PeopleRelationships')->findAllRelated($request->getParameter('id'));
     if($this->relations->count() == 0)
       return $this->renderText('nothing');
   }
   
   public function executeView(sfWebRequest $request)
   {
-    $this->people = Doctrine_Core::getTable('People')->find($request->getParameter('id'));
+    $this->people = Doctrine::getTable('People')->find($request->getParameter('id'));
     $this->forward404Unless($this->people,'People not Found');
     $this->form = new PeopleForm($this->people);
     $this->types = People::getTypes() ;
@@ -326,6 +307,9 @@ class peopleActions extends DarwinActions
    
   public function executeExtendedInfo(sfWebRequest $request)
   {
-    $this->people = Doctrine_Core::getTable('People')->findOneById($request->getParameter('id'));
+	$this->people = Doctrine::getTable('People')->findOneById($request->getParameter('id'));	
+	/*JMHerpers 2018 03 23	*/
+	$this->people_address = json_decode($this->people->getCorrespondingInstitutionandAddress(),true);
+		  
   }  
 }

@@ -55,39 +55,15 @@ class ExpeditionsFormFilter extends BaseExpeditionsFormFilter
                                                                           array('invalid'=>'The "begin" date cannot be above the "end" date.')
                                                                          )
                                             );
-	$this->widgetSchema['ig_ref'] = new widgetFormInputChecked(
-      array(
-        'model' => 'Igs',
-        'method' => 'getIgNum',
-        'nullable' => true,
-        'link_url' => 'igs/searchFor',
-        'notExistingAddDisplay' => false
-      )
-    );
-	$this->validatorSchema['ig_ref'] = new sfValidatorInteger(array('required' => false));
   }
-  
-
 
   public function doBuildQuery(array $values)
   {
-    $query = DQ::create()
-      ->select("DISTINCT e.id, name, name_indexed, expedition_from_date_mask, expedition_from_date, 
-       expedition_to_date_mask, expedition_to_date, string_agg(DISTINCT s.ig_num,';') as ig_numbers, fct_rmca_people_array_to_name(array_accum(s.spec_coll_ids)) as collectors, array_agg(DISTINCT ig_ref) as ig_list")
-      ->from('Expeditions e')->leftJoin("e.Specimens s ON e.id=s.expedition_ref");
+    $query = parent::doBuildQuery($values);
     $fields = array('expedition_from_date', 'expedition_to_date');
     $this->addNamingColumnQuery($query, 'expeditions', 'name_indexed', $values['name']);
     $this->addDateFromToColumnQuery($query, $fields, $values['expedition_from_date'], $values['expedition_to_date']);
-    //$this->addNamingColumnQuery($query, 'Expeditions', 'ig_ref', $values['ig_ref']);
-	if($values['ig_ref'])
-    {
-		
-      $query->andWhere("EXISTS(SELECT 1 FROM specimens s2 WHERE expedition_ref=e.id AND s2.ig_ref=?)", $values['ig_ref']);
-    
-    }
-    //$query->andWhere("e.id > 0 ");
-	$query->groupBy("e.id, name, name_indexed, expedition_from_date_mask, expedition_from_date, 
-       expedition_to_date_mask, expedition_to_date ");
+    $query->andWhere("id > 0 ");
     return $query;
   }
   
