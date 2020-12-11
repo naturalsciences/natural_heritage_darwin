@@ -91,8 +91,8 @@ if(array_key_exists("menu", $_SESSION[$_SERVER['HTTP_REFERER']]))
         <td colspan="2">
           <ul class="menu_link">
             <li><?php echo link_to(__('Zoological Search'),'@search');?></li>
-            <li><?php echo link_to(__('Geo/Paleo Search'),'@geoSearch');?></li>			
-			<li><?php echo link_to(__('Collections'), '@collections');?></li>
+            <li><?php echo link_to(__('Geo/Paleo Search'),'@geoSearch');?></li>	
+			<li><?php echo link_to(__('Collections'),'@collections');?></li>				
             <li><?php echo link_to(__('Take a tour'),'@tour');?></li>
             <li><?php echo link_to(__('Contacts'),'@contact');?></li>
           </ul>

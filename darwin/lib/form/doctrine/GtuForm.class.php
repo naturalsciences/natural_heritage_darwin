@@ -509,7 +509,7 @@ class GtuForm extends BaseGtuForm
         if(strtolower($taintedValues["delete_mode"])=="on")        {
            
             $cpt=Doctrine_Core::getTable('TemporalInformation')->countTemporalInformationBoundtoSpecimen($taintedValues["temporal_information"]);
-            print_r($cpt);
+            
             if($cpt>0)
             {
                 

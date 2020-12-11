@@ -45,6 +45,27 @@ $(document).ready(function ()
           <?php echo $form['abstract'] ?>
         </td>
       </tr>
+	  <tr>
+        <th><?php echo $form['reference']->renderLabel() ?></th>
+        <td>
+          <?php echo $form['reference']->renderError() ?>
+          <?php echo $form['reference'] ?>
+        </td>
+      </tr>
+	   <tr>
+        <th><?php echo $form['uri_protocol']->renderLabel() ?></th>
+        <td>
+          <?php echo $form['uri_protocol']->renderError() ?>
+          <?php echo $form['uri_protocol'] ?>
+        </td>
+      </tr>
+	   <tr>
+        <th><?php echo $form['uri']->renderLabel() ?></th>
+        <td>
+          <?php echo $form['uri']->renderError() ?>
+          <?php echo $form['uri'] ?>
+        </td>
+      </tr>
       <tr>
         <td colspan="2">
           <?php echo $form['Authors_holder'];?>
@@ -119,6 +140,15 @@ function addAuthor(people_ref, people_name)
       $('#bib_author_table tbody').append(html);
       $.fn.catalogue_people.reorder($('#bib_author_table'));
       showAfterRefresh($('.ui-tooltip-content .page')) ; 
+	   //ftheeten 2020 12 11
+		try 
+		{
+		  $('body').trigger('close_modal');
+		}
+		catch(err) 
+		{
+		  
+		}
     }
   });
   return true;

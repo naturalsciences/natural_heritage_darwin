@@ -29,6 +29,18 @@ abstract class BaseBibliographyFormFilter extends DarwinModelFormFilter
     $this->widgetSchema   ['year'] = new sfWidgetFormFilterInput();
     $this->validatorSchema['year'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
 
+    $this->widgetSchema   ['reference'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['reference'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['uri_protocol'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['uri_protocol'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['uri'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['uri'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['id'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['id'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => 'Bibliography', 'column' => 'id'));
+
     $this->widgetSchema->setNameFormat('bibliography_filters[%s]');
   }
 
@@ -45,6 +57,10 @@ abstract class BaseBibliographyFormFilter extends DarwinModelFormFilter
       'type' => 'Text',
       'abstract' => 'Text',
       'year' => 'Number',
+      'reference' => 'Text',
+      'uri_protocol' => 'Text',
+      'uri' => 'Text',
+      'id' => 'Number',
     ));
   }
 }

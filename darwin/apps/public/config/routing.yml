@@ -40,4 +40,5 @@ default:
   url:   /:module/:action/*
 
 collections:
-  url:   /search/collection
+  url:   /collections
+  param: { module: collections, action: index }

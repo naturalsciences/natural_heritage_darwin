@@ -1,5 +1,3 @@
-<script language="JavaScript" type="text/javascript" src="<?php print(public_path('/openlayers/v5.2.0-dist/ol.js'));?>"></script>
-<link rel="stylesheet" href="<?php print(public_path('/openlayers/v5.2.0-dist/ol.css'));?>">
 <?php include_partial('widgets/list', array('widgets' => $widget_list, 'category' => 'catalogue_gtu','eid'=> $form->getObject()->getId(), 'view' => true)); ?>
 <?php slot('title', __('View Sampling location'));  ?>
 <div class="page">
@@ -176,7 +174,7 @@
 			  visible: false,
 			  preload: Infinity,
 			  source: new ol.source.BingMaps({
-				key: " Al7loRcflCy8zRE2HskZKe4cQfzbiMu_kUEUaxjlQNH6DbLHfSqRC2O0_L2ibekX",
+				key: " <?php print(sfConfig::get('dw_bing_key'));?>",
 				imagerySet: styles[i]
 				// use maxZoom 19 to see stretched tiles instead of the BingMaps
 				// "no photos at this zoom level" tiles

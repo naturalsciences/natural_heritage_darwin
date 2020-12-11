@@ -67,6 +67,9 @@ abstract class BasePeopleForm extends DarwinModelForm
     $this->widgetSchema   ['activity_date_to_mask'] = new sfWidgetFormInputText();
     $this->validatorSchema['activity_date_to_mask'] = new sfValidatorInteger(array('required' => false));
 
+    $this->widgetSchema   ['id'] = new sfWidgetFormInputHidden();
+    $this->validatorSchema['id'] = new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false));
+
     $this->widgetSchema->setNameFormat('people[%s]');
   }
 

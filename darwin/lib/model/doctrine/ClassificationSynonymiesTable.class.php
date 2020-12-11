@@ -308,4 +308,36 @@ class ClassificationSynonymiesTable extends DarwinTable
       return $classif->getRecordId();
     else return 0;
   }
+  
+  public function getAllChildSynonyms($id)
+  {
+	 
+	  $conn = Doctrine_Manager::connection();
+	  $sql = "select id from taxonomy where id in (select fct_rmca_get_all_child_synonyms(:id));";
+	  $q = $conn->prepare($sql);
+	  $q->execute(array(':id'=> $id));
+	  $response = $q->fetchAll(PDO::FETCH_ASSOC);
+	  $merged=Array();
+	  foreach($response as $elem)
+	  {
+		  $merged[]=$elem["id"];		  
+	  }
+	  return $merged;
+  }
+  
+  public function getAllDirectChildSynonyms($id)
+  {
+	 
+	  $conn = Doctrine_Manager::connection();
+	  $sql = "select id from taxonomy where id in (select fct_rmca_get_all_child_direct_synonyms(:id));";
+	  $q = $conn->prepare($sql);
+	  $q->execute(array(':id'=> $id));
+	  $response = $q->fetchAll(PDO::FETCH_ASSOC);
+	  $merged=Array();
+	  foreach($response as $elem)
+	  {
+		  $merged[]=$elem["id"];		  
+	  }
+	  return $merged;
+  }
 }

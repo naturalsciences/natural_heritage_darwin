@@ -82,7 +82,7 @@ all:
       cache_key_use_host_name:    true
 
   storage:
-    class: sfSessionStorage
+    class: DarwinCookie
     param:
       session_name: darwin2
 

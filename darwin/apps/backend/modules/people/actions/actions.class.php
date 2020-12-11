@@ -20,7 +20,26 @@ class peopleActions extends DarwinActions
 
   public function executeIndex(sfWebRequest $request)
   {
-    $this->form = new PeopleFormFilter();
+	  
+	if($request->getParameter('identifier_protocol', '') != ''&&$request->getParameter('identifier_value', ''))
+	{
+		
+		if($request->getParameter('format', '')=='application/json')
+		{
+			$this->getResponse()->setHttpHeader('Content-type','application/json');
+		    $this->setLayout('json');
+			$res_json=Doctrine_Core::getTable('People')->getPeopleAsArrayIdentifier($request->getParameter('identifier_protocol'),$request->getParameter('identifier_value'));			
+			return $this->renderText(json_encode($res_json));
+		}
+		else
+		{
+			$this->form = new PeopleFormFilter(array("protocol"=>$request->getParameter('identifier_protocol'), "identifier"=>$request->getParameter('identifier_value')));
+		}
+	}
+	else
+	{
+		$this->form = new PeopleFormFilter();
+	}
   }
 
   public function executeSearchBoth(sfWebRequest $request)

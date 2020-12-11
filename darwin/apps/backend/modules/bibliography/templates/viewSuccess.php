@@ -18,7 +18,12 @@
           <?php echo $bibliography->getTitle(); ?>
         </td>
       </tr>
-
+     <tr>
+        <th><?php echo $form['reference']->renderLabel() ?></th>
+        <td>
+          <?php echo $bibliography->getReference(); ?>
+        </td>
+      </tr>
       <tr>
         <th><?php echo $form['year']->renderLabel() ?></th>
         <td>
@@ -30,6 +35,21 @@
         <th><?php echo $form['abstract']->renderLabel() ?></th>
         <td>
           <?php echo $bibliography->getAbstract(); ?>
+        </td>
+      </tr>
+	  <tr>
+        <th><?php echo $form['uri']->renderLabel() ?></th>
+   
+	    <td>
+			  <?php print($bibliography->getUriProtocol());?>
+			  <?php if(strtolower($bibliography->getUriProtocol())=="doi"):?>
+			   <a href="https://dx.doi.org/<?php  print($bibliography->getUri()); ?>" target="_blank"><?php  print($bibliography->getUri()); ?></a>
+			  <?php elseif(strtolower($bibliography->getUriProtocol())=="url"):?>
+			   <a href="<?php  print($bibliography->getUri()); ?>" target="_blank"><?php  print($bibliography->getUri()); ?></a>
+			 <?php else:?>
+			 <?php>  <?php  print($bibliography->getUri()); ?></a>
+			  
+			 <?php endif;?>
         </td>
       </tr>
 

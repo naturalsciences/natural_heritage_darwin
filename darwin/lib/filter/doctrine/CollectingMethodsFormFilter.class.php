@@ -21,9 +21,15 @@ class CollectingMethodsFormFilter extends BaseCollectingMethodsFormFilter
 
   public function doBuildQuery(array $values)
   {
-    $query = parent::doBuildQuery($values);
-    $this->addNamingColumnQuery($query, 'collecting_methods', 'method_indexed', $values['method']);
-    $query->andWhere("id > 0 ");
+    $query = DQ::create()
+      ->select("DISTINCT t.*, COUNT(DISTINCT o.specimen_ref) as countspecimens, string_agg(distinct collection_name,'; ' order by collection_name) as collections"
+      )
+      ->from('CollectingMethods t');
+    $query->leftJoin("t.SpecimensMethods o ON t.id=o.collecting_method_ref");
+    $query->leftJoin("o.Specimens s ON o.specimen_ref=s.id");
+    //$this->addNamingColumnQuery($query, 'collecting_methods', 'method_indexed', $values['method']);
+    $query->where("method_indexed LIKE '%'||fulltoindex(?)||'%'",$values['method']);
+    $query->groupBy("t.id, t.method, t.method_indexed");;
     return $query;
   }
 }

@@ -78,6 +78,7 @@ abstract class sfWebController extends sfController
       $url .= '#'.$fragment;
     }
 
+
     return $url;
   }
 

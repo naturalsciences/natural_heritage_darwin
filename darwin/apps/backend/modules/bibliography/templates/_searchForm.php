@@ -11,6 +11,7 @@
         <tr>
           <th><?php echo $form['type']->renderLabel() ?></th>
           <th><?php echo $form['title']->renderLabel() ?></th>
+		  <th><?php echo $form['author_name']->renderLabel() ?></th>
           <th></th>
         </tr>
       </thead>
@@ -18,6 +19,19 @@
         <tr>
           <td><?php echo $form['type']->render() ?></td>
           <td><?php echo $form['title']->render() ?></td>
+		  <td><?php echo $form['author_name']->render() ?></td>
+		</tr>
+		<tr>
+		  <th><?php echo $form['reference']->renderLabel() ?></th>
+          <th><?php echo $form['uri_protocol']->renderLabel() ?> <?php echo $form['uri']->renderLabel() ?></th>
+          <th><?php echo $form['year']->renderLabel() ?></th>
+        </tr>
+        <tr>
+		  <td><?php echo $form['reference']->render() ?></td>
+          <td><?php echo $form['uri_protocol']->render() ?> <?php echo $form['uri']->render() ?></td>
+          <td><?php echo $form['year']->render() ?></td>
+        </tr>		
+		<tr>
           <td><input class="search_submit" type="submit" name="search" value="<?php echo __('Search'); ?>" /></td>
         </tr>
       </tbody>

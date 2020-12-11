@@ -179,7 +179,7 @@
         {
             sumMin=sumMin+parseInt($('#specimen_specimen_count_juveniles'+param).val());
         }
-        if(sumMin>0)
+        if(sumMin>0&& parseInt($('#specimen_specimen_count'+param).val())<sumMin)
         {
             $('#specimen_specimen_count'+param).val(sumMin);
         }

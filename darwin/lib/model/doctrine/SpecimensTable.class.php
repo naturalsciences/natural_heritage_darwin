@@ -396,29 +396,7 @@ class SpecimensTable extends DarwinTable
     return $q->execute();
   }
 
-  public function createUniqFlatDistinct($table, $column,  $new_col='item', $empty = false)
-  {
-    if(! isset($this->flat_results)){
-      $q = Doctrine_Query::create()
-        ->useResultCache(true)
-        ->setResultCacheLifeSpan(5) //5 sec
-        ->From('FlatDict')
-        ->select('dict_field, dict_value')
-        ->andwhere('referenced_relation = ?', $table)
-        ->orderBy("dict_value ASC");
-      $res = $q->execute();
-      $this->flat_results = array();
-      foreach($res as $result) 
-      {
-        if(! isset($this->flat_results[$result->getDictField()]))
-          $this->flat_results[$result->getDictField()] = array();
-        $this->flat_results[$result->getDictField()][$result->getDictValue()] = $result->getDictValue();
-      }
-    }
-    if(isset($this->flat_results[$column]))
-      return $this->flat_results[$column];
-    return array();
-  }
+
 
   /**
    * For a given sort of "storage" ($item: building, floor, room, row, shelf, container, sub_container),
@@ -798,6 +776,178 @@ class SpecimensTable extends DarwinTable
                 }
             }
             return Array();
-    }   
+    }
+
+    public function getSpecimensInInstitutionJSON($p_institution_protocol, $p_institution_identifier, $p_host, $p_size=50, $p_page=1, $p_prefix_service_specimen="/public.php/json/getjson?", $p_prefix_service_collection="public.php/json/get_institution_identifier_json?")
+    {
+
+      
+      if(strlen($p_institution_protocol)>0&&strlen($p_institution_identifier)>0&&is_numeric($p_size)&&is_numeric($p_page))
+      {
+      
+            if($p_size>0 && $p_page>0)
+            {
+
+                $conn_MGR = Doctrine_Manager::connection();
+                $conn = $conn_MGR->getDbh();
+               
+                $rows=array();
+                
+                $query="SELECT a.*, count(*) OVER() AS full_count FROM (SELECT distinct 'http://'||:host||:prefix||'specimennumber='||COALESCE(codes.code_prefix,'')||COALESCE(codes.code_prefix_separator,'')||COALESCE(codes.code,'')||COALESCE(codes.code_suffix_separator,'')||COALESCE(codes.code_suffix,'') as url_specimen,
+                
+               'http://'||:host||:prefix||'id='||codes.record_id::varchar as technical_url_specimen, COALESCE(codes.code_prefix,'')||COALESCE(codes.code_prefix_separator,'')||COALESCE(codes.code,'')||COALESCE(codes.code_suffix_separator,'')||COALESCE(codes.code_suffix,'') AS code_display
+                FROM codes WHERE 
+                referenced_relation='specimens'
+                AND code_category='main' 
+				AND EXISTS (SELECT 1 FROM specimens INNER JOIN identifiers ON specimens.institution_ref= identifiers.record_id WHERE identifiers.referenced_relation='people' AND LOWER(identifiers.protocol)=:institution_protocol AND identifiers.value =  :institution_identifier  AND codes.record_id=specimens.id)
+                GROUP BY codes.code_prefix, codes.code_prefix_separator, codes.code, codes.code_suffix_separator, codes.code_suffix , record_id
+                ORDER BY code_display) a
+                LIMIT :size OFFSET :offset;";
+                $stmt=$conn->prepare($query);
+                $stmt->bindValue(":host", $p_host);
+                $stmt->bindValue(":prefix",$p_prefix_service_specimen);
+                $stmt->bindValue(":institution_protocol", strtolower($p_institution_protocol));
+				$stmt->bindValue(":institution_identifier", $p_institution_identifier);
+                $stmt->bindValue(":size", (int)$p_size);
+                $stmt->bindValue(":offset", ((int)$p_page -1)*((int)$p_size));
+                $stmt->execute();
+              
+                $rs=$stmt->fetchAll(PDO::FETCH_ASSOC);
+                if($rs[0]["full_count"]>0)
+                {
+                 
+                   $returned=Array();
+                   $returned["count"]=$rs[0]["full_count"];
+                   $returned["size_page"]=$p_size;
+                   $returned["current_page"]=(int)$p_page;
+                   $last_page=ceil($rs[0]["full_count"]/$p_size);
+                   $returned["last_page"]=$last_page;
+                   $returned["this_url"]="http://".$p_host."/".$p_prefix_service_collection."identifier_protocol=".$p_institution_protocol."&identifier_value=".$p_institution_identifier."&page=".$p_page."&size=".$p_size;
+                   if((int)$p_page<$last_page)
+                   {
+                        $returned["next_url"]="http://".$p_host."/".$p_prefix_service_collection."identifier_protocol=".$p_institution_protocol."&identifier_value=".$p_institution_identifier."&page=".($p_page+1)."&size=".$p_size;
+                   }
+                   else
+                   {
+                        $returned["next_url"]="http://".$p_host."/".$p_prefix_service_collection."identifier_protocol=".$p_institution_protocol."&identifier_value=".$p_institution_identifier."&page=".$last_page."&size=".$p_size;
+                   }
+                   $returned["last_url"]="http://".$p_host."/".$p_prefix_service_collection."identifier_protocol=".$p_institution_protocol."&identifier_value=".$p_institution_identifier."&page=".$last_page."&size=".$p_size;
+                   $records=Array();
+                   foreach($rs as $item)
+                   {
+                        $row["code_display"]=$item["code_display"];
+                        $row["url_specimen"]=$item["url_specimen"];
+                        $row["technical_url_specimen"]=$item["technical_url_specimen"];
+                        $records[]=$row;
+                   }
+                   $returned["records"]=$records;
+                   return $returned;
+                       
+                }
+             }
+        }
+        return Array();
+     }
+	 
+	public function getSpecimensForIdentifiersPeopleJSON($p_identifier_protocol, $p_identifier_value, $identifier_role, $p_host, $p_size=50, $p_page=1, $p_prefix_service_specimen="/public.php/json/getjson?", $p_prefix_service_collection="public.php/json/get_institution_identifier_json?")
+    {
+
+      
+      if(strlen($p_identifier_protocol)>0&&strlen($p_identifier_value)>0&&is_numeric($p_size)&&is_numeric($p_page))
+      {
+      
+            if($p_size>0 && $p_page>0)
+            {
+				 $id=Doctrine_Core::getTable('Identifiers')->getLinkedId($p_identifier_protocol, $p_identifier_value, "people");
+				  if($id!==null)
+				  {
+					 
+					  if($role == 'determinator')
+					  {
+						$build_query = ":id =any(spec_ident_ids) " ;
+						
+						
+					  }
+					  elseif($role == 'collector')
+					  {
+						 
+						  $build_query = "(:id =any(spec_coll_ids) OR EXISTS (SELECT cp.id FROM catalogue_people cp WHERE cp.referenced_relation= 'expeditions' AND cp.people_ref=:id AND specimens.expedition_ref=cp.record_id ))" ;
+						  
+
+					  }
+					  elseif($role == 'donator')
+					  {
+						$build_query .= ":id =any(spec_don_sel_ids) " ;
+					
+					  }
+					  else
+					  {
+						  $build_query = "(:id =any(spec_coll_ids||spec_ident_ids||spec_don_sel_ids) OR EXISTS (SELECT cp.id FROM catalogue_people cp WHERE cp.referenced_relation= 'expeditions' AND cp.people_ref=:id AND specimens.expedition_ref=cp.record_id ))" ;
+						 
+
+					  }
+					 
+				  
+					$conn_MGR = Doctrine_Manager::connection();
+					$conn = $conn_MGR->getDbh();
+				   
+					$rows=array();
+					
+					$query="SELECT a.*, count(*) OVER() AS full_count FROM (SELECT distinct 'http://'||:host||:prefix||'specimennumber='||COALESCE(codes.code_prefix,'')||COALESCE(codes.code_prefix_separator,'')||COALESCE(codes.code,'')||COALESCE(codes.code_suffix_separator,'')||COALESCE(codes.code_suffix,'') as url_specimen,
+					
+				   'http://'||:host||:prefix||'id='||codes.record_id::varchar as technical_url_specimen, COALESCE(codes.code_prefix,'')||COALESCE(codes.code_prefix_separator,'')||COALESCE(codes.code,'')||COALESCE(codes.code_suffix_separator,'')||COALESCE(codes.code_suffix,'') AS code_display
+					FROM codes WHERE 
+					referenced_relation='specimens'
+					AND code_category='main' 
+					AND EXISTS (SELECT 1 FROM specimens WHERE $build_query  AND codes.record_id=specimens.id )
+					GROUP BY codes.code_prefix, codes.code_prefix_separator, codes.code, codes.code_suffix_separator, codes.code_suffix , record_id
+					ORDER BY code_display) a
+					LIMIT :size OFFSET :offset;";
+					$stmt=$conn->prepare($query);
+					$stmt->bindValue(":host", $p_host);
+					$stmt->bindValue(":prefix",$p_prefix_service_specimen);
+					$stmt->bindValue(":id", $id);
+					
+					$stmt->bindValue(":size", (int)$p_size);
+					$stmt->bindValue(":offset", ((int)$p_page -1)*((int)$p_size));
+					$stmt->execute();
+				  
+					$rs=$stmt->fetchAll(PDO::FETCH_ASSOC);
+					if($rs[0]["full_count"]>0)
+					{
+					 
+					   $returned=Array();
+					   $returned["count"]=$rs[0]["full_count"];
+					   $returned["size_page"]=$p_size;
+					   $returned["current_page"]=(int)$p_page;
+					   $last_page=ceil($rs[0]["full_count"]/$p_size);
+					   $returned["last_page"]=$last_page;
+					   $returned["this_url"]="http://".$p_host."/".$p_prefix_service_collection."identifier_protocol=".$p_institution_protocol."&identifier_value=".$p_institution_identifier."&page=".$p_page."&size=".$p_size;
+					   if((int)$p_page<$last_page)
+					   {
+							$returned["next_url"]="http://".$p_host."/".$p_prefix_service_collection."identifier_protocol=".$p_institution_protocol."&identifier_value=".$p_institution_identifier."&page=".($p_page+1)."&size=".$p_size;
+					   }
+					   else
+					   {
+							$returned["next_url"]="http://".$p_host."/".$p_prefix_service_collection."identifier_protocol=".$p_institution_protocol."&identifier_value=".$p_institution_identifier."&page=".$last_page."&size=".$p_size;
+					   }
+					   $returned["last_url"]="http://".$p_host."/".$p_prefix_service_collection."identifier_protocol=".$p_institution_protocol."&identifier_value=".$p_institution_identifier."&page=".$last_page."&size=".$p_size;
+					   $records=Array();
+					   foreach($rs as $item)
+					   {
+							$row["code_display"]=$item["code_display"];
+							$row["url_specimen"]=$item["url_specimen"];
+							$row["technical_url_specimen"]=$item["technical_url_specimen"];
+							$records[]=$row;
+					   }
+					   $returned["records"]=$records;
+					   return $returned;
+                    }    
+                }
+             }
+        }
+        return Array();
+     }
+		
 
 }

@@ -62,6 +62,18 @@ abstract class BaseMultimediaFormFilter extends DarwinModelFormFilter
     $this->widgetSchema   ['extracted_info'] = new sfWidgetFormFilterInput();
     $this->validatorSchema['extracted_info'] = new sfValidatorPass(array('required' => false));
 
+    $this->widgetSchema   ['technical_parameters'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['technical_parameters'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['external_uri'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['external_uri'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['internet_protocol'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['internet_protocol'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['field_observations'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['field_observations'] = new sfValidatorPass(array('required' => false));
+
     $this->widgetSchema->setNameFormat('multimedia_filters[%s]');
   }
 
@@ -89,6 +101,10 @@ abstract class BaseMultimediaFormFilter extends DarwinModelFormFilter
       'visible' => 'Boolean',
       'publishable' => 'Boolean',
       'extracted_info' => 'Text',
+      'technical_parameters' => 'Text',
+      'external_uri' => 'Text',
+      'internet_protocol' => 'Text',
+      'field_observations' => 'Text',
     ));
   }
 }

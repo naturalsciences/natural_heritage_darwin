@@ -3284,3 +3284,9 @@ input[readonly]
 {
     background-color:	 #d1e0e0;
 }
+
+.spec_results tr:hover{
+  background-color: #ececff;
+  border-style: groove;
+   border-width: 2px;
+}

@@ -96,7 +96,7 @@
         <td colspan="2">
           <?php if (!$form->getObject()->isNew()): ?>
             <?php echo link_to(__('New Taxa'), 'taxonomy/new') ?>
-            &nbsp;<?php echo link_to(__('Duplicate Taxa'), 'taxonomy/new?duplicate_id='.$form->getObject()->getId()) ?>
+            &nbsp;<?php echo link_to(__('Duplicate Taxa'), 'taxonomy/new?duplicate_id='.$form->getObject()->getId(), array()) ?>
           <?php endif?>
 
           <?php echo $form['id']->render() ?><?php echo $form['table']->render() ?><?php echo link_to('search PUL', 'catalogue/searchPUL', array('id' => 'searchPUL', 'class' => 'hidden'));?>&nbsp;<a href="<?php echo url_for('taxonomy/index') ?>"><?php echo __('Cancel');?></a>

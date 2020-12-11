@@ -65,6 +65,9 @@ abstract class BasePeopleFormFilter extends DarwinModelFormFilter
     $this->widgetSchema   ['activity_date_to_mask'] = new sfWidgetFormFilterInput(array('with_empty' => false));
     $this->validatorSchema['activity_date_to_mask'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
 
+    $this->widgetSchema   ['id'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['id'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => 'People', 'column' => 'id'));
+
     $this->widgetSchema->setNameFormat('people_filters[%s]');
   }
 
@@ -93,6 +96,7 @@ abstract class BasePeopleFormFilter extends DarwinModelFormFilter
       'activity_date_from_mask' => 'Number',
       'activity_date_to' => 'Text',
       'activity_date_to_mask' => 'Number',
+      'id' => 'Number',
     ));
   }
 }

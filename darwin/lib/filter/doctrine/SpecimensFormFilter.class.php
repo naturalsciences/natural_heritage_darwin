@@ -386,19 +386,22 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       array('invalid' => 'Date provided is not valid',)
     );
 
+
+	$this->validatorSchema['related_ref'] = new sfValidatorInteger(array('required'=>false));
+	 $this->validatorSchema['related_ref'] = new sfValidatorNumber(array('required'=>false,'min' => '0'));
     $subForm = new sfForm();
     $this->embedForm('Tags',$subForm);
 
     $this->widgetSchema['tools'] = new widgetFormSelectDoubleListFilterable(array(
       'choices' => new sfCallable(array(Doctrine_Core::getTable('CollectingTools'),'fetchTools')),
       'label_associated'=>$this->getI18N()->__('Selected'),
-      'label_unassociated'=>$this->getI18N()->__('Available')
+      'label_unassociated'=>$this->getI18N()->__('Search')
     ));
 
     $this->widgetSchema['methods'] = new widgetFormSelectDoubleListFilterable(array(
       'choices' => new sfCallable(array(Doctrine_Core::getTable('CollectingMethods'),'fetchMethods')),
       'label_associated'=>$this->getI18N()->__('Selected'),
-      'label_unassociated'=>$this->getI18N()->__('Available')
+      'label_unassociated'=>$this->getI18N()->__('Search')
     ));
 
     $this->validatorSchema['methods'] = new sfValidatorPass();
@@ -410,7 +413,15 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 
     $this->validatorSchema['with_multimedia'] = new sfValidatorPass();
         //ftheeten 2018 11 22
-
+		
+		
+	$this->widgetSchema['link_type'] = new sfWidgetFormChoice(array(
+      'choices' => array_merge(array(""=>"all"),ExtLinks::getLinkTypes()),
+    ));	
+    $this->validatorSchema['link_type'] =  new sfValidatorPass();
+  
+   $this->widgetSchema['link_comment'] = new sfWidgetFormInputText();	
+    $this->validatorSchema['link_comment'] =  new sfValidatorString(array('required' => false, 'trim'=>true));
 
 
     /* Acquisition categories */
@@ -636,6 +647,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     );
     $this->widgetSchema['object_name'] = new sfWidgetFormInput();
     $this->validatorSchema['object_name'] = new sfValidatorString(array('required' => false));
+	
 
     $this->validatorSchema['floor'] = new sfValidatorString(array('required' => false));
 
@@ -800,6 +812,10 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 	$this->widgetSchema['wfs_search'] = new sfWidgetFormInputText();
     $this->widgetSchema['wfs_search']->setAttributes(array('class'=>'wfs_search'));
     $this->validatorSchema['wfs_search'] = new sfValidatorString(array('required' => false, 'trim' => true));
+	
+	$this->widgetSchema['wfs_search_translated'] = new sfWidgetFormInputText();
+    $this->widgetSchema['wfs_search_translated']->setAttributes(array('class'=>'wfs_search_translated'));
+    $this->validatorSchema['wfs_search_translated'] = new sfValidatorString(array('required' => false, 'trim' => true));
     
 	$this->widgetSchema['include_text_place'] = new sfWidgetFormChoice(array('choices' => array('OR' => 'OR', 'AND' => 'AND')));
  	$this->validatorSchema['include_text_place'] = new sfValidatorPass();
@@ -910,6 +926,46 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 	$this->widgetSchema['code_boolean'] = new sfWidgetFormChoice(array('choices' => array('OR' => 'OR', 'AND' => 'AND')));
   	////ftheeten 2015 01 08
 	$this->validatorSchema['code_boolean'] = new sfValidatorPass();
+	
+		$protocol_tmp=Doctrine_Core::getTable("Identifiers")->getDistinctProtocol();
+	$this->widgetSchema['institution_protocol'] = new sfWidgetFormChoice(array(
+       "choices"=> $protocol_tmp
+    ));
+    $this->validatorSchema['institution_protocol'] = new sfValidatorChoice(
+        array(
+         "choices"=> $protocol_tmp,
+         'multiple' => false,
+         "required"=>false
+         )
+    );
+	
+	$this->widgetSchema['institution_identifier'] = new sfWidgetFormInput();
+	$this->validatorSchema['institution_identifier'] = new sfValidatorPass();
+	
+	$this->widgetSchema['people_protocol'] = new sfWidgetFormChoice(array(
+       "choices"=> $protocol_tmp
+    ));
+    $this->validatorSchema['people_protocol'] =  new sfValidatorChoice(
+        array(
+         "choices"=> $protocol_tmp,
+         'multiple' => false,
+         "required"=>false
+         )
+    );
+	
+	$this->widgetSchema['people_identifier'] = new sfWidgetFormInput();
+	$this->validatorSchema['people_identifier'] = new sfValidatorPass();
+	
+	$this->widgetSchema['people_identifier_role'] = new sfWidgetFormChoice(array(
+       "choices"=> array(""=>"", "collector"=> "Collector", "determinator"=> "Determinator", "donator"=> "Donator")
+    ));
+	$this->validatorSchema['people_identifier_role'] =  new sfValidatorChoice(
+        array(
+         "choices"=> array("collector", "", "determinator", "donator"),
+         'multiple' => false,
+         "required"=>false
+         )
+    );
   
   }
 
@@ -1059,6 +1115,9 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 	
 	if( isset($values['wfs_search']))
     {
+		
+		$wfs_sql=Array();
+		
         if(strlen(trim($values['wfs_search'])))
         {
            $tmp_array=json_decode($values['wfs_search'], TRUE);
@@ -1082,6 +1141,28 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
                 $val_tmp="'{".implode(",", $val)."}'::integer[]";
                 $sql_block[]="  ST_INTERSECTS(ST_SETSRID(ST_Point(gtu_location[1], gtu_location[0]),4326),(SELECT rmca_get_wfs_geom('wfs.".$layer."', ".$val_tmp.")))"; 
            }
+		   
+		   if( isset($values['wfs_search_translated']))
+			{
+				if(strlen(trim($values['wfs_search_translated'])))
+				{					
+					$tmp_array=explode("|",$values['wfs_search_translated']);
+					
+					$i=1;
+					$conn_MGR = Doctrine_Manager::connection();
+					foreach($tmp_array as $elem)
+					{
+						if(strlen(trim($elem))>0)
+						{
+							$alias="j".$i;
+							$sql_block[]="EXISTS (SELECT id FROM Tags $alias where tag_indexed = fulltoindex(".$conn_MGR->quote($elem, 'string').") and $alias.gtu_ref=s.gtu_ref) ";
+							$i++;
+							
+						}
+					}
+					
+				}
+			}
            $wfs_sql = implode(" OR ", $sql_block );
            
            
@@ -1099,6 +1180,8 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 		   $query->andWhere($wfs_sql);
         }
     }
+	
+	
     return $query;
   }
 
@@ -1361,7 +1444,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
   
    public function addTagsColumn_text($val)
   {
-  print_r($val);
+  //print_r($val);
     $returned="";
     $conn_MGR = Doctrine_Manager::connection();
     $tagList = '';
@@ -1890,6 +1973,30 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 		return $query ;
 	}
 	
+    public function addLinks($query, $type, $comment) {
+		if(isset($type)||isset($comment))
+		{
+			if(strlen($type)>0||strlen($comment)>0)
+			{
+				$params=Array();
+				$sql="EXISTS (select l.id FROM ExtLinks l WHERE referenced_relation='specimens' ";
+				if(strlen($type)>0)
+				{
+					$sql.=" AND l.type = ?";
+					$params[]=$type;
+				}
+				if(strlen($comment)>0)
+				{
+					$sql.=" AND fulltoindex(l.comment) like '%'||fulltoindex(?)||'%' ";
+					$params[]=$comment;
+				}
+				$sql.=" AND l.record_id = s.id )";
+				$query->andWhere( $sql ,$params);
+			}
+		}
+		return $query ;
+	}
+	
    public function addPropertiesQuery($query, $type , $applies_to, $value_from, $value_to, $unit, $taintedValues=Array()) 
   {
   
@@ -2213,6 +2320,25 @@ $query = DQ::create()
     if ($values['litho_level_ref'] != '') $query->andWhere('litho_level_ref = ?', intval($values['litho_level_ref']));
     if ($values['lithology_level_ref'] != '') $query->andWhere('lithology_level_ref = ?', intval($values['lithology_level_ref']));
     if ($values['mineral_level_ref'] != '') $query->andWhere('mineral_level_ref = ?', intval($values['mineral_level_ref']));
+	
+	
+	if ($values['related_ref']!= '')
+	{
+
+		$array_linked=Doctrine_Core::getTable('SpecimensRelationships')->getAllRelated($values['related_ref']);
+		
+		$array_linked_str=Array();
+		foreach($array_linked as $key=>$row)
+		{
+			if(is_int($row[0]))
+			{
+				$array_linked_str[]=$row[0];			
+			}
+		}
+		
+		$array_linked_str="{".implode(",",$array_linked_str)."}";
+		$query->andWhere(" s.id = ANY ('".$array_linked_str."'::integer[])");
+    }
     $this->addLatLonColumnQuery($query, $values);
     $this->addNamingColumnQuery($query, 'expeditions', 'expedition_name_indexed', $values['expedition_name'],'s','expedition_name_indexed');
 
@@ -2256,6 +2382,10 @@ $query = DQ::create()
     $this->addCatalogueRelationColumnQuery($query, $values['lithology_item_ref'], $values['lithology_relation'],'lithology','lithology', $values['lithology_child_syn_included']);
     $this->addCatalogueRelationColumnQuery($query, $values['mineral_item_ref'], $values['mineral_relation'],'mineralogy','mineral', $values['mineral_child_syn_included']);
 
+    $this->addLinks($query, $values["link_type"], $values["link_comment"]);
+   
+   	$this->addInstitutionIdentifierQuery($query,   $values["institution_protocol"], $values["institution_identifier"]);
+	$this->addPeopleIdentifierQuery($query, $values["people_protocol"], $values["people_identifier"],$values["people_identifier_role"]);
    
     $query->limit($this->getCatalogueRecLimits());
 
@@ -2392,6 +2522,55 @@ $query = DQ::create()
       $query->andWhere('s.specimen_count_juveniles_max  <= '.$val);
     }
     return $query ;
+  }
+  
+  public function addInstitutionIdentifierQuery($query,  $protocol, $identifier)
+  {
+	  if(strlen($protocol)>0&&strlen($identifier)>0)
+	  {
+		   $query->andWhere("EXISTS (select i.id  from Identifiers i where s.institution_ref = i.record_id AND referenced_relation = 'people' AND LOWER(i.protocol)=? AND i.value=?)",array(strtolower($protocol), $identifier));
+	  }
+	  return $query;
+  }
+  
+  public function addPeopleIdentifierQuery($query,  $protocol, $identifier, $role="collector")
+  {
+	  if(strlen($protocol)>0&&strlen($identifier)>0)
+	  {
+		  $sql_params=Array();
+		  $id=Doctrine_Core::getTable('Identifiers')->getLinkedId($protocol, $identifier, "people");
+		  if($id!==null)
+		  {
+			  if($role == 'determinator')
+			  {
+				$build_query = "? =any(spec_ident_ids) " ;
+				$sql_params[]=$id;
+				
+			  }
+			  elseif($role == 'collector')
+			  {
+				 
+				  $build_query = "(? =any(spec_coll_ids) OR EXISTS (SELECT cp.id FROM CataloguePeople cp WHERE cp.referenced_relation= 'expeditions' AND cp.people_ref=? AND s.expedition_ref=cp.record_id ))" ;
+				  $sql_params=array($id, $id);
+
+			  }
+			  elseif($role == 'donator')
+			  {
+				$build_query .= "? =any(spec_don_sel_ids) " ;
+				$sql_params[]=$id;
+			  }
+			  else
+			  {
+				  $build_query = "(? =any(spec_coll_ids||spec_ident_ids||spec_don_sel_ids) OR EXISTS (SELECT cp.id FROM CataloguePeople cp WHERE cp.referenced_relation= 'expeditions' AND cp.people_ref=? AND s.expedition_ref=cp.record_id ))" ;
+				  $sql_params=array($id, $id);
+
+			  }
+			  $query->andWhere($build_query, $sql_params ) ;
+		  }
+	  
+	  }
+	  return $query;
+	  
   }
   
        //ftheeten 2018 04 10

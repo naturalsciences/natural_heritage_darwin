@@ -30,7 +30,25 @@ class institutionActions extends DarwinActions
 
   public function executeIndex(sfWebRequest $request)
   {
-    $this->form = new InstitutionsFormFilter();
+    if($request->getParameter('identifier_protocol', '') != ''&&$request->getParameter('identifier_value', ''))
+	{
+		
+		if($request->getParameter('format', '')=='application/json')
+		{
+			$this->getResponse()->setHttpHeader('Content-type','application/json');
+		    $this->setLayout('json');
+			$res_json=Doctrine_Core::getTable('Institutions')->getInstitutionAsArrayIdentifier($request->getParameter('identifier_protocol'),$request->getParameter('identifier_value'));			
+			return $this->renderText(json_encode($res_json));
+		}
+		else
+		{
+			$this->form = new InstitutionsFormFilter(array("protocol"=>$request->getParameter('identifier_protocol'), "identifier"=>$request->getParameter('identifier_value')));
+		}
+	}
+	else
+	{
+		$this->form = new InstitutionsFormFilter();
+	}
   }
 
   public function executeSearch(sfWebRequest $request)

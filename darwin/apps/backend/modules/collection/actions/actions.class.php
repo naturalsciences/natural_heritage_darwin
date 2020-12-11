@@ -320,7 +320,7 @@ class collectionActions extends DarwinActions
   {
     $this->getResponse()->setHttpHeader('Content-type','application/json');
     $this->setLayout('json');
-    return $this->renderText(json_encode($this->executeDisplay_statistics_specimens_main($request)));
+    return $this->renderText(json_encode($this->executeDisplay_statistics_specimens_main($request, true)));
   }
   
 
@@ -329,14 +329,14 @@ class collectionActions extends DarwinActions
   {
         $this->getResponse()->setHttpHeader('Content-type','application/json');
         $this->setLayout('json');
-        return   $this->renderText(json_encode($this->execute_statistics_generic($request, "types")));
+        return   $this->renderText(json_encode($this->execute_statistics_generic($request, "types", true)));
   }
   
   public function executeDisplay_statistics_taxa(sfWebRequest $request)
   {
         $this->getResponse()->setHttpHeader('Content-type','application/json');
         $this->setLayout('json');
-        return   $this->renderText(json_encode($this->execute_statistics_generic($request, "taxa")));
+        return   $this->renderText(json_encode($this->execute_statistics_generic($request, "taxa", true)));
   }
   
   public function executeDisplay_all_statistics_csv(sfWebRequest $request)
@@ -345,21 +345,21 @@ class collectionActions extends DarwinActions
     
     
     $returned[]="Specimen count";
-    $tmp=$this->executeDisplay_statistics_specimens_main($request);
+    $tmp=$this->executeDisplay_statistics_specimens_main($request, true);
     foreach($tmp as $row)
     {
         $returned[]=implode("\t", $row);
     }
     $returned[]="";
     $returned[]="Type specimen count";
-    $tmp=$this->execute_statistics_generic($request, "types");
+    $tmp=$this->execute_statistics_generic($request, "types", true);
     foreach($tmp as $row)
     {
         $returned[]=implode("\t", $row);
     }
     $returned[]="";
     $returned[]="Taxa in specimen count";
-    $tmp=$this->execute_statistics_generic($request, "taxa");
+    $tmp=$this->execute_statistics_generic($request, "taxa", true);
     foreach($tmp as $row)
     {
         $returned[]=implode("\t", $row);

@@ -16,4 +16,9 @@ class userswidgetComponents extends sfComponents
   {
      $this->login_info =  Doctrine_Core::getTable('UsersLoginInfos')->getInfoForUser($this->eid);
   }
+  
+  public function executeIdentifiers()
+  {
+     $this->identifiers =  Doctrine_Core::getTable('Identifiers')->findForTable("users", $this->eid);
+  }
 }

@@ -139,7 +139,7 @@ class GtuFormFilter extends BaseGtuFormFilter
     foreach($val as $line)
     {
       $line_val = $line['tag'];
-
+      print($line_val);
       if( $line_val != '')
       {
         //$tagList = $conn_MGR->quote($line_val, 'string');
@@ -170,7 +170,7 @@ class GtuFormFilter extends BaseGtuFormFilter
 					}
 					$tagvalue=trim($tagvalue);
 					$tagvalue = $conn_MGR->quote($tagvalue, 'string');
-                     $sqlClause[]="(tag_values_indexed::varchar ~ fulltoindex_add_prefix_suffix(fulltoindex($tagvalue, '\s(\.\*)', '{\\,/}'::varchar[]),$tagPrefix, $tagSuffix))";
+                     $sqlClause[]="(tag_values_indexed::varchar ~ fulltoindex_add_prefix_suffix(fulltoindex($tagvalue, TRUE, TRUE),$tagPrefix, $tagSuffix))";
                 }
                 else
                 {
@@ -184,7 +184,7 @@ class GtuFormFilter extends BaseGtuFormFilter
 					}
 					$tagvalue=trim($tagvalue);
 					$tagvalue = $conn_MGR->quote($tagvalue, 'string');
-                    $sqlClause[]="(tag_indexed::varchar ~ fulltoindex_add_prefix_suffix(fulltoindex($tagvalue,  '\s(\.\*)', '{\\,/}'::varchar[]),$tagPrefix, $tagSuffix))";
+                    $sqlClause[]="(tag_indexed::varchar ~ fulltoindex_add_prefix_suffix(fulltoindex($tagvalue, TRUE, TRUE),$tagPrefix, $tagSuffix))";
                 }
             }
         }
@@ -206,7 +206,6 @@ class GtuFormFilter extends BaseGtuFormFilter
 			$query->addOrderBy("fct_rmca_gtu_orderby_pattern(tag,$tagvalue )");
 	  }
 
-      
     return $query;
   }
 

@@ -571,7 +571,19 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
                             $queryTmp.= " ( ";
 
                             $synonyms = Doctrine_Core::getTable('ClassificationSynonymies')->findSynonymsIds($table, $item_ref);
-
+                            $super_synonyms=Array();
+                             if(in_array("child",$relations))
+                            {
+								$synonyms_2 = Doctrine_Core::getTable('ClassificationSynonymies')->getAllChildSynonyms($item_ref);
+								$super_synonyms=array_merge($synonyms,$synonyms_2 );
+							}
+							elseif(in_array("direct_child",$relations))
+                            {
+								$synonyms_2 = Doctrine_Core::getTable('ClassificationSynonymies')->getAllDirectChildSynonyms($item_ref);
+								$super_synonyms=array_merge($synonyms,$synonyms_2 );
+						    }
+                            print("debug");
+							$super_synonyms=array_unique($super_synonyms);
                             //if(empty($synonyms))
                             //$query->andWhere('0=1'); //False
                             //$query->andWhereIn($field_prefix."_ref",$synonyms)
@@ -588,9 +600,10 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
                                 if(in_array("child",$relations))
                                 {
                                     //$queryTmp.=" OR 24=24 ";
+									
                                     foreach($synonyms as $syno_object)
                                     {
-                                        $queryTmp.=" OR ".$field_prefix."_path like '%/".$syno_object."/%'" ;
+                                        $queryTmp.=" OR ".$field_prefix."_path like '%/".$syno_object."/%' " ;
                                     }
                                 }
                                 elseif(in_array("direct_child",$relations))
@@ -599,11 +612,15 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
                                     {
                                         $queryTmp.=" OR ".$field_prefix."_parent_ref = ".$syno_object ;
                                     }
-                                }
-                                
+                                }                 
                                 
                             }
                             $queryTmp.= " ) ";
+                            if(count($super_synonyms)>0)
+                            {
+                                   $queryTmp.=" OR (EXISTS(SELECT 1 FROM taxonomy WHERE taxonomy.id=taxon_ref AND taxonomy.id IN (".implode(",", $super_synonyms ).") ))"; ;
+                                   
+                           }
 
                         }
                    

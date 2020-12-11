@@ -115,11 +115,10 @@ class MySavedSearchesTable extends DarwinTable
 	  return $q->fetch()[0];
   }
   
-public function getSavedSearchData($user_id, $query_id)
-  {
-  
-            $test=sfContext::getInstance()->getUser()->isAtLeast(Users::ADMIN);
-            if($test)
+public function getSavedSearchData($user_id, $query_id, $p_is_admin=false)
+  {  
+           
+            if($p_is_admin)
             {
                 $is_adm="'TRUE'::BOOLEAN";
             }
@@ -128,13 +127,14 @@ public function getSavedSearchData($user_id, $query_id)
                 $is_adm="'FALSE'::BOOLEAN";            
             }
                 
-                        $sql="SELECT
+             $sql="SELECT
 
                        a.id as id,
                         collection_code,
 
                         code,
                         additional_codes,
+						'".sfConfig::get('dw_root_url_uuid')."'||uuid::varchar as uuid,
                         ig_num,
                         string_agg(DISTINCT taxon_name,'; ') as taxon_name,
                         string_agg(DISTINCT author,'; ') as author,
@@ -212,6 +212,7 @@ public function getSavedSearchData($user_id, $query_id)
 
                              CASE WHEN coll_user_type>= 4 OR is_adm is true THEN
                          sub_container else 'NOT_APPLICABLE' END as sub_container
+						 
 
       
                              
@@ -346,7 +347,8 @@ longitude_text,
                              shelf,
                              container,
                              sub_container,
-                             cr.db_user_type as coll_user_type
+                             cr.db_user_type as coll_user_type,
+							 uuid
                             ,
                              ".$is_adm." as IS_ADM
                             FROM specimens s
@@ -416,7 +418,8 @@ longitude_text,
 		             LEFT JOIN collections_rights cr
 		             ON s.collection_ref =cr.collection_ref
                             AND user_ref=:ID_USER
-
+							LEFT JOIN specimens_stable_ids
+								ON s.id=specimens_stable_ids.specimen_ref
                             GROUP BY s.id, c.code_prefix, c.code_prefix_separator, c.code, c.code_suffix, c.code_suffix_separator, i.id , col_tool.tool, col_meth.method,
                             --2018 11 21
                             ident.given_name, ident.family_name
@@ -432,7 +435,7 @@ longitude_text,
                              row, 
                              shelf,
                              container,
-                             sub_container, cr.db_user_type 
+                             sub_container, cr.db_user_type , uuid
                             ) a
 
 
@@ -489,7 +492,8 @@ longitude_text,
                              shelf,
                              container,
                              sub_container,
-                             coll_user_type, is_adm
+                             coll_user_type, is_adm,
+							 uuid
 
                         ORDER BY code
                          LIMIT 50000;";
@@ -519,6 +523,58 @@ longitude_text,
                         return $dataset;
   
   }
+  
+  public function getSavedSearchDataTaxonomyStatistics($user_id, $query_id)
+  {
+                        $sql="SELECt DISTINCT * FROM fct_rmca_dynamic_saved_search_taxonomy_statistics_detail(:ID_Q,:ID_USER) ORDER BY display_order;";
+                        
+                        $conn = Doctrine_Manager::connection();
+                        $q = $conn->prepare($sql);
+                        $q->bindParam(":ID_Q", $query_id, PDO::PARAM_INT);
+                        $q->bindParam(":ID_USER", $user_id, PDO::PARAM_INT);
+                        $q->execute();
+    
+                        $dataset=$q->fetchAll(PDO::FETCH_ASSOC);
+                        return $dataset;
+  
+  }
+  
+
+  public function getSavedSearchDataPage($user_id, $query_id, $page, $page_size, $p_is_admin)
+  {
+  
+            
+            if($p_is_admin)
+            {
+                $is_adm="'TRUE'::BOOLEAN";
+            }
+            else
+            {
+                $is_adm="'FALSE'::BOOLEAN";            
+            }
+                
+                        $sql="SELECT *  FROM  fct_rmca_dynamic_saved_search_get_specimen(:ID_Q,:ID_USER, :PREFIX, :PAGE,:SIZE,".$is_adm.");";
+                        
+                        $conn = Doctrine_Manager::connection();
+						$prefix=sfConfig::get('dw_root_url_uuid');
+                        $q = $conn->prepare($sql);
+                        $q->bindParam(":ID_Q", $query_id, PDO::PARAM_INT);
+                        $q->bindParam(":ID_USER", $user_id, PDO::PARAM_INT);  
+						$q->bindParam(":PREFIX", $prefix, PDO::PARAM_STR);
+						$q->bindParam(":PAGE", $page, PDO::PARAM_INT); 
+						$q->bindParam(":SIZE", $page_size, PDO::PARAM_INT);
+                        $q->execute();
+    
+                     
+                        $dataset=$q->fetchAll(PDO::FETCH_ASSOC);
+						
+                        return $dataset;
+  
+  }
+  
+
+
+  
   
   
   
