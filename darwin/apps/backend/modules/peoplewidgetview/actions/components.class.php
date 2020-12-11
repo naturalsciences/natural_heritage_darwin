@@ -35,5 +35,15 @@ class peoplewidgetViewComponents extends sfComponents
   public function executeInformativeWorkflow()
   {
     $this->informativeWorkflow = Doctrine_Core::getTable('InformativeWorkflow')->findForTable($this->table, $this->eid);
+  } 
+
+  public function executeIdentifiers()
+  {
+	  
+  }
+  
+  public function executePeopleSubTypes()
+  {
+	  
   }  
 }

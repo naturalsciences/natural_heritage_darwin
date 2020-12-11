@@ -159,6 +159,14 @@ class importActions extends DarwinActions
       {
         $this->type="locality";        
       }
+	  elseif($request->getParameter('format') == 'files')
+      {
+        $this->type="files";        
+      }
+	  elseif($request->getParameter('format') == 'links')
+      {
+        $this->type="links";        
+      }
       elseif($request->getParameter('format') == 'lithostratigraphy')
       {
         $this->type="lithostratigraphy";        
@@ -210,6 +218,14 @@ class importActions extends DarwinActions
                    elseif($this->type == 'lithostratigraphy')
                   {
                     $this->redirect('import/indexLithostratigraphy');
+                  }
+				   elseif($this->type == 'files')
+                  {
+                    $this->redirect('import/indexFiles');
+                  }
+				  elseif($this->type == 'links')
+                  {
+                    $this->redirect('import/indexLinks');
                   }
                   else
                   {          
@@ -270,6 +286,14 @@ class importActions extends DarwinActions
     elseif($this->format == 'locality')
     {
       $this->s_url = 'import/searchLocality'.'?is_choose='.$this->is_choose;
+    }
+	elseif($this->format == 'files')
+    {
+      $this->s_url = 'import/searchFiles'.'?is_choose='.$this->is_choose;
+    }
+	elseif($this->format == 'links')
+    {
+      $this->s_url = 'import/searchLinks'.'?is_choose='.$this->is_choose;
     }
     elseif($this->format == 'abcd')
     {
@@ -623,6 +647,7 @@ EOF
   {
     $id_staging_gtu=$request->getParameter("staging_gtu_id");
     $sampling_code=$request->getParameter("sampling_code");
+	$currentDir=getcwd();
     if(is_numeric($id_staging_gtu) && strlen(trim($sampling_code))>0)
     {
         $staging_gtu=Doctrine_Core::getTable("StagingGtu")->find($id_staging_gtu);
@@ -843,6 +868,66 @@ EOF
     $this->andSearch($request,'lithostratigraphy') ;
     $this->setTemplate('search');
   }
+      //ftheeten 2018 08 05
+    public function executeIndexFiles(sfWebRequest $request)
+  {
+    $this->format = 'files' ;
+    $this->form = new ImportsFilesFormFilter(null,array('user' =>$this->getUser()));    
+    $this->setTemplate('index');
+  }
+  
+   public function executeSearchFiles(sfWebRequest $request)
+  {
+    $this->form = new ImportsFilesFormFilter(null,array('user' =>$this->getUser()));
+    $this->andSearch($request,'files') ;
+    $this->setTemplate('search');
+  }
+
+
+
+  public function executeLoadfiles(sfWebRequest $request)
+  {
+    $idImport=$request->getParameter("id");
+	  $currentDir=getcwd();
+
+      chdir(sfconfig::get('sf_root_dir')); 
+  
+       $cmd='darwin:import-files --id='.$idImport;          
+      exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+
+      chdir($currentDir);	 
+	  $this->redirect('import/indexFiles');
+  }
+  
+ 
+    public function executeIndexLinks(sfWebRequest $request)
+  {
+    $this->format = 'links' ;
+    $this->form = new ImportsLinksFormFilter(null,array('user' =>$this->getUser()));    
+    $this->setTemplate('index');
+  }
+  
+   public function executeSearchLinks(sfWebRequest $request)
+  {
+    $this->form = new ImportsLinksFormFilter(null,array('user' =>$this->getUser()));
+    $this->andSearch($request,'links') ;
+    $this->setTemplate('search');
+  }
+  
+    public function executeLoadlinks(sfWebRequest $request)
+  {
+    $idImport=$request->getParameter("id");
+	  $currentDir=getcwd();
+
+      chdir(sfconfig::get('sf_root_dir')); 
+  
+       $cmd='darwin:import-links --id='.$idImport;          
+      exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+
+      chdir($currentDir);	 
+	  $this->redirect('import/indexLinks');
+  }
+  
 
   
   

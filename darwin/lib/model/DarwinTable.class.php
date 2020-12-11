@@ -422,4 +422,29 @@ class DarwinTable extends Doctrine_Table
     }
     return $results;
   }
+  
+   public function createUniqFlatDistinct($table, $column,  $new_col='item', $empty = false)
+  {
+    if(! isset($this->flat_results)){
+      $q = Doctrine_Query::create()
+        ->useResultCache(true)
+        ->setResultCacheLifeSpan(5) //5 sec
+        ->From('FlatDict')
+        ->select('dict_field, dict_value')
+        ->andwhere('referenced_relation = ?', $table)
+        ->orderBy("dict_value ASC");
+      $res = $q->execute();
+      $this->flat_results = array();
+      foreach($res as $result) 
+      {
+        if(! isset($this->flat_results[$result->getDictField()]))
+          $this->flat_results[$result->getDictField()] = array();
+        $this->flat_results[$result->getDictField()][$result->getDictValue()] = $result->getDictValue();
+      }
+    }
+    if(isset($this->flat_results[$column]))
+      return $this->flat_results[$column];
+    return array();
+  }
+
 }

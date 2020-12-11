@@ -1,5 +1,3 @@
-<script language="JavaScript" type="text/javascript" src="<?php print(public_path('/openlayers/v5.2.0-dist/ol.js'));?>"></script>
-<link rel="stylesheet" href="<?php print(public_path('/openlayers/v5.2.0-dist/ol.css'));?>"> 
  <div class="container">
     <table id="gtu_search">
       <thead>
@@ -104,7 +102,7 @@
  <!--ftheeten 2018 10 05-->
     <style>
 
-      
+      .qtip { max-width: none !important; }
       .draw-box {
         top: 65px;
         left: .5em;
@@ -183,29 +181,35 @@
     </tr>
   </table>
 </div>
+
   <div id="map_search_form">
+ 
     <div >
         <div style="width: 100%; height:500px; display:inline-block" id="smap">
-          <select id="addwms" class="form-control">
-			  <option value="rbins_natural_earth_adm" >Natural Earth Administrative</option>
-			  <option value="rbins_natural_earth_physical" >Natural Earth Physical</option>
-        </select>
+         <select id="addwms" class="form-control">
+				<?php foreach(sfConfig::get('dw_wfs_layers') as $url=>$name):?>
+					<option value="<?php print($url);?>"><?php print($name);?></option>
+				<?php endforeach;?>				  
+			</select>
         <input id="browse_wms" type="button" value="Browse layers"></input>		
 		<select id="addwmslayer" class="form-control">
 			
         </select>
 		<input id="put_layer" type="button" value="Add layers"></input>
 		<select id="layer-select">
-                       <option value="Aerial">Aerial</option>
+                       <!---<option value="Aerial">Aerial</option>
                        <option value="AerialWithLabels" selected>Aerial with labels</option>
                        <option value="Road">Road (static)</option>
-                       <option value="RoadOnDemand">Road (dynamic)</option>
+                       <option value="RoadOnDemand">Road (dynamic)</option>-->
 					   <option value="OSM">OpenStreetMap</option>
+					   <option value="esri_satelite">ESRI Web service</option>
+					   
         </select>
 		<br/>
 		Selected layers :
 		<input type="text" id="chosen_layer" style="width:70%" readonly>
-		 <input id="remove_last" type="button" value="Remove last"></input>	
+		 <input id="remove_last" type="button" value="Remove last"></input>
+			<input type="button" value="<?php echo __("List from map");?>" name="btn_translate_wfs" id="btn_translate_wfs" class="result_choose"/>
         </div>
         <div id="mouse-position"></div>    
     </div>   
@@ -217,6 +221,9 @@
         </tr>
 		<tr>
             <td><?php echo $form['wfs_search']->renderLabel();?></td><td><?php echo $form['wfs_search']->render();?></td>
+        </tr>
+		<tr>
+            <td><?php echo $form['wfs_search_translated']->renderLabel();?></td><td><?php echo $form['wfs_search_translated']->render();?></td> 	
         </tr>
         </table>
   </div>
@@ -264,6 +271,10 @@
 		
 	}
 	
+	var ol_ext_inherits = function(child,parent) {
+		child.prototype = Object.create(parent.prototype);
+		child.prototype.constructor = child;
+	};
 	var remove_last=function()
 	{
 		WFSArray.pop();
@@ -434,7 +445,7 @@
 			style:styleLine
 		});
 	  
-		var styles = [
+		/*var styles = [
 			'Road',
 			'RoadOnDemand',
 			'Aerial',
@@ -447,14 +458,25 @@
 			  visible: false,
 			  preload: Infinity,
 			  source: new ol.source.BingMaps({
-				key: " Al7loRcflCy8zRE2HskZKe4cQfzbiMu_kUEUaxjlQNH6DbLHfSqRC2O0_L2ibekX",
+				key: " <?php print(sfConfig::get('dw_bing_key'));?>",
 				imagerySet: styles[i]
 				// use maxZoom 19 to see stretched tiles instead of the BingMaps
 				// "no photos at this zoom level" tiles
 				// maxZoom: 19
 			  })
 			}));
-		}
+		}*/
+		var layers = [];
+		var styles=["esri_satelite"];
+		var esri= new ol.layer.Tile({
+		  source: new ol.source.XYZ({
+			url:
+			  'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+	
+			  maxZoom:12
+		  }),
+		});
+		layers.push(esri);
 		OSM_layer = new ol.layer.Tile({
 		    visible: false,
             source: new ol.source.OSM()
@@ -495,7 +517,7 @@
                   target: options.target
                 });
       };
-     ol.inherits(DrawBoxControl, ol.control.Control);
+      ol_ext_inherits(DrawBoxControl, ol.control.Control);
      
      //button draw Polygons
       DrawPolygonControl = function(opt_options) {
@@ -526,7 +548,7 @@
                   target: options.target
                 });
       };
-     ol.inherits(DrawPolygonControl, ol.control.Control);
+     ol_ext_inherits(DrawPolygonControl, ol.control.Control);
      
       //button moveMap
        MoveMapControl = function(opt_options) {
@@ -548,7 +570,7 @@
                   target: options.target
                 });
       };
-     ol.inherits(MoveMapControl, ol.control.Control);
+     ol_ext_inherits(MoveMapControl, ol.control.Control);
 	 
 	
 	  
@@ -583,7 +605,15 @@
       var select = document.getElementById('layer-select');
 			function onChange() {
 			//console.log(select.value)
-			if(select.value!="OSM")
+			/*if(select.value!="OSM")
+			{
+				OSM_layer.setVisible(false);
+				var style = select.value;
+				for (var i = 0, ii = layers.length; i < ii; ++i) {
+				  layers[i].setVisible(styles[i] === style);
+				}
+			}*/
+			if(select.value=="esri_satelite")
 			{
 				OSM_layer.setVisible(false);
 				var style = select.value;
@@ -650,7 +680,107 @@
 	}
     
    // drawmap();
-    
+    $('#btn_translate_wfs').on('click',purposeTagsListWfs);
+	
+	 function purposeTagsTranslate_logic(name_session_item, value_item, url, p_data)
+  {
+	    sessionStorage.setItem(name_session_item, value_item);
+	    var last_position = $("#gtu_search").offset().top ;
+	    
+		// $(".translate_modal").modal_screen();
+		 $(this).qtip({
+		  id: 'modal',
+		  content: {
+			text: '<img src="/images/loader.gif" alt="loading"> Loading ...',
+			title: { button: true, text: "" },
+			ajax: {
+			     url: url,
+					type: 'GET',
+					// Take name in input if set
+					data: p_data
+			}
+		  },
+		  position: {
+			my: 'top center',
+			at: 'top center',
+			adjust:{
+			  y: 250 // option set in case of the qtip become too big
+			},
+			target: $(document.body)
+		  },
+
+		  show: {
+			ready: true,
+			delay: 0,
+			event: event.type,
+			solo: true,
+			modal: {
+			  on: true,
+			  blur: false
+			}
+		  },
+		  hide: {
+			event: 'close_modal_gtu',
+			target: $('body')
+		  },
+		  events: {
+			show: function () {
+			  ref_element_id = null;
+			  ref_element_name = null;
+			},
+			hide: function(event, api) {
+			  if(ref_element_id != null && ref_element_name != null)
+			  {
+				parent_el = api.elements.target.parent().prevAll('.ref_name');
+				if(parent_el.get( 0 ).nodeName == 'INPUT')
+				  parent_el.val(ref_element_name);
+				else
+				  parent_el.text(ref_element_name);
+				parent_el.prev().val(ref_element_id);
+				api.elements.target.parent().prevAll('.ref_clear').removeClass('hidden').show();
+				api.elements.target.find('.off').removeClass('hidden');
+				api.elements.target.find('.on').addClass('hidden');
+				parent_el.prev().trigger('change');
+				if (data_field_to_clean !== '') {
+				  if ($('.'+data_field_to_clean).length) {
+					$('.'+data_field_to_clean).val('');
+				  }
+				}
+			  }
+			  
+			  scroll(0,last_position) ;
+			  api.destroy();
+			}
+		  },
+		  style: 'ui-tooltip-light ui-tooltip-rounded'
+		},event);
+		
+		window.scrollTo(0, 250);
+				
+  }
+  
+   function purposeTagsListWfs(event)
+  {
+	  if($(".wfs_search").val().length>0)
+	  {
+		  var tmp_list=JSON.parse($(".wfs_search").val());
+		  var i;
+		  var layer;
+		  var tmp_ids=Array();
+		  
+		  for(i=0;i<tmp_list.length; i++)
+		  {
+			  layer=tmp_list[i]["layer"];
+			  tmp_ids.push(tmp_list[i]["value"]);
+		  }
+		  if(tmp_ids>0)
+		  {
+			
+			var data= {with_js:1, layer: 'wfs.'+layer, ids:tmp_ids.join(",")};
+			purposeTagsTranslate_logic("translated_line_wfs", '.wfs_search_translated',"<?php echo(url_for('gtu/gtuTranslationWfsGeom?'));?>" , data);
+		  }
+	  }
+  }
     $(document).ready(
         function()
         {
@@ -670,6 +800,8 @@
                   $('#map_search_form').hide();
                 }
               });
+			  
+		$('#btn_translate_wfs').on('click',purposeTagsListWfs);
 
         }
     );

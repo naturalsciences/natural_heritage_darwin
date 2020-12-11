@@ -94,8 +94,16 @@ class cataloguewidgetComponents extends sfComponents
         $gtu = Doctrine_Core::getTable('Gtu')->find($this->eid);
         $this->form = new GtuForm($gtu);
         $this->gtu_id = $this->eid;
-	  }
-    
-	
+	  }	
+  }
+  
+  public function executeIdentifiers()
+  {
+	  $this->identifiers = Doctrine_Core::getTable('Identifiers')->findForTable($this->table, $this->eid); 
+  }
+  
+  public function executePeopleSubTypes()
+  {
+	  $this->sub_types = Doctrine_Core::getTable('PeopleSubTypes')->findByPeopleRef($this->eid); 
   }
 }

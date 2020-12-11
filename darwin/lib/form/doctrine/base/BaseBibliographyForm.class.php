@@ -31,6 +31,18 @@ abstract class BaseBibliographyForm extends DarwinModelForm
     $this->widgetSchema   ['year'] = new sfWidgetFormInputText();
     $this->validatorSchema['year'] = new sfValidatorInteger(array('required' => false));
 
+    $this->widgetSchema   ['reference'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['reference'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['uri_protocol'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['uri_protocol'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['uri'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['uri'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['id'] = new sfWidgetFormInputHidden();
+    $this->validatorSchema['id'] = new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false));
+
     $this->widgetSchema->setNameFormat('bibliography[%s]');
   }
 

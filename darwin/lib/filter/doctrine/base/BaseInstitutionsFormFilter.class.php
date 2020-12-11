@@ -32,6 +32,9 @@ abstract class BaseInstitutionsFormFilter extends DarwinModelFormFilter
     $this->widgetSchema   ['additional_names'] = new sfWidgetFormFilterInput();
     $this->validatorSchema['additional_names'] = new sfValidatorPass(array('required' => false));
 
+    $this->widgetSchema   ['id'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['id'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => 'Institutions', 'column' => 'id'));
+
     $this->widgetSchema->setNameFormat('institutions_filters[%s]');
   }
 
@@ -49,6 +52,7 @@ abstract class BaseInstitutionsFormFilter extends DarwinModelFormFilter
       'formated_name_indexed' => 'Text',
       'family_name' => 'Text',
       'additional_names' => 'Text',
+      'id' => 'Number',
     ));
   }
 }

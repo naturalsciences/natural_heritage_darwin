@@ -7,7 +7,8 @@
 <?php if(isset($notion) && (($notion == 'method' || $notion =='tool'))):?>
   <?php echo form_tag('methods_and_tools/search?notion='.$notion.( isset($is_choose) ? '&is_choose='.$is_choose : '') , array('class'=>'search_form','id'=>'methods_and_tools_filter'));?>
     <div class="container">
-      <table class="search hidden" id="<?php echo ($is_choose)?'search_and_choose':'search' ?>">
+    <div  style="text-align:right"><input class="search_submit get_tab" type="button" name="search" value="<?php echo __('Get tab-delimited'); ?>" /></div>
+      <table class="search " id="<?php echo ($is_choose)?'search_and_choose':'search' ?>">
         <thead>
           <tr>
             <th><?php echo $form[$notion]->renderLabel() ?></th>
@@ -31,12 +32,52 @@
     </div>
   </form>
 <?php else:?>
-  <?php echo __('You need to specify if you wish to work on tools or methods');?>
+  <?php echo __('You need to specify if you wish to work on tools or methods');$notion="";?>
 <?php endif;?>
 </div>
 <script language="javascript">
 $(document).ready(function () {
   $('.catalogue_methods').choose_form({});
   $('form#methods_and_tools_filter').submit();
+  
+    $(".get_tab").click(
+	function()
+	{
+		
+   
+		var $tmp=$('form:first');
+		
+		var new_target="<?php echo url_for('methods_and_tools/downloadTab') ?>";		
+		var $inputs = $('form:first :input');
+        var form = document.createElement("form");
+		form.hidden=true;
+		form.setAttribute("method", "post");
+		form.setAttribute("action", new_target);
+        
+		form.setAttribute("target", "view");
+        var hiddenField = document.createElement("input"); 			
+	    hiddenField.setAttribute("name", "notion");
+	    hiddenField.setAttribute("value", "<?php print($notion);?>");
+      
+	    form.appendChild(hiddenField);
+        
+       $inputs.each(function() {
+			var hiddenField = document.createElement("input"); 
+			
+			hiddenField.setAttribute("name", this.name);
+			hiddenField.setAttribute("value", $(this).val());
+			
+			form.appendChild(hiddenField);
+		});
+		
+		
+		
+		document.body.appendChild(form);
+
+		window.open('', 'view');
+console.log( "SUBMI");   
+		form.submit();
+	}
+    );
 });
 </script>

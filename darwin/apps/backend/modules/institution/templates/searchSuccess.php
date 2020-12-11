@@ -10,6 +10,7 @@
   <div class="results_container">
     <table class="results <?php if($is_choose) echo 'is_choose';?>">
       <thead>
+		  <th><?php echo __('Identifiers');?></th>
           <th>
             <a class="sort" href="<?php echo url_for($s_url.'&orderby=family_name'.( ($orderBy=='family_name' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
               <?php echo __('Name');?>
@@ -33,6 +34,7 @@
       <tbody>
         <?php foreach($items as $item):?>
           <tr class="rid_<?php echo $item->getId();?>">
+			<td><?php echo $item->getIdentifiers() ?></td>
             <td class="item_name"><?php echo $item->getFamilyName();?></td>
             <td><?php echo $item->getAdditionalNames() ?></td>
             <td><?php echo $item->getSubType() ?></td>

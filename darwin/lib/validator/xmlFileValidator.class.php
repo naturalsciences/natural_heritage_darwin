@@ -30,7 +30,12 @@ class xmlFileValidator extends sfValidatorFile
     }
   
     //ftheeten 2017 09 07 part for tab-delimited
-    if(mime_content_type($value['tmp_name'])=="text/plain"||mime_content_type($value['tmp_name'])=="text/x-c++")
+    if(mime_content_type($value['tmp_name'])=="application/zip")
+	{
+		 $class = $this->getOption('validated_file_class');
+        return new $class($value['name'], 'application/zip', $value['tmp_name'], $value['size'], $this->getOption('path'));
+	}
+    elseif(mime_content_type($value['tmp_name'])=="text/plain"||mime_content_type($value['tmp_name'])=="text/x-c++")
     {
         $delimiter=$this->getFileDelimiter($value['tmp_name'], $checkLines = 2);
         if($delimiter!=='\t')

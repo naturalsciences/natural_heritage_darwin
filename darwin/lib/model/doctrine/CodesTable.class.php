@@ -87,4 +87,28 @@ class CodesTable extends DarwinTable
       orderBy('code_category ASC,  full_code_indexed ASC');
     return $q->execute();
   }
+  
+   public function getByCodesFull( $code, $table='specimens',$case_insensitive=true)
+  {
+    
+	if($case_insensitive)
+	{
+		$clause="LOWER(concat( concat(COALESCE(code_prefix,''), COALESCE(code_prefix_separator,''),  COALESCE(code,'') ), 
+        COALESCE(code_suffix_separator,''), COALESCE(code_suffix,'')))=LOWER(?)";
+	}
+	else
+	{
+		$clause="concat( concat(COALESCE(code_prefix,''), COALESCE(code_prefix_separator,''),  COALESCE(code,'') ), 
+        COALESCE(code_suffix_separator,''), COALESCE(code_suffix,''))=?";
+	}
+    $q = Doctrine_Query::create()->
+      select("record_id, code_category, concat( concat(COALESCE(code_prefix,''), COALESCE(code_prefix_separator,''),  COALESCE(code,'') ), 
+        COALESCE(code_suffix_separator,''), COALESCE(code_suffix,'')) as full_code")->
+      from('Codes')->
+      where('referenced_relation = ?', $table)->
+      andWhere($clause,$code)->
+      orderBy('code_category ASC,  full_code_indexed ASC');
+	  
+    return $q->execute();
+  }
 }

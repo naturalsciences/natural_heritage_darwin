@@ -94,7 +94,7 @@ foreach($form['newVal'] as $group)
     <div id="reverse_tags" style="display: none;"><ul></ul><br class="clear" /></div>
     <div>
 		<!--DMS/DD selector  ftheeten 2015 05 05-->
-		<b><?php echo $form['coordinates_source']->renderLabel() ;?><?php echo $form['coordinates_source']->renderError() ?></b><br/><?php echo $form['coordinates_source'];?>
+		<b><?php echo $form['coordinates_source']->renderLabel() ;?><?php echo $form['coordinates_source']->renderError() ?></b><br/><?php echo $form['coordinates_source'];?> <?php echo image_tag('remove.png', array("class"=> "delete_coords")); ;?>
 		
 	</div>
     <table>
@@ -899,6 +899,16 @@ function initUTM(name, zone, direction )
             var latlng = L.latLng(lati, longi);
             drawPoint(latlng, accu );
         }
+		
+	    $(".delete_coords").click(
+				function()
+				{
+					console.log("delete");
+					$(".convertDD2DMSGeneral").val("");
+					$(".convertDMS2DDGeneralOnLeave").val("");
+					$(".UTM2DDGeneralOnLeave").val("");
+				}
+			);
 		
 
 	

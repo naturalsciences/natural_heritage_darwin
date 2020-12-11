@@ -75,6 +75,17 @@ usr2:
    visible: true
    title_perso: Addresses
    all_public: true
+   
+usr3:
+   col_num: 1
+   category: users_widget
+   group_name: identifiers
+   mandatory: false
+   order_by: 5
+   opened: true
+   visible: true
+   title_perso: Identifiers
+   all_public: true
 
 sps1:
    col_num: 1
@@ -383,6 +394,7 @@ sps28:
    visible: false
    title_perso: Identification
    all_public: true
+   
 
 #jmherpers 20190506
 sps31:
@@ -396,6 +408,16 @@ sps31:
    title_perso: Nagoya
    all_public: true
 
+sps32:
+   col_num: 1
+   category: specimensearch_widget
+   group_name: extLinks
+   mandatory: false
+   order_by: 21
+   opened: false
+   visible: false
+   title_perso: External links
+   all_public: true
    
 sw1:
    col_num: 1
@@ -1338,6 +1360,19 @@ pe9:
    visible: true
    title_perso: Related Files
    all_public: true
+   
+pe10:
+   col_num: 1
+   category: people_widget
+   group_name: identifiers
+   mandatory: false
+   order_by: 10
+   opened: true
+   visible: true
+   title_perso: Identifiers
+   all_public: true
+
+
 
 ins1:
    col_num: 1
@@ -1404,6 +1439,29 @@ ins8:
    visible: true
    title_perso: Related Files
    all_public: true
+   
+ins9:
+   col_num: 2
+   category: people_institution_widget
+   group_name: identifiers
+   mandatory: false
+   order_by: 9
+   opened: true
+   visible: true
+   title_perso: Identifiers
+   all_public: true
+
+ins10:
+   col_num: 2
+   category: people_institution_widget
+   group_name: peopleSubTypes
+   mandatory: false
+   order_by: 10
+   opened: true
+   visible: true
+   title_perso: People category
+   all_public: true
+
 
 bib2:
    col_num: 1

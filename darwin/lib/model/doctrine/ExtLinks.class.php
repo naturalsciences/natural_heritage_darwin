@@ -16,7 +16,9 @@ class ExtLinks extends BaseExtLinks
     'ext' => 'External',
     'vc' => 'Virtual Collection',
 	'nagoya'=> 'Nagoya',
-	'ltp' => 'LTP'
+	'ltp' => 'LTP',
+	'iiif' => 'IIIF',
+	'dna' => 'DNA link',
     ) ;
 
   static public function getLinkTypes()

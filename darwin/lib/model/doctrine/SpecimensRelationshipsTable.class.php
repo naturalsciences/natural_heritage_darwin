@@ -41,4 +41,16 @@ class SpecimensRelationshipsTable extends DarwinTable
          andWhere('specimen_related_ref = ?', $spec_id);
     return $q->execute();
   }
+  
+      public function getAllRelated($spec_id)
+  {
+	  
+	  $conn = Doctrine_Manager::connection();
+		$q = $conn->prepare("SELECT id  FROM fct_rmca_look_related_specimens(:id)");
+		 $q->bindParam(":id", $spec_id, PDO::PARAM_INT);
+		$q->execute();
+		$items=$q->fetchAll(PDO::FETCH_NUM);
+		
+		return $items;
+  }
 }

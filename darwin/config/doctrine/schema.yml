@@ -1,6 +1,6 @@
 Institutions:
-  tableName: people
-  columns:
+    tableName: people
+    columns:
         id: { type: integer, notnull: true,primary: true, autoincrement: true}
         is_physical: { type: boolean, notnull: false}
         sub_type: { type: string }
@@ -8,6 +8,12 @@ Institutions:
         formated_name_indexed: { type: string}
         family_name: { type: string, notnull: true}
         additional_names: { type: string}
+    relations:
+        IdentifiersPeople:
+            class: IdentifiersPeople
+            local: id
+            foreign: record_id
+
 
 People:
     columns:
@@ -29,6 +35,11 @@ People:
         activity_date_from_mask: { type: integer, notnull: true, default:0}
         activity_date_to: { type: string, notnull: true, default: '2038-12-31'}
         activity_date_to_mask: { type: integer, notnull: true, default:0}
+    relations:
+        IdentifiersPeople:
+            class: IdentifiersPeople
+            local: id
+            foreign: record_id
 
 CatalogueRelationships:
     columns:
@@ -52,6 +63,14 @@ CataloguePeople:
         People:
             local: people_ref
             foreign: id
+            
+CataloguePeopleBibliography:
+    inheritance:
+        extends: CataloguePeople
+        type: column_aggregation
+        keyField: referenced_relation
+        keyValue: bibliography
+        
 
 CatalogueLevels:
     columns:
@@ -330,6 +349,10 @@ Users:
         People:
             local: people_id
             foreign: id
+        IdentifiersUsers:
+            local: id
+            foreign: record_id
+            class: IdentifiersUsers  
 
 PeopleLanguages:
     columns:
@@ -564,6 +587,10 @@ MySavedSearches:
         subject: { type: string, notnull: true}
         query_where: { type: string, notnull: true}
         query_parameters: { type: string, notnull: true}
+        current_page: {type:integer, notnull: true, default: 0}
+        page_size: {type:integer, notnull: true, default: 10000 }
+        nb_records: {type:integer , notnull: true, default: 0 }
+        download_lock: {type:boolean, notnull: true, default: false }
     relations:
         User:
             class: Users
@@ -1490,7 +1517,10 @@ Multimedia:
         visible: {type:boolean, notnull: true, default: true}
         publishable: {type:boolean, notnull: true, default: true}
         extracted_info: { type: string }
-
+        technical_parameters: { type: string }
+        external_uri: { type: string }
+        internet_protocol: { type: string }
+        field_observations: { type: string }
 # This sub class is used for linking loans with actors
 LoanActors:
     inheritance:
@@ -1580,7 +1610,15 @@ Bibliography:
         type : {type:string, notnull: true }
         abstract : { type:string }
         year : { type:integer}
-
+        reference : { type:string}
+        uri_protocol : { type:string}
+        uri : { type:string}
+    relations:
+        CataloguePeopleBibliography:
+            local: id
+            foreign: record_id
+            class: CataloguePeopleBibliography
+        
 CatalogueBibliography:
     columns:
         id: { type: integer, primary: true, autoincrement: true }
@@ -2176,3 +2214,71 @@ DoctrineTemporalInformationGtuGroupUnnestTags:
         tag : {type : string}
         tag_indexed : {type : string}
 
+StagingMultimedia:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        referenced_relation: { type: string, notnull: true}
+        record_id: { type: integer}
+        is_digital: {type: boolean, notnull:true, default: true}
+        type: { type: string, notnull: true, default: 'image'}
+        sub_type: { type: string }
+        title: { type: string, notnull: true}
+        description: { type: string, notnull: true, default:''}
+        uri: { type: string }
+        filename: : { type: string }
+        creation_date: { type: string, notnull: true, default: '0001-01-01'}
+        creation_date_mask: { type: integer, notnull: true, default:0}
+        mime_type: { type: string }
+        visible: {type:boolean, notnull: true, default: true}
+        publishable: {type:boolean, notnull: true, default: true}
+        extracted_info: { type: string }
+        technical_parameters: { type: string }
+        external_uri: { type: string }
+        internet_protocol: { type: string }
+        field_observations: { type: string }
+        
+Identifiers:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        referenced_relation: { type: string, notnull: true}
+        record_id: { type: integer}
+        protocol: { type: string, notnull: true}
+        value: { type: string, notnull: true}
+        creation_date: { type: string, notnull: true }
+        
+IdentifiersPeople:
+    inheritance:
+        extends: Identifiers
+        type: column_aggregation
+        keyField: referenced_relation
+        keyValue: people
+        
+IdentifiersUsers:
+    inheritance:
+        extends: Identifiers
+        type: column_aggregation
+        keyField: referenced_relation
+        keyValue: users
+        
+InstitutionSubTypes:
+    tableName: PeopleSubTypes
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        people_ref: { type: integer, notnull: true}
+        sub_type: { type: string, notnull: true}
+    relations:
+        Institutions:
+            local: people_ref
+            foreign: id
+            class: Institutions 
+            
+PeopleSubTypes:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        people_ref: { type: integer, notnull: true}
+        sub_type: { type: string, notnull: true}
+    relations:
+        People:
+            local: people_ref
+            foreign: id
+            class: People

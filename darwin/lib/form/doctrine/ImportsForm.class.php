@@ -76,6 +76,68 @@ class ImportsForm extends BaseImportsForm
 		$this->validatorSchema['tags_in_merge'] = new sfValidatorBoolean(array('required' => false));
     
 	}
+	elseif($this->options['format'] == 'files')
+	{
+		$category = array('files'=>$this->getI18N()->__('Files')) ;
+		$this->useFields(array('collection_ref', 'format')) ;
+      /* Collection Reference */
+      $this->widgetSchema['collection_ref'] = new widgetFormButtonRef(
+        array(
+          'model' => 'Collections',
+          'link_url' => 'collection/choose',
+          'method' => 'getName',
+          'box_title' => $this->getI18N()->__('Choose'),
+          'button_class'=>'',
+        ),
+        array(
+          'class'=>'inline',
+        )
+      );
+      
+      $this->widgetSchema['collection_ref_for_gtu'] = new widgetFormButtonRef(
+        array(
+          'model' => 'Collections',
+          'link_url' => 'collection/choose',
+          'method' => 'getName',
+          'box_title' => $this->getI18N()->__('Choose'),
+          'button_class'=>'',
+        ),
+        array(
+          'class'=>'inline',
+        )
+      );
+	}
+	elseif($this->options['format'] == 'links')
+	{
+		$category = array('links'=>$this->getI18N()->__('Links')) ;
+		$this->useFields(array('collection_ref', 'format')) ;
+      /* Collection Reference */
+      $this->widgetSchema['collection_ref'] = new widgetFormButtonRef(
+        array(
+          'model' => 'Collections',
+          'link_url' => 'collection/choose',
+          'method' => 'getName',
+          'box_title' => $this->getI18N()->__('Choose'),
+          'button_class'=>'',
+        ),
+        array(
+          'class'=>'inline',
+        )
+      );
+      
+      $this->widgetSchema['collection_ref_for_gtu'] = new widgetFormButtonRef(
+        array(
+          'model' => 'Collections',
+          'link_url' => 'collection/choose',
+          'method' => 'getName',
+          'box_title' => $this->getI18N()->__('Choose'),
+          'button_class'=>'',
+        ),
+        array(
+          'class'=>'inline',
+        )
+      );
+	}
 	else
     {
       $this->useFields(array('collection_ref', 'format')) ;
@@ -143,7 +205,7 @@ class ImportsForm extends BaseImportsForm
     $this->widgetSchema['uploadfield'] = new sfWidgetFormInputFile(array(),array('id'=>'uploadfield'));
     //$allowed_types = array('text/xml','application/xml') ;
     //ftheeten 2017 09 07
-    $allowed_types = array('text/xml','application/xml', 'text/plain', 'text/x-c++') ;
+    $allowed_types = array('text/xml','application/xml','application/zip', 'text/plain', 'text/x-c++') ;
     $this->widgetSchema['format'] = new sfWidgetFormChoice(
       array(
         'choices' => $category

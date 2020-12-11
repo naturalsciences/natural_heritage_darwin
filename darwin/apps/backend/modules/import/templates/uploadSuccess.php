@@ -16,6 +16,16 @@
 		echo __('Lithostratigraphy') ;
 		
 	}
+	elseif($type=='files')
+	{
+		echo __('Files') ;
+		
+	}
+	elseif($type=='links')
+	{
+		echo __('Links') ;
+		
+	}
 	elseif($type=='taxon')
 	{	
 		echo __('Taxonomy') ;

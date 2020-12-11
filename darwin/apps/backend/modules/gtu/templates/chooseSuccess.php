@@ -62,6 +62,7 @@ function chooseGtu(event)
   //ftheeten 2018 12 13
   if($(event.target).attr("name")=="date_choose")
   {   
+ 
     //see _refGtu template
     //var selectedindex = $("#select_gtu_date").text();
     //console.log(selectedindex)
@@ -86,6 +87,7 @@ function chooseGtu(event)
   }
   else if($(event.target).attr("name")=="gtu_choose")
   {
+	
     var gtu_id=ref_element_id.split("_")[0];
     var idSelectDate="#select_gtu_date_id_"+ref_element_id;
 
@@ -94,9 +96,30 @@ function chooseGtu(event)
     var date_tags=el.find(tags_class);
     var gtu_address='.class_gtu_id_'+gtu_id;
     var gtu_tags=$(gtu_address);
-    
-    gtu_tags.html(gtu_tags.html());
-    ref_element_name=gtu_tags.html();
+
+	var html_tmp=$(gtu_tags.html());
+	var code_html="";
+	var url_tmp=window.location.href;
+	if(url_tmp.includes("/staging/"))
+	{
+		 
+		html_tmp.filter("[class='code']").each(function(){
+		  code_html=$(this).text();
+		});
+		if(code_html.length==0)
+		{
+			 
+			code_html=gtu_tags.html();
+		}
+		
+    }
+	else
+	{
+		 
+		code_html=gtu_tags.html();		
+	}
+	gtu_tags.html(code_html);
+   ref_element_name=gtu_tags.html();
   }
 
   $('.result_choose').die('click');

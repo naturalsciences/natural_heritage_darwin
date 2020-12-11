@@ -193,6 +193,7 @@ class methods_and_toolsActions extends DarwinActions
     */
   public function executeNew(sfWebRequest $request)
   {
+	 
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     // Forward to a 404 page if notion is not defined as tool or method
     $this->forward404Unless($request->getParameter('notion','')=='method' || $request->getParameter('notion','')=='tool');
@@ -405,6 +406,68 @@ class methods_and_toolsActions extends DarwinActions
     }
     // Remove surrounding layout
     $this->setLayout(false);
+  }
+  
+    public function executeDownloadTab(sfWebRequest $request)
+  {  
+      
+	   if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
+	   $notion=$request->getParameter('notion','tool');
+	   $this->getResponse()->setHttpHeader('Content-type','text/tab-separated-values');
+		$this->getResponse()->setHttpHeader('Content-disposition','attachment; filename="darwin_'.$notion.'.txt"');
+		$this->getResponse()->setHttpHeader('Pragma', 'no-cache');
+		$this->getResponse()->setHttpHeader('Expires', '0');
+		
+		$this->getResponse()->sendHttpHeaders(); //edited to add the missed sendHttpHeaders
+		
+		$this->getResponse()->sendContent();   
+	   
+        
+        if($notion=="method")
+        {
+            $form = new CollectingMethodsFormFilter();
+        }
+        else
+        {
+            $form = new CollectingToolsFormFilter();
+        }
+		
+	
+		if($request->getParameter("searchMethodsAndTools",'') !== '')
+		{
+           
+            $form->bind($request->getParameter("searchMethodsAndTools"));
+            if ($form->isValid())
+            {
+               
+                $query = $form->getQuery();			
+                $result = $query->execute();                
+                $returned=Array();
+                foreach($result as $row)
+                {
+					$line=Array();
+					$line[]=$row->getId();                    
+                    $line[]=$row->getName();
+                    $line[]=$row->getCountspecimens();
+                    $line[]=$row->getCollections();
+                    if(isset($comments[$row->getId()]))
+					{
+						 $line[]=preg_replace('/\r\n?/', ".", $comments[$row->getId()]);
+					}
+					else
+					{
+						$line[]="";
+					}                    
+                    $returned[]=implode("\t", $line);
+                }
+                print(implode("\t", array("id","Name", "nb_specimens", "collections" ))."\r\n");
+                print(implode("\r\n", $returned));
+            }
+       
+		}
+		
+		return sfView::NONE;           
+	  
   }
 
 }

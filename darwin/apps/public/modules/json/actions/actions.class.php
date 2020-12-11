@@ -181,6 +181,22 @@ class jsonActions extends DarwinActions
      $this->getResponse()->setContentType('application/json');
      return  $this->renderText(json_encode($results,JSON_UNESCAPED_SLASHES));
   }  
+  
+   public function executeGet_institution_identifier_json(sfWebRequest $request)
+  {
+
+     $results=$this->getInstitutionIdentifierJSON($request);
+     $this->getResponse()->setContentType('application/json');
+     return  $this->renderText(json_encode($results,JSON_UNESCAPED_SLASHES));
+  }  
+  
+   public function executeGet_people_identifier_json(sfWebRequest $request)
+  {
+
+     $results=$this->getPeopleIdentifierJSON($request);
+     $this->getResponse()->setContentType('application/json');
+     return  $this->renderText(json_encode($results,JSON_UNESCAPED_SLASHES));
+  }  
 }
 
 

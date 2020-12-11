@@ -83,6 +83,14 @@ all:
       timeout:         14400
   view_cache:
     class: sfAPCCache
+    
+all:
+  controller:
+    class: DarwinController
+  storage:
+    class: DarwinCookie
+    param:
+      session_name: darwin2
 #    param:
 #      automaticCleaningFactor: 0
 #      cacheDir:                %SF_TEMPLATE_CACHE_DIR%

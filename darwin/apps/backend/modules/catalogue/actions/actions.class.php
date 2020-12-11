@@ -13,7 +13,7 @@ class catalogueActions extends DarwinActions
   protected $catalogue = array(
    'catalogue_relationships','catalogue_people','vernacular_names','properties','comments',
    'specimens', 'ext_links','collection_maintenance', 'insurances', 'people_addresses', 'people_comm',
-   'people_languages', 'people_relationships', 'classification_keywords','catalogue_bibliography', 'multimedia');
+   'people_languages', 'people_relationships', 'classification_keywords','catalogue_bibliography', 'multimedia', 'identifiers', 'people_sub_types');
 
   public function executeRelation(sfWebRequest $request)
   {

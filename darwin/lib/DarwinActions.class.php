@@ -157,7 +157,7 @@ class DarwinActions extends sfActions
     return $obj ;
   }
   
-  protected function executeDisplay_statistics_specimens_main(sfWebRequest $request)
+  protected function executeDisplay_statistics_specimens_main(sfWebRequest $request, $hide_private=false)
   {
     $idCollections="/";
     $year="";
@@ -208,7 +208,7 @@ class DarwinActions extends sfActions
         }
     }
     
-    $items=Doctrine_Core::getTable('Collections')->countSpecimens($idCollections, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections) ;
+    $items=Doctrine_Core::getTable('Collections')->countSpecimens($idCollections, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections, $hide_private, $this->getUser()) ;
      
     if(count($items)>1)
     {
@@ -250,7 +250,7 @@ class DarwinActions extends sfActions
   }
   
   //ftheeten 2018 04 30
-   protected function execute_statistics_generic(sfWebRequest $request, $table_name)
+   protected function execute_statistics_generic(sfWebRequest $request, $table_name, $hide_private=false)
   {
     $idCollections="/";
     $year="";
@@ -302,11 +302,11 @@ class DarwinActions extends sfActions
     }
     if($table_name=="types")
     {
-        $items=Doctrine_Core::getTable('Collections')->countTypeSpecimens($idCollections, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections) ;
+        $items=Doctrine_Core::getTable('Collections')->countTypeSpecimens($idCollections, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections, $hide_private, $this->getUser()) ;
     }
     elseif($table_name=="taxa")
     {
-        $items=Doctrine_Core::getTable('Collections')->countTaxaInSpecimen($idCollections, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections) ;
+        $items=Doctrine_Core::getTable('Collections')->countTaxaInSpecimen($idCollections, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections, $hide_private,$this->getUser()) ;
     }
     if(count($items)>1)
     {
@@ -468,6 +468,39 @@ class DarwinActions extends sfActions
         $results=Doctrine_Core::getTable('Specimens')->getCollectionsAllAccessPointsJSON( $host);
         return  $results;
     }
+	
+	    protected function getInstitutionIdentifierJSON(sfWebRequest $request)
+    {
+    
+        if($request->hasParameter('identifier_protocol')&&$request->hasParameter('identifier_value'))
+		{
+            $host=$request->getHost();
+            $results=Doctrine_Core::getTable('Specimens')->getSpecimensInInstitutionJSON($request->getParameter('identifier_protocol'),$request->getParameter('identifier_value'), $host);
+            
+            return  $results;
+            
+        }
+       
+        return Array();
+    }
+	
+	protected function getPeopleIdentifierJSON(sfWebRequest $request)
+    {
+    
+        if($request->hasParameter('identifier_protocol')&&$request->hasParameter('identifier_value'))
+		{
+            $host=$request->getHost();
+            $results=Doctrine_Core::getTable('Specimens')->getSpecimensForIdentifiersPeopleJSON($request->getParameter('identifier_protocol'),$request->getParameter('identifier_value'), $request->getParameter('identifier_role',''), $host);
+            
+            return  $results;
+            
+        }
+       
+        return Array();
+    }
+	
+
+    
     
    
 }

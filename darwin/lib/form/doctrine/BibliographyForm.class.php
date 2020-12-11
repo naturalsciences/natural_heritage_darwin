@@ -12,9 +12,29 @@ class BibliographyForm extends BaseBibliographyForm
 {
   public function configure()
   {
-    $this->useFields(array('title', 'type', 'abstract','year'));
+    $this->useFields(array('title', 'type', 'abstract','year', 'reference', 'uri_protocol', 'uri'));
     $this->validatorSchema['title'] = new sfValidatorString(array('required' => true, 'trim' => true));
-    $this->widgetSchema['title']->setLabel('Full Bibliographic reference');
+    $this->widgetSchema['title']->setLabel('Title');
+ 
+    $this->validatorSchema['reference'] = new sfValidatorString(array('required' => false, 'trim' => true));
+    $this->widgetSchema['reference']->setLabel('Bibliographical reference');
+    
+	$this->widgetSchema['uri_protocol'] = new widgetFormSelectComplete(array(
+								  'model' => 'Bibliography',
+								  'table_method' => 'getDistinctUriProtocol',
+								  'method' => 'getUriProtocol',
+								  'key_method' => 'getUriProtocol',
+								  'add_empty' => true,
+								  'change_label' => 'Pick a protocol in the list',
+								  'add_label' => 'Add another protcol',
+								  ));
+    $this->validatorSchema['uri_protocol'] = new sfValidatorString(array('required' => false, 'trim' => true));
+    $this->widgetSchema['uri_protocol']->setLabel('Link protocol');
+	
+    $this->widgetSchema['uri'] = new sfWidgetFormInputText();
+    $this->validatorSchema['uri'] = new sfValidatorString(array('required' => false, 'trim' => true));
+    $this->widgetSchema['uri']->setLabel('URI');
+ 
  
     $this->validatorSchema['year'] = new sfValidatorInteger(array('required'=>false,'min'=> 0,'max' => date('Y')+2  ));
     $this->widgetSchema['year']->setAttributes(array('class'=>'small_size'));

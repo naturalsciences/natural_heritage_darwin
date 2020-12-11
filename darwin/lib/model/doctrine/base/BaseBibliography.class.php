@@ -11,22 +11,34 @@
  * @property string $type
  * @property string $abstract
  * @property integer $year
+ * @property string $reference
+ * @property string $uri_protocol
+ * @property string $uri
+ * @property CataloguePeopleBibliography $CataloguePeopleBibliography
  * @property Doctrine_Collection $CatalogueBibliography
  * 
- * @method integer             getId()                    Returns the current record's "id" value
- * @method string              getTitle()                 Returns the current record's "title" value
- * @method string              getTitleIndexed()          Returns the current record's "title_indexed" value
- * @method string              getType()                  Returns the current record's "type" value
- * @method string              getAbstract()              Returns the current record's "abstract" value
- * @method integer             getYear()                  Returns the current record's "year" value
- * @method Doctrine_Collection getCatalogueBibliography() Returns the current record's "CatalogueBibliography" collection
- * @method Bibliography        setId()                    Sets the current record's "id" value
- * @method Bibliography        setTitle()                 Sets the current record's "title" value
- * @method Bibliography        setTitleIndexed()          Sets the current record's "title_indexed" value
- * @method Bibliography        setType()                  Sets the current record's "type" value
- * @method Bibliography        setAbstract()              Sets the current record's "abstract" value
- * @method Bibliography        setYear()                  Sets the current record's "year" value
- * @method Bibliography        setCatalogueBibliography() Sets the current record's "CatalogueBibliography" collection
+ * @method integer                     getId()                          Returns the current record's "id" value
+ * @method string                      getTitle()                       Returns the current record's "title" value
+ * @method string                      getTitleIndexed()                Returns the current record's "title_indexed" value
+ * @method string                      getType()                        Returns the current record's "type" value
+ * @method string                      getAbstract()                    Returns the current record's "abstract" value
+ * @method integer                     getYear()                        Returns the current record's "year" value
+ * @method string                      getReference()                   Returns the current record's "reference" value
+ * @method string                      getUriProtocol()                 Returns the current record's "uri_protocol" value
+ * @method string                      getUri()                         Returns the current record's "uri" value
+ * @method CataloguePeopleBibliography getCataloguePeopleBibliography() Returns the current record's "CataloguePeopleBibliography" value
+ * @method Doctrine_Collection         getCatalogueBibliography()       Returns the current record's "CatalogueBibliography" collection
+ * @method Bibliography                setId()                          Sets the current record's "id" value
+ * @method Bibliography                setTitle()                       Sets the current record's "title" value
+ * @method Bibliography                setTitleIndexed()                Sets the current record's "title_indexed" value
+ * @method Bibliography                setType()                        Sets the current record's "type" value
+ * @method Bibliography                setAbstract()                    Sets the current record's "abstract" value
+ * @method Bibliography                setYear()                        Sets the current record's "year" value
+ * @method Bibliography                setReference()                   Sets the current record's "reference" value
+ * @method Bibliography                setUriProtocol()                 Sets the current record's "uri_protocol" value
+ * @method Bibliography                setUri()                         Sets the current record's "uri" value
+ * @method Bibliography                setCataloguePeopleBibliography() Sets the current record's "CataloguePeopleBibliography" value
+ * @method Bibliography                setCatalogueBibliography()       Sets the current record's "CatalogueBibliography" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -60,11 +72,24 @@ abstract class BaseBibliography extends DarwinModel
         $this->hasColumn('year', 'integer', null, array(
              'type' => 'integer',
              ));
+        $this->hasColumn('reference', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('uri_protocol', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('uri', 'string', null, array(
+             'type' => 'string',
+             ));
     }
 
     public function setUp()
     {
         parent::setUp();
+        $this->hasOne('CataloguePeopleBibliography', array(
+             'local' => 'id',
+             'foreign' => 'record_id'));
+
         $this->hasMany('CatalogueBibliography', array(
              'local' => 'id',
              'foreign' => 'bibliography_ref'));

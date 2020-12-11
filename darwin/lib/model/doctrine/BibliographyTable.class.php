@@ -29,5 +29,13 @@ class BibliographyTable extends DarwinTable
   {
     return array();
   }
+  
+  public function getDistinctUriProtocol()
+  {
+      $items = $this->createUniqFlatDistinct('bibliography', 'uri_protocol', 'uri_protocol', true);
+	  $items=array_merge( array("DOI"=>"DOI", "URL"=> "URL"),$items);
+	  ksort($items);
+      return $items;
+  }
 
 }

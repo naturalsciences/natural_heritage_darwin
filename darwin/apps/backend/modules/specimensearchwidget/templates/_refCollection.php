@@ -121,11 +121,30 @@ $(document).ready(function () {
     });
 });
 </script>
-<br/>
-	Search collection : <input type='text' id='filter_collection' name='filter_collection' class='filter_collection'></input>
+<table>
+<tr>
+<th>
+<?php echo __("Institution Identifier") ?>
+</th>
+</tr>
+<tr>
+<td>
+<?php echo $form['institution_protocol'] ; ?>&nbsp;<?php echo $form['institution_identifier'] ; ?>
+</td>
+</tr>
+<tr>
+<th>
+	Search collection
+<th>
+</tr>
+<tr>
+<td>
+<input type='text' id='filter_collection' name='filter_collection' class='filter_collection'></input>
 	<input type='button' id='do_filter_collection' name='do_filter_collection' class='do_filter_collection' value='Filter'></input> 
     <input type='button' id='do_reinit_collection' name='do_reinit_collection' class='do_reinit_collection' value='Reinit'></input>
-<br/>
+</td>
+</tr>
+</table>
 <br/>
 <table class="widget_sub_table">
   <tr>
@@ -143,3 +162,4 @@ $(document).ready(function () {
 	  </td>
 	</tr>
 </table>
+
