@@ -966,6 +966,17 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
          "required"=>false
          )
     );
+	
+	$this->widgetSchema['publication_ref'] = new widgetFormButtonRef(array(
+      'model' => 'Bibliography',
+      'link_url' => 'bibliography/choose?with_js=1',
+      'method' => 'getTitle',
+      'box_title' => $this->getI18N()->__('Choose publication'),
+      'nullable' => true,
+     ));
+	 $this->widgetSchema['publication_ref']->setLabel("Publication");
+   
+    $this->validatorSchema['publication_ref'] = new sfValidatorPass(); //Avoid duplicate the query
   
   }
 
@@ -2236,6 +2247,15 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     }*/
     parent::bind($taintedValues, $taintedFiles);
   }
+  
+   public function addBibliography($query, $field, $val) 
+   {
+		if(strlen($val)>0)
+		{
+			$query->andWhere( " EXISTS (SELECT cb.id FROM CatalogueBibliography cb WHERE cb.referenced_relation = 'specimens' AND cb.bibliography_ref=? AND cb.record_id= s.id)" ,$val);
+		}
+    return $query ;
+  }
 
   public function doBuildQuery(array $values)
   {
@@ -2386,7 +2406,7 @@ $query = DQ::create()
    
    	$this->addInstitutionIdentifierQuery($query,   $values["institution_protocol"], $values["institution_identifier"]);
 	$this->addPeopleIdentifierQuery($query, $values["people_protocol"], $values["people_identifier"],$values["people_identifier_role"]);
-   
+    $this->addBibliography($query,   $values["publication_ref"], $values["publication_ref"]);
     $query->limit($this->getCatalogueRecLimits());
 
     return $query;
@@ -2572,6 +2592,8 @@ $query = DQ::create()
 	  return $query;
 	  
   }
+  
+  
   
        //ftheeten 2018 04 10
    public function addIgRefColumnQuery($query, $field, $values)

@@ -234,6 +234,9 @@ INSERT INTO darwin2.my_widgets (user_ref, category, group_name, order_by, col_nu
 INSERT INTO darwin2.my_widgets (user_ref, category, group_name, order_by, col_num, mandatory,  visible, opened, color, is_available, icon_ref, title_perso, collections, all_public) VALUES ( 1, 'users_widget', 'comm', 3, 1, false, true, true, '#5BAABD', true, NULL, 'Communications', ',', true);
 INSERT INTO darwin2.my_widgets (user_ref, category, group_name, order_by, col_num, mandatory,  visible, opened, color, is_available, icon_ref, title_perso, collections, all_public) VALUES ( 1, 'users_widget', 'info', 1, 1, false, true, true, '#5BAABD', true, NULL, 'User information', ',', true);
 
+INSERT INTO darwin2.my_widgets (user_ref, category, group_name, order_by, col_num, mandatory,  visible, opened, color, is_available, icon_ref, title_perso, collections, all_public) VALUES ( 1, 'specimensearch_widget', 'bibliography', 17, 2, false, true, true, '#5BAABD', true, NULL, 'Bibliography', ',', true);
+
+
 
 -- Completed on 2020-07-07 15:29:58
 
