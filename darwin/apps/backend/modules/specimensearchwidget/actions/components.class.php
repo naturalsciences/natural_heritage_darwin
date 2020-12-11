@@ -184,4 +184,9 @@ class specimensearchwidgetComponents extends sfComponents
     $this->defineForm();
   }
   
+  public function executeBibliography()
+  {
+    $this->defineForm();
+  }
+  
 }
