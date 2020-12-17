@@ -47,9 +47,6 @@
             <option value=<?php echo(url_for("savesearch/downloadSpecLabels")."/user_id/".sfContext::getInstance()->getUser()->getId()."/query_id/".$search->getId())?>>
             Tab-delimited (specimens - labels )
             </option> 
-            <option value=<?php echo(url_for("savesearch/downloadTaxonomy")."/type_file/taxonomy/user_id/".sfContext::getInstance()->getUser()->getId()."/query_id/".$search->getId())?>>
-            Tab-delimited (taxonomy)
-            </option>
 			<option value=<?php echo(url_for("savesearch/downloadTaxonomy")."/type_file/taxonomy_count/user_id/".sfContext::getInstance()->getUser()->getId()."/query_id/".$search->getId())?>>
             Tab-delimited (taxonomy : statistics)
             </option> 			

@@ -52,6 +52,13 @@
 			 <?php endif;?>
         </td>
       </tr>
+	  <tr>
+        <th><?php echo __("Related specimens") ?></th>
+   
+	    <td>
+			 <a href=<?php print(url_for("specimensearch/search")."/1?&specimen_search_filters[publication_ref]=".$bibliography->getId()."&specimen_search_filters[rec_per_page]=10&submit=Search'"); ?> target="_blank"><?php print(image_tag('link.png',array('title'=>'Linked specimen')));?></a>	
+        </td>
+      </tr>
 
       <tr>
         <td colspan="2" class="search_form">

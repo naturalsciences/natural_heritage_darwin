@@ -421,4 +421,47 @@ INNER JOIN taxonomy ON taxonomy.id=record_id";
 		
 		return  $results;
   }
+  
+  public function getTaxonomyReport($id_taxa)
+  {
+	   $conn = Doctrine_Manager::connection();
+	  //$page=$page-1;
+	  //$offset=(int)$page*(int)$size;
+	  $sql= "
+			  with a as 
+		(select taxonomy.id , fct_rmca_sort_taxon_path_alphabetically_hstore(path||parent_ref||'/'||taxonomy.id::varchar||'/' )
+		|| hstore('nb_records', count(specimens.id)::varchar)
+		|| hstore('physical_specimen_min', sum(specimens.specimen_count_min)::varchar)
+		|| hstore('physical_specimen_max', sum(specimens.specimen_count_max)::varchar)
+		|| hstore('nb_types',  COUNT(CASE WHEN type ='specimen' THEN NULL ELSE type END)::varchar)
+		|| hstore('type_details', string_agg(distinct type, '; '  order by type))
+		|| hstore('container_details', string_agg(distinct container_type, '; ' order by container_type))
+		|| hstore('sub_container_details', string_agg(distinct sub_container_type, '; ' order by sub_container_type))
+		|| hstore('storage_details', string_agg(distinct container_storage, '; ' order by container_storage))
+		|| hstore('sub_storage_details', string_agg(distinct sub_container_storage, '; ' order by sub_container_storage))
+		as main_array ,
+		RANK () OVER ( 
+				ORDER BY fct_rmca_sort_taxon_path_alphabetically(path||parent_ref||'/'||taxonomy.id::varchar||'/' ) DESC
+			) rank 
+
+
+		from taxonomy 
+		LEFT JOIN specimens on taxonomy.id=taxon_ref
+
+		where path||parent_ref::varchar||'/'||taxonomy.id::varchar||'/' like '%/'|| :taxon ||'/%'
+		group by taxonomy.id
+		
+		)
+
+
+		select (populate_record(null::rmca_taxon_report, a.main_array)).*  from a order by rank;
+	  ";
+	  
+	   $q = $conn->prepare($sql);
+       $q->execute(array(':taxon' => $id_taxa));
+        
+        $results = $q->fetchAll(PDO::FETCH_ASSOC);        
+		
+		return  $results;
+  }
 }

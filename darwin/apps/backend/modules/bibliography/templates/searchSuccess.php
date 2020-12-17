@@ -72,9 +72,10 @@
                   <?php if(! $is_choose):?>
                     <?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>
                       <?php echo link_to(image_tag('edit.png',array('title'=>'Edit')),'bibliography/edit?id='.$bib->getId(), array('target'=>'_blank'));?>
-                      <?php echo link_to(image_tag('duplicate.png',array('title'=>'Duplicate')),'bibliography/new?duplicate_id='.$bib->getId(), array('target'=>'_blank'));?>
+                      <?php echo link_to(image_tag('duplicate.png',array('title'=>'Duplicate')),'bibliography/new?duplicate_id='.$bib->getId(), array('target'=>'_blank'));?>					  
                     <?php endif ; ?>
-                    <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),'bibliography/view?id='.$bib->getId(), array('target'=>'_blank'));?>               
+                    <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),'bibliography/view?id='.$bib->getId(), array('target'=>'_blank'));?> 
+					<a href="<?php print('specimensearch/search/1?&specimen_search_filters[publication_ref]='.$bib->getId().'&specimen_search_filters[rec_per_page]=10&submit=Search'); ?>" target="_blank"><?php print(image_tag('link.png',array('title'=>'Linked specimen')));?></a>			
                   <?php else:?>
                     <div class="result_choose"><?php echo __('Choose');?></div>
                   <?php endif;?>

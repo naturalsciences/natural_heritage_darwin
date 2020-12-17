@@ -148,4 +148,87 @@ class taxonomyActions extends DarwinActions
     $this->form = new TaxonomyForm($this->taxon);
     $this->loadWidgets();
   }
+  
+  
+    public function executeDownloadTaxon(sfWebRequest $request)
+  {
+	  
+	  if($request->getParameter('taxon_ref','')!=='')
+	  {
+		$this->taxon_ref=$request->getParameter('taxon_ref','');
+		if(ctype_digit($this->taxon_ref))
+		{
+			$currentDir=getcwd();
+			chdir(sfconfig::get('sf_root_dir'));
+
+			$cmd='darwin:get-tab-report-taxonomy --taxon_ref='.$this->taxon_ref;  
+      
+			exec('nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );
+			chdir($currentDir);	
+		}
+	  }
+  }
+  
+  public function executeTestReportRunning(sfWebRequest $request)
+  {
+	if($request->getParameter('taxon_ref','')!=='')
+	  {
+		$taxon_ref=$request->getParameter('taxon_ref','');
+		if(ctype_digit($taxon_ref))
+		{
+			$uri = sfConfig::get('sf_upload_dir').'/tab_report/taxonomy_id_' . $taxon_ref.".txt";
+			$uri_2 = sfConfig::get('sf_upload_dir').'/tab_report/work_taxonomy_id_' . $taxon_ref.".txt";
+			 $this->getResponse()->setContentType('application/json');
+			if(file_exists($uri_2))
+			{
+				 return  $this->renderText(json_encode(Array("state"=> "running"),JSON_UNESCAPED_SLASHES));
+			}
+			else
+			{
+				if(file_exists($uri))
+				{
+				 return  $this->renderText(json_encode(Array("state"=> "available"),JSON_UNESCAPED_SLASHES));
+				}
+				else
+				{
+					 return  $this->renderText(json_encode(Array("state"=> "issue"),JSON_UNESCAPED_SLASHES));
+				}
+			}
+		}
+	  }	  
+  }
+  
+  public function executeDownloadTaxonomyFile(sfWebRequest $request)
+  {
+    $this->setLayout(false);
+	if($request->getParameter('taxon_ref') != '')
+	 {
+		$this->taxon_ref=$request->getParameter('taxon_ref');
+		$uri = sfConfig::get('sf_upload_dir').'/tab_report/taxonomy_id_' . $this->taxon_ref.".txt";
+		$this->forward404Unless(file_exists($uri),sprintf('This file does not exist') );
+		$response = $this->getResponse();
+		// First clear HTTP headers
+		$response->clearHttpHeaders();
+		// Then define the necessary headers
+		$response->setContentType(Multimedia::getMimeTypeFor("txt"));
+		$response->setHttpHeader(
+		  'Content-Disposition',
+		  'attachment; filename="report_taxonomy_'.$this->taxon_ref.'.txt"');
+		$response->setHttpHeader('Content-Description', 'File Transfer');
+		$response->setHttpHeader('Content-Transfer-Encoding', 'binary');
+		$response->setHttpHeader('Content-Length', filesize($uri));
+		$response->setHttpHeader('Cache-Control', 'public, must-revalidate');
+		// if https then always give a Pragma header like this  to overwrite the "pragma: no-cache" header which
+		// will hint IE8 from caching the file during download and leads to a download error!!!
+		$response->setHttpHeader('Pragma', 'public');
+		$response->sendHttpHeaders();
+		ob_end_flush();
+		return $this->renderText(readfile($uri));
+	 }	 
+		
+  }
+  
+  
+  
+  
 }
