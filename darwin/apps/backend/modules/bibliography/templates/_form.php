@@ -66,12 +66,7 @@ $(document).ready(function ()
           <?php echo $form['uri'] ?>
         </td>
       </tr>
-	  <?php if (!$form->getObject()->isNew()): ?>
-		<tr>
-          <td><b><?php echo __("Related specimens") ?></b></td>
-          <td><a href=<?php print(url_for("specimensearch/search")."/1?&specimen_search_filters[publication_ref]=".$form->getObject()->getId()."&specimen_search_filters[rec_per_page]=10&submit=Search'"); ?> target="_blank"><?php print(image_tag('link.png',array('title'=>'Linked specimen')));?></a></td>
-        </tr>>
-	  <?php endif;?>
+	 
       <tr>
         <td colspan="2">
           <?php echo $form['Authors_holder'];?>

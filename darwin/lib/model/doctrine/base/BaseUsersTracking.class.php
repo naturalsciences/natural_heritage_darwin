@@ -76,6 +76,13 @@ abstract class BaseUsersTracking extends DarwinModel
         $this->hasColumn('new_value', 'string', null, array(
              'type' => 'string',
              ));
+
+        $this->setSubClasses(array(
+             'UsersTrackingSpecimens' => 
+             array(
+              'referenced_relation' => 'specimens',
+             ),
+             ));
     }
 
     public function setUp()

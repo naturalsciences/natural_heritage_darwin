@@ -224,12 +224,18 @@ class CollectionsTable extends DarwinTable
     
     if($detailSubCollections)
     {
-        $orders[]="collection_name";
-        $fields[1]="collection_name";
-        $groups[]="collection_name";
+        $orders[]="collection_path_text";
+        $fields[1]="collection_path_text collection_name";
+        $groups[]="collection_path_text";
         $includeSubcollection=true;
+		$orders[]="collection_ref";
+		$fields[]="collection_ref";
+		$groups[]="collection_ref";
+	
     }
-    
+	
+   
+
     if($includeSubcollection||$collectionID=="/")
     {
         
@@ -308,7 +314,9 @@ class CollectionsTable extends DarwinTable
 			$where[]="(is_public=true OR db_user_type>= 2)";
 	   }
    }
-    $sql ="SELECT ".$all_fields." FROM v_reporting_count_all_specimens_by_collection_year_ig ".$hide_str." WHERE ".implode(" AND ", $where);
+    $sql ="
+	 WITH a AS (SELECT id, collection_path_text FROM v_rmca_collections_path_as_text)  
+	SELECT ".$all_fields." FROM v_reporting_count_all_specimens_by_collection_year_ig INNER JOIN a ON v_reporting_count_all_specimens_by_collection_year_ig.collection_ref=a.id ".$hide_str." WHERE ".implode(" AND ", $where);
     
     if(count($groups)>0)
     {

@@ -2,6 +2,10 @@
 <?php slot('title', __('View Bibliography'));  ?>
 <div class="page">
     <h1><?php echo __('View Bibliography');?></h1>
+	 <div>
+          <b>Edit : </b><?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))), 'bibliography/edit?id='.$form->getObject()->getId()); ?>
+    <br/>
+	</div>
   <div class="table_view">
   <table>
     <tbody>

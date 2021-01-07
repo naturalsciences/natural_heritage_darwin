@@ -147,6 +147,7 @@
  * @property TemporalInformation $TemporalInformation
  * @property Tags $Tags
  * @property SpecimensStableIds $SpecimensStableIds
+ * @property UsersTrackingSpecimens $UsersTrackingSpecimens
  * @property Doctrine_Collection $SpecimensRelationships
  * @property Doctrine_Collection $SpecimensCodes
  * @property Doctrine_Collection $SpecimensMethods
@@ -297,6 +298,7 @@
  * @method TemporalInformation              getTemporalInformation()              Returns the current record's "TemporalInformation" value
  * @method Tags                             getTags()                             Returns the current record's "Tags" value
  * @method SpecimensStableIds               getSpecimensStableIds()               Returns the current record's "SpecimensStableIds" value
+ * @method UsersTrackingSpecimens           getUsersTrackingSpecimens()           Returns the current record's "UsersTrackingSpecimens" value
  * @method Doctrine_Collection              getSpecimensRelationships()           Returns the current record's "SpecimensRelationships" collection
  * @method Doctrine_Collection              getSpecimensCodes()                   Returns the current record's "SpecimensCodes" collection
  * @method Doctrine_Collection              getSpecimensMethods()                 Returns the current record's "SpecimensMethods" collection
@@ -446,6 +448,7 @@
  * @method Specimens                        setTemporalInformation()              Sets the current record's "TemporalInformation" value
  * @method Specimens                        setTags()                             Sets the current record's "Tags" value
  * @method Specimens                        setSpecimensStableIds()               Sets the current record's "SpecimensStableIds" value
+ * @method Specimens                        setUsersTrackingSpecimens()           Sets the current record's "UsersTrackingSpecimens" value
  * @method Specimens                        setSpecimensRelationships()           Sets the current record's "SpecimensRelationships" collection
  * @method Specimens                        setSpecimensCodes()                   Sets the current record's "SpecimensCodes" collection
  * @method Specimens                        setSpecimensMethods()                 Sets the current record's "SpecimensMethods" collection
@@ -970,6 +973,10 @@ abstract class BaseSpecimens extends DarwinModel
         $this->hasOne('SpecimensStableIds', array(
              'local' => 'id',
              'foreign' => 'specimen_fk'));
+
+        $this->hasOne('UsersTrackingSpecimens', array(
+             'local' => 'id',
+             'foreign' => 'record_id'));
 
         $this->hasMany('SpecimensRelationships', array(
              'local' => 'id',

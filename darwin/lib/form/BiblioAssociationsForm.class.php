@@ -14,6 +14,7 @@ class BiblioAssociationsForm extends BaseCatalogueBibliographyForm
   {
     $this->useFields(array('bibliography_ref'));
     $bib_id= $this->getObject()->getBibliographyRef() ;
+	$this->widgetSchema['bibliography_id'] = new sfWidgetFormInputHidden();
     $this->widgetSchema['bibliography_ref'] = new sfWidgetFormInputHidden();
 	$this->widgetSchema['bibliography_uri_protocol'] = new sfWidgetFormInputHidden();
 	$this->widgetSchema['bibliography_uri'] = new sfWidgetFormInputHidden();
@@ -22,6 +23,7 @@ class BiblioAssociationsForm extends BaseCatalogueBibliographyForm
 	  $bib=Doctrine_Core::getTable('Bibliography')->find($bib_id);
       $this->widgetSchema['bibliography_ref']->setLabel($bib->getTitle()) ;
 	 
+	 $this->widgetSchema['bibliography_id']->setLabel($bib_id) ;
 	  if(strlen(trim($bib->getYear()))>0)
 	  {
 		
@@ -55,6 +57,8 @@ class BiblioAssociationsForm extends BaseCatalogueBibliographyForm
 	  $this->widgetSchema['bibliography_uri']->setLabel("") ;
     }
 
+    //$this->widgetSchema['bibliography_id']->setAttribute('class','hidden_record');
+    $this->validatorSchema['bibliography_id'] = new sfValidatorPass();
     $this->validatorSchema['bibliography_year'] = new sfValidatorPass();
     $this->validatorSchema['bibliography_ref'] = new sfValidatorInteger(array('required'=>false));
 	$this->validatorSchema['bibliography_uri_protocol'] = new sfValidatorPass();
