@@ -5,7 +5,7 @@
 -- Dumped from database version 9.6.15
 -- Dumped by pg_dump version 13.0
 
--- Started on 2020-12-11 15:46:02
+-- Started on 2021-01-07 15:40:57
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -483,7 +483,7 @@ CREATE TYPE public.chip;
 ALTER TYPE public.chip OWNER TO postgres;
 
 --
--- TOC entry 2049 (class 1255 OID 4101697)
+-- TOC entry 2380 (class 1255 OID 4101697)
 -- Name: check_auto_increment_code_in_spec(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -605,7 +605,7 @@ $$;
 ALTER FUNCTION darwin2.check_auto_increment_code_in_spec() OWNER TO darwin2;
 
 --
--- TOC entry 2050 (class 1255 OID 4101698)
+-- TOC entry 2042 (class 1255 OID 4101698)
 -- Name: check_auto_increment_code_in_spec_on_specimen(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -672,7 +672,7 @@ $$;
 ALTER FUNCTION darwin2.check_auto_increment_code_in_spec_on_specimen() OWNER TO darwin2;
 
 --
--- TOC entry 2051 (class 1255 OID 4101699)
+-- TOC entry 2267 (class 1255 OID 4101699)
 -- Name: chk_part_not_loaned(); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -693,7 +693,7 @@ $$;
 ALTER FUNCTION darwin2.chk_part_not_loaned() OWNER TO postgres;
 
 --
--- TOC entry 2052 (class 1255 OID 4101700)
+-- TOC entry 2041 (class 1255 OID 4101700)
 -- Name: chk_specimens_not_loaned(); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -714,7 +714,7 @@ $$;
 ALTER FUNCTION darwin2.chk_specimens_not_loaned() OWNER TO postgres;
 
 --
--- TOC entry 2053 (class 1255 OID 4101701)
+-- TOC entry 2292 (class 1255 OID 4101701)
 -- Name: clean_imports(integer); Type: FUNCTION; Schema: darwin2; Owner: cebmpad
 --
 
@@ -757,7 +757,7 @@ $$;
 ALTER FUNCTION darwin2.clean_imports(integer) OWNER TO cebmpad;
 
 --
--- TOC entry 2365 (class 1255 OID 5153423)
+-- TOC entry 2313 (class 1255 OID 5153423)
 -- Name: cleanup_sample_properties(text); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -783,7 +783,7 @@ $_$;
 ALTER FUNCTION darwin2.cleanup_sample_properties(dms_string text) OWNER TO darwin2;
 
 --
--- TOC entry 2364 (class 1255 OID 5153414)
+-- TOC entry 2105 (class 1255 OID 5153414)
 -- Name: cleanupdms(text); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -812,7 +812,7 @@ $_$;
 ALTER FUNCTION darwin2.cleanupdms(dms_string text) OWNER TO darwin2;
 
 --
--- TOC entry 2054 (class 1255 OID 4101702)
+-- TOC entry 2043 (class 1255 OID 4101702)
 -- Name: concat(text[]); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -826,7 +826,7 @@ $_$;
 ALTER FUNCTION darwin2.concat(VARIADIC text[]) OWNER TO darwin2;
 
 --
--- TOC entry 2055 (class 1255 OID 4101703)
+-- TOC entry 2044 (class 1255 OID 4101703)
 -- Name: convert_to_integer(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -849,7 +849,7 @@ $$;
 ALTER FUNCTION darwin2.convert_to_integer(v_input character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2056 (class 1255 OID 4101704)
+-- TOC entry 2045 (class 1255 OID 4101704)
 -- Name: convert_to_real(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -872,7 +872,7 @@ $$;
 ALTER FUNCTION darwin2.convert_to_real(v_input character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2057 (class 1255 OID 4101705)
+-- TOC entry 2415 (class 1255 OID 4101705)
 -- Name: convert_to_unified(character varying, character varying); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -923,7 +923,7 @@ $$;
 ALTER FUNCTION darwin2.convert_to_unified(property character varying, property_unit character varying) OWNER TO postgres;
 
 --
--- TOC entry 2058 (class 1255 OID 4101706)
+-- TOC entry 2417 (class 1255 OID 4101706)
 -- Name: convert_to_unified(character varying, character varying, character varying); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -973,7 +973,7 @@ $$;
 ALTER FUNCTION darwin2.convert_to_unified(property character varying, property_unit character varying, property_type character varying) OWNER TO postgres;
 
 --
--- TOC entry 2363 (class 1255 OID 5153413)
+-- TOC entry 2233 (class 1255 OID 5153413)
 -- Name: dms2dd(text); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1069,7 +1069,7 @@ $_$;
 ALTER FUNCTION darwin2.dms2dd(strdegminsec text) OWNER TO darwin2;
 
 --
--- TOC entry 2059 (class 1255 OID 4101707)
+-- TOC entry 2046 (class 1255 OID 4101707)
 -- Name: fct_add_in_dict(text, text, text); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1099,7 +1099,7 @@ $$;
 ALTER FUNCTION darwin2.fct_add_in_dict(ref_relation text, ref_field text, dict_val text) OWNER TO darwin2;
 
 --
--- TOC entry 2060 (class 1255 OID 4101708)
+-- TOC entry 2268 (class 1255 OID 4101708)
 -- Name: fct_add_in_dict(text, text, text, text); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1129,7 +1129,7 @@ $$;
 ALTER FUNCTION darwin2.fct_add_in_dict(ref_relation text, ref_field text, old_value text, new_val text) OWNER TO darwin2;
 
 --
--- TOC entry 2061 (class 1255 OID 4101709)
+-- TOC entry 2287 (class 1255 OID 4101709)
 -- Name: fct_add_in_dict_dept(text, text, text, text, text, text); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -1166,7 +1166,7 @@ $$;
 ALTER FUNCTION darwin2.fct_add_in_dict_dept(ref_relation text, ref_field text, old_value text, new_val text, depending_old_value text, depending_new_value text) OWNER TO postgres;
 
 --
--- TOC entry 2062 (class 1255 OID 4101710)
+-- TOC entry 2291 (class 1255 OID 4101710)
 -- Name: fct_after_save_add_code(integer, integer); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -1199,7 +1199,7 @@ $$;
 ALTER FUNCTION darwin2.fct_after_save_add_code(collectionid integer, specimenid integer) OWNER TO postgres;
 
 --
--- TOC entry 2063 (class 1255 OID 4101711)
+-- TOC entry 2288 (class 1255 OID 4101711)
 -- Name: fct_array_find(anyarray, anyelement); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1213,7 +1213,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_array_find(in_array anyarray, elem anyelement, OUT item_order integer) OWNER TO darwin2;
 
 --
--- TOC entry 2064 (class 1255 OID 4101712)
+-- TOC entry 2289 (class 1255 OID 4101712)
 -- Name: fct_array_find(character varying, anyelement); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1227,7 +1227,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_array_find(in_array character varying, elem anyelement, OUT item_order integer) OWNER TO darwin2;
 
 --
--- TOC entry 2065 (class 1255 OID 4101713)
+-- TOC entry 2319 (class 1255 OID 4101713)
 -- Name: fct_auto_insert_status_history(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1260,7 +1260,7 @@ $$;
 ALTER FUNCTION darwin2.fct_auto_insert_status_history() OWNER TO darwin2;
 
 --
--- TOC entry 2066 (class 1255 OID 4101714)
+-- TOC entry 2290 (class 1255 OID 4101714)
 -- Name: fct_cast_to_real(text); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1282,7 +1282,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cast_to_real(element text) OWNER TO darwin2;
 
 --
--- TOC entry 2067 (class 1255 OID 4101715)
+-- TOC entry 2270 (class 1255 OID 4101715)
 -- Name: fct_catalogue_import_keywords_update(); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -1415,7 +1415,7 @@ $$;
 ALTER FUNCTION darwin2.fct_catalogue_import_keywords_update() OWNER TO postgres;
 
 --
--- TOC entry 2068 (class 1255 OID 4101716)
+-- TOC entry 2051 (class 1255 OID 4101716)
 -- Name: fct_chk_arerole(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1458,7 +1458,7 @@ $$;
 ALTER FUNCTION darwin2.fct_chk_arerole() OWNER TO darwin2;
 
 --
--- TOC entry 2069 (class 1255 OID 4101717)
+-- TOC entry 2052 (class 1255 OID 4101717)
 -- Name: fct_chk_canupdatecollectionsrights(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1490,7 +1490,7 @@ $$;
 ALTER FUNCTION darwin2.fct_chk_canupdatecollectionsrights() OWNER TO darwin2;
 
 --
--- TOC entry 2070 (class 1255 OID 4101718)
+-- TOC entry 2053 (class 1255 OID 4101718)
 -- Name: fct_chk_onceinpath(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1510,7 +1510,7 @@ $$;
 ALTER FUNCTION darwin2.fct_chk_onceinpath(path character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2071 (class 1255 OID 4101719)
+-- TOC entry 2269 (class 1255 OID 4101719)
 -- Name: fct_chk_parentcollinstitution(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1544,7 +1544,7 @@ $$;
 ALTER FUNCTION darwin2.fct_chk_parentcollinstitution() OWNER TO darwin2;
 
 --
--- TOC entry 2072 (class 1255 OID 4101720)
+-- TOC entry 2271 (class 1255 OID 4101720)
 -- Name: fct_chk_peopleismoral(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1568,7 +1568,7 @@ $$;
 ALTER FUNCTION darwin2.fct_chk_peopleismoral() OWNER TO darwin2;
 
 --
--- TOC entry 2073 (class 1255 OID 4101721)
+-- TOC entry 2272 (class 1255 OID 4101721)
 -- Name: fct_chk_peopletype(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1616,7 +1616,7 @@ $$;
 ALTER FUNCTION darwin2.fct_chk_peopletype() OWNER TO darwin2;
 
 --
--- TOC entry 2074 (class 1255 OID 4101722)
+-- TOC entry 2273 (class 1255 OID 4101722)
 -- Name: fct_chk_possible_upper_level(character varying, integer, integer, integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1649,7 +1649,7 @@ $$;
 ALTER FUNCTION darwin2.fct_chk_possible_upper_level(referenced_relation character varying, new_parent_ref integer, new_level_ref integer, new_id integer) OWNER TO darwin2;
 
 --
--- TOC entry 2075 (class 1255 OID 4101723)
+-- TOC entry 2295 (class 1255 OID 4101723)
 -- Name: fct_chk_possible_upper_level_rmca_allow_upper(character varying, integer, integer, integer); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -1692,7 +1692,7 @@ $$;
 ALTER FUNCTION darwin2.fct_chk_possible_upper_level_rmca_allow_upper(referenced_relation character varying, new_parent_ref integer, new_level_ref integer, new_id integer) OWNER TO postgres;
 
 --
--- TOC entry 2076 (class 1255 OID 4101724)
+-- TOC entry 2274 (class 1255 OID 4101724)
 -- Name: fct_chk_referencedrecord(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1716,7 +1716,7 @@ $$;
 ALTER FUNCTION darwin2.fct_chk_referencedrecord() OWNER TO darwin2;
 
 --
--- TOC entry 2077 (class 1255 OID 4101725)
+-- TOC entry 2293 (class 1255 OID 4101725)
 -- Name: fct_chk_referencedrecordrelationship(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1742,7 +1742,7 @@ $$;
 ALTER FUNCTION darwin2.fct_chk_referencedrecordrelationship() OWNER TO darwin2;
 
 --
--- TOC entry 2078 (class 1255 OID 4101726)
+-- TOC entry 2054 (class 1255 OID 4101726)
 -- Name: fct_chk_specimencollectionallowed(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1799,7 +1799,7 @@ $$;
 ALTER FUNCTION darwin2.fct_chk_specimencollectionallowed() OWNER TO darwin2;
 
 --
--- TOC entry 2079 (class 1255 OID 4101727)
+-- TOC entry 2296 (class 1255 OID 4101727)
 -- Name: fct_chk_upper_level_for_childrens(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1827,7 +1827,7 @@ $$;
 ALTER FUNCTION darwin2.fct_chk_upper_level_for_childrens() OWNER TO darwin2;
 
 --
--- TOC entry 2080 (class 1255 OID 4101728)
+-- TOC entry 2329 (class 1255 OID 4101728)
 -- Name: fct_clean_staging_catalogue(integer); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -1882,7 +1882,7 @@ $$;
 ALTER FUNCTION darwin2.fct_clean_staging_catalogue(importref integer) OWNER TO postgres;
 
 --
--- TOC entry 2081 (class 1255 OID 4101729)
+-- TOC entry 2297 (class 1255 OID 4101729)
 -- Name: fct_clear_identifiers_in_flat(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1919,7 +1919,7 @@ $$;
 ALTER FUNCTION darwin2.fct_clear_identifiers_in_flat() OWNER TO darwin2;
 
 --
--- TOC entry 2082 (class 1255 OID 4101730)
+-- TOC entry 2298 (class 1255 OID 4101730)
 -- Name: fct_clear_referencedrecord(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -1942,7 +1942,7 @@ $$;
 ALTER FUNCTION darwin2.fct_clear_referencedrecord() OWNER TO darwin2;
 
 --
--- TOC entry 2083 (class 1255 OID 4101731)
+-- TOC entry 2294 (class 1255 OID 4101731)
 -- Name: fct_clr_specialstatus(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -2033,7 +2033,7 @@ $$;
 ALTER FUNCTION darwin2.fct_clr_specialstatus() OWNER TO darwin2;
 
 --
--- TOC entry 2084 (class 1255 OID 4101732)
+-- TOC entry 2055 (class 1255 OID 4101732)
 -- Name: fct_count_units(); Type: FUNCTION; Schema: darwin2; Owner: cebmpad
 --
 
@@ -2093,7 +2093,7 @@ $$;
 ALTER FUNCTION darwin2.fct_count_units() OWNER TO cebmpad;
 
 --
--- TOC entry 2085 (class 1255 OID 4101733)
+-- TOC entry 2056 (class 1255 OID 4101733)
 -- Name: fct_cpy_deleted_file(); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -2110,7 +2110,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cpy_deleted_file() OWNER TO postgres;
 
 --
--- TOC entry 2086 (class 1255 OID 4101734)
+-- TOC entry 2057 (class 1255 OID 4101734)
 -- Name: fct_cpy_formattedname(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -2144,7 +2144,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cpy_formattedname() OWNER TO darwin2;
 
 --
--- TOC entry 2087 (class 1255 OID 4101735)
+-- TOC entry 2330 (class 1255 OID 4101735)
 -- Name: fct_cpy_fulltoindex(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -2224,7 +2224,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cpy_fulltoindex() OWNER TO darwin2;
 
 --
--- TOC entry 2088 (class 1255 OID 4101736)
+-- TOC entry 2404 (class 1255 OID 4101736)
 -- Name: fct_cpy_gtutags(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -2307,7 +2307,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cpy_gtutags() OWNER TO darwin2;
 
 --
--- TOC entry 2089 (class 1255 OID 4101737)
+-- TOC entry 2058 (class 1255 OID 4101737)
 -- Name: fct_cpy_ig_to_loan_items(); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -2328,7 +2328,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cpy_ig_to_loan_items() OWNER TO postgres;
 
 --
--- TOC entry 2090 (class 1255 OID 4101738)
+-- TOC entry 2299 (class 1255 OID 4101738)
 -- Name: fct_cpy_length_conversion(real, text); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -2435,7 +2435,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_cpy_length_conversion(property real, property_unit text) OWNER TO postgres;
 
 --
--- TOC entry 2091 (class 1255 OID 4101739)
+-- TOC entry 2331 (class 1255 OID 4101739)
 -- Name: fct_cpy_length_conversion(real, character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -2542,7 +2542,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_cpy_length_conversion(property real, property_unit character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2092 (class 1255 OID 4101740)
+-- TOC entry 2332 (class 1255 OID 4101740)
 -- Name: fct_cpy_loan_history(integer); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -2599,7 +2599,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cpy_loan_history(loan_id integer) OWNER TO postgres;
 
 --
--- TOC entry 2093 (class 1255 OID 4101741)
+-- TOC entry 2059 (class 1255 OID 4101741)
 -- Name: fct_cpy_location(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -2616,7 +2616,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cpy_location() OWNER TO darwin2;
 
 --
--- TOC entry 2094 (class 1255 OID 4101742)
+-- TOC entry 2333 (class 1255 OID 4101742)
 -- Name: fct_cpy_path(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -2678,7 +2678,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cpy_path() OWNER TO darwin2;
 
 --
--- TOC entry 2095 (class 1255 OID 4101743)
+-- TOC entry 2060 (class 1255 OID 4101743)
 -- Name: fct_cpy_path_catalogs(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -2725,7 +2725,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cpy_path_catalogs() OWNER TO darwin2;
 
 --
--- TOC entry 2096 (class 1255 OID 4101744)
+-- TOC entry 2334 (class 1255 OID 4101744)
 -- Name: fct_cpy_specimensmaincode(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -2762,7 +2762,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cpy_specimensmaincode() OWNER TO darwin2;
 
 --
--- TOC entry 2097 (class 1255 OID 4101745)
+-- TOC entry 2377 (class 1255 OID 4101745)
 -- Name: fct_cpy_speed_conversion(real, text); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -2815,7 +2815,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_cpy_speed_conversion(property real, property_unit text) OWNER TO postgres;
 
 --
--- TOC entry 2098 (class 1255 OID 4101746)
+-- TOC entry 2335 (class 1255 OID 4101746)
 -- Name: fct_cpy_speed_conversion(real, character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -2868,7 +2868,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_cpy_speed_conversion(property real, property_unit character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2362 (class 1255 OID 5153142)
+-- TOC entry 2234 (class 1255 OID 5153142)
 -- Name: fct_cpy_tags_to_distinct(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -2937,7 +2937,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cpy_tags_to_distinct() OWNER TO darwin2;
 
 --
--- TOC entry 2099 (class 1255 OID 4101747)
+-- TOC entry 2336 (class 1255 OID 4101747)
 -- Name: fct_cpy_tags_to_distinct_bedic(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -3010,7 +3010,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cpy_tags_to_distinct_bedic() OWNER TO darwin2;
 
 --
--- TOC entry 2100 (class 1255 OID 4101748)
+-- TOC entry 2301 (class 1255 OID 4101748)
 -- Name: fct_cpy_temperature_conversion(real, text); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -3041,7 +3041,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_cpy_temperature_conversion(property real, property_unit text) OWNER TO postgres;
 
 --
--- TOC entry 2101 (class 1255 OID 4101749)
+-- TOC entry 2062 (class 1255 OID 4101749)
 -- Name: fct_cpy_temperature_conversion(real, character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -3072,7 +3072,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_cpy_temperature_conversion(property real, property_unit character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2102 (class 1255 OID 4101750)
+-- TOC entry 2302 (class 1255 OID 4101750)
 -- Name: fct_cpy_time_conversion(real, text); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -3111,7 +3111,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_cpy_time_conversion(property real, property_unit text) OWNER TO postgres;
 
 --
--- TOC entry 2103 (class 1255 OID 4101751)
+-- TOC entry 2337 (class 1255 OID 4101751)
 -- Name: fct_cpy_time_conversion(real, character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -3150,7 +3150,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_cpy_time_conversion(property real, property_unit character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2104 (class 1255 OID 4101752)
+-- TOC entry 2338 (class 1255 OID 4101752)
 -- Name: fct_cpy_unified_values(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -3170,7 +3170,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cpy_unified_values() OWNER TO darwin2;
 
 --
--- TOC entry 2105 (class 1255 OID 4101753)
+-- TOC entry 2341 (class 1255 OID 4101753)
 -- Name: fct_cpy_updatecollectionrights(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -3232,7 +3232,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cpy_updatecollectionrights() OWNER TO darwin2;
 
 --
--- TOC entry 2106 (class 1255 OID 4101754)
+-- TOC entry 2063 (class 1255 OID 4101754)
 -- Name: fct_cpy_updatecollinstitutioncascade(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -3254,7 +3254,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cpy_updatecollinstitutioncascade() OWNER TO darwin2;
 
 --
--- TOC entry 2107 (class 1255 OID 4101755)
+-- TOC entry 2064 (class 1255 OID 4101755)
 -- Name: fct_cpy_updatemywidgetscoll(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -3293,7 +3293,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cpy_updatemywidgetscoll() OWNER TO darwin2;
 
 --
--- TOC entry 2108 (class 1255 OID 4101756)
+-- TOC entry 2321 (class 1255 OID 4101756)
 -- Name: fct_cpy_updatespechostimpact(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -3316,7 +3316,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cpy_updatespechostimpact() OWNER TO darwin2;
 
 --
--- TOC entry 2109 (class 1255 OID 4101757)
+-- TOC entry 2344 (class 1255 OID 4101757)
 -- Name: fct_cpy_updateuserrights(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -3423,7 +3423,7 @@ $$;
 ALTER FUNCTION darwin2.fct_cpy_updateuserrights() OWNER TO darwin2;
 
 --
--- TOC entry 2110 (class 1255 OID 4101758)
+-- TOC entry 2307 (class 1255 OID 4101758)
 -- Name: fct_cpy_volume_conversion(real, text); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -3454,7 +3454,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_cpy_volume_conversion(property real, property_unit text) OWNER TO postgres;
 
 --
--- TOC entry 2111 (class 1255 OID 4101759)
+-- TOC entry 2065 (class 1255 OID 4101759)
 -- Name: fct_cpy_volume_conversion(real, character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -3485,7 +3485,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_cpy_volume_conversion(property real, property_unit character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2112 (class 1255 OID 4101760)
+-- TOC entry 2308 (class 1255 OID 4101760)
 -- Name: fct_cpy_weight_conversion(real, text); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -3520,7 +3520,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_cpy_weight_conversion(property real, property_unit text) OWNER TO postgres;
 
 --
--- TOC entry 2113 (class 1255 OID 4101761)
+-- TOC entry 2345 (class 1255 OID 4101761)
 -- Name: fct_cpy_weight_conversion(real, character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -3555,7 +3555,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_cpy_weight_conversion(property real, property_unit character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2114 (class 1255 OID 4101762)
+-- TOC entry 2304 (class 1255 OID 4101762)
 -- Name: fct_del_in_dict(text, text, text); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -3586,7 +3586,7 @@ $$;
 ALTER FUNCTION darwin2.fct_del_in_dict(ref_relation text, ref_field text, dict_val text) OWNER TO darwin2;
 
 --
--- TOC entry 2115 (class 1255 OID 4101763)
+-- TOC entry 2305 (class 1255 OID 4101763)
 -- Name: fct_del_in_dict(text, text, text, text); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -3617,7 +3617,7 @@ $$;
 ALTER FUNCTION darwin2.fct_del_in_dict(ref_relation text, ref_field text, old_value text, new_val text) OWNER TO darwin2;
 
 --
--- TOC entry 2116 (class 1255 OID 4101764)
+-- TOC entry 2306 (class 1255 OID 4101764)
 -- Name: fct_del_in_dict_dept(text, text, text, text, text, text, text); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -3650,7 +3650,7 @@ $$;
 ALTER FUNCTION darwin2.fct_del_in_dict_dept(ref_relation text, ref_field text, old_value text, new_val text, depending_old_value text, depending_new_value text, depending_field text) OWNER TO postgres;
 
 --
--- TOC entry 2117 (class 1255 OID 4101765)
+-- TOC entry 2382 (class 1255 OID 4101765)
 -- Name: fct_duplicate_loans(integer); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -3852,7 +3852,7 @@ CREATE FUNCTION darwin2.fct_duplicate_loans(loan_id integer) RETURNS integer
 ALTER FUNCTION darwin2.fct_duplicate_loans(loan_id integer) OWNER TO postgres;
 
 --
--- TOC entry 2373 (class 1255 OID 5200474)
+-- TOC entry 2256 (class 1255 OID 5200474)
 -- Name: fct_encode_uri(text); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -3891,7 +3891,7 @@ $$;
 ALTER FUNCTION darwin2.fct_encode_uri(input text) OWNER TO darwin2;
 
 --
--- TOC entry 2118 (class 1255 OID 4101766)
+-- TOC entry 2067 (class 1255 OID 4101766)
 -- Name: fct_explode_array(anyarray); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -3905,7 +3905,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_explode_array(in_array anyarray) OWNER TO darwin2;
 
 --
--- TOC entry 2119 (class 1255 OID 4101767)
+-- TOC entry 2068 (class 1255 OID 4101767)
 -- Name: fct_filter_encodable_row(character varying, character varying, integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -3933,7 +3933,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_filter_encodable_row(ids character varying, col_name character varying, user_id integer) OWNER TO darwin2;
 
 --
--- TOC entry 2120 (class 1255 OID 4101768)
+-- TOC entry 2069 (class 1255 OID 4101768)
 -- Name: fct_find_tax_level(text, integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -3947,7 +3947,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_find_tax_level(tax_path text, searched_level integer) OWNER TO darwin2;
 
 --
--- TOC entry 2121 (class 1255 OID 4101769)
+-- TOC entry 2310 (class 1255 OID 4101769)
 -- Name: fct_get_tax_hierarchy(integer, integer[]); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -4117,7 +4117,7 @@ CREATE TABLE darwin2.staging (
 ALTER TABLE darwin2.staging OWNER TO darwin2;
 
 --
--- TOC entry 2122 (class 1255 OID 4101782)
+-- TOC entry 2070 (class 1255 OID 4101782)
 -- Name: fct_imp_checker(darwin2.staging, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -4356,7 +4356,7 @@ $$;
 ALTER FUNCTION darwin2.fct_imp_checker(line darwin2.staging, import boolean) OWNER TO darwin2;
 
 --
--- TOC entry 2123 (class 1255 OID 4101785)
+-- TOC entry 2309 (class 1255 OID 4101785)
 -- Name: fct_imp_checker_catalogue(darwin2.staging, text, text); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -4484,7 +4484,7 @@ $$;
 ALTER FUNCTION darwin2.fct_imp_checker_catalogue(line darwin2.staging, catalogue_table text, prefix text) OWNER TO darwin2;
 
 --
--- TOC entry 2124 (class 1255 OID 4101787)
+-- TOC entry 2347 (class 1255 OID 4101787)
 -- Name: fct_imp_checker_catalogues_parents(darwin2.staging, integer, text, text); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -4566,7 +4566,7 @@ $$;
 ALTER FUNCTION darwin2.fct_imp_checker_catalogues_parents(line darwin2.staging, rec_id integer, catalogue_table text, prefix text) OWNER TO darwin2;
 
 --
--- TOC entry 2125 (class 1255 OID 4101788)
+-- TOC entry 2348 (class 1255 OID 4101788)
 -- Name: fct_imp_checker_catalogues_parents_bck20180829(darwin2.staging, integer, text, text); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -4614,7 +4614,7 @@ $$;
 ALTER FUNCTION darwin2.fct_imp_checker_catalogues_parents_bck20180829(line darwin2.staging, rec_id integer, catalogue_table text, prefix text) OWNER TO darwin2;
 
 --
--- TOC entry 2126 (class 1255 OID 4101789)
+-- TOC entry 2073 (class 1255 OID 4101789)
 -- Name: fct_imp_checker_expeditions(darwin2.staging, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -4670,7 +4670,7 @@ $$;
 ALTER FUNCTION darwin2.fct_imp_checker_expeditions(line darwin2.staging, import boolean) OWNER TO darwin2;
 
 --
--- TOC entry 2127 (class 1255 OID 4101790)
+-- TOC entry 2074 (class 1255 OID 4101790)
 -- Name: fct_imp_checker_gtu(darwin2.staging, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -4996,7 +4996,7 @@ $$;
 ALTER FUNCTION darwin2.fct_imp_checker_gtu(line darwin2.staging, import boolean) OWNER TO darwin2;
 
 --
--- TOC entry 2128 (class 1255 OID 4101796)
+-- TOC entry 2075 (class 1255 OID 4101796)
 -- Name: fct_imp_checker_igs(darwin2.staging, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -5035,7 +5035,7 @@ $$;
 ALTER FUNCTION darwin2.fct_imp_checker_igs(line darwin2.staging, import boolean) OWNER TO darwin2;
 
 --
--- TOC entry 2129 (class 1255 OID 4101797)
+-- TOC entry 2077 (class 1255 OID 4101797)
 -- Name: fct_imp_checker_manager(darwin2.staging); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -5091,7 +5091,7 @@ $$;
 ALTER FUNCTION darwin2.fct_imp_checker_manager(line darwin2.staging) OWNER TO darwin2;
 
 --
--- TOC entry 2130 (class 1255 OID 4101798)
+-- TOC entry 2387 (class 1255 OID 4101798)
 -- Name: fct_imp_checker_people(darwin2.staging); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -5225,7 +5225,7 @@ $$;
 ALTER FUNCTION darwin2.fct_imp_checker_people(line darwin2.staging) OWNER TO darwin2;
 
 --
--- TOC entry 2131 (class 1255 OID 4101800)
+-- TOC entry 2170 (class 1255 OID 4101800)
 -- Name: fct_imp_checker_staging_info(darwin2.staging, text); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -5331,7 +5331,7 @@ $$;
 ALTER FUNCTION darwin2.fct_imp_checker_staging_info(line darwin2.staging, st_type text) OWNER TO postgres;
 
 --
--- TOC entry 2132 (class 1255 OID 4101801)
+-- TOC entry 2349 (class 1255 OID 4101801)
 -- Name: fct_imp_checker_staging_info_comments(character varying, integer, character varying, integer); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -5356,7 +5356,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_imp_checker_staging_info_comments(targeted_referenced_relation character varying, targeted_record_id integer, new_referenced_relation character varying, new_record_id integer) OWNER TO postgres;
 
 --
--- TOC entry 2133 (class 1255 OID 4101802)
+-- TOC entry 2322 (class 1255 OID 4101802)
 -- Name: fct_imp_checker_staging_info_ext_links(character varying, integer, character varying, integer); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -5379,7 +5379,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_imp_checker_staging_info_ext_links(targeted_referenced_relation character varying, targeted_record_id integer, new_referenced_relation character varying, new_record_id integer) OWNER TO postgres;
 
 --
--- TOC entry 2134 (class 1255 OID 4101803)
+-- TOC entry 2379 (class 1255 OID 4101803)
 -- Name: fct_imp_checker_staging_info_insurances(character varying, integer, character varying, integer); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -5408,7 +5408,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_imp_checker_staging_info_insurances(targeted_referenced_relation character varying, targeted_record_id integer, new_referenced_relation character varying, new_record_id integer) OWNER TO postgres;
 
 --
--- TOC entry 2135 (class 1255 OID 4101804)
+-- TOC entry 2066 (class 1255 OID 4101804)
 -- Name: fct_imp_checker_staging_info_multimedia(character varying, integer, character varying, integer); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -5432,7 +5432,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_imp_checker_staging_info_multimedia(targeted_referenced_relation character varying, targeted_record_id integer, new_referenced_relation character varying, new_record_id integer) OWNER TO postgres;
 
 --
--- TOC entry 2136 (class 1255 OID 4101805)
+-- TOC entry 2174 (class 1255 OID 4101805)
 -- Name: fct_imp_checker_staging_info_properties(character varying, integer, character varying, integer); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -5466,7 +5466,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_imp_checker_staging_info_properties(targeted_referenced_relation character varying, targeted_record_id integer, new_referenced_relation character varying, new_record_id integer) OWNER TO postgres;
 
 --
--- TOC entry 2137 (class 1255 OID 4101806)
+-- TOC entry 2403 (class 1255 OID 4101806)
 -- Name: fct_imp_checker_staging_relationship(); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -5515,7 +5515,7 @@ $$;
 ALTER FUNCTION darwin2.fct_imp_checker_staging_relationship() OWNER TO postgres;
 
 --
--- TOC entry 2138 (class 1255 OID 4101807)
+-- TOC entry 2383 (class 1255 OID 4101807)
 -- Name: fct_imp_create_catalogues_and_parents(darwin2.staging, text, text); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -5586,7 +5586,7 @@ $$;
 ALTER FUNCTION darwin2.fct_imp_create_catalogues_and_parents(line darwin2.staging, catalogue_table text, prefix text) OWNER TO postgres;
 
 --
--- TOC entry 2139 (class 1255 OID 4101808)
+-- TOC entry 2082 (class 1255 OID 4101808)
 -- Name: fct_importer_abcd(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -5815,7 +5815,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_importer_abcd(req_import_ref integer) OWNER TO darwin2;
 
 --
--- TOC entry 2140 (class 1255 OID 4101811)
+-- TOC entry 2323 (class 1255 OID 4101811)
 -- Name: fct_importer_catalogue(integer, text, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -5892,7 +5892,7 @@ $$;
 ALTER FUNCTION darwin2.fct_importer_catalogue(req_import_ref integer, referenced_relation text, exclude_invalid_entries boolean) OWNER TO darwin2;
 
 --
--- TOC entry 2141 (class 1255 OID 4101812)
+-- TOC entry 2081 (class 1255 OID 4101812)
 -- Name: fct_importer_catalogue_backup_pad(integer, text, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -6129,7 +6129,7 @@ CREATE FUNCTION darwin2.fct_importer_catalogue_backup_pad(req_import_ref integer
 ALTER FUNCTION darwin2.fct_importer_catalogue_backup_pad(req_import_ref integer, referenced_relation text, exclude_invalid_entries boolean) OWNER TO darwin2;
 
 --
--- TOC entry 2142 (class 1255 OID 4101815)
+-- TOC entry 2083 (class 1255 OID 4101815)
 -- Name: fct_importer_catalogue_non_reference_taxonomy(integer, integer, text, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -6163,7 +6163,7 @@ CREATE FUNCTION darwin2.fct_importer_catalogue_non_reference_taxonomy(req_import
 ALTER FUNCTION darwin2.fct_importer_catalogue_non_reference_taxonomy(req_import_ref integer, var_metadata_ref integer, referenced_relation text, exclude_invalid_entries boolean) OWNER TO darwin2;
 
 --
--- TOC entry 2368 (class 1255 OID 5188195)
+-- TOC entry 2311 (class 1255 OID 5188195)
 -- Name: fct_importer_catalogue_non_reference_taxonomy_add_author(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -6213,7 +6213,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_importer_catalogue_non_reference_taxonomy_add_author(var_staging_id integer) OWNER TO darwin2;
 
 --
--- TOC entry 2369 (class 1255 OID 5188196)
+-- TOC entry 2235 (class 1255 OID 5188196)
 -- Name: fct_importer_catalogue_non_reference_taxonomy_add_author_file(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -6260,7 +6260,7 @@ $$;
 ALTER FUNCTION darwin2.fct_importer_catalogue_non_reference_taxonomy_add_author_file(var_import_ref integer) OWNER TO darwin2;
 
 --
--- TOC entry 2370 (class 1255 OID 5189574)
+-- TOC entry 2238 (class 1255 OID 5189574)
 -- Name: fct_importer_catalogue_non_reference_taxonomy_add_author_loop(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -6283,7 +6283,7 @@ $$;
 ALTER FUNCTION darwin2.fct_importer_catalogue_non_reference_taxonomy_add_author_loop(var_import_ref integer) OWNER TO darwin2;
 
 --
--- TOC entry 2143 (class 1255 OID 4101816)
+-- TOC entry 2084 (class 1255 OID 4101816)
 -- Name: fct_importer_catalogue_reference_taxonomy(integer, integer, text, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -6314,7 +6314,7 @@ CREATE FUNCTION darwin2.fct_importer_catalogue_reference_taxonomy(req_import_ref
 ALTER FUNCTION darwin2.fct_importer_catalogue_reference_taxonomy(req_import_ref integer, var_metadata_ref integer, referenced_relation text, exclude_invalid_entries boolean) OWNER TO darwin2;
 
 --
--- TOC entry 2144 (class 1255 OID 4101817)
+-- TOC entry 2087 (class 1255 OID 4101817)
 -- Name: fct_importer_catalogue_reference_taxonomy_logic(integer, integer, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -6437,7 +6437,7 @@ CREATE FUNCTION darwin2.fct_importer_catalogue_reference_taxonomy_logic(req_impo
 ALTER FUNCTION darwin2.fct_importer_catalogue_reference_taxonomy_logic(req_import_ref integer, var_metadata_ref integer, exclude_invalid_entries boolean) OWNER TO darwin2;
 
 --
--- TOC entry 2145 (class 1255 OID 4101818)
+-- TOC entry 2086 (class 1255 OID 4101818)
 -- Name: fct_importer_catalogue_reference_taxonomy_logic_non_reference(integer, integer, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -6585,7 +6585,7 @@ returned =TRUE;
 ALTER FUNCTION darwin2.fct_importer_catalogue_reference_taxonomy_logic_non_reference(req_import_ref integer, var_metadata_ref integer, exclude_invalid_entries boolean) OWNER TO darwin2;
 
 --
--- TOC entry 2146 (class 1255 OID 4101821)
+-- TOC entry 2091 (class 1255 OID 4101821)
 -- Name: fct_importer_catalogue_reference_taxonomy_logic_reference(integer, integer, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -6734,7 +6734,7 @@ CREATE FUNCTION darwin2.fct_importer_catalogue_reference_taxonomy_logic_referenc
 ALTER FUNCTION darwin2.fct_importer_catalogue_reference_taxonomy_logic_reference(req_import_ref integer, var_metadata_ref integer, exclude_invalid_entries boolean) OWNER TO darwin2;
 
 --
--- TOC entry 2147 (class 1255 OID 4101824)
+-- TOC entry 2089 (class 1255 OID 4101824)
 -- Name: fct_importer_catalogue_reference_taxonomy_rmca_non_taxo(integer, integer, text, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -7015,7 +7015,7 @@ existing_text_hierarchy ;
 ALTER FUNCTION darwin2.fct_importer_catalogue_reference_taxonomy_rmca_non_taxo(req_import_ref integer, var_metadata_ref integer, referenced_relation text, exclude_invalid_entries boolean) OWNER TO darwin2;
 
 --
--- TOC entry 2148 (class 1255 OID 4101827)
+-- TOC entry 2354 (class 1255 OID 4101827)
 -- Name: fct_informative_reset_last_flag(); Type: FUNCTION; Schema: darwin2; Owner: cebmpad
 --
 
@@ -7038,7 +7038,7 @@ $$;
 ALTER FUNCTION darwin2.fct_informative_reset_last_flag() OWNER TO cebmpad;
 
 --
--- TOC entry 2149 (class 1255 OID 4101828)
+-- TOC entry 2355 (class 1255 OID 4101828)
 -- Name: fct_listing_botany(integer, integer[]); Type: FUNCTION; Schema: darwin2; Owner: cebmpad
 --
 
@@ -7052,7 +7052,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_listing_botany(nbr_records integer, VARIADIC taxon_ids integer[]) OWNER TO cebmpad;
 
 --
--- TOC entry 2150 (class 1255 OID 4101829)
+-- TOC entry 2093 (class 1255 OID 4101829)
 -- Name: fct_listing_chronostratigraphy(integer, integer[]); Type: FUNCTION; Schema: darwin2; Owner: cebmpad
 --
 
@@ -7121,7 +7121,7 @@ $$;
 ALTER FUNCTION darwin2.fct_listing_chronostratigraphy(nbr_records integer, VARIADIC chrono_unit_ids integer[]) OWNER TO cebmpad;
 
 --
--- TOC entry 2151 (class 1255 OID 4101830)
+-- TOC entry 2094 (class 1255 OID 4101830)
 -- Name: fct_listing_lithology(integer, integer[]); Type: FUNCTION; Schema: darwin2; Owner: cebmpad
 --
 
@@ -7190,7 +7190,7 @@ $$;
 ALTER FUNCTION darwin2.fct_listing_lithology(nbr_records integer, VARIADIC litholo_unit_ids integer[]) OWNER TO cebmpad;
 
 --
--- TOC entry 2152 (class 1255 OID 4101831)
+-- TOC entry 2095 (class 1255 OID 4101831)
 -- Name: fct_listing_lithostratigraphy(integer, integer[]); Type: FUNCTION; Schema: darwin2; Owner: cebmpad
 --
 
@@ -7259,7 +7259,7 @@ $$;
 ALTER FUNCTION darwin2.fct_listing_lithostratigraphy(nbr_records integer, VARIADIC litho_unit_ids integer[]) OWNER TO cebmpad;
 
 --
--- TOC entry 2153 (class 1255 OID 4101832)
+-- TOC entry 2096 (class 1255 OID 4101832)
 -- Name: fct_listing_mineralogy(integer, integer[]); Type: FUNCTION; Schema: darwin2; Owner: cebmpad
 --
 
@@ -7328,7 +7328,7 @@ $$;
 ALTER FUNCTION darwin2.fct_listing_mineralogy(nbr_records integer, VARIADIC mineralo_unit_ids integer[]) OWNER TO cebmpad;
 
 --
--- TOC entry 2154 (class 1255 OID 4101833)
+-- TOC entry 2350 (class 1255 OID 4101833)
 -- Name: fct_listing_taxonomy(integer, integer[]); Type: FUNCTION; Schema: darwin2; Owner: cebmpad
 --
 
@@ -7397,7 +7397,7 @@ $$;
 ALTER FUNCTION darwin2.fct_listing_taxonomy(nbr_records integer, VARIADIC taxon_ids integer[]) OWNER TO cebmpad;
 
 --
--- TOC entry 2155 (class 1255 OID 4101836)
+-- TOC entry 2353 (class 1255 OID 4101836)
 -- Name: fct_listing_zoology(integer, integer[]); Type: FUNCTION; Schema: darwin2; Owner: cebmpad
 --
 
@@ -7411,7 +7411,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_listing_zoology(nbr_records integer, VARIADIC taxon_ids integer[]) OWNER TO cebmpad;
 
 --
--- TOC entry 2156 (class 1255 OID 4101837)
+-- TOC entry 2300 (class 1255 OID 4101837)
 -- Name: fct_look_for_institution(text); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -7448,7 +7448,7 @@ $$;
 ALTER FUNCTION darwin2.fct_look_for_institution(fullname text) OWNER TO darwin2;
 
 --
--- TOC entry 2157 (class 1255 OID 4101838)
+-- TOC entry 2303 (class 1255 OID 4101838)
 -- Name: fct_look_for_people(text); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -7504,7 +7504,7 @@ $$;
 ALTER FUNCTION darwin2.fct_look_for_people(fullname text) OWNER TO darwin2;
 
 --
--- TOC entry 2158 (class 1255 OID 4101839)
+-- TOC entry 2061 (class 1255 OID 4101839)
 -- Name: fct_mask_date(timestamp without time zone, integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -7522,7 +7522,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_mask_date(date_fld timestamp without time zone, mask_fld integer) OWNER TO darwin2;
 
 --
--- TOC entry 2159 (class 1255 OID 4101840)
+-- TOC entry 2097 (class 1255 OID 4101840)
 -- Name: fct_nbr_in_relation(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -7566,7 +7566,7 @@ $$;
 ALTER FUNCTION darwin2.fct_nbr_in_relation() OWNER TO darwin2;
 
 --
--- TOC entry 2160 (class 1255 OID 4101841)
+-- TOC entry 2356 (class 1255 OID 4101841)
 -- Name: fct_nbr_in_synonym(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -7601,7 +7601,7 @@ $$;
 ALTER FUNCTION darwin2.fct_nbr_in_synonym() OWNER TO darwin2;
 
 --
--- TOC entry 2375 (class 1255 OID 5256821)
+-- TOC entry 2394 (class 1255 OID 5256821)
 -- Name: fct_rcma_sort_letter_before_numbers(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -7615,7 +7615,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_rcma_sort_letter_before_numbers(character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2161 (class 1255 OID 4101842)
+-- TOC entry 2098 (class 1255 OID 4101842)
 -- Name: fct_remove_array_elem(anyarray, anyarray); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -7631,7 +7631,7 @@ $$;
 ALTER FUNCTION darwin2.fct_remove_array_elem(in_array anyarray, elem anyarray, OUT out_array anyarray) OWNER TO darwin2;
 
 --
--- TOC entry 2162 (class 1255 OID 4101843)
+-- TOC entry 2357 (class 1255 OID 4101843)
 -- Name: fct_remove_array_elem(anyarray, anyelement); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -7647,7 +7647,7 @@ $$;
 ALTER FUNCTION darwin2.fct_remove_array_elem(in_array anyarray, elem anyelement, OUT out_array anyarray) OWNER TO darwin2;
 
 --
--- TOC entry 2163 (class 1255 OID 4101844)
+-- TOC entry 2358 (class 1255 OID 4101844)
 -- Name: fct_remove_last_flag(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -7667,7 +7667,7 @@ $$;
 ALTER FUNCTION darwin2.fct_remove_last_flag() OWNER TO darwin2;
 
 --
--- TOC entry 2164 (class 1255 OID 4101845)
+-- TOC entry 2359 (class 1255 OID 4101845)
 -- Name: fct_remove_last_flag_loan(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -7686,7 +7686,7 @@ $$;
 ALTER FUNCTION darwin2.fct_remove_last_flag_loan() OWNER TO darwin2;
 
 --
--- TOC entry 2165 (class 1255 OID 4101846)
+-- TOC entry 2360 (class 1255 OID 4101846)
 -- Name: fct_remove_null_array_elem(anyarray); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -7702,7 +7702,7 @@ $$;
 ALTER FUNCTION darwin2.fct_remove_null_array_elem(in_array anyarray, OUT out_array anyarray) OWNER TO darwin2;
 
 --
--- TOC entry 2166 (class 1255 OID 4101847)
+-- TOC entry 2099 (class 1255 OID 4101847)
 -- Name: fct_report_loans_addresses(integer, text); Type: FUNCTION; Schema: darwin2; Owner: cebmpad
 --
 
@@ -7875,7 +7875,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_report_loans_addresses(loan_id integer, target_copy text) OWNER TO cebmpad;
 
 --
--- TOC entry 2167 (class 1255 OID 4101848)
+-- TOC entry 2100 (class 1255 OID 4101848)
 -- Name: fct_report_loans_forms(integer, text, text, text, text, boolean, text); Type: FUNCTION; Schema: darwin2; Owner: cebmpad
 --
 
@@ -8136,7 +8136,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_report_loans_forms(loan_id integer, full_target_list text, short_target_list text, selected_target_list text, targeted_catalogues text, with_addr boolean, lang text) OWNER TO cebmpad;
 
 --
--- TOC entry 2168 (class 1255 OID 4101851)
+-- TOC entry 2101 (class 1255 OID 4101851)
 -- Name: fct_report_loans_maintenances(integer, text); Type: FUNCTION; Schema: darwin2; Owner: cebmpad
 --
 
@@ -8194,7 +8194,7 @@ CREATE FUNCTION darwin2.fct_report_loans_maintenances(loan_id integer, maintenan
 ALTER FUNCTION darwin2.fct_report_loans_maintenances(loan_id integer, maintenance_type text) OWNER TO cebmpad;
 
 --
--- TOC entry 2169 (class 1255 OID 4101852)
+-- TOC entry 2245 (class 1255 OID 4101852)
 -- Name: fct_report_loans_return_to(integer, text); Type: FUNCTION; Schema: darwin2; Owner: cebmpad
 --
 
@@ -8240,7 +8240,7 @@ CREATE FUNCTION darwin2.fct_report_loans_return_to(loan_id integer, lang text DE
 ALTER FUNCTION darwin2.fct_report_loans_return_to(loan_id integer, lang text) OWNER TO cebmpad;
 
 --
--- TOC entry 2170 (class 1255 OID 4101853)
+-- TOC entry 2102 (class 1255 OID 4101853)
 -- Name: fct_report_loans_transporters(integer, text, text); Type: FUNCTION; Schema: darwin2; Owner: cebmpad
 --
 
@@ -8322,7 +8322,7 @@ CREATE FUNCTION darwin2.fct_report_loans_transporters(loan_id integer, transport
 ALTER FUNCTION darwin2.fct_report_loans_transporters(loan_id integer, transporter_side text, lang text) OWNER TO cebmpad;
 
 --
--- TOC entry 2171 (class 1255 OID 4101854)
+-- TOC entry 2247 (class 1255 OID 4101854)
 -- Name: fct_rmca_abbreviate_names(character varying); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -8383,7 +8383,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_abbreviate_names(given_name character varying) OWNER TO postgres;
 
 --
--- TOC entry 2172 (class 1255 OID 4101855)
+-- TOC entry 2399 (class 1255 OID 4101855)
 -- Name: fct_rmca_chk_is_already_reference_taxo(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -8429,7 +8429,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_chk_is_already_reference_taxo() OWNER TO darwin2;
 
 --
--- TOC entry 2173 (class 1255 OID 4101856)
+-- TOC entry 2246 (class 1255 OID 4101856)
 -- Name: fct_rmca_chk_only_one_reference_taxo(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -8453,7 +8453,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_chk_only_one_reference_taxo() OWNER TO darwin2;
 
 --
--- TOC entry 2174 (class 1255 OID 4101857)
+-- TOC entry 2103 (class 1255 OID 4101857)
 -- Name: fct_rmca_chk_uniqueness_reference_taxo(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -8502,7 +8502,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_chk_uniqueness_reference_taxo() OWNER TO darwin2;
 
 --
--- TOC entry 2306 (class 1255 OID 4873611)
+-- TOC entry 2392 (class 1255 OID 4873611)
 -- Name: fct_rmca_collection_access_rights(integer, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -8535,7 +8535,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_collection_access_rights(id_user integer, with_writing boolean) OWNER TO darwin2;
 
 --
--- TOC entry 2359 (class 1255 OID 4873733)
+-- TOC entry 2388 (class 1255 OID 4873733)
 -- Name: fct_rmca_collection_access_rights_array(integer, integer[], boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -8568,7 +8568,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_collection_access_rights_array(id_user integer, searched_cols integer[], with_writing boolean) OWNER TO darwin2;
 
 --
--- TOC entry 2175 (class 1255 OID 4101858)
+-- TOC entry 2324 (class 1255 OID 4101858)
 -- Name: fct_rmca_collection_calculate_autoincrement_hierarchy(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -8619,7 +8619,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_collection_calculate_autoincrement_hierarchy(col_id integer) OWNER TO darwin2;
 
 --
--- TOC entry 2176 (class 1255 OID 4101859)
+-- TOC entry 2363 (class 1255 OID 4101859)
 -- Name: fct_rmca_collection_check_code_unicity(integer, character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -8679,7 +8679,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_collection_check_code_unicity(col_id integer, code_indexed character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2177 (class 1255 OID 4101860)
+-- TOC entry 2339 (class 1255 OID 4101860)
 -- Name: fct_rmca_collection_get_autoincrement_hierarchy(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -8724,7 +8724,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_collection_get_autoincrement_hierarchy(col_id integer) OWNER TO darwin2;
 
 --
--- TOC entry 2178 (class 1255 OID 4101861)
+-- TOC entry 2340 (class 1255 OID 4101861)
 -- Name: fct_rmca_collection_get_collections_ai_hierarchy(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -8769,7 +8769,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_collection_get_collections_ai_hierarchy(col_id integer) OWNER TO darwin2;
 
 --
--- TOC entry 2179 (class 1255 OID 4101862)
+-- TOC entry 2342 (class 1255 OID 4101862)
 -- Name: fct_rmca_collection_update_autoincrements_hierarchy(integer, bigint); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -8812,7 +8812,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_collection_update_autoincrements_hierarchy(col_id integer, new_code_value bigint) OWNER TO darwin2;
 
 --
--- TOC entry 2180 (class 1255 OID 4101863)
+-- TOC entry 2343 (class 1255 OID 4101863)
 -- Name: fct_rmca_compare_taxonomy_staging_darwin(integer, boolean, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -8852,7 +8852,7 @@ fct_rmca_sort_taxon_path_alphabetically(path||taxonomy.id::varchar
 ALTER FUNCTION darwin2.fct_rmca_compare_taxonomy_staging_darwin(req_import_ref integer, with_rank boolean, is_indexed boolean) OWNER TO darwin2;
 
 --
--- TOC entry 2181 (class 1255 OID 4101864)
+-- TOC entry 2104 (class 1255 OID 4101864)
 -- Name: fct_rmca_compare_taxonomy_staging_darwin_non_reference(integer, integer, boolean, boolean, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -8948,7 +8948,7 @@ ELSE
 ALTER FUNCTION darwin2.fct_rmca_compare_taxonomy_staging_darwin_non_reference(req_import_ref integer, var_metadata_ref integer, with_rank boolean, is_indexed boolean, match_invalid_units boolean) OWNER TO darwin2;
 
 --
--- TOC entry 2182 (class 1255 OID 4101865)
+-- TOC entry 2364 (class 1255 OID 4101865)
 -- Name: fct_rmca_compare_taxonomy_staging_darwin_reference(integer, boolean, boolean, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -9044,7 +9044,7 @@ ELSE
 ALTER FUNCTION darwin2.fct_rmca_compare_taxonomy_staging_darwin_reference(req_import_ref integer, with_rank boolean, is_indexed boolean, match_invalid_units boolean) OWNER TO darwin2;
 
 --
--- TOC entry 2183 (class 1255 OID 4101867)
+-- TOC entry 2107 (class 1255 OID 4101867)
 -- Name: fct_rmca_compare_taxonomy_staging_darwin_tagging(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -9078,7 +9078,7 @@ END;
 ALTER FUNCTION darwin2.fct_rmca_compare_taxonomy_staging_darwin_tagging(req_import_ref integer) OWNER TO darwin2;
 
 --
--- TOC entry 2304 (class 1255 OID 4872226)
+-- TOC entry 2390 (class 1255 OID 4872226)
 -- Name: fct_rmca_concatenate_comment(integer, character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -9103,7 +9103,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_concatenate_comment(record_ref integer, relation character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2305 (class 1255 OID 4872227)
+-- TOC entry 2391 (class 1255 OID 4872227)
 -- Name: fct_rmca_concatenate_properties(integer, character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -9125,7 +9125,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_concatenate_properties(record_ref integer, relation character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2184 (class 1255 OID 4101868)
+-- TOC entry 2108 (class 1255 OID 4101868)
 -- Name: fct_rmca_document_taxonomy_staging_darwin_non_reference(integer, integer, boolean, boolean, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -9151,7 +9151,7 @@ END
 ALTER FUNCTION darwin2.fct_rmca_document_taxonomy_staging_darwin_non_reference(req_import_ref integer, var_metadata_ref integer, with_rank boolean, is_indexed boolean, match_invalid_taxonomies boolean) OWNER TO darwin2;
 
 --
--- TOC entry 2185 (class 1255 OID 4101869)
+-- TOC entry 2365 (class 1255 OID 4101869)
 -- Name: fct_rmca_document_taxonomy_staging_darwin_reference(integer, boolean, boolean, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -9177,7 +9177,7 @@ END
 ALTER FUNCTION darwin2.fct_rmca_document_taxonomy_staging_darwin_reference(req_import_ref integer, with_rank boolean, is_indexed boolean, match_invalid_taxonomies boolean) OWNER TO darwin2;
 
 --
--- TOC entry 2186 (class 1255 OID 4101870)
+-- TOC entry 2133 (class 1255 OID 4101870)
 -- Name: fct_rmca_dynamic_saved_search(integer, integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -9215,7 +9215,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_rmca_dynamic_saved_search(id_query integer, id_user integer) OWNER TO darwin2;
 
 --
--- TOC entry 2408 (class 1255 OID 5622756)
+-- TOC entry 2134 (class 1255 OID 5622756)
 -- Name: fct_rmca_dynamic_saved_search(integer, integer, integer, integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -9255,7 +9255,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_rmca_dynamic_saved_search(id_query integer, id_user integer, page integer, page_size integer) OWNER TO darwin2;
 
 --
--- TOC entry 2187 (class 1255 OID 4101871)
+-- TOC entry 2118 (class 1255 OID 4101871)
 -- Name: fct_rmca_dynamic_saved_search_geojson(integer, integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -9298,7 +9298,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_dynamic_saved_search_geojson(id_query integer, id_user integer) OWNER TO darwin2;
 
 --
--- TOC entry 2409 (class 1255 OID 5642605)
+-- TOC entry 2149 (class 1255 OID 5642605)
 -- Name: fct_rmca_dynamic_saved_search_get_specimen(integer, integer, character varying, integer, integer, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -9745,7 +9745,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_dynamic_saved_search_get_specimen(query_id integer, user_id integer, url_prefix character varying, page integer, page_size integer, is_admin boolean) OWNER TO darwin2;
 
 --
--- TOC entry 2413 (class 1255 OID 5664346)
+-- TOC entry 2419 (class 1255 OID 5664346)
 -- Name: fct_rmca_dynamic_saved_search_taxonomy(integer, integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -9781,9 +9781,9 @@ BEGIN
 FOR tmp in
 		
 			SELECT
-	 DISTINCT taxon_ref, fct_rmca_sort_taxon_path_alphabetically_hstore(taxon_path||taxon_ref::varchar) as hstore_field ,
+	 DISTINCT taxon_ref, fct_rmca_sort_taxon_path_alphabetically_hstore(taxon_path||taxon_ref::varchar||'/') as hstore_field ,
 
-	fct_rmca_sort_taxon_path_alphabetically(taxon_path||taxon_ref::varchar) as alpha_path, count(specimens.id) as record_count,
+	fct_rmca_sort_taxon_path_alphabetically(taxon_path||taxon_ref::varchar||'/') as alpha_path, count(specimens.id) as record_count,
 	 SUM(specimen_count_min) as physical_specimen_min, SUM(specimen_count_max) as physical_specimen_max ,
 	 COUNT(CASE WHEN type ='specimen' THEN NULL ELSE type END) as nb_types
 	 from specimens INNER JOIN criteria_tmp_taxo ON specimens.id =spec_key GROUP BY taxon_path, taxon_ref order by alpha_path
@@ -9874,7 +9874,7 @@ END; $$;
 ALTER FUNCTION darwin2.fct_rmca_dynamic_saved_search_taxonomy(id_query integer, id_user integer) OWNER TO darwin2;
 
 --
--- TOC entry 2407 (class 1255 OID 5619512)
+-- TOC entry 2092 (class 1255 OID 5619512)
 -- Name: fct_rmca_dynamic_saved_search_taxonomy_statistics(integer, integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -9894,7 +9894,7 @@ from
 (
 
 SELECT
-	 each( fct_rmca_sort_taxon_path_alphabetically_hstore(taxon_path||taxon_ref::varchar) ) as hstore_field 
+	 each( fct_rmca_sort_taxon_path_alphabetically_hstore(taxon_path||taxon_ref::varchar||'/') ) as hstore_field 
 	 from specimens inner join criteria on specimens.id=spec_key
 
 			
@@ -9912,7 +9912,7 @@ SELECT
 ALTER FUNCTION darwin2.fct_rmca_dynamic_saved_search_taxonomy_statistics(id_query integer, id_user integer) OWNER TO darwin2;
 
 --
--- TOC entry 2412 (class 1255 OID 5663961)
+-- TOC entry 2241 (class 1255 OID 5663961)
 -- Name: fct_rmca_dynamic_saved_search_taxonomy_statistics_detail(integer, integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -10331,7 +10331,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_dynamic_saved_search_taxonomy_statistics_detail(id_query integer, id_user integer) OWNER TO darwin2;
 
 --
--- TOC entry 2422 (class 1255 OID 5904933)
+-- TOC entry 2408 (class 1255 OID 5904933)
 -- Name: fct_rmca_get_all_child_direct_synonyms(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -10356,7 +10356,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_rmca_get_all_child_direct_synonyms(integer) OWNER TO darwin2;
 
 --
--- TOC entry 2421 (class 1255 OID 5904803)
+-- TOC entry 2413 (class 1255 OID 5904803)
 -- Name: fct_rmca_get_all_child_synonyms(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -10381,7 +10381,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_rmca_get_all_child_synonyms(integer) OWNER TO darwin2;
 
 --
--- TOC entry 2188 (class 1255 OID 4101873)
+-- TOC entry 2119 (class 1255 OID 4101873)
 -- Name: fct_rmca_get_merge_catalogue_path_in_staging_existing_taxonomy(integer, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -10615,7 +10615,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_get_merge_catalogue_path_in_staging_existing_taxonomy(id_staging_taxon integer, exclude_invalid_entries boolean) OWNER TO darwin2;
 
 --
--- TOC entry 2189 (class 1255 OID 4101876)
+-- TOC entry 2120 (class 1255 OID 4101876)
 -- Name: fct_rmca_get_merge_catalogue_path_in_staging_existing_taxonomy(integer, integer, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -10852,7 +10852,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_get_merge_catalogue_path_in_staging_existing_taxonomy(id_staging_taxon integer, taxonomy_metadata_id integer, exclude_invalid_entries boolean) OWNER TO darwin2;
 
 --
--- TOC entry 2190 (class 1255 OID 4101882)
+-- TOC entry 2325 (class 1255 OID 4101882)
 -- Name: fct_rmca_gtu_linetotagarray_pattern(text); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -10871,7 +10871,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_rmca_gtu_linetotagarray_pattern(pattern text) OWNER TO darwin2;
 
 --
--- TOC entry 2301 (class 1255 OID 4644924)
+-- TOC entry 2231 (class 1255 OID 4644924)
 -- Name: fct_rmca_gtu_orderby_pattern(character varying, character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -10883,7 +10883,7 @@ CREATE FUNCTION darwin2.fct_rmca_gtu_orderby_pattern(character varying, characte
 ALTER FUNCTION darwin2.fct_rmca_gtu_orderby_pattern(character varying, character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2191 (class 1255 OID 4101883)
+-- TOC entry 2121 (class 1255 OID 4101883)
 -- Name: fct_rmca_handle_lithostratigraphy_import(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -10952,7 +10952,7 @@ CREATE FUNCTION darwin2.fct_rmca_handle_lithostratigraphy_import(req_import_ref 
 ALTER FUNCTION darwin2.fct_rmca_handle_lithostratigraphy_import(req_import_ref integer) OWNER TO darwin2;
 
 --
--- TOC entry 2192 (class 1255 OID 4101884)
+-- TOC entry 2122 (class 1255 OID 4101884)
 -- Name: fct_rmca_handle_non_reference_taxonomies(integer, integer, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -11333,7 +11333,7 @@ AND metadata_ref=var_metadata_ref;
 ALTER FUNCTION darwin2.fct_rmca_handle_non_reference_taxonomies(req_import_ref integer, var_metadata_ref integer, exclude_invalid_entries boolean) OWNER TO darwin2;
 
 --
--- TOC entry 2193 (class 1255 OID 4101887)
+-- TOC entry 2123 (class 1255 OID 4101887)
 -- Name: fct_rmca_handle_non_reference_taxonomies_bck(integer, integer, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -11590,7 +11590,7 @@ CREATE FUNCTION darwin2.fct_rmca_handle_non_reference_taxonomies_bck(req_import_
 ALTER FUNCTION darwin2.fct_rmca_handle_non_reference_taxonomies_bck(req_import_ref integer, var_metadata_ref integer, exclude_invalid_entries boolean) OWNER TO darwin2;
 
 --
--- TOC entry 2194 (class 1255 OID 4101896)
+-- TOC entry 2124 (class 1255 OID 4101896)
 -- Name: fct_rmca_handle_non_reference_taxonomies_same_taxo(integer, integer, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -11916,7 +11916,7 @@ CREATE FUNCTION darwin2.fct_rmca_handle_non_reference_taxonomies_same_taxo(req_i
 ALTER FUNCTION darwin2.fct_rmca_handle_non_reference_taxonomies_same_taxo(req_import_ref integer, var_metadata_ref integer, exclude_invalid_entries boolean) OWNER TO darwin2;
 
 --
--- TOC entry 2195 (class 1255 OID 4101899)
+-- TOC entry 2366 (class 1255 OID 4101899)
 -- Name: fct_rmca_imp_checker_gtu_search_code(darwin2.staging, integer, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -11954,7 +11954,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_imp_checker_gtu_search_code(line darwin2.staging, collection_ref_for_gtu_var integer, import boolean) OWNER TO darwin2;
 
 --
--- TOC entry 2196 (class 1255 OID 4101900)
+-- TOC entry 2384 (class 1255 OID 4101900)
 -- Name: fct_rmca_imp_checker_gtu_search_code_2(darwin2.staging, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -11993,7 +11993,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_imp_checker_gtu_search_code_2(line darwin2.staging, import boolean) OWNER TO darwin2;
 
 --
--- TOC entry 2197 (class 1255 OID 4101901)
+-- TOC entry 2125 (class 1255 OID 4101901)
 -- Name: fct_rmca_imp_checker_specimen_code(darwin2.staging, integer, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -12026,7 +12026,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_imp_checker_specimen_code(line darwin2.staging, collection_ref integer, import boolean) OWNER TO darwin2;
 
 --
--- TOC entry 2198 (class 1255 OID 4101902)
+-- TOC entry 2126 (class 1255 OID 4101902)
 -- Name: fct_rmca_keep_staging_catalogue_parent(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -12049,7 +12049,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_keep_staging_catalogue_parent() OWNER TO darwin2;
 
 --
--- TOC entry 2390 (class 1255 OID 5261611)
+-- TOC entry 2400 (class 1255 OID 5261611)
 -- Name: fct_rmca_log_original_specimens_id_uuid(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -12114,7 +12114,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_log_original_specimens_id_uuid() OWNER TO darwin2;
 
 --
--- TOC entry 2406 (class 1255 OID 5543530)
+-- TOC entry 2088 (class 1255 OID 5543530)
 -- Name: fct_rmca_look_related_specimens(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -12168,7 +12168,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_look_related_specimens(p_specimen_ref integer) OWNER TO darwin2;
 
 --
--- TOC entry 2199 (class 1255 OID 4101903)
+-- TOC entry 2127 (class 1255 OID 4101903)
 -- Name: fct_rmca_people_array_to_name(integer[]); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -12191,7 +12191,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_people_array_to_name(int_array integer[]) OWNER TO darwin2;
 
 --
--- TOC entry 2372 (class 1255 OID 5199192)
+-- TOC entry 2255 (class 1255 OID 5199192)
 -- Name: fct_rmca_py_webservice(text, text, text); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -12242,7 +12242,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_py_webservice(uri text, body text, content_type text) OWNER TO postgres;
 
 --
--- TOC entry 2200 (class 1255 OID 4101904)
+-- TOC entry 2128 (class 1255 OID 4101904)
 -- Name: fct_rmca_redo_taxonomic_import(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -12267,7 +12267,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_redo_taxonomic_import(req_import_ref integer) OWNER TO darwin2;
 
 --
--- TOC entry 2360 (class 1255 OID 4969609)
+-- TOC entry 2385 (class 1255 OID 4969609)
 -- Name: fct_rmca_reporting_refresh_views(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -12292,7 +12292,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_reporting_refresh_views() OWNER TO darwin2;
 
 --
--- TOC entry 2201 (class 1255 OID 4101905)
+-- TOC entry 2367 (class 1255 OID 4101905)
 -- Name: fct_rmca_retrieve_taxa_in_collection_fastly_array(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -12315,7 +12315,7 @@ SELECT DISTINCT array_agg(id) FROM taxonomy
 ALTER FUNCTION darwin2.fct_rmca_retrieve_taxa_in_collection_fastly_array(integer) OWNER TO darwin2;
 
 --
--- TOC entry 2300 (class 1255 OID 4631677)
+-- TOC entry 2230 (class 1255 OID 4631677)
 -- Name: fct_rmca_search_compare_date_array(integer[], timestamp without time zone[], integer[], timestamp without time zone[], character varying, timestamp without time zone, timestamp without time zone); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -12380,7 +12380,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_search_compare_date_array(array_from_date_mask integer[], array_from_date timestamp without time zone[], array_to_date_mask integer[], array_to_date timestamp without time zone[], query_mode character varying, val_from timestamp without time zone, val_to timestamp without time zone) OWNER TO darwin2;
 
 --
--- TOC entry 2202 (class 1255 OID 4101906)
+-- TOC entry 2368 (class 1255 OID 4101906)
 -- Name: fct_rmca_sort_taxon_get_parent_level(integer, integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -12412,7 +12412,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_sort_taxon_get_parent_level(id_taxon integer, id_level integer) OWNER TO darwin2;
 
 --
--- TOC entry 2203 (class 1255 OID 4101907)
+-- TOC entry 2249 (class 1255 OID 4101907)
 -- Name: fct_rmca_sort_taxon_get_parent_level_text(integer, integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -12451,7 +12451,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_sort_taxon_get_parent_level_text(id_taxon integer, id_level integer) OWNER TO darwin2;
 
 --
--- TOC entry 2411 (class 1255 OID 5661396)
+-- TOC entry 2240 (class 1255 OID 5661396)
 -- Name: fct_rmca_sort_taxon_path_all_json(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -12509,7 +12509,7 @@ BEGIN
 ALTER FUNCTION darwin2.fct_rmca_sort_taxon_path_all_json(src_path character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2204 (class 1255 OID 4101908)
+-- TOC entry 2250 (class 1255 OID 4101908)
 -- Name: fct_rmca_sort_taxon_path_alphabetically(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -12542,7 +12542,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_sort_taxon_path_alphabetically(path character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2205 (class 1255 OID 4101909)
+-- TOC entry 2129 (class 1255 OID 4101909)
 -- Name: fct_rmca_sort_taxon_path_alphabetically(character varying, integer, boolean, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -12593,7 +12593,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_sort_taxon_path_alphabetically(path character varying, last_level integer, with_rank boolean, is_indexed boolean) OWNER TO darwin2;
 
 --
--- TOC entry 2206 (class 1255 OID 4101910)
+-- TOC entry 2251 (class 1255 OID 4101910)
 -- Name: fct_rmca_sort_taxon_path_alphabetically_hstore(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -12633,7 +12633,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_sort_taxon_path_alphabetically_hstore(path character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2207 (class 1255 OID 4101912)
+-- TOC entry 2252 (class 1255 OID 4101912)
 -- Name: fct_rmca_sort_taxon_path_alphabetically_hstore_key(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -12673,7 +12673,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_sort_taxon_path_alphabetically_hstore_key(path character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2208 (class 1255 OID 4101914)
+-- TOC entry 2253 (class 1255 OID 4101914)
 -- Name: fct_rmca_sort_taxon_path_alphabetically_not_indexed(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -12706,7 +12706,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_sort_taxon_path_alphabetically_not_indexed(path character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2209 (class 1255 OID 4101915)
+-- TOC entry 2326 (class 1255 OID 4101915)
 -- Name: fct_rmca_sort_taxon_path_alphabetically_staging(integer, boolean, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -12790,7 +12790,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_sort_taxon_path_alphabetically_staging(taxon_id integer, with_rank boolean, is_indexed boolean) OWNER TO darwin2;
 
 --
--- TOC entry 2210 (class 1255 OID 4101916)
+-- TOC entry 2130 (class 1255 OID 4101916)
 -- Name: fct_rmca_sort_taxon_path_alphabetically_staging_merge_reference(integer, integer, boolean, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -12898,7 +12898,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_sort_taxon_path_alphabetically_staging_merge_reference(taxon_id integer, req_import_ref integer, with_rank boolean, is_indexed boolean) OWNER TO darwin2;
 
 --
--- TOC entry 2211 (class 1255 OID 4101917)
+-- TOC entry 2131 (class 1255 OID 4101917)
 -- Name: fct_rmca_sort_taxon_path_get_max_level_in_staging(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -12932,7 +12932,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_sort_taxon_path_get_max_level_in_staging(taxon_id integer) OWNER TO darwin2;
 
 --
--- TOC entry 2212 (class 1255 OID 4101918)
+-- TOC entry 2254 (class 1255 OID 4101918)
 -- Name: fct_rmca_taxonomy_get_staging_hierarchy_recursive(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -12983,7 +12983,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_rmca_taxonomy_get_staging_hierarchy_recursive(integer) OWNER TO darwin2;
 
 --
--- TOC entry 2213 (class 1255 OID 4101919)
+-- TOC entry 2327 (class 1255 OID 4101919)
 -- Name: fct_rmca_taxonomy_split_name_author(character varying, integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -13037,7 +13037,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_taxonomy_split_name_author(name character varying, rank_id integer) OWNER TO darwin2;
 
 --
--- TOC entry 2410 (class 1255 OID 5660665)
+-- TOC entry 2239 (class 1255 OID 5660665)
 -- Name: fct_rmca_taxonomy_taxon_path_all_json(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -13095,7 +13095,7 @@ BEGIN
 ALTER FUNCTION darwin2.fct_rmca_taxonomy_taxon_path_all_json(src_path character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2214 (class 1255 OID 4101920)
+-- TOC entry 2132 (class 1255 OID 4101920)
 -- Name: fct_rmca_taxonomy_try_to_isolate_from_author(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -13145,7 +13145,7 @@ DECLARE
 ALTER FUNCTION darwin2.fct_rmca_taxonomy_try_to_isolate_from_author(name character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2215 (class 1255 OID 4101921)
+-- TOC entry 2277 (class 1255 OID 4101921)
 -- Name: fct_rmca_taxonomy_try_to_isolate_from_author_old(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -13170,7 +13170,7 @@ E' (von|van|de|l\')$',''
 ALTER FUNCTION darwin2.fct_rmca_taxonomy_try_to_isolate_from_author_old(character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2216 (class 1255 OID 4101922)
+-- TOC entry 2278 (class 1255 OID 4101922)
 -- Name: fct_rmca_update_child_of_taxon_protected(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -13198,7 +13198,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_update_child_of_taxon_protected() OWNER TO darwin2;
 
 --
--- TOC entry 2217 (class 1255 OID 4101923)
+-- TOC entry 2279 (class 1255 OID 4101923)
 -- Name: fct_rmca_update_reference_taxo(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -13222,7 +13222,7 @@ $$;
 ALTER FUNCTION darwin2.fct_rmca_update_reference_taxo() OWNER TO darwin2;
 
 --
--- TOC entry 2218 (class 1255 OID 4101924)
+-- TOC entry 2280 (class 1255 OID 4101924)
 -- Name: fct_search_authorized_encoding_collections(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -13236,7 +13236,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_search_authorized_encoding_collections(user_id integer) OWNER TO darwin2;
 
 --
--- TOC entry 2219 (class 1255 OID 4101925)
+-- TOC entry 2281 (class 1255 OID 4101925)
 -- Name: fct_search_authorized_view_collections(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -13254,7 +13254,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_search_authorized_view_collections(user_id integer) OWNER TO darwin2;
 
 --
--- TOC entry 2220 (class 1255 OID 4101926)
+-- TOC entry 2328 (class 1255 OID 4101926)
 -- Name: fct_search_methods(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -13268,7 +13268,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_search_methods(str_ids character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2221 (class 1255 OID 4101927)
+-- TOC entry 2314 (class 1255 OID 4101927)
 -- Name: fct_search_tools(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -13282,7 +13282,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_search_tools(str_ids character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2222 (class 1255 OID 4101928)
+-- TOC entry 2370 (class 1255 OID 4101928)
 -- Name: fct_searchcodes(character varying[]); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -13340,7 +13340,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_searchcodes(VARIADIC character varying[]) OWNER TO darwin2;
 
 --
--- TOC entry 2223 (class 1255 OID 4101929)
+-- TOC entry 2135 (class 1255 OID 4101929)
 -- Name: fct_set_user(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -13359,7 +13359,7 @@ $_$;
 ALTER FUNCTION darwin2.fct_set_user(userid integer) OWNER TO darwin2;
 
 --
--- TOC entry 2224 (class 1255 OID 4101930)
+-- TOC entry 2136 (class 1255 OID 4101930)
 -- Name: fct_trg_chk_possible_upper_level(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -13382,7 +13382,7 @@ $$;
 ALTER FUNCTION darwin2.fct_trg_chk_possible_upper_level() OWNER TO darwin2;
 
 --
--- TOC entry 2387 (class 1255 OID 5261405)
+-- TOC entry 2396 (class 1255 OID 5261405)
 -- Name: fct_trg_rmca_codes_log_id(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -13405,7 +13405,7 @@ $$;
 ALTER FUNCTION darwin2.fct_trg_rmca_codes_log_id() OWNER TO darwin2;
 
 --
--- TOC entry 2389 (class 1255 OID 5261609)
+-- TOC entry 2398 (class 1255 OID 5261609)
 -- Name: fct_trg_rmca_log_specimens_stable_ids(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -13428,7 +13428,7 @@ $$;
 ALTER FUNCTION darwin2.fct_trg_rmca_log_specimens_stable_ids() OWNER TO darwin2;
 
 --
--- TOC entry 2388 (class 1255 OID 5261418)
+-- TOC entry 2397 (class 1255 OID 5261418)
 -- Name: fct_trg_rmca_specimens_log_id_uuid(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -13451,7 +13451,7 @@ $$;
 ALTER FUNCTION darwin2.fct_trg_rmca_specimens_log_id_uuid() OWNER TO darwin2;
 
 --
--- TOC entry 2225 (class 1255 OID 4101931)
+-- TOC entry 2315 (class 1255 OID 4101931)
 -- Name: fct_trk_log_table(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -13513,7 +13513,7 @@ $$;
 ALTER FUNCTION darwin2.fct_trk_log_table() OWNER TO darwin2;
 
 --
--- TOC entry 2226 (class 1255 OID 4101932)
+-- TOC entry 2371 (class 1255 OID 4101932)
 -- Name: fct_unpromotion_impact_prefs(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -13559,7 +13559,7 @@ $$;
 ALTER FUNCTION darwin2.fct_unpromotion_impact_prefs() OWNER TO darwin2;
 
 --
--- TOC entry 2227 (class 1255 OID 4101933)
+-- TOC entry 2373 (class 1255 OID 4101933)
 -- Name: fct_upd_institution_staging_relationship(); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -13591,7 +13591,7 @@ $$;
 ALTER FUNCTION darwin2.fct_upd_institution_staging_relationship() OWNER TO postgres;
 
 --
--- TOC entry 2228 (class 1255 OID 4101934)
+-- TOC entry 2372 (class 1255 OID 4101934)
 -- Name: fct_upd_people_in_flat(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -13682,7 +13682,7 @@ $$;
 ALTER FUNCTION darwin2.fct_upd_people_in_flat() OWNER TO darwin2;
 
 --
--- TOC entry 2229 (class 1255 OID 4101935)
+-- TOC entry 2244 (class 1255 OID 4101935)
 -- Name: fct_upd_people_staging_fields(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -13731,7 +13731,7 @@ $$;
 ALTER FUNCTION darwin2.fct_upd_people_staging_fields() OWNER TO darwin2;
 
 --
--- TOC entry 2230 (class 1255 OID 4101936)
+-- TOC entry 2361 (class 1255 OID 4101936)
 -- Name: fct_upd_staging_fields(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -13890,7 +13890,7 @@ $$;
 ALTER FUNCTION darwin2.fct_upd_staging_fields() OWNER TO darwin2;
 
 --
--- TOC entry 2231 (class 1255 OID 4101939)
+-- TOC entry 2243 (class 1255 OID 4101939)
 -- Name: fct_update_import(); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -13909,7 +13909,7 @@ $$;
 ALTER FUNCTION darwin2.fct_update_import() OWNER TO postgres;
 
 --
--- TOC entry 2232 (class 1255 OID 4101940)
+-- TOC entry 2137 (class 1255 OID 4101940)
 -- Name: fct_update_specimen_flat(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -14031,7 +14031,7 @@ $$;
 ALTER FUNCTION darwin2.fct_update_specimen_flat() OWNER TO darwin2;
 
 --
--- TOC entry 2233 (class 1255 OID 4101941)
+-- TOC entry 2405 (class 1255 OID 4101941)
 -- Name: fct_update_specimens_flat_related(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -14273,7 +14273,7 @@ $$;
 ALTER FUNCTION darwin2.fct_update_specimens_flat_related() OWNER TO darwin2;
 
 --
--- TOC entry 2234 (class 1255 OID 4101944)
+-- TOC entry 2376 (class 1255 OID 4101944)
 -- Name: fulltoindex(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -14289,7 +14289,7 @@ $$;
 ALTER FUNCTION darwin2.fulltoindex(to_indexed character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2235 (class 1255 OID 4101945)
+-- TOC entry 2412 (class 1255 OID 4101945)
 -- Name: fulltoindex(character varying, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -14354,7 +14354,7 @@ $$;
 ALTER FUNCTION darwin2.fulltoindex(to_indexed character varying, keep_space boolean) OWNER TO darwin2;
 
 --
--- TOC entry 2392 (class 1255 OID 5317328)
+-- TOC entry 2411 (class 1255 OID 5317328)
 -- Name: fulltoindex(character varying, boolean, boolean); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -14427,7 +14427,7 @@ $$;
 ALTER FUNCTION darwin2.fulltoindex(to_indexed character varying, keep_space boolean, keep_star boolean) OWNER TO darwin2;
 
 --
--- TOC entry 2402 (class 1255 OID 5495300)
+-- TOC entry 2079 (class 1255 OID 5495300)
 -- Name: fulltoindex(character varying, character varying, character varying[]); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -14496,7 +14496,7 @@ $$;
 ALTER FUNCTION darwin2.fulltoindex(to_indexed character varying, keep_chars character varying, to_spaces character varying[]) OWNER TO postgres;
 
 --
--- TOC entry 2391 (class 1255 OID 5308200)
+-- TOC entry 2406 (class 1255 OID 5308200)
 -- Name: fulltoindex_add_prefix_suffix(character varying, character varying, character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -14512,7 +14512,7 @@ $$;
 ALTER FUNCTION darwin2.fulltoindex_add_prefix_suffix(pattern character varying, prefix character varying, suffix character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2236 (class 1255 OID 4101946)
+-- TOC entry 2374 (class 1255 OID 4101946)
 -- Name: get_import_row(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -14534,7 +14534,7 @@ $$;
 ALTER FUNCTION darwin2.get_import_row() OWNER TO darwin2;
 
 --
--- TOC entry 2237 (class 1255 OID 4101947)
+-- TOC entry 2375 (class 1255 OID 4101947)
 -- Name: get_setting(text); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -14551,7 +14551,7 @@ END;$$;
 ALTER FUNCTION darwin2.get_setting(param text, OUT value text) OWNER TO darwin2;
 
 --
--- TOC entry 2238 (class 1255 OID 4101948)
+-- TOC entry 2283 (class 1255 OID 4101948)
 -- Name: getspecificparentforlevel(character varying, character varying, character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -14582,7 +14582,7 @@ $$;
 ALTER FUNCTION darwin2.getspecificparentforlevel(referenced_relation character varying, path character varying, level_searched character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2239 (class 1255 OID 4101949)
+-- TOC entry 2284 (class 1255 OID 4101949)
 -- Name: gettagsindexedasarray(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -14596,7 +14596,7 @@ $_$;
 ALTER FUNCTION darwin2.gettagsindexedasarray(taglist character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2240 (class 1255 OID 4101950)
+-- TOC entry 2138 (class 1255 OID 4101950)
 -- Name: is_property_unit_in_group(text, text); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -14630,7 +14630,7 @@ $_$;
 ALTER FUNCTION darwin2.is_property_unit_in_group(searched_unit text, property_unit text) OWNER TO postgres;
 
 --
--- TOC entry 2241 (class 1255 OID 4101951)
+-- TOC entry 2139 (class 1255 OID 4101951)
 -- Name: isnumeric(text); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -14650,7 +14650,7 @@ $_$;
 ALTER FUNCTION darwin2.isnumeric(text) OWNER TO postgres;
 
 --
--- TOC entry 2242 (class 1255 OID 4101952)
+-- TOC entry 2286 (class 1255 OID 4101952)
 -- Name: labeling_code_for_indexation(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -14671,7 +14671,7 @@ $_$;
 ALTER FUNCTION darwin2.labeling_code_for_indexation(part_ref integer) OWNER TO darwin2;
 
 --
--- TOC entry 2243 (class 1255 OID 4101953)
+-- TOC entry 2140 (class 1255 OID 4101953)
 -- Name: labeling_individual_type_for_indexation(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -14685,7 +14685,7 @@ $_$;
 ALTER FUNCTION darwin2.labeling_individual_type_for_indexation(individual_type character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2244 (class 1255 OID 4101954)
+-- TOC entry 2316 (class 1255 OID 4101954)
 -- Name: labeling_part_for_indexation(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -14699,7 +14699,7 @@ $_$;
 ALTER FUNCTION darwin2.labeling_part_for_indexation(part character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2245 (class 1255 OID 4101955)
+-- TOC entry 2317 (class 1255 OID 4101955)
 -- Name: labeling_type_for_indexation(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -14713,7 +14713,7 @@ $_$;
 ALTER FUNCTION darwin2.labeling_type_for_indexation(individual_type character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2246 (class 1255 OID 4101956)
+-- TOC entry 2141 (class 1255 OID 4101956)
 -- Name: linetotagarray(text); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -14727,7 +14727,7 @@ $_$;
 ALTER FUNCTION darwin2.linetotagarray(line text) OWNER TO darwin2;
 
 --
--- TOC entry 2247 (class 1255 OID 4101957)
+-- TOC entry 2142 (class 1255 OID 4101957)
 -- Name: linetotagrows(text); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -14742,7 +14742,7 @@ $_$;
 ALTER FUNCTION darwin2.linetotagrows(line text) OWNER TO darwin2;
 
 --
--- TOC entry 2248 (class 1255 OID 4101958)
+-- TOC entry 2318 (class 1255 OID 4101958)
 -- Name: point_equal(point, point); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -14756,7 +14756,7 @@ ELSE false END;$_$;
 ALTER FUNCTION darwin2.point_equal(point, point) OWNER TO postgres;
 
 --
--- TOC entry 2249 (class 1255 OID 4101959)
+-- TOC entry 2285 (class 1255 OID 4101959)
 -- Name: rmca_cast_staging_gtu_date_to_mask(timestamp without time zone, time without time zone, character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -14796,7 +14796,7 @@ $$;
 ALTER FUNCTION darwin2.rmca_cast_staging_gtu_date_to_mask(p_date timestamp without time zone, p_time time without time zone, date_resolution character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2403 (class 1255 OID 5498384)
+-- TOC entry 2080 (class 1255 OID 5498384)
 -- Name: rmca_clean_gtu_imports(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -14820,7 +14820,7 @@ $$;
 ALTER FUNCTION darwin2.rmca_clean_gtu_imports(p_import_ref integer) OWNER TO darwin2;
 
 --
--- TOC entry 2405 (class 1255 OID 5499778)
+-- TOC entry 2090 (class 1255 OID 5499778)
 -- Name: rmca_create_missing_people_in_staging(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -14948,7 +14948,7 @@ $$;
 ALTER FUNCTION darwin2.rmca_create_missing_people_in_staging(p_import_ref integer) OWNER TO darwin2;
 
 --
--- TOC entry 2250 (class 1255 OID 4101961)
+-- TOC entry 2143 (class 1255 OID 4101961)
 -- Name: rmca_delete_specimens_from_import_all(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -15085,7 +15085,7 @@ $$;
 ALTER FUNCTION darwin2.rmca_delete_specimens_from_import_all(p_import_ref integer) OWNER TO darwin2;
 
 --
--- TOC entry 2303 (class 1255 OID 4674028)
+-- TOC entry 2389 (class 1255 OID 4674028)
 -- Name: rmca_delete_staging_from_import_all(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -15157,7 +15157,7 @@ $$;
 ALTER FUNCTION darwin2.rmca_delete_staging_from_import_all(p_import_ref integer) OWNER TO darwin2;
 
 --
--- TOC entry 2251 (class 1255 OID 4101962)
+-- TOC entry 2282 (class 1255 OID 4101962)
 -- Name: rmca_dms_to_dd(character varying, character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -15257,7 +15257,7 @@ ALTER FUNCTION darwin2.rmca_dms_to_dd(coord_dms character varying, direction cha
 
 --
 -- TOC entry 7406 (class 0 OID 0)
--- Dependencies: 2251
+-- Dependencies: 2282
 -- Name: FUNCTION rmca_dms_to_dd(coord_dms character varying, direction character varying); Type: COMMENT; Schema: darwin2; Owner: darwin2
 --
 
@@ -15269,7 +15269,7 @@ Note : "," ad decimal separators are converted into "."';
 
 
 --
--- TOC entry 2252 (class 1255 OID 4101963)
+-- TOC entry 2362 (class 1255 OID 4101963)
 -- Name: rmca_dms_to_text(character varying, integer, double precision, double precision, integer, double precision, character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -15327,7 +15327,7 @@ $$;
 ALTER FUNCTION darwin2.rmca_dms_to_text(coordinates_format character varying, degrees integer, minutes double precision, seconds double precision, direction integer, coord_decimal double precision, lat_lon character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2253 (class 1255 OID 4101964)
+-- TOC entry 2248 (class 1255 OID 4101964)
 -- Name: rmca_dmscheck_syntax(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -15390,7 +15390,7 @@ $$;
 ALTER FUNCTION darwin2.rmca_dmscheck_syntax(coord_dms character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2254 (class 1255 OID 4101965)
+-- TOC entry 2145 (class 1255 OID 4101965)
 -- Name: rmca_fct_clear_gtu_date(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -15409,7 +15409,7 @@ $$;
 ALTER FUNCTION darwin2.rmca_fct_clear_gtu_date() OWNER TO darwin2;
 
 --
--- TOC entry 2255 (class 1255 OID 4101966)
+-- TOC entry 2146 (class 1255 OID 4101966)
 -- Name: rmca_fct_clear_specimen_date(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -15428,7 +15428,7 @@ $$;
 ALTER FUNCTION darwin2.rmca_fct_clear_specimen_date() OWNER TO darwin2;
 
 --
--- TOC entry 2256 (class 1255 OID 4101967)
+-- TOC entry 2147 (class 1255 OID 4101967)
 -- Name: rmca_fct_update_specimen_date(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -15464,7 +15464,7 @@ $$;
 ALTER FUNCTION darwin2.rmca_fct_update_specimen_date() OWNER TO darwin2;
 
 --
--- TOC entry 2257 (class 1255 OID 4101968)
+-- TOC entry 2144 (class 1255 OID 4101968)
 -- Name: rmca_get_import_row(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -15486,7 +15486,7 @@ $_$;
 ALTER FUNCTION darwin2.rmca_get_import_row(integer) OWNER TO darwin2;
 
 --
--- TOC entry 2394 (class 1255 OID 5402981)
+-- TOC entry 2275 (class 1255 OID 5402981)
 -- Name: rmca_get_wfs_geom(character varying, integer[]); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -15523,7 +15523,7 @@ $_$;
 ALTER FUNCTION darwin2.rmca_get_wfs_geom(table_name character varying, gids integer[]) OWNER TO postgres;
 
 --
--- TOC entry 2393 (class 1255 OID 5402137)
+-- TOC entry 2414 (class 1255 OID 5402137)
 -- Name: rmca_get_wfs_geom(character varying, integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -15561,7 +15561,7 @@ $_$;
 ALTER FUNCTION darwin2.rmca_get_wfs_geom(table_name character varying, gid integer) OWNER TO darwin2;
 
 --
--- TOC entry 2414 (class 1255 OID 5665945)
+-- TOC entry 2312 (class 1255 OID 5665945)
 -- Name: rmca_get_wfs_names(character varying, integer[]); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -15598,7 +15598,7 @@ $_$;
 ALTER FUNCTION darwin2.rmca_get_wfs_names(table_name character varying, gids integer[]) OWNER TO darwin2;
 
 --
--- TOC entry 2258 (class 1255 OID 4101969)
+-- TOC entry 2150 (class 1255 OID 4101969)
 -- Name: rmca_import_gtu_create_missing_people_in_staging(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -15724,7 +15724,7 @@ $$;
 ALTER FUNCTION darwin2.rmca_import_gtu_create_missing_people_in_staging(p_import_ref integer) OWNER TO darwin2;
 
 --
--- TOC entry 2259 (class 1255 OID 4101970)
+-- TOC entry 2148 (class 1255 OID 4101970)
 -- Name: rmca_import_gtu_force(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -15979,7 +15979,7 @@ $$;
 ALTER FUNCTION darwin2.rmca_import_gtu_force(p_staging_gtu_id integer) OWNER TO darwin2;
 
 --
--- TOC entry 2260 (class 1255 OID 4101973)
+-- TOC entry 2050 (class 1255 OID 4101973)
 -- Name: rmca_import_gtu_in_darwin_fast(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -16231,7 +16231,7 @@ $$;
 ALTER FUNCTION darwin2.rmca_import_gtu_in_darwin_fast(p_import_ref integer) OWNER TO darwin2;
 
 --
--- TOC entry 2261 (class 1255 OID 4101976)
+-- TOC entry 2351 (class 1255 OID 4101976)
 -- Name: rmca_reinit_statistical_view(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -16256,7 +16256,7 @@ $$;
 ALTER FUNCTION darwin2.rmca_reinit_statistical_view() OWNER TO darwin2;
 
 --
--- TOC entry 2262 (class 1255 OID 4101977)
+-- TOC entry 2352 (class 1255 OID 4101977)
 -- Name: rmca_update_parent_code(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -16277,7 +16277,7 @@ $$;
 ALTER FUNCTION darwin2.rmca_update_parent_code() OWNER TO darwin2;
 
 --
--- TOC entry 2418 (class 1255 OID 5691933)
+-- TOC entry 2407 (class 1255 OID 5691933)
 -- Name: rmca_wfs_get_darwin_translations(character varying, integer[]); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -16304,7 +16304,7 @@ $$;
 ALTER FUNCTION darwin2.rmca_wfs_get_darwin_translations(table_name character varying, gids integer[]) OWNER TO darwin2;
 
 --
--- TOC entry 2415 (class 1255 OID 5688101)
+-- TOC entry 2320 (class 1255 OID 5688101)
 -- Name: rmca_wfs_translation_service(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -16327,7 +16327,7 @@ $$;
 ALTER FUNCTION darwin2.rmca_wfs_translation_service(name_pattern character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2419 (class 1255 OID 5692436)
+-- TOC entry 2409 (class 1255 OID 5692436)
 -- Name: rmca_wfs_translation_service(public.geometry); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -16376,7 +16376,7 @@ $$;
 ALTER FUNCTION darwin2.rmca_wfs_translation_service(src_geom public.geometry) OWNER TO darwin2;
 
 --
--- TOC entry 2417 (class 1255 OID 5691678)
+-- TOC entry 2402 (class 1255 OID 5691678)
 -- Name: rmca_wfs_translation_service(character varying, public.geometry); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -16447,7 +16447,7 @@ $$;
 ALTER FUNCTION darwin2.rmca_wfs_translation_service(name_pattern character varying, src_geom public.geometry) OWNER TO darwin2;
 
 --
--- TOC entry 2416 (class 1255 OID 5691189)
+-- TOC entry 2401 (class 1255 OID 5691189)
 -- Name: rmca_wfs_translation_service_2(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -16510,7 +16510,7 @@ $$;
 ALTER FUNCTION darwin2.rmca_wfs_translation_service_2(name_pattern character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2263 (class 1255 OID 4101978)
+-- TOC entry 2369 (class 1255 OID 4101978)
 -- Name: set_path(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -16530,7 +16530,7 @@ $_$;
 ALTER FUNCTION darwin2.set_path() OWNER TO darwin2;
 
 --
--- TOC entry 2264 (class 1255 OID 4101979)
+-- TOC entry 1958 (class 1255 OID 4101979)
 -- Name: sha1(bytea); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -16546,7 +16546,7 @@ $_$;
 ALTER FUNCTION darwin2.sha1(bytea) OWNER TO darwin2;
 
 --
--- TOC entry 2361 (class 1255 OID 5076044)
+-- TOC entry 2071 (class 1255 OID 5076044)
 -- Name: specimens_log_id(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -16567,7 +16567,7 @@ $$;
 ALTER FUNCTION darwin2.specimens_log_id() OWNER TO darwin2;
 
 --
--- TOC entry 2265 (class 1255 OID 4101980)
+-- TOC entry 2006 (class 1255 OID 4101980)
 -- Name: stats_collections_encoding(integer, text, text); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -16582,7 +16582,7 @@ ALTER FUNCTION darwin2.stats_collections_encoding(integer, text, text) OWNER TO 
 
 --
 -- TOC entry 7410 (class 0 OID 0)
--- Dependencies: 2265
+-- Dependencies: 2006
 -- Name: FUNCTION stats_collections_encoding(integer, text, text); Type: COMMENT; Schema: darwin2; Owner: postgres
 --
 
@@ -16590,7 +16590,7 @@ COMMENT ON FUNCTION darwin2.stats_collections_encoding(integer, text, text) IS '
 
 
 --
--- TOC entry 2266 (class 1255 OID 4101981)
+-- TOC entry 2381 (class 1255 OID 4101981)
 -- Name: stats_collections_encoding(integer, timestamp without time zone, timestamp without time zone); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -16735,7 +16735,7 @@ ALTER FUNCTION darwin2.stats_collections_encoding(integer, timestamp without tim
 
 --
 -- TOC entry 7412 (class 0 OID 0)
--- Dependencies: 2266
+-- Dependencies: 2381
 -- Name: FUNCTION stats_collections_encoding(integer, timestamp without time zone, timestamp without time zone); Type: COMMENT; Schema: darwin2; Owner: postgres
 --
 
@@ -16743,7 +16743,7 @@ COMMENT ON FUNCTION darwin2.stats_collections_encoding(integer, timestamp withou
 
 
 --
--- TOC entry 2267 (class 1255 OID 4101982)
+-- TOC entry 2047 (class 1255 OID 4101982)
 -- Name: stats_collections_encoding_optimistics(integer, text, text); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -16758,7 +16758,7 @@ ALTER FUNCTION darwin2.stats_collections_encoding_optimistics(integer, text, tex
 
 --
 -- TOC entry 7414 (class 0 OID 0)
--- Dependencies: 2267
+-- Dependencies: 2047
 -- Name: FUNCTION stats_collections_encoding_optimistics(integer, text, text); Type: COMMENT; Schema: darwin2; Owner: postgres
 --
 
@@ -16766,7 +16766,7 @@ COMMENT ON FUNCTION darwin2.stats_collections_encoding_optimistics(integer, text
 
 
 --
--- TOC entry 2268 (class 1255 OID 4101983)
+-- TOC entry 2346 (class 1255 OID 4101983)
 -- Name: stats_collections_encoding_optimistics(integer, timestamp without time zone, timestamp without time zone); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -16926,7 +16926,7 @@ ALTER FUNCTION darwin2.stats_collections_encoding_optimistics(integer, timestamp
 
 --
 -- TOC entry 7416 (class 0 OID 0)
--- Dependencies: 2268
+-- Dependencies: 2346
 -- Name: FUNCTION stats_collections_encoding_optimistics(integer, timestamp without time zone, timestamp without time zone); Type: COMMENT; Schema: darwin2; Owner: postgres
 --
 
@@ -16934,7 +16934,7 @@ COMMENT ON FUNCTION darwin2.stats_collections_encoding_optimistics(integer, time
 
 
 --
--- TOC entry 2269 (class 1255 OID 4101984)
+-- TOC entry 2048 (class 1255 OID 4101984)
 -- Name: stats_encoders_encoding(integer, text, text, text); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -16949,7 +16949,7 @@ ALTER FUNCTION darwin2.stats_encoders_encoding(top_collection integer, users_arr
 
 --
 -- TOC entry 7418 (class 0 OID 0)
--- Dependencies: 2269
+-- Dependencies: 2048
 -- Name: FUNCTION stats_encoders_encoding(top_collection integer, users_array text, from_date text, to_date text); Type: COMMENT; Schema: darwin2; Owner: postgres
 --
 
@@ -16957,7 +16957,7 @@ COMMENT ON FUNCTION darwin2.stats_encoders_encoding(top_collection integer, user
 
 
 --
--- TOC entry 2270 (class 1255 OID 4101985)
+-- TOC entry 2049 (class 1255 OID 4101985)
 -- Name: stats_encoders_encoding(integer, text, timestamp without time zone, timestamp without time zone); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -17116,7 +17116,7 @@ ALTER FUNCTION darwin2.stats_encoders_encoding(top_collection integer, users_arr
 
 --
 -- TOC entry 7420 (class 0 OID 0)
--- Dependencies: 2270
+-- Dependencies: 2049
 -- Name: FUNCTION stats_encoders_encoding(top_collection integer, users_array text, from_date timestamp without time zone, to_date timestamp without time zone); Type: COMMENT; Schema: darwin2; Owner: postgres
 --
 
@@ -17124,7 +17124,7 @@ COMMENT ON FUNCTION darwin2.stats_encoders_encoding(top_collection integer, user
 
 
 --
--- TOC entry 2271 (class 1255 OID 4101986)
+-- TOC entry 2154 (class 1255 OID 4101986)
 -- Name: stats_encoders_encoding_optimistics(integer, text, text, text); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -17139,7 +17139,7 @@ ALTER FUNCTION darwin2.stats_encoders_encoding_optimistics(top_collection intege
 
 --
 -- TOC entry 7422 (class 0 OID 0)
--- Dependencies: 2271
+-- Dependencies: 2154
 -- Name: FUNCTION stats_encoders_encoding_optimistics(top_collection integer, users_array text, from_date text, to_date text); Type: COMMENT; Schema: darwin2; Owner: postgres
 --
 
@@ -17147,7 +17147,7 @@ COMMENT ON FUNCTION darwin2.stats_encoders_encoding_optimistics(top_collection i
 
 
 --
--- TOC entry 2272 (class 1255 OID 4101987)
+-- TOC entry 2386 (class 1255 OID 4101987)
 -- Name: stats_encoders_encoding_optimistics(integer, text, timestamp without time zone, timestamp without time zone); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -17323,7 +17323,7 @@ ALTER FUNCTION darwin2.stats_encoders_encoding_optimistics(top_collection intege
 
 --
 -- TOC entry 7424 (class 0 OID 0)
--- Dependencies: 2272
+-- Dependencies: 2386
 -- Name: FUNCTION stats_encoders_encoding_optimistics(top_collection integer, users_array text, from_date timestamp without time zone, to_date timestamp without time zone); Type: COMMENT; Schema: darwin2; Owner: postgres
 --
 
@@ -17331,7 +17331,7 @@ COMMENT ON FUNCTION darwin2.stats_encoders_encoding_optimistics(top_collection i
 
 
 --
--- TOC entry 2273 (class 1255 OID 4101988)
+-- TOC entry 2151 (class 1255 OID 4101988)
 -- Name: taxo_collections_count(integer); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -17435,7 +17435,7 @@ $_$;
 ALTER FUNCTION darwin2.taxo_collections_count(integer) OWNER TO darwin2;
 
 --
--- TOC entry 2274 (class 1255 OID 4101989)
+-- TOC entry 2152 (class 1255 OID 4101989)
 -- Name: touniquestr(character varying); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -17458,7 +17458,7 @@ $_$;
 ALTER FUNCTION darwin2.touniquestr(to_indexed character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2275 (class 1255 OID 4101990)
+-- TOC entry 2156 (class 1255 OID 4101990)
 -- Name: trg_del_dict(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -17560,7 +17560,7 @@ $$;
 ALTER FUNCTION darwin2.trg_del_dict() OWNER TO darwin2;
 
 --
--- TOC entry 2276 (class 1255 OID 4101991)
+-- TOC entry 2416 (class 1255 OID 4101991)
 -- Name: trg_ins_update_dict(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -17666,7 +17666,7 @@ $$;
 ALTER FUNCTION darwin2.trg_ins_update_dict() OWNER TO darwin2;
 
 --
--- TOC entry 2277 (class 1255 OID 4101992)
+-- TOC entry 2242 (class 1255 OID 4101992)
 -- Name: trg_rmca_del_import_related(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -17700,7 +17700,7 @@ $$;
 ALTER FUNCTION darwin2.trg_rmca_del_import_related() OWNER TO darwin2;
 
 --
--- TOC entry 2278 (class 1255 OID 4101993)
+-- TOC entry 2153 (class 1255 OID 4101993)
 -- Name: trg_rmca_import_taxonomy_history(); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -17731,7 +17731,7 @@ $$;
 ALTER FUNCTION darwin2.trg_rmca_import_taxonomy_history() OWNER TO darwin2;
 
 --
--- TOC entry 2279 (class 1255 OID 4101994)
+-- TOC entry 2176 (class 1255 OID 4101994)
 -- Name: update_collections_code_last_val(); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -17792,7 +17792,7 @@ $$;
 ALTER FUNCTION darwin2.update_collections_code_last_val() OWNER TO postgres;
 
 --
--- TOC entry 2280 (class 1255 OID 4101995)
+-- TOC entry 2177 (class 1255 OID 4101995)
 -- Name: update_collections_code_last_val_after_spec_del(); Type: FUNCTION; Schema: darwin2; Owner: postgres
 --
 
@@ -17835,7 +17835,7 @@ $$;
 ALTER FUNCTION darwin2.update_collections_code_last_val_after_spec_del() OWNER TO postgres;
 
 --
--- TOC entry 2281 (class 1255 OID 4101996)
+-- TOC entry 2378 (class 1255 OID 4101996)
 -- Name: upsert(character varying, public.hstore); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -17904,7 +17904,7 @@ $$;
 ALTER FUNCTION darwin2.upsert(tablename character varying, keyvalues public.hstore) OWNER TO darwin2;
 
 --
--- TOC entry 2395 (class 1255 OID 5412971)
+-- TOC entry 2418 (class 1255 OID 5412971)
 -- Name: urlencode(text); Type: FUNCTION; Schema: darwin2; Owner: darwin2
 --
 
@@ -17945,7 +17945,7 @@ $$;
 ALTER FUNCTION darwin2.urlencode(in_str text, OUT _result text) OWNER TO darwin2;
 
 --
--- TOC entry 2371 (class 1255 OID 5198868)
+-- TOC entry 2276 (class 1255 OID 5198868)
 -- Name: fct_rmca_worms_webservice(character varying); Type: FUNCTION; Schema: data_cleaning; Owner: darwin2
 --
 
@@ -18095,7 +18095,7 @@ $_$;
 ALTER FUNCTION data_cleaning.fct_rmca_worms_webservice(canonical_name character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2398 (class 1255 OID 5414742)
+-- TOC entry 2420 (class 1255 OID 5414742)
 -- Name: call_geoname_service(character varying, character varying, character varying, text); Type: FUNCTION; Schema: georeferencing; Owner: darwin2
 --
 
@@ -18174,7 +18174,7 @@ $$;
 ALTER FUNCTION georeferencing.call_geoname_service(name character varying, feature_code character varying, iso_code character varying, url text) OWNER TO darwin2;
 
 --
--- TOC entry 2400 (class 1255 OID 5419284)
+-- TOC entry 2076 (class 1255 OID 5419284)
 -- Name: call_nominatim_service(character varying, character varying, character varying, text[], text, text); Type: FUNCTION; Schema: georeferencing; Owner: postgres
 --
 
@@ -18311,7 +18311,7 @@ $$;
 ALTER FUNCTION georeferencing.call_nominatim_service(name character varying, iso_code character varying, p_osm_class character varying, p_osm_types text[], url text, url_osm text) OWNER TO postgres;
 
 --
--- TOC entry 2399 (class 1255 OID 5418862)
+-- TOC entry 2072 (class 1255 OID 5418862)
 -- Name: call_overpass_id(character varying, character varying, character varying, text); Type: FUNCTION; Schema: georeferencing; Owner: darwin2
 --
 
@@ -18381,7 +18381,7 @@ $_$;
 ALTER FUNCTION georeferencing.call_overpass_id(p_osm_id character varying, p_name character varying, p_osm_type character varying, p_url_osm text) OWNER TO darwin2;
 
 --
--- TOC entry 2396 (class 1255 OID 5414417)
+-- TOC entry 2421 (class 1255 OID 5414417)
 -- Name: fct_fill_georef_table(); Type: FUNCTION; Schema: georeferencing; Owner: darwin2
 --
 
@@ -18410,7 +18410,7 @@ $$;
 ALTER FUNCTION georeferencing.fct_fill_georef_table() OWNER TO darwin2;
 
 --
--- TOC entry 2397 (class 1255 OID 5414509)
+-- TOC entry 2422 (class 1255 OID 5414509)
 -- Name: map_country_to_geonames_iso(integer, integer, text); Type: FUNCTION; Schema: georeferencing; Owner: darwin2
 --
 
@@ -18443,7 +18443,7 @@ $$;
 ALTER FUNCTION georeferencing.map_country_to_geonames_iso(p_limit integer, p_offset integer, url text) OWNER TO darwin2;
 
 --
--- TOC entry 2366 (class 1255 OID 5155264)
+-- TOC entry 2236 (class 1255 OID 5155264)
 -- Name: fct_bedic_adjust_distinct_tags(); Type: FUNCTION; Schema: ipt; Owner: darwin2
 --
 
@@ -18485,7 +18485,7 @@ $$;
 ALTER FUNCTION ipt.fct_bedic_adjust_distinct_tags() OWNER TO darwin2;
 
 --
--- TOC entry 2367 (class 1255 OID 5169516)
+-- TOC entry 2237 (class 1255 OID 5169516)
 -- Name: fct_bedic_refresh_materialized_views(); Type: FUNCTION; Schema: ipt; Owner: postgres
 --
 
@@ -18505,7 +18505,7 @@ $$;
 ALTER FUNCTION ipt.fct_bedic_refresh_materialized_views() OWNER TO postgres;
 
 --
--- TOC entry 2374 (class 1255 OID 5245896)
+-- TOC entry 2393 (class 1255 OID 5245896)
 -- Name: fct_cetaf_rdf(integer); Type: FUNCTION; Schema: naturalheritage; Owner: postgres
 --
 
@@ -18565,7 +18565,7 @@ $_$;
 ALTER FUNCTION naturalheritage.fct_cetaf_rdf(integer) OWNER TO postgres;
 
 --
--- TOC entry 2282 (class 1255 OID 4101997)
+-- TOC entry 2157 (class 1255 OID 4101997)
 -- Name: addgeometrycolumn(character varying, character varying, integer, character varying, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -18584,7 +18584,7 @@ $_$;
 ALTER FUNCTION public.addgeometrycolumn(character varying, character varying, integer, character varying, integer) OWNER TO postgres;
 
 --
--- TOC entry 2284 (class 1255 OID 4101999)
+-- TOC entry 2158 (class 1255 OID 4101999)
 -- Name: addgeometrycolumn(character varying, character varying, character varying, character varying, integer, character varying, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -18784,7 +18784,7 @@ $_$;
 ALTER FUNCTION public.addgeometrycolumn(character varying, character varying, character varying, character varying, integer, character varying, integer) OWNER TO postgres;
 
 --
--- TOC entry 2283 (class 1255 OID 4101998)
+-- TOC entry 2155 (class 1255 OID 4101998)
 -- Name: addgeometrycolumn_old_postgis(character varying, character varying, character varying, integer, character varying, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -18803,7 +18803,7 @@ $_$;
 ALTER FUNCTION public.addgeometrycolumn_old_postgis(character varying, character varying, character varying, integer, character varying, integer) OWNER TO postgres;
 
 --
--- TOC entry 2420 (class 1255 OID 5778845)
+-- TOC entry 2410 (class 1255 OID 5778845)
 -- Name: fct_array_unique(anyarray); Type: FUNCTION; Schema: public; Owner: darwin2
 --
 
@@ -18818,7 +18818,7 @@ $$;
 ALTER FUNCTION public.fct_array_unique(arr anyarray) OWNER TO darwin2;
 
 --
--- TOC entry 2376 (class 1255 OID 5257765)
+-- TOC entry 2395 (class 1255 OID 5257765)
 -- Name: fct_rmca_get_collection_text_path(integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -18833,7 +18833,7 @@ $_$;
 ALTER FUNCTION public.fct_rmca_get_collection_text_path(integer) OWNER TO postgres;
 
 --
--- TOC entry 2285 (class 1255 OID 4102000)
+-- TOC entry 2159 (class 1255 OID 4102000)
 -- Name: fix_geometry_columns(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -18898,7 +18898,7 @@ $$;
 ALTER FUNCTION public.fix_geometry_columns() OWNER TO postgres;
 
 --
--- TOC entry 2286 (class 1255 OID 4102001)
+-- TOC entry 2160 (class 1255 OID 4102001)
 -- Name: fulltoindex(character varying, boolean); Type: FUNCTION; Schema: public; Owner: darwin2
 --
 
@@ -18963,7 +18963,7 @@ $$;
 ALTER FUNCTION public.fulltoindex(to_indexed character varying, keep_space boolean) OWNER TO darwin2;
 
 --
--- TOC entry 2287 (class 1255 OID 4102002)
+-- TOC entry 2161 (class 1255 OID 4102002)
 -- Name: populate_geometry_columns(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -19058,7 +19058,7 @@ $$;
 ALTER FUNCTION public.populate_geometry_columns() OWNER TO postgres;
 
 --
--- TOC entry 2288 (class 1255 OID 4102003)
+-- TOC entry 2162 (class 1255 OID 4102003)
 -- Name: populate_geometry_columns(oid); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -19289,7 +19289,7 @@ $$;
 ALTER FUNCTION public.populate_geometry_columns(tbl_oid oid) OWNER TO postgres;
 
 --
--- TOC entry 2289 (class 1255 OID 4102005)
+-- TOC entry 2163 (class 1255 OID 4102005)
 -- Name: probe_geometry_columns(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -19379,7 +19379,7 @@ $$;
 ALTER FUNCTION public.probe_geometry_columns() OWNER TO postgres;
 
 --
--- TOC entry 2290 (class 1255 OID 4102006)
+-- TOC entry 2164 (class 1255 OID 4102006)
 -- Name: rename_geometry_table_constraints(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -19393,7 +19393,7 @@ $$;
 ALTER FUNCTION public.rename_geometry_table_constraints() OWNER TO postgres;
 
 --
--- TOC entry 2404 (class 1255 OID 5499769)
+-- TOC entry 2085 (class 1255 OID 5499769)
 -- Name: rmca_create_missing_people_in_staging(integer); Type: FUNCTION; Schema: public; Owner: darwin2
 --
 
@@ -19521,7 +19521,7 @@ $$;
 ALTER FUNCTION public.rmca_create_missing_people_in_staging(p_import_ref integer) OWNER TO darwin2;
 
 --
--- TOC entry 2401 (class 1255 OID 5494944)
+-- TOC entry 2078 (class 1255 OID 5494944)
 -- Name: rmca_import_gtu_create_missing_people_in_staging(integer); Type: FUNCTION; Schema: public; Owner: darwin2
 --
 
@@ -19647,7 +19647,7 @@ $$;
 ALTER FUNCTION public.rmca_import_gtu_create_missing_people_in_staging(p_import_ref integer) OWNER TO darwin2;
 
 --
--- TOC entry 2302 (class 1255 OID 4671336)
+-- TOC entry 2232 (class 1255 OID 4671336)
 -- Name: rmca_migrate_check_triggers(character varying); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -19694,7 +19694,7 @@ CREATE FUNCTION public.rmca_migrate_check_triggers(schema character varying) RET
 ALTER FUNCTION public.rmca_migrate_check_triggers(schema character varying) OWNER TO postgres;
 
 --
--- TOC entry 2291 (class 1255 OID 4102007)
+-- TOC entry 2165 (class 1255 OID 4102007)
 -- Name: rmca_migrate_normalize_gtus(); Type: FUNCTION; Schema: public; Owner: darwin2
 --
 
@@ -19887,7 +19887,7 @@ begin
 ALTER FUNCTION public.rmca_migrate_normalize_gtus() OWNER TO darwin2;
 
 --
--- TOC entry 2292 (class 1255 OID 4102010)
+-- TOC entry 2166 (class 1255 OID 4102010)
 -- Name: rmca_migrate_rbins_count_tables(character varying, character varying); Type: FUNCTION; Schema: public; Owner: darwin2
 --
 
@@ -19953,7 +19953,7 @@ CREATE FUNCTION public.rmca_migrate_rbins_count_tables(schema1 character varying
 ALTER FUNCTION public.rmca_migrate_rbins_count_tables(schema1 character varying, schema2 character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2299 (class 1255 OID 4626110)
+-- TOC entry 2175 (class 1255 OID 4626110)
 -- Name: rmca_migrate_rbins_reenable_triggers(character varying); Type: FUNCTION; Schema: public; Owner: darwin2
 --
 
@@ -20007,7 +20007,7 @@ CREATE FUNCTION public.rmca_migrate_rbins_reenable_triggers(schema1 character va
 ALTER FUNCTION public.rmca_migrate_rbins_reenable_triggers(schema1 character varying) OWNER TO darwin2;
 
 --
--- TOC entry 2293 (class 1255 OID 4102011)
+-- TOC entry 2167 (class 1255 OID 4102011)
 -- Name: rmca_migrate_rbins_rmca(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -20374,7 +20374,7 @@ EXCEPTION WHEN OTHERS then
 ALTER FUNCTION public.rmca_migrate_rbins_rmca() OWNER TO postgres;
 
 --
--- TOC entry 2294 (class 1255 OID 4102013)
+-- TOC entry 2168 (class 1255 OID 4102013)
 -- Name: rmca_migrate_rbins_rmca_align_seq(); Type: FUNCTION; Schema: public; Owner: darwin2
 --
 
@@ -20416,7 +20416,7 @@ CREATE FUNCTION public.rmca_migrate_rbins_rmca_align_seq() RETURNS integer
 ALTER FUNCTION public.rmca_migrate_rbins_rmca_align_seq() OWNER TO darwin2;
 
 --
--- TOC entry 2295 (class 1255 OID 4102014)
+-- TOC entry 2169 (class 1255 OID 4102014)
 -- Name: rmca_migrate_rbins_rmca_align_widgets(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -20452,7 +20452,7 @@ SELECT users.id, category, group_name, order_by, col_num, mandatory,
 ALTER FUNCTION public.rmca_migrate_rbins_rmca_align_widgets() OWNER TO postgres;
 
 --
--- TOC entry 2296 (class 1255 OID 4102015)
+-- TOC entry 2171 (class 1255 OID 4102015)
 -- Name: rmca_migrate_rbins_rmca_detect_diff(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -20564,7 +20564,7 @@ END LOOP;
 ALTER FUNCTION public.rmca_migrate_rbins_rmca_detect_diff() OWNER TO postgres;
 
 --
--- TOC entry 2297 (class 1255 OID 4102016)
+-- TOC entry 2172 (class 1255 OID 4102016)
 -- Name: rmca_migrate_rbins_rmca_normalize_gtus(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -20754,7 +20754,7 @@ EXCEPTION WHEN OTHERS then
 ALTER FUNCTION public.rmca_migrate_rbins_rmca_normalize_gtus() OWNER TO postgres;
 
 --
--- TOC entry 2298 (class 1255 OID 4102018)
+-- TOC entry 2173 (class 1255 OID 4102018)
 -- Name: st_asbinary(text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -64467,7 +64467,7 @@ GRANT ALL ON SCHEMA wfs TO darwin2;
 
 --
 -- TOC entry 7360 (class 0 OID 0)
--- Dependencies: 2049
+-- Dependencies: 2380
 -- Name: FUNCTION check_auto_increment_code_in_spec(); Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -64476,7 +64476,7 @@ GRANT ALL ON FUNCTION darwin2.check_auto_increment_code_in_spec() TO postgres;
 
 --
 -- TOC entry 7361 (class 0 OID 0)
--- Dependencies: 2052
+-- Dependencies: 2041
 -- Name: FUNCTION chk_specimens_not_loaned(); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64485,7 +64485,7 @@ GRANT ALL ON FUNCTION darwin2.chk_specimens_not_loaned() TO darwin2;
 
 --
 -- TOC entry 7362 (class 0 OID 0)
--- Dependencies: 2057
+-- Dependencies: 2415
 -- Name: FUNCTION convert_to_unified(property character varying, property_unit character varying); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64494,7 +64494,7 @@ GRANT ALL ON FUNCTION darwin2.convert_to_unified(property character varying, pro
 
 --
 -- TOC entry 7363 (class 0 OID 0)
--- Dependencies: 2058
+-- Dependencies: 2417
 -- Name: FUNCTION convert_to_unified(property character varying, property_unit character varying, property_type character varying); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64503,7 +64503,7 @@ GRANT ALL ON FUNCTION darwin2.convert_to_unified(property character varying, pro
 
 --
 -- TOC entry 7364 (class 0 OID 0)
--- Dependencies: 2062
+-- Dependencies: 2291
 -- Name: FUNCTION fct_after_save_add_code(collectionid integer, specimenid integer); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64512,7 +64512,7 @@ GRANT ALL ON FUNCTION darwin2.fct_after_save_add_code(collectionid integer, spec
 
 --
 -- TOC entry 7365 (class 0 OID 0)
--- Dependencies: 2067
+-- Dependencies: 2270
 -- Name: FUNCTION fct_catalogue_import_keywords_update(); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64521,7 +64521,7 @@ GRANT ALL ON FUNCTION darwin2.fct_catalogue_import_keywords_update() TO darwin2;
 
 --
 -- TOC entry 7366 (class 0 OID 0)
--- Dependencies: 2075
+-- Dependencies: 2295
 -- Name: FUNCTION fct_chk_possible_upper_level_rmca_allow_upper(referenced_relation character varying, new_parent_ref integer, new_level_ref integer, new_id integer); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64530,7 +64530,7 @@ GRANT ALL ON FUNCTION darwin2.fct_chk_possible_upper_level_rmca_allow_upper(refe
 
 --
 -- TOC entry 7367 (class 0 OID 0)
--- Dependencies: 2080
+-- Dependencies: 2329
 -- Name: FUNCTION fct_clean_staging_catalogue(importref integer); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64539,7 +64539,7 @@ GRANT ALL ON FUNCTION darwin2.fct_clean_staging_catalogue(importref integer) TO 
 
 --
 -- TOC entry 7368 (class 0 OID 0)
--- Dependencies: 2090
+-- Dependencies: 2299
 -- Name: FUNCTION fct_cpy_length_conversion(property real, property_unit text); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64548,7 +64548,7 @@ GRANT ALL ON FUNCTION darwin2.fct_cpy_length_conversion(property real, property_
 
 --
 -- TOC entry 7369 (class 0 OID 0)
--- Dependencies: 2097
+-- Dependencies: 2377
 -- Name: FUNCTION fct_cpy_speed_conversion(property real, property_unit text); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64557,7 +64557,7 @@ GRANT ALL ON FUNCTION darwin2.fct_cpy_speed_conversion(property real, property_u
 
 --
 -- TOC entry 7370 (class 0 OID 0)
--- Dependencies: 2100
+-- Dependencies: 2301
 -- Name: FUNCTION fct_cpy_temperature_conversion(property real, property_unit text); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64566,7 +64566,7 @@ GRANT ALL ON FUNCTION darwin2.fct_cpy_temperature_conversion(property real, prop
 
 --
 -- TOC entry 7371 (class 0 OID 0)
--- Dependencies: 2102
+-- Dependencies: 2302
 -- Name: FUNCTION fct_cpy_time_conversion(property real, property_unit text); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64575,7 +64575,7 @@ GRANT ALL ON FUNCTION darwin2.fct_cpy_time_conversion(property real, property_un
 
 --
 -- TOC entry 7372 (class 0 OID 0)
--- Dependencies: 2110
+-- Dependencies: 2307
 -- Name: FUNCTION fct_cpy_volume_conversion(property real, property_unit text); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64584,7 +64584,7 @@ GRANT ALL ON FUNCTION darwin2.fct_cpy_volume_conversion(property real, property_
 
 --
 -- TOC entry 7373 (class 0 OID 0)
--- Dependencies: 2112
+-- Dependencies: 2308
 -- Name: FUNCTION fct_cpy_weight_conversion(property real, property_unit text); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64593,7 +64593,7 @@ GRANT ALL ON FUNCTION darwin2.fct_cpy_weight_conversion(property real, property_
 
 --
 -- TOC entry 7374 (class 0 OID 0)
--- Dependencies: 2117
+-- Dependencies: 2382
 -- Name: FUNCTION fct_duplicate_loans(loan_id integer); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64613,7 +64613,7 @@ GRANT SELECT ON TABLE darwin2.staging TO cetaf_viewer;
 
 --
 -- TOC entry 7376 (class 0 OID 0)
--- Dependencies: 2131
+-- Dependencies: 2170
 -- Name: FUNCTION fct_imp_checker_staging_info(line darwin2.staging, st_type text); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64622,7 +64622,7 @@ GRANT ALL ON FUNCTION darwin2.fct_imp_checker_staging_info(line darwin2.staging,
 
 --
 -- TOC entry 7377 (class 0 OID 0)
--- Dependencies: 2132
+-- Dependencies: 2349
 -- Name: FUNCTION fct_imp_checker_staging_info_comments(targeted_referenced_relation character varying, targeted_record_id integer, new_referenced_relation character varying, new_record_id integer); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64631,7 +64631,7 @@ GRANT ALL ON FUNCTION darwin2.fct_imp_checker_staging_info_comments(targeted_ref
 
 --
 -- TOC entry 7378 (class 0 OID 0)
--- Dependencies: 2133
+-- Dependencies: 2322
 -- Name: FUNCTION fct_imp_checker_staging_info_ext_links(targeted_referenced_relation character varying, targeted_record_id integer, new_referenced_relation character varying, new_record_id integer); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64640,7 +64640,7 @@ GRANT ALL ON FUNCTION darwin2.fct_imp_checker_staging_info_ext_links(targeted_re
 
 --
 -- TOC entry 7379 (class 0 OID 0)
--- Dependencies: 2134
+-- Dependencies: 2379
 -- Name: FUNCTION fct_imp_checker_staging_info_insurances(targeted_referenced_relation character varying, targeted_record_id integer, new_referenced_relation character varying, new_record_id integer); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64649,7 +64649,7 @@ GRANT ALL ON FUNCTION darwin2.fct_imp_checker_staging_info_insurances(targeted_r
 
 --
 -- TOC entry 7380 (class 0 OID 0)
--- Dependencies: 2135
+-- Dependencies: 2066
 -- Name: FUNCTION fct_imp_checker_staging_info_multimedia(targeted_referenced_relation character varying, targeted_record_id integer, new_referenced_relation character varying, new_record_id integer); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64658,7 +64658,7 @@ GRANT ALL ON FUNCTION darwin2.fct_imp_checker_staging_info_multimedia(targeted_r
 
 --
 -- TOC entry 7381 (class 0 OID 0)
--- Dependencies: 2136
+-- Dependencies: 2174
 -- Name: FUNCTION fct_imp_checker_staging_info_properties(targeted_referenced_relation character varying, targeted_record_id integer, new_referenced_relation character varying, new_record_id integer); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64667,7 +64667,7 @@ GRANT ALL ON FUNCTION darwin2.fct_imp_checker_staging_info_properties(targeted_r
 
 --
 -- TOC entry 7382 (class 0 OID 0)
--- Dependencies: 2137
+-- Dependencies: 2403
 -- Name: FUNCTION fct_imp_checker_staging_relationship(); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64676,7 +64676,7 @@ GRANT ALL ON FUNCTION darwin2.fct_imp_checker_staging_relationship() TO darwin2;
 
 --
 -- TOC entry 7383 (class 0 OID 0)
--- Dependencies: 2138
+-- Dependencies: 2383
 -- Name: FUNCTION fct_imp_create_catalogues_and_parents(line darwin2.staging, catalogue_table text, prefix text); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64685,7 +64685,7 @@ GRANT ALL ON FUNCTION darwin2.fct_imp_create_catalogues_and_parents(line darwin2
 
 --
 -- TOC entry 7384 (class 0 OID 0)
--- Dependencies: 2140
+-- Dependencies: 2323
 -- Name: FUNCTION fct_importer_catalogue(req_import_ref integer, referenced_relation text, exclude_invalid_entries boolean); Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -64694,7 +64694,7 @@ GRANT ALL ON FUNCTION darwin2.fct_importer_catalogue(req_import_ref integer, ref
 
 --
 -- TOC entry 7385 (class 0 OID 0)
--- Dependencies: 2149
+-- Dependencies: 2355
 -- Name: FUNCTION fct_listing_botany(nbr_records integer, VARIADIC taxon_ids integer[]); Type: ACL; Schema: darwin2; Owner: cebmpad
 --
 
@@ -64703,7 +64703,7 @@ GRANT ALL ON FUNCTION darwin2.fct_listing_botany(nbr_records integer, VARIADIC t
 
 --
 -- TOC entry 7386 (class 0 OID 0)
--- Dependencies: 2150
+-- Dependencies: 2093
 -- Name: FUNCTION fct_listing_chronostratigraphy(nbr_records integer, VARIADIC chrono_unit_ids integer[]); Type: ACL; Schema: darwin2; Owner: cebmpad
 --
 
@@ -64712,7 +64712,7 @@ GRANT ALL ON FUNCTION darwin2.fct_listing_chronostratigraphy(nbr_records integer
 
 --
 -- TOC entry 7387 (class 0 OID 0)
--- Dependencies: 2151
+-- Dependencies: 2094
 -- Name: FUNCTION fct_listing_lithology(nbr_records integer, VARIADIC litholo_unit_ids integer[]); Type: ACL; Schema: darwin2; Owner: cebmpad
 --
 
@@ -64721,7 +64721,7 @@ GRANT ALL ON FUNCTION darwin2.fct_listing_lithology(nbr_records integer, VARIADI
 
 --
 -- TOC entry 7388 (class 0 OID 0)
--- Dependencies: 2152
+-- Dependencies: 2095
 -- Name: FUNCTION fct_listing_lithostratigraphy(nbr_records integer, VARIADIC litho_unit_ids integer[]); Type: ACL; Schema: darwin2; Owner: cebmpad
 --
 
@@ -64730,7 +64730,7 @@ GRANT ALL ON FUNCTION darwin2.fct_listing_lithostratigraphy(nbr_records integer,
 
 --
 -- TOC entry 7389 (class 0 OID 0)
--- Dependencies: 2153
+-- Dependencies: 2096
 -- Name: FUNCTION fct_listing_mineralogy(nbr_records integer, VARIADIC mineralo_unit_ids integer[]); Type: ACL; Schema: darwin2; Owner: cebmpad
 --
 
@@ -64739,7 +64739,7 @@ GRANT ALL ON FUNCTION darwin2.fct_listing_mineralogy(nbr_records integer, VARIAD
 
 --
 -- TOC entry 7390 (class 0 OID 0)
--- Dependencies: 2154
+-- Dependencies: 2350
 -- Name: FUNCTION fct_listing_taxonomy(nbr_records integer, VARIADIC taxon_ids integer[]); Type: ACL; Schema: darwin2; Owner: cebmpad
 --
 
@@ -64748,7 +64748,7 @@ GRANT ALL ON FUNCTION darwin2.fct_listing_taxonomy(nbr_records integer, VARIADIC
 
 --
 -- TOC entry 7391 (class 0 OID 0)
--- Dependencies: 2155
+-- Dependencies: 2353
 -- Name: FUNCTION fct_listing_zoology(nbr_records integer, VARIADIC taxon_ids integer[]); Type: ACL; Schema: darwin2; Owner: cebmpad
 --
 
@@ -64757,7 +64757,7 @@ GRANT ALL ON FUNCTION darwin2.fct_listing_zoology(nbr_records integer, VARIADIC 
 
 --
 -- TOC entry 7392 (class 0 OID 0)
--- Dependencies: 2171
+-- Dependencies: 2247
 -- Name: FUNCTION fct_rmca_abbreviate_names(given_name character varying); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64766,7 +64766,7 @@ GRANT ALL ON FUNCTION darwin2.fct_rmca_abbreviate_names(given_name character var
 
 --
 -- TOC entry 7393 (class 0 OID 0)
--- Dependencies: 2185
+-- Dependencies: 2365
 -- Name: FUNCTION fct_rmca_document_taxonomy_staging_darwin_reference(req_import_ref integer, with_rank boolean, is_indexed boolean, match_invalid_taxonomies boolean); Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -64775,7 +64775,7 @@ GRANT ALL ON FUNCTION darwin2.fct_rmca_document_taxonomy_staging_darwin_referenc
 
 --
 -- TOC entry 7394 (class 0 OID 0)
--- Dependencies: 2196
+-- Dependencies: 2384
 -- Name: FUNCTION fct_rmca_imp_checker_gtu_search_code_2(line darwin2.staging, import boolean); Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -64784,7 +64784,7 @@ GRANT ALL ON FUNCTION darwin2.fct_rmca_imp_checker_gtu_search_code_2(line darwin
 
 --
 -- TOC entry 7395 (class 0 OID 0)
--- Dependencies: 2372
+-- Dependencies: 2255
 -- Name: FUNCTION fct_rmca_py_webservice(uri text, body text, content_type text); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64793,7 +64793,7 @@ GRANT ALL ON FUNCTION darwin2.fct_rmca_py_webservice(uri text, body text, conten
 
 --
 -- TOC entry 7396 (class 0 OID 0)
--- Dependencies: 2227
+-- Dependencies: 2373
 -- Name: FUNCTION fct_upd_institution_staging_relationship(); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64802,7 +64802,7 @@ GRANT ALL ON FUNCTION darwin2.fct_upd_institution_staging_relationship() TO darw
 
 --
 -- TOC entry 7397 (class 0 OID 0)
--- Dependencies: 2231
+-- Dependencies: 2243
 -- Name: FUNCTION fct_update_import(); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64811,7 +64811,7 @@ GRANT ALL ON FUNCTION darwin2.fct_update_import() TO darwin2;
 
 --
 -- TOC entry 7398 (class 0 OID 0)
--- Dependencies: 2402
+-- Dependencies: 2079
 -- Name: FUNCTION fulltoindex(to_indexed character varying, keep_chars character varying, to_spaces character varying[]); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64820,7 +64820,7 @@ GRANT ALL ON FUNCTION darwin2.fulltoindex(to_indexed character varying, keep_cha
 
 --
 -- TOC entry 7399 (class 0 OID 0)
--- Dependencies: 2240
+-- Dependencies: 2138
 -- Name: FUNCTION is_property_unit_in_group(searched_unit text, property_unit text); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64829,7 +64829,7 @@ GRANT ALL ON FUNCTION darwin2.is_property_unit_in_group(searched_unit text, prop
 
 --
 -- TOC entry 7400 (class 0 OID 0)
--- Dependencies: 2241
+-- Dependencies: 2139
 -- Name: FUNCTION isnumeric(text); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64838,7 +64838,7 @@ GRANT ALL ON FUNCTION darwin2.isnumeric(text) TO darwin2;
 
 --
 -- TOC entry 7401 (class 0 OID 0)
--- Dependencies: 2242
+-- Dependencies: 2286
 -- Name: FUNCTION labeling_code_for_indexation(part_ref integer); Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -64848,7 +64848,7 @@ GRANT ALL ON FUNCTION darwin2.labeling_code_for_indexation(part_ref integer) TO 
 
 --
 -- TOC entry 7402 (class 0 OID 0)
--- Dependencies: 2243
+-- Dependencies: 2140
 -- Name: FUNCTION labeling_individual_type_for_indexation(individual_type character varying); Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -64858,7 +64858,7 @@ GRANT ALL ON FUNCTION darwin2.labeling_individual_type_for_indexation(individual
 
 --
 -- TOC entry 7403 (class 0 OID 0)
--- Dependencies: 2244
+-- Dependencies: 2316
 -- Name: FUNCTION labeling_part_for_indexation(part character varying); Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -64868,7 +64868,7 @@ GRANT ALL ON FUNCTION darwin2.labeling_part_for_indexation(part character varyin
 
 --
 -- TOC entry 7404 (class 0 OID 0)
--- Dependencies: 2245
+-- Dependencies: 2317
 -- Name: FUNCTION labeling_type_for_indexation(individual_type character varying); Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -64878,7 +64878,7 @@ GRANT ALL ON FUNCTION darwin2.labeling_type_for_indexation(individual_type chara
 
 --
 -- TOC entry 7405 (class 0 OID 0)
--- Dependencies: 2248
+-- Dependencies: 2318
 -- Name: FUNCTION point_equal(point, point); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64887,7 +64887,7 @@ GRANT ALL ON FUNCTION darwin2.point_equal(point, point) TO darwin2;
 
 --
 -- TOC entry 7407 (class 0 OID 0)
--- Dependencies: 2253
+-- Dependencies: 2248
 -- Name: FUNCTION rmca_dmscheck_syntax(coord_dms character varying); Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -64896,7 +64896,7 @@ GRANT ALL ON FUNCTION darwin2.rmca_dmscheck_syntax(coord_dms character varying) 
 
 --
 -- TOC entry 7408 (class 0 OID 0)
--- Dependencies: 2394
+-- Dependencies: 2275
 -- Name: FUNCTION rmca_get_wfs_geom(table_name character varying, gids integer[]); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64905,7 +64905,7 @@ GRANT ALL ON FUNCTION darwin2.rmca_get_wfs_geom(table_name character varying, gi
 
 --
 -- TOC entry 7409 (class 0 OID 0)
--- Dependencies: 2260
+-- Dependencies: 2050
 -- Name: FUNCTION rmca_import_gtu_in_darwin_fast(p_import_ref integer); Type: ACL; Schema: darwin2; Owner: darwin2
 --
 
@@ -64914,7 +64914,7 @@ GRANT ALL ON FUNCTION darwin2.rmca_import_gtu_in_darwin_fast(p_import_ref intege
 
 --
 -- TOC entry 7411 (class 0 OID 0)
--- Dependencies: 2265
+-- Dependencies: 2006
 -- Name: FUNCTION stats_collections_encoding(integer, text, text); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64924,7 +64924,7 @@ GRANT ALL ON FUNCTION darwin2.stats_collections_encoding(integer, text, text) TO
 
 --
 -- TOC entry 7413 (class 0 OID 0)
--- Dependencies: 2266
+-- Dependencies: 2381
 -- Name: FUNCTION stats_collections_encoding(integer, timestamp without time zone, timestamp without time zone); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64933,7 +64933,7 @@ GRANT ALL ON FUNCTION darwin2.stats_collections_encoding(integer, timestamp with
 
 --
 -- TOC entry 7415 (class 0 OID 0)
--- Dependencies: 2267
+-- Dependencies: 2047
 -- Name: FUNCTION stats_collections_encoding_optimistics(integer, text, text); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64943,7 +64943,7 @@ GRANT ALL ON FUNCTION darwin2.stats_collections_encoding_optimistics(integer, te
 
 --
 -- TOC entry 7417 (class 0 OID 0)
--- Dependencies: 2268
+-- Dependencies: 2346
 -- Name: FUNCTION stats_collections_encoding_optimistics(integer, timestamp without time zone, timestamp without time zone); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64953,7 +64953,7 @@ GRANT ALL ON FUNCTION darwin2.stats_collections_encoding_optimistics(integer, ti
 
 --
 -- TOC entry 7419 (class 0 OID 0)
--- Dependencies: 2269
+-- Dependencies: 2048
 -- Name: FUNCTION stats_encoders_encoding(top_collection integer, users_array text, from_date text, to_date text); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64963,7 +64963,7 @@ GRANT ALL ON FUNCTION darwin2.stats_encoders_encoding(top_collection integer, us
 
 --
 -- TOC entry 7421 (class 0 OID 0)
--- Dependencies: 2270
+-- Dependencies: 2049
 -- Name: FUNCTION stats_encoders_encoding(top_collection integer, users_array text, from_date timestamp without time zone, to_date timestamp without time zone); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64973,7 +64973,7 @@ GRANT ALL ON FUNCTION darwin2.stats_encoders_encoding(top_collection integer, us
 
 --
 -- TOC entry 7423 (class 0 OID 0)
--- Dependencies: 2271
+-- Dependencies: 2154
 -- Name: FUNCTION stats_encoders_encoding_optimistics(top_collection integer, users_array text, from_date text, to_date text); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64983,7 +64983,7 @@ GRANT ALL ON FUNCTION darwin2.stats_encoders_encoding_optimistics(top_collection
 
 --
 -- TOC entry 7425 (class 0 OID 0)
--- Dependencies: 2272
+-- Dependencies: 2386
 -- Name: FUNCTION stats_encoders_encoding_optimistics(top_collection integer, users_array text, from_date timestamp without time zone, to_date timestamp without time zone); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -64993,7 +64993,7 @@ GRANT ALL ON FUNCTION darwin2.stats_encoders_encoding_optimistics(top_collection
 
 --
 -- TOC entry 7426 (class 0 OID 0)
--- Dependencies: 2279
+-- Dependencies: 2176
 -- Name: FUNCTION update_collections_code_last_val(); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -65002,7 +65002,7 @@ GRANT ALL ON FUNCTION darwin2.update_collections_code_last_val() TO darwin2;
 
 --
 -- TOC entry 7427 (class 0 OID 0)
--- Dependencies: 2280
+-- Dependencies: 2177
 -- Name: FUNCTION update_collections_code_last_val_after_spec_del(); Type: ACL; Schema: darwin2; Owner: postgres
 --
 
@@ -65011,7 +65011,7 @@ GRANT ALL ON FUNCTION darwin2.update_collections_code_last_val_after_spec_del() 
 
 --
 -- TOC entry 7428 (class 0 OID 0)
--- Dependencies: 2400
+-- Dependencies: 2076
 -- Name: FUNCTION call_nominatim_service(name character varying, iso_code character varying, p_osm_class character varying, p_osm_types text[], url text, url_osm text); Type: ACL; Schema: georeferencing; Owner: postgres
 --
 
@@ -65020,7 +65020,7 @@ GRANT ALL ON FUNCTION georeferencing.call_nominatim_service(name character varyi
 
 --
 -- TOC entry 7429 (class 0 OID 0)
--- Dependencies: 2367
+-- Dependencies: 2237
 -- Name: FUNCTION fct_bedic_refresh_materialized_views(); Type: ACL; Schema: ipt; Owner: postgres
 --
 
@@ -65029,7 +65029,7 @@ GRANT ALL ON FUNCTION ipt.fct_bedic_refresh_materialized_views() TO darwin2;
 
 --
 -- TOC entry 7430 (class 0 OID 0)
--- Dependencies: 2374
+-- Dependencies: 2393
 -- Name: FUNCTION fct_cetaf_rdf(integer); Type: ACL; Schema: naturalheritage; Owner: postgres
 --
 
@@ -66789,7 +66789,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA darwin2 REVOKE ALL ON TABLE
 ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA darwin2 GRANT ALL ON TABLES  TO darwin2;
 
 
--- Completed on 2020-12-11 15:49:00
+-- Completed on 2021-01-07 15:43:30
 
 --
 -- PostgreSQL database dump complete

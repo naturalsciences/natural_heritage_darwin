@@ -540,6 +540,18 @@ UsersTracking:
         Users:
             local: user_ref
             foreign: id
+            
+UsersTrackingSpecimens:
+    inheritance:
+        extends: UsersTracking
+        type: column_aggregation
+        keyField: referenced_relation
+        keyValue: specimens
+    relations:
+        Users:
+            local: user_ref
+            foreign: id
+           
 
 InformativeWorkflow:
     columns:
@@ -1026,6 +1038,10 @@ Specimens:
             class: SpecimensStableIds
             local: id
             foreign: specimen_fk
+        UsersTrackingSpecimens:
+            class: UsersTrackingSpecimens
+            local: id
+            foreign: record_id
 
 SpecimensStableIds:
     tableName: specimens_stable_ids

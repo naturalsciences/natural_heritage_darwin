@@ -47,7 +47,7 @@
 		
 				 <!--JMHerpers 2019 04 26-->
 		<th>
-			<?php if($table=="taxonomy"):?>
+			<?php if($searchForm->getValue('table')=="taxonomy"):?>
 			  <a class="sort" href="<?php echo url_for($s_url.'&orderby=cites'.( ($orderBy=='cites' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
 				<?php echo __('CITES');?>
 				<?php if($orderBy=='cites') echo $orderSign ?>
@@ -112,7 +112,7 @@
             <?php endif;?>
 			<!--JMHerpers 2019 04 26-->
 			<td>
-				<?php if($table=="taxonomy"):?>
+				<?php if($searchForm->getValue('table')=="taxonomy"):?>
 					<?php if($item->getCites() == 1): ?>
 						<span  style="margin:auto; display:table;">X</span>
 					<?php endif;?>
@@ -133,6 +133,9 @@
                 <?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>
                   <?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))),$searchForm->getValue('table').'/edit?id='.$item->getId(),array('target'=>"_blank"));?>
                   <?php echo link_to(image_tag('duplicate.png', array("title" => __("Duplicate"))),$searchForm->getValue('table').'/new?duplicate_id='.$item->getId(),array('target'=>"_blank"));?>
+				  <?php if($searchForm->getValue('table')=="taxonomy"):?>
+					 <?php echo link_to(image_tag('csv.png', array("title" => __("File export"))),$searchForm->getValue('table').'/downloadTaxon?taxon_ref='.$item->getId(),array('target'=>"_blank"));?>
+				  <?php endif;?>
                 <?php endif ; ?>
               <?php else:?>
                 <?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>

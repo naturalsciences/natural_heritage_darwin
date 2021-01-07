@@ -389,12 +389,23 @@ sps28:
    category: specimensearch_widget
    group_name: identification
    mandatory: false
-   order_by: 11
+   order_by: 16
    opened: true
    visible: false
    title_perso: Identification
    all_public: true
-   
+
+sps29:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: bibliography
+   mandatory: false
+   order_by: 17
+   opened: true
+   visible: false
+   title_perso: Bibliography
+   all_public: true
+      
 
 #jmherpers 20190506
 sps31:

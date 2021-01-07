@@ -9,10 +9,10 @@
 			
 			
 			
-			<?php $current_label_protocol=$form['bibliography_uri_protocol']->renderLabel(); $raw_current_label_protocol= strip_tags($form['bibliography_uri_protocol']->renderLabel()); $current_uri=$form['bibliography_uri']->renderLabel(); $raw_current_uri_protocol= strip_tags($form['bibliography_uri']->renderLabel());?>
+			<?php $current_label_protocol=$form['bibliography_uri_protocol']->renderLabel(); $raw_current_label_protocol= strip_tags($form['bibliography_uri_protocol']->renderLabel()); $current_uri=$form['bibliography_uri']->renderLabel(); $raw_current_uri_protocol= strip_tags($form['bibliography_uri']->renderLabel()); $current_id= strip_tags($form['bibliography_id']->renderLabel()); $current_title= strip_tags($form['bibliography_ref']->renderLabel());?>
 			<div style=" border-width: 2px;border-style: solid;border-color: #C1CF56; cursor: pointer;" >
 			 <b>Year : </b><?php echo $form['bibliography_year']->renderLabel();?><br/>
-			 <b>Title : </b><?php echo $form['bibliography_ref']->renderLabel();?><br/>
+			 <b>Title : </b><a href="<?php  print(url_for("bibliography/view")."/id/".$current_id); ?>" target="_blank"><?php  print($current_title); ?></a><br/>
 			 <?php if(strtolower($raw_current_label_protocol)!=="none"): ;?>
 				 <b>URL : </b>
 				 <?php if(strtolower( $raw_current_label_protocol)=="doi"):?>
@@ -20,10 +20,12 @@
 				 <?php elseif(strip_tags($raw_current_label_protocol)=="url"):?>
 					 <a href="<?php  print($raw_current_uri_protocol); ?>" target="_blank"><?php  print($raw_current_uri_protocol); ?></a>
 				 <?php else:?>
-					 <?php print($current_uri);?>
-				 </div>
-				<?php endif;?>
+					 <?php print($current_uri);?>				
+				<?php endif;?>			   
 			<?php endif;?>
+			<br/>
+			
+            </div>   
 			</td>
             <td class="widget_row_delete">
               <?php echo image_tag('remove.png', 'alt=Delete class=clear_code id=clear_biblio_'.$row_num); ?>
