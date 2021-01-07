@@ -64,6 +64,18 @@ abstract class BaseMultimediaForm extends DarwinModelForm
     $this->widgetSchema   ['extracted_info'] = new sfWidgetFormTextarea();
     $this->validatorSchema['extracted_info'] = new sfValidatorString(array('required' => false));
 
+    $this->widgetSchema   ['technical_parameters'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['technical_parameters'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['external_uri'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['external_uri'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['internet_protocol'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['internet_protocol'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['field_observations'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['field_observations'] = new sfValidatorString(array('required' => false));
+
     $this->widgetSchema->setNameFormat('multimedia[%s]');
   }
 

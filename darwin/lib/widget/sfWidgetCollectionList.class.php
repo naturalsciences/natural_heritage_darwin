@@ -116,7 +116,7 @@ class sfWidgetCollectionList extends sfWidgetFormChoice
         $html .= "><div class=\"col_name\">" ;
         $html .= image_tag ($img_expand, array('alt' => '+', 'class'=> 'tree_cmd collapsed'));
         $html .= image_tag ($img_expand_up, array('alt' => '-', 'class'=> 'tree_cmd expanded hidden'));
-        $html .=  "<span>".$child->getName()."</span>";
+        $html .=  "<span style='width:300px;'>".$child->getName()."</span>";
 
         $options = array(
           'type'=> 'checkbox',
@@ -133,17 +133,22 @@ class sfWidgetCollectionList extends sfWidgetFormChoice
         {
           if(! $this->getOption('is_choose') )
           {
+			  $html .= '<div>';
             $html .= ' '.image_tag('info.png',array('title'=>'info','class'=>'extd_info','data-manid'=> $child->getMainManagerRef(), 'data-staffid'=> $child->getStaffRef()));
             if($user->isA(Users::ADMIN) || ( $user->isAtLeast(Users::MANAGER) && $child->getTypeInCol() >= Users::MANAGER  ) )
-            {
+          	{
              $html .= link_to(image_tag('edit.png',array('title'=>'Edit Collection','class' => 'collection_edit')),'collection/edit?id='.$child->getId());
              $html .= link_to(image_tag('duplicate.png',array('title'=>'Duplicate Collection')),'collection/new?duplicate_id='.$child->getId());
+			}
+			if($user->isAtLeast(Users::REGISTERED_USER))
+			{
               //ftheeten 2018 04 24
 			  if($this->withStatistics)
 			  {
-				$html .= link_to("Statistics (page)",'collection/statistics?id='.$child->getId(), array("target"=>"_blank"));
+				$html .= link_to(image_tag('stat.png',array('title'=>'View collection statistics')),'collection/statistics?id='.$child->getId());
 			  }
 			}
+			$html .= '</div>';
 
           }
         }

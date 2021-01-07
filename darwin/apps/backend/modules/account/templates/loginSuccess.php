@@ -1,6 +1,6 @@
 <h1 id="login"><?php echo __("This application requires an authentification.");?></h1>
 <div class="login">
-    <?php echo form_tag('account/login');?>
+    <?php echo form_tag('account/login');Z?>
       <table>
         <tbody>
           <tr>

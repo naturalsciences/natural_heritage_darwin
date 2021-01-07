@@ -12,6 +12,7 @@ class gtuActions extends DarwinActions
 {
   protected $widgetCategory = 'catalogue_gtu_widget';
 
+
   public function preExecute()
   {
     if (strstr('purposetag,andsearch,completetag',$this->getActionName()) )
@@ -120,13 +121,22 @@ class gtuActions extends DarwinActions
 
   public function executeNew(sfWebRequest $request)
   {
+	$this->rich_interface=false;
     $gtu = new Gtu() ;
     $duplic = $request->getParameter('duplicate_id','0');
     $gtu = $this->getRecordIfDuplicate($duplic, $gtu);
     if($request->hasParameter('gtu')) $gtu->fromArray($request->getParameter('gtu'));
+	if($request->hasParameter('rich')) 
+	{			
+			if(strtolower($request->getParameter('rich'))=="on")
+			{				
+				$this->rich_interface=true;
+			}
+	}
 
     // if there is no duplicate $gtu is an empty array
     $this->form = new GtuForm($gtu);
+		
     if ($duplic)
     {
    
@@ -149,20 +159,36 @@ class gtuActions extends DarwinActions
   public function executeCreate(sfWebRequest $request)
   {
 	  //print("create");
+	  $this->rich_interface=false;  
+	 if($request->hasParameter('rich')) 
+	{			
+			if(strtolower($request->getParameter('rich'))=="on")
+			{				
+				$this->rich_interface=true;
+			}
+	}
       $this->forward404Unless($request->isMethod(sfRequest::POST));
 
      $this->form = new GtuForm();
 
-      $this->processForm($request, $this->form, 'create');
-
-    $this->setTemplate('new');
+     $this->processForm($request, $this->form, 'create');
+	
+     $this->setTemplate('new');
   }
 
   public function executeEdit(sfWebRequest $request)
   {
+	$this->rich_interface=false;
     $this->forward404Unless($gtu = Doctrine_Core::getTable('Gtu')->find($request->getParameter('id')), sprintf('Object gtu does not exist (%s).', $request->getParameter('id')));
     $this->no_right_col = Doctrine_Core::getTable('Gtu')->testNoRightsCollections('gtu_ref',$request->getParameter('id'), $this->getUser()->getId());
-
+	if($request->hasParameter('rich')) 
+	{			
+			if(strtolower($request->getParameter('rich'))=="on")
+			{
+				
+				$this->rich_interface=true;
+			}
+	}
     $this->form = new GtuForm($gtu);
     $this->loadWidgets();
     //ftheeten 2018 11 29
@@ -178,6 +204,14 @@ class gtuActions extends DarwinActions
   
   public function executeUpdate(sfWebRequest $request)
   {
+	$this->rich_interface=false;  
+	 if($request->hasParameter('rich')) 
+	{			
+			if(strtolower($request->getParameter('rich'))=="on")
+			{				
+				$this->rich_interface=true;
+			}
+	}
     $this->forward404Unless($request->isMethod(sfRequest::POST) || $request->isMethod(sfRequest::PUT));
     $this->forward404Unless($gtu = Doctrine_Core::getTable('Gtu')->find($request->getParameter('id')), sprintf('Object gtu does not exist (%s).', $request->getParameter('id')));
     $this->no_right_col = Doctrine_Core::getTable('Gtu')->testNoRightsCollections('gtu_ref',$request->getParameter('id'), $this->getUser()->getId());
@@ -221,10 +255,41 @@ class gtuActions extends DarwinActions
     {
       try
       {
-       print("valid");
+       //print("valid");
         $item = $form->save();
-        print("redirect");
-        $this->redirect('gtu/edit?id='.$item->getId());
+		/*if($request->hasParameter("chosen_layer")&&$request->hasParameter("geom_wfs")&&$request->hasParameter("wfs_json"))
+		{
+			$wfs_name=$request->getParameter("chosen_layer");
+			$wfs_desc=json_decode($request->getParameter("geom_wfs"), true);
+			$wfs_json=$request->getParameter("wfs_json");
+			$name=$request->getParameter("chosen_layer");
+			$wfs_desc=$wfs_desc[0];
+			print_r($wfs_desc);
+			print($wfs_desc["root_url"]);
+			print($wfs_desc["layer"]);
+			print($wfs_desc["value"]);
+			$this->serializeWFS($item, $wfs_desc["root_url"], $wfs_desc["layer"], $wfs_desc["value"], $name, $wfs_json);
+		}*/
+        //print("redirect");
+		$rich_suffix="";
+		if($request->hasParameter('rich')) 
+		{			
+				if(strtolower($request->getParameter('rich'))=="on")
+				{
+					
+					$this->rich_interface=true;
+					$rich_suffix="&rich=on";
+				}
+		}
+					
+		if(strtolower($request->getPostParameter('rich','off'))=="on")
+		{
+						
+			$this->rich_interface=true;
+			$rich_suffix="&rich=on";
+		}
+		
+        $this->redirect('gtu/edit?id='.$item->getId().$rich_suffix);
         
       }
       catch(Doctrine_Exception $ne)
@@ -343,5 +408,35 @@ class gtuActions extends DarwinActions
      $this->getResponse()->setContentType('application/json');
     return  $this->renderText(json_encode($results));
   
+  }
+  
+  /*public function serializeWFS(&$gtu, $url, $table, $id, $name, $geo_json)
+  {
+	  $georef_id=Doctrine_Core::getTable('GeoreferencesByService')->serializeIfNew($url, $table, $id, $name, $geo_json);
+	  $gtu->setGeoreferenceRef($georef_id);
+	  $gtu->save();
+	  $wfsTagRefs=Doctrine_Core::getTable('TagGroups')->getByIdGroup($gtu->getId(), "other", "WFS_name");
+	  foreach($wfsTagRefs as $old_tag)
+	  {
+		  $old_tag->delete();
+	  }
+	  $tag=new TagGroups();
+	  $tag->setGtuRef( $gtu->getId());
+	  $tag->setGroupName("other");
+	  $tag->setSubGroupName("WFS_name");
+	  $tag->setTagValue($name);
+	  $tag->setInternationalName("");
+	  $tag->save();
+  }*/
+  
+  public function executeGetGeorefServiceJSON(sfWebRequest $request)
+  {
+	$this->forward404Unless($request->getParameter('id'));
+    $id = $request->getParameter('id');
+    $georef = Doctrine_Core::getTable('GeoreferencesByService')->findOneById($id);
+
+    $this->forward404Unless($georef);
+	 $this->getResponse()->setHttpHeader('Content-type','application/json');
+    return $this->renderText($georef->getGeoJson());  
   }
 }

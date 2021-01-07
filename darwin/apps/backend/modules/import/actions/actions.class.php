@@ -631,6 +631,7 @@ EOF
             $staging_gtu->setSamplingCode($sampling_code);
             $staging_gtu->save();
         }
+		$currentDir=getcwd();
 	    chdir(sfconfig::get('sf_root_dir'));   
         $cmd='darwin:import-gtu --id='.$staging_gtu->getImportRef();          
         exec('nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );

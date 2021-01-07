@@ -177,6 +177,7 @@ class specimensearchActions extends DarwinActions
             $this->form->getValue('rec_per_page')
           );
           // Replace the count query triggered by the Pager to get the number of records retrieved
+		 
           $count_q = clone $query;
           // Remove from query the group by and order by clauses
 		  //ftheeten 2020 02 20
@@ -222,6 +223,7 @@ class specimensearchActions extends DarwinActions
       Doctrine_Core::getTable('Specimens')->getRequiredWidget($criterias['specimen_search_filters'], $this->getUser()->getId(), 'specimensearch_widget');
     $this->loadWidgets();
   }
+
 
   /**
   * Load related things for the specimens (code, loans related)

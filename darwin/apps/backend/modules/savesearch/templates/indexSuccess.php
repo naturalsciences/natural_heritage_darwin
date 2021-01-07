@@ -41,19 +41,24 @@
          <?php if($sf_user->isAtLeast(Users::ENCODER)):?>
          <td class="rurl_container">
             <select class="url_report">
-            <option value=<?php echo(url_for("savesearch/excelSpecimens")."/user_id/".sfContext::getInstance()->getUser()->getId()."/query_id/".$search->getId())?>>
+            <option value=<?php echo(url_for("savesearch/downloadSpec")."/user_id/".sfContext::getInstance()->getUser()->getId()."/query_id/".$search->getId())?>>
             Excel (specimens)
             </option> 
-            <option value=<?php echo(url_for("savesearch/excelTaxonomy")."/user_id/".sfContext::getInstance()->getUser()->getId()."/query_id/".$search->getId())?>>
+            <option value=<?php echo(url_for("savesearch/downloadTaxonomy")."/type_file/taxonomy/user_id/".sfContext::getInstance()->getUser()->getId()."/query_id/".$search->getId())?>>
             Excel (taxonomy)
-            </option>                
+            </option>
+			<option value=<?php echo(url_for("savesearch/downloadTaxonomy")."/type_file/taxonomy_count/user_id/".sfContext::getInstance()->getUser()->getId()."/query_id/".$search->getId())?>>
+            Excel (taxonomy : statistics)
+            </option> 			
             </select>
          </td>
+		   
          <td>
             <input id="report_link" class="save_search report_link" value="Get report" type="button">
          </td>
          <td>
-            <a id="geojson_link" target="_blank" href="<?php print(url_for("savesearch/geojson"));?>?query_id=<?php print($search->getId());?>&user_id=<?php print(sfContext::getInstance()->getUser()->getId()); ?>">GIS Layer (.geojson)</a>
+		    <?php print(link_to(image_tag('gis.png',array('title'=>'Export GeoJSON')),url_for("savesearch/geojson")."?query_id=".$search->getId()."&user_id=".sfContext::getInstance()->getUser()->getId())); ?>
+          
          </td>
          <?php endif;?>
     </tr>

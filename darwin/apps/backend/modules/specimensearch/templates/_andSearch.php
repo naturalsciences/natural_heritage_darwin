@@ -5,6 +5,7 @@
   </td>
   <td class="top_aligned">
     <input type="button" value="<?php echo __("fuzzy associations");?>" name="btn_fuz_<?php echo($row_line);?>" id="btn_fuz_<?php echo($row_line);?>" class="result_choose"/>
+	 <input type="button" value="<?php echo __("Copy map entries");?>" name="btn_map_<?php echo($row_line);?>" id="btn_map_<?php echo($row_line);?>" class="result_choose"/>
   </td>
   <td class="widget_row_delete">
     <?php echo image_tag('remove.png', 'alt=Delete class=clear_prop id=clear_tag_'.$row_line); ?>
@@ -12,6 +13,7 @@
 </tr>
 <script  type="text/javascript">
   $('#btn_fuz_<?php echo $row_line ; ?>').on('click',purposeTagsViaButton);
+  $('#btn_map_<?php echo $row_line ; ?>').on('click',purposeTagsViaMap);
   $('input.tag_line_<?php echo $row_line ; ?>').on('keydown click',purposeTags);
   $('#clear_tag_<?php echo $row_line;?>').click(function(){
     if($(this).closest('tbody').find('tr.tag_line').length == 1)
@@ -48,6 +50,12 @@
   {
 	  $('input.tag_line_<?php echo $row_line ; ?>').click();
   }
+  
+    function purposeTagsViaMap(event)
+  {
+	  $('input.tag_line_<?php echo $row_line ; ?>').val($("#chosen_layer").val());
+  }
+
 
   $('#purposed_tags_<?php echo $row_line ; ?> li').live('click',function()
   {

@@ -219,28 +219,8 @@ Gtu:
         location: {type: string}
         #JMHerpers 2019 05 07
         nagoya: { type: string, notnull: true, default: 'not defined'}
-    #ftheeten 2018 12 11
-    relations:
-        Tags:
-            local: id
-            foreign: gtu_ref
-            class: Tags
-        TemporalInformation:
-            local: id
-            foreign: gtu_ref
-            class: TemporalInformation
-        DoctrineGtuComments:
-            local: id
-            foreign : record_id
-            class: DoctrineGtuComments
-        GtuComments:
-            local: id
-            foreign : record_id
-            class: GtuComments
-        GtuProperties:
-            local: id
-            foreign : record_id
-            class: GtuProperties
+        geom_wkt: {type:string}
+        georeference_ref: {type:integer}         
 
 Properties:
     columns:
@@ -564,6 +544,10 @@ MySavedSearches:
         subject: { type: string, notnull: true}
         query_where: { type: string, notnull: true}
         query_parameters: { type: string, notnull: true}
+        current_page: {type:integer, notnull: true, default: 0}
+        page_size: {type:integer, notnull: true, default: 10000 }
+        nb_records: {type:integer , notnull: true, default: 0 }
+        download_lock: {type:boolean, notnull: true, default: false }
     relations:
         User:
             class: Users
@@ -1490,6 +1474,10 @@ Multimedia:
         visible: {type:boolean, notnull: true, default: true}
         publishable: {type:boolean, notnull: true, default: true}
         extracted_info: { type: string }
+        technical_parameters: { type: string }
+        external_uri: { type: string }
+        internet_protocol: { type: string }
+        field_observations: { type: string }
 
 # This sub class is used for linking loans with actors
 LoanActors:
@@ -2176,3 +2164,58 @@ DoctrineTemporalInformationGtuGroupUnnestTags:
         tag : {type : string}
         tag_indexed : {type : string}
 
+GeoreferencesByService:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        data_origin: {type: string}
+        gtu_refs: {type: string}
+        count_specimens: {type: integer}
+        wfs_url: {type: string}
+        wfs_table: {type: string}
+        wfs_id: {type: string}
+        root_urls_service: {type: string}
+        data_urls: {type: string}
+        service_ids: {type: string}
+        service_stable_ids: {type: string}
+        service_responses: {type: string}
+        response_names : {type: string}
+        service_categories : {type: string}
+        service_queries : {type: string}
+        tag_group_name : {type: string}
+        tag_sub_group_name : {type: string}
+        name : {type: string}
+        country : {type: string}
+        country_iso: {type: string}
+        longitude: {type: string}
+        latitude: {type: string}
+        geom_type: {type: string}
+        geom_wkt: {type: string}
+        query_date: {type: string}
+        creator: {type: string}
+        validation_date: {type: string}
+        validator: {type: string}
+        validation_level: {type: string}
+        validation_comment: {type: string}
+        
+StagingMultimedia:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        referenced_relation: { type: string, notnull: true}
+        record_id: { type: integer}
+        is_digital: {type: boolean, notnull:true, default: true}
+        type: { type: string, notnull: true, default: 'image'}
+        sub_type: { type: string }
+        title: { type: string, notnull: true}
+        description: { type: string, notnull: true, default:''}
+        uri: { type: string }
+        filename: : { type: string }
+        creation_date: { type: string, notnull: true, default: '0001-01-01'}
+        creation_date_mask: { type: integer, notnull: true, default:0}
+        mime_type: { type: string }
+        visible: {type:boolean, notnull: true, default: true}
+        publishable: {type:boolean, notnull: true, default: true}
+        extracted_info: { type: string }
+        technical_parameters: { type: string }
+        external_uri: { type: string }
+        internet_protocol: { type: string }
+        field_observations: { type: string }

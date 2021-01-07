@@ -12,7 +12,6 @@
  * @property string $from_date
  * @property integer $to_date_mask
  * @property string $to_date
- * @property Doctrine_Collection $Gtu
  * @property Doctrine_Collection $Specimens
  * 
  * @method integer             getId()             Returns the current record's "id" value
@@ -22,7 +21,6 @@
  * @method string              getFromDate()       Returns the current record's "from_date" value
  * @method integer             getToDateMask()     Returns the current record's "to_date_mask" value
  * @method string              getToDate()         Returns the current record's "to_date" value
- * @method Doctrine_Collection getGtu()            Returns the current record's "Gtu" collection
  * @method Doctrine_Collection getSpecimens()      Returns the current record's "Specimens" collection
  * @method TemporalInformation setId()             Sets the current record's "id" value
  * @method TemporalInformation setGtuRef()         Sets the current record's "gtu_ref" value
@@ -31,7 +29,6 @@
  * @method TemporalInformation setFromDate()       Sets the current record's "from_date" value
  * @method TemporalInformation setToDateMask()     Sets the current record's "to_date_mask" value
  * @method TemporalInformation setToDate()         Sets the current record's "to_date" value
- * @method TemporalInformation setGtu()            Sets the current record's "Gtu" collection
  * @method TemporalInformation setSpecimens()      Sets the current record's "Specimens" collection
  * 
  * @package    darwin
@@ -80,10 +77,6 @@ abstract class BaseTemporalInformation extends DarwinModel
     public function setUp()
     {
         parent::setUp();
-        $this->hasMany('Gtu', array(
-             'local' => 'gtu_ref',
-             'foreign' => 'id'));
-
         $this->hasMany('Specimens', array(
              'local' => 'specimen_ref',
              'foreign' => 'id'));

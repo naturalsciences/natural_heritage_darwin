@@ -34,12 +34,13 @@
  * @property float $longitude_utm
  * @property varchar $utm_zone
  * @property string $nagoya
- * @property Tags $Tags
- * @property TemporalInformation $TemporalInformation
- * @property DoctrineGtuComments $DoctrineGtuComments
+ * @property string $geom_wkt
+ * @property integer $georeference_ref
  * @property Doctrine_Collection $TagGroups
+ * @property Doctrine_Collection $Tags
  * @property Doctrine_Collection $Specimens
  * @property Doctrine_Collection $SpecimensMaincodes
+ * @property Doctrine_Collection $DoctrineGtuComments
  * 
  * @method integer             getId()                      Returns the current record's "id" value
  * @method string              getCode()                    Returns the current record's "code" value
@@ -70,12 +71,13 @@
  * @method float               getLongitudeUtm()            Returns the current record's "longitude_utm" value
  * @method varchar             getUtmZone()                 Returns the current record's "utm_zone" value
  * @method string              getNagoya()                  Returns the current record's "nagoya" value
- * @method Tags                getTags()                    Returns the current record's "Tags" value
- * @method TemporalInformation getTemporalInformation()     Returns the current record's "TemporalInformation" value
- * @method DoctrineGtuComments getDoctrineGtuComments()     Returns the current record's "DoctrineGtuComments" value
+ * @method string              getGeomWkt()                 Returns the current record's "geom_wkt" value
+ * @method integer             getGeoreferenceRef()         Returns the current record's "georeference_ref" value
  * @method Doctrine_Collection getTagGroups()               Returns the current record's "TagGroups" collection
+ * @method Doctrine_Collection getTags()                    Returns the current record's "Tags" collection
  * @method Doctrine_Collection getSpecimens()               Returns the current record's "Specimens" collection
  * @method Doctrine_Collection getSpecimensMaincodes()      Returns the current record's "SpecimensMaincodes" collection
+ * @method Doctrine_Collection getDoctrineGtuComments()     Returns the current record's "DoctrineGtuComments" collection
  * @method Gtu                 setId()                      Sets the current record's "id" value
  * @method Gtu                 setCode()                    Sets the current record's "code" value
  * @method Gtu                 setGtuFromDateMask()         Sets the current record's "gtu_from_date_mask" value
@@ -105,12 +107,13 @@
  * @method Gtu                 setLongitudeUtm()            Sets the current record's "longitude_utm" value
  * @method Gtu                 setUtmZone()                 Sets the current record's "utm_zone" value
  * @method Gtu                 setNagoya()                  Sets the current record's "nagoya" value
- * @method Gtu                 setTags()                    Sets the current record's "Tags" value
- * @method Gtu                 setTemporalInformation()     Sets the current record's "TemporalInformation" value
- * @method Gtu                 setDoctrineGtuComments()     Sets the current record's "DoctrineGtuComments" value
+ * @method Gtu                 setGeomWkt()                 Sets the current record's "geom_wkt" value
+ * @method Gtu                 setGeoreferenceRef()         Sets the current record's "georeference_ref" value
  * @method Gtu                 setTagGroups()               Sets the current record's "TagGroups" collection
+ * @method Gtu                 setTags()                    Sets the current record's "Tags" collection
  * @method Gtu                 setSpecimens()               Sets the current record's "Specimens" collection
  * @method Gtu                 setSpecimensMaincodes()      Sets the current record's "SpecimensMaincodes" collection
+ * @method Gtu                 setDoctrineGtuComments()     Sets the current record's "DoctrineGtuComments" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -222,24 +225,22 @@ abstract class BaseGtu extends DarwinModel
              'notnull' => true,
              'default' => 'not defined',
              ));
+        $this->hasColumn('geom_wkt', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('georeference_ref', 'integer', null, array(
+             'type' => 'integer',
+             ));
     }
 
     public function setUp()
     {
         parent::setUp();
-        $this->hasOne('Tags', array(
-             'local' => 'id',
-             'foreign' => 'gtu_ref'));
-
-        $this->hasOne('TemporalInformation', array(
-             'local' => 'id',
-             'foreign' => 'gtu_ref'));
-
-        $this->hasOne('DoctrineGtuComments', array(
-             'local' => 'id',
-             'foreign' => 'record_id'));
-
         $this->hasMany('TagGroups', array(
+             'local' => 'id',
+             'foreign' => 'gtu_ref'));
+
+        $this->hasMany('Tags', array(
              'local' => 'id',
              'foreign' => 'gtu_ref'));
 
@@ -250,5 +251,9 @@ abstract class BaseGtu extends DarwinModel
         $this->hasMany('SpecimensMaincodes', array(
              'local' => 'id',
              'foreign' => 'gtu_ref'));
+
+        $this->hasMany('DoctrineGtuComments', array(
+             'local' => 'id',
+             'foreign' => 'record_id'));
     }
 }

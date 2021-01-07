@@ -16,8 +16,8 @@ abstract class BaseTemporalInformationForm extends DarwinModelForm
   {
     parent::setupInheritance();
 
-    $this->widgetSchema   ['gtu_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Gtu'), 'add_empty' => true));
-    $this->validatorSchema['gtu_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Gtu'), 'required' => false));
+    $this->widgetSchema   ['gtu_ref'] = new sfWidgetFormInputText();
+    $this->validatorSchema['gtu_ref'] = new sfValidatorInteger(array('required' => false));
 
     $this->widgetSchema   ['specimen_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Specimens'), 'add_empty' => true));
     $this->validatorSchema['specimen_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Specimens'), 'required' => false));

@@ -100,8 +100,11 @@ abstract class BaseGtuForm extends DarwinModelForm
     $this->widgetSchema   ['nagoya'] = new sfWidgetFormTextarea();
     $this->validatorSchema['nagoya'] = new sfValidatorString(array('required' => false));
 
-    $this->widgetSchema   ['id'] = new sfWidgetFormInputHidden();
-    $this->validatorSchema['id'] = new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false));
+    $this->widgetSchema   ['geom_wkt'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['geom_wkt'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['georeference_ref'] = new sfWidgetFormInputText();
+    $this->validatorSchema['georeference_ref'] = new sfValidatorInteger(array('required' => false));
 
     $this->widgetSchema->setNameFormat('gtu[%s]');
   }
