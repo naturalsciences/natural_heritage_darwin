@@ -115,6 +115,10 @@ $(document).ready(function ()
       &nbsp;<a href="<?php echo url_for('specimensearch/index') ?>" id="spec_cancel"><?php echo __('Cancel');?></a>
       <input type="submit" value="<?php echo __('Save');?>" id="submit_spec_f1"/>
     </p>
+	<?php if($duplic>0):?>
+		<input type="hidden" name="duplicate_id" id="duplicate_id" value="<?php print($duplic);?>"/>
+		<input type="hidden" name="keep_duplicate" id="keep_duplicate" value="off"/>
+	<?php endif;?>
   </form>
 <script  type="text/javascript">
  //ftheeten 2018 02 13
@@ -170,9 +174,15 @@ $(document).ready(function () {
 		
 		if($('#specimen_ig_ref_check').val() == 0 && $('#specimen_ig_ref').val() == "" && $('#specimen_ig_ref_name').val() != "")
 		{
-		  if(!window.confirm('<?php echo __("Your I.G. number will be lost ! are you sure you want continue ?") ; ?>'))
+		  if(!window.confirm('Your I.G. number will be lost ! are you sure you want continue ?'))
 			event.preventDefault();
 		}
+		<?php if($duplic>0):?>
+		 //if(window.confirm('Do you want to keep trace of the duplicate relation in the database ?'))
+		 //{
+			 $("#keep_duplicate").val("on");
+		 //}
+		<?php endif;?>
 	}
   }) ; 
   

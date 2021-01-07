@@ -318,5 +318,16 @@ class Gtu extends BaseGtu
     }
   }
   
+  public function getGeoReferencesByService()
+  {
+	  $q = Doctrine_Query::create()
+		  ->select('*')
+		  ->from('GeoreferencesByService g')
+		  ->where('? = ANY(gtu_refs) ',$this->getId());		
+		
+		$tmp= $q->execute();
+		
+		return $tmp;
+  }  
 
 }

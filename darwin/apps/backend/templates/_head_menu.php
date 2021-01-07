@@ -129,6 +129,7 @@
                         <li><?php echo link_to(__('People'),'people/index');?></li>
                         <?php if($sf_user->getDbUserType() >= Users::ENCODER) : ?>
                           <li><?php echo link_to(__('Sampling location'),'gtu/index');?></li>
+						  <li><?php echo link_to(__('Georeferences'),'georeferences/index');?></li>
                         <?php endif ; ?>
                         <li><?php echo link_to(__('Collecting Methods'),'methods_and_tools/methodsIndex');?></li>
                         <li><?php echo link_to(__('Collecting Tools'),'methods_and_tools/toolsIndex');?></li>                        
@@ -165,6 +166,7 @@
                         <li><?php echo link_to(__('Institutions'),'institution/new');?></li>
                         <li><?php echo link_to(__('People'),'people/new');?></li>
                         <li><?php echo link_to(__('Sampling location'),'gtu/new');?></li>
+						<li><?php echo link_to(__('Georeferences'),'georeferences/new');?></li>
                         <li><?php echo link_to(__('Collecting Methods'),'methods_and_tools/new?notion=method');?></li>
                         <li><?php echo link_to(__('Collecting Tools'),'methods_and_tools/new?notion=tool');?></li>
                         <li><?php echo link_to(__('Bibliography'),'bibliography/new');?></li>

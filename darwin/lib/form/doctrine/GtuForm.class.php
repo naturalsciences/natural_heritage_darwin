@@ -23,7 +23,7 @@ class GtuForm extends BaseGtuForm
       'coordinates_source',
 	  'latitude_dms_degree', 'latitude_dms_minutes', 'latitude_dms_seconds','longitude_dms_degree', 'longitude_dms_minutes', 
 	  'longitude_dms_seconds', 'latitude_utm', 'longitude_utm', 'utm_zone', 'latitude_dms_direction', 'longitude_dms_direction',
-	  'nagoya' ));
+	  'nagoya', 'georeference_ref' ));
 
     $this->widgetSchema['code'] = new sfWidgetFormInput();
     $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')), intval(sfConfig::get('dw_yearRangeMin')));
@@ -79,6 +79,38 @@ class GtuForm extends BaseGtuForm
       ),
       array('invalid' => 'Date provided is not valid',)
     );
+	
+	/*
+	$this->widgetSchema   ['latitude2'] = new sfWidgetFormInputText();
+    $this->validatorSchema['latitude2'] = new sfValidatorNumber(array('required' => false));
+
+    $this->widgetSchema   ['longitude2'] = new sfWidgetFormInputText();
+    $this->validatorSchema['longitude2'] = new sfValidatorNumber(array('required' => false));
+	
+	$this->widgetSchema   ['latitude2_dms_degree'] = new sfWidgetFormInputText();
+    $this->validatorSchema['latitude2_dms_degree'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['latitude2_dms_minutes'] = new sfWidgetFormInputText();
+    $this->validatorSchema['latitude2_dms_minutes'] = new sfValidatorNumber(array('required' => false));
+
+    $this->widgetSchema   ['latitude2_dms_seconds'] = new sfWidgetFormInputText();
+    $this->validatorSchema['latitude2_dms_seconds'] = new sfValidatorNumber(array('required' => false));
+
+    $this->widgetSchema   ['latitude2_dms_direction'] = new sfWidgetFormInputText();
+    $this->validatorSchema['latitude2_dms_direction'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['longitude2_dms_degree'] = new sfWidgetFormInputText();
+    $this->validatorSchema['longitude2_dms_degree'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['longitude2_dms_minutes'] = new sfWidgetFormInputText();
+    $this->validatorSchema['longitude2_dms_minutes'] = new sfValidatorNumber(array('required' => false));
+
+    $this->widgetSchema   ['longitude2_dms_seconds'] = new sfWidgetFormInputText();
+    $this->validatorSchema['longitude_dms_seconds'] = new sfValidatorNumber(array('required' => false));
+
+    $this->widgetSchema   ['longitude2_dms_direction'] = new sfWidgetFormInputText();
+    $this->validatorSchema['longitude2_dms_direction'] = new sfValidatorInteger(array('required' => false));
+	*/
     
     	//this group ftheeten 2016 02 05
     $this->widgetSchema['coordinates_source']= new sfWidgetFormChoice(array('choices'=>array('DD'=> 'Decimal', 'DMS'=>'Degrees Minutes Seconds', 'UTM'=>'UTM', 'ISSUE'=>'Issue (to check)')));
@@ -345,7 +377,35 @@ class GtuForm extends BaseGtuForm
     $this->widgetSchema['delete_mode'] = new sfWidgetFormInputCheckbox();
 
     $this->validatorSchema['delete_mode'] = new sfValidatorPass();
+	
+	 //ftheeten 2018 10 05
+    $this->widgetSchema['geom_wkt'] = new sfWidgetFormInputText();
+    $this->widgetSchema['geom_wkt']->setAttributes(array('class'=>'wkt_search'));
+    $this->validatorSchema['geom_wkt'] = new sfValidatorString(array('required' => false, 'trim' => true));
+	
+	/*$this->widgetSchema['geom_wfs'] = new sfWidgetFormInputText();
+    $this->widgetSchema['geom_wfs']->setAttributes(array('class'=>'wfs_search'));
+    $this->validatorSchema['geom_wfs'] = new sfValidatorString(array('required' => false, 'trim' => true));
 
+	$this->widgetSchema['wfs_json'] = new sfWidgetFormInputHidden();
+	 $this->widgetSchema['wfs_json']->setAttributes(array('class'=>'wfs_json'));
+	$this->validatorSchema['wfs_json'] = new sfValidatorString(array('required' => false, 'trim' => true));*/
+	//$this->widgetSchema['georeference_ref'] = new sfWidgetFormInputHidden();
+	//$this->widgetSchema['georeference_ref']->setAttributes(array('class'=>'georeference_ref'));
+	
+	  /* Gtu Reference */
+    $this->widgetSchema['georeference_ref'] = new widgetFormButtonRef(array(
+      'model' => 'GeoreferencesByService',
+      'link_url' => 'georeferences/choose?with_js=1',
+      'method' => 'getDescription',
+      'box_title' => $this->getI18N()->__('Choose Georeferenced object'),
+      'nullable' => true,
+      'button_class'=>'',
+      ),
+      array('class'=>'inline')
+    );
+	$this->validatorSchema['georeference_ref'] = new sfValidatorInteger(array('required' => false));
+	
 
     $subForm = new sfForm();
     $this->embedForm('newVal',$subForm);
@@ -424,7 +484,10 @@ class GtuForm extends BaseGtuForm
         $this->deleteDate($taintedValues, $taintedFiles);
       //ftheeten 2018 11 29
 
-
+	  if(isset($taintedValues['wfs_json']))
+	  {
+		  
+	  }
       parent::bind($taintedValues, $taintedFiles);
      
       

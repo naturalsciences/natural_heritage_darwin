@@ -177,5 +177,16 @@ class TagGroupsTable extends DarwinTable
          ->andWherein('g.gtu_ref', $ids);
      return  $q->execute();
   }
+  
+
+  public function getByIdGroup($id, $group, $sub_group)
+  {
+	  $q = Doctrine_Query::create()
+         ->from('TagGroups g')
+         ->where('g.gtu_ref=?', $id)
+		 ->andWhere('group_name=?', $group)
+		 ->andWhere('sub_group_name=?', $sub_group);
+     return  $q->execute();
+  }
 
 }

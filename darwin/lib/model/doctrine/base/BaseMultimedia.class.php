@@ -22,39 +22,51 @@
  * @property boolean $visible
  * @property boolean $publishable
  * @property string $extracted_info
+ * @property string $technical_parameters
+ * @property string $external_uri
+ * @property string $internet_protocol
+ * @property string $field_observations
  * 
- * @method integer    getId()                  Returns the current record's "id" value
- * @method string     getReferencedRelation()  Returns the current record's "referenced_relation" value
- * @method integer    getRecordId()            Returns the current record's "record_id" value
- * @method boolean    getIsDigital()           Returns the current record's "is_digital" value
- * @method string     getType()                Returns the current record's "type" value
- * @method string     getSubType()             Returns the current record's "sub_type" value
- * @method string     getTitle()               Returns the current record's "title" value
- * @method string     getDescription()         Returns the current record's "description" value
- * @method string     getUri()                 Returns the current record's "uri" value
- * @method string     getSearchIndexed()       Returns the current record's "search_indexed" value
- * @method string     getCreationDate()        Returns the current record's "creation_date" value
- * @method integer    getCreationDateMask()    Returns the current record's "creation_date_mask" value
- * @method string     getMimeType()            Returns the current record's "mime_type" value
- * @method boolean    getVisible()             Returns the current record's "visible" value
- * @method boolean    getPublishable()         Returns the current record's "publishable" value
- * @method string     getExtractedInfo()       Returns the current record's "extracted_info" value
- * @method Multimedia setId()                  Sets the current record's "id" value
- * @method Multimedia setReferencedRelation()  Sets the current record's "referenced_relation" value
- * @method Multimedia setRecordId()            Sets the current record's "record_id" value
- * @method Multimedia setIsDigital()           Sets the current record's "is_digital" value
- * @method Multimedia setType()                Sets the current record's "type" value
- * @method Multimedia setSubType()             Sets the current record's "sub_type" value
- * @method Multimedia setTitle()               Sets the current record's "title" value
- * @method Multimedia setDescription()         Sets the current record's "description" value
- * @method Multimedia setUri()                 Sets the current record's "uri" value
- * @method Multimedia setSearchIndexed()       Sets the current record's "search_indexed" value
- * @method Multimedia setCreationDate()        Sets the current record's "creation_date" value
- * @method Multimedia setCreationDateMask()    Sets the current record's "creation_date_mask" value
- * @method Multimedia setMimeType()            Sets the current record's "mime_type" value
- * @method Multimedia setVisible()             Sets the current record's "visible" value
- * @method Multimedia setPublishable()         Sets the current record's "publishable" value
- * @method Multimedia setExtractedInfo()       Sets the current record's "extracted_info" value
+ * @method integer    getId()                   Returns the current record's "id" value
+ * @method string     getReferencedRelation()   Returns the current record's "referenced_relation" value
+ * @method integer    getRecordId()             Returns the current record's "record_id" value
+ * @method boolean    getIsDigital()            Returns the current record's "is_digital" value
+ * @method string     getType()                 Returns the current record's "type" value
+ * @method string     getSubType()              Returns the current record's "sub_type" value
+ * @method string     getTitle()                Returns the current record's "title" value
+ * @method string     getDescription()          Returns the current record's "description" value
+ * @method string     getUri()                  Returns the current record's "uri" value
+ * @method string     getSearchIndexed()        Returns the current record's "search_indexed" value
+ * @method string     getCreationDate()         Returns the current record's "creation_date" value
+ * @method integer    getCreationDateMask()     Returns the current record's "creation_date_mask" value
+ * @method string     getMimeType()             Returns the current record's "mime_type" value
+ * @method boolean    getVisible()              Returns the current record's "visible" value
+ * @method boolean    getPublishable()          Returns the current record's "publishable" value
+ * @method string     getExtractedInfo()        Returns the current record's "extracted_info" value
+ * @method string     getTechnicalParameters()  Returns the current record's "technical_parameters" value
+ * @method string     getExternalUri()          Returns the current record's "external_uri" value
+ * @method string     getInternetProtocol()     Returns the current record's "internet_protocol" value
+ * @method string     getFieldObservations()    Returns the current record's "field_observations" value
+ * @method Multimedia setId()                   Sets the current record's "id" value
+ * @method Multimedia setReferencedRelation()   Sets the current record's "referenced_relation" value
+ * @method Multimedia setRecordId()             Sets the current record's "record_id" value
+ * @method Multimedia setIsDigital()            Sets the current record's "is_digital" value
+ * @method Multimedia setType()                 Sets the current record's "type" value
+ * @method Multimedia setSubType()              Sets the current record's "sub_type" value
+ * @method Multimedia setTitle()                Sets the current record's "title" value
+ * @method Multimedia setDescription()          Sets the current record's "description" value
+ * @method Multimedia setUri()                  Sets the current record's "uri" value
+ * @method Multimedia setSearchIndexed()        Sets the current record's "search_indexed" value
+ * @method Multimedia setCreationDate()         Sets the current record's "creation_date" value
+ * @method Multimedia setCreationDateMask()     Sets the current record's "creation_date_mask" value
+ * @method Multimedia setMimeType()             Sets the current record's "mime_type" value
+ * @method Multimedia setVisible()              Sets the current record's "visible" value
+ * @method Multimedia setPublishable()          Sets the current record's "publishable" value
+ * @method Multimedia setExtractedInfo()        Sets the current record's "extracted_info" value
+ * @method Multimedia setTechnicalParameters()  Sets the current record's "technical_parameters" value
+ * @method Multimedia setExternalUri()          Sets the current record's "external_uri" value
+ * @method Multimedia setInternetProtocol()     Sets the current record's "internet_protocol" value
+ * @method Multimedia setFieldObservations()    Sets the current record's "field_observations" value
  * 
  * @package    darwin
  * @subpackage model
@@ -133,6 +145,18 @@ abstract class BaseMultimedia extends DarwinModel
              'default' => true,
              ));
         $this->hasColumn('extracted_info', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('technical_parameters', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('external_uri', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('internet_protocol', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('field_observations', 'string', null, array(
              'type' => 'string',
              ));
     }

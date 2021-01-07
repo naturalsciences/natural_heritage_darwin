@@ -10,7 +10,7 @@
       <th></th>
     </tr>
   </thead>
-  <?php $test="test" ?>
+ 
   <?php foreach($spec_related as $val):?>
   <tr>
     <td><?php echo $val->getRelationshipType() ; ?></td>
@@ -78,3 +78,5 @@
   <?php endforeach;?>
 </table>
  <?php endif;?>
+ <br/><br/>
+<a  target="_blank" href="<?php print(url_for("specimensearch/search/is_choose/",true)."/1?specimen_search_filters[related_ref]=".$eid);?>">View all related specimens</a>

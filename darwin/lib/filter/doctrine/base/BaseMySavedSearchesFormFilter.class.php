@@ -44,6 +44,18 @@ abstract class BaseMySavedSearchesFormFilter extends DarwinModelFormFilter
     $this->widgetSchema   ['query_parameters'] = new sfWidgetFormFilterInput(array('with_empty' => false));
     $this->validatorSchema['query_parameters'] = new sfValidatorPass(array('required' => false));
 
+    $this->widgetSchema   ['current_page'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['current_page'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
+
+    $this->widgetSchema   ['page_size'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['page_size'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
+
+    $this->widgetSchema   ['nb_records'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['nb_records'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
+
+    $this->widgetSchema   ['download_lock'] = new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no')));
+    $this->validatorSchema['download_lock'] = new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0)));
+
     $this->widgetSchema   ['user_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('User'), 'add_empty' => true));
     $this->validatorSchema['user_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('User'), 'column' => 'id'));
 
@@ -68,6 +80,10 @@ abstract class BaseMySavedSearchesFormFilter extends DarwinModelFormFilter
       'subject' => 'Text',
       'query_where' => 'Text',
       'query_parameters' => 'Text',
+      'current_page' => 'Number',
+      'page_size' => 'Number',
+      'nb_records' => 'Number',
+      'download_lock' => 'Boolean',
       'user_ref' => 'ForeignKey',
     ));
   }

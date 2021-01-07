@@ -46,6 +46,8 @@
   <?php endforeach;?>
 <?php endif;?>
 </table>
+ <br/><br/>
+<a  target="_blank" href="<?php print(url_for("specimensearch/search/is_choose/",true)."/1?specimen_search_filters[related_ref]=".$eid);?>">View all related specimens</a>
 <?php echo $form['SpecimensRelationships_holder'];?>
 <script  type="text/javascript">
 $(document).ready(function () {

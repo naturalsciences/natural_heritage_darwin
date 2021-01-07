@@ -386,6 +386,9 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       array('invalid' => 'Date provided is not valid',)
     );
 
+
+	$this->validatorSchema['related_ref'] = new sfValidatorInteger(array('required'=>false));
+	 $this->validatorSchema['related_ref'] = new sfValidatorNumber(array('required'=>false,'min' => '0'));
     $subForm = new sfForm();
     $this->embedForm('Tags',$subForm);
 
@@ -636,6 +639,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     );
     $this->widgetSchema['object_name'] = new sfWidgetFormInput();
     $this->validatorSchema['object_name'] = new sfValidatorString(array('required' => false));
+	
 
     $this->validatorSchema['floor'] = new sfValidatorString(array('required' => false));
 
@@ -986,8 +990,9 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
   {
     if( $values['lat_from'] != '' && $values['lon_from'] != '' && $values['lon_to'] != ''  && $values['lat_to'] != '' )
     {
-      $horizontal_box = "((".(float)$values['lat_from'].",-180),(".(float)$values['lat_to'].",180))";
-      $vert_box = "((".(float)$values['lat_from'].",".(float)$values['lon_from']."),(".(float)$values['lat_to'].",".(float)$values['lon_to']."))";
+      //$horizontal_box = "((".(float)$values['lat_from'].",-180),(".(float)$values['lat_to'].",180))";
+      //$vert_box = "((".(float)$values['lat_from'].",".(float)$values['lon_from']."),(".(float)$values['lat_to'].",".(float)$values['lon_to']."))";
+	  $env="ST_MAKEENVELOPE(".$values['lon_from'].", ".$values['lat_from'].", ".$values['lon_to'].", ".$values['lat_to'].", 4326)";
 
       // Look for a wrapped box (ie. between RUSSIA and USA)
       if( (float)$values['lon_to'] < (float) $values['lon_from']) 
@@ -995,14 +1000,12 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 
         $tmp="
           ( station_visible = true
-            AND box('$horizontal_box') @> gtu_location
-            AND NOT box('$vert_box') @> gtu_location
+            AND EXISTS(SELECT 1 FROM fct_rmca_get_gtu_by_geometry(ST_SETSRID(".$env.") WHERE s.gtu_ref=id_for_geom)
           )
           OR
           ( station_visible = false
             AND collection_ref IN (".implode(',',$this->encoding_collection).")
-            AND box('$horizontal_box') @> gtu_location
-            AND NOT box('$vert_box') @> gtu_location
+             AND EXISTS(SELECT 1 FROM fct_rmca_get_gtu_by_geometry(ST_SETSRID(".$env.") WHERE s.gtu_ref=id_for_geom)
           )" ;
         $query->whereParenWrap();
 
@@ -1011,14 +1014,12 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       {
         $tmp="
           ( station_visible = true
-            AND box('$horizontal_box') @> gtu_location
-            AND box('$vert_box') @> gtu_location
+           AND gtu_ref=ANY(fct_rmca_get_gtu_by_geometry(".$env."))
           )
           OR
           ( station_visible = false
             AND collection_ref IN (".implode(',',$this->encoding_collection).")
-            AND box('$horizontal_box') @> gtu_location
-            AND box('$vert_box') @> gtu_location
+              AND EXISTS(SELECT 1 FROM fct_rmca_get_gtu_by_geometry(ST_SETSRID(".$env.") WHERE s.gtu_ref=id_for_geom)
           )";
         
       }
@@ -1042,7 +1043,8 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     {
         if(strlen(trim($values['wkt_search'])))
         {
-            $tmp="ST_INTERSECTS(ST_SETSRID(ST_Point(gtu_location[1], gtu_location[0]),4326), ST_GEOMFROMTEXT('".$values['wkt_search']."',4326))";
+            //$tmp="ST_INTERSECTS(ST_SETSRID(ST_Point(gtu_location[1], gtu_location[0]),4326), ST_GEOMFROMTEXT('".$values['wkt_search']."',4326))";
+			$tmp="EXISTS(SELECT 1 FROM fct_rmca_get_gtu_by_geometry(ST_SETSRID(ST_GEOMFROMTEXT('".$values['wkt_search']."'),4326)) WHERE s.gtu_ref=id_for_geom)";
             
                 if($this->testGtuIncluded($values)===TRUE)
                 {
@@ -1080,7 +1082,8 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
            {
                 $layer=$key;
                 $val_tmp="'{".implode(",", $val)."}'::integer[]";
-                $sql_block[]="  ST_INTERSECTS(ST_SETSRID(ST_Point(gtu_location[1], gtu_location[0]),4326),(SELECT rmca_get_wfs_geom('wfs.".$layer."', ".$val_tmp.")))"; 
+                //$sql_block[]="  ST_INTERSECTS(ST_SETSRID(ST_Point(gtu_location[1], gtu_location[0]),4326),(SELECT rmca_get_wfs_geom('wfs.".$layer."', ".$val_tmp.")))"; 
+				$sql_block[]="  EXISTS(SELECT 1 FROM fct_rmca_get_gtu_by_geometry((SELECT rmca_get_wfs_geom('wfs.".$layer."', ".$val_tmp."))) WHERE s.gtu_ref=id_for_geom)"; 
            }
            $wfs_sql = implode(" OR ", $sql_block );
            
@@ -2213,6 +2216,25 @@ $query = DQ::create()
     if ($values['litho_level_ref'] != '') $query->andWhere('litho_level_ref = ?', intval($values['litho_level_ref']));
     if ($values['lithology_level_ref'] != '') $query->andWhere('lithology_level_ref = ?', intval($values['lithology_level_ref']));
     if ($values['mineral_level_ref'] != '') $query->andWhere('mineral_level_ref = ?', intval($values['mineral_level_ref']));
+	
+	
+	if ($values['related_ref']!= '')
+	{
+
+		$array_linked=Doctrine_Core::getTable('SpecimensRelationships')->getAllRelated($values['related_ref']);
+		
+		$array_linked_str=Array();
+		foreach($array_linked as $key=>$row)
+		{
+			if(is_int($row[0]))
+			{
+				$array_linked_str[]=$row[0];			
+			}
+		}
+		
+		$array_linked_str="{".implode(",",$array_linked_str)."}";
+		$query->andWhere(" s.id = ANY ('".$array_linked_str."'::integer[])");
+    }
     $this->addLatLonColumnQuery($query, $values);
     $this->addNamingColumnQuery($query, 'expeditions', 'expedition_name_indexed', $values['expedition_name'],'s','expedition_name_indexed');
 

@@ -14,8 +14,8 @@ abstract class BaseTemporalInformationFormFilter extends DarwinModelFormFilter
   {
     parent::setupInheritance();
 
-    $this->widgetSchema   ['gtu_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Gtu'), 'add_empty' => true));
-    $this->validatorSchema['gtu_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Gtu'), 'column' => 'id'));
+    $this->widgetSchema   ['gtu_ref'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['gtu_ref'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
 
     $this->widgetSchema   ['specimen_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Specimens'), 'add_empty' => true));
     $this->validatorSchema['specimen_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Specimens'), 'column' => 'id'));
@@ -43,7 +43,7 @@ abstract class BaseTemporalInformationFormFilter extends DarwinModelFormFilter
   public function getFields()
   {
     return array_merge(parent::getFields(), array(
-      'gtu_ref' => 'ForeignKey',
+      'gtu_ref' => 'Number',
       'specimen_ref' => 'ForeignKey',
       'from_date_mask' => 'Number',
       'from_date' => 'Text',

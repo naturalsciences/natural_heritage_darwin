@@ -1,0 +1,10 @@
+.svn
+/web/uploads/*
+/cache/*
+/log/*
+/web/*_dev.php
+/uploads/*
+/config/database.yml
+/config/darwin.yml
+/config/rsync_exclude.txt
+/config/git_rsync_help.txt

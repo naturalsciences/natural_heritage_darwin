@@ -19,8 +19,15 @@ all:
     domain_disable_menu: http://collections.naturalsciences.be/darwin/
 	root_url_darwin: https://darwin.naturalsciences.be
     root_url_wfs: https://darwin.naturalsciences.be/geoserver/
+	root_url_uuid: https://darwin.naturalsciences.be/darwin/search/view/uuid/
 	php_console: 'php7'
-    
+	wfs_layers: 
+      rbins_natural_earth_adm: "Natural Earth Administrative"
+      bins_natural_earth_physical: "Natural Earth Physical"
+      rbins_osm: "Open Street Map"
+ 
+ 
+  
   mailer:
     sender: your_send_email@example.com
 

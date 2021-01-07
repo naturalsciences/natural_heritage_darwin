@@ -2,7 +2,7 @@
 <?php slot('title', __('CollectionsStatistics'));  ?>
 <?php include_stylesheets_for_form($form) ?>
 <?php include_javascripts_for_form($form) ?>
-<div class="page" style="border:solid;">
+<div class="page" >
   <h1><?php echo __('Collection statistics');?></h1>
   <div style="text-align:right;">
     <input type="button" href="<?php echo url_for("collection/display_all_statistics_csv");?>" target="_blank" class="search_submit edition" name="search_csv" id="search_csv" value="<?php echo __('Get tab file'); ?>"/>
