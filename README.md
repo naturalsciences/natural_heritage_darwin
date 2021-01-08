@@ -44,6 +44,7 @@ https://darwin.naturalsciences.be/public_dev.php/json/Get_collection_detail?id={
   - method **SaveEmbeddedForms** is replaced by **SaveObjectEmbeddedForms** in forms (different signature but same content). https://github.com/FriendsOfSymfony1/symfony1/issues/103
   - initialisation of the project in **./config/ProjectConfiguration.class.php** is different. The **configureDoctrine** method is replaced by **configureDoctrineEvent**) : https://github.com/FriendsOfSymfony1/symfony1/issues/42
   - the "classic" PHP libraries are required (pdo, xml, xsl, json, ...), but please install **php-apcu** and **php-apcu-bc** (backward compatiability with the old apc API) for the Symfony cache
+  -  required PostgreSQL packages : the PostgreSQL module for **Python 3** ( postgresql-plpython3-\*), **postgis** version >= 2.5, **hstore**, **pg_trgm**, **fuzzystrmatch** and optinnaly **file_fdw** to ease migration from legacy system 
   
 **Configuration of PostgreSQL**
 
