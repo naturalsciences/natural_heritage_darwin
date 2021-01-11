@@ -135,6 +135,16 @@
                   <?php echo link_to(image_tag('duplicate.png', array("title" => __("Duplicate"))),$searchForm->getValue('table').'/new?duplicate_id='.$item->getId(),array('target'=>"_blank"));?>
 				  <?php if($searchForm->getValue('table')=="taxonomy"):?>
 					 <?php echo link_to(image_tag('csv.png', array("title" => __("File export"))),$searchForm->getValue('table').'/downloadTaxon?taxon_ref='.$item->getId(),array('target'=>"_blank"));?>
+					  <?php preg_match('/(.+?)([A-Z]|\(|$)/', $item->getName(), $matches);
+					  if(count($matches)>1)
+					  {
+						echo link_to("GBIF","https://www.gbif.org/fr/species/search?q=".$matches[1],array('target'=>"_blank"));
+					  }
+					  else
+					  {
+						  echo link_to("GBIF","https://www.gbif.org/fr/species/search?q=". $item->getName(),array('target'=>"_blank"));						  
+					  }
+					  ?>
 				  <?php endif;?>
                 <?php endif ; ?>
               <?php else:?>
