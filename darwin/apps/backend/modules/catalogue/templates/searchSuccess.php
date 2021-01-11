@@ -138,11 +138,11 @@
 					  <?php preg_match('/(.+?)([A-Z]|\(|$)/', $item->getName(), $matches);
 					  if(count($matches)>1)
 					  {
-						echo link_to("GBIF","https://www.gbif.org/fr/species/search?q=".$matches[1],array('target'=>"_blank"));
+						echo link_to("GBIF","https://www.gbif.org/species/search?q=".$matches[1],array('target'=>"_blank"));
 					  }
 					  else
 					  {
-						  echo link_to("GBIF","https://www.gbif.org/fr/species/search?q=". $item->getName(),array('target'=>"_blank"));						  
+						  echo link_to("GBIF","https://www.gbif.org/species/search?q=". $item->getName(),array('target'=>"_blank"));						  
 					  }
 					  ?>
 				  <?php endif;?>
