@@ -30,6 +30,10 @@
         <th><?php echo __("CITES : ");?></th>
         <td><?php echo $form['taxonomy_cites'];?></td>
     </tr>
+	<tr>
+        <th><?php echo __("Determination status : ");?></th>
+        <td><?php echo $form['determination_status'];?></td>
+    </tr>
   </tbody>
 </table>
 

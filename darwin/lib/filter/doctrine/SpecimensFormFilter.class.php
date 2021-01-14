@@ -977,6 +977,17 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 	 $this->widgetSchema['publication_ref']->setLabel("Publication");
    
     $this->validatorSchema['publication_ref'] = new sfValidatorPass(); //Avoid duplicate the query
+	
+	$this->widgetSchema['determination_status'] = new sfWidgetFormDarwinDoctrineChoice(array(
+      'model' => 'Identifications',
+      'add_empty'=> true,
+        'table_method' => Array('method'=> 'getDistinctDeterminationStatus', 'parameters' => array(/*$this->options['ref_relation']*/)),
+		'method' => 'getDeterminationStatus',
+        'key_method' => 'getDeterminationStatus',
+		'multiple'=> true
+    ), array("size"=>5));
+	
+	$this->validatorSchema['determination_status'] = new sfValidatorPass();
   
   }
 
@@ -2407,6 +2418,7 @@ $query = DQ::create()
    	$this->addInstitutionIdentifierQuery($query,   $values["institution_protocol"], $values["institution_identifier"]);
 	$this->addPeopleIdentifierQuery($query, $values["people_protocol"], $values["people_identifier"],$values["people_identifier_role"]);
     $this->addBibliography($query,   $values["publication_ref"], $values["publication_ref"]);
+	$this->addDeterminationStatus($query, $values["determination_status"], $values["determination_status"]);
     $query->limit($this->getCatalogueRecLimits());
 
     return $query;
@@ -2621,6 +2633,31 @@ $query = DQ::create()
         }	
     return false;
   }
+  
+   public function addDeterminationStatus($query, $field, $val)
+  { 
+
+	$statuses=Array();
+	$i=0;
+    if(count($field)>0)
+	{
+		foreach($field as $tmp)
+		{
+			if(strlen(trim($tmp))>0)
+			{
+				  $statuses[]='"'.str_replace("'","''", (str_replace("\"","\\\"", str_replace("\\","\\\\", $tmp )))).'"';
+				  $i++;
+			}
+			
+		}
+		if($i>0)
+		{
+			$query->andWhere("EXISTS (SELECT f.id FROM Identifications f WHERE f.referenced_relation='specimens' AND f.record_id=s.id AND TRIM(lower(f.determination_status)) = ANY ('{".implode(",", $statuses)."}'))" ) ;
+		}
+	}
+    return $query ;
+  }
+  
 
   public function getJavaScripts()
   {

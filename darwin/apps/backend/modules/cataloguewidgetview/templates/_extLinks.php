@@ -9,6 +9,25 @@
     </tr>
   </thead>
   <tbody>
+   <tbody>
+  <?php if($table=="taxonomy"):?>
+	  <tr>
+	    <td>
+          <?php preg_match('/(.+?)([A-Z]|\(|$)/', $taxon->getName(), $matches);
+					  if(count($matches)>1)
+					  {
+						echo link_to($taxon->getName(),"https://www.gbif.org/species/search?q=".$matches[1],array('target'=>"_blank"));
+					  }
+					  else
+					  {
+						  echo link_to($taxon->getName(),"https://www.gbif.org/species/search?q=". $taxon->getName(),array('target'=>"_blank"));						  
+					  }
+					  ?>
+        </td>
+		<td><?php echo __('GBIF link');?></td>
+      </tr>
+	  </tr>
+	  <?php endif;?>
   <?php foreach($links as $link):?>
   <tr>
     <td>
