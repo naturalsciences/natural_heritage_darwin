@@ -340,4 +340,14 @@ class ClassificationSynonymiesTable extends DarwinTable
 	  }
 	  return $merged;
   }
+  
+    public function getOldSynonymies($id)
+  {
+	  $conn = Doctrine_Manager::connection();
+	  $sql = "select * FROM fct_rmca_taxonomy_get_old_synonyms(:id) order by modification_date_time desc;";
+	  $q = $conn->prepare($sql);
+	  $q->execute(array(':id'=> $id));
+	  $response = $q->fetchAll(PDO::FETCH_ASSOC);
+	  return $response;
+  }
 }

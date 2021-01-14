@@ -17,12 +17,17 @@ class cataloguewidgetViewComponents extends sfComponents
   }
 
   public function executeComment()
-  {
+  { 
+	
     $this->comments =  Doctrine_Core::getTable('Comments')->findForTable($this->table, $this->eid);
   }
 
   public function executeExtLinks()
   {
+	  if($this->table == 'taxonomy')
+    {
+      $this->taxon = Doctrine_Core::getTable('Taxonomy')->find($this->eid);  
+	}
     $this->links =  Doctrine_Core::getTable('ExtLinks')->findForTable($this->table, $this->eid);
   }
   
