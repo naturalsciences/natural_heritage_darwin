@@ -90,6 +90,24 @@
           <div class="warn_message ref_name button hidden" id="taxonomy_parent_ref_warning"><?php echo __('The parenty does not follow the possible upper level rule');?></div>
         </td>
       </tr>
+	  <?php if(sfContext::getInstance()->getActionName()=="edit"):?>
+	  <tr>
+	
+	  <td>
+		<?php echo image_tag('magnifier.gif');?>
+          <?php preg_match('/(.+?)([A-Z]|\(|$)/', $form->getObject()->getName(), $matches);
+					  if(count($matches)>1)
+					  {
+						echo link_to("Search this Taxonomic Unit on GBIF",sfConfig::get('dw_gbif_url').$matches[1],array('target'=>"_blank"));
+					  }
+					  else
+					  {
+						  echo link_to("Search this Taxonomic Unit on GBIF", sfConfig::get('dw_gbif_url'). $taxon->getName(),array('target'=>"_blank"));						  
+					  }
+					  ?><?php echo image_tag('gbif_small');?>
+        </td>
+	  </tr>
+	  <?php endif;?>
     </tbody>
     <tfoot>
       <tr>

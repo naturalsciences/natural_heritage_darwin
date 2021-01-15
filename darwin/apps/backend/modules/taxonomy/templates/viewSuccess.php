@@ -66,7 +66,7 @@ $(document).ready(function ()
         </td>
       </tr>
       <tr>
-        <td colspan="2"><?php echo image_tag('magnifier.gif');?> <?php echo link_to(__('Search related specimens'),'specimensearch/search', array('class'=>'link_to_search'));?>
+        <td colspan="2"><?php echo image_tag('magnifier.gif');?> <?php echo link_to(__('Search related specimens in Darwin'),'specimensearch/search', array('class'=>'link_to_search'));?>
 <script type="text/javascript">
   $(document).ready(function (){
     search_data = <?php echo json_encode(array('specimen_search_filters[taxa_list]' => $taxon->getId(), 'specimen_search_filters[taxon_relation]' => 'equal' ));?>;
@@ -77,6 +77,24 @@ $(document).ready(function ()
   });
 </script></td>
       </tr>
+	  
+	  <tr>
+	
+	  <td>
+		<?php echo image_tag('magnifier.gif');?>
+          <?php preg_match('/(.+?)([A-Z]|\(|$)/', $taxon->getName(), $matches);
+					  if(count($matches)>1)
+					  {
+						echo link_to("Search this Taxonomic Unit on GBIF",sfConfig::get('dw_gbif_url').$matches[1],array('target'=>"_blank"));
+					  }
+					  else
+					  {
+						  echo link_to("Search this Taxonomic Unit on GBIF",sfConfig::get('dw_gbif_url'). $taxon->getName(),array('target'=>"_blank"));						  
+					  }
+					  ?><?php echo image_tag('gbif_small');?>
+        </td>
+	  </tr>
+
       <?php if($sf_user->isAtLeast(Users::ENCODER)):?>
         <tr><td colspan="2"><?php echo image_tag('edit.png');?> <?php echo link_to(__('Edit this item'),'taxonomy/edit?id='.$taxon->getId());?></td></tr>
       <?php endif;?>

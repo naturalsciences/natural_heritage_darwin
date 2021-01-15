@@ -5,7 +5,7 @@
 -- Dumped from database version 9.6.15
 -- Dumped by pg_dump version 13.0
 
--- Started on 2021-01-14 20:46:38
+-- Started on 2021-01-15 16:13:01
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -13508,7 +13508,7 @@ DECLARE
   taxon_name varchar;
   go_upd boolean;
 BEGIN
-RAISE NOTICE '1';
+--RAISE NOTICE '1';
 
    	  SELECT COALESCE(get_setting('darwin.userid'),'0')::integer INTO user_id;
 	  /*IF user_id = 0 OR  user_id = -1 THEN
@@ -13533,10 +13533,10 @@ RAISE NOTICE '1';
 	     user_name,
 	     taxon_name,
 		 TG_OP;
-	     RAISE NOTICE '5';
+	     --RAISE NOTICE '5';
   
 
-    RAISE NOTICE '7';
+    --RAISE NOTICE '7';
 	RETURN NULL;
 	
 END;
@@ -64542,16 +64542,16 @@ ALTER TABLE ONLY darwin2.tags
 
 
 --
--- TOC entry 6893 (class 2606 OID 5153312)
+-- TOC entry 6894 (class 2606 OID 6073344)
 -- Name: taxonomy_authority fk_taxon; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
 ALTER TABLE ONLY darwin2.taxonomy_authority
-    ADD CONSTRAINT fk_taxon FOREIGN KEY (taxonomy_ref) REFERENCES darwin2.taxonomy(id);
+    ADD CONSTRAINT fk_taxon FOREIGN KEY (taxonomy_ref) REFERENCES darwin2.taxonomy(id) ON DELETE CASCADE;
 
 
 --
--- TOC entry 6894 (class 2606 OID 5153317)
+-- TOC entry 6893 (class 2606 OID 5153317)
 -- Name: taxonomy_authority fk_taxonomy_authority_domain_id; Type: FK CONSTRAINT; Schema: darwin2; Owner: darwin2
 --
 
@@ -67079,7 +67079,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA darwin2 REVOKE ALL ON TABLE
 ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA darwin2 GRANT ALL ON TABLES  TO darwin2;
 
 
--- Completed on 2021-01-14 20:49:02
+-- Completed on 2021-01-15 16:15:34
 
 --
 -- PostgreSQL database dump complete

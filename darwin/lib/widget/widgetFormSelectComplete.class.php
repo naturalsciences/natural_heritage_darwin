@@ -41,8 +41,8 @@ class widgetFormSelectComplete extends sfWidgetFormDarwinDoctrineChoice
         $add_class=' hidden';
         $pick_class='';
       }
-      $widget .= '<div class="add_item_button'. $add_class .'">'.$this->renderTag('img',array('src'=>'/images/add_green.png', 'alt'=>'+')).'<span>'.__($this->getOption('add_label')).'</span></div>';
-      $widget .= '<div class="change_item_button'. $pick_class .'">'.$this->renderTag('img',array('src'=>'/images/refresh_green.png', 'alt'=>'+')).'<span>'.__($this->getOption('change_label')).'</span></div>';
+      $widget .= '<div class="add_item_button'. $add_class .'"><span>'.__($this->getOption('add_label')).'&nbsp;</span>'.$this->renderTag('img',array('src'=>'/images/add_green.png', 'alt'=>'+')).'</div>';
+      $widget .= '<div class="change_item_button'. $pick_class .'"><span>'.__($this->getOption('change_label')).'&nbsp;</span>'.$this->renderTag('img',array('src'=>'/images/refresh_green.png', 'alt'=>'+')).'</div>';
       $widget .= '</div>';
       
       $widget .=  sprintf(<<<EOF
