@@ -23,7 +23,7 @@
         </td>
         <td>
           <div class="search_name">
-            <?php echo link_to($search->getName(),'specimensearch/search?search_id='.$search->getId(),array('title'=>__('Go to your search')) ); ?>
+            <?php echo link_to($search->getName(),'specimensearch/search?search_id='.$search->getId(),array('title'=>__('Go to your search'), "target"=>"_blank") ); ?>
             <?php if($is_only_spec):?>
               <span class="saved_count">(<?php echo format_number_choice('[0] No Items|[1] 1 Item |(1,+Inf] %1% Items', array('%1%' =>  $search->getNumberOfIds()), $search->getNumberOfIds());?>)</span>
             <?php endif;?>

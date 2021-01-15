@@ -82,7 +82,7 @@
     <td class="col_taxon">
       <?php if($specimen->getTaxonRef() > 0) : ?>
         <?php echo image_tag('info.png',"title=info class=info id=taxon_".$specimen->getId()."_info");?>
-        <a href="<?php echo url_for('taxonomy/'.$action.'?id='.$specimen->getTaxonRef());?>"><?php echo $specimen->getTaxonName();?></a>
+        <a target="_blank" href="<?php echo url_for('taxonomy/view?id='.$specimen->getTaxonRef());?>"><?php echo $specimen->getTaxonName();?></a>
 		<!--JMHerpers 2019 05 29-->
 		<!-- ?php if($specimen->getCites() == TRUE ) : ?> 
 			&nbsp;<B><font size="4" color="red">(CITES!!)</font></B>

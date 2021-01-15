@@ -22,10 +22,6 @@ class cataloguewidgetComponents extends sfComponents
   
   public function executeExtLinks()
   {
-    if($this->table == 'taxonomy')
-    {
-      $this->taxon = Doctrine_Core::getTable('Taxonomy')->find($this->eid);  
-	}
     $this->links =  Doctrine_Core::getTable('ExtLinks')->findForTable($this->table, $this->eid);
   }  
 
