@@ -8,9 +8,11 @@ fi
 
 FILE=$1
 OUTPUT=$2
+TMP=${OUTPUT}_WORK
 echo "Go $1"
 cp $1 $2
 
+sed -i "s/$(echo -e "\x96")/û/g" $2
 sed -i "s/$(echo -e "\x90")/É/g" $2
 sed -i "s/$(echo -e "\x91")/AE/g" $2
 sed -i "s/$(echo -e "\x93")/ô/g" $2
@@ -34,4 +36,17 @@ sed -i "s/$(echo -e "\x88")/ê/g" $2
 sed -i "s/$(echo -e "\x8A")/è/g" $2
 sed -i "s/$(echo -e "\x8B")/ï/g" $2
 sed -i "s/$(echo -e "\x8C")/î/g" $2
+tr  "$(echo -e "\x0F")" "\r" < $2 > ${TMP}
+cp  ${TMP} $2
+tr -s "\n" < $2 > ${TMP}
+cp  ${TMP} $2
+
+#tr  "$(echo -e "\x0D")$(echo -e "\x3B")" "$(echo -e "\x0D")" < $2 > ${TMP}
+#cp  ${TMP} $2
+
+tr -d "\n"  < $2 > ${TMP}
+cp  ${TMP} $2
+rm  ${TMP}
+
+
 echo "Done $2"
