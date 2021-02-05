@@ -76,7 +76,7 @@ $(document).ready(function ()
       </tr>
       <!--ftheeten 2017 07 06-->
       <tr>
-        <th><?php echo $form['specimen_taxonomy_ref']->renderLabel() ?> :</th>
+        <th><?php echo $form['specimen_taxonomy_ref']->renderLabel() ?> :<br/><p style="font-weight:normal;">Please provide the phylum as higher rank (no domain or kingdom)</p></th>
         <td>
           <?php echo $form['specimen_taxonomy_ref']->renderError() ?>
           <?php echo $form['specimen_taxonomy_ref'] ?>

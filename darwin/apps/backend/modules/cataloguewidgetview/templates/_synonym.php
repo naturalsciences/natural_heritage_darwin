@@ -17,6 +17,7 @@
           <thead>
             <tr>
         <th><?php echo __('Name');?></th>
+		<th><?php echo __('Synonymized from');?></th>
         <th>
           <?php if($group_name == 'rename'):?>
             <?php echo __('Current');?>
@@ -55,6 +56,11 @@
           });
           </script>
         </td>
+		<td>
+				<?php if($synonym['synonym_record_id']==$eid): ?><b><?php endif;?>
+			    <?php  print($synonym['synonym_record_name']); ?>
+				<?php if($synonym['synonym_record_id']==$eid): ?></b><?php endif;?>
+			  </td>	
         <td class="basio_cell">
           <?php if($group_name != "homonym"):?>
             <?php if($synonym['is_basionym']) echo image_tag('checkbox_checked.png') ; else echo image_tag('checkbox_unchecked.png') ;?>
@@ -70,30 +76,3 @@
     <?php endforeach;?>
   </tbody>
 </table>
-<?php $old_synonyms= Doctrine_Core::getTable('ClassificationSynonymies')->getOldSynonymies( $eid);?>
-<?php if(count($old_synonyms)>0): ?>
-<div>
-<p style="font-style : italic; font-weight: bold;margin-top:15px;margin-bottom:15px;">Old synonyms :</p>
-<table class="catalogue_table">
-  <thead>
-    <tr>
-	  <th><?php echo __('Action');?></th>
-      <th><?php echo __('Name');?></th>
-      <th><?php echo __('Creation date');?></th>
-	  <th><?php echo __('User');?></th>
-    </tr>
-  </thead>
-  <tbody>
-    <?php foreach($old_synonyms as $key => $value):?>
-		<tr>
-			<td><?php print($value["action"]); ?></td>
-			<td><a target="_blank" href="<?php echo url_for('taxonomy/view?id='.$value['taxon_id']);?>" title="<?php echo __('To name') ?>" ><?php print($value["taxon_name"]); ?></a></td>
-			<td><?php print($value["modification_date_time"]); ?></td>
-			<td><?php print($value["user_name"]); ?></td>
-		</tr>
-	<?php endforeach;?>
-  </tbody>
-	
-</table>
-</div>
-<?php endif;?>

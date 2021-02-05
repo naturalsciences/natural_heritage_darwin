@@ -78,7 +78,7 @@ class ClassificationSynonymiesTable extends DarwinTable
       return array();
 
     $q = Doctrine_Query::create()
-      ->select('s.group_name, s.id, s.record_id, s.group_id, s.is_basionym, s.order_by, t.name, t.id ' .
+      ->select('s.group_name, s.id, s.record_id, s.group_id, s.is_basionym, s.order_by, s.synonym_record_id, t.name, t.id ' .
         ($table_name=='taxonomy' ? ', t.extinct' : '') )
       ->from('ClassificationSynonymies s, '.DarwinTable::getModelForTable($table_name). ' t')
       ->where('s.referenced_relation = ?',$table_name) //Not really necessay but....
@@ -93,10 +93,17 @@ class ClassificationSynonymiesTable extends DarwinTable
     {
       $catalogue = DarwinTable::getModelForTable($table_name);
       $cRecord = new $catalogue();
-      $cRecord->setName($item[6]);
-      $cRecord->setId($item[7]);
+      $cRecord->setName($item[7]);
+      $cRecord->setId($item[8]);
+	  $original_name="";
+	  if(is_numeric($item[6]))
+	  {
+		  
+		$original_name=Doctrine_Core::getTable($table_name)->findOneById($item[6])->getName();
+		
+      }
       if($table_name=='taxonomy')
-        $cRecord->setExtinct($item[8]);
+        $cRecord->setExtinct($item[9]);
 
       //group_name 
       if(! isset($results[$item[0]]) )
@@ -108,6 +115,8 @@ class ClassificationSynonymiesTable extends DarwinTable
         'is_basionym' => $item[4],
         'order_by' => $item[5],
         'ref_item' => $cRecord,
+		'synonym_record_id' => $item[6],
+		'synonym_record_name' => $original_name
       );
     }
     return $results;
@@ -230,6 +239,7 @@ class ClassificationSynonymiesTable extends DarwinTable
       $c1->setReferencedRelation($table);
       $c1->setGroupName($group_name);
       $c1->setRecordId($record_id_2);
+	  $c1->setSynonymRecordId($record_id_2);
 
       if($ref_group_id_1 == 0 && $ref_group_id_2 == 0) //If there is no group
       {

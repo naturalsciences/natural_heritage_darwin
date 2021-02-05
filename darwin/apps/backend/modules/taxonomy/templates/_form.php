@@ -91,6 +91,28 @@
         </td>
       </tr>
 	  <?php if(sfContext::getInstance()->getActionName()=="edit"):?>
+	        <tr>
+					<td colspan="2"><?php echo image_tag('magnifier.gif');?> <?php echo link_to(__('Search related specimens'),'specimensearch/search', array('class'=>'link_to_search'));?>
+			 with child <input type="checkbox" name="child_taxa" id="child_taxa" checked> with synonyms <input type="checkbox" name="syno_taxa" id="syno_taxa" checked>
+			<script type="text/javascript">
+			  $(document).ready(function (){
+				
+				$('.link_to_search').click(function (event){
+					search_data = <?php echo json_encode(array('specimen_search_filters[taxa_list]' => $form->getObject()->getId(), 'specimen_search_filters[taxon_relation][0]' => 'equal' ));?>;
+					if($("#child_taxa").is(':checked'))
+					{
+						search_data["specimen_search_filters[taxon_relation][1]"]="child";
+					}
+					if($("#syno_taxa").is(':checked'))
+					{
+						search_data["specimen_search_filters[taxon_relation][2]"]="synonym";
+					}
+				  event.preventDefault();
+				  postToUrl($(this).attr('href'), search_data, true);
+				});
+			  });
+			</script></td>
+      </tr>
 	  <tr>
 	
 	  <td>
