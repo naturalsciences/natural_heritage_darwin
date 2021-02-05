@@ -144,6 +144,7 @@ $(document).ready(function () {
 				tokenSeparators: [';'],
 				  ajax: {
 				    //url: getCodeUrl(),
+					delay: 1000,
                     transport: function (params, success, failure) {                        
                        
                         if(params.data.term.length>=3)

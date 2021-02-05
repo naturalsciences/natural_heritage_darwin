@@ -7439,7 +7439,7 @@
       </trans-unit>      
       <trans-unit id="1837">
         <source>catalogue_search_tips</source>
-        <target>Utilisez le caractère ^ pour une recherche &quot;commence par&quot; (ex: ^falco)</target>
+        <target>Utilisez le caractère * pour une recherche &quot;contenant&quot; (ex: *falco)</target>
                 
       </trans-unit>
       <trans-unit id="1838">

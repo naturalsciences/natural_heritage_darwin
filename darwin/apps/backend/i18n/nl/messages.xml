@@ -7439,7 +7439,7 @@ Indien ja, dan kunt u zien wanneer het werd uitgeleend en wanneer het teruggebra
       </trans-unit>      
       <trans-unit id="1837">
         <source>catalogue_search_tips</source>
-        <target>Gebruik het karakter ^ om een &quot;Begint met&quot; opzoeking te starten (bv. ^falco)</target>
+        <target>Gebruik het karakter * om een &quot;Bevat&quot; opzoeking te starten (bv. *falco)</target>
                 
       </trans-unit>
       <trans-unit id="1838">

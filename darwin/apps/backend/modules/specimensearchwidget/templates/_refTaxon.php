@@ -13,7 +13,7 @@
   </thead>
   <tbody>
     <tr id="taxon_full_text_line" class="hidden">
-      <td><?php echo $form['taxon_name'];?></td>
+      <td><div>* as wildcard (begin and end). eg : Bulli*</div><?php echo $form['taxon_name'];?></td>
       <td><?php echo $form['taxon_level_ref'];?></td>
     </tr>
     <tr id="taxon_precise_line">

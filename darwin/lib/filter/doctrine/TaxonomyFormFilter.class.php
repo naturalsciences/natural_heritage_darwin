@@ -156,8 +156,15 @@ class TaxonomyFormFilter extends BaseTaxonomyFormFilter
     
     if ($values['name'] != '')
     {
-     $query->andWhere("  name_indexed LIKE  fulltoindex(?)||'%' ", $values['name']);
-    }
+	 if(substr( $values['name'],0,1)=="*")
+	 {
+		 $query->andWhere("  name_indexed LIKE  '%'||fulltoindex(?)||'%' ", $values['name']);
+	 }
+	 else
+	 {
+		$query->andWhere("  name_indexed LIKE  fulltoindex(?)||'%' ", $values['name']);
+	 }
+	}
 
 	//JMHerpers 2019 04 29
 	if ($values['cites'] != ''){

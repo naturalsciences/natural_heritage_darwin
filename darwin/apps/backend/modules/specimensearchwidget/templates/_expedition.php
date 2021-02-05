@@ -6,7 +6,7 @@
   </thead>
   <tbody>
     <tr>
-      <td><?php echo $form['expedition_name']->render() ?></td>
+      <td><div>* as wildcard (begin and end). eg : *polar*</div><?php echo $form['expedition_name']->render() ?></td>
     </tr>
   </tbody>
 </table>

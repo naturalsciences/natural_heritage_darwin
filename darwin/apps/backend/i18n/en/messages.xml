@@ -5960,7 +5960,7 @@ DaRWIN</target>
       </trans-unit>      
       <trans-unit id="1837">
         <source>catalogue_search_tips</source>
-        <target>Use the character ^ for a "Start with" search (eg: ^falco)</target>        
+        <target>Use the character * for a "containing" search (eg: *falco)</target>        
       </trans-unit>
       <trans-unit id="1838">
         <source>Barcode</source>

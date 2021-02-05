@@ -1,4 +1,7 @@
 <?php
+require_once(__DIR__."/../file_models/Encoding.php");
+use \ForceUTF8\Encoding;
+
 class RMCATabImportFiles
 {
 	protected $headers=Array();
@@ -13,7 +16,7 @@ class RMCATabImportFiles
 
     protected $parsed_fields=Array();   
 	
-	public function __construct($p_configuration, $p_import_id, $p_collection_of_import, $p_zip)
+	public function __construct($p_configuration, $p_import_id, $p_collection_of_import, &$p_zip)
     {
 		$this->configuration = $p_configuration;
 		$this->import_id = $p_import_id ;
@@ -158,66 +161,88 @@ class RMCATabImportFiles
 	protected function logThrowError($ex, $message)
 	{
 		$import_obj = Doctrine_Core::getTable('Imports')->find($this->import_id );
-		$import_obj->setErrorsInImport($message);
+		$import_obj->setErrorsInImport(Encoding::toUTF8($message));
 		$import_obj->setState("error");
 		$import_obj->setWorking(FALSE);
 		$import_obj->save();
 		throw $ex;
 	}
+
+  public function changeUri($record_id, $relation,$uri)
+  {
+    $this->checkUploadPathAvailable($record_id, $relation) ;
+    rename(
+      sfConfig::get('sf_upload_dir')."/multimedia/temp/".$uri,
+      sfConfig::get('sf_upload_dir')."/multimedia/".$this->getBuildedUrl($record_id, $relation,$uri)
+    );
+   return $this->getBuildedUrl($record_id, $relation,$uri) ;
+  }
+  
+  protected function checkUploadPathAvailable($record_id, $relation)
+  {
+    //function used to verify if the folder for the uploaded file exists
+    $path = sfConfig::get('sf_upload_dir')."/multimedia/".$this->getBuildedDir($record_id, $relation);
+    if(!is_dir($path)) mkdir($path,0750,true) ;
+    return true;
+  }
+
+
+ public function getBuildedUrl($record_id, $relation,$uri)
+  {
+    return $this->getBuildedDir($record_id, $relation).'/'.$uri;
+  }
+
+  public function getBuildedDir($record_id, $relation)
+  {
+    //Make something like multimedia/00/01/01/12  for the multimed of id= 10112
+    $num = sprintf('%08d', $record_id);
+    return $relation.'/'.implode('/',str_split($num,'2'));
+  }
+	
 	public function create_multimedia($p_filename, $p_record_id, $p_title=NULL, $p_description=NULL, $p_sub_type=NULL, $p_mime_type=NULL, $p_technical_parameters=NULL, $p_internet_protocol=NULL, $p_field_observations=NULL, $p_external_uri=NULL)
 	{
 		try
 		{
-				
-								
-					//$ids=Doctrine_Core::getTable('Codes')->getByCodesFull($p_record_id) ;
-					//if(count($ids)>0)
-					//{
-					//foreach($ids as $code) 
-				     //{
-							print($p_filename);
-							$this->zip->extractTo(sfConfig::get('sf_upload_dir')."/multimedia/temp/",$p_filename );
-							print("found\r\n");
-							//$id=$code->getRecordId();
+					
+						
 							
-							$multimedia=new Multimedia();
-							$multimedia->setReferencedRelation("specimens");
-							$multimedia->setFilename($p_filename);
-							$multimedia->setUri($p_filename);
-							$multimedia->setRecordId( $p_record_id);
-							$multimedia->setCreationDate(date('Y-m-d'));
-							$multimedia->setMimeType(mime_content_type(sfConfig::get('sf_upload_dir')."/multimedia/temp/".$p_filename));
+							//rename(sfConfig::get('sf_upload_dir')."/multimedia/temp/".$p_filename, sfConfig::get('sf_upload_dir')."/multimedia/temp/".$target_filename);
+							
+							$code=$this->zip->extractTo(sfConfig::get('sf_upload_dir')."/multimedia/temp/",$p_filename );
+							
+							$mime= mime_content_type(sfConfig::get('sf_upload_dir')."/multimedia/temp/".$p_filename);
+							
+
 							$type= pathinfo(sfConfig::get('sf_upload_dir')."/multimedia/temp/".$p_filename, PATHINFO_EXTENSION);
-							$multimedia->setType(".".$type);
-							if($p_title!==null)
+							//print("TYPE".$type);
+							//$multimedia->setType(".".$type);
+							if($p_description==null)
 							{
-								$multimedia->setTitle($p_title);
+								$p_description=$filename." ".date('Y-m-d'). " (default)";
 							}
-							if($p_description!==null)
-							{
-								$multimedia->setDescription($p_description);
-							}
-							if($p_sub_type!==null)
-							{
-								$multimedia->setSubType($p_sub_type);
-							}
-							if($p_technical_parameters!==null)
-							{
-								$multimedia->setTechnicalParameters($p_technical_parameters);
-							}
-							if($p_internet_protocol!==null)
-							{
-								$multimedia->setInternetProtocol($p_internet_protocol);
-							}
-							if($p_field_observations!==null)
-							{
-								$multimedia->setFieldObservation($p_field_observations);
-							}
-							if($p_external_uri!==null)
-							{
-								$multimedia->setExternalUri($p_external_uri);
-							}
-							$multimedia->save();
+
+							$conn = Doctrine_Manager::connection();
+							$sql= "INSERT INTO multimedia (referenced_relation, filename, uri, record_id, creation_date, mime_type, title, description, type, sub_type, technical_parameters, internet_protocol, field_observations, external_uri, import_ref) 
+													VALUES(:referenced_relation, :filename, :uri, :record_id, :creation_date, :mime_type, :title, :description, :type, :sub_type, :technical_parameters, :internet_protocol, :field_observations, :external_uri, :import_ref); ";
+							$q = $conn->prepare($sql);
+							$q->execute(array(':referenced_relation'=>"specimens", 
+												":filename"=> $p_filename, 
+												":uri"=>  $this->changeUri($p_record_id, "specimens",  $p_filename), 
+												":record_id"=> $p_record_id, 
+												":creation_date"=> date('Y-m-d'), 
+												":mime_type"=>$mime, 
+												":title"=> $p_title, 
+												":description"=> $p_description,
+												":type"=> $type,
+												":sub_type"=> $p_sub_type,
+												":technical_parameters"=> $p_technical_parameters,
+												":internet_protocol"=> $p_internet_protocol,
+												":field_observations"=> $p_field_observations,
+												":external_uri"=> $p_external_uri,
+												":import_ref"=> $this->import_id
+												));
+							
+							//$multimedia->save();
 						//}
 					//}
 					//else
@@ -227,10 +252,16 @@ class RMCATabImportFiles
 		}
 		catch(Doctrine_Exception $ex)
 		{
+			print("EX1");
+			print("MSG");
+			print($ex->getMessage());
+			print("=====================");
+			print($ex->getTraceAsString());
 			$this->logThrowError($ex, $ex->getMessage());
 		}
 		catch(Exception $ex)
 		{
+			print("EX2");
 			$this->logThrowError($ex, $ex->getMessage());
 		}
 		
@@ -238,7 +269,7 @@ class RMCATabImportFiles
 	
 	public function parseLineAndSaveToDB($p_row)
 	  { 
-		print_r($p_row);
+		//print_r($p_row);
 		$this->row=$p_row;
 		$filename=$this->getCSVValue("filename");
 		$unitid=$this->getCSVValue("unitid");
@@ -246,7 +277,7 @@ class RMCATabImportFiles
 		$ids=Array();
 		if($this->isset_and_not_null($uuid ))
 		{
-			print('UUID set\r\n');
+			//print('UUID set\r\n');
 			try
 			{
 				$uuid_rec=Doctrine_Core::getTable('SpecimensStableIds')->findByUuid($uuid) ;
@@ -254,7 +285,7 @@ class RMCATabImportFiles
 				{
 					$ids[]=$rec->getSpecimenRef();
 				}
-				print_r($ids);
+				//print_r($ids);
 				if(count($ids)==0)
 				{
 					$this->logThrowError(new Exception("Record not found uuid : ".$uuid), "Record not found uuid : ".$uuid);
@@ -277,7 +308,7 @@ class RMCATabImportFiles
 				$codes=Doctrine_Core::getTable('Codes')->getByCodesFull($unitid) ;
 				foreach($codes as $rec)
 				{
-					$ids[]=$rec->getRecordId();;
+					$ids[]=$rec->getRecordId();
 				}
 				if(count($ids)==0)
 				{
@@ -296,16 +327,17 @@ class RMCATabImportFiles
 		if( $this->isset_and_not_null($filename )&& count($ids)>0) 
         {
 			
-				print($filename);
+				//print($filename);
 				$file=$this->zip->getFromName($filename);
 				if($file)
 				{
-					print("file found");
+					//print("file found");
 					$title=$filename;
 					$title_tmp=$this->getCSVValue("title");
 					if($this->isset_and_not_null($title_tmp ))
 					{
 						$title=$title_tmp;
+						//print("SET_TITLE\r\n");
 					}
 					
 					$description=NULL;

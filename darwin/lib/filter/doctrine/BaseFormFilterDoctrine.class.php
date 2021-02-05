@@ -76,7 +76,8 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
   * @param string $alias The Alias for the searched table if null the root alias is taken
   * @return Doctrine_Query the modified doctrine query
   */
-  public function addNamingColumnQuery(Doctrine_Query $query, $table, $field, $values, $alias = null, $flat_field = null)
+  
+   public function addNamingColumnQuery(Doctrine_Query $query, $table, $field, $values, $alias = null, $flat_field = null)
   {
     $search = self::splitNameQuery($values);
     $terms = self::getAllTerms($search);
@@ -89,7 +90,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
     unset($search['with']);
     foreach($search as $item) {
       foreach ($item as $search_term) {
-        if(strpos($search_term, '^') === 0) {
+        if(strpos($search_term, '^') === 0 || substr($search_term,0,1)=="*" ) {
           $query->andWhere($alias.'.'.$field." not like fulltoindex(?) || '%' ", $search_term);
         }
         $query->andWhere($alias.'.'.$field." not like '%' || fulltoindex(?) || '%' ", $search_term);
@@ -97,6 +98,8 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
     }
 
   }
+
+
 
   /**
   * Get a searched term and give a string containing all proposition separeted by $separator
@@ -582,7 +585,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
 								$synonyms_2 = Doctrine_Core::getTable('ClassificationSynonymies')->getAllDirectChildSynonyms($item_ref);
 								$super_synonyms=array_merge($synonyms,$synonyms_2 );
 						    }
-                            print("debug");
+                           
 							$super_synonyms=array_unique($super_synonyms);
                             //if(empty($synonyms))
                             //$query->andWhere('0=1'); //False

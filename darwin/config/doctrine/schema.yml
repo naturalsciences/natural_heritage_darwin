@@ -697,6 +697,7 @@ ClassificationSynonymies:
         group_name: {type:string, notnull:true}
         is_basionym: { type: boolean, default: false}
         order_by: { type: integer, notnull: true, default:0}
+        synonym_record_id: { type: integer}
 
 Chronostratigraphy:
     columns:
