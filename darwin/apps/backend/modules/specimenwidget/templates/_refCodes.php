@@ -71,6 +71,16 @@
   <tfoot>
     <tr>
       <td colspan='8'>
+		<?php if(strpos($_SERVER['REQUEST_URI'],'/part_id/')):?>
+            <?php 
+			
+				$matches=Array();
+				preg_match('/.+\/part_id\/([0-9]+)/',$_SERVER['REQUEST_URI'], $matches);			
+				$url_copy = 'specimen/copyCode?id='.$matches[1];
+				?>
+             <div class="add_code" style="visibility:hidden;"> &nbsp;<a href="<?php echo url_for($url_copy);?>/num/" id="copy_code"><?php echo __('Copy code');?></a></div>
+           
+		<?php endif;?>
         <div class="add_code">
           <?php
           if($module == 'specimen') $url = 'specimen/addCode';
@@ -156,6 +166,27 @@ $(document).ready(function () {
         });
         return false;
     });
+	
+    $('#copy_code').click(function()
+    {
+        hideForRefresh('#refCodes');
+        parent_el = $(this).closest('table.property_values');
+        url = $(this).attr('href')+ (0+$(parent_el).find('tbody').length);
+        
+        $.ajax(
+        {
+          type: "GET",
+          url: url,
+          success: function(html)
+          {
+            $(parent_el).append(html);
+            $(parent_el).find('thead:hidden').show();
+            showAfterRefresh('#refCodes');
+          }
+        });
+        return false;
+    });
+    
     
     $("select#<?php echo $module;?>_prefix_separator").change(function()
     {
@@ -242,6 +273,14 @@ $(document).ready(function () {
         return false;
       }
     );
+	
+    <?php if(strpos($_SERVER['REQUEST_URI'],'/part_id/')):?>
+		<?php if(!strpos($_SERVER['REQUEST_URI'],'/create')):?>
+			$('#copy_code').click();
+		<?php endif;?>		
+		$(".class_unicity_check").prop("checked",false);		
+	<?php endif;?>
+
 
 });
 </script>

@@ -177,6 +177,9 @@ class ImportGtuCSV
 		$fields[50]="sampling_notes"; 
         $fields[51]="bounding_box"; 
 		
+		//mista
+		$fields[52]="coast";
+		
 		
         #this would be in the template but in property table in SQL
         
@@ -910,7 +913,7 @@ class ImportGtuCSV
                   $tag_obj->setGroupName("administrative area") ;
                   //$tag_obj->setSubGroupName($name_field) ;
                 }
-                else if (in_array(strtolower($name_field),array("ocean", "sea", "archipelago", "island")))
+                else if (in_array(strtolower($name_field),array("ocean", "sea", "archipelago", "island", "coast")))
                 {
                   $tag_obj->setGroupName("hydrographic") ;
                   //$tag_obj->setSubGroupName($name_field) ;

@@ -87,6 +87,12 @@ class Specimens extends BaseSpecimens
     $name = rtrim($name);
     return $name;
   }
+  
+  public function getNameAndPart()
+  {
+    return $this->getName()." (".$this->getSpecimenPart().')'; 
+  }
+
 
   public function getAggregatedName($sep = ' / ')
   {

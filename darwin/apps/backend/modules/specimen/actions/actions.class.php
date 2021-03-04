@@ -188,6 +188,10 @@ class specimenActions extends DarwinActions
     {
       $specimen = new Specimens() ;
       $duplic = $request->getParameter('duplicate_id','0') ;
+	  if(!$duplic && $request->hasParameter('split_id'))
+	  {
+		  $duplic = $request->getParameter('split_id','0') ;
+	  }
       $specimen = $this->getRecordIfDuplicate($duplic,$specimen,true);
       // set all necessary widgets to visible
       if($request->hasParameter('all_duplicate'))
@@ -234,8 +238,18 @@ class specimenActions extends DarwinActions
           $this->getUser()->setAttribute('callbackMethods', $tab);
           $this->form->setDefault('collecting_methods_list',$tab);
         }
-      }
-      
+		
+		$this->duplicateFlag=true;
+        $this->duplicate_id=$duplic;
+		if($request->hasParameter("part_id"))
+		{
+			if(is_numeric($request->getParameter("part_id")))
+			{
+				$this->part_id=$request->getParameter("part_id");
+				$this->partFlag=true;				
+			}		  
+		}
+      }      
       
     }
     else
@@ -315,7 +329,11 @@ class specimenActions extends DarwinActions
 		
 		
         $specimen = $form->save();
-		if($request->hasParameter("duplicate_id"))
+		if($request->hasParameter("part_id"))
+		{
+			$this->handleRelationsOfDuplicate( $request->getParameter("part_id",-1), $specimen->getId(), "part_of");
+		}
+		elseif($request->hasParameter("duplicate_id"))
 		{
 			if($request->getParameter("keep_duplicate","off")=="on")
 			{
@@ -717,23 +735,41 @@ class specimenActions extends DarwinActions
         return $this->renderText($this->specimen->getXMLDataCite());
    }
    
-  protected function handleRelationsOfDuplicate($src_id, $dest_id)
+  protected function handleRelationsOfDuplicate($src_id, $dest_id,$relationship_type="duplicated_from" )
   {
         
                         if($src_id!='-1'&&$dest_id!='-1')
                         {
-                           $relationship_type="duplicated_from";
-                           $sql = "INSERT INTO specimens_relationships (specimen_ref, relationship_type, unit_type, specimen_related_ref) VALUES (:dest, :type, 'specimens', :src)";
-				
-                            $conn = Doctrine_Manager::connection();
-                            $q = $conn->prepare($sql);
-                            $q->execute(
-                                    array(
-                                        ':dest' =>$dest_id,
-                                        ':type' =>$relationship_type,
-                                         ':src' => $src_id
-                                        ));
+							$obj=new SpecimensRelationships();
+							$obj->setUnitType("specimens");
+							$obj->setRelationshipType($relationship_type);
+							$obj->setSpecimenRef($dest_id);
+							$obj->setSpecimenRelatedRef($src_id);
+							$obj->save();
+							
                         }
                   
   }
+  
+  
+  public function executeCopyCode(sfWebRequest $request)
+  {
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
+	 $number = intval($request->getParameter('num'));
+    $form = $this->getSpecimenForm($request);
+	$testVal=$request->getParameter('id', null);
+    if(strlen(trim($testVal))>0)
+    {
+		$resCodes=Doctrine_Core::getTable('Codes')->getCodesRelated("specimens", $testVal);
+		foreach ($resCodes as $key=>$val)
+        {
+          $form->addCodes($number, $val,0, TRUE);
+		  $this->renderPartial('spec_codes',array('form' => $form['newCodes'][$number], 'rownum'=>$number));
+		  $number++;
+        }		
+	}
+	 return $this->renderText("ok");
+     
+  }
+  
 }

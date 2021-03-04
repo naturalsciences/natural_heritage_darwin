@@ -78,7 +78,17 @@ $(document).ready(function ()
     </ul>
   </div>
 
-  <?php echo form_tag('specimen/'.($form->getObject()->isNew() ? 'create' : 'update?id='.$form->getObject()->getId()), array('class'=>'edition no_border','enctype'=>'multipart/form-data'));?>
+    <?php
+	$formDisplay= form_tag('specimen/'.($form->getObject()->isNew() ? 'create' : 'update?id='.$form->getObject()->getId()), array('class'=>'edition no_border main_form','enctype'=>'multipart/form-data'));
+	if(isset($partFlag))
+	{
+		if($partFlag&& isset($part_id))
+		{
+			$formDisplay= form_tag('specimen/'.($form->getObject()->isNew() ? 'create?part_id='.$part_id : 'update?id='.$form->getObject()->getId()."&part_id=".$part_id), array('class'=>'edition no_border main_form','enctype'=>'multipart/form-data'));
+		}
+	}
+	print($formDisplay);
+	?>
     <div>
 	  <?php $errors = $form->getErrorSchema()->getErrors() ?>
       <?php if($form->hasGlobalErrors()||count($errors)>0):?>
@@ -110,6 +120,7 @@ $(document).ready(function ()
       <?php if (!$form->getObject()->isNew()): ?>
         <?php echo link_to(__('New specimen'), 'specimen/new') ?>
         &nbsp;<a href="<?php echo url_for('specimen/new?duplicate_id='.$form->getObject()->getId());?>" class="duplicate_link"><?php echo __('Duplicate specimen');?></a>
+		<a href="<?php echo url_for('specimen/new?duplicate_id='.$form->getObject()->getId().'&part_id='.$form->getObject()->getId());?>" class="duplicate_link"><?php echo __('Split into parts');?></a>
         &nbsp;<?php echo link_to(__('Delete'), 'specimen/delete?id='.$form->getObject()->getId(), array('method' => 'delete', 'confirm' => __('Are you sure?'))) ?>
       <?php endif?>
       &nbsp;<a href="<?php echo url_for('specimensearch/index') ?>" id="spec_cancel"><?php echo __('Cancel');?></a>
@@ -151,8 +162,26 @@ $(document).ready(function () {
   $('body').duplicatable({duplicate_href: '<?php echo url_for('specimen/confirm');?>'});
   $('body').catalogue({});
 
+ <?php if(strpos($_SERVER['REQUEST_URI'],"/create")):?>
+var part_id=getUrlElem(window.location.href,"part_id");
 
+if(part_id!==undefined)
+{
+	if(part_id.length>0)
+	{ 
+		$('form.main_form').attr('action', $('form.main_form').attr('action') + '/part_id/'+part_id);
+	}
+}
+var duplicate_id=getUrlElem(window.location.href,"duplicate_id");
 
+if(duplicate_id!==undefined)
+{
+	if(duplicate_id.length>0)
+	{
+		$('form.main_form').attr('action', $('form.main_form').attr('action') + '/duplicate_id/'+duplicate_id);
+	}
+}
+<?php endif; ?>
 
   $('#submit_spec_f1').click(function(event){
 	 //JMHerpers 2018/02/08	  

@@ -37,6 +37,11 @@
 		<td>
 				<?php echo ucfirst($val->Specimen->getSpecimenCreationDate())?'Date created: '.$val->Specimen->getSpecimenCreationDate():'';?>
 	    </td>
+		<?php if($val->getRelationshipType()=="part_of") : ?>
+		<td>
+				<?php echo ucfirst($val->Specimen->getSpecimenPart())?'Parts: '.$val->Specimen->getSpecimenPart():'';?>
+	    </td>
+		<?php endif; ?>
 		
       <?php endif ; ?>
     

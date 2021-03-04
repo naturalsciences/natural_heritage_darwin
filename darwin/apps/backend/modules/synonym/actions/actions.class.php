@@ -109,4 +109,14 @@ class synonymActions extends DarwinActions
       $request->getParameter('type'))
     );
   }
+  
+    public function executeSetOriginalSynonym(sfWebRequest $request)
+  {
+    $this->forward404Unless($request->isMethod('post'));
+    if($request->getParameter('uncheck'))
+      Doctrine_Core::getTable('ClassificationSynonymies')->resetOriginalSynonym($request->getParameter('group_id'));
+    else
+      Doctrine_Core::getTable('ClassificationSynonymies')->setOriginalSynonym($request->getParameter('group_id'), $request->getParameter('id'));
+    return $this->renderText('ok');
+  }
 }

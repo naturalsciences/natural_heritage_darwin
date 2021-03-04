@@ -24,7 +24,10 @@
       <?php elseif($val->getUnitType()=="specimens") : ?>
        <td><a href="<?php echo url_for('specimen/view?id='.$val->getSpecimenRelatedRef()) ; ?>"><?php echo __('Specimen'); ?> : <?php echo $val->SpecimenRelated->getName(); ?></a>
 	   <br> <?php echo $val->SpecimenRelated->getTaxonName(); ?>
-	   </td>			
+	   </td>
+		<?php if($val->getRelationshipType()=="part_of"): ?>
+		<td><?php echo $val->SpecimenRelated->getSpecimenPart(); ?></td>
+		<?php endif;?>
       <?php elseif($val->getUnitType()=="external") : ?>
         <td> <?php echo $val->getSourceName();?> ID: <?php echo $val->getSourceId();?></td>
       <?php endif ; ?>
@@ -69,7 +72,9 @@
 		<td>
 				<?php echo ucfirst($val->Specimen->getSpecimenCreationDate())?'Date created: '.$val->Specimen->getSpecimenCreationDate():'';?>
 	    </td>
-		
+		<?php if($val->getRelationshipType()=="part_of"): ?>
+		<td><?php echo $val->Specimen->getSpecimenPart(); ?></td>
+		<?php endif;?>
       <?php endif ; ?>
     
     <td>
