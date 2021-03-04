@@ -37,6 +37,9 @@ abstract class BaseClassificationSynonymiesForm extends DarwinModelForm
     $this->widgetSchema   ['synonym_record_id'] = new sfWidgetFormInputText();
     $this->validatorSchema['synonym_record_id'] = new sfValidatorInteger(array('required' => false));
 
+    $this->widgetSchema   ['original_synonym'] = new sfWidgetFormInputCheckbox();
+    $this->validatorSchema['original_synonym'] = new sfValidatorBoolean(array('required' => false));
+
     $this->widgetSchema->setNameFormat('classification_synonymies[%s]');
   }
 

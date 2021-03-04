@@ -762,5 +762,23 @@ $.fn.customRadioCheck = function() {
             else{
                return decodeURI(results[1]) || 0;
             }
-        }  
-	
+        } 
+
+	var getUrlElem=function(url, elem)
+	{	 
+	 var len=elem.length;
+	 var returned="";
+	 elem="/"+elem+"/";
+	  if(url.includes(elem))
+	  {		 
+		  var n=url.indexOf(elem);
+		   url=url.slice(n+1+len);		  
+		  var regexp = /(\/.+?(\/|$))/g;
+		  var pattern=url.match(regexp);		 
+		  if(pattern.length>0)
+		  {
+			  returned=pattern[0].replaceAll('/','');
+		  }		  
+	  }
+	  return returned;	  
+	}	

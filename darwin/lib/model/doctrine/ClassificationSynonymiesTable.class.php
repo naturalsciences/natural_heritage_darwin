@@ -78,8 +78,7 @@ class ClassificationSynonymiesTable extends DarwinTable
       return array();
 
     $q = Doctrine_Query::create()
-      ->select('s.group_name, s.id, s.record_id, s.group_id, s.is_basionym, s.order_by, s.synonym_record_id, t.name, t.id ' .
-        ($table_name=='taxonomy' ? ', t.extinct' : '') )
+      ->select('s.group_name, s.id, s.record_id, s.group_id, s.is_basionym, s.order_by, s.synonym_record_id, s.original_synonym, t.name, t.id ' .($table_name=='taxonomy' ? ', t.extinct' : ''))
       ->from('ClassificationSynonymies s, '.DarwinTable::getModelForTable($table_name). ' t')
       ->where('s.referenced_relation = ?',$table_name) //Not really necessay but....
       ->andWhere('s.record_id=t.id')
@@ -93,16 +92,50 @@ class ClassificationSynonymiesTable extends DarwinTable
     {
       $catalogue = DarwinTable::getModelForTable($table_name);
       $cRecord = new $catalogue();
+      $cRecord->setName($item[8]);
+      $cRecord->setId($item[9]);
+	  
+	  if($table_name=='taxonomy')
+        $cRecord->setExtinct($item[10]);
+
+      //group_name 
+      if(! isset($results[$item[0]]) )
+        $results[$item[0]]=array();
+      $results[$item[0]][] = array(
+        'id' => $item[1],
+        'record_id' => $item[2],
+        'group_id' => $item[3],
+        'is_basionym' => $item[4],
+        'order_by' => $item[5],
+        
+        'ref_item' => $cRecord,
+        'synonym_record_id' => $item[6],
+		'original_synonym' => $item[7]
+      );
+    }
+    return $results;
+  }
+  
+    public function findOtherSynonymsForRecord($table_name, $record_id)
+  {
+
+
+    $conn = Doctrine_Manager::connection();
+	  $sql = "SELECT s.group_name, s.id, s.record_id, s.group_id, s.is_basionym, s.order_by,  s.original_synonym, t.name, t.id , t.extinct from fct_rmca_taxonomy_get_other_synonyms( :id) s LEFT JOIN $table_name t ON s.record_id=t.id;";
+	  $q = $conn->prepare($sql);
+	  $q->execute(array(':id'=> $record_id));
+	  $items = $q->fetchAll(PDO::FETCH_NUM);
+
+
+    $results = array();
+    foreach($items as $item)
+    {
+      $catalogue = DarwinTable::getModelForTable($table_name);
+      $cRecord = new $catalogue();
       $cRecord->setName($item[7]);
       $cRecord->setId($item[8]);
-	  $original_name="";
-	  if(is_numeric($item[6]))
-	  {
-		  
-		$original_name=Doctrine_Core::getTable($table_name)->findOneById($item[6])->getName();
-		
-      }
-      if($table_name=='taxonomy')
+	  
+	  if($table_name=='taxonomy')
         $cRecord->setExtinct($item[9]);
 
       //group_name 
@@ -114,9 +147,9 @@ class ClassificationSynonymiesTable extends DarwinTable
         'group_id' => $item[3],
         'is_basionym' => $item[4],
         'order_by' => $item[5],
+        
         'ref_item' => $cRecord,
-		'synonym_record_id' => $item[6],
-		'synonym_record_name' => $original_name
+		'original_synonym' => $item[6]
       );
     }
     return $results;
@@ -134,6 +167,7 @@ class ClassificationSynonymiesTable extends DarwinTable
       'isonym' => $this->getI18N()->__('Isonyms'),
       'homonym' => $this->getI18N()->__('Homonyms'),
       'rename' => $this->getI18N()->__('Renaming'),
+	  'revalidation' => $this->getI18N()->__('Revalidation'),
     );
   }
 
@@ -215,6 +249,24 @@ class ClassificationSynonymiesTable extends DarwinTable
       ->where('group_id = ?',$group_id)
       ->execute();
   }
+  
+    public function setOriginalSynonym($group_id, $basionym_id)
+  {
+    $this->resetOriginalSynonym($group_id);
+    $element = $this->find($basionym_id);
+    $element->setOriginalSynonym(true);
+    $element->save();
+  }
+  
+  public function resetOriginalSynonym($group_id)
+  {
+    $q = Doctrine_Query::create()
+      ->update('ClassificationSynonymies')
+      ->set('original_synonym', '?', false)
+      ->where('group_id = ?',$group_id)
+      ->execute();
+  }
+  
 
   /**
    * mergeSynonyms
@@ -359,5 +411,17 @@ class ClassificationSynonymiesTable extends DarwinTable
 	  $q->execute(array(':id'=> $id));
 	  $response = $q->fetchAll(PDO::FETCH_ASSOC);
 	  return $response;
+  }
+  
+   public function findDirectlyLinkedName($group_id, $record_id)
+  {
+    $q = Doctrine_Query::create()
+      ->from('ClassificationSynonymies s')
+      ->andWhere('s.group_id = ?', $group_id)
+      ->andWhere('s.record_id = ?',$record_id);
+    $classif = $q->fetchOne();
+    if($classif)
+      return $classif->getSynonymRecordId();
+    else return 0;
   }
 }

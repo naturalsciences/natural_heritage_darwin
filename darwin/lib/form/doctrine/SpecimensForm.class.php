@@ -460,7 +460,7 @@ class SpecimensForm extends BaseSpecimensForm
     ));
 
     /* Validators */
-    $this->validatorSchema['specimen_part'] = new sfValidatorString(array('required' => false, 'trim' => true));
+    $this->validatorSchema['specimen_part'] = new sfValidatorString(array('required' => true, 'trim' => true));
     $this->validatorSchema['object_name'] = new sfValidatorString(array('required' => false, 'trim' => true));
 
     $this->validatorSchema['extlink'] = new sfValidatorPass();
@@ -1046,10 +1046,13 @@ class SpecimensForm extends BaseSpecimensForm
   {
     $options = array('referenced_relation' => 'specimens', 'record_id' => $this->getObject()->getId());
     if(isset($values['collection_ref']))
+	{
       $col = $values['collection_ref'];
-    else
+    }
+	else
+	{
       $col = $this->getObject()->getCollectionRef();
-
+	}
     if($col != '') {
       $collections = Doctrine_Core::getTable('Collections');
       $collection = $collections->findOneById($col);
@@ -1062,9 +1065,31 @@ class SpecimensForm extends BaseSpecimensForm
           $options['code'] = $collection->getAutoIncrementFromParent() + 1 ; //$collections->getAndUpdateLastCode($collection->getId());
         }
 		elseif (!empty($values['code']) && $values['code'] != '')
+		{
           $options['code'] = $values['code'];
-        $options['code_suffix'] = $collection->getCodeSuffix();
+        }
+		$options['code_suffix'] = $collection->getCodeSuffix();
         $options['code_suffix_separator'] = $collection->getCodeSuffixSeparator();
+		if(!empty($values['code_category']) && $values['code_category'] != '')
+		{
+			 $options['code_category'] = $values['code_category'];
+		}
+		if(!empty($values['code_prefix']) && $values['code_prefix'] != '')
+		{
+			 $options['code_prefix'] = $values['code_prefix'];
+		}
+		if(!empty($values['code_prefix_separator']) && $values['code_prefix_separator'] != '')
+		{
+			 $options['code_prefix_separator'] = $values['code_prefix_separator'];
+		}
+		if(!empty($values['code_suffix']) && $values['code_suffix'] != '')
+		{
+			 $options['code_suffix'] = $values['code_suffix'];
+		}
+		if(!empty($values['code_suffix_separator']) && $values['code_suffix_separator'] != '')
+		{
+			 $options['code_suffix_separator'] = $values['code_suffix_separator'];
+		}
       }
     }
     $this->attachEmbedRecord('Codes', new CodesForm(DarwinTable::newObjectFromArray('Codes',$options)), $num);

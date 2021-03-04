@@ -35,6 +35,9 @@ abstract class BaseClassificationSynonymiesFormFilter extends DarwinModelFormFil
     $this->widgetSchema   ['synonym_record_id'] = new sfWidgetFormFilterInput();
     $this->validatorSchema['synonym_record_id'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
 
+    $this->widgetSchema   ['original_synonym'] = new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no')));
+    $this->validatorSchema['original_synonym'] = new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0)));
+
     $this->widgetSchema->setNameFormat('classification_synonymies_filters[%s]');
   }
 
@@ -53,6 +56,7 @@ abstract class BaseClassificationSynonymiesFormFilter extends DarwinModelFormFil
       'is_basionym' => 'Boolean',
       'order_by' => 'Number',
       'synonym_record_id' => 'Number',
+      'original_synonym' => 'Boolean',
     ));
   }
 }
