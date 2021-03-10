@@ -98,8 +98,14 @@ abstract class BaseGtuFormFilter extends DarwinModelFormFilter
     $this->widgetSchema   ['nagoya'] = new sfWidgetFormFilterInput(array('with_empty' => false));
     $this->validatorSchema['nagoya'] = new sfValidatorPass(array('required' => false));
 
+    $this->widgetSchema   ['expedition_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Expeditions'), 'add_empty' => true));
+    $this->validatorSchema['expedition_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Expeditions'), 'column' => 'id'));
+
     $this->widgetSchema   ['id'] = new sfWidgetFormFilterInput();
     $this->validatorSchema['id'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => 'Gtu', 'column' => 'id'));
+
+    $this->widgetSchema   ['expedition_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Expeditions'), 'add_empty' => true));
+    $this->validatorSchema['expedition_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Expeditions'), 'column' => 'id'));
 
     $this->widgetSchema->setNameFormat('gtu_filters[%s]');
   }
@@ -140,7 +146,9 @@ abstract class BaseGtuFormFilter extends DarwinModelFormFilter
       'longitude_utm' => 'Number',
       'utm_zone' => 'Text',
       'nagoya' => 'Text',
+      'expedition_ref' => 'ForeignKey',
       'id' => 'Number',
+      'expedition_ref' => 'ForeignKey',
     ));
   }
 }

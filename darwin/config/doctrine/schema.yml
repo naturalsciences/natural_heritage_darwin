@@ -239,6 +239,7 @@ Gtu:
         #JMHerpers 2019 05 07
         nagoya: { type: string, notnull: true, default: 'not defined'}
     #ftheeten 2018 12 11
+        expedition_ref: {type: ref}
     relations:
         Tags:
             local: id
@@ -260,6 +261,10 @@ Gtu:
             local: id
             foreign : record_id
             class: GtuProperties
+        Expeditions:
+            local: expedition_ref
+            foreign : id
+            class: Expeditions
 
 Properties:
     columns:
@@ -326,6 +331,10 @@ Expeditions:
         Specimens:
             class: Specimens
             local: id
+            foreign: expedition_ref
+        Gtu:
+            class: Gtu:
+            local : id
             foreign: expedition_ref
 
 Users:
@@ -2143,6 +2152,7 @@ DoctrineTemporalInformationGtuGroupTags:
         import_ref: {type: integer}
         collector_refs: {type: string}
         expedition_refs: {type: string}
+        expedition_ref: {type: integer}
         collection_ref: {type: integer}
         #ftheeten rmca 2015 06 01
         coordinates_source: {type: string}

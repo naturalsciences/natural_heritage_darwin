@@ -119,6 +119,20 @@
         initSearchMap();
 
         $(document).ready(function () {
+			
+				
+		$(".but_more").click(
+			function()
+			{
+				if($('#all_collections:checked').length>0)
+				{
+					$("#all_collections").click();
+				}
+			}
+		);
+		
+		
+
         
        $("#all_collections").change(
             function()

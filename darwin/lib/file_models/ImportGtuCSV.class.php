@@ -118,6 +118,10 @@ class ImportGtuCSV
          $tags[20]="ecology";
         $tags[21]="habitat";
 		$tags[22]="exact_site";
+		
+		//mista
+		$tags[23]="coast";
+		$tags[24]="lake";
 
 
 		$fields[0]="station_type";
@@ -148,7 +152,7 @@ class ImportGtuCSV
         $fields[22]="longitude_2";
         //point, polygon, linestring, eventually bbox
         $fields[23]="gis_type"; 
-        $fields[24]="coordinates_wkt";
+        //$fields[24]="coordinates_wkt";
         $fields[25]="coordinates_datum";
         $fields[26]="coordinates_original";
         $fields[27]="coordinates_accuracy";
@@ -177,8 +181,7 @@ class ImportGtuCSV
 		$fields[50]="sampling_notes"; 
         $fields[51]="bounding_box"; 
 		
-		//mista
-		$fields[52]="coast";
+		
 		
 		
         #this would be in the template but in property table in SQL
@@ -514,12 +517,12 @@ class ImportGtuCSV
 					////print($val."\r\n");
 					$obj->setGisType($val);				
 				}
-				$val=$this->getValueIfFieldExists("coordinates_wkt", $p_row);
+				/*$val=$this->getValueIfFieldExists("coordinates_wkt", $p_row);
 				if($val)
 				{
 					////print($val."\r\n");
 					$obj->setCoordinatesWkt($val);				
-				}
+				}*/
 				$val=$this->getValueIfFieldExists("coordinates_datum", $p_row);
 				if($val)
 				{
@@ -913,7 +916,7 @@ class ImportGtuCSV
                   $tag_obj->setGroupName("administrative area") ;
                   //$tag_obj->setSubGroupName($name_field) ;
                 }
-                else if (in_array(strtolower($name_field),array("ocean", "sea", "archipelago", "island", "coast")))
+                else if (in_array(strtolower($name_field),array("ocean", "sea", "archipelago", "island", "coast", "lake")))
                 {
                   $tag_obj->setGroupName("hydrographic") ;
                   //$tag_obj->setSubGroupName($name_field) ;

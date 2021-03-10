@@ -20,9 +20,9 @@
         <a href="<?php echo url_for('mineral/view?id='.$val->getMineralRef()) ; ?>"><?php echo $val->Mineralogy->getName() ; ?></a>
       </td>
 	  <?php elseif($val->getUnitType()=="taxonomy") : ?>
-       <td> <a href="<?php echo url_for('taxonomy/view?id='.$val->getTaxonRef()) ; ?>"><?php echo $val->Taxonomy->getName(); ?></a></td>
+       <td> <a target='_blank' href="<?php echo url_for('taxonomy/view?id='.$val->getTaxonRef()) ; ?>"><?php echo $val->Taxonomy->getName(); ?></a></td>
       <?php elseif($val->getUnitType()=="specimens") : ?>
-       <td><a href="<?php echo url_for('specimen/view?id='.$val->getSpecimenRelatedRef()) ; ?>"><?php echo __('Specimen'); ?> : <?php echo $val->SpecimenRelated->getName(); ?></a>
+       <td><a target='_blank'  href="<?php echo url_for('specimen/view?id='.$val->getSpecimenRelatedRef()) ; ?>"><?php echo __('Specimen'); ?> : <?php echo $val->SpecimenRelated->getName(); ?></a>
 	   <br> <?php echo $val->SpecimenRelated->getTaxonName(); ?>
 	   </td>
 		<?php if($val->getRelationshipType()=="part_of"): ?>

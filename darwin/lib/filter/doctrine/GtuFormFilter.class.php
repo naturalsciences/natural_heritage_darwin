@@ -231,7 +231,7 @@ class GtuFormFilter extends BaseGtuFormFilter
         $query->andWhere("
    		(EXISTS (SELECT d.id
 			  FROM Expeditions e1 WHERE 
-			   name_indexed = fulltoindex(?) AND e1.id = ANY ( d.expedition_refs) ))
+			    e1.id = d.expedition_ref ))
         OR 
         (
         EXISTS (SELECT s.gtu_ref FROM Specimens s , Expeditions e2   WHERE  s.gtu_ref=d.id AND s.expedition_ref=e2.id   AND e2.name_indexed=fulltoindex(?)) 
