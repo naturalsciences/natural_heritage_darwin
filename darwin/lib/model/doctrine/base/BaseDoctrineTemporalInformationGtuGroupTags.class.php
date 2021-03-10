@@ -20,6 +20,7 @@
  * @property integer $import_ref
  * @property string $collector_refs
  * @property string $expedition_refs
+ * @property integer $expedition_ref
  * @property integer $collection_ref
  * @property string $coordinates_source
  * @property integer $latitude_dms_degree
@@ -59,6 +60,7 @@
  * @method integer                                 getImportRef()               Returns the current record's "import_ref" value
  * @method string                                  getCollectorRefs()           Returns the current record's "collector_refs" value
  * @method string                                  getExpeditionRefs()          Returns the current record's "expedition_refs" value
+ * @method integer                                 getExpeditionRef()           Returns the current record's "expedition_ref" value
  * @method integer                                 getCollectionRef()           Returns the current record's "collection_ref" value
  * @method string                                  getCoordinatesSource()       Returns the current record's "coordinates_source" value
  * @method integer                                 getLatitudeDmsDegree()       Returns the current record's "latitude_dms_degree" value
@@ -97,6 +99,7 @@
  * @method DoctrineTemporalInformationGtuGroupTags setImportRef()               Sets the current record's "import_ref" value
  * @method DoctrineTemporalInformationGtuGroupTags setCollectorRefs()           Sets the current record's "collector_refs" value
  * @method DoctrineTemporalInformationGtuGroupTags setExpeditionRefs()          Sets the current record's "expedition_refs" value
+ * @method DoctrineTemporalInformationGtuGroupTags setExpeditionRef()           Sets the current record's "expedition_ref" value
  * @method DoctrineTemporalInformationGtuGroupTags setCollectionRef()           Sets the current record's "collection_ref" value
  * @method DoctrineTemporalInformationGtuGroupTags setCoordinatesSource()       Sets the current record's "coordinates_source" value
  * @method DoctrineTemporalInformationGtuGroupTags setLatitudeDmsDegree()       Sets the current record's "latitude_dms_degree" value
@@ -186,6 +189,9 @@ abstract class BaseDoctrineTemporalInformationGtuGroupTags extends DarwinModel
              ));
         $this->hasColumn('expedition_refs', 'string', null, array(
              'type' => 'string',
+             ));
+        $this->hasColumn('expedition_ref', 'integer', null, array(
+             'type' => 'integer',
              ));
         $this->hasColumn('collection_ref', 'integer', null, array(
              'type' => 'integer',

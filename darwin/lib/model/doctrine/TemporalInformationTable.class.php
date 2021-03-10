@@ -26,7 +26,39 @@ class TemporalInformationTable extends Doctrine_Table
       ->orderBy('t.id') ;
     return $q->execute();
 
-}    
+}   
+
+  public function getTemporalInformationNoSpecimen($gtu_id)
+  {
+    $q = Doctrine_Query::create()
+      ->from('TemporalInformation t')
+      ->where('t.gtu_ref = ?', $gtu_id)
+	  ->andWhere('t.specimen_ref IS NULL ')
+      ->orderBy('t.id') ;
+    return $q->execute();
+  }
+
+  public function getTemporalInformationNoSpecimenArray($gtu_id)
+  {
+	$date_array=Array();
+	$date_test=$this->getTemporalInformationNoSpecimen($gtu_id);
+	$i=0;
+	if($date_test !==null)
+	{
+		foreach($date_test as $date_item)
+		{
+			$from_date=	$date_item->getFromDateMasked(ESC_RAW);
+			$to_date=	$date_item->getToDateMasked(ESC_RAW);
+
+			$date_array[$i]["from_date"]=$from_date;
+			$date_array[$i]["to_date"]=$to_date;
+			$i++;
+		}
+	}
+	
+	return $date_array;
+  }
+  
     
     //2019 03 07
   public function getDistinctTemporalInformation($gtu_id)

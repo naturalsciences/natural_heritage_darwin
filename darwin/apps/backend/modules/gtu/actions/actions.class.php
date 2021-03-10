@@ -160,18 +160,36 @@ class gtuActions extends DarwinActions
 
   public function executeEdit(sfWebRequest $request)
   {
-    $this->forward404Unless($gtu = Doctrine_Core::getTable('Gtu')->find($request->getParameter('id')), sprintf('Object gtu does not exist (%s).', $request->getParameter('id')));
+	$gtu = Doctrine_Core::getTable('Gtu')->find($request->getParameter('id'));
+    $this->forward404Unless($gtu, sprintf('Object gtu does not exist (%s).', $request->getParameter('id')));
     $this->no_right_col = Doctrine_Core::getTable('Gtu')->testNoRightsCollections('gtu_ref',$request->getParameter('id'), $this->getUser()->getId());
-
+	$this->collection=false;
+	if($gtu->getCollectionRef()!==null)
+	{
+		$tmp_collec=Doctrine_Core::getTable('Collections')->find($gtu->getCollectionRef());
+		$this->collection=$tmp_collec->getName();
+		$tmp_collec=null;
+	}
+	$this->date_array=Doctrine_Core::getTable('TemporalInformation')->getTemporalInformationNoSpecimenArray($request->getParameter('id'));
     $this->form = new GtuForm($gtu);
     $this->loadWidgets();
     //ftheeten 2018 11 29
      //$this->form->loadEmbedTemporalInformation();//loadEmbed('TemporalInformation');
   }
 
+
+
   public function executeView(sfWebRequest $request)
   {
     $this->forward404Unless($this->gtu = Doctrine_Core::getTable('Gtu')->find($request->getParameter('id')), sprintf('Object gtu does not exist (%s).', $request->getParameter('id')));
+	$this->collection=false;
+	if($this->gtu->getCollectionRef()!==null)
+	{
+		$tmp_collec=Doctrine_Core::getTable('Collections')->find($this->gtu->getCollectionRef());
+		$this->collection=$tmp_collec->getName();
+		$tmp_collec=null;
+	}
+	$this->date_array=Doctrine_Core::getTable('TemporalInformation')->getTemporalInformationNoSpecimenArray($this->gtu->getId());	
     $this->form = new GtuForm($this->gtu);
     $this->loadWidgets();
   }

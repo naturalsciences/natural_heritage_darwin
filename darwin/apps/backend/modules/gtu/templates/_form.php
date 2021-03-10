@@ -26,6 +26,25 @@ $(document).ready(function ()
           <?php echo $form['code'] ?>
         </td>
       </tr>
+	   <?php if($collection):?>
+	  <tr>
+        <th><?php echo __("Collection").":"; ?></th>
+        <td>
+          <?php echo $collection; ?>
+        </td>
+      </tr>
+	  <?php endif; ?>
+	  <?php if(count($date_array)>0):?>
+		   <?php foreach($date_array as $date_elem):?>
+		  <tr>
+			<th><?php echo __("Date").":"; ?></th>
+			<td>
+			  <?php $from_date=$date_elem["from_date"]; $to_date=$date_elem["to_date"]; ?>
+			  <?php print(html_entity_decode($from_date."-". $to_date)); ?>
+			</td>
+		  </tr>
+		  <?php endforeach;?>		  
+	 <?php endif; ?>
     </tbody>
 </table>
 <!--JMHerpers 2019 05 29-->

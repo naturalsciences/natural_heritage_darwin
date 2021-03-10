@@ -98,7 +98,7 @@ $(document).ready(function ()
           <?php endforeach; ?>
 		  <?php foreach( $errors as $name => $error ) : ?>
 		     <li class="error_fld_<?php echo $name;?>"><?php echo $name ?> : <?php echo __($error) ?></li>
-		  <?php endforeach ?>
+		  <?php endforeach; ?>
 		  <li>(Issue(s) might be caused by a closed widget containing a mandatory field) </li>
         </ul>
       <?php endif;?>

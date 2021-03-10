@@ -34,9 +34,11 @@
  * @property float $longitude_utm
  * @property varchar $utm_zone
  * @property string $nagoya
+ * @property ref $expedition_ref
  * @property Tags $Tags
  * @property TemporalInformation $TemporalInformation
  * @property DoctrineGtuComments $DoctrineGtuComments
+ * @property Expeditions $Expeditions
  * @property Doctrine_Collection $TagGroups
  * @property Doctrine_Collection $Specimens
  * @property Doctrine_Collection $SpecimensMaincodes
@@ -70,9 +72,11 @@
  * @method float               getLongitudeUtm()            Returns the current record's "longitude_utm" value
  * @method varchar             getUtmZone()                 Returns the current record's "utm_zone" value
  * @method string              getNagoya()                  Returns the current record's "nagoya" value
+ * @method ref                 getExpeditionRef()           Returns the current record's "expedition_ref" value
  * @method Tags                getTags()                    Returns the current record's "Tags" value
  * @method TemporalInformation getTemporalInformation()     Returns the current record's "TemporalInformation" value
  * @method DoctrineGtuComments getDoctrineGtuComments()     Returns the current record's "DoctrineGtuComments" value
+ * @method Expeditions         getExpeditions()             Returns the current record's "Expeditions" value
  * @method Doctrine_Collection getTagGroups()               Returns the current record's "TagGroups" collection
  * @method Doctrine_Collection getSpecimens()               Returns the current record's "Specimens" collection
  * @method Doctrine_Collection getSpecimensMaincodes()      Returns the current record's "SpecimensMaincodes" collection
@@ -105,9 +109,11 @@
  * @method Gtu                 setLongitudeUtm()            Sets the current record's "longitude_utm" value
  * @method Gtu                 setUtmZone()                 Sets the current record's "utm_zone" value
  * @method Gtu                 setNagoya()                  Sets the current record's "nagoya" value
+ * @method Gtu                 setExpeditionRef()           Sets the current record's "expedition_ref" value
  * @method Gtu                 setTags()                    Sets the current record's "Tags" value
  * @method Gtu                 setTemporalInformation()     Sets the current record's "TemporalInformation" value
  * @method Gtu                 setDoctrineGtuComments()     Sets the current record's "DoctrineGtuComments" value
+ * @method Gtu                 setExpeditions()             Sets the current record's "Expeditions" value
  * @method Gtu                 setTagGroups()               Sets the current record's "TagGroups" collection
  * @method Gtu                 setSpecimens()               Sets the current record's "Specimens" collection
  * @method Gtu                 setSpecimensMaincodes()      Sets the current record's "SpecimensMaincodes" collection
@@ -222,6 +228,9 @@ abstract class BaseGtu extends DarwinModel
              'notnull' => true,
              'default' => 'not defined',
              ));
+        $this->hasColumn('expedition_ref', 'ref', null, array(
+             'type' => 'ref',
+             ));
     }
 
     public function setUp()
@@ -238,6 +247,10 @@ abstract class BaseGtu extends DarwinModel
         $this->hasOne('DoctrineGtuComments', array(
              'local' => 'id',
              'foreign' => 'record_id'));
+
+        $this->hasOne('Expeditions', array(
+             'local' => 'expedition_ref',
+             'foreign' => 'id'));
 
         $this->hasMany('TagGroups', array(
              'local' => 'id',

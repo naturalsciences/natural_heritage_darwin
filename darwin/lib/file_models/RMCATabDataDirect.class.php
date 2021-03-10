@@ -148,7 +148,7 @@ class RMCATabDataDirect
         $fields[] = "associatedUnitCollection";
         $fields[] = "associatedUnitID";
         $fields[] = "associationType"; /* host, parasite, commensalism etc...*/
-        $fields[] = "associationDomain"; /* values : darwin_id, darwin_file, taxonomy, mineralogy, external */
+        $fields[] = "associationDomain"; /* values : darwin_id, darwin_uuid, darwin_file, taxonomy, mineralogy, external */
         
         
         //field in ABCD extensions
@@ -276,15 +276,16 @@ class RMCATabDataDirect
    
 	if(strlen(trim($value))>0)
     {
-		
+		$this->name="";
         if($category=="main")
         {
             $this->main_code_found=true;
+			$this->name=$value;
         }
         $code = new Codes() ;
         $code->setCodeCategory(strtolower($category)) ;
         $tmpCode=$value;
-        $this->name=$value;       
+               
 
 
         if(string_isset($this->code_prefix)&&$category=="main")
@@ -606,11 +607,27 @@ class RMCATabDataDirect
                     elseif( $associationDomain=="darwin_id")
                     {
                     
-                        $spec=Doctrine_Core::getTable('Specimens')->findById($valTmp);
+                        $spec=Doctrine_Core::getTable('Specimens')->findOneById($valTmp);
                         
-                        if(count($spec)>0)
+                        if(is_object($spec))
                         {                            
-                            $this->object->setExistingSpecimenRef($valTmp); 
+                            $this->object->setExistingSpecimenRef($spec->getId()); 
+                            $this->object->setUnitType("specimens") ; 
+                        }
+                        else
+                        {
+                            $this->object->setSourceId($valTmp. " (not_found_in_darwin)") ; 
+                            $this->object->setUnitType('external') ;
+                        }
+                    }
+					elseif( $associationDomain=="darwin_uuid")
+                    {
+                    
+                        $stable=Doctrine_Core::getTable('SpecimensStableIds')->findOneByUuid($valTmp);
+                        
+                        if(is_object($stable))
+                        {                            
+                            $this->object->setExistingSpecimenRef($stable->getSpecimenRef()); 
                             $this->object->setUnitType("specimens") ; 
                         }
                         else
@@ -2026,7 +2043,10 @@ class RMCATabDataDirect
 		{
 			//print("OK\n");
 			$this->saveObjects() ;
-			$this->unit_id_ref[$this->name] = $this->staging->getId();
+			if(!array_key_exists($this->name, $this->unit_id_ref))
+			{
+				$this->unit_id_ref[$this->name] = $this->staging->getId();
+			}
 			//print("DONE\n");
 		}
 	}
