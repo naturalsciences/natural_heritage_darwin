@@ -93,6 +93,10 @@ class Specimens extends BaseSpecimens
     return $this->getName()." (".$this->getSpecimenPart().')'; 
   }
 
+  public function getNamePartAndUuid()
+  {
+    return $this->getName()." (".$this->getSpecimenPart().') <br/> UUID : '.$this->getUuid(); 
+  }
 
   public function getAggregatedName($sep = ' / ')
   {

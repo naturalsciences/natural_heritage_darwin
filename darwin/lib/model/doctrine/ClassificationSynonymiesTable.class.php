@@ -95,8 +95,11 @@ class ClassificationSynonymiesTable extends DarwinTable
       $cRecord->setName($item[8]);
       $cRecord->setId($item[9]);
 	  
-	  if($table_name=='taxonomy')
+	 if($table_name=='taxonomy')
+	  {
         $cRecord->setExtinct($item[10]);
+		$cRecord->setStatus($item[11]);
+	  }
 
       //group_name 
       if(! isset($results[$item[0]]) )
@@ -136,7 +139,10 @@ class ClassificationSynonymiesTable extends DarwinTable
       $cRecord->setId($item[8]);
 	  
 	  if($table_name=='taxonomy')
+	  {
         $cRecord->setExtinct($item[9]);
+		$cRecord->setStatus($item[10]);
+	  }
 
       //group_name 
       if(! isset($results[$item[0]]) )

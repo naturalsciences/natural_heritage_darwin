@@ -10,6 +10,8 @@
     <?php foreach($synonyms as $group_name => $group):?>
     <tr>
       <td>
+        <?php //ftheeten 2017 02 08
+        $linkedName=Doctrine_Core::getTable('ClassificationSynonymies')->findDirectlyLinkedName($group[0]['group_id'], $eid);?>        
         <?php $groups=Doctrine_Core::getTable('ClassificationSynonymies')->findGroupnames() ; echo $groups[$group_name];?>
       </td>
       <td>
@@ -18,6 +20,7 @@
             <tr>
         <th></th>
         <th><?php echo __('Name');?></th>
+		<th><?php echo __('Name status');?></th>
         <th>
           <?php if($group_name == 'rename'):?>
             <?php echo __('Current');?>
@@ -47,6 +50,7 @@
                 <?php echo image_tag('info.png',"title=info class=info id=info_".$synonym['id']);?>
                 <div class="tree">
                 </div>
+				
                 <script type="text/javascript">
                 $('#info_<?php echo $synonym['id'];?>').click(function()
                 {
@@ -61,6 +65,11 @@
                 });
                 </script>
               </td>
+			  <td style="font-weight:bold;">
+			  <div>
+			  <?php $synonym['ref_item']->getStatus()=="valid" ? print("<div style='color:green;'>".$synonym['ref_item']->getStatus()."</div>"):print("<div style='color:red;'>".$synonym['ref_item']->getStatus()."</div>") ;?>
+			  </div>
+			  </td>
 			  <td class="basio_cell">
                 <?php if($group_name != "homonym"):?>
                   <a href="#" <?php if($synonym['is_basionym']):?> class="basio_check checked"<?php else: ?> class="basio_check"<?php endif;?>></a>
@@ -83,14 +92,14 @@
           </tbody>
         </table>
       </td>
-
     </tr>
     <?php endforeach;?>
+	
   </tbody>
 </table>
 <br />
-<?php echo image_tag('add_green.png');?><a title="<?php echo __('Add Synonymies');?>" class="link_catalogue" href="<?php echo url_for('synonym/add?table='.$table.'&id='.$eid); ?>"><?php echo __('Add');?></a>
 
+<?php echo image_tag('add_green.png');?><a title="<?php echo __('Add Synonymies');?>" class="link_catalogue" href="<?php echo url_for('synonym/add?table='.$table.'&id='.$eid); ?>"><?php echo __('Add');?></a>
 <?php if(count($other_synonyms)>0): ?>
 	<div style="margin-top:40px; margin-bottom:40px; font-weight:bold;">Other indirect synonyms <i>(read-only)</i>:</div>
 	<table class="catalogue_table">
@@ -115,6 +124,7 @@
             <tr>
         <th></th>
         <th><?php echo __('Name');?></th>
+		<th><?php echo __('Name status');?></th>
         <th>
           <?php if($group_name == 'rename'):?>
             <?php echo __('Current');?>
@@ -137,9 +147,6 @@
                   <a title="<?php echo __('Synonym');?>" href="<?php echo url_for($table.'/edit?id='.$synonym['record_id']) ?>">
                     <?php echo $synonym['ref_item']->getNameWithFormat(ESC_RAW);?>
                   </a>
-                  <?php if($synonym['record_id'] == $linkedName):?>
-                    <i> <?php echo __('Original synonym');?></i>
-                  <?php endif;?>
                 <?php endif;?>
                 <?php echo image_tag('info.png',"title=info class=info id=info_".$synonym['id']);?>
                 <div class="tree">
@@ -158,6 +165,11 @@
                 });
                 </script>
               </td>
+			  <td style="font-weight:bold;">
+			  <div>
+			  <?php $synonym['ref_item']->getStatus()=="valid" ? print("<div style='color:green;'>".$synonym['ref_item']->getStatus()."</div>"):print("<div style='color:red;'>".$synonym['ref_item']->getStatus()."</div>") ;?>
+			  </div>
+			  </td>
 			  <td class="basio_cell">
                 <?php if($group_name != "homonym"):?>
                    <?php if($synonym['is_basionym']) echo image_tag('checkbox_checked.png') ; else echo image_tag('checkbox_unchecked.png') ;?> 
@@ -242,7 +254,7 @@ $(document).ready(function()
     });
     return false;
   });
-
+  
   $("#synonym .widget_sub_table tbody").sortable({
     placeholder: 'ui-state-highlight',
     handle: '.handle',
@@ -267,4 +279,3 @@ $(document).ready(function()
 
 });
 </script>
-

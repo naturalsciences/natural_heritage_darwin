@@ -56,6 +56,9 @@ abstract class BaseDoctrineTemporalInformationGtuGroupTagsFormFilter extends Dar
     $this->widgetSchema   ['expedition_refs'] = new sfWidgetFormFilterInput();
     $this->validatorSchema['expedition_refs'] = new sfValidatorPass(array('required' => false));
 
+    $this->widgetSchema   ['expedition_ref'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['expedition_ref'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
+
     $this->widgetSchema   ['collection_ref'] = new sfWidgetFormFilterInput();
     $this->validatorSchema['collection_ref'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
 
@@ -144,6 +147,7 @@ abstract class BaseDoctrineTemporalInformationGtuGroupTagsFormFilter extends Dar
       'import_ref' => 'Number',
       'collector_refs' => 'Text',
       'expedition_refs' => 'Text',
+      'expedition_ref' => 'Number',
       'collection_ref' => 'Number',
       'coordinates_source' => 'Text',
       'latitude_dms_degree' => 'Number',

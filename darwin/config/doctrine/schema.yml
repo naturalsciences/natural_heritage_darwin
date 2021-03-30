@@ -978,7 +978,7 @@ Specimens:
         main_code_indexed: { type: string}
         #JMHerpers 2019 05 07
         nagoya: { type: string, notnull: true, default: 'not defined'}
-        #uuid: { type: string, notnull: true}
+        uuid: { type: string}
     relations:
         Collections:
             local: collection_ref

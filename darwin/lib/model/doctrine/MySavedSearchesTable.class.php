@@ -418,8 +418,7 @@ longitude_text,
 		             LEFT JOIN collections_rights cr
 		             ON s.collection_ref =cr.collection_ref
                             AND user_ref=:ID_USER
-							LEFT JOIN specimens_stable_ids
-								ON s.id=specimens_stable_ids.specimen_ref
+							
                             GROUP BY s.id, c.code_prefix, c.code_prefix_separator, c.code, c.code_suffix, c.code_suffix_separator, i.id , col_tool.tool, col_meth.method,
                             --2018 11 21
                             ident.given_name, ident.family_name
@@ -572,6 +571,19 @@ longitude_text,
   
   }
   
+  	  public function getVirtualCollectionsReport($query_id, $user_id)
+	  {
+		   $sql="SELECT *  FROM  darwin2.fct_rmca_dynamic_saved_search_get_specimen_collective_access(:ID_Q,:ID_USER);";
+                        
+           $conn = Doctrine_Manager::connection();
+		 
+           $q = $conn->prepare($sql);
+           $q->bindParam(":ID_Q", $query_id, PDO::PARAM_INT);
+           $q->bindParam(":ID_USER", $user_id, PDO::PARAM_INT);
+           $q->execute();
+           $dataset=$q->fetchAll(PDO::FETCH_ASSOC);
+		   return $dataset;
+	  }
 
 
   

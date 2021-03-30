@@ -49,7 +49,10 @@
             </option> 
 			<option value=<?php echo(url_for("savesearch/downloadTaxonomy")."/type_file/taxonomy_count/user_id/".sfContext::getInstance()->getUser()->getId()."/query_id/".$search->getId())?>>
             Tab-delimited (taxonomy : statistics)
-            </option> 			
+            </option>
+			<option value=<?php echo(url_for("savesearch/downloadVirtualCollections")."/user_ref/".sfContext::getInstance()->getUser()->getId()."/query_id/".$search->getId())?>>
+            Tab-delimited (Virtual Collections)
+            </option>   			
             </select>
          </td>
 		   

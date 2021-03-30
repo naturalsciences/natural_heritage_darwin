@@ -197,7 +197,7 @@ class CollectionsTable extends DarwinTable
     if(strlen($creation_date_min)>0)
     {
         $fields[2]="year";
-        $where[]= "specimen_creation_date >= date_trunc('day',:creation_date_min::timestamp with time zone)";
+        $where[]= "COALESCE(specimen_creation_date,'1706-01-01 00:00:00') >= date_trunc('day',:creation_date_min::timestamp with time zone)";
         $groups[]="year";
     }
     
@@ -205,7 +205,7 @@ class CollectionsTable extends DarwinTable
     {
         $orders[]="year";
         $fields[2]="year";
-        $where[]= "specimen_creation_date <= (date_trunc('day',:creation_date_max::timestamp with time zone)  + (24*60*60 - 1) * interval '1 second')";
+        $where[]= "COALESCE(specimen_creation_date,'1706-01-01 00:00:00') <= (date_trunc('day',:creation_date_max::timestamp with time zone)  + (24*60*60 - 1) * interval '1 second')";
         $groups[]="year";
     }
     
@@ -405,15 +405,17 @@ class CollectionsTable extends DarwinTable
     if(strlen($creation_date_min)>0)
     {
         $fields[2]="year";
-        $where[]= "specimen_creation_date >= (date_trunc('day',:creation_date_min::timestamp with time zone))";
+        $where[]= "COALESCE(specimen_creation_date,'1706-01-01 00:00:00') >= (date_trunc('day',:creation_date_min::timestamp with time zone))";
         $groups[]="year";
+		 $orders[]="year";
     }
     
     if(strlen($creation_date_max)>0)
     {
         $fields[2]="year";
-        $where[]= "specimen_creation_date <= (date_trunc('day',:creation_date_max::timestamp with time zone)  + (24*60*60 - 1) * interval '1 second')";
+        $where[]= "COALESCE(specimen_creation_date,'1706-01-01 00:00:00') <= (date_trunc('day',:creation_date_max::timestamp with time zone)  + (24*60*60 - 1) * interval '1 second')";
         $groups[]="year";
+		 $orders[]="year";
     }
     
      if(strlen($ig_num)>0)
@@ -612,15 +614,17 @@ class CollectionsTable extends DarwinTable
     if(strlen($creation_date_min)>0)
     {
         $fields[2]="year";
-        $where[]= "creation_date >= date_trunc('day',:creation_date_min::timestamp with time zone)";
+        $where[]= "COALESCE(creation_date,'1706-01-01 00:00:00') >= date_trunc('day',:creation_date_min::timestamp with time zone)";
         $groups[]="year";
+		$orders[]="year";
     }
     
     if(strlen($creation_date_max)>0)
     {
         $fields[2]="year";
-        $where[]= "creation_date <= (date_trunc('day',:creation_date_max::timestamp with time zone)  + (24*60*60 - 1) * interval '1 second')";
+        $where[]= "COALESCE(creation_date,'1706-01-01 00:00:00') <= (date_trunc('day',:creation_date_max::timestamp with time zone)  + (24*60*60 - 1) * interval '1 second')";
         $groups[]="year";
+		$orders[]="year";
     }
     
      if(strlen($ig_num)>0)

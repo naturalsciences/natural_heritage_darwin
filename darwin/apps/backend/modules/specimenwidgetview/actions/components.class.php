@@ -166,7 +166,7 @@ class specimenwidgetviewComponents extends sfComponents
   public function executeSpecimensRelationships()
   {
     $this->spec_related = Doctrine_Core::getTable("SpecimensRelationships")->findBySpecimenRef($this->eid);
-    $this->spec_related_inverse = Doctrine_Core::getTable("SpecimensRelationships")->findByRelatedSpecimenRef($this->eid);
+    $this->spec_related_inverse = Doctrine_Core::getTable("SpecimensRelationships")->getAllInverseRelationships($this->eid);
   }
 
   public function executeRefRelatedFiles()

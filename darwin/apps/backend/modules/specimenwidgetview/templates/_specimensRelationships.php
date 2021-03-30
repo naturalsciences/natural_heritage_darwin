@@ -7,7 +7,7 @@
       <th>
         <?php echo __('Extra'); ?>
       </th>
-      <th></th>
+      <th><?php echo __('Uuid'); ?></th>
     </tr>
   </thead>
   <?php $test="test" ?>
@@ -39,6 +39,11 @@
         <strong><?php echo $val->Institutions->getFamilyName();?></strong>
       <?php endif ; ?>
     </td>
+	<td>
+	<?php if($val->getUnitType()=="specimens" ) : ?>
+		<?php print($val->SpecimenRelated->getUuid());?>
+	<?php endif;?>
+	</td>
   </tr>
   <?php endforeach;?>
 </table>
@@ -58,13 +63,18 @@
       <th></th>
     </tr>
   </thead>
-  <?php foreach($spec_related_inverse as $val):?>
+  <?php $cpt=0; foreach($spec_related_inverse as $val):?>
+  <tr>
+	  <td style='max-width:20px;'><?php echo ++$cpt; ?></td>
+	  <td>UUID</td>
+	  <td colspan='2'><a target="_blank" href="<?php echo url_for('specimen/view?id='.$val->getSpecimenRef()) ?>"><?php echo __('Specimen'); ?> : <?php echo $val->Specimen->getUuid(); ?></a></td>
+  </tr>
   <tr>
     <td><?php echo $val->getRelationshipType() ; ?></td>
 <!--ftheeten 2018 02 13 : add getTaxonName and reorganize layout-->
       <?php if($val->getUnitType()=="specimens") : ?>
         <td>
-			<a href="<?php echo url_for('specimen/view?id='.$val->getSpecimenRef()) ; ?>"><?php echo __('Specimen'); ?> : <?php echo $val->Specimen->getName(); ?></a>
+			<?php echo __('Specimen'); ?> : <?php echo $val->Specimen->getName(); ?>
 			</br>
 			<?php echo $val->Specimen->getTaxonName(); ?>
 		</td>
