@@ -2032,8 +2032,9 @@ class RMCATabDataDirect
 		catch(Doctrine_Exception $ne)
 		{
 			//print("failed");
-			$e = new DarwinPgErrorParser($ne);
+			//$e = new DarwinPgErrorParser($ne);
 			$this->errors_reported .= "Unit ".$this->name." object were not saved: ".$e->getMessage().";";
+			 $e = new DarwinPgErrorParser($this->errors_reported);
 			//print($this->errors_reported);
 			$ok = false ;
 			$this->import->setErrorsInImport("Table error for staging");
@@ -2081,9 +2082,9 @@ class RMCATabDataDirect
 	  }
       catch(Doctrine_Exception $ne)
       {
-        $e = new DarwinPgErrorParser($ne);
+        //$e = new DarwinPgErrorParser($ne);
         $this->errors_reported .= "Unit ".$this->name." : ".$object->getTable()->getTableName()." were not saved : ".$ne->getMessage().";";
-		
+		 $e = new DarwinPgErrorParser($this->errors_reported);
 		$this->import->setErrorsInImport("Table error for ".$object->getTable()->getTableName());
 		throw $ne;
       }
@@ -2097,8 +2098,9 @@ class RMCATabDataDirect
 	  }
       catch(Doctrine_Exception $ne)
       {
-        $e = new DarwinPgErrorParser($ne);
-        $this->errors_reported .= "NamedArea ".$object->getSubGroupName()." were not saved : ".$e->getMessage().";";
+       
+        $this->errors_reported .= "NamedArea ".$object->getSubGroupName()." were not saved : ".$ne->getMessage().";";
+		 $e = new DarwinPgErrorParser($this->errors_reported);
 		$this->import->setErrorsInImport("Table error for ".$object->getTable()->getTableName());
 		throw $e;
       }
@@ -2112,8 +2114,9 @@ class RMCATabDataDirect
 	  }
       catch(Doctrine_Exception $ne)
       {
-        $e = new DarwinPgErrorParser($ne);
+        //$e = new DarwinPgErrorParser($ne);
         $this->errors_reported .= "Mulitmedia ".$object->getUri()." was not saved : ".$e->getMessage().";";
+		 $e = new DarwinPgErrorParser($this->errors_reported);
 		$this->import->setErrorsInImport("Table error for ".$object->getUri());
 		throw $e;
       }

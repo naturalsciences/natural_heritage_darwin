@@ -295,6 +295,7 @@ class specimensearchActions extends DarwinActions
               'sub_container_type' , 'sub_container_storage', 'specimen_count','part_codes', 'loans',
               /*MA FT 2018 11 27*/
               'taxonomic_identification'
+			  , 'uuid'
               );
 
 
@@ -355,6 +356,9 @@ class specimensearchActions extends DarwinActions
       'codes' => array(
         false,
         $this->getI18N()->__('Codes'),),
+	   'Uuid' => array(
+          false,
+          $this->getI18N()->__('UUID'),),
       'taxon' => array(
         'taxon_name_indexed',
         $this->getI18N()->__('Taxon'),),
@@ -498,6 +502,7 @@ class specimensearchActions extends DarwinActions
         'loans' => array(
           false,
           $this->getI18N()->__('Loans'),),
+
         ));
       }
   }

@@ -20,16 +20,25 @@
     </tr>
   </tfoot>
   <?php if(strpos($_SERVER['REQUEST_URI'], '/edit/')):?>
+</table>
 <?php if(count($spec_related_inverse)>0): ?>
-<tr><td>Inverse relationship<td></tr>
+<h3>Inverse relationship</h3>
+<table>
+
 <?php endif;  ?>
-<?php foreach($spec_related_inverse as $val):?>
+<?php $cpt=0; foreach($spec_related_inverse as $val):?>
+<tr>
+  <td style='max-width:20px;'><?php echo ++$cpt; ?></td>
+  <td>UUID</td>
+  <td colspan='2'><a target="_blank" href="<?php echo url_for('specimen/edit?id='.$val->getSpecimenRef()) ?>"><?php echo __('Specimen'); ?> : <?php echo $val->Specimen->getUuid(); ?></a></td>
+  </tr>
   <tr>
+  <td></td>
     <td><?php echo $val->getRelationshipType() ; ?></td>
 <!--ftheeten 2018 02 13 : add getTaxonName and reorganize layout-->
       <?php if($val->getUnitType()=="specimens") : ?>
         <td>
-			<a target="_blank" href="<?php echo url_for('specimen/edit?id='.$val->getSpecimenRef()) ?>"><?php echo __('Specimen'); ?> : <?php echo $val->Specimen->getName(); ?></a>
+			<?php echo $val->Specimen->getName(); ?>
 			</br>
 			<?php echo $val->Specimen->getTaxonName(); ?>
 		</td>

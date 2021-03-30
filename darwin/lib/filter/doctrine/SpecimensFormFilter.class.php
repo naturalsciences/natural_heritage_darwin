@@ -884,6 +884,10 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->widgetSchema['exact_codes_list']->setLabel("Fuzzy matching");
     $this->validatorSchema['exact_codes_list'] = new sfValidatorPass();
     $this->is_fuzzy_codes_list=false;
+	$this->widgetSchema['uuid']=new sfWidgetFormInputCheckbox();   
+    $this->widgetSchema['uuid']->setLabel("UUID");
+    $this->validatorSchema['uuid'] = new sfValidatorPass();
+	$this->is_uuid=false;
     $this->codeListCalled=false;
     
     //ftheeten 2018 11 26
@@ -916,6 +920,21 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 	//ftheeten 2019 06 02
 	 $this->widgetSchema['import_ref'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
 	 $this->validatorSchema['import_ref'] = new sfValidatorString(array('required' => false));
+	 
+	$this->widgetSchema['user_ref'] = new sfWidgetFormDoctrineChoice(array(
+      'model' =>'Users',
+      'add_empty' => true,
+      'table_method' => 'getTrackingUsers',
+    ));
+	 $this->validatorSchema['user_ref'] = new sfValidatorString(array('required' => false));
+	 
+	 $this->widgetSchema['action'] = new sfWidgetFormChoice(array(
+        'choices'  => array("insert"=> "Insert" , "update"=> "Update"),
+       'expanded'=> true,
+	   'multiple'=>true
+        ), array( 'style' => "display: inline-block;text-align:center"));
+    $this->widgetSchema['action']->setDefault("insert");
+	$this->validatorSchema['action'] = new sfValidatorPass();
      
     //2018 11 22
 	$this->widgetSchema['tag_boolean'] = new sfWidgetFormChoice(array('choices' => array('OR' => 'OR', 'AND' => 'AND')));
@@ -1042,7 +1061,13 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
               
                 foreach($tmpCodes as $to_search)
                 {
-                    if($this->is_fuzzy_codes_list)
+					
+					if($this->is_uuid)
+					{
+						//$to_search;
+                        $sql_parts[]= "uuid = ? ";
+					}
+                    elseif($this->is_fuzzy_codes_list)
                     {
                         $to_search="%".BaseSpecimensFormFilter::fulltoindex_sql($to_search)."%";
                         $sql_parts[]= "EXISTS(select 1 from codes where referenced_relation='specimens' and code_category='main' and record_id = s.id AND full_code_indexed LIKE ? ) ";
@@ -2195,6 +2220,14 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
             $this->is_fuzzy_codes_list=true;
         }
     }
+	
+	if(isset($taintedValues['uuid']))
+    {
+        if($taintedValues['uuid'])
+        {
+            $this->is_uuid=true;
+        }
+    }
 
 	
 	if(isset($taintedValues['Peoples'])&& is_array($taintedValues['Peoples']))
@@ -2401,7 +2434,7 @@ $query = DQ::create()
     $this->addDateFromToColumnQuery($query, array('ig_date'), $values['ig_from_date'], $values['ig_to_date']);
     $this->addDateFromToColumnQuery($query, array('acquisition_date'), $values['acquisition_from_date'], $values['acquisition_to_date']);
     //2019 02 25
-    $this->addCreationDateFromToColumnQuery($query, array('modification_date_time'), $values['creation_from_date'], $values['creation_to_date']);
+    $this->addCreationDateFromToColumnQuery($query, array('modification_date_time'), $values['creation_from_date'], $values['creation_to_date'], $values['user_ref'], $values['action']);
     
     
     
@@ -2424,14 +2457,27 @@ $query = DQ::create()
     return $query;
   }
   
-     //ftheeten 2019 02 25
-   public function addCreationDateFromToColumnQuery(Doctrine_Query $query, array $dateFields, $val_from, $val_to)
+    
+   //ftheeten 2019 02 25
+   public function addCreationDateFromToColumnQuery(Doctrine_Query $query, array $dateFields, $val_from, $val_to, $user_ref, $actions)
   {
-    if (count($dateFields) > 0 && ($val_from->getMask() > 0 || $val_to->getMask() > 0 ))
+	  
+	$user_flag=false;
+	if( !empty($user_ref))
+	{
+		if(is_numeric($user_ref))
+		{
+			$user_flag=true;
+		}
+	}
+	//print_r($action);
+    if ((count($dateFields) > 0 && ($val_from->getMask() > 0 || $val_to->getMask() > 0 ))|| $user_flag)
     {
       $query->innerJoin('s.UsersTrackingSpecimens ut');
       $query->andWhere("ut.referenced_relation = ? ",'specimens');
-       $query->andWhere("ut.action = ? ",'insert');
+      // $query->andWhere("ut.action = ? ",'insert');
+	  $actions = $this->checksToQuotedValues($actions);
+	  $query->andWhere('ut.action in ('.implode(',',$actions).')');
       if($val_from->getMask() > 0 && $val_to->getMask() > 0)
       {
         if (count($dateFields) == 1)
@@ -2472,6 +2518,12 @@ $query = DQ::create()
                          $vals
                         );
       }
+	  
+	  if($user_flag)
+	  {
+		    $query->andWhere("ut.user_ref = ? ",$user_ref);
+	  }
+	  $this->with_tracking=true;
     }
     return $query;
   }

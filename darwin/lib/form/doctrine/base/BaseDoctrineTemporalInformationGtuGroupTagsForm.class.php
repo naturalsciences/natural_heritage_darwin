@@ -58,6 +58,9 @@ abstract class BaseDoctrineTemporalInformationGtuGroupTagsForm extends DarwinMod
     $this->widgetSchema   ['expedition_refs'] = new sfWidgetFormTextarea();
     $this->validatorSchema['expedition_refs'] = new sfValidatorString(array('required' => false));
 
+    $this->widgetSchema   ['expedition_ref'] = new sfWidgetFormInputText();
+    $this->validatorSchema['expedition_ref'] = new sfValidatorInteger(array('required' => false));
+
     $this->widgetSchema   ['collection_ref'] = new sfWidgetFormInputText();
     $this->validatorSchema['collection_ref'] = new sfValidatorInteger(array('required' => false));
 

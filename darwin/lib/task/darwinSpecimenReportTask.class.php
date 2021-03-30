@@ -12,7 +12,7 @@ class darwinSpecimenReportTask extends sfBaseTask
       new sfCommandOption('user_id', null, sfCommandOption::PARAMETER_REQUIRED, 'id of the query'),
 	  new sfCommandOption('page_size', null, sfCommandOption::PARAMETER_REQUIRED, 'page_size', 10000),
 	  new sfCommandOption('is_admin', null, sfCommandOption::PARAMETER_REQUIRED, 'user is admin', "false"),
-	  new sfCommandOption('type_report', null, sfCommandOption::PARAMETER_REQUIRED, 'type od report', "specimens"), //specimens, taxonomy, taxonomy_count, label
+	  new sfCommandOption('type_report', null, sfCommandOption::PARAMETER_REQUIRED, 'type od report', "specimens"), //specimens, taxonomy, taxonomy_count, label,specimen_virtual_collection
       ));
     $this->namespace        = 'darwin';
     $this->name             = 'get-tab-report';
@@ -24,6 +24,7 @@ EOF;
   
     protected function execute($arguments = array(), $options = array())
   {
+	  print("DEBUG");
       //$configuration = ProjectConfiguration::getApplicationConfiguration('backend', 'prod', false);
        // sfContext::createInstance($configuration)->dispatch();
 	  $databaseManager = new sfDatabaseManager($this->configuration);
@@ -96,9 +97,10 @@ EOF;
 		}
         elseif(strtolower($options['type_report'])=="label")
         {
-    
+    print("label1");
              if(ctype_digit($options['query_id']) && ctype_digit($options['user_id'])&& ctype_digit($options['page_size']) )
 			  {
+				      print("label2");
                 
 				  $page_size=$options['page_size'];
 				  $admin=false;
@@ -120,7 +122,7 @@ EOF;
                    
 				  $conn->commit();
 				  $uri = sfConfig::get('sf_upload_dir').'/tab_report/label_' . $options['query_id'].".txt";
-				 
+				 print($uri);
 				  $handle = fopen($uri, "w");
 				
 					 $conn->beginTransaction();
@@ -137,7 +139,7 @@ EOF;
 					
 					foreach($dataset as $row)
 					{
-									
+				print("ROW");					
 						$tmp=implode("\t",
 							array_map(
 									function ($text)
@@ -203,6 +205,38 @@ EOF;
 				fclose($handle);				
 				  
 			 }
+		}
+	    elseif(strtolower($options['type_report'])=="specimen_virtual_collections")
+		{
+			print("go");
+			$uri_2 = sfConfig::get('sf_upload_dir').'/tab_report/work_Report_VC_' . $options['query_id'].".txt";
+			if(!file_exists($uri_2))
+		    {
+				$handle2 = fopen($uri_2, "w");
+				$uri = sfConfig::get('sf_upload_dir').'/tab_report/Report_VC_' . $options['query_id'].".txt";
+				$handle = fopen($uri, "w");
+				
+				$dataset=Doctrine_Core::getTable('MySavedSearches')->getVirtualCollectionsReport($options['query_id'] , $options['user_id']);
+
+				fwrite($handle, implode("\t",array_keys($dataset[0])));
+
+				foreach($dataset as $row)
+				{
+												
+					$tmp=implode("\t",
+							array_map(
+							function ($text)
+							{
+									return trim(preg_replace('/(\r\n|\t|\n)/', ' ', $text));
+							} ,$row) );
+							fwrite($handle, "\r\n".$tmp);
+									
+				}	
+				fclose($handle2);
+				unlink($uri_2);
+				
+			}
+			
 		}
 	  }
 	   

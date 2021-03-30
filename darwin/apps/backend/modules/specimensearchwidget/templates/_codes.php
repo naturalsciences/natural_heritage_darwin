@@ -24,13 +24,15 @@
         <tr>
             <th><?php echo $form['codes_list']->renderLabel();?> : </th>
             <th style="font-style: italic;"><?php echo $form['exact_codes_list']->renderLabel();?> :</th>
+			<th style="font-style: italic;"><?php echo $form['uuid']->renderLabel();?> :</th>
           </tr>
      </thead>
      <tbody>
 	     <tr><td>Enter ";" to provide several values (with trailing ";")</td> </tr>
         <tr>
            <td><select name="select2_codes" id="select2_codes" multiple="multiple"></select><?php echo $form['codes_list'];?></td>        
-            <td><?php echo $form['exact_codes_list'];?></td>        
+            <td><?php echo $form['exact_codes_list'];?></td>
+			<td><?php echo $form['uuid'];?></td> 			
         </tr>
       <!---->
   </tbody>

@@ -18,6 +18,7 @@ class SpecimensSelfFormFilter extends BaseSpecimensFormFilter
     $this->widgetSchema->setNameFormat('searchSpecimen[%s]');
     $this->widgetSchema['caller_id'] = new sfWidgetFormInputHidden();
     $this->widgetSchema['code'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
+	$this->widgetSchema['uuid'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
     $this->widgetSchema['taxon_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
     $this->widgetSchema->setLabels(array('code' => 'Exact Specimen code',
                                          'taxon_name' => 'Taxon',
@@ -39,6 +40,7 @@ class SpecimensSelfFormFilter extends BaseSpecimensFormFilter
                                                                  'trim' => true
                                                                 )
                                                           );
+	$this->validatorSchema['uuid'] = new sfValidatorString(array('required' => false,'trim' => true));
     $this->validatorSchema['caller_id'] = new sfValidatorString(array('required' => false));
 
 
@@ -71,6 +73,16 @@ class SpecimensSelfFormFilter extends BaseSpecimensFormFilter
      {
        $conn_MGR = Doctrine_Manager::connection();
        $query->andWhere("ig_num_indexed like concat(fullToIndex(".$conn_MGR->quote($values, 'string')."), '%') ");
+     }
+     return $query;
+  }
+  
+  public function addUuidColumnQuery(Doctrine_Query $query, $field, $values)
+  {
+     if ($values != "")
+     {
+       
+       $query->andWhere('uuid = ?', $values);
      }
      return $query;
   } 

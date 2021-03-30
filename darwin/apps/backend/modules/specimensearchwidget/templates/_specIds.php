@@ -18,6 +18,24 @@
       <td><?php echo $form['import_ref'];?></td>
     </tr>
   </tbody>
+  <thead>
+     <tr>
+      <th><?php echo $form['action']->renderLabel();?></th>
+    </tr>
+     </thead>
+     <tr>
+      <td><?php echo $form['action'];?></td>
+    </tr>
+  </tbody>
+   <thead>
+     <tr>
+      <th><?php echo $form['user_ref']->renderLabel();?></th>
+    </tr>
+     </thead>
+     <tr>
+      <td><?php echo $form['user_ref'];?></td>
+    </tr>
+  </tbody>
 </table>
 
 <table>

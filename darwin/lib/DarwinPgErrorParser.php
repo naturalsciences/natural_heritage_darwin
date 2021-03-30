@@ -1,5 +1,5 @@
 <?php
-class DarwinPgErrorParser
+class DarwinPgErrorParser extends Exception
 {
   protected $nat_exception = null;
 
@@ -91,12 +91,13 @@ class DarwinPgErrorParser
     '/\bunq_staging_tag_groups\b/' => 'This tag group already exists',
   );
 
-  public function __construct(Doctrine_Exception $e)
+  public function __construct($message)
   {
-    $this->nat_exception = $e;
+    //$this->nat_exception = $e;
+	parent::__construct($message);
   }
 
-  public function getMessage()
+  /*public function getMessage()
   {    
     $original_message = $this->nat_exception->getMessage();
     foreach (self::$errorRegexps as $regexp => $message)
@@ -107,5 +108,5 @@ class DarwinPgErrorParser
 	    }
     }
     return 'Unknown Error : '.$original_message;
-  }
+  }*/
 }
