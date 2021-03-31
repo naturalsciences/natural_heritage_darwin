@@ -356,7 +356,7 @@ class specimensearchActions extends DarwinActions
       'codes' => array(
         false,
         $this->getI18N()->__('Codes'),),
-	   'Uuid' => array(
+	   'uuid' => array(
           false,
           $this->getI18N()->__('UUID'),),
       'taxon' => array(
