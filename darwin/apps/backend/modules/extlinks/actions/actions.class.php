@@ -53,4 +53,35 @@ class extLinksActions extends DarwinActions
       }
     }
   }
+  
+    //ftheeten 2017 01 09
+  public function executeSketchfabSnippet(sfWebRequest $request)
+  {
+      $id=$request->getParameter('id');
+        $this->link = Doctrine_Core::getTable('ExtLinks')->find($id);
+   
+        $this->form = new ExtLinksForm($this->link);       
+        
+  }
+  
+  //ftheeten 2017 01 09
+  public function executeIiifViewer(sfWebRequest $request)
+  {
+      $id=$request->getParameter('id');
+        $this->link = Doctrine_Core::getTable('ExtLinks')->find($id);
+   
+        $this->form = new ExtLinksForm($this->link);       
+        
+  }
+  
+    //ftheeten 2017 01 09
+  public function executeExtViewer(sfWebRequest $request)
+  {
+      $id=$request->getParameter('id');
+        $this->link = Doctrine_Core::getTable('ExtLinks')->find($id);
+   
+        $this->form = new ExtLinksForm($this->link);       
+        
+  }
+  
 }

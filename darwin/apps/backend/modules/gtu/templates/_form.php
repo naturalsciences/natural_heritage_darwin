@@ -19,6 +19,32 @@ $(document).ready(function ()
 <table>
     <tbody>
       <?php echo $form->renderGlobalErrors() ?>
+	   <?php if (!$form->getObject()->isNew()): ?>
+	 	  <tr>
+		<td><?php echo image_tag('magnifier.gif');?> <?php echo link_to(__('Search related specimens'),'specimensearch/search', array('class'=>'link_to_search'));?>
+		<script type="text/javascript">
+		  $(document).ready(function (){
+		   
+		   
+		   if($('#gtu_temporal_information option').size()>0)
+		   {
+				$('.counter_date').text($('#gtu_temporal_information option').size()+" Value(s)");
+		   }
+		   else
+		   {
+				 $(".date_row").hide();
+		   }
+		  
+			search_data = <?php echo json_encode(array('specimen_search_filters[gtu_ref]' => $form->getObject()->getId()));?>;
+			$('.link_to_search').click(function (event){
+			  event.preventDefault();
+			  postToUrl($(this).attr('href'), search_data, true);
+			});
+		  });
+		</script>
+		</td>
+	</tr>
+	 <?php endif;?>
       <tr>
         <th class="top_aligned"><?php echo $form['code']->renderLabel() ?></th>
         <td>
@@ -45,6 +71,7 @@ $(document).ready(function ()
 		  </tr>
 		  <?php endforeach;?>		  
 	 <?php endif; ?>
+	
     </tbody>
 </table>
 <!--JMHerpers 2019 05 29-->

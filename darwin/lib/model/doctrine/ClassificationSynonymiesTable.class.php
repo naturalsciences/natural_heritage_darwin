@@ -124,7 +124,15 @@ class ClassificationSynonymiesTable extends DarwinTable
 
 
     $conn = Doctrine_Manager::connection();
-	  $sql = "SELECT s.group_name, s.id, s.record_id, s.group_id, s.is_basionym, s.order_by,  s.original_synonym, t.name, t.id , t.extinct from fct_rmca_taxonomy_get_other_synonyms( :id) s LEFT JOIN $table_name t ON s.record_id=t.id;";
+	
+	  if($table_name=="taxonomy")
+	  {
+		$sql = "SELECT s.group_name, s.id, s.record_id, s.group_id, s.is_basionym, s.order_by,  s.original_synonym, t.name, t.id , t.extinct from fct_rmca_taxonomy_get_other_synonyms( :id) s LEFT JOIN $table_name t ON s.record_id=t.id;";
+	  }
+	  else
+	  {
+		 $sql = "SELECT s.group_name, s.id, s.record_id, s.group_id, s.is_basionym, s.order_by,  s.original_synonym, t.name, t.id  from fct_rmca_taxonomy_get_other_synonyms( :id) s LEFT JOIN $table_name t ON s.record_id=t.id;";
+	  }
 	  $q = $conn->prepare($sql);
 	  $q->execute(array(':id'=> $record_id));
 	  $items = $q->fetchAll(PDO::FETCH_NUM);

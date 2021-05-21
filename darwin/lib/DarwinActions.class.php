@@ -306,7 +306,11 @@ class DarwinActions extends sfActions
     }
     elseif($table_name=="taxa")
     {
-        $items=Doctrine_Core::getTable('Collections')->countTaxaInSpecimen($idCollections, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections, $hide_private,$this->getUser()) ;
+        $items=Doctrine_Core::getTable('Collections')->countTaxaInSpecimen($idCollections, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections, $hide_private,$this->getUser(), $false) ;
+    }
+	elseif($table_name=="all_taxa")
+    {
+        $items=Doctrine_Core::getTable('Collections')->countTaxaInSpecimen($idCollections, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections, $hide_private,$this->getUser(), $true) ;
     }
     if(count($items)>1)
     {
