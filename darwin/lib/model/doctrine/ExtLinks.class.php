@@ -13,12 +13,16 @@
 class ExtLinks extends BaseExtLinks
 {
   private static $link_types = array(
-    'ext' => 'External',
-    'vc' => 'Virtual Collection',
-	'nagoya'=> 'Nagoya',
+    'ext' => 'Other External',
+    //'vc' => 'Virtual Collection',
+	'html_3d_snippet' => '3D',
+	'dna' => 'DNA',
+	'iiif' => 'Picture (IIIF)',
 	'ltp' => 'LTP',
-	'iiif' => 'IIIF',
-	'dna' => 'DNA link',
+	'nagoya'=> 'Nagoya',
+	'sound' => 'Sound',
+	'video' => 'Video',
+	'other' => 'Others'
     ) ;
 
   static public function getLinkTypes()

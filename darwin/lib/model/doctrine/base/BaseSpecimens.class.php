@@ -129,6 +129,7 @@
  * @property integer $import_ref
  * @property string $main_code_indexed
  * @property string $nagoya
+ * @property string $uuid
  * @property Collections $Collections
  * @property Expeditions $Expeditions
  * @property Gtu $Gtu
@@ -280,6 +281,7 @@
  * @method integer                          getImportRef()                        Returns the current record's "import_ref" value
  * @method string                           getMainCodeIndexed()                  Returns the current record's "main_code_indexed" value
  * @method string                           getNagoya()                           Returns the current record's "nagoya" value
+ * @method string                           getUuid()                             Returns the current record's "uuid" value
  * @method Collections                      getCollections()                      Returns the current record's "Collections" value
  * @method Expeditions                      getExpeditions()                      Returns the current record's "Expeditions" value
  * @method Gtu                              getGtu()                              Returns the current record's "Gtu" value
@@ -430,6 +432,7 @@
  * @method Specimens                        setImportRef()                        Sets the current record's "import_ref" value
  * @method Specimens                        setMainCodeIndexed()                  Sets the current record's "main_code_indexed" value
  * @method Specimens                        setNagoya()                           Sets the current record's "nagoya" value
+ * @method Specimens                        setUuid()                             Sets the current record's "uuid" value
  * @method Specimens                        setCollections()                      Sets the current record's "Collections" value
  * @method Specimens                        setExpeditions()                      Sets the current record's "Expeditions" value
  * @method Specimens                        setGtu()                              Sets the current record's "Gtu" value
@@ -894,6 +897,9 @@ abstract class BaseSpecimens extends DarwinModel
              'type' => 'string',
              'notnull' => true,
              'default' => 'not defined',
+             ));
+        $this->hasColumn('uuid', 'string', null, array(
+             'type' => 'string',
              ));
     }
 

@@ -271,7 +271,9 @@
 
     $.catalogue.defaultOptions = {
       link_catalogue: "a.link_catalogue",
-      delete_link: "a.widget_row_delete"
+      delete_link: "a.widget_row_delete",
+	  //ftheeten 2020 04 01
+      link_catalogue_view: "a.link_catalogue_view",
     };
 
     $.fn.catalogue = function(options){

@@ -34,6 +34,20 @@
             <?php if($orderBy=='name_indexed') echo $orderSign ?>
           </a>
         </th>
+		<?php if($searchForm->getValue('table')=="taxonomy"):?>
+		<th>			
+			  <a class="sort" href="<?php echo url_for($s_url.'&orderby=status'.( ($orderBy=='status' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
+				<?php echo __('Status');?>
+				<?php if($orderBy=='status') echo $orderSign ?>
+			  </a>			
+        </th>
+		<th>			
+			  <a class="sort" href="<?php echo url_for($s_url.'&orderby=nb_synonyms'.( ($orderBy=='nb_synonyms' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
+				<?php echo __('Synonyms');?>
+				<?php if($orderBy=='nb_synonyms') echo $orderSign ?>
+			  </a>			
+        </th>
+		<?php endif; ?>
         <th>
           <a class="sort" href="<?php echo url_for($s_url.'&orderby=level_ref'.( ($orderBy=='level_ref' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
             <?php echo __('Level');?>
@@ -101,6 +115,18 @@
               <div class="tree">
               </div>
             </td>
+			<?php if($searchForm->getValue('table')=="taxonomy"):?>
+				<td>
+					 <?php if($item->getStatus()!="valid"):?>
+						<span class="item_status"><?php echo $item->getStatus();?></span>
+					<?php endif;?>						
+				</td>
+				<td>
+				    <?php if($item->getNbSynonyms()>0):?>
+						<span class="nb_synonyms"><?php echo $item->getNbSynonyms();?></span>
+					<?php endif;?>
+				</td>
+			<?php endif;?>
             <td>
               <span class="level_name"><?php echo $item->getLevel();?></span>
             </td>
@@ -128,7 +154,7 @@
             <?php endif;?>
             <td class="<?php echo (! $is_choose)?'edit':'choose';?>">
               <a href="#" class="search_related"><?php echo image_tag('link.png', array("title" => __("Search Related")));?></a>
-                <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),$searchForm->getValue('table').'/view?id='.$item->getId());?>
+                <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),$searchForm->getValue('table').'/view?id='.$item->getId(),array('target'=>"_blank"));?>
               <?php if(! $is_choose):?>
                 <?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>
                   <?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))),$searchForm->getValue('table').'/edit?id='.$item->getId(),array('target'=>"_blank"));?>

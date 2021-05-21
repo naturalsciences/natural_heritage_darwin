@@ -9,13 +9,59 @@
       else
         $orderSign = '<span class="order_sign_up">&nbsp;&#9650;</span>';
     ?>
-    
+    <?php
+	 
+	function init_map_json($spec_list, $code_list, &$has_coordinates)
+	{
+		$returned=Array();
+		$returned["type"]="FeatureCollection";
+		$returned["crs"]["type"]="name";
+		$returned["crs"]["properties"]["name"]=["EPSG:4326"];
+		
+		$points=Array();
+		foreach($spec_list as $spec)
+		{
+			
+			if(is_numeric($spec->getLatitude())&&is_numeric($spec->getLongitude()))
+			{
+				$has_coordinates=true;
+				$obj=Array();
+				$obj["type"]="Feature";
+				$obj["geometry"]["type"]="Point";
+				$obj["geometry"]["coordinates"]=[(float)$spec->getLongitude(),(float)$spec->getLatitude()];
+				$obj["properties"]["dw_id"]=$spec->getId();
+				$obj["properties"]["dw_code"]="Undefined id";
+				$obj["properties"]["dw_taxon_name"]="";
+				if($spec->getTaxonName()!==null)
+				{
+					$obj["properties"]["dw_taxon_name"]=$spec->getTaxonName();
+				}
+				foreach($code_list[$spec->getId()] as $key=>$code)
+				{
+					if($code->getCodeCategory() == 'main')
+					{
+						$obj["properties"]["dw_code"]=str_replace(","," ", $code->getFullCode());
+					}
+				}
+				$points[]=$obj;
+			}		
+		}
+		$returned["features"]=$points;
+		return json_encode($returned);
+	}
+	$has_coordinates=false;
+	$array_coords=init_map_json($specimensearch, $codes, $has_coordinates);
+	
+
+?>
     <!-- ftheeten 2014 04 17-->
     <?php include_partial('showurl', array('id'=>1, 'currentPage'=>$currentPage,'postMapper' => $_POST, 'getMapper' => $_GET, 's_url'=>$s_url , 'method'=>$_SERVER['REQUEST_METHOD'])); ?>
     <?php include_partial('global/pager', array('pagerLayout' => $pagerLayout)); ?>
     <?php include_partial('pager_info', array('form' => $form, 'pagerLayout' => $pagerLayout, 'container'=> '.spec_results')); ?>
-
-      <table class="spec_results">
+	<?php if($has_coordinates):?>
+    <?php include_partial('map', array('form' => $form, "specimensearch"=> $specimensearch, "codes"=>$codes, "geojson"=>$array_coords));?>
+    <?php endif;?>    
+	<table class="spec_results">
         <thead>
           <tr>
             <th><!-- checkbox for selection of records to be removed -->

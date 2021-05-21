@@ -56,6 +56,9 @@ abstract class BaseTaxonomyFormFilter extends DarwinModelFormFilter
     $this->widgetSchema   ['metadata_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('TaxonomyMetadata'), 'add_empty' => true));
     $this->validatorSchema['metadata_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('TaxonomyMetadata'), 'column' => 'id'));
 
+    $this->widgetSchema   ['id'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['id'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => 'Taxonomy', 'column' => 'id'));
+
     $this->widgetSchema->setNameFormat('taxonomy_filters[%s]');
   }
 
@@ -81,6 +84,7 @@ abstract class BaseTaxonomyFormFilter extends DarwinModelFormFilter
       'parent_ref' => 'ForeignKey',
       'level_ref' => 'ForeignKey',
       'metadata_ref' => 'ForeignKey',
+      'id' => 'Number',
     ));
   }
 }

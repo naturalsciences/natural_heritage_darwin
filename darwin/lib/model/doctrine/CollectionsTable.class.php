@@ -588,8 +588,17 @@ class CollectionsTable extends DarwinTable
   }
   
   
-  public function countTaxaInSpecimen($collectionID ="/", $year="", $creation_date_min="", $creation_date_max="", $ig_num="", $includeSubcollection=false, $detailSubCollections=false  , $hide_private=false)
+  public function countTaxaInSpecimen($collectionID ="/", $year="", $creation_date_min="", $creation_date_max="", $ig_num="", $includeSubcollection=false, $detailSubCollections=false  , $hide_private=false, $all=false)
   {
+	  
+	if($all)
+	{
+		$view_name="v_reporting_taxa_in_specimen_per_rank_collection_ref_year_igall";
+	}
+	else
+	{
+		$view_name="v_reporting_taxa_in_specimen_per_rank_collection_ref_year_ig";
+	}
   
     $fields =Array();
     $groups =Array();
@@ -670,7 +679,7 @@ class CollectionsTable extends DarwinTable
 			{
 				if(is_numeric($tmp_id))
 				{
-					$whereTmp[]= "collection_path||'/'||v_reporting_taxa_in_specimen_per_rank_collection_ref_year_ig.collection_ref||'/' LIKE '%/$tmp_id/%'";
+					$whereTmp[]= "collection_path||'/'||$view_name.collection_ref||'/' LIKE '%/$tmp_id/%'";
 				}
 			}
 			$where[]="(".implode(" OR ", $whereTmp).")";
@@ -678,7 +687,7 @@ class CollectionsTable extends DarwinTable
         else
         {
             //$where[]= "collections.id::varchar  = :ida";
-            $where[]= "collection_path||'/'||v_reporting_taxa_in_specimen_per_rank_collection_ref_year_ig.collection_ref||'/' LIKE '%/'||:idb||'/%'";
+            $where[]= "collection_path||'/'||$view_name.collection_ref||'/' LIKE '%/'||:idb||'/%'";
         }       
     }
 	elseif(strpos($collectionID, ","))
@@ -690,14 +699,14 @@ class CollectionsTable extends DarwinTable
 			{
 				if(is_numeric($tmp_id))
 				{
-					$whereTmp[]= "v_reporting_taxa_in_specimen_per_rank_collection_ref_year_ig.collection_ref = $tmp_id";
+					$whereTmp[]= "$view_name.collection_ref = $tmp_id";
 				}
 			}
 			$where[]="(".implode(" OR ", $whereTmp).")";
 	}
     else
     {
-         $where[]= "v_reporting_taxa_in_specimen_per_rank_collection_ref_year_ig.collection_ref::varchar  = :id";
+         $where[]= "$view_name.collection_ref::varchar  = :id";
     }
     
     
@@ -709,9 +718,9 @@ class CollectionsTable extends DarwinTable
    $hide_str="";
    if($hide_private)
    {
-	   $hide_str=" INNER JOIN collections ON v_reporting_taxa_in_specimen_per_rank_collection_ref_year_ig.collection_ref=collections.id AND is_public=true ";
+	   $hide_str=" INNER JOIN collections ON $view_name.collection_ref=collections.id AND is_public=true ";
    }
-    $sql ="SELECT ".$all_fields." FROM v_reporting_taxa_in_specimen_per_rank_collection_ref_year_ig ".$hide_str." WHERE ".implode(" AND ", $where);
+    $sql ="SELECT ".$all_fields." FROM $view_name ".$hide_str." WHERE ".implode(" AND ", $where);
     
     if(count($groups)>0)
     {

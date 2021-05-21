@@ -1257,6 +1257,10 @@ class RMCATabDataDirect
             if($this->isset_and_not_null($valTmp))
             {
                 $this->parsed_fields[]=$prefixNotionConcerned;
+				if(strpos(strtolower($valTmp),"history")===false)
+				{
+					$valTmp="History - ".$valTmp;
+				}
                 $this->identification_object->setNotion($valTmp);
             }
                 

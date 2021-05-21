@@ -125,8 +125,8 @@ class TaxonomyFormFilter extends BaseTaxonomyFormFilter
       */
     //ftheeten 2017 07 03   
     $query = DQ::create()
-      ->select('t.*, m.taxonomy_name as taxonomy_name')
-      ->from('Taxonomy t')->leftJoin("t.TaxonomyMetadata m ON t.metadata_ref=m.id");
+      ->select('t.*, m.taxonomy_name as taxonomy_name, count(y.id) as nb_synonyms')
+      ->from('Taxonomy t')->leftJoin("t.TaxonomyMetadata m ON t.metadata_ref=m.id")->leftJoin("t.TaxonomicSynonymies y on t.id=y.record_id");
 
     if ($values['collection_ref'] != '')
     {
@@ -186,6 +186,7 @@ class TaxonomyFormFilter extends BaseTaxonomyFormFilter
     }
     
      $this->addRelationItemColumnQuery($query, $values);
+	 $query->groupBy("t.id, m.id");
     $query->limit($this->getCatalogueRecLimits());
     return $query;
   }

@@ -107,6 +107,7 @@
         </td
 		<!--madam 2019 01 28-->
 	  </tr>
+	  <tr>
 		<td><?php echo image_tag('magnifier.gif');?> <?php echo link_to(__('Search related specimens'),'specimensearch/search', array('class'=>'link_to_search'));?>
 <script type="text/javascript">
   $(document).ready(function (){
@@ -128,7 +129,6 @@
     });
   });
 </script></td>
-      </tr>
       </tr>
       <?php if($sf_user->isAtLeast(Users::ENCODER)):?>
       <tr>

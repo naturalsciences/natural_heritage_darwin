@@ -673,6 +673,10 @@ Taxonomy:
             class: TaxonomyMetadata
             local: metadata_ref
             foreign: id
+        TaxonomicSynonymies:
+            class: TaxonomicSynonymies
+            local: id
+            foreign: record_id
 
 
 #ftheeten 2017 07 17
@@ -708,6 +712,14 @@ ClassificationSynonymies:
         order_by: { type: integer, notnull: true, default:0}
         synonym_record_id: { type: integer}
         original_synonym: { type: boolean, default: false}
+        
+TaxonomicSynonymies:
+    inheritance:
+        extends: ClassificationSynonymies
+        type: column_aggregation
+        keyField: referenced_relation
+        keyValue: taxonomy
+
 
 Chronostratigraphy:
     columns:
