@@ -12,10 +12,15 @@ class ExtLinksForm extends BaseExtLinksForm
 {
   public function configure()
   {
-    $this->useFields(array('id','type','url','comment'));
+    $this->useFields(array('id','type','url','comment', 'is_public'));
 
     $this->widgetSchema['url'] = new sfWidgetFormInputText();
     $this->widgetSchema['url']->setAttributes(array('class'=>'small_medium_size'));
+
+    
+	$this->widgetSchema['is_public'] = new sfWidgetFormInputCheckBox();
+	$this->setDefault('is_public', true);
+	$this->validatorSchema['is_public'] = new sfValidatorPass();
 
     /* Validators */
     $this->validatorSchema['id'] = new sfValidatorInteger(array('required'=>false));

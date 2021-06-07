@@ -420,8 +420,11 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     ));	
     $this->validatorSchema['link_type'] =  new sfValidatorPass();
   
-   $this->widgetSchema['link_comment'] = new sfWidgetFormInputText();	
+	$this->widgetSchema['link_comment'] = new sfWidgetFormInputText();	
     $this->validatorSchema['link_comment'] =  new sfValidatorString(array('required' => false, 'trim'=>true));
+	
+	$this->widgetSchema['link_url'] = new sfWidgetFormInputText();	
+    $this->validatorSchema['link_url'] =  new sfValidatorString(array('required' => false, 'trim'=>true));
 
 
     /* Acquisition categories */
@@ -2020,10 +2023,10 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 		return $query ;
 	}
 	
-    public function addLinks($query, $type, $comment) {
-		if(isset($type)||isset($comment))
+    public function addLinks($query, $type, $comment, $url) {
+		if(isset($type)||isset($comment)||isset($url))
 		{
-			if(strlen($type)>0||strlen($comment)>0)
+			if(strlen($type)>0||strlen($comment)>0||strlen($url)>0)
 			{
 				$params=Array();
 				$sql="EXISTS (select l.id FROM ExtLinks l WHERE referenced_relation='specimens' ";
@@ -2036,6 +2039,11 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 				{
 					$sql.=" AND fulltoindex(l.comment) like '%'||fulltoindex(?)||'%' ";
 					$params[]=$comment;
+				}
+				if(strlen($url)>0)
+				{
+					$sql.=" AND fulltoindex(l.url)=fulltoindex(?) ";
+					$params[]=$url;
 				}
 				$sql.=" AND l.record_id = s.id )";
 				$query->andWhere( $sql ,$params);
@@ -2446,7 +2454,7 @@ $query = DQ::create()
     $this->addCatalogueRelationColumnQuery($query, $values['lithology_item_ref'], $values['lithology_relation'],'lithology','lithology', $values['lithology_child_syn_included']);
     $this->addCatalogueRelationColumnQuery($query, $values['mineral_item_ref'], $values['mineral_relation'],'mineralogy','mineral', $values['mineral_child_syn_included']);
 
-    $this->addLinks($query, $values["link_type"], $values["link_comment"]);
+    $this->addLinks($query, $values["link_type"], $values["link_comment"], $values["link_url"]);
    
    	$this->addInstitutionIdentifierQuery($query,   $values["institution_protocol"], $values["institution_identifier"]);
 	$this->addPeopleIdentifierQuery($query, $values["people_protocol"], $values["people_identifier"],$values["people_identifier_role"]);

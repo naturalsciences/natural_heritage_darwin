@@ -120,6 +120,7 @@
         </td>  
       </tr>
     </tbody>
+	</div>
   </table>
   
   <table>
@@ -189,12 +190,63 @@
 	  </tbody>
     </table>
     <br />
-  </div>  
+  </div> 
+  <h2 class="title"><?php echo __("Other") ?></h2>  
+  <div class="borded">
+    <table id="other">
+      <thead>
+		<th>
+		<?php echo __("Type of link") ?>
+		</th>
+		<th>
+		<?php echo __("Link URL") ?>
+		</th>
+	  </thead>
+	  <tbody>
+	  <tr>
+          <td><?php echo $form['link_type'];?></td>
+		  <td><?php echo $form['link_url'];?></td>
+	  </tr>
+	  </tbody>
+	  </table>
+	  <table>
+	  <br/>
+	  <thead>
+		<th>
+		<?php echo __("Recorded query") ?>
+		</th>
+		<th>
+		<?php echo __("Report type") ?>
+		</th>
+	  </thead>
+	  <tbody>
+	  <tr>
+          <td><?php echo $form['public_query'];?></td>
+		  <td>
+            <select class="url_report">
+            <option value=<?php echo(url_for("savesearch/downloadSpec")."/query_id/")?>>
+            Tab-delimited (specimens)
+            </option> 
+            <option value=<?php echo(url_for("savesearch/downloadSpecLabels")."/query_id/")?>>
+            Tab-delimited (specimens - labels )
+            </option> 
+			<option value=<?php echo(url_for("savesearch/downloadTaxonomy")."/type_file/taxonomy_count/query_id/")?>>
+            Tab-delimited (taxonomy : statistics)
+            </option>
+			<option value=<?php echo(url_for("savesearch/downloadVirtualCollections")."/query_id/")?>>
+            Tab-delimited (Virtual Collections)
+            </option>   			
+            </select>
+         <input type="button" name="download_q" id="download_q" value="<?php echo __("Download") ?>"/></td>
+	  </tr>
+	  </tbody>
+  </table>	
+  </div>
   <div style="text-align:right">
     <?php echo link_to(__('Clear'),'@search');?>
     <input type="submit" name="submit" id="submit" value="<?php echo __('Search'); ?>" class="search_submit">
   </div>
-</div>  
+</div>
 </form>
 <script type="text/javascript">
 $(document).ready(function () {
@@ -246,5 +298,24 @@ $(document).ready(function () {
   {
     document.location.href = "<?php echo url_for('search/index') ; ?>" ;
   });
+  
+  $("#download_q").click(
+	function()
+	{
+		if($(".public_query").val().length>0)
+		{
+			var tmp_url=$(".url_report").val()+$(".public_query").val();
+			window.open(tmp_url, '_blank');
+		}
+	}
+  );
+  
+  if( $('.public_query').has('option').length == 0 ) {
+	$('.public_query').append($('<option>', {
+    value: "",
+    text: 'Empty...'
+}));
+  }
+  
 });  
 </script>

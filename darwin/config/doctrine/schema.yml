@@ -612,6 +612,7 @@ MySavedSearches:
         page_size: {type:integer, notnull: true, default: 10000 }
         nb_records: {type:integer , notnull: true, default: 0 }
         download_lock: {type:boolean, notnull: true, default: false }
+        is_public: {type:boolean, default: false }
     relations:
         User:
             class: Users

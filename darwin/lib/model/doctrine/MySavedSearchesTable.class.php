@@ -16,6 +16,53 @@ class MySavedSearchesTable extends DarwinTable
         ->orderBy($alias . '.favorite DESC');
     return $q;
   }
+  
+  public function createPublicQuery(Doctrine_Query $q = null, $ordered_desc=true)
+  {
+    if (is_null($q))
+    {
+        $q = Doctrine_Query::create()
+            ->from('MySavedSearches s')->andWhere("is_public=true and is_public IS NOT NULL");
+		if(ordered_desc)
+		{
+			$q->orderBy('modification_date_time DESC');
+		}
+    }
+    
+    return $q;
+  }
+  
+   public function testIsPublicQuery($id)
+  {
+    $returned=false;
+	$obj = Doctrine_Query::create()
+            ->from('MySavedSearches s')->andWhere("is_public=true and is_public IS NOT NULL")->andWhere("id=?",$id)->fetchOne();
+	if(is_object($obj))
+	{
+		if($obj->getIsPublic()===true)
+		{
+			$returned=true;
+		}
+	}
+	return $returned;
+  }
+  
+   public function getPublicQueryUser($id)
+  {
+    $returned=null;
+	$obj = Doctrine_Query::create()
+            ->from('MySavedSearches s')->andWhere("is_public=true and is_public IS NOT NULL")->andWhere("id=?",$id)->fetchOne();
+	if(is_object($obj))
+	{
+		if($obj->getIsPublic()===true)
+		{
+			$returned=$obj->getUserRef();
+		}
+	}
+	return $returned;
+  }
+  
+  
 
   public function addIsSearch(Doctrine_Query $q, $is_search = false)
   {

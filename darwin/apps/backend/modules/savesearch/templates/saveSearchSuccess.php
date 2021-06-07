@@ -18,6 +18,11 @@
         <?php echo image_tag('favorite_off.png', array('id'=> 'favorite_off', 'alt' => __('Set a bookmark'))) ; ?>
       </td>
     </tr>
+	<tr>
+      <td><label><?php echo __('Is public'); ?></label></td>
+      <td> <?php echo $form['is_public'] ; ?></td>
+    </tr>
+    <tr>
     <tr>
       <td><label><?php echo __('Last modification'); ?></label></td>
       <td></td>
