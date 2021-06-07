@@ -74,4 +74,9 @@ class MySavedSearches extends BaseMySavedSearches
     $ids = $this->getAllSearchedId();
     return count($ids);
   }
+  
+  public function getNameAndDate()
+  {
+	  return $this->getName()." ".$this->getModificationDateTime();	  
+  }
 }

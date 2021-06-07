@@ -676,7 +676,7 @@ $.fn.customRadioCheck = function() {
 				
 				$("#coll_label").text("- Collection is concerned by Nagoya protocol");
 				$("#GTU_label").text("- Sampling location is in a area concerned by Nagoya protocol");
-				$("#dates_label").text("- Dates of acquisition and/or collect are after 12/10/2014");
+				$("#dates_label").text("- Dates of acquisition or collect are after 12/10/2014");
 		}
 		else if (	$('#coll').val()=="nok" || $('#gtu').val()=="nok" || ($('#date_sampl').val()=="nok" && $('#date_acq').val()=="nok") )
 		{
@@ -707,11 +707,11 @@ $.fn.customRadioCheck = function() {
 					}
 					
 					if($('#date_sampl').val()=="not defined" || $('#date_acq').val()=="not defined") {
-						$("#dates_label").text("- Date of acquisition and/or collect are NOT filled");
+						$("#dates_label").text("- Date of acquisition or collect are NOT filled");
 					}else if($('#date_sampl').val()=="ok" || $('#date_acq').val()=="ok") {
-						$("#dates_label").text("- Dates of acquisition and/or collect are after 12/10/2014");
+						$("#dates_label").text("- Dates of acquisition or collect are after 12/10/2014");
 					}else{
-						$("#dates_label").text("- Dates of acquisition and collect are BEFORE 12/10/2014");
+						$("#dates_label").text("- Dates of acquisition or collect are BEFORE 12/10/2014");
 					}
 			//}
 		}else{	
@@ -744,11 +744,11 @@ $.fn.customRadioCheck = function() {
 
 			if($('#date_sampl').val()=="not defined" || $('#date_acq').val()=="not defined") {
 				
-				$("#dates_label").text("- Date of acquisition and/or collect are NOT filled");
+				$("#dates_label").text("- Date of acquisition or collect are NOT filled");
 			}else if($('#date_sampl').val()=="ok" || $('#date_acq').val()=="ok") {
-				$("#dates_label").text("- Dates of acquisition and/or collect are after 12/10/2014");
+				$("#dates_label").text("- Dates of acquisition or collect are after 12/10/2014");
 			}else{
-				$("#dates_label").text("- Dates of acquisition and collect are BEFORE 12/10/2014");
+				$("#dates_label").text("- Dates of acquisition or collect are BEFORE 12/10/2014");
 			}	
 		}	
 	};

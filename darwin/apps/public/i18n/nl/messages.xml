@@ -957,7 +957,22 @@
         <source>DaRWIN search</source>
         <target>DaRWIN opzoeking</target>
       </trans-unit>
-
+	  <trans-unit id="1724">
+        <source>Type of link</source>
+        <target>Type internetlink</target>
+      </trans-unit>
+	  <trans-unit id="1725">
+        <source>Link URL</source>
+        <target>URL van internetlink</target>
+      </trans-unit>
+	  <trans-unit id="1726">
+        <source>Recorded query</source>
+        <target>Opgenomen verslag</target>
+      </trans-unit>
+	  <trans-unit id="1727">
+        <source>Report type</source>
+        <target>Verslag categorie</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

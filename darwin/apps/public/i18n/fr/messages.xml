@@ -961,6 +961,22 @@
         <source>DaRWIN search</source>
         <target>Recherche DaRWIN</target>
       </trans-unit>
+	  <trans-unit id="1724">
+        <source>Type of link</source>
+        <target>Type du lien</target>
+      </trans-unit>
+	  <trans-unit id="1725">
+        <source>Link URL</source>
+        <target>URL du lien</target>
+      </trans-unit>
+	  	  <trans-unit id="1726">
+        <source>Recorded query</source>
+        <target>Rapport enregistré</target>
+      </trans-unit>
+	  <trans-unit id="1727">
+        <source>Report type</source>
+        <target>Format du rapport</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

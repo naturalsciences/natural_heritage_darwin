@@ -5,7 +5,7 @@
 -- Dumped from database version 9.6.20
 -- Dumped by pg_dump version 13.2
 
--- Started on 2021-05-21 19:17:40
+-- Started on 2021-06-07 22:10:48
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -27456,7 +27456,8 @@ CREATE TABLE darwin2.my_saved_searches (
     current_page integer DEFAULT 0,
     page_size integer DEFAULT 10000,
     nb_records bigint,
-    download_lock boolean DEFAULT false
+    download_lock boolean DEFAULT false,
+    is_public boolean
 );
 
 
@@ -74437,7 +74438,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA darwin2 REVOKE ALL ON TABLE
 ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA darwin2 GRANT ALL ON TABLES  TO darwin2;
 
 
--- Completed on 2021-05-21 19:43:07
+-- Completed on 2021-06-07 22:14:19
 
 --
 -- PostgreSQL database dump complete

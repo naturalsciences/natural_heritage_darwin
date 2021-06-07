@@ -948,6 +948,12 @@ class SpecimensTable extends DarwinTable
         }
         return Array();
      }
+	 
+	 public function getSpecimensByLink($url)
+	 {
+		 $query = Doctrine_Query::create()->from('Specimens s')->andWhere("EXISTS (select l.id FROM ExtLinks l WHERE referenced_relation='specimens' AND l.record_id = s.id AND fulltoindex(l.url)=fulltoindex(?))", $url);
+		 return $query;		 
+	 }
 		
 
 }

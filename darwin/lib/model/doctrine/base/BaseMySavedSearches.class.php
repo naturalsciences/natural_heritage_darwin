@@ -20,6 +20,7 @@
  * @property integer $page_size
  * @property integer $nb_records
  * @property boolean $download_lock
+ * @property boolean $is_public
  * @property Users $User
  * 
  * @method integer         getId()                       Returns the current record's "id" value
@@ -37,6 +38,7 @@
  * @method integer         getPageSize()                 Returns the current record's "page_size" value
  * @method integer         getNbRecords()                Returns the current record's "nb_records" value
  * @method boolean         getDownloadLock()             Returns the current record's "download_lock" value
+ * @method boolean         getIsPublic()                 Returns the current record's "is_public" value
  * @method Users           getUser()                     Returns the current record's "User" value
  * @method MySavedSearches setId()                       Sets the current record's "id" value
  * @method MySavedSearches setUserRef()                  Sets the current record's "user_ref" value
@@ -53,6 +55,7 @@
  * @method MySavedSearches setPageSize()                 Sets the current record's "page_size" value
  * @method MySavedSearches setNbRecords()                Sets the current record's "nb_records" value
  * @method MySavedSearches setDownloadLock()             Sets the current record's "download_lock" value
+ * @method MySavedSearches setIsPublic()                 Sets the current record's "is_public" value
  * @method MySavedSearches setUser()                     Sets the current record's "User" value
  * 
  * @package    darwin
@@ -130,6 +133,10 @@ abstract class BaseMySavedSearches extends DarwinModel
         $this->hasColumn('download_lock', 'boolean', null, array(
              'type' => 'boolean',
              'notnull' => true,
+             'default' => false,
+             ));
+        $this->hasColumn('is_public', 'boolean', null, array(
+             'type' => 'boolean',
              'default' => false,
              ));
     }

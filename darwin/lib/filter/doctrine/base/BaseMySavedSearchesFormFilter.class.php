@@ -56,6 +56,9 @@ abstract class BaseMySavedSearchesFormFilter extends DarwinModelFormFilter
     $this->widgetSchema   ['download_lock'] = new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no')));
     $this->validatorSchema['download_lock'] = new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0)));
 
+    $this->widgetSchema   ['is_public'] = new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no')));
+    $this->validatorSchema['is_public'] = new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0)));
+
     $this->widgetSchema   ['user_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('User'), 'add_empty' => true));
     $this->validatorSchema['user_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('User'), 'column' => 'id'));
 
@@ -84,6 +87,7 @@ abstract class BaseMySavedSearchesFormFilter extends DarwinModelFormFilter
       'page_size' => 'Number',
       'nb_records' => 'Number',
       'download_lock' => 'Boolean',
+      'is_public' => 'Boolean',
       'user_ref' => 'ForeignKey',
     ));
   }

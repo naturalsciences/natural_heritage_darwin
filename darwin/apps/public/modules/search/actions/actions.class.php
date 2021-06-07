@@ -43,14 +43,22 @@ class searchActions extends DarwinActions
     {
       $this->form->bind($request->getParameter('specimen_search_filters')) ;
     }
-
-    if ($this->form->isBound() && $this->form->isValid() && ! $request->hasParameter('criteria'))
+   
+    if (($this->form->isBound() && $this->form->isValid() && ! $request->hasParameter('criteria'))||$request->getParameter('link_url','') !== '')
     {
-
+       $mode_force=false;
       // Get the generated query from the filter and add order criterion to the query
-      $query = $this->form->getWithOrderCriteria();
+	  if($request->getParameter('link_url','') !== '')
+	  {
+		  $query =  Doctrine_Core::getTable('Specimens')->getSpecimensByLink($request->getParameter('link_url')) ;
+		  $mode_force=true;
+	  }
+	  else
+	  {
+		$query = $this->form->getWithOrderCriteria();
 
-      // Define the pager
+      }
+	  // Define the pager
       $pager = new DarwinPager($query, $this->form->getValue('current_page'), $this->form->getValue('rec_per_page'));
 
       // Replace the count query triggered by the Pager to get the number of records retrieved
@@ -82,7 +90,7 @@ class searchActions extends DarwinActions
       {
         $this->search = $this->pagerLayout->execute();
       }
-      $this->field_to_show = $this->getVisibleColumns($this->form);
+      $this->field_to_show = $this->getVisibleColumns($this->form, $mode_force);
       $this->defineFields();
       $ids = $this->FecthIdForCommonNames() ;
       //ftheeten 2018 10 29
@@ -278,7 +286,7 @@ class searchActions extends DarwinActions
   * @param sfForm $form The form with the 'fields' field defined
   * @return array of fields with check or uncheck or a list of visible fields separated by |
   */
-  private function getVisibleColumns(sfForm $form)
+  private function getVisibleColumns(sfForm $form, $mode_force=false)
   {
     $flds = array('category','collection','taxon','type','gtu','chrono','taxon_common_name', 'chrono_common_name',
               'litho_common_name','lithologic_common_name','mineral_common_name', 'expedition', 'individual_type',
@@ -287,6 +295,7 @@ class searchActions extends DarwinActions
 
     if($form->isBound())
     {
+	  
       $req_fields = $form->getValue('col_fields');
       if($form->getValue('taxon_common_name') != '' || $form->getValue('taxon_name') != '') $req_fields .= '|taxon|taxon_common_name';
       if($form->getValue('chrono_common_name') != '' || $form->getValue('chrono_name') != '') $req_fields .= '|chrono|chrono_common_name';
@@ -305,6 +314,11 @@ class searchActions extends DarwinActions
       $req_fields_array = explode('|',$req_fields);
 
     }
+	elseif($mode_force)
+	{
+		return array_fill_keys(array('category','collection','taxon','type','gtu', 'expedition', 'individual_type',
+             'state','stage','specimen_count','object_name'), 'check');;
+	}
 
     if(empty($req_fields_array))
       $req_fields_array = explode('|', $form->getDefault('col_fields'));

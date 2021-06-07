@@ -107,6 +107,7 @@
               <li><?php echo link_to(__('My Preferences'),'user/preferences');?></li>
               <li><?php echo link_to(__('Saved Specimens list'),'savesearch/index?specimen=1');?></li>
               <li><?php echo link_to(__('Saved search'),'savesearch/index');?></li>
+			  <li><?php echo link_to(__('Public saved search'),'savesearch/public');?></li>
                 <li><?php echo link_to(__('Reports'),'report/index');?></li>
             </ul>
         </li>

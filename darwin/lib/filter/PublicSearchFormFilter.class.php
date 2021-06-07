@@ -247,6 +247,28 @@ class PublicSearchFormFilter extends BaseSpecimensFormFilter
          "required"=>false
          )
     );
+	
+			
+	$this->widgetSchema['link_type'] = new sfWidgetFormChoice(array(
+      'choices' => array_merge(array(""=>"all"),ExtLinks::getLinkTypes()),
+    ));	
+    $this->validatorSchema['link_type'] =  new sfValidatorPass();
+  
+	
+	
+	$this->widgetSchema['link_url'] = new sfWidgetFormInputText(array(), array('class'=>'xlarge_size'));	
+    $this->validatorSchema['link_url'] =  new sfValidatorString(array('required' => false, 'trim'=>true));
+	
+	$this->widgetSchema['public_query'] =  new sfWidgetFormDarwinDoctrineChoice(array(
+        'model' => 'MySavedSearches',
+        'table_method' => array('method'=>'createPublicQuery','parameters'=>array()),
+		'method' => 'getNameAndDate',
+        'key_method' => 'getId',
+      ), array("class"=>"public_query"));
+	  
+	  
+	
+	$this->validatorSchema['public_query'] = new sfValidatorPass();
   }
 
   public function addSexColumnQuery($query, $field, $val)
@@ -307,6 +329,32 @@ class PublicSearchFormFilter extends BaseSpecimensFormFilter
     $query->andWhere($field.' IN ('.$this->ListIdByWord($relation,$val).')');
     return $query;
   }
+  
+  public function addLinks($query, $type, $url) {
+		if(isset($type)||isset($url))
+		{
+			if(strlen($type)>0||strlen($url)>0)
+			{
+				$params=Array();
+				$sql="EXISTS (select l.id FROM ExtLinks l WHERE referenced_relation='specimens' ";
+				if(strlen($type)>0)
+				{
+					$sql.=" AND l.type = ?";
+					$params[]=$type;
+				}
+				
+				if(strlen($url)>0)
+				{
+					$sql.=" AND fulltoindex(l.url)=fulltoindex(?) ";
+					$params[]=$url;
+				}
+				$sql.=" AND l.record_id = s.id )";
+				$query->andWhere( $sql ,$params);
+			}
+		}
+		return $query ;
+	}
+	
   public function bind(array $taintedValues = null, array $taintedFiles = null) {
     if(!isset($taintedValues['search_type']) ||  $taintedValues['search_type'] == '')
       $taintedValues['search_type'] = 'zoo';
@@ -340,6 +388,7 @@ class PublicSearchFormFilter extends BaseSpecimensFormFilter
     $this->addNamingColumnQuery($query, 'lithostratigraphy', 'litho_name_indexed', $values['litho_name'],'s','litho_name_indexed');
     $this->addNamingColumnQuery($query, 'lithology', 'lithology_name_indexed', $values['lithology_name'],'s','lithology_name_indexed');
     $this->addNamingColumnQuery($query, 'mineralogy', 'mineral_name_indexed', $values['mineral_name'],'s','mineral_name_indexed');
+	$this->addLinks($query, $values["link_type"], $values["link_url"]);
     $query->andWhere('collection_is_public = true') ;
     if($values['tags'] != '') $query->andWhere("gtu_country_tag_indexed && getTagsIndexedAsArray(?)",$values['tags']);
     $query->limit($this->getCatalogueRecLimits());

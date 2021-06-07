@@ -776,6 +776,22 @@
         <source>DaRWIN search</source>
         <target></target>
       </trans-unit>
+	  <trans-unit id="1724">
+        <source>Type of link</source>
+        <target>Type of link</target>
+      </trans-unit>
+	  <trans-unit id="1725">
+        <source>Link URL</source>
+        <target>Link URL</target>
+      </trans-unit>
+	  <trans-unit id="1726">
+        <source>Recorded query</source>
+        <target>Recorded report</target>
+      </trans-unit>
+	  <trans-unit id="1727">
+        <source>Report type</source>
+        <target>Report type</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
