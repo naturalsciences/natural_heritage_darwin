@@ -2,15 +2,34 @@
 
 // this check prevents access to debug front controllers that are deployed by accident to production servers.
 // feel free to remove this, extend it or make something more sophisticated.
-/*if (!in_array(@$_SERVER['REMOTE_ADDR'], array('127.0.0.1', '::1')) && ! preg_match('/192\.168\./',@$_SERVER['REMOTE_ADDR']) && ! preg_match('/10\.0\./',@$_SERVER['REMOTE_ADDR'])
-//ftheeten 2018 04 30
-&& ! preg_match('/193\.190\.234\./',@$_SERVER['REMOTE_ADDR'])
-)
+$src=$_SERVER['HTTP_X_FORWARDED_FOR'];
+if(!filter_var($src, FILTER_VALIDATE_IP))
 {
-  throw new Exception('You are not allowed to access this file. Check '.basename(__FILE__).' for more information.');
+	$src=$_SERVER['REMOTE_ADDR'];
 }
-*/
-require_once(dirname(__FILE__).'/../config/ProjectConfiguration.class.php');
 
-$configuration = ProjectConfiguration::getApplicationConfiguration('backend', 'dev', true);
-sfContext::createInstance($configuration)->dispatch();
+$test=file_get_contents ("ips.cfg");
+
+
+$list_ips=explode("\r",$test);
+
+$go=false;
+foreach($list_ips as $url)
+{
+	if(strpos($src, trim($url)) === 0)
+	{
+		
+		$go=true;
+	}	
+}
+if ($go)
+{
+	require_once(dirname(__FILE__).'/../config/ProjectConfiguration.class.php');
+
+	$configuration = ProjectConfiguration::getApplicationConfiguration('backend', 'dev', true);
+	sfContext::createInstance($configuration)->dispatch();
+}
+else
+{
+	header('HTTP/1.0 403 Forbidden');
+}
