@@ -1011,6 +1011,13 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 	
 	$this->validatorSchema['determination_status'] = new sfValidatorPass();
   
+      $this->widgetSchema['category'] = new sfWidgetFormChoice(array(
+      'choices' => Specimens::getCategories(),
+    ));
+
+    $this->validatorSchema['category'] = new sfValidatorChoice(
+        array('choices'=>array_keys(Specimens::getCategories()),
+        "required"=> false));
   }
 
   public function addGtuTagValue($num)
@@ -1069,8 +1076,21 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 					{
 						//$to_search;
                         $sql_parts[]= "uuid = ? ";
+                        $sql_params[] =trim($to_search);
 					}
-                    elseif($this->is_fuzzy_codes_list)
+                    else
+                    {
+                        if(strlen($to_search)>0)
+                        {
+                            $sql_parts[]= "EXISTS(select 1 from codes where referenced_relation='specimens' and code_category='main' and record_id = s.id AND (full_code_indexed like (SELECT  fulltoindex(?) )
+                            OR 
+                            full_code_indexed LIKE ? 
+                            )) ";
+                            $sql_params[] =trim($to_search);
+                            $sql_params[] =trim("%".BaseSpecimensFormFilter::fulltoindex_sql($to_search)."%");
+                        }
+                    }
+                    /*elseif($this->is_fuzzy_codes_list)
                     {
                         $to_search="%".BaseSpecimensFormFilter::fulltoindex_sql($to_search)."%";
                         $sql_parts[]= "EXISTS(select 1 from codes where referenced_relation='specimens' and code_category='main' and record_id = s.id AND full_code_indexed LIKE ? ) ";
@@ -1080,6 +1100,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
                         $sql_parts[]= "EXISTS(select 1 from codes where referenced_relation='specimens' and code_category='main' and record_id = s.id AND full_code_indexed like (SELECT  fulltoindex(?) )) ";
                     }
                     $sql_params[] =trim($to_search);
+                    */
                 }
                 $sql=implode(" OR ", $sql_parts);
                 $query->andWhere("(" .$sql.")", $sql_params);
@@ -1189,7 +1210,13 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
            {
                 $layer=$key;
                 $val_tmp="'{".implode(",", $val)."}'::integer[]";
-                $sql_block[]="  ST_INTERSECTS(ST_SETSRID(ST_Point(gtu_location[1], gtu_location[0]),4326),(SELECT rmca_get_wfs_geom('wfs.".$layer."', ".$val_tmp.")))"; 
+				$sql_block[]="EXISTS(	
+				select g.* FROM rmca_get_wfs_geom_subdivide_gtu('wfs.".$layer."', ".$val_tmp.") g
+				   where s.gtu_ref =g 
+
+			)"; 
+							
+                
            }
 		   
 		   if( isset($values['wfs_search_translated']))
@@ -1247,6 +1274,15 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
   {
     if($val != '' && is_array($val) && !empty($val)) {
       $query->andWhere('s.id in (select fct_search_methods (?))',implode(',', $val));
+    }
+    return $query ;
+  }
+
+  
+    public function addCategoryQuery($query, $field, $val)
+  {
+    if($val != '') {
+      $query->andWhere('s.category = ?', $val);
     }
     return $query ;
   }
@@ -1642,14 +1678,14 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
         {           
             if($code['code_part']  != '')
             { 
-                if($without_prefix)
+                /*if($without_prefix)
                 {
                     $sql ="EXISTS(select 1 from codes where  referenced_relation='specimens' and record_id = s.id AND  LOWER(code) = LOWER(?) ";
-                }
-                else
-                {
+                }*/
+                //else
+                //{
                     $sql ="EXISTS(select 1 from codes where  referenced_relation='specimens' and record_id = s.id AND full_code_indexed like (SELECT fulltoindex(?))";
-                }
+                //}
                 $sqlParams[]=$code['code_part'];
                 if($code['category']  != '' && strtolower($code['category'])  != 'all') 
                 {
@@ -2460,6 +2496,7 @@ $query = DQ::create()
 	$this->addPeopleIdentifierQuery($query, $values["people_protocol"], $values["people_identifier"],$values["people_identifier_role"]);
     $this->addBibliography($query,   $values["publication_ref"], $values["publication_ref"]);
 	$this->addDeterminationStatus($query, $values["determination_status"], $values["determination_status"]);
+    $this->addCategoryQuery($query,$values["category"], $values["category"] );
     $query->limit($this->getCatalogueRecLimits());
 
     return $query;

@@ -29,18 +29,18 @@
 				$obj["type"]="Feature";
 				$obj["geometry"]["type"]="Point";
 				$obj["geometry"]["coordinates"]=[(float)$spec->getLongitude(),(float)$spec->getLatitude()];
-				$obj["properties"]["dw_id"]=$spec->getId();
+				$obj["properties"]["dw_id"]=addslashes($spec->getId());
 				$obj["properties"]["dw_code"]="Undefined id";
 				$obj["properties"]["dw_taxon_name"]="";
 				if($spec->getTaxonName()!==null)
 				{
-					$obj["properties"]["dw_taxon_name"]=$spec->getTaxonName();
+					$obj["properties"]["dw_taxon_name"]=addslashes($spec->getTaxonName());
 				}
 				foreach($code_list[$spec->getId()] as $key=>$code)
 				{
 					if($code->getCodeCategory() == 'main')
 					{
-						$obj["properties"]["dw_code"]=str_replace(","," ", $code->getFullCode());
+						$obj["properties"]["dw_code"]=addslashes(str_replace(","," ", $code->getFullCode()));
 					}
 				}
 				$points[]=$obj;

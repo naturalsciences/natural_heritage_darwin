@@ -85,6 +85,8 @@ class RMCATabDataDirect
         $fields[] = "SamplingCode";
 		$fields[] = "Sampling_code";
         $fields[] = "Country";
+		
+		$fields[]="specimenCategory";
 
         
         //2018 04 11
@@ -1569,6 +1571,23 @@ class RMCATabDataDirect
         }
     }
 	
+	public function addSpecimenCategory()
+    {     
+	   /*
+	   'physical' => 'Physical',
+      'observation' => 'Observation',
+      'figurate' => 'Figurate',
+      'figurate-physical' => 'Figurate-Physical',
+	  'composite-storage-unit' => 'Composite storage unit',
+	   */
+ 
+        $valTmp=$this->getCSVValue("specimenCategory");
+        if($this->isset_and_not_null($valTmp))
+        {    
+            $this->staging->setCategory($valTmp) ;                    
+        }
+    }
+	
 	    //2018 04 11 
     public function addCountParts()
     {     
@@ -1870,6 +1889,7 @@ class RMCATabDataDirect
         $this->unit_object =new ParsingTag("unit") ;		
         $this->addId();
 		
+		$this->addSpecimenCategory();
         $this->addIdentifications();
 		$this->addMineralogicalIdentifications();
         $this->addKindOfUnit();

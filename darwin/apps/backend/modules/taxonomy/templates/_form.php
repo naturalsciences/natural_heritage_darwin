@@ -61,6 +61,7 @@
 				</table>
 			</td>
 		</tr>
+         
         <!-- ftheeten 2017 07 03-->
       <?php if(sfContext::getInstance()->getActionName()!=="new"&&sfContext::getInstance()->getActionName()!=="edit"): ?>
       <tr>

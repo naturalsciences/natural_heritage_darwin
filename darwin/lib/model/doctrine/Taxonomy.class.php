@@ -37,6 +37,18 @@ class Taxonomy extends BaseTaxonomy
     {
         return Doctrine_Core::getTable('TaxonomyMetadata')->find($this->getMetadataRef())->getIsReferenceTaxonomy();
     }
+    
+    public static function getStatusList()
+    {
+        return array(
+            'valid'=>'valid', 
+            'invalid'=>'invalid', 
+            'deprecated'=>'deprecated', 
+            "in litteris"=> "in litteris", 
+            "nomen nudum"=> "nomen nudum", 
+            "in press"=> "submitted / in press");
+    }
+    
 	 
 	 
   

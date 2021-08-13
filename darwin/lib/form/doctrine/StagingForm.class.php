@@ -244,6 +244,17 @@ class StagingForm extends BaseStagingForm
       } 
       $this->embedForm('WrongOperator', $this->embeddedForms['WrongOperator']);
     }
+	
+	if(in_array('category',$this->options['fields']) )
+	{
+		$this->widgetSchema['category'] = new sfWidgetFormChoice(array(
+      'choices' => array_merge([""=>"pick a value"],Specimens::getCategories()), "default"=>""
+    ));
+		$this->validatorSchema['category'] = new sfValidatorChoice(array('choices'=>array_keys(Specimens::getCategories())));
+	}
+	
+	
+	
   }
   
   public function loadEmbedPeople($people)
@@ -333,8 +344,9 @@ class StagingForm extends BaseStagingForm
 
   public function save($con = null, $forms = null) 
   {
+	  
     $status = $this->getObject()->getFields(true) ;
-    
+
     if(is_numeric($this->getValue('taxon_ref'))) $status['taxon'] = 'done' ;
     else unset($this['taxon_ref']) ;
     
@@ -342,11 +354,16 @@ class StagingForm extends BaseStagingForm
     if(is_numeric($this->getValue('gtu_ref'))) $status['gtu'] = 'done' ;
     else unset($this['gtu_ref']) ; 
     //ftheeten 2019 05 21
+	
     if($this->string_isset($this->getValue('code_ref')))
     {    
         $this->getObject()->setCode($this->getValue('code_ref'));
-        $status['code'] = 'done' ;
-    }
+		$cpt=Doctrine_Core::getTable('Codes')->getCountCodeIndexedByCollection("main", '', '', $this->getValue('code_ref'), '', '', $this->getObject()->getCollectionId());
+		if($cpt==0)
+		{
+			$status['code'] = 'done' ;
+		}
+	}
     else 
     {
         unset($this['code_ref']) ; 
@@ -367,6 +384,15 @@ class StagingForm extends BaseStagingForm
     else unset($this['spec_ref']) ;
     if(is_numeric($this->getValue('institution_ref'))) $status['institution'] = 'done' ;
     else unset($this['institution_ref']) ;
+	
+	if(in_array($this->getValue('category'),array_keys(Specimens::getCategories())))
+	{
+		$status['category'] = 'done' ;
+	}
+	else
+	{
+		 unset($this['category']) ;
+	}
     if($value = $this->getValue('WrongPeople')) 
     {
       unset($this['people']) ; 
@@ -407,7 +433,9 @@ class StagingForm extends BaseStagingForm
         unset($this->embeddedForms['WrongRelation_institution_ref'][$name]);
       }
     }
+	
     $this->getObject()->setStatus($status) ;
     return parent::save($con, $forms);
+	
   }
 }

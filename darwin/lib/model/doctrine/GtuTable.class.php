@@ -97,4 +97,30 @@ class GtuTable extends DarwinTable
 	  return $rows;
   }
   
+  public function getGtuIdsFromWFS($table, $ids)
+  {
+     $ids="{".$ids."}";
+	  $rows=array();
+	  if(strlen($table)>1&&strlen($ids))
+	  {
+		   $conn_MGR = Doctrine_Manager::connection();
+           $conn = $conn_MGR->getDbh();
+           $query="SELECT * FROM rmca_get_wfs_geom_subdivide_gtu(:table_name, :ids);";
+		   $stmt=$conn->prepare($query);
+           $stmt->bindValue(":table_name", $table);
+		   $stmt->bindValue(":ids", $ids);
+		   $stmt->execute();
+		   $rs=$stmt->fetchAll(PDO::FETCH_NUM);
+       
+         if(count($rs)>0)
+         {
+              return array_merge(...$rs);;
+              
+         }
+          
+            
+	  }
+	  return $rows;
+  }
+  
 }

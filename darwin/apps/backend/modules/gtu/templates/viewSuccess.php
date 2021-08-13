@@ -102,7 +102,16 @@
                        <option value="Road">Road (static)</option>
                        <option value="RoadOnDemand">Road (dynamic)</option>
 					   <option value="OSM">OpenStreetMap</option>
-				</select>	
+				</select>
+                <input type="button" id="export-png" value="Download PNG" ></input>
+                <input type="button" id="export-data" value="Download data" ></input>
+    <select name="map-resolution" id="map-resolution">
+    <option value="700">700 X 700</option>
+    <option value="1024">1024 X 1024</option>
+    <option value="2048">2048 X 2048</option>    
+    </select>
+    <a id="image-download" download="map.png"></a>
+    <a id="data-download" download="data.txt"></a>                
 			<?php endif;?>
         </td
 		<!--madam 2019 01 28-->
@@ -171,11 +180,18 @@
 		
 
 		styleLine=  new ol.style.Style({
-          image: new ol.style.Circle({
+          /*image: new ol.style.Circle({
             radius: 5,
             fill: new ol.style.Fill({color: '#ffff00'}),
-            stroke: new ol.style.Stroke({color: '#000000', width: 1})
-          })
+            stroke: new ol.style.Stroke({color: '#000000', width: 1})*/
+            image: new ol.style.Icon({
+                anchor: [0.5, 46],
+                anchorXUnits: 'fraction',
+                anchorYUnits: 'pixels',
+                src: '<?php print(public_path("images/marker-icon.png")); ?>'
+              }
+            
+          )
         });
 		
 		
@@ -194,7 +210,7 @@
 			  preload: Infinity,
 			  source: new ol.source.BingMaps({
 				key: " <?php print(sfConfig::get('dw_bing_key'));?>",
-				imagerySet: styles[i]
+				imagerySet: styles[i],
 				// use maxZoom 19 to see stretched tiles instead of the BingMaps
 				// "no photos at this zoom level" tiles
 				// maxZoom: 19
@@ -273,5 +289,86 @@
 	}
 	init_map();
 	
+
+    document.getElementById('export-png').addEventListener('click', function () {
+      map.once('rendercomplete', function () {
+        var mapCanvas = document.createElement('canvas');
+        var size = map.getSize();
+        mapCanvas.width = size[0];
+        mapCanvas.height = size[1];
+        var mapContext = mapCanvas.getContext('2d');
+        Array.prototype.forEach.call(
+          document.querySelectorAll('.ol-layer canvas'),
+          function (canvas) {
+            if (canvas.width > 0) {
+              var opacity = canvas.parentNode.style.opacity;
+              mapContext.globalAlpha = opacity === '' ? 1 : Number(opacity);
+              var transform = canvas.style.transform;
+              // Get the transform parameters from the style's transform matrix
+              var matrix = transform
+                .match(/^matrix\(([^\(]*)\)$/)[1]
+                .split(',')
+                .map(Number);
+              // Apply the transform to the export map context
+              CanvasRenderingContext2D.prototype.setTransform.apply(
+                mapContext,
+                matrix
+              );
+              mapContext.drawImage(canvas, 0, 0);
+            }
+          }
+        );
+        if (navigator.msSaveBlob) {
+          // link download attribuute does not work on MS browsers
+          navigator.msSaveBlob(mapCanvas.msToBlob(), 'map.png');
+        } else {
+          var link = document.getElementById('image-download');
+          link.href = mapCanvas.toDataURL();
+          link.click();
+        }
+      });
+      map.renderSync();
+    });
+    
+    document.getElementById('export-data').addEventListener('click', function () {
+    var dataURL = '',  
+            fieldSeparator = '\t',  
+            textField = '"',  
+            lineSeparator = '\n',  
+            regExpTesto = /(")/g,  
+            regExp = /[";]/;  
+              
+        dataURL=dataURL+"<?php echo $gtu->getCode(); ?>"+lineSeparator;
+     <?php if($gtu->getLocation()):?>
+             dataURL=dataURL+"Latitude"+fieldSeparator+"<?php echo $gtu->getLatitude(); ?>"+lineSeparator;
+             dataURL=dataURL+"Longitude"+fieldSeparator+"<?php echo $gtu->getLongitude(); ?>"+lineSeparator;
+        <?php endif?>
+         <?php if($gtu->getCoordinatesSource()=="DMS"): ?>
+            dataURL=dataURL+"Latitude DMS"+fieldSeparator+"<?php echo $gtu->getLatitudeDmsDegree(); ?>°"+"<?php echo $gtu->getLatitudeDmsMinutes(); ?>'"+"<?php echo $gtu->getLatitudeDmsSeconds(); ?>\""+"<?php ($gtu->getLatitudeDmsDirection()>0 ? print("N") : print("S") ); ?>"+lineSeparator;
+            dataURL=dataURL+"Longitude DMS"+fieldSeparator+"<?php echo $gtu->getLongitudeDmsDegree(); ?>°"+"<?php echo $gtu->getLongitudeDmsMinutes(); ?>'"+"<?php echo $gtu->getLongitudeDmsSeconds(); ?>\""+"<?php ($gtu->getLongitudeDmsDirection()>0 ? print("E") : print("W") ); ?>"+lineSeparator;
+          <?php endif; ?>
+       <?php if($gtu->getElevation() !== null && $gtu->getElevation() !== ''):?>
+        dataURL=dataURL+"Elevation"+fieldSeparator+"<?php echo $gtu->getElevation(); ?>"+lineSeparator;
+       <?php endif;?>
+       dataURL=dataURL+"Tags"+lineSeparator;
+       <?php $tags=$gtu->getTagsArray();?>
+       <?php if(count($tags)>0):?>
+       <?php foreach($tags as $k=>$v):?>
+            dataURL=dataURL+"<?php print($k);?>"+fieldSeparator+"<?php print($v);?>"+lineSeparator;
+       <?php endforeach;?>
+       <?php endif;?>
+    window.location.href = 'data:text/csv;charset=utf-8;base64,' + btoa(dataURL); 
+          
+       
+    });
+
+    $("#map-resolution").change(
+        function()
+        {
+             $("#map").height($("#map-resolution").val());
+             $("#map").width($("#map-resolution").val());
+             setTimeout( function() { map.updateSize();}, 200);
+        }
+    );
 	<?php endif;?>
   </script>

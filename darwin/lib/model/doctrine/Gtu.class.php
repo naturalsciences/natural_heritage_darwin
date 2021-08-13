@@ -85,6 +85,25 @@ class Gtu extends BaseGtu
     $str .= '</ul>';
     return $str;
   }
+  
+  public function getTagsArray($countriesOnly = false)
+  {
+    $returned=Array();
+    if($this->_get('id')==0) return Array();
+    $nbr = count($this->TagGroups);
+    if(! $nbr) return Array();
+    $str = '<ul  class="search_tags">';
+    foreach($this->TagGroups as $group)
+    {
+      if(!$countriesOnly || ($countriesOnly && $group->getSubGroupName()=='country')) {         
+         $returned[$group->getGroupName()." ".$group->getSubGroupName()]=$group->getTagValue();
+         if($countriesOnly)
+          break;
+      }
+    }
+    return $returned;
+  }
+
 
   public function getMap()
   {
