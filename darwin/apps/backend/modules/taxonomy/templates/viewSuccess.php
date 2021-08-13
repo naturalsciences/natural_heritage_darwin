@@ -51,7 +51,7 @@ $(document).ready(function ()
         <td>
   		    <?php if($form['cites']->getValue()) echo __("Yes") ; else echo __("No") ;?>
         </td>
-      </tr>
+      </tr>      
       <tr>
         <th><?php echo $form['parent_ref']->renderLabel() ?></th>
         <td>

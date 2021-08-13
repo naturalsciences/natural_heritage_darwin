@@ -68,7 +68,7 @@
           <th colspan="2"><?php echo __("Search option");?></th>
         </tr>
       </thead>
-      <tbody>
+      <!--<tbody>
         <tr>
           <th>
             <?php echo $form['exclude_prefix_in_searches']->renderLabel();?>
@@ -77,7 +77,7 @@
           <td><?php echo $form['exclude_prefix_in_searches'];?></td>
         </tr>
         <tr>
-      </tbody>
+      </tbody>-->
       <tfoot>
         <tr>
           <td colspan='2'>

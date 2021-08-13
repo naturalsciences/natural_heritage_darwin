@@ -339,6 +339,7 @@ class specimenActions extends DarwinActions
 			{
 				$this->handleRelationsOfDuplicate($specimen->getId(), $request->getParameter("duplicate_id",-1));
 			}
+			$this->handlePropertiesOfDuplicate($request, $request->getParameter("duplicate_id",-1),$specimen->getId());
 		}
         //ftheeten 2018 02 08
 		$this->addCollectionCookie($specimen);
@@ -748,7 +749,64 @@ class specimenActions extends DarwinActions
 							$obj->save();
 							
                         }
+						
+
                   
+  }
+  
+  protected function handlePropertiesOfDuplicate($request, $src_id, $dest_id)
+  {
+	  		
+                    if($request->getPostParameter('copy_properties', "no")=="yes")
+                    {
+                      
+                        if($src_id!='-1'&&$dest_id!='-1')
+                        {       
+						 
+                           $props=Doctrine_Core::getTable('Properties')->findForTable('specimens',$src_id);
+						  
+						   foreach($props as $key=>$prop)
+						   {		
+								try
+								{
+									$prop2=clone $prop;								
+									$prop2->setRecordId($dest_id);
+									$prop2->save();
+								}
+								catch(Exception $e)
+								{
+									
+									//capture duplicate
+								}
+						   }
+						
+                        }
+                    } 
+                
+			
+                    if($request->getPostParameter('copy_comments', 'no')=="yes")
+                    {
+                        
+                        if($src_id!='-1'&&$dest_id!='-1')
+                        {
+							$comments=Doctrine_Core::getTable('Comments')->getRelatedComment('specimens',Array($src_id));
+						   foreach($comments as $key=> $comment)
+						   {
+								try
+								{
+									$comment2=clone $comment;
+									$comment2->setRecordId($dest_id);
+									$comment2->save();
+								}
+								catch(Exception $e)
+								{
+									
+									//capture duplicate
+								}
+						   }
+                        }
+                    } 
+                
   }
   
   

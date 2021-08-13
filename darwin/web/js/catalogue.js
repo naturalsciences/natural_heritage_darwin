@@ -69,7 +69,22 @@
                   //ftheeten 2019 09 17
                  //ftheeten 2019 09 17
                   //document.location.href = new_link;
-                  window.open( new_link,'_blank');
+                  var mode_self=false;
+                  if('target' in base.options)
+                  {
+                    if(base.options["target"]=="_self")
+                    {
+                         mode_self=true;
+                    }
+                  }
+                  if(mode_self)
+                  {
+                    document.location.href = new_link;
+                  }
+                  else
+                  {
+                    window.open( new_link,'_blank');
+                  }
                   return true;
                 }
 

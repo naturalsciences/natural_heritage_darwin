@@ -358,13 +358,15 @@ class stagingActions extends DarwinActions
     {
       foreach($this->fields as $key => $values)
       {
-		print($values['fields'] );
+		//print($values['fields'] );
         $form_fields[] = $values['fields'] ;
       }
     }
     $this->form = new StagingForm($staging, array('fields' => $form_fields));
 
     $this->processForm($request,$this->form, $form_fields);
+	
+	 
 
     $this->setTemplate('edit');
   }

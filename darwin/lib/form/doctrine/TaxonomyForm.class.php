@@ -17,7 +17,7 @@ class TaxonomyForm extends BaseTaxonomyForm
     //ftheeten 2018 03 14
     $this->widgetSchema['name']->setAttributes(array('class'=>'large_size taxonomy_name_callback'));
     $this->validatorSchema['name']->setOption('trim', true);
-    $statuses = array('valid'=>$this->getI18N()->__('valid'), 'invalid'=>$this->getI18N()->__('invalid'), 'deprecated'=>$this->getI18N()->__('deprecated'), "in litteris"=> "in litteris", "nomen nudum"=> "nomen nudum");
+    $statuses = Taxonomy::getStatusList();
     $this->widgetSchema['status'] = new sfWidgetFormChoice(array(
         'choices'  => $statuses,
     ));
@@ -75,6 +75,7 @@ class TaxonomyForm extends BaseTaxonomyForm
 	//JM Herpers 2019 04 25
 	 $this->widgetSchema['cites']->setAttributes(array('class'=>'cites'));
 	 $this->validatorSchema['cites'] = new sfValidatorBoolean();
+
   }
 
 }

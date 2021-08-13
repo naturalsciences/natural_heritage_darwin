@@ -81,7 +81,7 @@
              <div class="add_code" style="visibility:hidden;"> &nbsp;<a href="<?php echo url_for($url_copy);?>/num/" id="copy_code"><?php echo __('Copy code');?></a></div>
            
 		<?php endif;?>
-        <div class="add_code">
+        <div class="add_code" style="display:none;">
           <?php
           if($module == 'specimen') $url = 'specimen/addCode';
           if($module == 'loan_items') $url = 'loanitem/addCode';
@@ -95,7 +95,7 @@
 </table>
 <script  type="text/javascript">
 $(document).ready(function () {
-
+	$(".add_code").show();
     // Initialization of codes content
     var initial_code_object = {};
     $(".code_mrac_input_mask").map(

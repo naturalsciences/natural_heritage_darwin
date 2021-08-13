@@ -116,10 +116,24 @@ $(document).ready(function ()
                                                         'search_module'=>'specimensearch/index',
                                                         'save_button_id' => 'submit_spec_f1')
     ); ?>
+	<p>
+	<?php if($duplic>0):?>
+	<table>
+	<tr>
+		<td>
+			<h2><?php echo __('Do you also want to duplicate properties');?></h2>
+		</td>
+		<td>
+			Yes : <input type="radio" name="copy_properties" value="yes" > No : <input type="radio" name="copy_properties" value="no"  checked="checked">
+		</td>
+	</tr>
+  </table>
+	<?php endif;?>
+	</p>
     <p class="form_buttons">
       <?php if (!$form->getObject()->isNew()): ?>
         <?php echo link_to(__('New specimen'), 'specimen/new') ?>
-        &nbsp;<a href="<?php echo url_for('specimen/new?duplicate_id='.$form->getObject()->getId());?>" class="duplicate_link"><?php echo __('Duplicate specimen');?></a>
+        &nbsp;<a target="_self" href="<?php echo url_for('specimen/new?duplicate_id='.$form->getObject()->getId());?>" class="duplicate_link"><?php echo __('Duplicate specimen');?></a>
 		<a href="<?php echo url_for('specimen/new?duplicate_id='.$form->getObject()->getId().'&part_id='.$form->getObject()->getId());?>" class="duplicate_link"><?php echo __('Split into parts');?></a>
         &nbsp;<?php echo link_to(__('Delete'), 'specimen/delete?id='.$form->getObject()->getId(), array('method' => 'delete', 'confirm' => __('Are you sure?'))) ?>
       <?php endif?>
@@ -159,7 +173,7 @@ function removeError()
 }
 
 $(document).ready(function () {
-  $('body').duplicatable({duplicate_href: '<?php echo url_for('specimen/confirm');?>'});
+  $('body').duplicatable({duplicate_href: '<?php echo url_for('specimen/confirm');?>', target:'_self'});
   $('body').catalogue({});
 
  <?php if(strpos($_SERVER['REQUEST_URI'],"/create")):?>

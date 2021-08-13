@@ -429,7 +429,7 @@ INNER JOIN taxonomy ON taxonomy.id=record_id) a ORDER BY LEVENSHTEIN(SUBSTR(labe
 	  //$offset=(int)$page*(int)$size;
 	  $sql= "
 			  with a as 
-		(select taxonomy.id , fct_rmca_sort_taxon_path_alphabetically_hstore(path||parent_ref||'/'||taxonomy.id::varchar||'/' )
+		(select taxonomy.id , fct_rmca_sort_taxon_path_alphabetically_hstore_tech(path||parent_ref||'/'||taxonomy.id::varchar||'/' )
 		|| hstore('nb_records', count(specimens.id)::varchar)
 		|| hstore('physical_specimen_min', sum(specimens.specimen_count_min)::varchar)
 		|| hstore('physical_specimen_max', sum(specimens.specimen_count_max)::varchar)

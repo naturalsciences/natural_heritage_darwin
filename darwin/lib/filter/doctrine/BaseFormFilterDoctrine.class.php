@@ -77,23 +77,31 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
   * @return Doctrine_Query the modified doctrine query
   */
   
-   public function addNamingColumnQuery(Doctrine_Query $query, $table, $field, $values, $alias = null, $flat_field = null)
+   public function addNamingColumnQuery(Doctrine_Query $query, $table, $field, $values, $alias = null, $flat_field = null, $keep_space=false)
   {
     $search = self::splitNameQuery($values);
     $terms = self::getAllTerms($search);
+    if($keep_space)
+    {
+        $keep_space_str="true";
+    }
+    else
+    {
+        $keep_space_str="false";
+    }
     foreach ($search['with'] as $search_term) {
       if(strpos($search_term, '^') === 0) {
-        $query->andWhere($alias.'.'.$field." like fulltoindex(?) || '%' ", $search_term);
+        $query->andWhere($alias.'.'.$field." like fulltoindex(?, $keep_space_str ) || '%' ", $search_term);
       }
-      $query->andWhere($alias.'.'.$field." like '%' || fulltoindex(?) || '%' ", $search_term);
+      $query->andWhere($alias.'.'.$field." like '%' || fulltoindex(?, $keep_space_str ) || '%' ", $search_term);
     }
     unset($search['with']);
     foreach($search as $item) {
       foreach ($item as $search_term) {
         if(strpos($search_term, '^') === 0 || substr($search_term,0,1)=="*" ) {
-          $query->andWhere($alias.'.'.$field." not like fulltoindex(?) || '%' ", $search_term);
+          $query->andWhere($alias.'.'.$field." not like fulltoindex(?, $keep_space_str ) || '%' ", $search_term);
         }
-        $query->andWhere($alias.'.'.$field." not like '%' || fulltoindex(?) || '%' ", $search_term);
+        $query->andWhere($alias.'.'.$field." not like '%' || fulltoindex(?, $keep_space_str ) || '%' ", $search_term);
       }
     }
 

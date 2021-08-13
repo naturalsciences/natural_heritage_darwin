@@ -26,12 +26,16 @@
         <ul class="error_list">
           <li><?php echo __($array['display_error'],array('%here%' => link_to('here', $form->getObject()->getLevel().'/view?id='.$array['duplicate_record'],'target=blanck'))) ?></li>
       <?php else : ?>
-      <fieldset><legend><?php echo __('Field to be corrected')." : ".$key ;?></legend>
+      <fieldset><legend><?php echo __('Field to be corrected')." : ".$key ;?></legend>		
         <ul class="error_list">
             <li><?php echo __($array['display_error'],array('%field%' => $key)) ; ?></li>
       <?php endif ; ?>
         </ul>
+		<?php if($key=="category"): ?>
+			<b><?php print(__("Value to be replaced")." : ".$form->getObject()->getCategory());?> </b>
+		<?php endif ; ?>
         <?php if(in_array($array['fields'],array('people','identifiers','operator','relation_institution_ref'))) : ?>
+		
         <table class="encoding collections_rights" id="<?php echo $array['fields'] ; ?>_table">
           <thead>
             <tr>
@@ -88,6 +92,7 @@
             </ul>
           <?php endif ; ?>
         <?php endif ; ?>
+		
       </fieldset>
     <?php endforeach ; ?>
     <?php echo $form->renderHiddenFields() ; ?>

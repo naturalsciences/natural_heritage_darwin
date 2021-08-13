@@ -108,7 +108,15 @@ class TaxonomyFormFilter extends BaseTaxonomyFormFilter
        
         ), array( 'style' => "display: inline-block;text-align:center"));
     $this->validatorSchema['cites'] = new sfValidatorString(array('required' => false));
+    
+    $statuses = array_merge(array(""=>"ALL"),Taxonomy::getStatusList());
+    $this->widgetSchema['status'] = new sfWidgetFormChoice(array(
+        'choices'  => $statuses,
+    ));
+     $this->validatorSchema['status'] = new sfValidatorChoice(array('choices'  => array_keys($statuses), 'required' => false));
+
   }
+  
 
   public function doBuildQuery(array $values)
   {
@@ -134,7 +142,7 @@ class TaxonomyFormFilter extends BaseTaxonomyFormFilter
 		 {
 			if((int)$values['collection_ref']!=-1)
             {				
-			 $query->andWhere("  ARRAY[id] <@ ( select fct_rmca_retrieve_taxa_in_collection_fastly_array(?))", $values['collection_ref']);
+			 $query->andWhere("  EXISTS( select * from fct_rmca_retrieve_taxa_in_collection_fastly(?) x WHERE t.id=x.id)", $values['collection_ref']);
 			}
 		 }
 	}
@@ -145,13 +153,18 @@ class TaxonomyFormFilter extends BaseTaxonomyFormFilter
 		 {
 			if((int)$values['collection_ref_for_modal']!=-1)
             {				
-			 $query->andWhere("  ARRAY[id] <@ ( select fct_rmca_retrieve_taxa_in_collection_fastly_array(?))", $values['collection_ref_for_modal']);
+			 $query->andWhere("  EXISTS( select * from fct_rmca_retrieve_taxa_in_collection_fastly(?) x WHERE t.id=x.id)", $values['collection_ref_for_modal']);
 			}
 		 }
 	}
     if ($values['level_ref'] != '')
     {
      $query->andWhere("  level_ref = ? ", $values['level_ref']);
+    }
+    
+     if ($values['status'] != '')
+    {
+     $query->andWhere("  status = ? ", $values['status']);
     }
     
     if ($values['name'] != '')
@@ -170,7 +183,8 @@ class TaxonomyFormFilter extends BaseTaxonomyFormFilter
 	if ($values['cites'] != ''){
      $query->andWhere("  cites = ? ", $values['cites']);
     }
-	
+    
+
     //2018 03 06
 	if (isset($values['metadata_ref']))
     {

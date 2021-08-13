@@ -85,7 +85,7 @@ class CodesForm extends BaseCodesForm
 
 		if(sfContext::getInstance()->getActionName()=="create")
 		{
-			$cpt=$this->getCountCodeIndexedForm($category, $prefix, $prefix_sep, $code, $suffix, $suffix_sep, $this->colIDSess);
+			$cpt=Doctrine_Core::getTable('Codes')->getCountCodeIndexedByCollection($category, $prefix, $prefix_sep, $code, $suffix, $suffix_sep, $this->colIDSess);
 			if($cpt>0)
 			{
 			
@@ -139,32 +139,5 @@ class CodesForm extends BaseCodesForm
 		
 	}
 	
-	public function getCountCodeIndexedForm($category, $prefix='', $prefix_sep='', $code='', $suffix='', $suffix_sep='',$coll=-1)
-	{
-	
-		
-		$searched=$prefix.$prefix_sep.$code.$suffix_sep.$suffix;
-		if($coll==-1)
-		{
-			$q = Doctrine_Query ::create()->
-				select("count(id)")->
-				from('Codes')->
-				where('code_category = ?', $category)->
-				andWhere('full_code_indexed  =  fulltoindex(?)', $searched);
-			
-		}
-		else
-		{
-			 $q=Doctrine_Query::create()->
-				select('count(a.id)')->
-				from('SpecimensCodes a')->
-				innerJoin('a.Specimens b')->
-				where('a.code_category = ?', $category)->
-				andWhere("TRIM(COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'')) =  ?", $searched)->
-				andWhere('b.collection_ref = ?', $coll);
-		
-		}
-		return $q->execute(null, Doctrine_Core::HYDRATE_SINGLE_SCALAR);
-		
-	}
+
 }

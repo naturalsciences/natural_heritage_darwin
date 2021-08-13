@@ -88,6 +88,11 @@ class Staging extends BaseStaging
         return FALSE;
         
     }
+	
+	public function getCollectionId()
+	{
+		return Doctrine_Core::getTable('Imports')->find($this->getImportRef())->getCollectionRef();
+	}
   
     private function addRelCode($value, $category="main")
   {
@@ -283,6 +288,14 @@ class Staging extends BaseStaging
       else
         return $tb_ok;
     }
+	elseif($field == "category")
+    {      
+      if(array_key_exists("category", $this->getStatus())) 
+		  return $tb_completed ;
+      else
+        return $tb_ok;
+    }
+	
   }
 /*
   public function getIdentifier()
@@ -395,6 +408,7 @@ class Staging extends BaseStaging
 	#ftheeten 2019 01 29
 	if($field == 'gtu') return('gtu_ref') ;
 	if($field == 'code') return('code_ref') ;
+	if($field == 'category') return('category') ;
     return($field) ;
   }
 }

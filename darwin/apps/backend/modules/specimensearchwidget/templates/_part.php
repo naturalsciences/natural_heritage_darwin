@@ -1,4 +1,14 @@
 <table>
+<thead>
+    <tr>
+      <th><?php echo $form['category']->renderLabel();?></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><?php echo $form['category'];?></td>
+    </tr>
+  </tbody>
   <thead>
     <tr>
       <th><?php echo $form['part']->renderLabel();?></th>

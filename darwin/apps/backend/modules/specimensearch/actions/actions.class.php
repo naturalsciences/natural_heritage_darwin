@@ -103,8 +103,16 @@ class specimensearchActions extends DarwinActions
     // If search_id parameter is given it means we try to open an already saved search with its criterias
     elseif($request->getParameter('search_id','') != '')
     {
+	  if( Doctrine_Core::getTable('MySavedSearches')->testIsPublicQuery($request->getParameter('search_id')))
+	  {
+		  $user_key=Doctrine_Core::getTable("MySavedSearches")->getPublicQueryUser($request->getParameter('search_id'));
+	  }
+	  else
+	  {
+		  $user_key=$this->getUser()->getId();
+	  }
       // Get the saved search asked
-      $saved_search = Doctrine_Core::getTable('MySavedSearches')->getSavedSearchByKey($request->getParameter('search_id'), $this->getUser()->getId()) ;
+      $saved_search = Doctrine_Core::getTable('MySavedSearches')->getSavedSearchByKey($request->getParameter('search_id'), $user_key) ;
       // If not available, not found -> forward on 404 page
       $this->forward404Unless($saved_search);
 
