@@ -1012,7 +1012,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 	$this->validatorSchema['determination_status'] = new sfValidatorPass();
   
       $this->widgetSchema['category'] = new sfWidgetFormChoice(array(
-      'choices' => Specimens::getCategories(),
+      'choices' => array_merge(array(''=>'ALL'),Specimens::getCategories()),
     ));
 
     $this->validatorSchema['category'] = new sfValidatorChoice(
@@ -1082,7 +1082,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
                     {
                         if(strlen($to_search)>0)
                         {
-                            $sql_parts[]= "EXISTS(select 1 from codes where referenced_relation='specimens' and code_category='main' and record_id = s.id AND (full_code_indexed like (SELECT  fulltoindex(?) )
+                            $sql_parts[]= "EXISTS(select 1 from codes where referenced_relation='specimens' and code_category='main' and record_id = s.id AND (full_code_indexed like fulltoindex(?) 
                             OR 
                             full_code_indexed LIKE ? 
                             )) ";
@@ -1090,17 +1090,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
                             $sql_params[] =trim("%".BaseSpecimensFormFilter::fulltoindex_sql($to_search)."%");
                         }
                     }
-                    /*elseif($this->is_fuzzy_codes_list)
-                    {
-                        $to_search="%".BaseSpecimensFormFilter::fulltoindex_sql($to_search)."%";
-                        $sql_parts[]= "EXISTS(select 1 from codes where referenced_relation='specimens' and code_category='main' and record_id = s.id AND full_code_indexed LIKE ? ) ";
-                    }
-                    else
-                    {
-                        $sql_parts[]= "EXISTS(select 1 from codes where referenced_relation='specimens' and code_category='main' and record_id = s.id AND full_code_indexed like (SELECT  fulltoindex(?) )) ";
-                    }
-                    $sql_params[] =trim($to_search);
-                    */
+                 
                 }
                 $sql=implode(" OR ", $sql_parts);
                 $query->andWhere("(" .$sql.")", $sql_params);
@@ -1665,7 +1655,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
                 
                  if($code['code_prefix']  != '')
                 {
-                     $sql .= " AND full_code_indexed LIKE (SELECT fulltoindex(?)||'%')";
+                     $sql .= " AND full_code_indexed LIKE  fulltoindex(?)||'%'";
                      $sqlParams[]=$code['code_prefix'];
                 }
                 
@@ -1684,7 +1674,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
                 }*/
                 //else
                 //{
-                    $sql ="EXISTS(select 1 from codes where  referenced_relation='specimens' and record_id = s.id AND full_code_indexed like (SELECT fulltoindex(?))";
+                    $sql ="EXISTS(select 1 from codes where  referenced_relation='specimens' and record_id = s.id AND full_code_indexed like  fulltoindex(?)";
                 //}
                 $sqlParams[]=$code['code_part'];
                 if($code['category']  != '' && strtolower($code['category'])  != 'all') 

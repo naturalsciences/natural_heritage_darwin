@@ -47,8 +47,8 @@ class specimensearchActions extends DarwinActions
   public function executeSearch(sfWebRequest $request)
   {
     $this->is_specimen_search = false;
-    // Initialize the order by and paging values: order by collection_name here
-    $this->setCommonValues('specimensearch', 'collection_name', $request);
+    // Initialize the order by and paging values: order by id here
+    $this->setCommonValues('specimensearch', '', $request);
     // Modify the s_url to call the searchResult action when on result page and playing with pager
     $this->s_url = 'specimensearch/search'.'?is_choose='.$this->is_choose;
     // Initialize filter
@@ -180,7 +180,15 @@ class specimensearchActions extends DarwinActions
           }
           // Define in one line a pager Layout based on a pagerLayoutWithArrows object
           // This pager layout is based on a Doctrine_Pager, itself based on a customed Doctrine_Query object (call to the getExpLike method of ExpeditionTable class)
-          $pager = new DarwinPager($query,
+		  if($this->orderBy=="")
+		  {
+			  $query_tmp=$query->removeDqlQueryPart('orderby');
+		  }
+		  else
+		  {
+			  $query_tmp=$query;
+		  }
+          $pager = new DarwinPager($query_tmp,
             $this->currentPage,
             $this->form->getValue('rec_per_page')
           );
@@ -188,9 +196,9 @@ class specimensearchActions extends DarwinActions
           $count_q = clone $query;
           // Remove from query the group by and order by clauses
 		  //ftheeten 2020 02 20
-          $count_q = $count_q->select("count(s.id), count(distinct TRIM(COALESCE(s.ig_num||'_','') || COALESCE(s.main_code_indexed,''))) as count_ig, sum(specimen_count_min) as count_min, sum(specimen_count_max) as count_max")->removeDqlQueryPart('orderby')->limit(0);
+          $count_q = $count_q->select("count(s.id), count(DISTINCT ig_main_code_indexed) as count_ig, sum(specimen_count_min) as count_min, sum(specimen_count_max) as count_max")->removeDqlQueryPart('orderby')->limit(0);
           if($this->form->with_group) {
-             $count_q->select("count(distinct s.id), count(distinct TRIM(COALESCE(s.ig_num||'_','')|| COALESCE(s.main_code_indexed,''))) as count_ig, , sum(specimen_count_min) as count_min, sum(specimen_count_max) as count_max")->removeDqlQueryPart('groupby');
+             $count_q->select("count(distinct s.id), count(DISTINCT ig_main_code_indexed) as count_ig, , sum(specimen_count_min) as count_min, sum(specimen_count_max) as count_max")->removeDqlQueryPart('groupby');
           }
 
           // Initialize an empty count query
@@ -209,8 +217,10 @@ class specimensearchActions extends DarwinActions
           $this->setDefaultPaggingLayout($this->pagerLayout);
           // If pager not yet executed, this means the query has to be executed for data loading
           if (! $this->pagerLayout->getPager()->getExecuted())
+		  {
             $this->specimensearch = $this->pagerLayout->execute();
-	      //ftheeten 2020 11 02
+		  }	     
+		 //ftheeten 2020 11 02
 			$this->pagerLayout->getPager()->additional_count=$counted->all_results;
           //Load Codes and Loans and related for each item
           $this->loadRelated();
