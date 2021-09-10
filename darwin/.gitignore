@@ -1,6 +1,8 @@
 cache/*
 log/*
 config/darwin.yml
+config/database.yml
 database/darwin.yml
 web/uploads/**
 !web/uploads/**
+apps/backend/config/database.yml

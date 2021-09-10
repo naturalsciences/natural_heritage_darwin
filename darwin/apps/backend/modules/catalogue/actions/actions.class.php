@@ -395,18 +395,11 @@ class catalogueActions extends DarwinActions
 	if($request->getParameter('term'))
 	{
 		 $conn = Doctrine_Manager::connection();
-         /*if(is_numeric($request->getParameter('term')))
-         {
-            $pattern="CONCAT('[^\d]', (SELECT * FROM fulltoindex(:term)), '.*')";
-         }
-         else
-         {
-            $pattern="CONCAT((SELECT * FROM fulltoindex(:term)), '.*')";
-         }*/
+         
 		 if($request->getParameter('collections'))
 		 {
 			$sql = "SELECT DISTINCT COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'') as value, full_code_indexed as value_indexed,length(code) as len FROM codes WHERE code_category='main' AND referenced_relation='specimens' AND
-			full_code_indexed LIKE CONCAT('%', (SELECT * FROM fulltoindex(:term)), '%') AND 
+			full_code_indexed LIKE CONCAT('%', fulltoindex(:term), '%') AND 
 			record_id IN (SELECT id FROM specimens WHERE collection_ref IN (".$request->getParameter('collections').") )
 			ORDER by length(code), full_code_indexed LIMIT 30;";
 		 }
@@ -414,7 +407,7 @@ class catalogueActions extends DarwinActions
 		 {
 			$sql = "SELECT DISTINCT COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'') as value, full_code_indexed as value_indexed,length(code) as len  FROM codes WHERE code_category='main' AND
 			referenced_relation='specimens' AND 
-			full_code_indexed LIKE CONCAT('%', (SELECT * FROM fulltoindex(:term)), '%')   ORDER by length(code), full_code_indexed LIMIT 30;";
+			full_code_indexed LIKE CONCAT('%',  fulltoindex(:term), '%')   ORDER by length(code), full_code_indexed LIMIT 30;";
 		}
 		$q = $conn->prepare($sql);
 		$q->execute(array(':term' => $request->getParameter('term')));
