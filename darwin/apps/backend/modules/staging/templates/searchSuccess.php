@@ -43,6 +43,8 @@
           <td  class="<?php if(count($row['status']) != 0 && $row['status']->export() != ''):?>fld_tocomplete<?php else:?>fld_ok<?php endif;?>">
             <?php if(count($row['status']) != 0 && $row['status']->export() != ''):?>
               <?php echo __('Error');?>
+			   <br/>
+			   <?php echo $row['statusString'];?>
             <?php else:?>
               <?php echo __('No problems detected');?>
             <?php endif;?>

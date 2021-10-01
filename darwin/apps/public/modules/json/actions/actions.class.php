@@ -128,6 +128,7 @@ class jsonActions extends DarwinActions
         }
 		if(is_object($coll_obj))
         {
+			$results["last_autoincremented_number"]=$coll_obj->getAutoIncrementFromParent();		
 			$coll_count= Doctrine_Core::getTable("Collections")->countSpecimens($id);
 			$results["count_data"]=$coll_count;			
 			$coll_types= Doctrine_Core::getTable("Collections")->countTypeSpecimens($id);
