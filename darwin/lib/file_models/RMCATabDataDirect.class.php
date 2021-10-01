@@ -237,14 +237,22 @@ class RMCATabDataDirect
     
    
     
-    public function configure($options)
+    public function configure($options, $encoding="UTF-8")
     {
         $this->fields = $this->initFields();
 		$this->fields_inverted=Array();
         foreach($this->fields as $key=>$value)
         {
-            $this->fields_inverted[strtolower(trim($value))]=$key;
-        }
+			if(strtolower($encoding)=="utf-8")
+			{
+				//print("ENCODE HEADERS_UTF8");
+				$this->fields_inverted[strtolower(trim(iconv("UTF-8", "ISO-8859-1//TRANSLIT",$value)))]=$key;
+			}
+			else
+			{
+				$this->fields_inverted[strtolower(trim($value))]=$key;
+			}
+		}
         $this->file   = $options['tab_file'];
         
     }
@@ -258,15 +266,14 @@ class RMCATabDataDirect
    //ftheeten 2019 04 19
    public function getCSVValue( $name_tag_csv)
    {
+		
 	   $lower_key=trim(strtolower($name_tag_csv));
 	   $tmp_headers=$this->getHeadersInverted();
-	   
 	   $returned=null ;
 	   if(array_key_exists($lower_key, $tmp_headers))
-	   {		   
-		  
+	   {		  		 
 		   return $this->row[$tmp_headers[$lower_key]];
-	   }
+	   }	   
 	   return $returned;
    }
 
@@ -347,14 +354,12 @@ class RMCATabDataDirect
    
    
     public function addID()
-    {   
-	
+    {   		
 	    //if(null != $this->getCSVValue("UnitID")) $this->addCode($this->getCSVValue("UnitID"), "main");
 		//if(null != $this->getCSVValue("datasetName")) $this->addCode($this->getCSVValue("datasetName"), "secondary");	   
-		$valTmp=$this->getCSVValue("UnitID");
+		$valTmp=$this->getCSVValue("UnitID");		
 		if( $this->isset_and_not_null($valTmp )) 
-        {
-			
+        {	
 			$this->addCode($valTmp, "main");
 		}
 		$valTmp=$this->getCSVValue("datasetName");
@@ -1167,7 +1172,7 @@ class RMCATabDataDirect
     }
 
     public function addMeasurement_free( $p_parameter_name_csv, $p_parameter_name_db)
-    {   
+    {   		
          if(strlen(trim($this->row[$this->headers_inverted[strtolower($p_parameter_name_csv)]]))>0)
          {      
                 $valTmp=$this->getCSVValue($p_parameter_name_csv);
@@ -1809,18 +1814,29 @@ class RMCATabDataDirect
 	
 
     
-    public function identifyHeader($p_handle)
+    public function identifyHeader($p_handle,$encoding="UTF-8")
     {
         
         $this->headers          = fgetcsv($p_handle, 0, "\t");
-        
+		
+		$headers_tmp=Array();
+		if(strtolower($encoding)=="utf-8")
+		{
+			foreach($this->headers as $key=>$value)
+			{
+				$headers_tmp[$key]=iconv("UTF-8", "ISO-8859-1//TRANSLIT",$value);
+			}
+			 $this->headers=$headers_tmp;
+		}	
+       
         foreach($this->headers as $key=>$value)
         {
 		   if(strlen(trim($value))>0)
-		   {
-            $this->headers_inverted[strtolower(trim($value))]= $key;
-           }
-		}      
+		   {			
+					$this->headers_inverted[strtolower(trim($value))]= $key;           
+		   }
+		}
+			
         //print_r($this->headers_inverted);
        
         $this->number_of_fields = count($this->headers);
@@ -1871,9 +1887,26 @@ class RMCATabDataDirect
 		return $conn->fetchOne("SELECT nextval('staging_id_seq');") ;
 	}
   
-    public function parseLineAndSaveToDB($p_row)
+    public function parseLineAndSaveToDB($p_row, $encoding="UTF-8")
     {        
-		////print("READ ROW");
+
+		if(strtolower( $encoding)!="utf-8")
+		{		
+			$row_tmp=Array();
+			foreach($p_row as $index=>$value)
+			{
+				if(strtolower($encoding)=="ascii")
+				{
+					$row_tmp[$index]=iconv("ISO-8859-1", "UTF-8//TRANSLIT",$value);
+				}
+				else
+				{
+					$row_tmp[$index]=iconv($encoding, "UTF-8//TRANSLIT",$value);
+				}
+			}
+			print_r($row_tmp);
+			$p_row=$row_tmp;
+		}
 		$this->staging = new Staging();
 		$this->object = null;
 		$this->gtu_object = null;
@@ -1966,7 +1999,6 @@ class RMCATabDataDirect
 				{			               
 						if(!in_array($field_name, $this->parsed_fields))
                         {
-							print("add measuremnt $field_name \n");
                             $this->addMeasurement_free($field_name, $field_name);
                         }
                 }

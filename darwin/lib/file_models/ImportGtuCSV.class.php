@@ -122,6 +122,9 @@ class ImportGtuCSV
 		//mista
 		$tags[23]="coast";
 		$tags[24]="lake";
+		
+		//Cédric 2021
+		$tags[25]="biotope";
 
 
 		$fields[0]="station_type";
@@ -921,7 +924,7 @@ class ImportGtuCSV
                   $tag_obj->setGroupName("hydrographic") ;
                   //$tag_obj->setSubGroupName($name_field) ;
                 }
-                else if(in_array(strtolower($name_field),array("ecology", "natural_site", "ecology_text", "habitat", "habitat_text")))
+                else if(in_array(strtolower($name_field),array("ecology", "natural_site", "ecology_text", "habitat", "habitat_text", "biotope")))
                 {
                     $tag_obj->setGroupName("habitat");
 

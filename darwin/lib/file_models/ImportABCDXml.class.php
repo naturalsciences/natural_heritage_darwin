@@ -1,6 +1,6 @@
 <?php
 require_once("Encoding.php");
-use \ForceUTF8\Encoding;
+
 
 class ImportABCDXml implements ImportModelsInterface
 {
@@ -21,6 +21,7 @@ class ImportABCDXml implements ImportModelsInterface
   private $code_suffix_separator;
   
   private $max_xml_levels=20;
+  protected $current_encoding;
   
 
   
@@ -58,7 +59,6 @@ class ImportABCDXml implements ImportModelsInterface
      $doc->formatOutput = true;
      $doc->load($filepath);
      $xpath = new DOMXPath($doc); 
-     print("TRY");
      
      
      $tmp_xml_str="";
@@ -75,8 +75,7 @@ class ImportABCDXml implements ImportModelsInterface
          while(($nodeList = $xpath->query('//*[not(text()) and not(node())]')) && $nodeList->length > 0 ) 
          {
                 foreach($nodeList as $node)
-                {
-                    print("REMOVE");
+                {                 
                     $node->parentNode->removeChild($node);
                 }
                
@@ -87,7 +86,7 @@ class ImportABCDXml implements ImportModelsInterface
            $i++;          
      }
    
-    print($last_doc->saveXML());     
+     
     $last_doc->save($filepath);
      
      
@@ -99,7 +98,7 @@ class ImportABCDXml implements ImportModelsInterface
      //2019 04 15 flush empty tags           
      $tmp_xml_str="";
      $i=0;
-     print("TEST");
+
      while($i<$this->max_xml_levels && strlen($xml_str)!=strlen($tmp_xml_str))
      {
          $doc = new DOMDocument();
@@ -107,13 +106,13 @@ class ImportABCDXml implements ImportModelsInterface
          $doc->formatOutput = true;
          $doc->loadXML($xml_str);
          $xpath = new DOMXPath($doc); 
-         print("TRY");
+
          $tmp_xml_str=$xml_str;
          while(($nodeList = $xpath->query('//*[not(text()) and not(node())]')) && $nodeList->length > 0 ) 
          {
                 foreach($nodeList as $node)
                 {
-                    print("REMOVE");
+
                     $node->parentNode->removeChild($node);
                 }
                
@@ -173,9 +172,11 @@ class ImportABCDXml implements ImportModelsInterface
         if (!($fp = fopen($file, "r"))) {
             return("could not open input file");
         }       
-      
         
-       
+        $line = fgets($fp);
+		$this->current_encoding=mb_detect_encoding($line);						 
+        fclose($fp);
+		$fp = fopen($file, "r");
         $tabParser = new RMCATabDataDirect(
             $this->configuration,
             $this->import_id, 
@@ -189,8 +190,8 @@ class ImportABCDXml implements ImportModelsInterface
             $this->code_suffix);
        
         $options["tab_file"] = $file;
-        $tabParser->configure($options);
-        $tabParser->identifyHeader($fp);
+        $tabParser->configure($options,$this->current_encoding);
+        $tabParser->identifyHeader($fp,$this->current_encoding);
         $i=1;
 		$conn = Doctrine_Manager::connection();
         
@@ -203,9 +204,10 @@ class ImportABCDXml implements ImportModelsInterface
 					if (array(null) !== $row) 
 					{ // ignore blank lines
 							//ftheeten 2018 02 28
-						 $row=  Encoding::toUTF8($row);
+					     
+				
 						 
-						 $tabParser->parseLineAndSaveToDB($row);
+						 $tabParser->parseLineAndSaveToDB($row,$this->current_encoding);
 					}
 				 }
 			}

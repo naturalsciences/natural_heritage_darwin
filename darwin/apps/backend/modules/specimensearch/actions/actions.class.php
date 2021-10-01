@@ -160,7 +160,7 @@ class specimensearchActions extends DarwinActions
           {
                 $this->orderBy="(SELECT p.formated_name_indexed from people p where id= spec_don_sel_ids[1])";
           }
-          $query = $this->form->getQuery()->orderby($this->orderBy . ' ' . $this->orderDir. ', id');
+          $query = $this->form->getQuery()->orderby($this->orderBy . ' ' . $this->orderDir. ', id DESC');
           //If export is defined export it!
           $this->field_to_show = $this->getVisibleColumns($this->getUser(), $this->form);
 
@@ -183,6 +183,7 @@ class specimensearchActions extends DarwinActions
 		  if($this->orderBy=="")
 		  {
 			  $query_tmp=$query->removeDqlQueryPart('orderby');
+			  $query_tmp=$query_tmp->orderBy('id DESC');
 		  }
 		  else
 		  {
