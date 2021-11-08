@@ -16,11 +16,19 @@
   </div>
     <?php endif;?>
 <?php else:?>
+	<br/>
+	<table id="table_error_in_page" class="results staging_table">
+		<tr><th>Errors in page</th><th>Count</th></tr>
+		<tbody>
+		</tbody>
+	</table>
+	<br/>
   <?php include_partial('global/pager', array('pagerLayout' => $pagerLayout)); ?>
   <?php include_partial('global/pager_info', array('form' => $form, 'pagerLayout' => $pagerLayout)); ?>
   <div class="edition">
   <table class="staging_table results_container results">
     <thead>
+	  <th></th>
       <th><?php echo __('Actions');?></th>
       <th><?php echo __('Error(s) found') ; ?></th>
       <th><?php echo __('Status');?></th>
@@ -31,8 +39,11 @@
       <?php endforeach;?>
       </thead>
       <tbody>
-      <?php foreach($search as $row):?>
-        <tr>
+	  <?php $i=0;?>
+      <?php foreach($search as $row):?>		
+		 <?php $i=$i+1;?>
+        <tr class="row_<?php print($i)?> row_err_msg">
+		<td><?php print($i);?></td>
           <td>
             <?php if(count($row['status']) != 0 ):?>
               <?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))), 'staging/edit?id='.$row['id']);?>
@@ -40,7 +51,7 @@
             <?php echo link_to(image_tag('remove.png', array("title" => __("Delete"))), 'staging/delete?id='.$row['id'],'class=remove_staging');?>
           </td>
           <td class="<?php echo ($row->getStatus()->export()==''?'fld_ok':'fld_tocomplete') ; ?>"><?php echo ($row->getStatus()->export()==''?'0':count(explode(',',$row->getStatus()->export()))) ; ?></td>
-          <td  class="<?php if(count($row['status']) != 0 && $row['status']->export() != ''):?>fld_tocomplete<?php else:?>fld_ok<?php endif;?>">
+          <td  class="error_msg <?php if(count($row['status']) != 0 && $row['status']->export() != ''):?>fld_tocomplete<?php else:?>fld_ok<?php endif;?>">
             <?php if(count($row['status']) != 0 && $row['status']->export() != ''):?>
               <?php echo __('Error');?>
 			   <br/>
@@ -63,7 +74,7 @@
           <?php foreach($fields as $name=>$title):?>
             <td class="<?php echo $row->getStatusFor($name);?>"><?php echo $row[$name];?></td>
           <?php endforeach;?>
-          </tr>
+          </tr>	 
       <?php endforeach;?>
     </tbody>
   </table>
@@ -77,6 +88,43 @@
 <!---->
 
 <script language="javascript">
+var array_errors={};
+var array_errors_text={};
+var array_errors_rows={};
+
+var filter=function(index)
+   {
+		
+		var list_lines_to_show=array_errors_rows[index];
+	
+		$(".row_err_msg").hide();
+		console.log(list_lines_to_show);
+		for(i=0;i<list_lines_to_show.length;i++)
+		{
+			var tmp_line="row_"+list_lines_to_show[i].toString();
+			console.log("."+tmp_line+"");
+			$("."+tmp_line+"").show();
+		}
+   }
+
+ var hashCode = function(param) {
+  var hash = 0, i, chr;
+  if (param.length === 0) return hash;
+  for (i = 0; i < param.length; i++) {
+    chr   = param.charCodeAt(i);
+    hash  = ((hash << 5) - hash) + chr;
+    hash |= 0; // Convert to 32bit integer
+  }
+  return hash;
+};
+  
+   
+var display_all=function()
+{
+	$(".row_err_msg").show();
+}
+
+
 $(document).ready(function () {
   $('.remove_staging').click(function(event)
   {
@@ -111,6 +159,44 @@ $(document).ready(function () {
 			$(".check_link").attr("href", url_link);
 		}
    );
+   
+   get_errors_on_page=function()
+   {		
+		var i_row=0;
+		$('.error_msg').each(function(i, obj) {
+			i_row=i_row+1;
+			
+			
+			var err_tmp=$(obj).html();
+			var hash=hashCode(err_tmp);
+			if(hash in array_errors)
+			{
+				var count=array_errors[hash];
+				array_errors[hash]=count+1;
+				var row_array=array_errors_rows[hash];
+			}
+			else
+			{
+				array_errors[hash]=1;
+				array_errors_text[hash]=err_tmp;
+				var row_array=Array();
+			}
+			row_array.push(i_row);
+			array_errors_rows[hash]=row_array;
+			
+			
+		});
+		
+	
+		$('#table_error_in_page tr:last').after('<tr><td><a onclick="display_all()" href="#cpt">all</a></td><td>'+ i_row.toString() +'</td></tr>');
+		
+		
+		$.each(array_errors,function(index,value){ 
+		   $('#table_error_in_page tr:last').after('<tr><td><a onclick="filter('+index+')" href="#cpt">'+array_errors_text[index]+'</a></td><td>'+ value +'</td></tr>');
+		});
+   }
+   get_errors_on_page();
+   
 });
 </script>
 <?php endif;?>

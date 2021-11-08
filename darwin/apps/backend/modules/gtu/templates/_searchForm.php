@@ -51,10 +51,14 @@
         <!--ftheeten 2018 08 08-->
         <tr>
 		  <th><?php echo $form['collection_ref']->renderLabel() ?></th>
+		  <th></th>
+		   <th><?php echo $form['import_ref']->renderLabel() ?></th>
         </tr>
         <tr>
         <td><?php echo $form['collection_ref']->render() ?> All :<input type="checkbox" id="all_collections" class="all_collections" checked></td>
-        </tr>
+        <td></td>
+		<td><?php echo $form['import_ref']->render() ?></td>
+		</tr>
       </tbody>
 
       </table>

@@ -104,6 +104,9 @@ class GtuFormFilter extends BaseGtuFormFilter
      //ftheeten 2018 03 23
     $this->widgetSchema['ig_number'] = new sfWidgetFormInputText();
     $this->validatorSchema['ig_number'] = new sfValidatorString(array('required' => false, 'trim' => true));
+	
+	$this->widgetSchema['import_ref'] = new sfWidgetFormInputText();
+    $this->validatorSchema['import_ref'] = new sfValidatorString(array('required' => false, 'trim' => true));
     
     $this->validatorSchema['id'] = new sfValidatorInteger(array('required'=>false));
     
@@ -320,6 +323,15 @@ class GtuFormFilter extends BaseGtuFormFilter
     }
     return $query;
   }
+  
+   public function addImportRefColumnQuery($query, $values, $val)
+  {
+    if( $val != '' )
+    {     
+      $query->andWhere(' import_ref = ?  ', $val);
+    }
+    return $query;
+  }
 
   
       //ftheeten 2018 03 23
@@ -377,6 +389,7 @@ class GtuFormFilter extends BaseGtuFormFilter
     $this->addExpeditionColumnExplicit($query,$values);
     $this->addCollectionRefColumnQuery($query, $values,$values["collection_ref"]);
     $this->addLatLonColumnQuery($query,$values);
+	$this->addImportRefColumnQuery($query,$values,$values["import_ref"]);
     
 
     $fields = array('from_date', 'to_date');    

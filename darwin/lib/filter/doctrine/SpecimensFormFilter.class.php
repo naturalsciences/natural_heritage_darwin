@@ -793,14 +793,14 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
      // LAT LON
     $this->widgetSchema['lat_from'] = new sfWidgetForminput();
     $this->widgetSchema['lat_from']->setLabel('Latitude');
-    $this->widgetSchema['lat_from']->setAttributes(array('class'=>'medium_small_size'));
+    $this->widgetSchema['lat_from']->setAttributes(array('class'=>'medium_small_size coord_dd'));
     $this->widgetSchema['lat_to'] = new sfWidgetForminput();
-    $this->widgetSchema['lat_to']->setAttributes(array('class'=>'medium_small_size'));
+    $this->widgetSchema['lat_to']->setAttributes(array('class'=>'medium_small_size coord_dd'));
     $this->widgetSchema['lon_from'] = new sfWidgetForminput();
     $this->widgetSchema['lon_from']->setLabel('Longitude');
-    $this->widgetSchema['lon_from']->setAttributes(array('class'=>'medium_small_size'));
+    $this->widgetSchema['lon_from']->setAttributes(array('class'=>'medium_small_size coord_dd'));
     $this->widgetSchema['lon_to'] = new sfWidgetForminput();
-    $this->widgetSchema['lon_to']->setAttributes(array('class'=>'medium_small_size'));
+    $this->widgetSchema['lon_to']->setAttributes(array('class'=>'medium_small_size coord_dd'));
 
     $this->validatorSchema['lat_from'] = new sfValidatorNumber(array('required'=>false,'min' => '-180', 'max'=>'180'));
     $this->validatorSchema['lon_from'] = new sfValidatorNumber(array('required'=>false,'min' => '-360', 'max'=>'360'));
