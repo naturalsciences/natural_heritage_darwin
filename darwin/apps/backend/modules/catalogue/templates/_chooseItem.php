@@ -61,10 +61,15 @@
                     </tr>
           <tr>
           <!--ftheeten 2017 06 30-->
-
-            <!--<th><?php echo $searchForm['collection_ref']->renderLabel();?></th>-->
+			<?php if($searchForm['table']->getValue()!=="lithostratigraphy"
+					&&
+					$searchForm['table']->getValue()!=="lithology"
+					&&
+					$searchForm['table']->getValue()!=="mineralogy"
+					&&
+					$searchForm['table']->getValue()!=="chronostratigraphy"):?>           
 			<th>Collection</th>
-   
+			<?php endif;?>
 		    <!--ftheeten 2017 06 30-->
            <?php if(isset($searchForm['metadata_ref'])):?>
            <!--jmherpers 2018 03 14-->
@@ -81,11 +86,19 @@
            </tr>
           <tr>
            <!--ftheeten 2017 06 30-->
-           <?php if($is_modal):?>
-                  <td><?php echo $searchForm['collection_ref_for_modal'];?></td>
-			<?php else:?>
-				<td><?php echo $searchForm['collection_ref'];?></td>
-          <?php endif;?> 
+		   <?php if($searchForm['table']->getValue()!=="lithostratigraphy"
+					&&
+					$searchForm['table']->getValue()!=="lithology"
+					&&
+					$searchForm['table']->getValue()!=="mineralogy"
+					&&
+					$searchForm['table']->getValue()!=="chronostratigraphy"):?>
+			   <?php if($is_modal):?>
+					  <td><?php echo $searchForm['collection_ref_for_modal'];?></td>
+				<?php else:?>
+					<td><?php echo $searchForm['collection_ref'];?></td>
+			  <?php endif;?>
+		  <?php endif;?>
 		  <?php if(isset($searchForm['metadata_ref'])):?>
             <td><?php echo $searchForm['metadata_ref'];?></td>
           <?php endif;?>
