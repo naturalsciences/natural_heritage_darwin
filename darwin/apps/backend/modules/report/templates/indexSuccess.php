@@ -33,6 +33,7 @@
   }
 
   $(document).ready(function() {
+	console.log('<?php echo url_for("report/getReport") ; ?>');
     refresh_reports() ;
     // @Todo Make the function called on change generic so it's not duplicated code - also on _report_form.php partial
     $('#report_list').on("change",

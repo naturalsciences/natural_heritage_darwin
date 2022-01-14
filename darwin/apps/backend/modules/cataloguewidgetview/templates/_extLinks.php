@@ -15,9 +15,15 @@
                 <a  class="link_catalogue_view" href="<?php echo url_for("extlinks/sketchfabSnippet?id=".$link->getId());?>/model/undefined"><?php echo image_tag('3D_icon',array('title' =>'3D link'));?></a></td>
 	<?php  elseif($link->getType()=="iiif"):?>
 				<a  class="link_catalogue_view" href="<?php echo url_for("extlinks/iiifViewer?id=".$link->getId());?>/model/undefined"><?php echo image_tag('image_icon',array('title' =>'Image IIIF link'));?></a></td>
-    <?php elseif($link->getType() == 'dna') : ?>
+    <?php  elseif($link->getType()=="image"):?>
+				<a  href="<?php echo url_for("extlinks/iiifViewer?id=".$link->getId());?>"><?php echo image_tag('image_icon',array('title' =>'Image IIIF link'));?></a></td>
+	<?php elseif($link->getType() == 'dna') : ?>
        <a href="<?php echo $link->getUrl();?>" target="_blank" class='complete_widget'>
         <?php echo image_tag('dna_icon',array('title' =>'DNA icon'));?></a>
+      </a>
+	  <?php elseif($link->getType() == 'pdf') : ?>
+     <a href="<?php echo $link->getUrl();?>" target="_blank" class='complete_widget'>
+        <?php echo image_tag('pdf_link',array('title' =>'PDF icon'));?></a>
       </a>
 	 <?php elseif($link->getType() == 'ltp') : ?>
        <a href="<?php echo $link->getUrl();?>" target="_blank" class='complete_widget'>
@@ -37,7 +43,7 @@
       </a>
     <?php else : ?>
       <a href="<?php echo $link->getUrl();?>" target="_blank" class='complete_widget'>
-        <?php echo image_tag('other_link',array('title' =>'External URL'));?></a>
+        <?php echo image_tag('extlink',array('title' =>'External URL'));?></a>
       </a>
     <?php endif ; ?>
     </td>

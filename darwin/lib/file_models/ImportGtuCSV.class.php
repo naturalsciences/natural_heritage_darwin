@@ -271,7 +271,7 @@ class ImportGtuCSV
 			if(preg_match('/^\d+,\d+$/',$tmp)!==false)
 			{
 				//print("REGREG");
-				$returned=str_replace($this->alternate_decimal_delimiter, $this->decimal_delimiter, $returned );
+				$returned=trim(str_replace($this->alternate_decimal_delimiter, $this->decimal_delimiter, $returned ));
 			}
 		}
 		return $returned;
@@ -283,7 +283,7 @@ class ImportGtuCSV
 		$returned=false;
 		if(array_key_exists(strtolower($p_field),$p_control_array))
 		{
-			$returned = $p_row[$p_control_array[$p_field]];			
+			$returned = trim($p_row[$p_control_array[$p_field]]);			
 		}
 		return $returned;
 	}

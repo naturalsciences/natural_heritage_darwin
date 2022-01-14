@@ -56,8 +56,11 @@ class ReportsForm extends BaseReportsForm
       'button_class'=>'check_right',
       'complete_url' => 'catalogue/completeName?table=collections',
     ));
+	/* $this->widgetSchema['collection_ref'] = new sfWidgetCollectionList(array('choices' => array()));*/
+    $this->widgetSchema['collection_ref']->addOption('public_only',false);
     $this->widgetSchema->setLabels(array('collection_ref' => 'Collection')) ;
-    $this->validatorSchema['collection_ref'] = new sfValidatorInteger(array('required'=>true));
+    //$this->validatorSchema['collection_ref'] = new sfValidatorString(array('required'=>true)); //
+	$this->validatorSchema['collection_ref'] =new sfValidatorInteger(array('required'=>true));
 
     /*
      * Fuzzy date from

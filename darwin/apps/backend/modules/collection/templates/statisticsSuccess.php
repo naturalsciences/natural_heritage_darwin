@@ -14,7 +14,7 @@
  </td>
  <td>
  <?php echo(__("All collections")); ?>  <input type="checkbox" id="all_collections" name="all_collections" class="all_collections"/>
-	<div class="treelist collection_tree_div" style="border:solid;">
+	<div class="treelist collection_tree_div">
 		    <?php echo $form['id'] ; ?>
             <br/>
       </div>
@@ -50,9 +50,14 @@
  <td><?php echo __("Display subcollections");?></td>
  <td><input type="checkbox" name="display_subcollections" id="display_subcollections" checked/></td>
  </tr>
+ <tr>
+ <td><?php echo __("View specimens");?></td>
+ <td><a id="to_specimens" href="<?php print(url_for("specimensearch/search/1"))."?specimen_search_filters[rec_per_page]=50";?>" target="_blank"><img src="<?php echo(public_path("images/blue_eyel.png"));?>"></img></a> </td>
+ </tr>
  </table>
 <div style="text-align:center">
-<input class="search_submit" style="float: none;" type="submit" name="search" id="search" value="<?php echo __('Search'); ?>" /> 
+<input class="search_submit" style="float: none;" type="submit" name="search" id="search" value="<?php echo __('Search'); ?>" />
+
 </div>
 <div id="div_loader" style="display:none;">
  <img src="<?php echo(public_path("images/loader.gif"));?>"></img>
@@ -163,27 +168,54 @@ var LastDayOfMonth=function(Year, Month) {
 
 var getStatistics = function(collection_ids, ig_num, from_date, to_date, includesub, displaysub, selector)
 	{
-		
-		console.log(collection_ids)
+		$("#to_specimens").attr("href", "<?php print(url_for("specimensearch/search/1"))."?specimen_search_filters[rec_per_page]=50";?>" ); 
+		console.log("_STAT");
 		var dataTmp={};
 		if(collection_ids.length>0)
 		{
+			for(var i=0; i<collection_ids.length;i++)
+			{
+				console.log(collection_ids[i]);
+				var _href = $("#to_specimens").attr("href");
+				$("#to_specimens").attr("href", _href + '&specimen_search_filters[collection_ref]['+i+']='+collection_ids[i]);
+			}
+			
 			dataTmp["collectionids"]=collection_ids.join();
 		}
 		if(ig_num.length>0)
 		{
+			var _href = $("#to_specimens").attr("href");
+			_href= _href + '&specimen_search_filters[ig_num]='+ig_num;
+			$("#to_specimens").attr("href", _href );
 			dataTmp["ig_num"]=ig_num;
 		}
 		if(from_date.length>0)
 		{
+			
+			var elems=from_date.split("-");
+			var _href = $("#to_specimens").attr("href");
+			_href= _href + '&specimen_search_filters[creation_from_date][year]='+elems[0];
+			_href= _href  + '&specimen_search_filters[creation_from_date][month]='+elems[1];
+			_href= _href  + '&specimen_search_filters[creation_from_date][day]='+elems[2];
+			_href= _href  + '&specimen_search_filters[action][0]=insert';
+			$("#to_specimens").attr("href", _href );
 			dataTmp["creation_date_min"]=from_date;
 		}
 		if(to_date.length>0)
 		{
+			var elems=to_date.split("-");
+			var _href = $("#to_specimens").attr("href");
+			_href= _href + '&specimen_search_filters[creation_to_date][year]='+elems[0];
+			_href= _href  + '&specimen_search_filters[creation_to_date][month]='+elems[1];
+			_href= _href  + '&specimen_search_filters[creation_to_date][day]='+elems[2];
+			_href= _href  + '&specimen_search_filters[action][0]=insert';
+			$("#to_specimens").attr("href", _href );
 			dataTmp["creation_date_max"]=to_date;
 		}
 		if(includesub)
 		{          
+			var _href = $("#to_specimens").attr("href");
+			$("#to_specimens").attr("href", _href + "&specimen_search_filters[include_sub_collections]=on");
 			dataTmp["withsubcollections"]="true";
 		}
 		if(displaysub)
@@ -476,6 +508,15 @@ $(document).ready(
             $("#search").click();
 
       <?php endif;?> 
+	  $("#to_specimens").click(
+			function()
+			{
+				
+				 $("#search").click();
+			}
+		);
     }
+	
+	
 );
 </script>
