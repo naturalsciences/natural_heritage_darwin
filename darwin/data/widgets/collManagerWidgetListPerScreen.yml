@@ -21,8 +21,16 @@ col2:
    category: catalogue_collections_widget
    group_name: extLinks
    mandatory: false
-   order_by: 1
+   order_by: 3
    opened: true
    visible: true
    title_perso: External Links
-
+col3:
+   col_num: 1
+   category: catalogue_collections_widget
+   group_name: identifiers
+   mandatory: false
+   order_by: 3
+   opened: true
+   visible: true
+   title_perso: Identifiers

@@ -2,11 +2,7 @@
   <tbody>
     <tr>
 		<td>
-			<?php if ( $spec->getNagoya()):?>
-				Concerned by the Nagoya protocol
-			<?php	else:?>
-				Not concerned by the Nagoya protocol
-			<?php endif ; ?>
+			Is concerned by Nagoya : <b><?php print($spec->getNagoya()); ?></b>
 		</td>
     </tr>
   </tbody>

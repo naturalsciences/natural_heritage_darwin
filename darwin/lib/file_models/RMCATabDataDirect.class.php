@@ -272,7 +272,7 @@ class RMCATabDataDirect
 	   $returned=null ;
 	   if(array_key_exists($lower_key, $tmp_headers))
 	   {		  		 
-		   return $this->row[$tmp_headers[$lower_key]];
+		   return trim($this->row[$tmp_headers[$lower_key]]);
 	   }	   
 	   return $returned;
    }

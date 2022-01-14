@@ -198,6 +198,7 @@ class Reports extends BaseReports
   }
   public function setParameters($data)
   {
+
     $param = '' ;
     $widget = self::getRequiredFieldForReport($data['name']) ;
     foreach($widget as $field => $name)
@@ -223,6 +224,7 @@ class Reports extends BaseReports
   {
     $hstore = new Hstore() ;
     $hstore->import($this->_get('parameters')) ;
+	
     return $hstore ;
   }
 
@@ -236,6 +238,17 @@ class Reports extends BaseReports
           $name = str_replace('_x_','_'.$variables['catalogue_type'].'_',$name);
         }
     }
+	
+	//ftheeten
+	$variables=(array)$variables;
+	foreach($variables as $key=>$val)
+	{
+		if($key=="users_array")
+		{
+			
+			$variables[$key]=str_replace("[","",str_replace("]","",$val));
+		}
+	}
 
     sfApplicationConfiguration::getActive()->loadHelpers(array("Darwin"));
 
@@ -243,11 +256,14 @@ class Reports extends BaseReports
 
     if(!empty($url) && !in_array($url, array($name.'.'.$this->getFormat(), $name.'_'.$this->getLang().'.'.$this->getFormat()))) {
       if (!empty($variables)) {
+	 
         $url .= '?' . http_build_query($variables);
       }
+	 
       // We add userLocale to the url to avoid different date format depending on which locale jasper choose
       $url .= "&userLocale=en";
     }
+	
 
     return $url ;
   }

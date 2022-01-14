@@ -278,6 +278,7 @@ class reportActions extends DarwinActions
       $file_name = sha1($report->getName() . rand());
       $uri = sfConfig::get('sf_upload_dir') . '/report/' . $file_name;
       // Try to write the file
+	  print($report->getUrlReport());
       if(file_put_contents($uri, file_get_contents($report->getUrlReport(), FALSE, $ctx),null,$ctx)) {
         // Write the reference of that file into db for concerned report
         $report->setUri('/report/'.$file_name);

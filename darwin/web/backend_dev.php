@@ -22,7 +22,7 @@ foreach($list_ips as $url)
 		$go=true;
 	}	
 }
-$go=true;
+//$go=true;
 if ($go)
 {
 	require_once(dirname(__FILE__).'/../config/ProjectConfiguration.class.php');
