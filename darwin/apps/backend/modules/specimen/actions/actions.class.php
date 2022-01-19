@@ -769,7 +769,7 @@ class specimenActions extends DarwinActions
 						   {		
 								try
 								{
-									$prop2=clone $prop;								
+									$prop2=$prop->copy();								
 									$prop2->setRecordId($dest_id);
 									$prop2->save();
 								}
@@ -794,7 +794,7 @@ class specimenActions extends DarwinActions
 						   {
 								try
 								{
-									$comment2=clone $comment;
+									$comment2= $comment->copy();
 									$comment2->setRecordId($dest_id);
 									$comment2->save();
 								}
