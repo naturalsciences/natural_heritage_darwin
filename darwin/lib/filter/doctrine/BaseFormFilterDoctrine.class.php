@@ -535,12 +535,20 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
             {
                 $queryTmp="";
                 $i=0;
-                
+                $child_and_exact=false;
+				if(in_array('equal',$relations)&&in_array('child',$relations))
+				{
+					
+					$child_and_exact=true;
+					$item  = Doctrine_Core::getTable($table)->find($item_ref);
+                            //$query->andWhere($field_prefix."_path like ?", $item->getPath().''.$item->getId().'/%');
+                        $queryTmp.=$field_prefix."_path||".$field_prefix."_ref||'/' like '".$item->getPath().$item->getId().'/%'."'" ;
+				}
                 foreach($relations as $relation)
                 {
                     
                     $arrayParams=Array();
-                        if($relation == 'equal')
+                        if($relation == 'equal'&& !$child_and_exact)
                         {
                         if($i>0)
                             {
@@ -550,7 +558,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
                         $queryTmp.=$field_prefix."_ref = ".$item_ref ;
 
                         }
-                        if($relation == 'child')
+                        if($relation == 'child'&& !$child_and_exact)
                         {
                         if($i>0)
                             {
@@ -561,7 +569,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
                         $queryTmp.=$field_prefix."_path like '".$item->getPath().''.$item->getId().'/%'."'" ;
 
                         }
-                        if($relation == 'direct_child')
+                        if($relation == 'direct_child'&& !$child_and_exact)
                         {
                         if($i>0)
                             {
