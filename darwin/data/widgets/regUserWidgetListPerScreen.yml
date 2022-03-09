@@ -430,6 +430,17 @@ sps32:
    title_perso: External links
    all_public: true
    
+sps33:
+  col_num: 1
+  category: specimensearch_widget
+  group_name: mids
+  mandatory: false
+  order_by: 22
+  opened: true
+  visible: true
+  title_perso: Mids level
+  all_public: true
+   
 sw1:
    col_num: 1
    category: specimen_widget
@@ -758,12 +769,22 @@ sw35:
   category: specimen_widget
   group_name: nagoya
   mandatory: false
-  order_by: 20
+  order_by: 21
   opened: true
   visible: true
   title_perso: Nagoya
   all_public: true      
 
+sw36:
+  col_num: 1
+  category: specimen_widget
+  group_name: mids
+  mandatory: false
+  order_by: 21
+  opened: true
+  visible: true
+  title_perso: Mids level
+  all_public: true  
    
 
    

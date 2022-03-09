@@ -89,7 +89,12 @@ Taxa in specimen count  :
     </table>
 </div>
 <br/>
-
+Mids in collection  :
+<div  class="results_container">
+    <table name="results5" id="results5" class="results" >
+    </table>
+</div>
+<br/>
 </div>
 <script language="JavaScript">
 
@@ -98,10 +103,11 @@ var finishedAjax1=false;
 var finishedAjax2=false;
 var finishedAjax3=false;
 var finishedAjax4=false;
+var finishedAjax5=false;
 
 var hideLoader=function()
 {
-    if(finishedAjax1&&finishedAjax2&&finishedAjax3&&finishedAjax4)
+    if(finishedAjax1&&finishedAjax2&&finishedAjax3&&finishedAjax4&&finishedAjax5)
     {
         $("#div_loader").css("display", 'none');
     }
@@ -229,6 +235,7 @@ var getStatistics = function(collection_ids, ig_num, from_date, to_date, include
             $("#results2 tr").remove();
             $("#results3 tr").remove();
 			$("#results4 tr").remove();
+			$("#results5 tr").remove();
             var request1 = $.ajax({
               url: detect_https("<?php echo url_for("collection/display_statistics_specimens");?>"),
               method: "GET",
@@ -282,6 +289,20 @@ var getStatistics = function(collection_ids, ig_num, from_date, to_date, include
                 {
                     finishedAjax4 = true;                   
                     buildHtmlTable(result, "#results4");
+                    hideLoader();
+                }
+            );
+			
+			 var request5 = $.ajax({
+              url: detect_https("<?php echo url_for("collection/display_statistics_mids");?>"),
+              method: "GET",
+              data: dataTmp,
+              dataType: "json"
+            }).done(
+                function(result)
+                {
+                    finishedAjax5 = true;                   
+                    buildHtmlTable(result, "#results5");
                     hideLoader();
                 }
             );

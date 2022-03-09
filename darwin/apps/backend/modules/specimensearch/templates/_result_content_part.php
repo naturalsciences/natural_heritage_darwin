@@ -74,4 +74,5 @@
     <span class="counting">0</span>
   <?php endif;?>
 </td>
+ <td class="col_mids"><?php echo $specimen->getMidsLevel();?>
 

@@ -654,6 +654,12 @@ class SpecimensForm extends BaseSpecimensForm
       ),
       array('invalid' => 'Date provided is not valid',)
     );
+	
+	 $this->widgetSchema['mids_level'] = new sfWidgetFormChoice(array(
+      'choices' => array(-1=>"Auto",0=>"0",1=>"1", 2=>"2", 3=>"3")),
+    );	
+	  $this->validatorSchema['mids_level'] = new sfValidatorInteger(array('required'=>false));
+	
     $this->validatorSchema->setPostValidator(
       new sfValidatorAnd(array(
         new sfValidatorSchemaCompare(

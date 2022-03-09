@@ -1018,6 +1018,17 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->validatorSchema['category'] = new sfValidatorChoice(
         array('choices'=>array_keys(Specimens::getCategories()),
         "required"=> false));
+		
+	$this->widgetSchema['mids_level'] = new sfWidgetFormChoice(array(
+      'choices' => array(-1=>"All",0=>"0",1=>"1", 2=>"2", 3=>"3")),
+    );	
+	$this->validatorSchema['mids_level'] =  new sfValidatorChoice(
+        array(
+         "choices"=>  array(-1,0,1, 2, 3),
+         'multiple' => false,
+         "required"=>false
+         )
+    );
   }
 
   public function addGtuTagValue($num)
@@ -2014,6 +2025,19 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 		}
     return $query ;
   }
+  
+   public function addMidsLevelQuery($query, $field, $val) 
+   {
+		if(strlen($val)>0)
+		{
+			if((int)$val>-1)
+			{
+			$query->andWhere( "s.mids_level=?" ,$val);
+			}
+		}
+    return $query ;
+  }
+
 
   
      public function addIdentificationQuery($query, $field, $val, $notion) 
@@ -2339,19 +2363,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
   {
     $this->encoding_collection = $this->getCollectionWithRights($this->options['user'],true);
 
-    /*$query = DQ::create()
-      ->select('s.*,
-
-        gtu_location[0] as latitude,
-        gtu_location[1] as longitude,
-        (collection_ref in ('.implode(',',$this->encoding_collection).')) as has_encoding_rights, code_category, code_prefix as codeprefix, 
-       sc.code_prefix_separator as codeprefixseparator, sc.code as codecore, sc.code_suffix_separator as codesuffixseparator, sc.code_suffix as codesuffix'
-      )
-      ->from('Specimens s')
-	  ->leftJoin("s.SpecimensCodes sc on s.id=sc.record_id")->where("sc.code_category='main'");
-*/
-
-$query = DQ::create()
+	$query = DQ::create()
       ->select('s.*,
 
         gtu_location[0] as latitude,
@@ -2446,6 +2458,7 @@ $query = DQ::create()
     $this->addNamingColumnQuery($query, 'lithology', 'lithology_name_indexed', $values['lithology_name'],'s','lithology_name_indexed');
     $this->addNamingColumnQuery($query, 'mineralogy', 'mineral_name_indexed', $values['mineral_name'],'s','mineral_name_indexed');
 
+
     //ftheeten 2018 09 19
     $this->addTaxonomicMetadataRef($query, $values["taxonomy_metadata_ref"]);
     
@@ -2487,6 +2500,8 @@ $query = DQ::create()
     $this->addBibliography($query,   $values["publication_ref"], $values["publication_ref"]);
 	$this->addDeterminationStatus($query, $values["determination_status"], $values["determination_status"]);
     $this->addCategoryQuery($query,$values["category"], $values["category"] );
+	
+	$this->addMidsLevelQuery($query,$values["mids_level"], $values["mids_level"] );
     $query->limit($this->getCatalogueRecLimits());
 
     return $query;

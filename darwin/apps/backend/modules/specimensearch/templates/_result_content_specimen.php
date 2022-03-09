@@ -79,6 +79,9 @@
         </ul>
       <?php endif;?>
     </td>
+	<td class="col_import_ref">
+		<?php print($specimen->getImportRef());?>
+    </td>
 	<td class="col_uuid">
 		<?php print($specimen->getUuid());?>
 	</td>

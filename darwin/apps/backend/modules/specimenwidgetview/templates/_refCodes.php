@@ -29,5 +29,11 @@
     <td><?php echo __("UUID");?></td>
     <td><?php echo $stable? $stable->getUuid():"";?></td>
   </tr>
+  <?php $import_ref=$spec->getImportRef(); if($import_ref!==null):?>
+  <tr>
+		<td><b>Nr. import</td>
+		<td><?php print($import_ref); ?></td>
+	</tr>
+ <?php endif;?>
 </table>
 

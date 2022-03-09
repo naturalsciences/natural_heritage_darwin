@@ -389,6 +389,9 @@ abstract class BaseSpecimensFormFilter extends DarwinModelFormFilter
     $this->widgetSchema   ['ig_main_code_indexed'] = new sfWidgetFormFilterInput();
     $this->validatorSchema['ig_main_code_indexed'] = new sfValidatorPass(array('required' => false));
 
+    $this->widgetSchema   ['mids_level'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['mids_level'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
+
     $this->widgetSchema   ['collection_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Collections'), 'add_empty' => true));
     $this->validatorSchema['collection_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Collections'), 'column' => 'id'));
 
@@ -600,6 +603,7 @@ abstract class BaseSpecimensFormFilter extends DarwinModelFormFilter
       'nagoya' => 'Text',
       'uuid' => 'Text',
       'ig_main_code_indexed' => 'Text',
+      'mids_level' => 'Number',
       'collection_ref' => 'ForeignKey',
       'expedition_ref' => 'ForeignKey',
       'gtu_ref' => 'ForeignKey',
