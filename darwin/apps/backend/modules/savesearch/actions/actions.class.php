@@ -531,7 +531,8 @@ return sfView::NONE;
 		$response->setHttpHeader('Pragma', 'public');
 		$response->sendHttpHeaders();
 		ob_end_flush();
-		return $this->renderText(readfile($uri));
+		$tmp=file_get_contents($uri);
+		return $this->renderText($tmp);
 	 }	 
 		
   }
@@ -562,7 +563,8 @@ return sfView::NONE;
 		$response->setHttpHeader('Pragma', 'public');
 		$response->sendHttpHeaders();
 		ob_end_flush();
-		return $this->renderText(readfile($uri));
+		$tmp=file_get_contents($uri);
+		return $this->renderText($tmp);
 	 }	 
 		
   }
@@ -599,7 +601,8 @@ return sfView::NONE;
 		$response->setHttpHeader('Pragma', 'public');
 		$response->sendHttpHeaders();
 		ob_end_flush();
-		return $this->renderText(readfile($uri));
+		$tmp=file_get_contents($uri);
+		return $this->renderText($tmp);
 	 }	 
 		
   }
@@ -713,7 +716,8 @@ return sfView::NONE;
 			$response->setHttpHeader('Pragma', 'public');
 			$response->sendHttpHeaders();
 			ob_end_flush();
-			return $this->renderText(readfile($uri));
+			$tmp=file_get_contents($uri);
+			return $this->renderText($tmp);
 		 }	 
 			
 	  }

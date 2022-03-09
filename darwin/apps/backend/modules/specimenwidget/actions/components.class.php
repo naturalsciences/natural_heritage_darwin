@@ -309,4 +309,10 @@ class specimenwidgetComponents extends sfComponents
   {
     $this->defineForm();
   }
+  
+    public function executeMids()
+  {
+    $this->defineForm();
+  }
+
 }

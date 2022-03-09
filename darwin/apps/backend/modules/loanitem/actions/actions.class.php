@@ -140,7 +140,7 @@ class loanitemActions extends DarwinActions
           $obj->setReferencedRelation('loan_items');
           foreach($items as $it)
           {
-            $o = $obj->copy();
+            $o =  $obj->copy();
             $o->setRecordId($it);
             $o->save();
           }

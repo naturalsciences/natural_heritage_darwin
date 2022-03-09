@@ -122,6 +122,7 @@ class specimenwidgetviewComponents extends sfComponents
 
   public function executeRefCodes()
   {
+	  $this->defineObject();
     $this->stable = Doctrine_Core::getTable('SpecimensStableIds')->findOneBySpecimenRef($this->eid);
     $this->Codes  = Doctrine_Core::getTable('Codes')->getCodesRelatedArray('specimens',$this->eid) ;
   }
@@ -239,6 +240,11 @@ class specimenwidgetviewComponents extends sfComponents
   
     //ftheeten 2018 11 30
    public function executeGtuDate()
+  {
+    $this->defineObject();
+  }
+  
+  public function executeMids()
   {
     $this->defineObject();
   }

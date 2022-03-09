@@ -189,4 +189,9 @@ class specimensearchwidgetComponents extends sfComponents
     $this->defineForm();
   }
   
+  public function executeMids()
+  {
+    $this->defineForm();
+  }
+  
 }

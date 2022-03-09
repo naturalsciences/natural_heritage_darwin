@@ -332,6 +332,13 @@ class collectionActions extends DarwinActions
         return   $this->renderText(json_encode($this->execute_statistics_generic($request, "types", true)));
   }
   
+    public function executeDisplay_statistics_mids(sfWebRequest $request)
+  {
+        $this->getResponse()->setHttpHeader('Content-type','application/json');
+        $this->setLayout('json');
+        return   $this->renderText(json_encode($this->execute_statistics_generic($request, "mids", true)));
+  }
+  
   public function executeDisplay_statistics_taxa(sfWebRequest $request)
   {
         $this->getResponse()->setHttpHeader('Content-type','application/json');
@@ -376,6 +383,13 @@ class collectionActions extends DarwinActions
     $returned[]="";
     $returned[]="Taxa in specimens count";
     $tmp=$this->execute_statistics_generic($request, "all_taxa", true);
+    foreach($tmp as $row)
+    {
+        $returned[]=implode("\t", $row);
+    }
+	$returned[]="";
+    $returned[]="Mids in collection";
+    $tmp=$this->execute_statistics_generic($request, "mids", true);
     foreach($tmp as $row)
     {
         $returned[]=implode("\t", $row);

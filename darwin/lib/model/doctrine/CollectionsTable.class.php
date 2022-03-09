@@ -587,6 +587,211 @@ class CollectionsTable extends DarwinTable
     return $items;
   }
   
+   public function countMidsSpecimens($collectionID ="/", $year="", $creation_date_min="", $creation_date_max="", $ig_num="", $includeSubcollection=false, $detailSubCollections=false , $hide_private=false,$user=null )
+  {
+  
+    $fields =Array();
+    $groups =Array();
+    $where =Array();
+    $orders=Array();
+    if($detailSubCollection>0)
+    {
+        $fields[0]="collection_name";
+        $fields[1]="mids_level";
+        $groups[]="collection_name";
+        $groups[]="mids_level";
+        
+    }
+   
+    if(strlen($year)>0)
+    {
+        $fields[2]="year";
+        $where[]= "year = :year";
+        $groups[]="year";
+    }
+    
+    if(strlen($creation_date_min)>0)
+    {
+        $fields[2]="year";
+        $where[]= "COALESCE(specimen_creation_date,'1706-01-01 00:00:00') >= (date_trunc('day',:creation_date_min::timestamp with time zone))";
+        $groups[]="year";
+		 $orders[]="year";
+    }
+    
+    if(strlen($creation_date_max)>0)
+    {
+        $fields[2]="year";
+        $where[]= "COALESCE(specimen_creation_date,'1706-01-01 00:00:00') <= (date_trunc('day',:creation_date_max::timestamp with time zone)  + (24*60*60 - 1) * interval '1 second')";
+        $groups[]="year";
+		 $orders[]="year";
+    }
+    
+     if(strlen($ig_num)>0)
+    {
+        $fields[3]="ig_num";
+         $groups[]="ig_num";
+        $where[]= "ig_num = :ig_num";
+    }
+    
+    
+    $fields[4]="SUM(nb_records) as nb_database_records";
+	$fields[5]="SUM(specimen_count_min) as nb_physical_specimens_low";
+    $fields[6]="SUM(specimen_count_max) as nb_physical_specimens_high";
+   
+    
+    $orders[]="mids_level";
+    $fields[1]="mids_level";
+    $groups[]="mids_level";
+    
+    if($detailSubCollections)
+    {
+        
+        $orders[]="collection_name";
+        $fields[0]="collection_name";
+        
+        $groups[]="collection_name";
+        $includeSubcollection=true;
+    }
+    
+    if($includeSubcollection||$collectionID=="/")
+    {
+        
+        if($collectionID=="/")
+        {
+            $where[]= "collection_path LIKE  :id||'%'";            
+        }
+		elseif(strpos($collectionID, ","))
+		{
+			
+			$array_col_id=explode(",",$collectionID );
+			$whereTmp=Array();
+			foreach($array_col_id as $tmp_id)
+			{
+				if(is_numeric($tmp_id))
+				{
+					$whereTmp[]= "collection_path||'/'||v_reporting_count_all_specimens_mids_by_collection_ref_year_ig.collection_ref||'/' LIKE '%/$tmp_id/%'";
+				}
+			}
+			$where[]="(".implode(" OR ", $whereTmp).")";
+		}
+        else
+        {
+            //$where[]= "collections.id::varchar  = :ida";
+            $where[]= "collection_path||'/'||v_reporting_count_all_specimens_mids_by_collection_ref_year_ig.collection_ref||'/' LIKE '%/'||:idb||'/%'";
+        }       
+    }
+	elseif(strpos($collectionID, ","))
+	{
+			
+			$array_col_id=explode(",",$collectionID );
+			$whereTmp=Array();
+			foreach($array_col_id as $tmp_id)
+			{
+				if(is_numeric($tmp_id))
+				{
+					$whereTmp[]= "v_reporting_count_all_specimens_mids_by_collection_ref_year_ig.collection_ref = $tmp_id";
+				}
+			}
+			$where[]="(".implode(" OR ", $whereTmp).")";
+		}
+    else
+    {
+         $where[]= "v_reporting_count_all_specimens_mids_by_collection_ref_year_ig.collection_ref::varchar  = :id";
+    }
+    
+   
+    
+    ksort($fields);
+    
+    $all_fields=implode(", ", $fields);
+   
+   $hide_str="";
+   if($user!==null)
+   {
+	   $test_user=true;
+	   $user_role=$user->getDbUserType();
+	   $user_id=$user->getId();
+   }
+   if($hide_private)
+   {
+	   
+	   if($user_role==Users::ADMIN)
+	   {
+		   $hide_str="";
+	   }   
+	   elseif(!$test_user||$user_role==Users::ANONYMOUS)
+	   {
+			$hide_str=" INNER JOIN collections ON v_reporting_count_all_specimens_mids_by_collection_ref_year_ig.collection_ref=collections.id AND is_public=true ";
+	   }
+	   else
+	   {
+		   $hide_str="LEFT JOIN collections_rights  ON v_reporting_count_all_specimens_mids_by_collection_ref_year_ig.collection_ref= collections_rights.collection_ref AND user_ref=".$user_id."
+					INNER JOIN collections ON v_reporting_count_all_specimens_mids_by_collection_ref_year_ig.collection_ref=collections.id ";
+			$where[]="(is_public=true OR db_user_type>= 2)";
+	   }
+   }
+    $sql ="SELECT ".$all_fields." FROM v_reporting_count_all_specimens_mids_by_collection_ref_year_ig ".$hide_str."  WHERE ".implode(" AND ", $where);
+    
+    if(count($groups)>0)
+    {
+        $sql = $sql." GROUP BY ".implode(", ", $groups);
+    }
+    
+     if(count($orders)>0)
+    {
+        $sql = $sql." ORDER BY ".implode(", ", $orders);
+    }
+    
+    $conn = Doctrine_Manager::connection();
+    $q = $conn->prepare($sql);
+    
+     if(strlen($year)>0)
+    {
+        $q->bindParam(":year", $year);
+    }
+    
+     if(strlen($ig_num)>0)
+    {
+       $q->bindParam(":ig_num", $ig_num, PDO::PARAM_STR);
+    }
+    
+    if($includeSubcollection||$collectionID=="/")    
+    {
+        
+        if($collectionID=="/")
+        {
+            $q->bindParam(":id", $collectionID, PDO::PARAM_STR);
+            
+        }
+        elseif(strpos($collectionID,",")===false)
+        {
+            //$q->bindParam(":ida", $collectionID, PDO::PARAM_STR);
+            $q->bindParam(":idb", $collectionID, PDO::PARAM_STR);
+        }       
+    }
+    elseif(strpos($collectionID,",")===false)
+    {
+         $q->bindParam(":id", $collectionID, PDO::PARAM_STR);
+    }
+    
+    if(strlen($creation_date_min)>0)
+    {
+         $q->bindParam(":creation_date_min", $creation_date_min, PDO::PARAM_STR);
+    }
+    
+    if(strlen($creation_date_max)>0)
+    {
+        $q->bindParam(":creation_date_max", $creation_date_max, PDO::PARAM_STR);
+    }
+       
+   
+   
+    $q->execute();
+    
+    $items=$q->fetchAll(PDO::FETCH_ASSOC);
+
+    return $items;
+  }
   
   public function countTaxaInSpecimen($collectionID ="/", $year="", $creation_date_min="", $creation_date_max="", $ig_num="", $includeSubcollection=false, $detailSubCollections=false  , $hide_private=false, $all=false)
   {

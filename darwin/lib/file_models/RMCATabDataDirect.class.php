@@ -2089,7 +2089,7 @@ class RMCATabDataDirect
 		{
 			//print("failed");
 			//$e = new DarwinPgErrorParser($ne);
-			$this->errors_reported .= "Unit ".$this->name." object were not saved: ".$e->getMessage().";";
+			$this->errors_reported .= "Unit ".$this->name." object were not saved: ".$ne->getMessage().";";
 			 $e = new DarwinPgErrorParser($this->errors_reported);
 			//print($this->errors_reported);
 			$ok = false ;

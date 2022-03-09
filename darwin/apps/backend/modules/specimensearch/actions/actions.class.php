@@ -11,6 +11,7 @@
 class specimensearchActions extends DarwinActions
 {
   protected $widgetCategory = 'specimensearch_widget';
+  protected $ajax_query=null;
 
   public function executeIndex(sfWebRequest $request)
   {
@@ -37,18 +38,12 @@ class specimensearchActions extends DarwinActions
     //loadwidget at the end because we possibliy need to update some widget visibility before showing it
     $this->loadWidgets();
   }
-
-  /**
-    * Action executed when searching a specimen - trigger by the click on the search button
-    * It's also the same action that is used to open a saved search reopened, a list of pinned specimens
-    * or when clicking on the back to criterias button
-    * @param sfWebRequest $request Request coming from browser
-    */
-  public function executeSearch(sfWebRequest $request)
-  {
+  
+  public function executeAjaxPager(sfWebRequest $request)
+{
     $this->is_specimen_search = false;
     // Initialize the order by and paging values: order by id here
-    $this->setCommonValues('specimensearch', '', $request);
+    $this->setCommonValues('specimensearch', 'main_code_indexed', $request);
     // Modify the s_url to call the searchResult action when on result page and playing with pager
     $this->s_url = 'specimensearch/search'.'?is_choose='.$this->is_choose;
     // Initialize filter
@@ -156,6 +151,11 @@ class specimensearchActions extends DarwinActions
           {
                 $this->orderBy="(SELECT p.formated_name_indexed from people p where id= spec_coll_ids[1])";
           }
+		  elseif($this->orderBy=="codes")
+		  {
+			  $query_tmp=$query->removeDqlQueryPart('orderby');
+			  $query_tmp=$query_tmp->orderBy('main_code_indexed');
+		  }
           elseif($this->orderBy=="don_peoples")
           {
                 $this->orderBy="(SELECT p.formated_name_indexed from people p where id= spec_don_sel_ids[1])";
@@ -209,7 +209,223 @@ class specimensearchActions extends DarwinActions
 		  
           // And replace the one of the pager with this new one
           $pager->setCountQuery($counted);
+		  //q ajax mids
+		  $count_q2 = clone $query;
+			$count_q2 = $count_q2->select("s.id as s_id, mids_level,  ig_main_code_indexed,
+ specimen_count_min,
+ specimen_count_max")->removeDqlQueryPart('orderby')->limit(0);
+			$tmp_params=$count_q2->getCountQueryParams();
+			
+			$tmp_query=$count_q2->getSqlQuery();
+			$conn = Doctrine_Manager::connection();
+			$q_ajax = $conn->prepare("WITH a AS (".$tmp_query.")SELECT  count(distinct s__id), count(DISTINCT s__ig_main_code_indexed) as count_ig, sum(s__specimen_count_min) as count_min, sum(s__specimen_count_max) as count_max, (select count(*) from a where s__mids_level=0) as count_mids0 ,(select count(*) from a where s__mids_level=1) as count_mids1,(select count(*) from a where s__mids_level=2)  as count_mids2,(select count(*) from a where s__mids_level=3)  as count_mids3, 
+			(select COALESCE(sum(s__specimen_count_min),0) from a where s__mids_level=0) as spec_min_mids0, 
+			(select COALESCE(sum(s__specimen_count_max),0) from a where s__mids_level=0) as spec_max_mids0,
+			(select COALESCE(sum(s__specimen_count_min),0) from a where s__mids_level=1) as spec_min_mids1, 
+			(select COALESCE(sum(s__specimen_count_max),0) from a where s__mids_level=1) as spec_max_mids1,
+			(select COALESCE(sum(s__specimen_count_min),0) from a where s__mids_level=2) as spec_min_mids2, 
+			(select COALESCE(sum(s__specimen_count_max),0) from a where s__mids_level=2) as spec_max_mids2,
+			(select COALESCE(sum(s__specimen_count_min),0) from a where s__mids_level=3) as spec_min_mids3, 
+			(select COALESCE(sum(s__specimen_count_max),0) from a where s__mids_level=3) as spec_max_mids3		FROM a;");
+			
+			//$q_ajax->execute($tmp_params);
+		  //$this->ajax_query=$q_ajax;
+		   //$this->ajax_query_params=$tmp_params;
+			$q=$q_ajax->execute($tmp_params, Doctrine_Core::HYDRATE_ARRAY);
+			
+			 $this->getResponse()->setHttpHeader('Content-type','application/json');
+			$this->setLayout('json');
+			return   $this->renderText(json_encode($q_ajax->fetch(PDO::FETCH_ASSOC)));
+        }
+      }
+    }
+
+    $this->setTemplate('index');
+    if(isset($criterias['specimen_search_filters']))
+      Doctrine_Core::getTable('Specimens')->getRequiredWidget($criterias['specimen_search_filters'], $this->getUser()->getId(), 'specimensearch_widget');
+    $this->loadWidgets();
+  }
+
+  /**
+    * Action executed when searching a specimen - trigger by the click on the search button
+    * It's also the same action that is used to open a saved search reopened, a list of pinned specimens
+    * or when clicking on the back to criterias button
+    * @param sfWebRequest $request Request coming from browser
+    */
+  public function executeSearch(sfWebRequest $request)
+  {
+    $this->is_specimen_search = false;
+    // Initialize the order by and paging values: order by id here
+    $this->setCommonValues('specimensearch', 'main_code_indexed', $request);
+    // Modify the s_url to call the searchResult action when on result page and playing with pager
+    $this->s_url = 'specimensearch/search'.'?is_choose='.$this->is_choose;
+    // Initialize filter
+    $this->form = new SpecimensFormFilter(null,array('user' => $this->getUser()));
+    // If the search has been triggered by clicking on the search button or with pinned specimens
+    //ftheeten 2018 04 17 allow GET aprameters
+    //if(($request->isMethod('post') && $request->getParameter('specimen_search_filters','') !== '' ) || $request->hasParameter('pinned') )
+    if(($request->getParameter('specimen_search_filters','') !== '' ) || $request->hasParameter('pinned') )
+    {
+      // Store all post parameters
+      //ftheeten 2018 04 17 allow GET aprameters
+      
+      //$criterias = $request->getPostParameters();
+      if($request->isMethod('post'))
+      {
+        // Store all post parameters
+        $criterias = $request->getPostParameters();
+      }
+      //ftheeten 2018 04 17 modified for GET parameters
+      elseif($request->isMethod('get'))
+      {
+
+         $criterias = $request->getGetParameters();
+      }
+      // If pinned specimens called
+      if($request->hasParameter('pinned'))
+      {
+        // Get all ids pinned
+        $ids = implode(',',$this->getUser()->getAllPinned('specimen') );
+        if($ids == '')
+          $ids = '0';
+        $this->is_pinned_only_search = true;
+        // Set the list of ids as criteria
+        $criterias['specimen_search_filters']['spec_ids'] = $ids;
+
+      }
+      // If instead it's a call to a stored specimen search
+      elseif($request->hasParameter('spec_search'))
+      {
+        // Get the saved search concerned
+        $saved_search = Doctrine_Core::getTable('MySavedSearches')->getSavedSearchByKey($request->getParameter('spec_search'), $this->getUser()->getId());
+        // Forward 404 if we don't get the search requested
+        $this->forward404Unless($saved_search);
+
+        $criterias['specimen_search_filters']['spec_ids'] = $saved_search->getSearchedIdString();
+        if($criterias['specimen_search_filters']['spec_ids'] == '')
+          $criterias['specimen_search_filters']['spec_ids'] = '0';
+        $this->is_specimen_search = $saved_search->getId();
+      }
+      $this->form->bind($criterias['specimen_search_filters']) ;
+    }
+    // If search_id parameter is given it means we try to open an already saved search with its criterias
+    elseif($request->getParameter('search_id','') != '')
+    {
+	  if( Doctrine_Core::getTable('MySavedSearches')->testIsPublicQuery($request->getParameter('search_id')))
+	  {
+		  $user_key=Doctrine_Core::getTable("MySavedSearches")->getPublicQueryUser($request->getParameter('search_id'));
+	  }
+	  else
+	  {
+		  $user_key=$this->getUser()->getId();
+	  }
+      // Get the saved search asked
+      $saved_search = Doctrine_Core::getTable('MySavedSearches')->getSavedSearchByKey($request->getParameter('search_id'), $user_key) ;
+      // If not available, not found -> forward on 404 page
+      $this->forward404Unless($saved_search);
+
+      if($saved_search->getIsOnlyId())
+        $this->is_specimen_search = $saved_search->getId();
+      // Get all search criterias from DB
+      $criterias = $saved_search->getUnserialRequest();
+      // Transform all visible fields stored as a string with | as separator and store it into col_fields field
+      $criterias['specimen_search_filters']['col_fields'] = implode('|',$saved_search->getVisibleFieldsInResult()) ;
+      // If data were set, in other terms specimen_search_filters array is available...
+      if(isset($criterias['specimen_search_filters']))
+      {
+        // Bring all the required/necessary widgets on page
+        Doctrine_Core::getTable('Specimens')->getRequiredWidget($criterias['specimen_search_filters'], $this->getUser()->getId(), 'specimensearch_widget');
+        if($saved_search->getisOnlyId() && $criterias['specimen_search_filters']['spec_ids']=='')
+          $criterias['specimen_search_filters']['spec_ids'] = '0';
+        $this->form->bind($criterias['specimen_search_filters']) ;
+      }
+    }
+
+    if($this->form->isBound())
+    {
+      if ($this->form->isValid())
+      {
+        $this->getUser()->storeRecPerPage( $this->form->getValue('rec_per_page'));
+        // When criteria parameter is given, it means we go back to criterias
+        if($request->hasParameter('criteria'))
+        {
+          $this->setTemplate('index');
+          // Bring all the required/necessary widgets on page
+          Doctrine_Core::getTable('Specimens')->getRequiredWidget($criterias['specimen_search_filters'], $this->getUser()->getId(), 'specimensearch_widget');
+          $this->loadWidgets();
+          return;
+        }
+        else
+        {
+          $this->spec_lists = Doctrine_Core::getTable('MySavedSearches')
+            ->getListFor($this->getUser()->getId(), 'specimen');
+            
+          if($this->orderBy=="col_peoples")
+          {
+                $this->orderBy="(SELECT p.formated_name_indexed from people p where id= spec_coll_ids[1])";
+          }
+		  elseif($this->orderBy=="codes")
+		  {
+			  $query_tmp=$query->removeDqlQueryPart('orderby');
+			  $query_tmp=$query_tmp->orderBy('main_code_indexed');
+		  }
+          elseif($this->orderBy=="don_peoples")
+          {
+                $this->orderBy="(SELECT p.formated_name_indexed from people p where id= spec_don_sel_ids[1])";
+          }
+          $query = $this->form->getQuery()->orderby($this->orderBy . ' ' . $this->orderDir. ', id DESC');
+          //If export is defined export it!
+          $this->field_to_show = $this->getVisibleColumns($this->getUser(), $this->form);
+
+          if($request->getParameter('export','') != '')
+          {
+            
+				$this->specimensearch = $query->limit(1000)->execute();
+			
+            $this->setLayout(false);
+            $this->loadRelated();
+            $this->getResponse()->setHttpHeader('Pragma: private', true);
+            $this->getResponse()->setHttpHeader('Content-Disposition',
+                            'attachment; filename="export.csv"');
+            $this->getResponse()->setContentType("application/force-download text/csv");
+            $this->setTemplate('exportCsv');
+            return ;
+          }
+          // Define in one line a pager Layout based on a pagerLayoutWithArrows object
+          // This pager layout is based on a Doctrine_Pager, itself based on a customed Doctrine_Query object (call to the getExpLike method of ExpeditionTable class)
+		  if($this->orderBy=="")
+		  {
+			  $query_tmp=$query->removeDqlQueryPart('orderby');
+			  $query_tmp=$query_tmp->orderBy('id DESC');
+		  }
+		  else
+		  {
+			  $query_tmp=$query;
+		  }
+          $pager = new DarwinPager($query_tmp,
+            $this->currentPage,
+            $this->form->getValue('rec_per_page')
+          );
+          // Replace the count query triggered by the Pager to get the number of records retrieved
+          $count_q = clone $query;
+          // Remove from query the group by and order by clauses
+		  //ftheeten 2020 02 20
+          //$count_q = $count_q->select("count(s.id), count(DISTINCT ig_main_code_indexed) as count_ig, sum(specimen_count_min) as count_min, sum(specimen_count_max) as count_max")->removeDqlQueryPart('orderby')->limit(0);
+		   $count_q = $count_q->select('count(s.id)')->removeDqlQueryPart('orderby')->limit(0);
+          if($this->form->with_group) {
+            // $count_q->select("count(distinct s.id), count(DISTINCT ig_main_code_indexed) as count_ig, , sum(specimen_count_min) as count_min, sum(specimen_count_max) as count_max")->removeDqlQueryPart('groupby');
+			 $count_q->select('count(distinct s.id)')->removeDqlQueryPart('groupby');
+          }
+
+          // Initialize an empty count query
+          $counted = new DoctrineCounted();
+          // Define the correct select count() of the count query
+          $counted->count_query = $count_q;
 		  
+          // And replace the one of the pager with this new one
+          $pager->setCountQuery($counted);
+
+		
           $this->pagerLayout = new PagerLayoutWithArrows($pager,
                                                         new Doctrine_Pager_Range_Sliding(array('chunk' => $this->pagerSlidingSize)),
                                                         $this->getController()->genUrl($this->s_url.$this->o_url).'/page/{%page_number}'
@@ -314,7 +530,7 @@ class specimensearchActions extends DarwinActions
               'sub_container_type' , 'sub_container_storage', 'specimen_count','part_codes', 'loans',
               /*MA FT 2018 11 27*/
               'taxonomic_identification'
-			  , 'uuid'
+			  , 'uuid', 'import_ref'
               );
 
 
@@ -375,6 +591,9 @@ class specimensearchActions extends DarwinActions
       'codes' => array(
         false,
         $this->getI18N()->__('Codes'),),
+	   'import_ref' => array(
+         'import_ref',
+        $this->getI18N()->__('Import ref.'),),
 	   'uuid' => array(
           false,
           $this->getI18N()->__('UUID'),),
@@ -521,6 +740,9 @@ class specimensearchActions extends DarwinActions
         'loans' => array(
           false,
           $this->getI18N()->__('Loans'),),
+		'mids' => array(
+          'mids_level',
+          $this->getI18N()->__('MIDS level'),),
 
         ));
       }

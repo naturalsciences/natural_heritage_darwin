@@ -320,6 +320,10 @@ class DarwinActions extends sfActions
     {
         $items=Doctrine_Core::getTable('Collections')->countTaxaInSpecimen($idCollections, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections, $hide_private,$this->getUser(), $true) ;
     }
+	elseif($table_name=="mids")
+    {
+        $items=Doctrine_Core::getTable('Collections')->countMidsSpecimens($idCollections, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections, $hide_private, $this->getUser()) ;
+    }
     if(count($items)>1)
     {
         
