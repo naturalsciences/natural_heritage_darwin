@@ -52,3 +52,6 @@ https://darwin.naturalsciences.be/public_dev.php/json/Get_collection_detail?id={
     alter user darwin2 set search_path=darwin2,public;
    
     alter database darwin2 set datestyle to 'ISO, DMY';
+    
+**Installation**
+[Installation instructions for Ubuntu/Debian](install_darwin_ubuntu20.md)
