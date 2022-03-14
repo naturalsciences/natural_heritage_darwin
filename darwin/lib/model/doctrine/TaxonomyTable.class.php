@@ -407,7 +407,7 @@ ON record_id=tmp_taxa and referenced_relation='taxonomy'
 SELECT * FROM (
 SELECT value,label  FROM find_taxa WHERE cpt=1
 UNION
-SELECT id::text, name||' (Family : '||fct_rmca_sort_taxon_get_parent_level_text(id,34)||' Order : '||fct_rmca_sort_taxon_get_parent_level_text(id,28)||')' FROM taxonomy INNER JOIN (SELECT unnest(string_to_array(value,';')) as id_unnest FROM find_taxa WHERE cpt>1) a
+SELECT id::text, TRIM(name||COALESCE(' (Family : '||fct_rmca_sort_taxon_get_parent_level_text(id,34)||' Order : '||fct_rmca_sort_taxon_get_parent_level_text(id,28)||')','')) FROM taxonomy INNER JOIN (SELECT unnest(string_to_array(value,';')) as id_unnest FROM find_taxa WHERE cpt>1) a
 ON id=id_unnest::int
 UNION
 SELECT taxonomy.id::text, name||' ('||status||')' FROM classification_synonymies
