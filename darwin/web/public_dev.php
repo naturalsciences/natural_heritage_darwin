@@ -14,7 +14,9 @@ $test=file_get_contents ("ips.cfg");
 
 $list_ips=explode("\r",$test);
 
+
 $go=false;
+
 foreach($list_ips as $url)
 {
 	if(strpos($src, trim($url)) === 0)
@@ -23,6 +25,8 @@ foreach($list_ips as $url)
 		$go=true;
 	}	
 }
+#uncomment to debug
+#$go=true;
 if ($go)
 {
 	require_once(dirname(__FILE__).'/../config/ProjectConfiguration.class.php');

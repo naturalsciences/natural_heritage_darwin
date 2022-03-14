@@ -1,11 +1,11 @@
 #
-0 If your use GIT
+1 If your use GIT
 ------------------
 create a local repository (optionnaly placed directly in  the web folder) to get the source code
 and then from within this folder
  sudo git clone https://github.com/naturalsciences/natural_heritage_darwin
 
-1 Requirements
+2 Requirements
 ---------------
 
 Documentation is written for Linux systems using the apt package manager (Debian or Ubuntu).
@@ -16,21 +16,21 @@ Min 8 Gigas of RAM (note : but default PostgreSQL can not more than 50% of the R
 Better to install the server and the PHP interface on two different machines if it  is possible.
 
 
-2 Enable PostgreSQL repository
+3 Enable PostgreSQL repository
 --------------------------------
-**2.1 Create the file repository configuration:**
+**3.1 Create the file repository configuration:**
 
     sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
 
-**2.2 Import the repository signing key:**
+**3.2 Import the repository signing key:**
 
     wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
 
-**2.3 Update the package lists:**
+**3.3 Update the package lists:**
 
     sudo apt-get update
 
-3 Enable PostGIS repository
+4 Enable PostGIS repository
 -------------------------------
 
 See: https://wiki.ubuntu.com/UbuntuGIS
@@ -38,7 +38,7 @@ See: https://wiki.ubuntu.com/UbuntuGIS
     sudo add-apt-repository ppa:ubuntugis/ppa
     sudo apt-get update
 
-4 Install PostgreSQL 
+5 Install PostgreSQL 
 --------------------
 Default version (14 at the time of the writing of this documentation)
 
@@ -57,9 +57,9 @@ Optionnally, install Python3 module
     sudo apt-get install postgresql-contrib postgresql-plpython3-14 
 (this will be bound to PL SQL function **darwin2.fct_rmca_py_webservice**)
 
-5 Configure PostgreSQL
+6 Configure PostgreSQL
 -----------------------
-We recommend to install PgADMIN 6.4/+ on your own computer to administer PostgreSQL
+We recommend to install PgADMIN 6.4/+ on your own computer to administer PostgreSQL (connecting the server remotely)
 https://www.pgadmin.org/download/
 
 Note command to :
@@ -118,9 +118,9 @@ Assign a password for the postgresql account
     #back to original user
     exit
 
-INSTALL PHP 7.4 and apache2
+7 INSTALL PHP 7.4 and apache2
 
-----------------------------
+-----------------------------
 (package names may differ in upur distribution)
 
     sudo apt-get install php-7.4
@@ -146,7 +146,7 @@ Enable PHP dependencies
 
 
 
-create database 
+8 create database 
 ------------------
 In GitHub consider the https://github.com/naturalsciences/natural_heritage_darwin/tree/Branch_DISTRI_2022 branch
 
@@ -214,7 +214,7 @@ The script also configures the search_path and schema darwin2 that will contains
 note you will need to provide the darwin2 password in a shell
 connection through IP to connect with darwin2 and access triggers and functions
 
-Create webfolder
+9 Create webfolder
 -------------------
 
 Download the "darwin" subfolder and move it into the web folder of your server
@@ -228,7 +228,7 @@ sudo chmod -R 755 /var/www/html
 + cron pour stats
 + securité backend_dev
 
-Configure Apache
+10 Configure Apache
 -------------------
 Put these lines into the Apache config of your site
 (e.g. /etc/apache2/sites-available/default-ssl)
@@ -265,7 +265,9 @@ cd /var/www/html/darwin/config
  2. web folder config
  cp darwin.yml.init darwin.yml
  
- (attention, check that these files do not contains tab, replace them with 4 spaces, otherwise errors)
+ 3. note app.yml contains the parameter of the LDAP server (Darwin can bridge user accounts with passwords defined in a LDAP server)
+ 
+ (attention, check that these files do not contains tab, replace them with 4 spaces, otherwise errors when starting Darwin)
  
  Note, if you change the password salt connect to PostgreSQL with the darwin2 user and and change the password of the admin account accodingly:
  UPDATE users_login_infos set password =sha1('YOUR_SALTYOUR_ADMIN_PASSWORD') where user_ref=1 and login_type='local'; 
@@ -273,3 +275,6 @@ cd /var/www/html/darwin/config
  Check the logs of the server do not start
  Take a look at the logs of the server do not start 
  tail -n 100 /var/log/apache2/error.log
+ 
+ 4=> salt update
+ 5=> $go in _dev.php

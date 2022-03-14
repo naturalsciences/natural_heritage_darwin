@@ -10,7 +10,7 @@ delete from users_login_infos;
 alter sequence users_login_info_id_seq restart;
 insert into users_login_infos
 (user_Ref, login_type, user_name, password)
-values(1, 'local', 'admin', sha1('ADMINPWD'));
+values(1, 'local', 'admin', sha1('saltADMINPWD'));
 
 
 INSERT INTO darwin2.my_widgets (user_ref, category, group_name, order_by, col_num, mandatory,  visible, opened, color, is_available, icon_ref, title_perso, collections, all_public) VALUES ( 1, 'board_widget', 'addSpecimen', '2', '1', 'false', 'true', 'true', '#5BAABD', 'true', NULL, 'Add new specimen', ',', 'false');
