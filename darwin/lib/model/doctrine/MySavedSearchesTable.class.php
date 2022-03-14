@@ -599,9 +599,7 @@ longitude_text,
                 $is_adm="'FALSE'::BOOLEAN";            
             }
                 
-                        $sql="SELECT a.*,
-v_specimens_mids.mids_level  FROM  fct_rmca_dynamic_saved_search_get_specimen(:ID_Q,:ID_USER, :PREFIX, :PAGE,:SIZE,".$is_adm.") a LEFT JOIN v_specimens_mids
-						ON a.id_specimen=v_specimens_mids.id ;";
+                        $sql="SELECT DISTINCT a.*  FROM  fct_rmca_dynamic_saved_search_get_specimen(:ID_Q,:ID_USER, :PREFIX, :PAGE,:SIZE,".$is_adm.") a ;";
                         
                         $conn = Doctrine_Manager::connection();
 						$prefix=sfConfig::get('dw_root_url_uuid');

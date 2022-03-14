@@ -1,12 +1,12 @@
 all:
   ldap:
-    ldap_enabled: true
-    host: dc2012.rbins.be
-    port: 389
-    user: adreader2
-    pass: adReader2!
-    baseuser: cn=Users, dc=rbins, dc=be
-    version: 3
-    attr_displayname: displayName
-    attr_mail: mail
-    attr_id: samaccountname
+    ldap_enabled: false
+    host: 
+    port: 
+    user: 
+    pass: 
+    baseuser: 
+    version: 
+    attr_displayname: 
+    attr_mail: 
+    attr_id: 
