@@ -404,13 +404,19 @@ exemple of configuration
     0 * * * *   /[FOLDER_FOR_CRONJOBS]/darwin_collection_statistics.sh
 
 Other cron jobs to set on the apache user (legacy statistic widget developped by RBINS)
+e.g. 
+           
+
     sudo -s -u www-data
     crontab -e
+
+And then
 
     # m h  dom mon dow   command
     00 12 * * * /var/www/html/darwin/tools/compute_stats.sh
     00 19 * * * /var/www/html/darwin/tools/clean_report.sh
 
-(check of the cotnent of these files correspond to your server)
+(check of the content of these files correspond to your server path and adapt accordingly)
 
-	
+    #cron for www-data user
+    php /var/www/html/darwin/symfony darwin:gen-stats
