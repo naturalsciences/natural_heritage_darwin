@@ -28,7 +28,7 @@ all:
     bing_key: "Ap3eFRefFd94_D4cqsicw-Fk1-d4kRat9pstTO4oo_i9anyUqrfQcqL9Ew9CJahg"
     iiif_viewer: "https://darwinweb.africamuseum.be/mirador/index.php?manifest="
     gbif_url: "https://www.gbif.org/species/search?q="
-	
+
   mailer:
     sender: your_send_email@example.com
 
