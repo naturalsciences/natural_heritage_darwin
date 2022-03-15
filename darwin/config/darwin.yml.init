@@ -1,6 +1,7 @@
 all:
   .general:
     salt: salt
+    root_url_darwin: https://darwin.naturalsciences.be
     yearRangeMin: 1700
     yearRangeMax:  2038
     dateUpperBound: '2038/12/31'
