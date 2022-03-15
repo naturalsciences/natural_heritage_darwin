@@ -350,7 +350,7 @@ e.g.
 
 **Note** : this admin account are those internal Darwin, to log to the web interface, different from the accounts defined at point 9 that are working at lower level, to connect directly the PostgreSQL database è!
 
-Enable debug rights
+14 Enable debug rights
 -------------------
 At this stage, Darwin should be available on the URL
 https://YOUR_SERVER/darwin
@@ -373,5 +373,34 @@ e.g
 You can provide several IPs on several  different lines.
 Shorten the URL for network masks (e.g. "192.168.0" to declare 192.168.0.0/24)
 This will work only if Darwin is also configured on a port 80 address (without SSL/HTTPS)
+
+15 Cron jobs
+-------------------
+Darwin features an embedded statistical tool, running asynchronously, allowing the user to export statistics by collections on tab-delimited formats.
+These statistics provides :
+
+ 1. the amount of specimen present in the main collection and its subcollections
+ 2. the corresponding amount  of types specimens
+ 3. the amount of present taxa (by ranks)
+ 4. the MIDS level (https://www.tdwg.org/community/cd/mids/)
+
+The statistics are based on Materialized view that need to be refreshed via a PostgreSQL function
+
+     SELECT * FROM darwin2.fct_rmca_reporting_refresh_views();
+
+./cronjons/ contains a script to link it to a cron job :
+
+    #!/usr/bin/env bash
+    sudo -u postgres psql  darwin2 <<END
+        SELECT * FROM darwin2.fct_rmca_reporting_refresh_views();
+    END
+
+exemple of configuration 
+
+    crontab -e
+ and then (to refresh at every hours)
+ 
+    0 * * * *   /[FOLDER_FOR_CRONJOBS]/darwin_collection_statistics.sh
+
 
 	
