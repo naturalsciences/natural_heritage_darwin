@@ -321,6 +321,7 @@ You must give temporarily writing permission on the darwin folder top copy them 
 
         cp darwin.yml.init darwin.yml
 
+Two of the mot important parameters of this file are **salt** to hash passwords (see below) and **root_url_darwin**, to declare the root URL of the database (e.g. https://darwin.naturalsciences.be/ ).  Declare your IP if the server doesn't have a domain name.
  
  3. note :  **app.yml** contains the parameter of the LDAP server (Darwin can bridge user accounts with passwords defined in a LDAP server)
  
@@ -333,8 +334,8 @@ You must give temporarily writing permission on the darwin folder top copy them 
      tail -n 100 /var/log/apache2/error.log
      
 
-13 Salt for public password
-------------------------
+13 Salt for web-interface passwords
+-------------------------------------
  In case of local (i.e from database) authentication, a "salt" (suffix) is used to generate user passwords that will get the sha1 hash. This makes the original password harder to find.
  The salt is defined in ./darwin/config/darwin.yml
  Its default value is "salt". It his strongly advised to change it.
