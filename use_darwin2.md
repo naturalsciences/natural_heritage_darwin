@@ -49,4 +49,4 @@ Most of them are covered by the backend web interface to import data
          - create validated records
             sudo php symfony darwin:check-import --id [ID of import in imports table] --do-import
          - check batch import of localities
-           sudo php symfony darwin:import-gtu  --id [ID of import in imports 
+           sudo php symfony darwin:import-gtu  --id [ID of import in imports table] 
