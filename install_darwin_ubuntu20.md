@@ -128,6 +128,8 @@ Assign a password for the postgresql account
     sudo apt-get install php-apcu
 	sudo apt-get install php-apcu-bc
 	sudo apt-get install php-ldap
+	sudo apt-get install php-mbstring
+	
 (package names may differ in your distribution)
 
 Link PHP to Apache2 (note : *fpm* is another, more performant, possibility) :
