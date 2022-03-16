@@ -1,3 +1,4 @@
+
 1 Note on the general architecture
 ------------------------
 
@@ -17,4 +18,35 @@ Therefore, when configuring PgAdmin, you should declare 2 connections to the Dar
  1. one with the embedded "***postgres***" account, for backup and technical maintenance tasks on the whole database
  2. a second one with the "***darwin2***" user, to access and modidy data in Darwin directly from PostgreSQL
 
+3 Important Symfony commands
+-----------------------------
 
+Need to be run from the base folder (e.g. **/var/www/html/darwin**)
+
+ 1. To regenerate the Doctrine (object-oriented PHP counterpart of the database model) defined in **./config/doctrine/schema.yml**
+
+        sudo php symfony doctrine:build-model
+
+and then
+
+         sudo php symfony doctrine:build-forms
+
+and then
+
+        sudo php symfony doctrine:build-filters
+
+ -  clear the cache, otherwise code changes are only visible via the debug interface ./backend_dev.php
+
+       sudo php symfony cc 
+
+ - Darwin tasks in **/dawin/lib/task** folder
+Most of them are covered by the backend web interface to import data
+
+		 - load tab-delimited files
+			  sudo php symfony darwin:load-import
+         - quality check (edtect duplicates, taxonomic conflicts and missing required fields)
+           sudo php symfony darwin:check-import --id [ID of import in imports table] 
+         - create validated records
+            sudo php symfony darwin:check-import --id [ID of import in imports table] --do-import
+         - check batch import of localities
+           sudo php symfony darwin:import-gtu  --id [ID of import in imports 
