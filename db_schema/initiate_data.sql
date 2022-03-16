@@ -1248,3 +1248,6 @@ INSERT INTO darwin2.classification_keywords (referenced_relation, record_id, key
 INSERT INTO darwin2.classification_keywords (referenced_relation, record_id, keyword_type, keyword, keyword_indexed) (select 'taxonomy', id, 'GenusOrMonomial', 'Bacteria', 'bacteria' from darwin2.taxonomy where name = 'Bacteria');
 INSERT INTO darwin2.classification_keywords (referenced_relation, record_id, keyword_type, keyword, keyword_indexed) (select 'taxonomy', id, 'GenusOrMonomial', 'Eucaryota', 'eucaryota' from darwin2.taxonomy where name = 'Eucaryota');
 INSERT INTO darwin2.classification_keywords (referenced_relation, record_id, keyword_type, keyword, keyword_indexed) (select 'taxonomy', id, 'GenusOrMonomial', 'Archaea', 'archaea' from darwin2.taxonomy where name = 'Archaea');
+
+
+INSERT into darwin2.db_version (id, update_at) VALUES (1, '2022-03-14');
