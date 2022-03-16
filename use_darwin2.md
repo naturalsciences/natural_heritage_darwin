@@ -15,6 +15,6 @@ Triggers and Pl/PgSQL are located in the "**darwin2**" schema. If you need to ma
 Therefore, when configuring PgAdmin, you should declare 2 connections to the Darwin server
 
  1. one with the embedded "***postgres***" account, for backup and technical maintenance tasks on the whole database
- 2. a second one with the "***darwin2***" user, to manipulate data in Darwin
+ 2. a second one with the "***darwin2***" user, to access and modidy data in Darwin directly from PostgreSQL
 
 
