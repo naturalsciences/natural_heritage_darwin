@@ -129,6 +129,7 @@ Assign a password for the postgresql account
 	sudo apt-get install php-apcu-bc
 	sudo apt-get install php-ldap
 	sudo apt-get install php-mbstring
+    sudo apt-get install php-imagick
 	
 (package names may differ in your distribution)
 
