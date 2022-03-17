@@ -140,7 +140,12 @@ class Multimedia extends BaseMultimedia
 
   public function getFullURI()
   {
-    return sfConfig::get('sf_upload_dir').'/multimedia/'.$this->getUri();
+	$dir=sfConfig::get('dw_upload_dir');
+	if(strlen(trim($dir))==0)
+	{
+		$dir=sfConfig::get('sf_upload_dir');
+	}	
+    return $dir.'/multimedia/'.$this->getUri();
   }
 
   public function getSize()
