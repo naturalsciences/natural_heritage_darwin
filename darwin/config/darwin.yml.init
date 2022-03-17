@@ -1,5 +1,6 @@
 all:
   .general:
+    upload_dir:
     salt: salt
     root_url_darwin: https://darwin.naturalsciences.be
     yearRangeMin: 1700
