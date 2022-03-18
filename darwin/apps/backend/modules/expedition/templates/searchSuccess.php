@@ -46,10 +46,10 @@
                 <td class="<?php echo (! $is_choose)?'edit':'choose';?>">
                   <?php if(! $is_choose):?>
                     <?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>                  
-                      <?php echo link_to(image_tag('edit.png',array('title'=>'Edit expedition')),'expedition/edit?id='.$expedition->getId());?>
-                      <?php echo link_to(image_tag('duplicate.png',array('title'=>'Duplicate expedition')),'expedition/new?duplicate_id='.$expedition->getId());?>
+                      <?php echo link_to(image_tag('edit.png',array('title'=>'Edit expedition')),'expedition/edit?id='.$expedition->getId(), array("target"=>"_blank"));?>
+                      <?php echo link_to(image_tag('duplicate.png',array('title'=>'Duplicate expedition')),'expedition/new?duplicate_id='.$expedition->getId(), array("target"=>"_blank"));?>
                     <?php endif ; ?>
-                    <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),'expedition/view?id='.$expedition->getId());?>               
+                    <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),'expedition/view?id='.$expedition->getId(), array("target"=>"_blank"));?>               
                   <?php else:?>
                     <div class="result_choose"><?php echo __('Choose');?></div>
                   <?php endif;?>
