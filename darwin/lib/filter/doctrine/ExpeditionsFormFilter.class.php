@@ -65,8 +65,53 @@ class ExpeditionsFormFilter extends BaseExpeditionsFormFilter
       )
     );
 	$this->validatorSchema['ig_ref'] = new sfValidatorInteger(array('required' => false));
+	   	//people widget
+    $this->widgetSchema['people_ref'] = new widgetFormButtonRef(array(
+      'model' => 'People',
+      'link_url' => 'people/searchBoth',
+      'box_title' => $this->getI18N()->__('Choose people'),
+	  'label' => $this->getI18N()->__('Choose people'),
+      'nullable' => true,
+      'button_class'=>'people_ref people_ref_0',
+      ),
+      array('class'=>'inline',)
+    );
+
+    $fields_to_search = array(
+      'spec_coll_ids' => $this->getI18N()->__('Collector'),
+      'spec_don_sel_ids' => $this->getI18N()->__('Donator or seller'),
+      'ident_ids' => $this->getI18N()->__('Identifier')
+    );
+
+   
+    $this->validatorSchema['people_ref'] = new sfValidatorInteger(array('required' => false)) ;
+
+	//ftheeten 2016/01/07
+		$this->widgetSchema['people_fuzzy'] = new sfWidgetFormInputText();
+	$this->widgetSchema['people_fuzzy']->setAttributes(array("class"=> 'class_fuzzy_people_0'));
+	$this->validatorSchema['people_fuzzy'] = new sfValidatorString(array('required' => false)) ;
+	$this->validatorSchema['people_fuzzy'] = new sfValidatorPass() ;
+
+ }
+  
+  public function addPeopleSearchColumnQuery(Doctrine_Query $query, $people_id)
+  {
+		
+		$query->andWhere("EXISTS (SELECT c.id FROM CataloguePeople c WHERE c.people_ref = ? AND record_id=e.id AND referenced_relation='expeditions')", $people_id) ;
+		
   }
   
+  public function addPeopleSearchColumnQueryFuzzy(Doctrine_Query $query, $people_name)
+  {
+	//$query->leftJoin("e.CataloguePeople c on e.id=c.record_id");
+	$query->andWhere(" (EXISTS (SELECT c.id AS c__id FROM CataloguePeople c 
+		  WHERE (EXISTS (SELECT e.id AS e__id FROM People p 
+						 WHERE (fulltoindex(p.formated_name_indexed) ILIKE '%'||fulltoindex(?)||'%' AND c.people_ref = p.id))
+				 AND e.id = c.record_id)
+  AND c.record_id = e.id AND c.referenced_relation = 'expeditions') )", $people_name);
+	//$query->andWhere("c.referenced_relation=?", "expeditions");	
+  
+  }
 
 
   public function doBuildQuery(array $values)
@@ -85,6 +130,8 @@ class ExpeditionsFormFilter extends BaseExpeditionsFormFilter
       $query->andWhere("EXISTS(SELECT 1 FROM specimens s2 WHERE expedition_ref=e.id AND s2.ig_ref=?)", $values['ig_ref']);
     
     }
+	if ($values['people_ref'] != '') $this->addPeopleSearchColumnQuery($query, $values['people_ref']);
+	if ($values['people_fuzzy'] != '') $this->addPeopleSearchColumnQueryFuzzy($query, $values['people_fuzzy']);
     //$query->andWhere("e.id > 0 ");
 	$query->groupBy("e.id, name, name_indexed, expedition_from_date_mask, expedition_from_date, 
        expedition_to_date_mask, expedition_to_date ");
