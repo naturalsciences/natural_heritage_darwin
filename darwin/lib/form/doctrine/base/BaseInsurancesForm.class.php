@@ -23,7 +23,7 @@ abstract class BaseInsurancesForm extends DarwinModelForm
     $this->validatorSchema['record_id'] = new sfValidatorInteger();
 
     $this->widgetSchema   ['insurance_value'] = new sfWidgetFormInputText();
-    $this->validatorSchema['insurance_value'] = new sfValidatorNumber();
+    $this->validatorSchema['insurance_value'] = new sfValidatorNumber(array('required' => false));
 
     $this->widgetSchema   ['insurance_currency'] = new sfWidgetFormTextarea();
     $this->validatorSchema['insurance_currency'] = new sfValidatorString(array('required' => false));
@@ -45,6 +45,9 @@ abstract class BaseInsurancesForm extends DarwinModelForm
 
     $this->widgetSchema   ['contact_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Contact'), 'add_empty' => true));
     $this->validatorSchema['contact_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Contact'), 'column' => 'id', 'required' => false));
+
+    $this->widgetSchema   ['disaster_recovery_score'] = new sfWidgetFormInputText();
+    $this->validatorSchema['disaster_recovery_score'] = new sfValidatorInteger(array('required' => false));
 
     $this->widgetSchema   ['insurer_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('People'), 'add_empty' => true));
     $this->validatorSchema['insurer_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('People'), 'column' => 'id', 'required' => false));

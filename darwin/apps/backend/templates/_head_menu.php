@@ -1,5 +1,4 @@
 <script>
- //ftheeten 2018 05 30
 
     function disableFrameMenu() 
     {
@@ -118,7 +117,6 @@
                     <a href="#" class="subtitle"><?php echo __('Catalogues');?> »</a>
                     <ul class="submenu lvl_2">
                         <li><?php echo link_to(__('Taxonomy'),'taxonomy/index');?></li>
-                        <!--ftheeten 2017 07 17--!>
                         <li><?php echo link_to(__('Taxonomic groups'),'taxonomymetadata/index');?></li>
                         <li><?php echo link_to(__('Chronostratigraphy'),'chronostratigraphy/index');?></li>
                         <li><?php echo link_to(__('Lithostratigraphy'),'lithostratigraphy/index');?></li>
@@ -155,7 +153,6 @@
                     <a href="#" class="subtitle"><?php echo __('Catalogues');?> »</a>
                     <ul class="submenu lvl_2">
                         <li><?php echo link_to(__('Taxonomy'),'taxonomy/new');?></li>
-                         <!--ftheeten 2017 07 17--!>
                         <li><?php echo link_to(__('Taxonomic groups'),'taxonomymetadata/new');?></li>
                         <li><?php echo link_to(__('Chronostratigraphy'),'chronostratigraphy/new');?></li>
                         <li><?php echo link_to(__('Lithostratigraphy'),'lithostratigraphy/new');?></li>
@@ -205,6 +202,13 @@
                     <ul class="submenu lvl_2">
                       <li><?php echo link_to(__('Add'),'user/new');?></li>
                       <li><?php echo link_to(__('Search'),'user/index');?></li>
+                    </ul>
+                  </li>
+				  <li>
+                    <a href="#" class="subtitle"><?php echo __('Profiles (widgets)');?> »</a>
+                    <ul class="submenu lvl_2">
+                      <li><?php echo link_to(__('Add'),'widgetprofiles/new');?></li>
+                      <li><?php echo link_to(__('Search'),'widgetprofiles/index');?></li>
                     </ul>
                   </li>
                 <?php endif ?>

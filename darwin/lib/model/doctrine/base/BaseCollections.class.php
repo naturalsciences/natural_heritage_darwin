@@ -34,6 +34,7 @@
  * @property Users $Manager
  * @property Users $Staff
  * @property Collections $Parent
+ * @property Doctrine_Collection $Users
  * @property Doctrine_Collection $Collections
  * @property Doctrine_Collection $CollectionsRights
  * @property Doctrine_Collection $Specimens
@@ -69,6 +70,7 @@
  * @method Users               getManager()                             Returns the current record's "Manager" value
  * @method Users               getStaff()                               Returns the current record's "Staff" value
  * @method Collections         getParent()                              Returns the current record's "Parent" value
+ * @method Doctrine_Collection getUsers()                               Returns the current record's "Users" collection
  * @method Doctrine_Collection getCollections()                         Returns the current record's "Collections" collection
  * @method Doctrine_Collection getCollectionsRights()                   Returns the current record's "CollectionsRights" collection
  * @method Doctrine_Collection getSpecimens()                           Returns the current record's "Specimens" collection
@@ -103,6 +105,7 @@
  * @method Collections         setManager()                             Sets the current record's "Manager" value
  * @method Collections         setStaff()                               Sets the current record's "Staff" value
  * @method Collections         setParent()                              Sets the current record's "Parent" value
+ * @method Collections         setUsers()                               Sets the current record's "Users" collection
  * @method Collections         setCollections()                         Sets the current record's "Collections" collection
  * @method Collections         setCollectionsRights()                   Sets the current record's "CollectionsRights" collection
  * @method Collections         setSpecimens()                           Sets the current record's "Specimens" collection
@@ -246,6 +249,10 @@ abstract class BaseCollections extends DarwinModel
         $this->hasOne('Collections as Parent', array(
              'local' => 'parent_ref',
              'foreign' => 'id'));
+
+        $this->hasMany('Users', array(
+             'local' => 'id',
+             'foreign' => 'default_widget_collection_ref'));
 
         $this->hasMany('Collections', array(
              'local' => 'id',

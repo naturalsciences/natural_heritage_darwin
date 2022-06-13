@@ -101,8 +101,18 @@ $(document).ready(function ()
 		  <?php endforeach; ?>
 		  <li>(Issue(s) might be caused by a closed widget containing a mandatory field) </li>
         </ul>
-      <?php endif;?>
-
+      <?php endif;?>		
+		<?php $form->isNew() ? $url_tpl="specimen/new" : $url_tpl=sfContext::getInstance()->getRequest()->getUri(); ?>
+		<?php  $count_templates=Doctrine_Core::getTable('Users')->getWidgetTemplates($sf_user->getId(), true); ?>
+		<?php if(count($count_templates)>1): ?>
+			<div class="dw_anchor_button">
+			<div>
+				<div><?php print($form["widget_template"]) ?></div>
+				<div style="margin-top:5px"><p class="form_buttons"><?php echo link_to(__("change template"),$url_tpl, array("id"=>"link_change_template"));?></p></div>
+			</div>
+			</div>
+		<br/>
+		<?php endif;?>
       <?php include_partial('widgets/screen', array(
         'widgets' => $widgets,
         'category' => 'specimenwidget',
@@ -110,6 +120,7 @@ $(document).ready(function ()
         'options' => array('form' => $form, 'level' => 2),
       )); ?>
     </div>
+	
     <p class="clear"></p>
     <?php include_partial('widgets/float_button', array('form' => $form,
                                                         'module' => 'specimen',
@@ -146,6 +157,12 @@ $(document).ready(function ()
 	<?php endif;?>
   </form>
 <script  type="text/javascript">
+
+
+	var template_url="";
+ 
+
+
  //ftheeten 2018 02 13
 function addErrorToMain(html)
 {
@@ -261,6 +278,28 @@ if(duplicate_id!==undefined)
         }
 	   
    }
+
+   template_url=$("#link_change_template").attr('href');
+   $("#specimen_widget_template").on('change', function (e) {	
+	   var valueSelected = this.value;
+	   console.log(valueSelected);
+	   if(valueSelected.length>0)
+	   {
+			var template_url_local=template_url;			
+			template_url_local=template_url_local.replace(/\/widget_template\/\-?\d+/g,"");
+			console.log(template_url_local);
+			var href = template_url_local+"/widget_template/"+valueSelected;
+			console.log(href);
+			$("#link_change_template").attr('href', href);
+	   }
+		
+   });
+   
+   <?php if($widget_template!="-1"):?>
+        console.log("TEMPLATE_DEF");
+		console.log("<?php print($debug);?>");
+		$("#specimen_widget_template").val("<?php print($widget_template);?>");
+   <?php endif;?>
    
    browseErrors();
 });

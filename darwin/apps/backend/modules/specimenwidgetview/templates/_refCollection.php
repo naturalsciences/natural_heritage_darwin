@@ -8,7 +8,7 @@
           'data-manid'=> $spec->getCollections()->getMainManagerRef(),
           'data-staffid'=> $spec->getCollections()->getStaffRef())
           );?>
-        <?php echo $spec->getCollections()->getName(); ?>
+        <?php echo trim($spec->getCollectionNameFullPath(), "/");?>
       </td>
     </tr>
     

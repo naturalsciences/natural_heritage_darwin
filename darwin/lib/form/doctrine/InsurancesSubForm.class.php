@@ -11,7 +11,7 @@ class InsurancesSubForm extends BaseInsurancesForm
 {
   public function configure()
   {
-    $this->useFields(array('insurance_currency', 'insurer_ref', 'contact_ref', 'insurance_value', 'date_from', 'date_to' ));
+    $this->useFields(array('insurance_currency', 'insurer_ref', 'contact_ref', 'insurance_value', 'date_from', 'date_to', 'disaster_recovery_score' ));
     $this->validatorSchema['id'] = new sfValidatorInteger(array('required'=>false));
     $this->widgetSchema['insurance_currency'] = new widgetFormSelectComplete(array(
       'model' => 'Insurances',
@@ -63,6 +63,9 @@ class InsurancesSubForm extends BaseInsurancesForm
     $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
     $dateUpperBound = new FuzzyDateTime(sfConfig::get('dw_dateUpperBound'));
     $maxDate->setStart(false);
+	
+	$this->widgetSchema['referenced_relation'] = new sfWidgetFormInputHidden(array('default'=>"specimens"));
+    $this->validatorSchema['referenced_relation'] = new sfValidatorPass();
 
     $this->widgetSchema['date_from'] = new widgetFormJQueryFuzzyDate(array(
       'culture'=>  $this->getCurrentCulture(),
@@ -105,6 +108,11 @@ class InsurancesSubForm extends BaseInsurancesForm
       ),
       array('invalid' => 'Invalid date "to"')
     );
+	
+	$this->widgetSchema['disaster_recovery_score'] = new sfWidgetFormChoice(array(
+      'choices' => array(null=>"No set",1=>"1", 2=>"2", 3=>"3", 4=>"4")),
+    );	
+	 $this->validatorSchema['disaster_recovery_score'] = new sfValidatorInteger(array('required'=>false));
 
     $this->validatorSchema->setPostValidator(
       new sfValidatorSchemaCompare(
@@ -115,6 +123,7 @@ class InsurancesSubForm extends BaseInsurancesForm
         array('invalid'=>'The "from" date cannot be above the "to" date.')
       )
     );
+
 
 
     $this->validatorSchema['insurance_currency']->setOption('required', false);

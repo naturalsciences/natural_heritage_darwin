@@ -91,6 +91,13 @@
           <?php echo $form['selected_lang'] ?>
         </td>
       </tr>
+	  <tr>
+      <th><?php echo $form['default_widget_collection_ref']->renderLabel("Default widget collection") ?></th>
+        <td>
+          <?php echo $form['default_widget_collection_ref']->renderError() ?>
+          <?php echo $form['default_widget_collection_ref'] ?>
+        </td>
+      </tr>
       <?php if(!$form->getObject()->isNew()) : ?>
         <tr>
           <td colspan="2"><hr /></td>

@@ -118,7 +118,7 @@ class ExpeditionsFormFilter extends BaseExpeditionsFormFilter
   {
     $query = DQ::create()
       ->select("DISTINCT e.id, name, name_indexed, expedition_from_date_mask, expedition_from_date, 
-       expedition_to_date_mask, expedition_to_date, string_agg(DISTINCT s.ig_num,';') as ig_numbers, fct_rmca_people_array_to_name(array_accum(s.spec_coll_ids)) as collectors, array_agg(DISTINCT ig_ref) as ig_list")
+       expedition_to_date_mask, expedition_to_date, string_agg(DISTINCT s.ig_num,';') as ig_numbers, fct_rmca_people_array_to_name(array_concat_agg(s.spec_coll_ids)) as collectors, array_agg(DISTINCT ig_ref) as ig_list")
       ->from('Expeditions e')->leftJoin("e.Specimens s ON e.id=s.expedition_ref");
     $fields = array('expedition_from_date', 'expedition_to_date');
     $this->addNamingColumnQuery($query, 'expeditions', 'name_indexed', $values['name']);

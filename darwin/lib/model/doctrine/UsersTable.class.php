@@ -156,4 +156,101 @@ class UsersTable extends DarwinTable
     }
     return $result;
   }
+  
+  public function getWidgetTemplate($user, $collection_ref)
+  {
+
+	if($collection_ref!==null)
+	{
+		 $q = Doctrine_Query::create()
+			->select('DISTINCT w.*')
+			->from('WidgetProfiles w')
+			->andWhere('EXISTS(select 1 from collections_rights c where (c.user_ref= ?  AND c.collection_ref=?)
+		    AND c.widget_profile_ref=w.id   )', array($user->getId(), $collection_ref));
+			return $q->fetchOne();
+    }
+    else
+    {
+		return null;
+	}	
+  }
+  
+  public function getPreferredWidgetTemplate($user)
+  {
+	$default_collection_tmp=$user->getDefaultWidgetCollectionRef();
+	$default_collection=null;
+	if(strlen(trim($default_collection_tmp))>0)
+	{
+		if(is_numeric($default_collection_tmp))
+		{
+			 $default_collection=$default_collection_tmp;
+		}
+	}
+	if($default_collection!==null)
+	{
+		 $q = Doctrine_Query::create()
+			->select('DISTINCT w.*')
+			->from('WidgetProfiles w')
+			->andWhere('EXISTS(select 1 from collections_rights c where (c.user_ref= ?  AND c.collection_ref=?)
+		    AND c.widget_profile_ref=w.id   )', array($user->getId(), $default_collection));
+			return $q->fetchOne();
+    }
+    else
+    {
+		return null;
+	}	
+  }
+  
+   public function getWidgetTemplates($user_id, $add_custom=false)
+  {
+	  
+	  $user_tmp=Doctrine_Core::getTable('Users')->find($user_id);
+	  $default_collection_tmp=$user_tmp->getDefaultWidgetCollectionRef();
+	  
+	  $default_collection=null;
+	  if(strlen(trim($default_collection_tmp))>0)
+	  {
+		if(is_numeric($default_collection_tmp))
+		{
+			 $default_collection=$default_collection_tmp;
+		}
+	  }
+	  if($default_collection!==null)
+	  {			
+			 $q = Doctrine_Query::create()
+			->select('DISTINCT w.*')
+			->from('WidgetProfiles w')
+			->andWhere('EXISTS(select 1 from collections_rights c where (c.user_ref= ?  OR c.collection_ref=?)
+							  AND c.widget_profile_ref=w.id   )', array($user_id, $default_collection))
+			->orderBy('w.name');
+	  }
+	  else
+	  {
+		  $q = Doctrine_Query::create()
+			->select('DISTINCT w.*')
+			->from('WidgetProfiles w')
+			->andWhere('EXISTS(select 1 from collections_rights c where c.user_ref= ? 
+							  AND c.widget_profile_ref=w.id  )', $user_id)
+			->orderBy('w.name');
+	   }	
+		//$results = $q->fetchArray();
+		
+	
+		$rs=$q->execute();
+		if( $add_custom==false)
+		{
+			return $rs;
+			
+		}
+		else
+		{
+			$tmp=new WidgetProfiles();
+			$tmp->setId(-1);
+			$tmp->setName("User defined");
+			
+			
+			$rs->add($tmp);
+			return $rs;
+		}
+  }
 }

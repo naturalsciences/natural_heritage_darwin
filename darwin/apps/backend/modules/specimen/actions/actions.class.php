@@ -180,6 +180,29 @@ class specimenActions extends DarwinActions
       return $this->renderPartial('spec_identification_identifiers',array('form' => $spec_form['newIdentification'][$number]['newIdentifier'][$identifier_number], 'rownum'=>$identifier_number, 'identnum' => $number));
     }
   }
+  
+  protected function getUserPreferredTemplate()
+  {
+
+	 if($this->getUser()->getAttribute("default_widget_template",'not_set')!=='not_set')
+	 {
+		return strval($this->getUser()->getAttribute("default_widget_template"));
+	 }
+     $tmp_user= Doctrine_Core::getTable('Users')->find($this->getUser()->getId());
+	 $preferred_template_obj =Doctrine_Core::getTable('Users')->getPreferredWidgetTemplate($tmp_user);
+	if(is_object($preferred_template_obj))
+	{
+        $preferred_template= strval($preferred_template_obj->getId());
+     }
+     else
+     {
+        $preferred_template=-1;
+     }
+      
+	 
+	 return strval($preferred_template);
+  }
+ 
 
   public function executeNew(sfWebRequest $request)
   {
@@ -257,7 +280,19 @@ class specimenActions extends DarwinActions
       $spec = new Specimens();
       $this->form = new SpecimensForm($spec);
     }
-    $this->loadWidgets();
+   $widget_template=$request->getParameter('widget_template', $this->getUserPreferredTemplate());
+	 $this->getUser()->setAttribute("default_widget_template", strval($widget_template));
+	 $param_widget=null;
+	 if(is_numeric($widget_template))
+	 {
+      if(strval($widget_template)!="-1")
+      {
+        $param_widget=strval($widget_template);
+      }
+	 }
+
+	  $this->loadWidgets(null, null,null, $param_widget);
+	  $this->widget_template=$widget_template;
   }
 
   public function executeCreate(sfWebRequest $request)
@@ -267,7 +302,18 @@ class specimenActions extends DarwinActions
     $spec = new Specimens();
     $this->form = new SpecimensForm($spec);
     $this->processForm($request, $this->form,'create');
-    $this->loadWidgets();
+     
+	 $widget_template=$request->getParameter('widget_template', $this->getUserPreferredTemplate());
+	 $param_widget=null;
+	 if(is_numeric($widget_template))
+	 {
+      if(strval($widget_template)!="-1")
+      {
+        $param_widget=strval($widget_template);
+      }
+	 }
+	  $this->loadWidgets(null, null,null, $param_widget);
+	  $this->widget_template=$widget_template;
 
     $this->setTemplate('new');
   }
@@ -296,13 +342,24 @@ class specimenActions extends DarwinActions
       if(! Doctrine_Core::getTable('Specimens')->hasRights('spec_ref',$spec_id, $this->getUser()->getId()))
         $this->redirect("specimen/view?id=".$request->getParameter('id')) ;
     }
-    $this->loadWidgets();
+    //$widget_template=$request->getParameter('widget_template', "-1");
+	$widget_template=$request->getParameter('widget_template', $this->getUserPreferredTemplate());
+	 $param_widget=null;
+	 if(is_numeric($widget_template))
+	 {
+      if(strval($widget_template)!="-1")
+      {
+        $param_widget=strval($widget_template);
+      }
+	 }
+	$this->loadWidgets(null, null,null, $param_widget);
+	 $this->widget_template=$widget_template;
     $this->setTemplate('new');
   }
 
   public function executeUpdate(sfWebRequest $request)
   {
-    $this->loadWidgets();
+     $this->loadWidgets(null, null,$request);
 
     $this->forward404Unless($request->isMethod('post') || $request->isMethod('put'));
     $codeMask = $this->getCodeMask($request);
@@ -505,7 +562,7 @@ class specimenActions extends DarwinActions
       $this->form = new specimensForm($spec);
       $error = new sfValidatorError(new savedValidator(),$e->getMessage());
       $this->form->getErrorSchema()->addError($error);
-      $this->loadWidgets();
+      $this->loadWidgets(null, null,$request);
       $this->setTemplate('new');
       return ;
     }
@@ -540,7 +597,7 @@ class specimenActions extends DarwinActions
     }
     $this->forward404Unless($this->specimen,'Specimen does not exist');
 
-    $this->loadWidgets(null,$this->specimen->getCollectionRef());
+    $this->loadWidgets(null,$this->specimen->getCollectionRef(),$request);
   }
 
   public function executeAddInsurance(sfWebRequest $request)
@@ -829,5 +886,29 @@ class specimenActions extends DarwinActions
 	 return $this->renderText("ok");
      
   }
+  
+    
+  public function executeAttachProperties(sfWebRequest $request)
+  {
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
+    $number = intval($request->getParameter('num'));
+    $form = $this->getSpecimenForm($request);
+    $form->attachProperties($number, '');
+    
+    return $this->renderPartial('specimen/newproperties',array('form' => $form['newProperties'][$number], 'rownum'=>$number, 'module'=>'specimen', 'referenced_relation'=> 'specimens', 'hasmodel'=>true));
+    
+ }
+ 
+   public function executeAttachMaintenance(sfWebRequest $request)
+  {
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
+    $number = intval($request->getParameter('num'));
+    $form = $this->getSpecimenForm($request);
+    $form->attachMaintenance($number, '');
+    
+    return $this->renderPartial('specimen/newmaintenance',array('form' => $form['newCollectionMaintenance'][$number], 'rownum'=>$number, 'module'=>'specimen', 'referenced_relation'=> 'specimens'));
+    
+ }
+  
   
 }

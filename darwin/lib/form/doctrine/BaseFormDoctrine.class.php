@@ -85,6 +85,57 @@ abstract class BaseFormDoctrine extends sfFormDoctrine
     }
 
   }
+  
+   protected function saveEmbedArrayFields($emFieldName, $list_fields ,$forms, $enforce_value)
+  {
+    if (null === $forms && $this->getValue($emFieldName.'_holder'))
+    {
+      $value = $this->getValue('new'.$emFieldName);
+      foreach($this->embeddedForms['new'.$emFieldName]->getEmbeddedForms() as $name => $form)
+      {
+       
+	    $set_flag=false;
+		foreach($list_fields as $emptyField)
+		{
+			if(isset($value[$name][$emptyField])!==false)
+		    {
+				$set_flag=true;
+			}
+			 
+		}
+		if(!$set_flag)
+		{
+			unset($this->embeddedForms['new'.$emFieldName][$name]);
+		}
+		else
+		{
+			$form->getObject()->fromArray($enforce_value);
+		}
+	  
+      }
+      $value = $this->getValue($emFieldName);
+      foreach($this->embeddedForms[$emFieldName]->getEmbeddedForms() as $name => $form)
+      {
+        
+		$set_flag=false;
+		foreach($list_fields as $emptyField)
+		{
+			if(isset($value[$name][$emptyField])!==false)
+		    {
+				$set_flag=true;
+			}
+			 
+		}
+		if(!$set_flag)
+		{
+			$form->getObject()->delete();
+			unset($this->embeddedForms[$emFieldName][$name]);
+		}
+		
+      }
+    }
+
+  }
 
   /**
   * Fct_add is the function to add an new Embedded Form like addBiblio()

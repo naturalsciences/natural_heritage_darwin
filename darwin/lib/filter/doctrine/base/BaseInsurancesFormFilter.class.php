@@ -20,7 +20,7 @@ abstract class BaseInsurancesFormFilter extends DarwinModelFormFilter
     $this->widgetSchema   ['record_id'] = new sfWidgetFormFilterInput(array('with_empty' => false));
     $this->validatorSchema['record_id'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
 
-    $this->widgetSchema   ['insurance_value'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->widgetSchema   ['insurance_value'] = new sfWidgetFormFilterInput();
     $this->validatorSchema['insurance_value'] = new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false)));
 
     $this->widgetSchema   ['insurance_currency'] = new sfWidgetFormFilterInput(array('with_empty' => false));
@@ -43,6 +43,9 @@ abstract class BaseInsurancesFormFilter extends DarwinModelFormFilter
 
     $this->widgetSchema   ['contact_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Contact'), 'add_empty' => true));
     $this->validatorSchema['contact_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Contact'), 'column' => 'id'));
+
+    $this->widgetSchema   ['disaster_recovery_score'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['disaster_recovery_score'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
 
     $this->widgetSchema   ['insurer_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('People'), 'add_empty' => true));
     $this->validatorSchema['insurer_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('People'), 'column' => 'id'));
@@ -71,6 +74,7 @@ abstract class BaseInsurancesFormFilter extends DarwinModelFormFilter
       'date_to' => 'Text',
       'date_to_mask' => 'Number',
       'contact_ref' => 'ForeignKey',
+      'disaster_recovery_score' => 'Number',
       'insurer_ref' => 'ForeignKey',
       'contact_ref' => 'ForeignKey',
     ));

@@ -269,7 +269,7 @@
         <tr>
           <td><span class="pager_nav"><?php echo __("Type") ; ?> :</span></td>
           <td>
-            <span><?php echo ($specimen->getTypeSearch()=="undefined"?"-":$specimen->getTypeSearch()) ; ?></span>
+            <span><?php echo ($specimen->getTypeSearch()=="undefined"?"-":$specimen->getType()) ; ?></span>
           </td>
         </tr>
         <tr>

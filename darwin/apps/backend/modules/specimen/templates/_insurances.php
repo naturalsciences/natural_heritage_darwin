@@ -39,7 +39,16 @@
     <td colspan="4">
       <?php echo $form['contact_ref'];?>
     </td>
-  </tr>  
+  </tr>
+	<tr>
+		<th>
+			<?php echo __('Disaster recovery score'); ?>
+		</th>
+		<td>
+		    <?php echo $form['referenced_relation'];?>
+			<?php echo $form['disaster_recovery_score']; ?>
+		</td>
+	<tr>  
 </tbody>
 <script type="text/javascript">
   $(document).ready(function () {

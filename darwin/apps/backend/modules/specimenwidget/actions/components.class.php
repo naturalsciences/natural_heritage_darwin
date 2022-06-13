@@ -141,11 +141,21 @@ class specimenwidgetComponents extends sfComponents
     if(!isset($this->form['newDonators']))
       $this->form->loadEmbed('Donators');
   }
-
-  public function executeRefProperties()
+  
+  /*
+    public function executeRefProperties()
   {
     if(isset($this->form) )
       $this->eid = $this->form->getObject()->getId() ;
+  }
+
+  */
+
+  public function executeRefProperties()
+  {
+    $this->defineForm();
+    if(!isset($this->form['newProperties']))
+      $this->form->loadEmbed('Properties');
   }
 
   public function executeRefComment()
@@ -268,12 +278,19 @@ class specimenwidgetComponents extends sfComponents
       $this->form->loadEmbed('Insurances');
   }
 
-  public function executeMaintenance()
+  /*public function executeMaintenance()
   {
     $this->defineForm();
     if($this->eid){
       $this->maintenances = Doctrine_Core::getTable('CollectionMaintenance')->getRelatedArray('specimens', array($this->eid));
     }
+  }*/
+  
+  public function executeMaintenance()
+  {
+    $this->defineForm();
+    if(!isset($this->form['newCollectionMaintenance']))
+      $this->form->loadEmbed('CollectionMaintenance');
   }
 
   public function executeHistoric()

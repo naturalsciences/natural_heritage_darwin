@@ -354,6 +354,7 @@ Users:
         db_user_type: { type: integer, notnull: true, default: 1}
         people_id: { type: integer}
         selected_lang: { type: string,notnull:true, default:en}
+        default_widget_collection_ref: { type: integer}
     relations:
         People:
             local: people_id
@@ -361,7 +362,11 @@ Users:
         IdentifiersUsers:
             local: id
             foreign: record_id
-            class: IdentifiersUsers  
+            class: IdentifiersUsers
+        DefaultWidgetCollection:
+            local: default_widget_collection_ref
+            foreign: id
+            class: Collections            
 
 PeopleLanguages:
     columns:
@@ -526,12 +531,16 @@ CollectionsRights:
         collection_ref: { type: integer, notnull: true }
         user_ref: { type: integer, notnull: true}
         db_user_type: { type: integer, notnull: true, default:1 }
+        widget_profile_ref: { type: integer}
     relations:
         Collections:
             local: collection_ref
             foreign: id
         Users:
             local: user_ref
+            foreign: id
+        WidgetProfiles:
+            local: widget_profile_ref
             foreign: id
 
 
@@ -993,6 +1002,8 @@ Specimens:
         nagoya: { type: string, notnull: true, default: 'not defined'}
         uuid: { type: string}
         ig_main_code_indexed: { type: string}
+        mids_level: {type: integer}
+        collection_name_full_path : {type: string}    
     relations:
         Collections:
             local: collection_ref
@@ -1151,7 +1162,7 @@ Insurances:
         id: { type: integer, primary: true, autoincrement: true }
         referenced_relation: { type: string, notnull: true}
         record_id: { type: integer, notnull: true}
-        insurance_value: { type: decimal, length: 16, scale: 2, notnull: true}
+        insurance_value: { type: decimal, length: 16, scale: 2, notnull: false}
         insurance_currency: { type: string, notnull: true, default: '€'}
         insurer_ref: { type: integer}
         date_from: { type: string, notnull: true, default: '0001-01-01'}
@@ -1159,6 +1170,7 @@ Insurances:
         date_to: { type: string, notnull: true, default: '2038-12-31'}
         date_to_mask: { type: integer, notnull: true, default:0}
         contact_ref: { type: integer}
+        disaster_recovery_score : { type: integer}
     relations:
         People:
             local: insurer_ref
@@ -2324,3 +2336,38 @@ PeopleSubTypes:
             local: people_ref
             foreign: id
             class: People
+
+WidgetProfiles:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true } 
+        name: { type: string, notnull: true}
+        creator_ref: { type: integer, notnull: true}  
+        creation_date_mask: { type: integer, notnull: true, default:0}
+        creation_date: { type: string, notnull: true, default: '0001-01-01'}        
+    relations:
+        Users:
+            class: Users
+            local: creator_ref
+            foreign: id
+            
+WidgetProfilesDefinition:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        profile_ref: { type: integer, notnull: true}
+        category: { type: string, notnull: true, default: board_widget}
+        group_name: { type: string, notnull: true}
+        order_by: { type: integer, notnull: true, default:1 }
+        col_num: { type: integer, notnull: true, default:1 }
+        mandatory: { type: boolean, notnull: true, default: false}
+        visible: { type: boolean, notnull: true, default: true}
+        opened: { type: boolean, notnull: true, default: true}
+        color: { type: string, default:'#5BAABD'}
+        is_available: { type: boolean, default: true}
+        icon_ref: { type: integer}
+        title_perso: { type: string}
+        all_public: {type: boolean, notnull:true, default:false}
+    relations:
+        WidgetProfiles:
+            class: WidgetProfiles
+            local: profile_ref
+            foreign: id

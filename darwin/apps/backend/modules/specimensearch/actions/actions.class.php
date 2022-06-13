@@ -189,10 +189,7 @@ class specimensearchActions extends DarwinActions
 		  {
 			  $query_tmp=$query;
 		  }
-          $pager = new DarwinPager($query_tmp,
-            $this->currentPage,
-            $this->form->getValue('rec_per_page')
-          );
+         
           // Replace the count query triggered by the Pager to get the number of records retrieved
           $count_q = clone $query;
           // Remove from query the group by and order by clauses
@@ -200,15 +197,9 @@ class specimensearchActions extends DarwinActions
           $count_q = $count_q->select("count(s.id), count(DISTINCT ig_main_code_indexed) as count_ig, sum(specimen_count_min) as count_min, sum(specimen_count_max) as count_max")->removeDqlQueryPart('orderby')->limit(0);
           if($this->form->with_group) {
              $count_q->select("count(distinct s.id), count(DISTINCT ig_main_code_indexed) as count_ig, , sum(specimen_count_min) as count_min, sum(specimen_count_max) as count_max")->removeDqlQueryPart('groupby');
-          }
-
-          // Initialize an empty count query
-          $counted = new DoctrineCounted();
-          // Define the correct select count() of the count query
-          $counted->count_query = $count_q;
-		  
-          // And replace the one of the pager with this new one
-          $pager->setCountQuery($counted);
+          }		  
+         
+          
 		  //q ajax mids
 		  $count_q2 = clone $query;
 			$count_q2 = $count_q2->select("s.id as s_id, mids_level,  ig_main_code_indexed,
@@ -228,9 +219,7 @@ class specimensearchActions extends DarwinActions
 			(select COALESCE(sum(s__specimen_count_min),0) from a where s__mids_level=3) as spec_min_mids3, 
 			(select COALESCE(sum(s__specimen_count_max),0) from a where s__mids_level=3) as spec_max_mids3		FROM a;");
 			
-			//$q_ajax->execute($tmp_params);
-		  //$this->ajax_query=$q_ajax;
-		   //$this->ajax_query_params=$tmp_params;
+		
 			$q=$q_ajax->execute($tmp_params, Doctrine_Core::HYDRATE_ARRAY);
 			
 			 $this->getResponse()->setHttpHeader('Content-type','application/json');
