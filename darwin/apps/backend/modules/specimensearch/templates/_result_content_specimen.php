@@ -14,9 +14,9 @@
       <?php if($specimen->getCollectionRef() > 0) : ?>
         <?php echo image_tag('info.png',"title=info class=info id=collection_".$specimen->getId()."_info");?>
         <?php if($sf_user->isAtLeast(Users::ADMIN) || ($sf_user->isAtLeast(Users::MANAGER) && $specimen->getHasEncodingRights())) : ?>           
-          <a href="<?php echo url_for('collection/edit?id='.$specimen->getCollectionRef());?>"><?php echo $specimen->getCollectionName();?></a>
+          <a href="<?php echo url_for('collection/edit?id='.$specimen->getCollectionRef());?>"><?php echo trim($specimen->getCollectionNameFullPath(), "/");?></a>
         <?php else : ?>
-          <?php echo $specimen->getCollectionName();?>
+         <?php echo trim($specimen->getCollectionNameFullPath(), "/");?></a>
         <?php endif ; ?>
         <div id="collection_<?php echo $specimen->getId();?>_tree" class="tree"></div>
         <script type="text/javascript">

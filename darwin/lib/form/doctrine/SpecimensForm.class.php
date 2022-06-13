@@ -600,6 +600,23 @@ class SpecimensForm extends BaseSpecimensForm
 
     $this->widgetSchema['Insurances_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
     $this->validatorSchema['Insurances_holder'] = new sfValidatorPass();
+	
+	$this->widgetSchema['Properties_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
+    $this->validatorSchema['Properties_holder'] = new sfValidatorPass();
+	
+	$this->widgetSchema['CollectionMaintenance_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
+    $this->validatorSchema['CollectionMaintenance_holder'] = new sfValidatorPass();
+	
+	$this->widgetSchema['widget_template'] = new sfWidgetFormDarwinDoctrineChoice(array(
+        'model' => 'Users',
+        'table_method' => array('method'=>'getWidgetTemplates', 'parameters'=>array('user_id'=>sfContext::getInstance()->getUser()->getId(),'add_custom'=>true)),
+		'key_method' => 'getId',
+		'method' => 'getName',
+        'add_empty' => true
+      ),
+      array('class'=>'catalogue_level')
+      );
+  $this->validatorSchema['widget_template']= new sfValidatorPass();
     
 
     $this->mergePostValidator(new sfValidatorSchemaCompare('specimen_count_min', '<=', 'specimen_count_max',
@@ -1004,6 +1021,8 @@ class SpecimensForm extends BaseSpecimensForm
         $taintedValues['institution_ref'] = sfConfig::get('dw_defaultInstitutionRef');
       }
     }
+	$this->bindEmbed('Properties', 'attachProperties' , $taintedValues);
+	$this->bindEmbed('CollectionMaintenance', 'attachMaintenance' , $taintedValues);
     parent::bind($taintedValues, $taintedFiles);
   }
 
@@ -1106,6 +1125,23 @@ class SpecimensForm extends BaseSpecimensForm
     $options = array('referenced_relation' => 'specimens', 'record_id' => $this->getObject()->getId());
     $this->attachEmbedRecord('ExtLinks', new ExtLinksForm(DarwinTable::newObjectFromArray('ExtLinks',$options)), $num);
   }
+  
+   public function attachProperties($num, $values, $order_by=0)
+  {
+        $options =  array('referenced_relation' => 'specimens', 'record_id' => $this->getObject()->getId());
+		//has model initializes autocomplete
+		$tmp_form=new PropertiesForm(DarwinTable::newObjectFromArray('Properties',$options),array("hasmodel"=>true));
+		$tmp_form->setOption("hasmodel", true);
+		$this->attachEmbedRecord('Properties', $tmp_form, $num);      
+  }
+
+  public function attachMaintenance($num, $values, $order_by=0)
+  {
+        $options =  array('referenced_relation' => 'specimens', 'record_id' => $this->getObject()->getId());
+		//has model initializes autocomplete
+		$tmp_form=new CollectionMaintenanceForm(DarwinTable::newObjectFromArray('CollectionMaintenance',$options));
+		$this->attachEmbedRecord('CollectionMaintenance', $tmp_form, $num);     
+  }    
 
   public function getEmbedRecords($emFieldName, $record_id = false)
   {
@@ -1130,6 +1166,10 @@ class SpecimensForm extends BaseSpecimensForm
       return Doctrine_Core::getTable('SpecimensRelationships')->findBySpecimenRef($record_id);
     if( $emFieldName =='Insurances' )
       return Doctrine_Core::getTable('Insurances')->findForTable('specimens', $record_id);
+    if( $emFieldName =='Properties' )
+      return Doctrine_Core::getTable('Properties')->findForTable('specimens', $record_id);
+    if( $emFieldName =='CollectionMaintenance' )
+      return Doctrine_Core::getTable('CollectionMaintenance')->getRelatedArray('specimens', $record_id);
   }
 
   public function getEmbedRelationForm($emFieldName, $values)
@@ -1150,6 +1190,10 @@ class SpecimensForm extends BaseSpecimensForm
       return new SpecimensRelationshipsForm($values);
     if( $emFieldName =='Insurances' )
       return new InsurancesSubForm($values);
+  if( $emFieldName =='Properties' )
+      return new PropertiesForm($values);
+	if( $emFieldName =='CollectionMaintenance' )
+      return new CollectionMaintenanceForm($values);
   }
 
   public function duplicate($id)
@@ -1241,7 +1285,9 @@ class SpecimensForm extends BaseSpecimensForm
     $this->saveEmbed('ExtLinks', 'url' ,$forms, array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
     $this->saveEmbed('RelatedFiles', 'mime_type' ,$forms, array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
     $this->saveEmbed('SpecimensRelationships', 'unit_type' ,$forms, array('specimen_ref' => $this->getObject()->getId()));
-    $this->saveEmbed('Insurances', 'insurance_value' ,$forms, array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
+	$this->saveEmbedArrayFields('Insurances', array('insurance_value','disaster_recovery_score') ,$forms, array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
+	$this->saveEmbed('Properties', 'lower_value' ,$forms, array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
+	$this->saveEmbed('CollectionMaintenance', 'action_observation' ,$forms, array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
 
     if (null === $forms && $this->getValue('ident'))
     {
@@ -1304,32 +1350,9 @@ class SpecimensForm extends BaseSpecimensForm
         }
       }
     }
-     //ftheeten 2019 01 18
     $form_vals = $this->getTaintedValues();
     
-    //print("try to save");
-    /*if(array_key_exists('timestamp', $form_vals))
-    {
-        //print("TIMESTAMP !!!!");
-        if(isset($_SESSION["TEMP_DARWIN_PROPERTY_".$form_vals['timestamp']]))
-        {
-             $tmp_array=$_SESSION["TEMP_DARWIN_PROPERTY_".$form_vals['timestamp']];
-             foreach($tmp_array as $elem=> $id_prop)
-             {
-                if(is_integer($id_prop))
-                {
-                    $prop=Doctrine_Core::getTable('Properties')->findOneById($id_prop);
-                    if($prop)
-                    {
-                        $prop->setRecordId($this->getObject()->getId());
-                        $prop->save();
-                    }
-                }
-             }
-        
-            unset($_SESSION["TEMP_DARWIN_PROPERTY_".$form_vals['timestamp']]);
-        }
-    }*/
+    
     
     return parent::saveObjectEmbeddedForms($con, $forms);
   }

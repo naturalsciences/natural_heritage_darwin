@@ -194,4 +194,9 @@ class specimensearchwidgetComponents extends sfComponents
     $this->defineForm();
   }
   
+   public function executeInsurances()
+  {
+    $this->defineForm();
+  }
+  
 }

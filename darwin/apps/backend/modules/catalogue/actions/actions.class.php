@@ -396,23 +396,51 @@ class catalogueActions extends DarwinActions
 	{
 		 $conn = Doctrine_Manager::connection();
          
-		 if($request->getParameter('collections'))
+		 $category="main";
+		 if($request->getParameter('category'))
 		 {
-			$sql = "SELECT DISTINCT COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'') as value, full_code_indexed as value_indexed,length(code) as len FROM codes WHERE code_category='main' AND referenced_relation='specimens' AND
-			full_code_indexed LIKE CONCAT('%', fulltoindex(:term), '%') AND 
-			record_id IN (SELECT id FROM specimens WHERE collection_ref IN (".$request->getParameter('collections').") )
-			ORDER by length(code), full_code_indexed LIMIT 30;";
+			$category=$request->getParameter('category');
 		 }
-		 else
-		 {
-			$sql = "SELECT DISTINCT COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'') as value, full_code_indexed as value_indexed,length(code) as len  FROM codes WHERE code_category='main' AND
-			referenced_relation='specimens' AND 
-			full_code_indexed LIKE CONCAT('%',  fulltoindex(:term), '%')   ORDER by length(code), full_code_indexed LIMIT 30;";
+		if(strtolower($category)!="all")
+		{
+			if($request->getParameter('collections'))
+			 {
+				$sql = "SELECT DISTINCT COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'') as value, full_code_indexed as value_indexed,length(code) as len FROM codes WHERE code_category=:category AND referenced_relation='specimens' AND
+				full_code_indexed LIKE CONCAT('%', (SELECT * FROM fulltoindex(:term)), '%') AND 
+				record_id IN (SELECT id FROM specimens WHERE collection_ref IN (".$request->getParameter('collections').") )
+				ORDER by length(code), full_code_indexed LIMIT 30;";
+			 }
+			 else
+			 {
+				$sql = "SELECT DISTINCT COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'') as value, full_code_indexed as value_indexed,length(code) as len  FROM codes WHERE code_category=:category AND
+				referenced_relation='specimens' AND 
+				full_code_indexed LIKE CONCAT('%', (SELECT * FROM fulltoindex(:term)), '%')   ORDER by length(code), full_code_indexed LIMIT 30;";
+			}
+			$q = $conn->prepare($sql);
+			
+			$q->execute(array(':term' => $request->getParameter('term'),':category' => $category));
+			$codes = $q->fetchAll();
 		}
-		$q = $conn->prepare($sql);
-		$q->execute(array(':term' => $request->getParameter('term')));
-		$codes = $q->fetchAll();
-
+		else
+		{
+			if($request->getParameter('collections'))
+			 {
+				$sql = "SELECT DISTINCT COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'') as value, full_code_indexed as value_indexed,length(code) as len FROM codes WHERE referenced_relation='specimens' AND
+				full_code_indexed LIKE CONCAT('%', (SELECT * FROM fulltoindex(:term)), '%') AND 
+				record_id IN (SELECT id FROM specimens WHERE collection_ref IN (".$request->getParameter('collections').") )
+				ORDER by length(code), full_code_indexed LIMIT 30;";
+			 }
+			 else
+			 {
+				$sql = "SELECT DISTINCT COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'') as value, full_code_indexed as value_indexed,length(code) as len  FROM codes WHERE 
+				referenced_relation='specimens' AND 
+				full_code_indexed LIKE CONCAT('%', (SELECT * FROM fulltoindex(:term)), '%')   ORDER by length(code), full_code_indexed LIMIT 30;";
+			}
+			$q = $conn->prepare($sql);
+			
+			$q->execute(array(':term' => $request->getParameter('term')));
+			$codes = $q->fetchAll();
+		}
 		$i=0;
 		foreach($codes as $code)
 		{
@@ -421,7 +449,7 @@ class catalogueActions extends DarwinActions
 			$i++;
 		}
 	}
-	    
+	
 		$this->getResponse()->setContentType('application/json');
 		return  $this->renderText(json_encode($results));
   }

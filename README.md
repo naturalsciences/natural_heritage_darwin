@@ -57,3 +57,7 @@ https://darwin.naturalsciences.be/public_dev.php/json/Get_collection_detail?id={
 ## Installation
 
 [Installation instructions for Ubuntu/Debian](install_darwin_ubuntu20.md)
+
+## Technical management
+
+[Using and managing Darwin2](use_darwin2.md)

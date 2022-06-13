@@ -126,7 +126,8 @@ $(document).ready(function ()
             <thead>
               <tr>
                 <th><label><?php echo __("Users") ; ?></label></th>
-                <th colspan="4"><label><?php echo __("Rights") ; ?></label></th>
+                <th colspan="3"><label><?php echo __("Rights") ; ?></label></th>
+				<th colspan="3"><label><?php echo __("Template") ; ?></label></th>
               </tr>
             </thead>
             <tbody>

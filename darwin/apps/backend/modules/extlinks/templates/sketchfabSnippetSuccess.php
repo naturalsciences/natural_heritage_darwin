@@ -7,13 +7,24 @@
 </a>
 </div>
 
-
+<?php
+	if(strpos($link->getUrl(), "//sketchfab.com"))
+	{
+		$display_url=$link->getUrl()."/embed";
+		
+	}
+	else
+	{
+		$display_url=$link->getUrl();
+	}
+	$link_url=$link->getUrl();
+?>
 <span>
-                    <iframe width="640" height="480" src="<?php echo($link->getUrl());?>/embed" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" onmousewheel="" style="display: block;  margin: auto;"></iframe>
+                    <iframe width="640" height="480" src="<?php echo($display_url);?>" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" onmousewheel="" style="display: block;  margin: auto;"></iframe>
                     <br/>
                   
 </span>
-  <div  style="text-align:center;"><?php echo __("URL");?>: <a target="_blank" href="<?php echo(str_replace('/embed','', $link->getUrl()));?>" ><?php echo(str_replace('/embed','', $link->getUrl()));?></a></div>
+  <div  style="text-align:center;"><?php echo __("URL");?>: <a target="_blank" href="<?php echo($link_url);?>" ><?php echo($link_url);?></a></div>
 <script language="javascript">
 
 $(document).ready(function () {
@@ -22,15 +33,7 @@ $(document).ready(function () {
 $(".ui-tooltip-close").click(
     function()
     {
-         //$('body').trigger('close_modal');
-             /*alert($('body > .ui-tooltip').html());
-          $('body > .ui-tooltip').remove();
-          $('body').focus();*/
-          //$('body > .link_catalogue').hide();
-           
-          // $('body > .ui-tooltip').remove();
-          //  $('#qtip-overlay').remove();
-            //scroll(0,-last_position);
+        
             $('body').trigger('close_modal');
     }
 );

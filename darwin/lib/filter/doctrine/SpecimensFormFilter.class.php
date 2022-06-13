@@ -1029,6 +1029,13 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
          "required"=>false
          )
     );
+	
+	
+    $this->widgetSchema['disaster_recovery_score'] = new sfWidgetFormChoice(array(
+      'choices' => array(null=>"No set",1=>"1", 2=>"2", 3=>"3", 4=>"4")),
+    );	
+	 $this->validatorSchema['disaster_recovery_score'] = new sfValidatorInteger(array('required'=>false));
+
   }
 
   public function addGtuTagValue($num)
@@ -2037,6 +2044,18 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 		}
     return $query ;
   }
+  
+     public function addDisasterRecoveryScoreQuery($query, $field, $val) 
+   {
+		if(strlen($val)>0)
+		{
+			if((int)$val>-1)
+			{
+			$query->andWhere( "EXISTS (SELECT i.id FROM Insurances i WHERE i.referenced_relation = 'specimens' AND i.record_id=s.id AND  disaster_recovery_score=?) " ,$val);
+			}
+		}
+    return $query ;
+  }
 
 
   
@@ -2502,6 +2521,8 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->addCategoryQuery($query,$values["category"], $values["category"] );
 	
 	$this->addMidsLevelQuery($query,$values["mids_level"], $values["mids_level"] );
+	$this->addDisasterRecoveryScoreQuery($query,$values["disaster_recovery_score"], $values["disaster_recovery_score"] );
+	
     $query->limit($this->getCatalogueRecLimits());
 
     return $query;

@@ -1,35 +1,62 @@
-<?php if($eid):?>
-<table class="catalogue_table">
-  <thead>
-    <tr>
-      <th><?php echo __('Type');?></th>
-      <th><?php echo __('Action / Observation');?></th>
-      <th><?php echo __('Date');?></th>
-      <th><?php echo __('People');?></th>
-      <th><?php echo __('Description');?></th>
-      <th></th>
+<table class="new_maintenance"  id="new_maintenance">
+    <thead style="<?php echo ($form['CollectionMaintenance']->count() || $form['newCollectionMaintenance']->count())?'':'display: none;';?>" class="spec_maintenance_head">
+    <tr>   
+      <th><?php echo __('Maintenance');?></th>
+      <th><?php echo $form['CollectionMaintenance_holder'];?></th>
     </tr>
   </thead>
-  <tbody>
-    <?php foreach($maintenances as $maintenance):?>
-    <tr>
-      <td>
-        <?php echo link_to($maintenance->getCategory(),'specimen/editMaintenance?id='.$maintenance->getId(),array('class'=>"link_catalogue",'title'=> __('Edit Maintenance'))); ?>
-      </td>
-      <td><?php echo $maintenance->getActionObservation();?></td>
-      <td class="datesNum"><?php echo $maintenance->getModificationDateTimeMasked(ESC_RAW);?></td>
-      <td><?php echo ($maintenance->getPeopleRef()?$maintenance->People->getFormatedName():'-');?></td>
-      <td><?php echo $maintenance->getDescription();?></td>
-      <td class="widget_row_delete">
-        <a class="widget_row_delete" href="<?php echo url_for('catalogue/deleteRelated?table=collection_maintenance&id='.$maintenance->getId());?>" title="<?php echo __('Are you sure ?') ?>"><?php echo image_tag('remove.png'); ?></a>
-      </td>
-    </tr>
-    <?php endforeach;?>
-  </tbody>
+  <?php $retainedKey = 0;?>
+  <?php foreach($form['CollectionMaintenance'] as $form_value):?>
+  old
+     <?php include_partial('specimen/newmaintenance', array('form' => $form_value, 'rownum'=>$retainedKey));?>
+     <?php $retainedKey = $retainedKey+1;?>
+  <?php endforeach;?>
+  <?php foreach($form['newCollectionMaintenance'] as $form_value):?>
+  new
+     <?php include_partial('specimen/newmaintenance', array('form' => $form_value, 'rownum'=>$retainedKey));?>
+     <?php $retainedKey = $retainedKey+1;?>
+  <?php endforeach;?>          
+   <tfoot>
+     <tr>
+       <td colspan="3">
+         <div class="add_maintenance">
+          <?php if($module == 'specimen') $url = 'specimen/attachMaintenance';
+          
+          ?>
+           <a href="<?php echo url_for($url.($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/num/" id="add_maintenance"><?php echo __('Add maintenance');?></a>
+         </div>
+       </td>
+     </tr>
+   </tfoot>
 </table>
-<?php echo image_tag('add_green.png');?>
-<a title="<?php echo __('Add Maintenance');?>" class="link_catalogue" href="<?php echo url_for('specimen/editMaintenance?table=specimens&rid='.$eid); ?>"><?php echo __('Add Maintenance');?></a>
-<br />
-<?php else:?>
-  <?php echo __('Please save your specimen in order to add maintenances');?>
-<?php endif;?>
+
+<script  type="text/javascript">
+$(document).ready(function () {
+
+    $('#add_maintenance').click( function()
+    {
+        hideForRefresh('#new_maintenance');
+        parent_el = $(this).closest('table.new_maintenance');
+		console.log($(this).attr('href'));
+		
+        parentId = $(parent_el).attr('id');
+		console.log(parentId);
+        $.ajax(
+        {
+          type: "GET",
+          url: $(this).attr('href')+ ($('table#'+parentId+' tbody.maintenance_data').length),
+          success: function(html)
+          {                    
+            $(parent_el).append(html);
+            showAfterRefresh('#new_maintenance');
+          }
+        });
+        $(this).closest('table.new_maintenance').find('thead').show();
+        return false;
+    }); 
+    //one storage place is required
+   
+    
+});
+</script>
+  

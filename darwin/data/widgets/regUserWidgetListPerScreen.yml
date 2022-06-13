@@ -440,6 +440,17 @@ sps33:
   visible: true
   title_perso: Mids level
   all_public: true
+  
+sps34:
+  col_num: 1
+  category: specimensearch_widget
+  group_name: insurances
+  mandatory: false
+  order_by: 23
+  opened: true
+  visible: true
+  title_perso: insurances
+  all_public: true
    
 sw1:
    col_num: 1
@@ -1845,6 +1856,17 @@ ex3:
    opened: true
    visible: true
    title_perso: Related Files
+   all_public: true
+   
+ex4:
+   col_num: 1
+   category: catalogue_expeditions_widget
+   group_name: biblio
+   mandatory: false
+   order_by: 3
+   opened: true
+   visible: true
+   title_perso: Bibliography
    all_public: true
 
 gtu1:
