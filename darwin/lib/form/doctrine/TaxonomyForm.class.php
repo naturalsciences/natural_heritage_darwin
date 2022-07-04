@@ -38,10 +38,12 @@ class TaxonomyForm extends BaseTaxonomyForm
       'box_title' => $this->getI18N()->__('Choose Parent'),
       'button_is_hidden' => true,
       'complete_url' => 'catalogue/completeNameTaxonomyWithRef',
+	  'nullable'=> true
     ));
 
-    $this->validatorSchema['parent_ref']->setOption('required', true);
-
+    //$this->validatorSchema['parent_ref']->setOption('required', false);
+    $this->validatorSchema['parent_ref'] = new sfValidatorInteger(array('required'=>false));
+	
 	//ftheeten 2017 07 23
 	$this->widgetSchema['metadata_ref'] = new sfWidgetFormChoice(array(
       'choices' =>  TaxonomyMetadataTable::getAllTaxonomicMetadata("id ASC")
@@ -75,6 +77,8 @@ class TaxonomyForm extends BaseTaxonomyForm
 	//JM Herpers 2019 04 25
 	 $this->widgetSchema['cites']->setAttributes(array('class'=>'cites'));
 	 $this->validatorSchema['cites'] = new sfValidatorBoolean();
+	 
+	 $this->mergePostValidator( new TaxonomyTopLevelValidatorSchema()) ;
 
   }
 
