@@ -14,6 +14,10 @@ $(document).ready(function ()
   <table class="search">
     <tbody>
       <?php echo $form->renderGlobalErrors() ?>
+	  <tr>
+        <th><?php echo $form['source_database']->renderLabel(); ?> :</th>
+        <td><?php echo $form['source_database']; ?></td>
+      </tr>
       <tr>
         <th><?php echo $form['uploadfield']->renderLabel() ?> :</th>
         <td>
@@ -72,7 +76,7 @@ $(document).ready(function ()
           <?php echo $form['specimen_taxonomy_ref'] ?>
         </td>         
       </tr>
-      <?php endif ?>
+      
 	  <!--ftheeten 2018 06 06-->
 	  <tr>
       <th><?php echo $form['taxonomy_kingdom']->renderLabel() ?> :</th>
@@ -81,14 +85,22 @@ $(document).ready(function ()
           <?php echo $form['taxonomy_kingdom'] ?>
         </td>
       </tr>
+	  <?php endif ?>
 	  <?php if($type == 'abcd') : ?>
-       <tr>
+       <!--<tr>
       <th><?php echo  $form['merge_gtu']->renderLabel() ;?> :</th>
         <td>
           <?php echo $form['merge_gtu']->renderError() ?>
           <?php echo $form['merge_gtu'] ?>
         </td>
-      </tr>
+      </tr>-->
+	  <!--<tr>
+	  <th><?php echo  $form['add_collection_prefix']->renderLabel() ;?> :</th>
+        <td>
+          <?php echo $form['add_collection_prefix']->renderError() ?>
+          <?php echo $form['add_collection_prefix'] ?>
+        </td>
+      </tr>-->
 	  <?php endif;?>
     </tbody>
       <tfoot>

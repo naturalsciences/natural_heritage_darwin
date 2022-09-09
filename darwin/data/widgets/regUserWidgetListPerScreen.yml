@@ -75,6 +75,18 @@ usr2:
    visible: true
    title_perso: Addresses
    all_public: true
+   
+usr3:
+   col_num: 1
+   category: users_widget
+   group_name: identifiers
+   mandatory: false
+   order_by: 5
+   opened: true
+   visible: true
+   title_perso: Identifiers
+   all_public: true
+
 
 sps1:
    col_num: 1

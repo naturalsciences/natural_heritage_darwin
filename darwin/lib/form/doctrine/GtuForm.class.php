@@ -396,7 +396,7 @@ class GtuForm extends BaseGtuForm
       parent::bind($taintedValues, $taintedFiles);
     }
 
-    public function saveEmbeddedForms($con = null, $forms = null)
+    public function saveObjectEmbeddedForms($con = null, $forms = null)
     {
 
       if (null === $forms)
@@ -421,7 +421,7 @@ class GtuForm extends BaseGtuForm
           }
         }
       }
-      return parent::saveEmbeddedForms($con, $forms);
+      return parent::saveObjectEmbeddedForms($con, $forms);
     }
 
   public function getJavaScripts()

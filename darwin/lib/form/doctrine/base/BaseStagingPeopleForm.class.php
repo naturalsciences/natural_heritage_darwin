@@ -8,43 +8,42 @@
  * @package    darwin
  * @subpackage form
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
+ * @version    SVN: $Id$
  */
-abstract class BaseStagingPeopleForm extends BaseFormDoctrine
+abstract class BaseStagingPeopleForm extends DarwinModelForm
 {
-  public function setup()
+  protected function setupInheritance()
   {
-    $this->setWidgets(array(
-      'id'                  => new sfWidgetFormInputHidden(),
-      'referenced_relation' => new sfWidgetFormTextarea(),
-      'record_id'           => new sfWidgetFormInputText(),
-      'people_type'         => new sfWidgetFormTextarea(),
-      'people_sub_type'     => new sfWidgetFormTextarea(),
-      'order_by'            => new sfWidgetFormInputText(),
-      'people_ref'          => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('People'), 'add_empty' => false)),
-      'formated_name'       => new sfWidgetFormTextarea(),
-      'import_ref'          => new sfWidgetFormInputText(),
-    ));
+    parent::setupInheritance();
 
-    $this->setValidators(array(
-      'id'                  => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
-      'referenced_relation' => new sfValidatorString(),
-      'record_id'           => new sfValidatorInteger(array('required' => false)),
-      'people_type'         => new sfValidatorString(array('required' => false)),
-      'people_sub_type'     => new sfValidatorString(),
-      'order_by'            => new sfValidatorInteger(array('required' => false)),
-      'people_ref'          => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('People'))),
-      'formated_name'       => new sfValidatorString(array('required' => false)),
-      'import_ref'          => new sfValidatorInteger(array('required' => false)),
-    ));
+    $this->widgetSchema   ['referenced_relation'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['referenced_relation'] = new sfValidatorString();
+
+    $this->widgetSchema   ['record_id'] = new sfWidgetFormInputText();
+    $this->validatorSchema['record_id'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['people_type'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['people_type'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['people_sub_type'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['people_sub_type'] = new sfValidatorString();
+
+    $this->widgetSchema   ['order_by'] = new sfWidgetFormInputText();
+    $this->validatorSchema['order_by'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['people_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('People'), 'add_empty' => false));
+    $this->validatorSchema['people_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('People'), 'column' => 'id'));
+
+    $this->widgetSchema   ['formated_name'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['formated_name'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['import_ref'] = new sfWidgetFormInputText();
+    $this->validatorSchema['import_ref'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['people_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('People'), 'add_empty' => false));
+    $this->validatorSchema['people_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('People'), 'column' => 'id'));
 
     $this->widgetSchema->setNameFormat('staging_people[%s]');
-
-    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
-
-    $this->setupInheritance();
-
-    parent::setup();
   }
 
   public function getModelName()

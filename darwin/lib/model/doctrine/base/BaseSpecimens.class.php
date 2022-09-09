@@ -112,8 +112,11 @@
  * @property boolean $valid_label
  * @property string $label_created_on
  * @property string $label_created_by
- * @property varchar $nagoya
+ * @property string $nagoya
  * @property integer $import_ref
+ * @property string $uuid
+ * @property string $specimen_creation_date
+ * @property string $collection_name_full_path
  * @property Collections $Collections
  * @property Expeditions $Expeditions
  * @property Gtu $Gtu
@@ -130,12 +133,12 @@
  * @property SubProperties $SubProperties
  * @property UsersTrackingSpecimens $UsersTrackingSpecimens
  * @property SpecimensStableIds $SpecimensStableIds
+ * @property LoanItems $LoanItems
  * @property Doctrine_Collection $StorageParts
  * @property Doctrine_Collection $SpecimensRelationships
  * @property Doctrine_Collection $SpecimensCodes
  * @property Doctrine_Collection $SpecimensMethods
  * @property Doctrine_Collection $SpecimensTools
- * @property Doctrine_Collection $LoanItems
  * 
  * @method integer                getId()                           Returns the current record's "id" value
  * @method integer                getCollectionRef()                Returns the current record's "collection_ref" value
@@ -244,8 +247,11 @@
  * @method boolean                getValidLabel()                   Returns the current record's "valid_label" value
  * @method string                 getLabelCreatedOn()               Returns the current record's "label_created_on" value
  * @method string                 getLabelCreatedBy()               Returns the current record's "label_created_by" value
- * @method varchar                getNagoya()                       Returns the current record's "nagoya" value
+ * @method string                 getNagoya()                       Returns the current record's "nagoya" value
  * @method integer                getImportRef()                    Returns the current record's "import_ref" value
+ * @method string                 getUuid()                         Returns the current record's "uuid" value
+ * @method string                 getSpecimenCreationDate()         Returns the current record's "specimen_creation_date" value
+ * @method string                 getCollectionNameFullPath()       Returns the current record's "collection_name_full_path" value
  * @method Collections            getCollections()                  Returns the current record's "Collections" value
  * @method Expeditions            getExpeditions()                  Returns the current record's "Expeditions" value
  * @method Gtu                    getGtu()                          Returns the current record's "Gtu" value
@@ -262,12 +268,12 @@
  * @method SubProperties          getSubProperties()                Returns the current record's "SubProperties" value
  * @method UsersTrackingSpecimens getUsersTrackingSpecimens()       Returns the current record's "UsersTrackingSpecimens" value
  * @method SpecimensStableIds     getSpecimensStableIds()           Returns the current record's "SpecimensStableIds" value
+ * @method LoanItems              getLoanItems()                    Returns the current record's "LoanItems" value
  * @method Doctrine_Collection    getStorageParts()                 Returns the current record's "StorageParts" collection
  * @method Doctrine_Collection    getSpecimensRelationships()       Returns the current record's "SpecimensRelationships" collection
  * @method Doctrine_Collection    getSpecimensCodes()               Returns the current record's "SpecimensCodes" collection
  * @method Doctrine_Collection    getSpecimensMethods()             Returns the current record's "SpecimensMethods" collection
  * @method Doctrine_Collection    getSpecimensTools()               Returns the current record's "SpecimensTools" collection
- * @method Doctrine_Collection    getLoanItems()                    Returns the current record's "LoanItems" collection
  * @method Specimens              setId()                           Sets the current record's "id" value
  * @method Specimens              setCollectionRef()                Sets the current record's "collection_ref" value
  * @method Specimens              setExpeditionRef()                Sets the current record's "expedition_ref" value
@@ -377,6 +383,9 @@
  * @method Specimens              setLabelCreatedBy()               Sets the current record's "label_created_by" value
  * @method Specimens              setNagoya()                       Sets the current record's "nagoya" value
  * @method Specimens              setImportRef()                    Sets the current record's "import_ref" value
+ * @method Specimens              setUuid()                         Sets the current record's "uuid" value
+ * @method Specimens              setSpecimenCreationDate()         Sets the current record's "specimen_creation_date" value
+ * @method Specimens              setCollectionNameFullPath()       Sets the current record's "collection_name_full_path" value
  * @method Specimens              setCollections()                  Sets the current record's "Collections" value
  * @method Specimens              setExpeditions()                  Sets the current record's "Expeditions" value
  * @method Specimens              setGtu()                          Sets the current record's "Gtu" value
@@ -393,12 +402,12 @@
  * @method Specimens              setSubProperties()                Sets the current record's "SubProperties" value
  * @method Specimens              setUsersTrackingSpecimens()       Sets the current record's "UsersTrackingSpecimens" value
  * @method Specimens              setSpecimensStableIds()           Sets the current record's "SpecimensStableIds" value
+ * @method Specimens              setLoanItems()                    Sets the current record's "LoanItems" value
  * @method Specimens              setStorageParts()                 Sets the current record's "StorageParts" collection
  * @method Specimens              setSpecimensRelationships()       Sets the current record's "SpecimensRelationships" collection
  * @method Specimens              setSpecimensCodes()               Sets the current record's "SpecimensCodes" collection
  * @method Specimens              setSpecimensMethods()             Sets the current record's "SpecimensMethods" collection
  * @method Specimens              setSpecimensTools()               Sets the current record's "SpecimensTools" collection
- * @method Specimens              setLoanItems()                    Sets the current record's "LoanItems" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -767,12 +776,22 @@ abstract class BaseSpecimens extends DarwinModel
         $this->hasColumn('label_created_by', 'string', null, array(
              'type' => 'string',
              ));
-        $this->hasColumn('nagoya', 'varchar', null, array(
-             'type' => 'varchar',
+        $this->hasColumn('nagoya', 'string', null, array(
+             'type' => 'string',
              'notnull' => true,
              ));
         $this->hasColumn('import_ref', 'integer', null, array(
              'type' => 'integer',
+             ));
+        $this->hasColumn('uuid', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('specimen_creation_date', 'string', null, array(
+             'type' => 'string',
+             'notnull' => true,
+             ));
+        $this->hasColumn('collection_name_full_path', 'string', null, array(
+             'type' => 'string',
              ));
     }
 
@@ -845,6 +864,10 @@ abstract class BaseSpecimens extends DarwinModel
              'local' => 'id',
              'foreign' => 'specimen_fk'));
 
+        $this->hasOne('LoanItems', array(
+             'local' => 'id',
+             'foreign' => 'specimen_ref'));
+
         $this->hasMany('StorageParts', array(
              'local' => 'id',
              'foreign' => 'specimen_ref'));
@@ -862,10 +885,6 @@ abstract class BaseSpecimens extends DarwinModel
              'foreign' => 'specimen_ref'));
 
         $this->hasMany('SpecimensTools', array(
-             'local' => 'id',
-             'foreign' => 'specimen_ref'));
-
-        $this->hasMany('LoanItems', array(
              'local' => 'id',
              'foreign' => 'specimen_ref'));
     }

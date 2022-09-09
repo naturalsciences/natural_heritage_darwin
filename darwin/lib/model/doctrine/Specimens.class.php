@@ -154,7 +154,7 @@ class Specimens extends BaseSpecimens
     $name = '-';
     if(! $this->isNew() && $this->_get('id')==0)
       return $name;
-    $codes = Doctrine::getTable('Codes')->getCodesRelated('specimens', $this->_get('id'));
+    $codes = Doctrine_Core::getTable('Codes')->getCodesRelated('specimens', $this->_get('id'));
     if (!$codes->count())
       return $name;
     $name = '';
@@ -170,6 +170,16 @@ class Specimens extends BaseSpecimens
     }
     $name = rtrim($name);
     return $name;
+  }
+  
+  public function getNameAndPart()
+  {
+    return $this->getName()." (".$this->getSpecimenPart().')'; 
+  }
+
+  public function getNamePartAndUuid()
+  {
+    return $this->getName()." (".$this->getSpecimenPart().') <br/> UUID : '.$this->getUuid(); 
   }
 
   public function getAggregatedName($sep = ' / ')
@@ -208,6 +218,28 @@ class Specimens extends BaseSpecimens
     //rmca 2016 05 12
     $tags = explode(';',$this->getGtuOthersTagValue(''));
 
+    $nbr = count($tags);
+    if(! $nbr) return "-";
+	//JMHerpers 2018 02 23
+    //$str = '<ul class="name_tags_view">';
+	$str = '<ul>';
+    foreach($tags as $value)
+      if (strlen($value))
+		    //JMHerpers 2018 02 23
+		  if ($value != "Africa")
+			$str .= '<li>● '.trim($value).'</li>';
+    $str .= '</ul>';
+
+    return $str;
+  }
+  
+  public function getAllGtuTags($is_view = false)
+  {
+    //$tags = explode(';',$this->getGtuCountryTagValue(''));
+    //rmca 2016 05 12
+	$tags1= explode(';',$this->getGtuCountryTagValue(''));
+    $tags2 = explode(';',$this->getGtuOthersTagValue(''));
+    $tags=array_merge($tags1, $tags2);
     $nbr = count($tags);
     if(! $nbr) return "-";
 	//JMHerpers 2018 02 23
@@ -306,7 +338,7 @@ class Specimens extends BaseSpecimens
   {
      if($this->flagStorageLinked===false)
      {
-        $this->partsAssociation = Doctrine::getTable('StorageParts')->findBySpecimenRef($this->_get('id'));
+        $this->partsAssociation = Doctrine_Core::getTable('StorageParts')->findBySpecimenRef($this->_get('id'));
         $this->flagStorageLinked=true;
      } 
      
@@ -385,19 +417,58 @@ class Specimens extends BaseSpecimens
   {
     
     if($this->getId()){
-      $loans = Doctrine::getTable('Loans')->getRelatedToSpecimen($this->getId());
+	 
+      $loans = Doctrine_Core::getTable('Loans')->getRelatedToSpecimen($this->getId());
+	  $items=Array();
+	  if(count($loans)>0)
+	  {
+		  $loanItems=Doctrine_Core::getTable('LoanItems')->findBySpecimenRef($this->getId());
+		
+		foreach($loanItems as $item)
+		  {
+				if($item->getToDate()!==null)
+				{
+					$items[$item->getLoanRef()]=$item->getToDate();
+				}
+		  }
+	  }
       $loan_list = array();
       foreach($loans as $loan) {
            $loan_list[$loan->getId()]['name']=$loan->getName();
-           $status = Doctrine::getTable('LoanStatus')->getLastLoanStatus($loan->getId()) ;
-          
+           $status = Doctrine_Core::getTable('LoanStatus')->getLastLoanStatus($loan->getId()) ;
+          $loan_list[$loan->getId()]['last_status'] = "";
           foreach($status as $sta) {
-             $loan_list[$loan->getId()]['last_status'] = $sta->getStatus();
-          }
+			 if($sta->getStatus()!==null)
+			 {
+				$loan_list[$loan->getId()]['last_status'] = $sta->getStatus();
+			 }
+			 
+		  }
+		  if(array_key_exists($loan->getId(), $items))
+		  {
+			  $loan_list[$loan->getId()]['last_status']=$loan_list[$loan->getId()]['last_status']." Partial return : ".$items[$loan->getId()];
+		  }
+		  
       }
       
       return $loan_list;
     }
+  }
+  
+  function getSpecimenPart()
+  {
+	  $returned="";
+	  $items=Doctrine_Core::getTable('StorageParts')->findBySpecimenRef($this->getId());
+	  if(count($items)>0)
+	  {
+		  $tmp_array=Array();
+		  foreach($items as $item)
+		  {
+			  $tmp_array[]=$item->getSpecimenPart();
+		  }
+		  $returned=implode("; ", $tmp_array);
+	  }
+	  return $returned;
   }
 
 

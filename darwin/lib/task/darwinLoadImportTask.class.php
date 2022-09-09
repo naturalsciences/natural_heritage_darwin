@@ -71,7 +71,13 @@ EOF;
                   print("GO TAXON");
                     $import = new importCatalogueXml('taxonomy') ;
                     $count_line = "(select count(*) from staging_catalogue where parent_ref IS NULL AND import_ref = $id )" ;
-                    break;              
+                    break;   
+			      case 'locality':
+					 print("\n!!!!!!!!!!!!!!!!!GTU detected!!!!!!!!!!!!!!!!!!");
+					$import = new ImportGtuCSV() ;
+					//$result = $import->parseFile($file,$id) ;
+					$count_line = "(select count(*) from staging_gtu where import_ref = $id )" ;
+                break;
                   case 'abcd':
                   default:             
                     $import = new importABCDXml($this->configuration ) ;

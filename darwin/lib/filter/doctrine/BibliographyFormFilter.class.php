@@ -41,7 +41,7 @@ class BibliographyFormFilter extends BaseBibliographyFormFilter
   public function doBuildQuery(array $values)
   {
     $query = DQ::create()
-      ->select("b.*, string_agg(p.formated_name, ', ' ORDER BY c.id) as authors")->from('Bibliography b')->leftJoin("b.CataloguePeople c ON b.id=c.record_id")->where("c.referenced_relation='bibliography'")->leftJoin("c.People p ON c.people_ref=p.id")->where("c.referenced_relation='bibliography'");
+       ->select("b.*, string_agg(p.formated_name, ', ' ORDER BY c.id) as authors")->from('Bibliography b')->leftJoin("b.CataloguePeopleBibliography c ON b.id=c.record_id AND c.referenced_relation='bibliography' ")->leftJoin("c.People p ON c.people_ref=p.id AND c.referenced_relation='bibliography'");
     
     if($values['title'] != "")
     {

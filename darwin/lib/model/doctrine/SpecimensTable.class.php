@@ -346,10 +346,10 @@ class SpecimensTable extends DarwinTable
         if(isset(self::$widget_array[$key]) && !in_array($fields,$default_values))
           $req_widget[self::$widget_array[$key]] = 1 ;
       }
-      Doctrine::getTable('MyWidgets')->forceWidgetOpened($user, $category ,array_keys($req_widget));
+      Doctrine_Core::getTable('MyWidgets')->forceWidgetOpened($user, $category ,array_keys($req_widget));
     }
     else
-      Doctrine::getTable('MyWidgets')->forceWidgetOpened($user, $category ,1);
+      Doctrine_Core::getTable('MyWidgets')->forceWidgetOpened($user, $category ,1);
   }
 
   public function fetchOneWithRights($id, $user)
@@ -508,10 +508,10 @@ public function getJSON($p_specimencode, $p_public_url = "http://www.africamuseu
                     gtu_to_date,
                     gtu_to_date_mask,
                     type as coll_type,
-                    case
+                    unnest(case
                     when gtu_country_tag_indexed is not null then
-                    unnest(gtu_country_tag_indexed) 
-                else null end
+                    gtu_country_tag_indexed 
+                else null::varchar[]) end
                     as country_unnest,
                     
                                ext_links_thumbnails.url as urls_thumbnails, ext_links_thumbnails.category image_category_thumbnails, ext_links_thumbnails.contributor contributor_thumbnails, ext_links_thumbnails.disclaimer disclaimer_thumbnails, ext_links_thumbnails.license license_thumbnails, ext_links_thumbnails.display_order display_order_thumbnails,

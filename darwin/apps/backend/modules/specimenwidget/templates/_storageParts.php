@@ -50,7 +50,7 @@ $(document).ready(function () {
         return false;
     }); 
     //one storage place is required
-    <?php if ((sfContext::getInstance()->getActionName()=="new")&&(sfContext::getInstance()->getRequest()->hasParameter("split_id")===FALSE)&&(sfContext::getInstance()->getRequest()->hasParameter("duplicate_id")===FALSE)): ?>
+    <?php if ((sfContext::getInstance()->getActionName()=="new")&&(sfContext::getInstance()->getRequest()->hasParameter("split_id")===FALSE)&&(sfContext::getInstance()->getRequest()->hasParameter("duplicate_id")===FALSE)&&!strpos($_SERVER['REQUEST_URI'],"/part_id")): ?>
         $('#add_storage_parts').click( );
     <?php endif;?>
     

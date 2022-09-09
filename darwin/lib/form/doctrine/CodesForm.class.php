@@ -145,7 +145,7 @@ class CodesForm extends BaseCodesForm
 			;
 			
 		
-		return $q->execute(null, Doctrine::HYDRATE_SINGLE_SCALAR);
+		return $q->execute(null, Doctrine_Core::HYDRATE_SINGLE_SCALAR);
 		
 	}
 	
@@ -174,7 +174,7 @@ class CodesForm extends BaseCodesForm
 				andWhere('b.collection_ref = ?', $coll);
 		
 		}
-		return $q->execute(null, Doctrine::HYDRATE_SINGLE_SCALAR);
+		return $q->execute(null, Doctrine_Core::HYDRATE_SINGLE_SCALAR);
 		
 	}
 }

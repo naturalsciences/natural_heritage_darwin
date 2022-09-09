@@ -66,7 +66,7 @@ class RegisterLoginInfosForm extends UsersLoginInfosForm
     }
     if(! empty($values['user_name']) )
     {
-        $this->user = Doctrine::getTable('UsersLoginInfos')->getUserByUserName($values['user_name']);
+        $this->user = Doctrine_Core::getTable('UsersLoginInfos')->getUserByUserName($values['user_name']);
         if ($this->user)
         {
           $error = new sfValidatorError($validator, 'Login is already used, please provide an other');

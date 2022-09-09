@@ -6,25 +6,27 @@
  * @package    darwin
  * @subpackage filter
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
+ * @version    SVN: $Id$
  */
-abstract class BasePossibleUpperLevelsFormFilter extends BaseFormFilterDoctrine
+abstract class BasePossibleUpperLevelsFormFilter extends DarwinModelFormFilter
 {
-  public function setup()
+  protected function setupInheritance()
   {
-    $this->setWidgets(array(
-    ));
+    parent::setupInheritance();
 
-    $this->setValidators(array(
-    ));
+    $this->widgetSchema   ['level_ref'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['level_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => 'PossibleUpperLevels', 'column' => 'level_ref'));
+
+    $this->widgetSchema   ['level_upper_ref'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['level_upper_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => 'PossibleUpperLevels', 'column' => 'level_upper_ref'));
+
+    $this->widgetSchema   ['level_upper_ref'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['level_upper_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => 'PossibleUpperLevels', 'column' => 'level_upper_ref'));
+
+    $this->widgetSchema   ['level_ref'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['level_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => 'PossibleUpperLevels', 'column' => 'level_ref'));
 
     $this->widgetSchema->setNameFormat('possible_upper_levels_filters[%s]');
-
-    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
-
-    $this->setupInheritance();
-
-    parent::setup();
   }
 
   public function getModelName()
@@ -34,9 +36,11 @@ abstract class BasePossibleUpperLevelsFormFilter extends BaseFormFilterDoctrine
 
   public function getFields()
   {
-    return array(
-      'level_ref'       => 'Number',
+    return array_merge(parent::getFields(), array(
+      'level_ref' => 'Number',
       'level_upper_ref' => 'Number',
-    );
+      'level_upper_ref' => 'Number',
+      'level_ref' => 'Number',
+    ));
   }
 }

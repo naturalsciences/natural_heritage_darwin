@@ -78,13 +78,13 @@ class ClassificationSynonymiesTable extends DarwinTable
       return array();
 
     $q = Doctrine_Query::create()
-      ->select('s.group_name, s.id, s.record_id, s.group_id, s.is_basionym, s.order_by, s.synonym_record_id, t.name, t.id ' .($table_name=='taxonomy' ? ', t.extinct' : ''))
+      ->select('s.group_name, s.id, s.record_id, s.group_id, s.is_basionym, s.order_by, s.synonym_record_id, s.original_synonym, t.name, t.id ' .($table_name=='taxonomy' ? ', t.extinct, t.status' : ''))
       ->from('ClassificationSynonymies s, '.DarwinTable::getModelForTable($table_name). ' t')
       ->where('s.referenced_relation = ?',$table_name) //Not really necessay but....
       ->andWhere('s.record_id=t.id')
       ->andwhereIn('s.group_id', $groups)
       ->orderBy('s.group_name ASC, s.order_by ASC')
-      ->setHydrationMode(Doctrine::HYDRATE_NONE);
+      ->setHydrationMode(Doctrine_Core::HYDRATE_NONE);
     $items = $q->execute();
 
     $results = array();
@@ -92,11 +92,14 @@ class ClassificationSynonymiesTable extends DarwinTable
     {
       $catalogue = DarwinTable::getModelForTable($table_name);
       $cRecord = new $catalogue();
-      $cRecord->setName($item[7]);
-      $cRecord->setId($item[8]);
-      if($table_name=='taxonomy')
-        $cRecord->setExtinct($item[9]);
-
+      $cRecord->setName($item[8]);
+      $cRecord->setId($item[9]);
+	  
+	  if($table_name=='taxonomy')
+	  {
+        $cRecord->setExtinct($item[10]);
+		$cRecord->setStatus($item[11]);
+	  }
       //group_name 
       if(! isset($results[$item[0]]) )
         $results[$item[0]]=array();
@@ -109,6 +112,48 @@ class ClassificationSynonymiesTable extends DarwinTable
         
         'ref_item' => $cRecord,
         'synonym_record_id' => $item[6],
+		'original_synonym' => $item[7]
+      );
+    }
+    return $results;
+  }
+  
+  public function findOtherSynonymsForRecord($table_name, $record_id)
+  {
+
+
+    $conn = Doctrine_Manager::connection();
+	  $sql = "SELECT s.group_name, s.id, s.record_id, s.group_id, s.is_basionym, s.order_by,  s.original_synonym, t.name, t.id , t.extinct, t.status from fct_rmca_taxonomy_get_other_synonyms( :id) s LEFT JOIN $table_name t ON s.record_id=t.id;";
+	  $q = $conn->prepare($sql);
+	  $q->execute(array(':id'=> $record_id));
+	  $items = $q->fetchAll(PDO::FETCH_NUM);
+
+
+    $results = array();
+    foreach($items as $item)
+    {
+      $catalogue = DarwinTable::getModelForTable($table_name);
+      $cRecord = new $catalogue();
+      $cRecord->setName($item[7]);
+      $cRecord->setId($item[8]);
+	  
+	  if($table_name=='taxonomy')
+	  {
+        $cRecord->setExtinct($item[9]);
+		$cRecord->setStatus($item[10]);
+	  }
+      //group_name 
+      if(! isset($results[$item[0]]) )
+        $results[$item[0]]=array();
+      $results[$item[0]][] = array(
+        'id' => $item[1],
+        'record_id' => $item[2],
+        'group_id' => $item[3],
+        'is_basionym' => $item[4],
+        'order_by' => $item[5],
+        
+        'ref_item' => $cRecord,
+		'original_synonym' => $item[6]
       );
     }
     return $results;
@@ -126,6 +171,7 @@ class ClassificationSynonymiesTable extends DarwinTable
       'isonym' => $this->getI18N()->__('Isonyms'),
       'homonym' => $this->getI18N()->__('Homonyms'),
       'rename' => $this->getI18N()->__('Renaming'),
+	  'revalidation' => $this->getI18N()->__('Revalidation'),
     );
   }
 
@@ -207,6 +253,24 @@ class ClassificationSynonymiesTable extends DarwinTable
       ->where('group_id = ?',$group_id)
       ->execute();
   }
+  
+  public function setOriginalSynonym($group_id, $basionym_id)
+  {
+    $this->resetOriginalSynonym($group_id);
+    $element = $this->find($basionym_id);
+    $element->setOriginalSynonym(true);
+    $element->save();
+  }
+  
+  public function resetOriginalSynonym($group_id)
+  {
+    $q = Doctrine_Query::create()
+      ->update('ClassificationSynonymies')
+      ->set('original_synonym', '?', false)
+      ->where('group_id = ?',$group_id)
+      ->execute();
+  }
+  
 
   /**
    * mergeSynonyms
@@ -232,7 +296,7 @@ class ClassificationSynonymiesTable extends DarwinTable
       $c1->setGroupName($group_name);
       $c1->setRecordId($record_id_2);
       //ftheeten 2017 02 08
-      $c1->setSynonymRecordId($record_id_1);
+      $c1->setSynonymRecordId($record_id_2);
       
       if($ref_group_id_1 == 0 && $ref_group_id_2 == 0) //If there is no group
       {
@@ -283,7 +347,7 @@ class ClassificationSynonymiesTable extends DarwinTable
       ->andWhere('s.group_id = ?', $group1)
       ->andWhere('s.is_basionym = ?',true);
 
-    $res = $q->execute(array(), Doctrine::HYDRATE_SINGLE_SCALAR);
+    $res = $q->execute(array(), Doctrine_Core::HYDRATE_SINGLE_SCALAR);
 
     // Set No Basionym If more than 1
     if($res > 1)
@@ -355,5 +419,15 @@ class ClassificationSynonymiesTable extends DarwinTable
 		  $merged[]=$elem["id"];		  
 	  }
 	  return $merged;
+  }
+  
+  public function getOldSynonymies($id)
+  {
+	  $conn = Doctrine_Manager::connection();
+	  $sql = "select * FROM fct_rmca_taxonomy_get_old_synonyms(:id) order by modification_date_time desc;";
+	  $q = $conn->prepare($sql);
+	  $q->execute(array(':id'=> $id));
+	  $response = $q->fetchAll(PDO::FETCH_ASSOC);
+	  return $response;
   }
 }

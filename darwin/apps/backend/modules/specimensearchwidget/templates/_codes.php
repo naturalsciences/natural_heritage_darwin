@@ -34,13 +34,16 @@
          <tr>
             <th><?php echo $form['codes_list']->renderLabel();?> : </th>
             <th style="font-style: italic;"><?php echo $form['exact_codes_list']->renderLabel();?> :</th>
+			<th style="font-style: italic;"><?php echo $form['uuid']->renderLabel();?> :</th>
          </tr>
     </thead>
     <tbody>
       <!--ftheeten 2018 11 22--->
-        <tr>
+        <tr><td>Enter ";" to provide several values (with trailing ";") </td></tr>
+		<tr>
             <td><select name="select2_codes" id="select2_codes" multiple="multiple"></select><?php echo $form['codes_list'];?></td>        
-            <td><?php echo $form['exact_codes_list'];?></td>        
+            <td><?php echo $form['exact_codes_list'];?></td>
+			<td><?php echo $form['uuid'];?></td> 			
         </tr>
         <!---->
   </tbody>
@@ -113,6 +116,8 @@ $(document).ready(function () {
   //ftheeten 2015 06 08
   //autocomplete for codes number
   
+
+  
   function initCollectionCheck()
  {
 				autocomplete_rmca_array=$('.col_check:checked').map(function(){
@@ -125,6 +130,7 @@ $(document).ready(function () {
         function()
         {
             initCollectionCheck();
+			
         }
   );
   
@@ -133,6 +139,7 @@ $(document).ready(function () {
     
        var getCodeUrl=function()
        {
+			
             return "<?php echo(url_for('catalogue/codesAutocomplete?'));?>";
        };
        
@@ -140,7 +147,8 @@ $(document).ready(function () {
 				width: "100%",
                 minimumInputLength : 1,
 				tags: true,
-				tokenSeparators: ['|'],
+				tokenSeparators: [';'],
+				delay:1000,
 				  ajax: {
 				    //url: getCodeUrl(),
                     transport: function (params, success, failure) {                        
@@ -153,7 +161,8 @@ $(document).ready(function () {
                                   url:  getCodeUrl(),
                                   data: {
                                         term : params.data.term,
-                                        collections: autocomplete_rmca_array.join()
+                                        collections: autocomplete_rmca_array.join(),
+										
                                   }
                                 }
                             );

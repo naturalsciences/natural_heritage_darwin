@@ -1,5 +1,6 @@
 all:
   .general:
+    upload_dir:
     salt: salt
     yearRangeMin: 1700
     yearRangeMax:  <?php echo date('Y')+2 ."\n"; ?>
@@ -17,7 +18,14 @@ all:
     tempFilePath: '/tmp/temp_file'
     disableXSDValidation: false
     domain_disable_menu: http://collections.naturalsciences.be/darwin/
-    bing_key: "Ap3eFRefFd94_D4cqsicw-Fk1-d4kRat9pstTO4oo_i9anyUqrfQcqL9Ew9CJahg"  
+    bing_key: "Ap3eFRefFd94_D4cqsicw-Fk1-d4kRat9pstTO4oo_i9anyUqrfQcqL9Ew9CJahg"
+    php_console: 'php'
+    root_url_wfs: https://darwin.naturalsciences.be/geoserver/
+    wfs_layers: 
+        rbins_natural_earth_adm: "Natural Earth Administrative"
+        rbins_natural_earth_physical: "Natural Earth Physical"
+        rbins_osm: "Open Street Map"	
+        rbins_generic: "RBINS Other layers"		
 
   mailer:
     sender: your_send_email@example.com

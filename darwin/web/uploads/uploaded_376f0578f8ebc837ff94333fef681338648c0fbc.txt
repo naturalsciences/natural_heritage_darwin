@@ -1,0 +1,5 @@
+unitid	url	comment	type	uuid
+TEST_IRSNB M 0006	http://debug.com		iiif	
+TEST_IRSNB M 0006	http://www.yahoo.fr		dna	
+	http://africamuseum.be		ext	9fed22ea-7944-4fcc-be74-df92fe3cf6e5
+	https://africamuseum.be		unknown	9fed22ea-7944-4fcc-be74-df92fe3cf6e5

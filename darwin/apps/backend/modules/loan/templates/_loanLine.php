@@ -32,9 +32,9 @@
     <?php echo $form['loan_item_ind'];?>
 
 
-    <div class="loan_item_date_button">
-      <input type="checkbox"  <?php if(! $form['from_date']->getValue() &&  !$form['to_date']->getValue() ) echo 'checked="checked"';?> />
-      <label><?php echo __('Use Loan dates');?></label>
+    <div class="loan_item_date_button" >
+      <input type="checkbox"  <?php if( $form['from_date']->getValue() ||  $form['to_date']->getValue()) print('checked="checked"')  ;?> />
+      <label><?php echo __('Check if returned separately');?></label>
     </div>
     <br />
     <div class="loan_item_dates <?php if(! $form['from_date']->getValue() &&  !$form['to_date']->getValue() ) echo 'hidden';?>">
@@ -63,11 +63,27 @@
     $(".line_<?php echo $form->getparent()->getName().'_'.$form->getName();?> .loan_item_date_button input").change(function(event)
     {
       if($(this).is(':checked')){
-        $(this).closest('td').find('.loan_item_dates').hide();
-        $(this).closest('td').find('.loan_item_dates select,.loan_item_dates input ').val('');
+		 
+		  var prefix="#loan_overview_LoanItems_<?php echo $form->getName();?>_to_date_";
+		  var today=new Date();
+		  $(prefix+'year').val(today.getFullYear());
+		  $(prefix+'month').val(today.getMonth() + 1);
+		  $(prefix+'day').val(String(today.getDate()));//.padStart(2, '0'));
+		 $(this).closest('td').find('.loan_item_dates').show();        
       }
       else {
-        $(this).closest('td').find('.loan_item_dates').show();
+		  
+		 var prefix="#loan_overview_LoanItems_<?php echo $form->getName();?>_to_date_";
+		 var prefixfrom="#loan_overview_LoanItems_<?php echo $form->getName();?>_from_date_";
+		 
+		 $(prefixfrom+'year').val($(prefixfrom+'year option:first').val());
+		 $(prefixfrom+'month').val($(prefixfrom+'month option:first').val());
+		 $(prefixfrom+'day').val($(prefixfrom+'day option:first').val());
+		 $(prefix+'year').val($(prefix+'year option:first').val());
+		 $(prefix+'month').val($(prefix+'month option:first').val());
+		 $(prefix+'day').val($(prefix+'day option:first').val());
+        //$(this).closest('td').find('.loan_item_dates').hide();
+        //$(this).closest('td').find('.loan_item_dates select,.loan_item_dates input ').val('');
       }
     });
 

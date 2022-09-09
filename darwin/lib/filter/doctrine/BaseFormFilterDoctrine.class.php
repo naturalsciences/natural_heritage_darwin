@@ -16,13 +16,13 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
 
   public function addPagerItems()
   {
-    $recPerPages = array("1"=>"1", "2"=>"2", "5"=>"5", "10"=>"10","20"=>"20", "25"=>"25", "50"=>"50", "75"=>"75", "100"=>"100");
+    $recPerPages = array("1"=>"1", "2"=>"2", "5"=>"5", "10"=>"10","20"=>"20", "25"=>"25", "50"=>"50", "75"=>"75", "100"=>"100",  "500"=>"500",  "1000"=>"1000");
 
     $this->widgetSchema['rec_per_page'] = new sfWidgetFormChoice(array('choices' => $recPerPages), array('class'=>'rec_per_page'));
     $user = sfContext::getInstance()->getUser();
     if($user)
     {
-      $default = Doctrine::getTable('Preferences')->getPreference(
+      $default = Doctrine_Core::getTable('Preferences')->getPreference(
         $user->getId() ,
         'default_search_rec_pp'
       );
@@ -270,7 +270,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
      if ($values != "")
      {
        $levels = array();
-       $pul = Doctrine::getTable('PossibleUpperLevels')->findByLevelRef($values)->toArray();
+       $pul = Doctrine_Core::getTable('PossibleUpperLevels')->findByLevelRef($values)->toArray();
        foreach ($pul as $key=>$val)
        {
          $levels[]=$val['level_upper_ref'];
@@ -354,7 +354,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
       }
       elseif($relation =='synonym')
       {
-        $synonyms = Doctrine::getTable('ClassificationSynonymies')->findSynonymsIds($this->getTable()->getTableName(), $val);
+        $synonyms = Doctrine_Core::getTable('ClassificationSynonymies')->findSynonymsIds($this->getTable()->getTableName(), $val);
         if(empty($synonyms))
           $query->andWhere('0=1'); //False
         $query->andWhereIn("id",$synonyms)
@@ -377,7 +377,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
       }
       elseif($relation == 'child')
       {
-        $item  = Doctrine::getTable($table)->find($item_ref);
+        $item  = Doctrine_Core::getTable($table)->find($item_ref);
         $query->andWhere($field_prefix."_path like ?",$item->getPath().$item->getId().'/%');
       }
       elseif($relation == 'direct_child')
@@ -386,7 +386,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
       }
       elseif($relation =='synonym')
       {
-        $synonyms = Doctrine::getTable('ClassificationSynonymies')->findSynonymsIds($table, $item_ref);
+        $synonyms = Doctrine_Core::getTable('ClassificationSynonymies')->findSynonymsIds($table, $item_ref);
         if(empty($synonyms))
           $query->andWhere('0=1'); //False
         $query->andWhereIn($field_prefix."_ref",$synonyms)
@@ -413,11 +413,21 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
                 $queryTmp="";
                 $i=0;
                 
+				$child_and_exact=false;
+				if(in_array('equal',$relations)&&in_array('child',$relations))
+				{
+					
+					$child_and_exact=true;
+					$item  = Doctrine_Core::getTable($table)->find($item_ref);
+                            //$query->andWhere($field_prefix."_path like ?", $item->getPath().''.$item->getId().'/%');
+                        $queryTmp.=$field_prefix."_path||".$field_prefix."_ref||'/' like '".$item->getPath().$item->getId().'/%'."'" ;
+				}
+				
                 foreach($relations as $relation)
                 {
                     
                     $arrayParams=Array();
-                        if($relation == 'equal')
+                        if($relation == 'equal'&& !$child_and_exact)
                         {
                         if($i>0)
                             {
@@ -427,18 +437,18 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
                         $queryTmp.=$field_prefix."_ref = ".$item_ref ;
 
                         }
-                        if($relation == 'child')
+                        if($relation == 'child' && !$child_and_exact)
                         {
                         if($i>0)
                             {
                                 $queryTmp.= " OR ";
                             }
-                            $item  = Doctrine::getTable($table)->find($item_ref);
+                            $item  = Doctrine_Core::getTable($table)->find($item_ref);
                             //$query->andWhere($field_prefix."_path like ?", $item->getPath().''.$item->getId().'/%');
                         $queryTmp.=$field_prefix."_path like '".$item->getPath().$item->getId().'/%'."'" ;
 
                         }
-                        if($relation == 'direct_child')
+                        if($relation == 'direct_child' && !$child_and_exact)
                         {
                         if($i>0)
                             {
@@ -458,7 +468,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
                             }
                             $queryTmp.= " ( ";
 
-                            $synonyms = Doctrine::getTable('ClassificationSynonymies')->findSynonymsIds($table, $item_ref);
+                            $synonyms = Doctrine_Core::getTable('ClassificationSynonymies')->findSynonymsIds($table, $item_ref);
                             $super_synonyms=Array();
                              if(in_array("child",$relations))
                             {

@@ -103,7 +103,7 @@ class GtuFormFilter extends BaseGtuFormFilter
   public function addCodeColumnQuery($query, $field, $val)
   {
     if($val == '') return $query;
-    $query->andWhere("code ilike ? ", "%" . $val . "%");
+    $query->andWhere("LOWER(REPLACE(REPLACE(LOWER(code),' ',''),'.','')) LIKE '%'||LOWER(REPLACE(REPLACE(LOWER(?),' ',''),'.',''))||'%' ", $val );
   }
 
   public function addTagsColumnQuery($query, $field, $val)

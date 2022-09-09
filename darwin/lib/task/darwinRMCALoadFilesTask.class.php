@@ -61,46 +61,68 @@ EOF;
 				$file_to_unzip=sfConfig::get('sf_upload_dir')."/uploaded_".$sha1.".".$extension;
 				print($file_to_unzip);
 				$zip = new ZipArchive();
-				if ($zip->open($file_to_unzip) === TRUE) {
+				if ($zip->open($file_to_unzip) === TRUE) 
+				{
 					$zip->extractTo('php://temp');
+					$meta_name='meta.txt';
 					for ($i = 0; $i < $zip->numFiles; $i++) 
 					{
 						$filename = $zip->getNameIndex($i);
 						print("\r\n");
 						print($filename);
+						if(substr($filename, strlen($filename)- strlen($meta_name), strlen($meta_name))==$meta_name)
+						{
+							$meta_name=$filename;
+						}
+						/*$zip->getExternalAttributesIndex($i, $sys, $attr);
+						print_r($sys);
+						print_r($attr);*/
 					}
+					print("META=".$meta_name);
+					$meta=$zip->getFromName($meta_name);
+				    //$path = sprintf('zip://%s#%s', $file_to_unzip, $meta_name);
+					//print($path);
+					print("\r\n");
+					//$fileData = file_get_contents($path);
 					
-					$meta=$zip->getFromName('meta.txt');
+					//print($fileData);
+					
 					if($meta)
 					{
 						print("\r\n");
-						print($meta);
+						//print($meta);
 						$tabParser = new RMCATabImportFiles(
 						$this->configuration,
 						$id_import, 
 						$this->getCollectionOfImport($id_import),
 						$zip						
 						);
+						
 						$tabParser->configure();
 						//string as filestream
-						$fiveMBs = 5 * 1024 * 1024;
+						$fiveMBs = 2048 * 1024 * 1024;
 						$fp = fopen("php://temp/maxmemory:$fiveMBs", 'r+');
+						
 						fputs($fp, $meta);
 						rewind($fp);
+							
 						//
 						$tabParser->identifyHeader($fp);
 						
 						try
 						{
-							while (($row = fgetcsv($fp, 0, "\t")) !== FALSE)
+							while (($row_tmp=fgets($fp)) !== FALSE)
 							{
+								$row_tmp=  Encoding::toUTF8($row_tmp);
+								$row =preg_split("/[\t]/", $row_tmp);
+								print_r($row);
 								if($this->csvLineIsNotEmpty($row))
 								{
 									if (array(null) !== $row) 
 									{ // ignore blank lines
 											//ftheeten 2018 02 28
-										 $row=  Encoding::toUTF8($row);
-										 print_r($row);
+										 //$row=  Encoding::toUTF8($row);
+										 //print_r($row);
 										 $tabParser->parseLineAndSaveToDB($row);
 									}
 								 }
@@ -111,24 +133,12 @@ EOF;
 						 }
 						 catch(Doctrine_Exception $ne)
 						{
-							/*print("ERROR 1");
-							$conn->rollback();
-							$import_obj = Doctrine_Core::getTable('Imports')->find($q->getId());
-							$import_obj->setErrorsInImport($ne->getMessage());
-							$import_obj->setState("error");
-							$import_obj->setWorking(FALSE);
-							$import_obj->save();*/
+							
 							throw $ne;
 						}
 						catch(Exception $e)
 						{
-							/*print("ERROR 2");
-							$conn->rollback();
-							$import_obj = Doctrine_Core::getTable('Imports')->find($q->getId());
-							$import_obj->setErrorsInImport($ne->getMessage());
-							$import_obj->setState("error");
-							$import_obj->setWorking(FALSE);
-							$import_obj->save();*/
+							
 							throw $e;
 						}
 						

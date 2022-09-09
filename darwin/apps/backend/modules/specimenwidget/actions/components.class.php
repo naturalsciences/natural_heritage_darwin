@@ -18,12 +18,12 @@ class specimenwidgetComponents extends sfComponents
     {
       if(isset($this->eid) && $this->eid != null)
       {
-        $spec = Doctrine::getTable('Specimens')->find($this->eid);
+        $spec = Doctrine_Core::getTable('Specimens')->find($this->eid);
         $this->form = new SpecimensForm($spec);
         $this->spec_id = $this->eid;
         if(!$this->getUser()->isA(Users::ADMIN))
         {
-          if(! Doctrine::getTable('Specimens')->hasRights('spec_ref', $this->eid, $this->getUser()->getId()))
+          if(! Doctrine_Core::getTable('Specimens')->hasRights('spec_ref', $this->eid, $this->getUser()->getId()))
             die("<div class='warn_message'>".__("you can't do that !!")."</div>") ;
         }
       }
@@ -140,8 +140,9 @@ class specimenwidgetComponents extends sfComponents
 
   public function executeRefProperties()
   {
-    if(isset($this->form) )
-      $this->eid = $this->form->getObject()->getId() ;
+    $this->defineForm();
+    if(!isset($this->form['newProperties']))
+      $this->form->loadEmbed('Properties');
   }
 
   public function executeRefComment()
@@ -179,8 +180,11 @@ class specimenwidgetComponents extends sfComponents
     if(!isset($this->form['newSpecimensRelationships']))
       $this->form->loadEmbed('SpecimensRelationships');
 
-//     if($this->spec_id != 0)
-//       $this->spec_related_inverse = Doctrine::getTable("SpecimensRelationships")->findByRelatedSpecimenRef($this->spec_id);
+	if($this->spec_id!=0)
+	{
+		 
+		$this->spec_related_inverse = Doctrine_Core::getTable("SpecimensRelationships")->getAllInverseRelationships($this->spec_id);
+	}
   }
 
   public function executeInformativeWorkflow()
@@ -263,17 +267,16 @@ class specimenwidgetComponents extends sfComponents
   public function executeMaintenance()
   {
     $this->defineForm();
-    if($this->eid){
-      $this->maintenances = Doctrine::getTable('CollectionMaintenance')->getRelatedArray('specimens', array($this->eid));
-    }
+    if(!isset($this->form['newCollectionMaintenance']))
+      $this->form->loadEmbed('CollectionMaintenance');
   }
-
+  
   public function executeHistoric()
   {
     if(isset($this->form) )
       $this->eid = $this->form->getObject()->getId() ;
     if($this->eid){
-      $this->items = Doctrine::getTable('UsersTracking')->getRelated('specimens', $this->eid);
+      $this->items = Doctrine_Core::getTable('UsersTracking')->getRelated('specimens', $this->eid);
     }
 
   }
@@ -281,17 +284,47 @@ class specimenwidgetComponents extends sfComponents
   {
     $this->defineForm();
     if($this->eid){
-      $this->loans = Doctrine::getTable('Loans')->getRelatedToSpecimen($this->eid);
+      $this->loans = Doctrine_Core::getTable('Loans')->getRelatedToSpecimen($this->eid);
       $loan_list = array();
+	  $loan_names=Array();
+      $loan_properties_tmp=Array();
+      $this->loan_properties=Array();
+      
       foreach($this->loans as $loan) {
         $loan_list[] = $loan->getId() ;
+		$loan_names[$loan->getId()]=$loan->getName();
+        $props=Doctrine_Core::getTable('Properties')->findForTable("loans",$loan->getId());
+        //$list_props=$props->fetchAll(PDO::FETCH_ASSOC);
+        $loan_properties_tmp[$loan->getId()]=$props;
       }
-      $status = Doctrine::getTable('LoanStatus')->getStatusRelatedArray($loan_list) ;
+      $status = Doctrine_Core::getTable('LoanStatus')->getStatusRelatedArray($loan_list) ;
       $this->status = array();
       foreach($status as $sta) {
         $this->status[$sta->getLoanRef()] = $sta;
       }
-      $this->rights = Doctrine::getTable('loanRights')->getEncodingRightsForUser($this->getUser()->getId());
+      $this->rights = Doctrine_Core::getTable('loanRights')->getEncodingRightsForUser($this->getUser()->getId());
+	  $loanItems=Doctrine_Core::getTable('LoanItems')->findBySpecimenRef($this->eid);
+	  $this->items=Array();
+      $this->loans_props=Array();
+	  foreach($loanItems as $item)
+	  {
+			if($item->getToDate()!==null)
+			{
+				$this->items[$loan_names[$item->getLoanRef()]]=$item;
+			}
+	  }
+      //print_r($this->loan_properties);
+      foreach($loan_properties_tmp as $id_loan=> $prop)
+      {
+          $this->loan_properties[$id_loan]=Array();
+        foreach($props as $prop)
+        {
+            $this->loan_properties[$id_loan][]=$prop;
+        }
+      
+      }
+      
+
     }
   }
   

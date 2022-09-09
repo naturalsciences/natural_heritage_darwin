@@ -6,31 +6,24 @@
  * @package    darwin
  * @subpackage filter
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
+ * @version    SVN: $Id$
  */
-abstract class BaseCollectingMethodsFormFilter extends BaseFormFilterDoctrine
+abstract class BaseCollectingMethodsFormFilter extends DarwinModelFormFilter
 {
-  public function setup()
+  protected function setupInheritance()
   {
-    $this->setWidgets(array(
-      'method'         => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'method_indexed' => new sfWidgetFormFilterInput(),
-      'specimens_list' => new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => 'Specimens')),
-    ));
+    parent::setupInheritance();
 
-    $this->setValidators(array(
-      'method'         => new sfValidatorPass(array('required' => false)),
-      'method_indexed' => new sfValidatorPass(array('required' => false)),
-      'specimens_list' => new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'Specimens', 'required' => false)),
-    ));
+    $this->widgetSchema   ['method'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['method'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['method_indexed'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['method_indexed'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['specimens_list'] = new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => 'Specimens'));
+    $this->validatorSchema['specimens_list'] = new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'Specimens', 'required' => false));
 
     $this->widgetSchema->setNameFormat('collecting_methods_filters[%s]');
-
-    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
-
-    $this->setupInheritance();
-
-    parent::setup();
   }
 
   public function addSpecimensListColumnQuery(Doctrine_Query $query, $field, $values)
@@ -58,11 +51,10 @@ abstract class BaseCollectingMethodsFormFilter extends BaseFormFilterDoctrine
 
   public function getFields()
   {
-    return array(
-      'id'             => 'Number',
-      'method'         => 'Text',
+    return array_merge(parent::getFields(), array(
+      'method' => 'Text',
       'method_indexed' => 'Text',
       'specimens_list' => 'ManyKey',
-    );
+    ));
   }
 }

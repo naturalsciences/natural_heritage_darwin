@@ -72,7 +72,7 @@ class IdentificationsForm extends BaseIdentificationsForm
     
     $subForm = new sfForm();
     $this->embedForm('Identifiers',$subForm);   
-    foreach(Doctrine::getTable('CataloguePeople')->getPeopleRelated('identifications', 'identifier', $this->getObject()->getId()) as $key=>$vals)
+    foreach(Doctrine_Core::getTable('CataloguePeople')->getPeopleRelated('identifications', 'identifier', $this->getObject()->getId()) as $key=>$vals)
     {
       $form = new IdentifiersForm($vals);
       $this->embeddedForms['Identifiers']->embedForm($key, $form);

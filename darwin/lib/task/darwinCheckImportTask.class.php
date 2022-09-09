@@ -50,14 +50,15 @@ EOF;
       //ftheeten  2018 02 28
 	  if(!empty($options['id']) && ctype_digit($options['id']) )
 	  {
+		print("RECHECK");
 		$this->setImportAsWorking($conn, $options['id'], true);
 	  }
 	  $ctn = $conn->getDbh()->exec($sql);
-	  //ftheeten  2018 02 28
+	  /*//ftheeten  2018 02 28
 	  if(!empty($options['id']) && ctype_digit($options['id']) )
 	  {
 		$this->setImportAsWorking($conn, $options['id'], false);
-	  }
+	  }*/
 
       // Remove the import reference from imports table if no more lines in staging for this import
       $sql = "delete from imports i WHERE i.state='deleted' AND NOT EXISTS (select 1 from staging where import_ref = i.id)";
@@ -87,17 +88,17 @@ print("full : loaded, pending, processing");
       $state_to_check = array('loaded','pending','processing');
     }
     // let's 'lock' all imports checkable to avoid an other check from the next check task
-    $catalogues = Doctrine::getTable('Imports')->tagProcessing('taxon', $options['id']);
+    $catalogues = Doctrine_Core::getTable('Imports')->tagProcessing('taxon', $options['id']);
     //debug
    
     
     // Get back here the list of imports id that could be treated
-    $imports = Doctrine::getTable('Imports')->tagProcessing($state_to_check, $options['id']);
+    $imports = Doctrine_Core::getTable('Imports')->tagProcessing($state_to_check, $options['id']);
 	
     
 	
     $imports_ids = $imports->toKeyValueArray("id", "id");
-	
+	print_r( $imports_ids);
   
     // let's begin with import catalogue
     foreach($catalogues as $catalogue)
@@ -179,7 +180,7 @@ print("full : loaded, pending, processing");
 				foreach($imports_ids as $tmp_id)
 				{
 						
-					 $importsTmp = Doctrine::getTable('Imports')->find($tmp_id);
+					 $importsTmp = Doctrine_Core::getTable('Imports')->find($tmp_id);
 					
 					
 				}
@@ -188,11 +189,11 @@ print("full : loaded, pending, processing");
 					if(!empty($options['id']) &&  ctype_digit($options['id']) )
 					{
 											
-						$imports  = Doctrine::getTable('Imports')->getWithImports($options['id'], "OR"); 
+						$imports  = Doctrine_Core::getTable('Imports')->getWithImports($options['id'], "OR"); 
 					}
 					else
 					{
-					  $imports  = Doctrine::getTable('Imports')->getWithImports($options['id']); 
+					  $imports  = Doctrine_Core::getTable('Imports')->getWithImports($options['id']); 
                     }
 					  foreach($imports as $import)
 					  {
@@ -303,6 +304,7 @@ EOF
         $p_conn->beginTransaction();
         foreach($p_ids as $id)
         {
+			print($id);
          Doctrine_Query::create()
             ->update('imports p')
             ->set('p.working','?',((int)$p_working==0)?'f':'t')

@@ -1,7 +1,5 @@
 <!--link to OpenLayers 3 ftheeten 2018 06 04-->
  <?php if(isset($gtu)):?>
-<script language="JavaScript" type="text/javascript" src="<?php print(public_path('/openlayers/v4.x.x-dist/ol.js'));?>"></script>
-<link rel="stylesheet" href="<?php print(public_path('/openlayers/v4.x.x-dist/ol.css'));?>">
 <table class="catalogue_table_view">
   <tbody>
     <tr>
@@ -70,7 +68,14 @@
                        <option value="Road">Road (static)</option>
                        <option value="RoadOnDemand">Road (dynamic)</option>
 					   <option value="OSM">OpenStreetMap</option>
-				</select>	
+				</select>
+				<input type="button" id="export-png" value="Download PNG" ></input>
+					<select name="map-resolution" id="map-resolution">
+					<option value="700">700 X 700</option>
+					<option value="1024">1024 X 1024</option>
+					<option value="2048">2048 X 2048</option>    
+					</select>
+				<a id="image-download" download="map.png"></a>				
 			<?php endif;?>
 		<div>
       </td>
@@ -83,7 +88,7 @@
         <td>
 			 <div class="inline">
 				<?php 
-					$tmpComments = Doctrine::getTable('Comments')->findForTable('gtu',$gtu->getId());
+					$tmpComments = Doctrine_Core::getTable('Comments')->findForTable('gtu',$gtu->getId());
 					
 						$flagGo=TRUE;
 						
@@ -246,7 +251,60 @@ var mousePositionControl;
 			}
 		}
 		select.addEventListener('change', onChange);
-		onChange();   
+		onChange();  
+
+		document.getElementById('export-png').addEventListener('click', function () {
+			console.log("a1");
+		  //map.once('rendercomplete', function () {
+			  console.log("a2");
+			var mapCanvas = document.createElement('canvas');
+			var size = map.getSize();
+			mapCanvas.width = size[0];
+			mapCanvas.height = size[1];
+			var mapContext = mapCanvas.getContext('2d');
+			Array.prototype.forEach.call(
+			  document.querySelectorAll('.ol-layer canvas'),
+			  function (canvas) {
+				if (canvas.width > 0) {
+				  var opacity = canvas.parentNode.style.opacity;
+				  mapContext.globalAlpha = opacity === '' ? 1 : Number(opacity);
+				  var transform = canvas.style.transform;
+				  // Get the transform parameters from the style's transform matrix
+				  var matrix = transform
+					.match(/^matrix\(([^\(]*)\)$/)[1]
+					.split(',')
+					.map(Number);
+				  // Apply the transform to the export map context
+				  CanvasRenderingContext2D.prototype.setTransform.apply(
+					mapContext,
+					matrix
+				  );
+				  mapContext.drawImage(canvas, 0, 0);
+				}
+			  }
+			);
+			if (navigator.msSaveBlob) {
+			  // link download attribuute does not work on MS browsers
+			  navigator.msSaveBlob(mapCanvas.msToBlob(), 'map.png');
+			} else {
+			  var link = document.getElementById('image-download');
+			  link.href = mapCanvas.toDataURL();
+			  link.click();
+			}
+		  //});
+		  map.renderSync();
+		});
+		
+
+
+		$("#map-resolution").change(
+			function()
+			{
+				 $("#map").height($("#map-resolution").val());
+				 $("#map").width($("#map-resolution").val());
+				 setTimeout( function() { map.updateSize();}, 200);
+			}
+		);		
         
 
 		

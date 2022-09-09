@@ -65,13 +65,13 @@ Types count :
     </table>
 </div>
 <br/>
-Taxa in specimens count :
+Taxa in taxonomic identifications :
 <div  class="results_container">
     <table name="results3" id="results3" class="results" >
     </table>
 </div>
 
-Higher taxa:
+Taxa in collection:
 <div  class="results_container">
     <table name="results4" id="results4" class="results" >
     </table>
@@ -235,7 +235,7 @@ var getStatistics = function(collection_id, ig_num, from_date, to_date, includes
             );
             
              var request4 = $.ajax({
-              url: "<?php echo url_for("collection/display_higher_taxa");?>",
+              url: "<?php echo url_for("collection/display_statistics_all_taxa");?>",
               method: "GET",
               data: dataTmp,
               dataType: "json"

@@ -74,10 +74,17 @@
   <tfoot>
     <tr>
       <td colspan='8'>      
-          <?php if(strpos($_SERVER['REQUEST_URI'],'/duplicate_id/')):?>
+          <?php if(strpos($_SERVER['REQUEST_URI'],'/duplicate_id/')||strpos($_SERVER['REQUEST_URI'],'/part_id/')):?>
             <?php 
 				$matches=Array();
-				preg_match('/.+\/duplicate_id\/([0-9]+)/',$_SERVER['REQUEST_URI'], $matches);			
+				if(strpos($_SERVER['REQUEST_URI'],'/part_id/'))
+				{
+					preg_match('/.+\/part_id\/([0-9]+)/',$_SERVER['REQUEST_URI'], $matches);			
+				}
+				else
+				{
+					preg_match('/.+\/duplicate_id\/([0-9]+)/',$_SERVER['REQUEST_URI'], $matches);			
+				}
 				$url_copy = 'specimen/copyCode?id='.$matches[1];
 				?>
              <div class="add_code"> &nbsp;<a href="<?php echo url_for($url_copy);?>/num/" id="copy_code"><?php echo __('Copy code');?></a></div>
@@ -165,7 +172,5 @@ $(document).ready(function () {
                                                 }
                                 }
                 ); 
- 
- 
 });
 </script>

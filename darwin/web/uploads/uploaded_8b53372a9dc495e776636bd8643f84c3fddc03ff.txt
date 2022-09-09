@@ -1,0 +1,245 @@
+sampling_code	continent	country	original_administrative_data	province	municipality	ocean	sea	exact_site	LatitudeDecimal	LongitudeDecimal	LatitudeDecimal_end	LongitudeDecimal_end	Coord_Origins	GTU_Webservice	Webservice_GTU_id	Webservice_URL	GPS_Weight	WKT	coordinates_accuracy	coordinates_original	sampling_elevation_start	sampling_elevation_end	sampling_elevation_accuracy	sampling_depth_start	sampling_depth_end	sampling_depth_accuracy	station_baseline_elevation	station_baseline_accuracy	iso3166	coordinates_format	latitude_1	longitude_1	latitude_2	longitude_2	collector	sampling_method	expedition	collecting_day_start	collecting_month_start	collecting_year_start	collecting_time_start	collecting_day_end	collecting_month_end	collecting_year_end	collecting_time_end	station_notes	Sampling_Hour	ecology_Water_temperature	ecology_PH	ecology_Salinity	ecology_TSS	ecology_Streamflow	ecology_mV	ecology_Conductivity	ecology_O2_Perc	ecology_O2_mg	ecology_air_pressure	ecology_Air_Temperature	ecology_Relative_Humidity	ecology	biogeo_realms_no_marine	biogeo_realms_marine	biome_terr	biome_freshwater	biome_marine	biotope
+TEST_MERGEIRSNB M 0003	Europe	Belgium						Flemish Brabant Province, Dormaal°'																					BE																	Tienen Formation																				
+TEST_MERGEIRSNB M 0128	Europe	Belgium						Hainaut Province, Erquelinnes, Jeumont,  Pl. XXXIII, pt 1°'																					BE																	Tienen Formation																				
+TEST_MERGEIRSNB M 0131a-c	Europe	Belgium						Antwerp Province, Lierre, deviation of the Nethe River°'																					BE																																					
+TEST_MERGEIRSNB M 0133	Europe	Belgium						Leval, Mons Basin, Hainaut Province°'																					BE																																					
+TEST_MERGEIRSNB M 0136a-a³	Europe	Belgium						Antwerp Province, Boom, In den Hoek°'																					BE																	sables d'Edeghem																				
+TEST_MERGEIRSNB M 0137a-b	Europe	Belgium						East Flanders Province, Steendorp°'																					BE																																					
+TEST_MERGEIRSNB M 0138a-e	Europe	Belgium						East Flanders Province, Steendorp°'																					BE																	argile de Boom																				
+TEST_MERGEIRSNB M 0141a-b	Europe	Belgium						Antwerp Province, Boom°'																					BE																	argile de Boom																				
+TEST_MERGEIRSNB M 0142a-b	Europe	Belgium						Belgium, Province d'Anvers, Steendorp, near Boom°'																					BE																	profondeur dans l'argile de Boom: 3m																				
+TEST_MERGEIRSNB M 0144a-c	Europe	Belgium						Antwerp Province, Noeveren°'																					BE																	argile de Boom																				
+TEST_MERGEIRSNB M 0147a-b	Europe	Belgium						Antwerp Province, Niel°'																					BE																	argile de Boom																				
+TEST_MERGEIRSNB M 0149	Europe	Belgium						Antwerp Province, Terhaegen°'																					BE																	argile de Boom																				
+TEST_MERGEIRSNB M 0150a-c	Europe	Belgium						East Flanders Province, St-Nicolas (Waes)°'																					BE																	argile de Boom																				
+TEST_MERGEIRSNB M 0151a-d	Europe	Belgium						Antwerp Province, Hemixem°'																					BE																	argile de Boom																				
+TEST_MERGEIRSNB M 0152	Europe	Belgium						Unknown°'																					BE																	argile de Boom																				
+TEST_MERGEIRSNB M 0153a-c	Europe	The Netherlands						Limburg Province, Elsloo°'																																																										
+TEST_MERGEIRSNB M 0154	Europe	Belgium						"Antwerp Province, Borgerhout, 3th section, ""lopommière"" du canal d'Herenthals°'"																					BE																																					
+TEST_MERGEIRSNB M 0155	Europe	Belgium						Antwerp Province, Borgerhout, emplacement à l'ancien fortin n°1°'																					BE																																					
+TEST_MERGEIRSNB M 0156	Europe	Belgium						Antwerp Province, Antwerpen, Stuyvenberg, 2nd section°'																					BE																																					
+TEST_MERGEIRSNB M 0157	Europe	Belgium						Antwerp Province, Antwerpen, Stuyvenberg, 3th section°'																					BE																																					
+TEST_MERGEIRSNB M 0159	Europe	Belgium						Antwerp Province, Antwerpen, Stuyvenberg°'																					BE																																					
+TEST_MERGEIRSNB M 0160a-c	Europe	Belgium						Antwerp Province, Antwerpen, Hoboken°'																					BE																																					
+TEST_MERGEIRSNB M 0161a-c	Europe	Belgium						Antwerp Province, Antwerpen, 2nd section, fossé capital près du Stuyvenberg°'																					BE																																					
+TEST_MERGEIRSNB M 0173a-c	Europe	Belgium						Antwerp Province, Antwerpen, 3rd section°'																					BE																																					
+TEST_MERGEIRSNB M 0891	Europe	Belgium						Antwerp Province, Wijneghem, fort 1°'																					BE																																					
+TEST_MERGEIRSNB M 0165	Europe	Belgium						Antwerp Province, Duffel°'																					BE																	argile de Boom																				
+TEST_MERGEIRSNB M 0167	Europe	Belgium						Hainaut Province, Erquelinnes, Mons Basin, Hainaut, Sablière n°1°'																					BE																	Tienen Formation																				
+TEST_MERGEIRSNB M 0172	Europe	Belgium						Antwerp Province, Antwerpen°'																					BE																																					
+TEST_MERGEIRSNB M 0174	Europe	Belgium						Antwerp Province, Borgerhout ?, 3ième section°'																					BE																																					
+TEST_MERGEIRSNB M 0175	Europe	Belgium						Antwerp Province, Deurne (Borherhout sur étiquette), 3ième section°'																					BE																																					
+TEST_MERGEIRSNB M 0176	Europe	Belgium						Antwerp Province, Berchem, 3ième section°'																					BE																																					
+TEST_MERGEIRSNB M 0240a-f	Europe	Belgium						Antwerp Province, Borgerhout, 3rd section°'																					BE																																					
+TEST_MERGEIRSNB M 0200	Europe	Belgium						Antwerp Province, Deurne, 2nd section°'																					BE																																					
+TEST_MERGEIRSNB M 0181	Europe	Belgium						Brussels-Capital Region, Bruxelles, Chaussée de Waterloo, Saint-Gilles°'																					BE																																					
+TEST_MERGEIRSNB M 0187	Europe	Belgium						Antwerp Province, Antwerpen, 2nd section°'																					BE																																					
+TEST_MERGEIRSNB M 0191	Europe	Belgium						Brussels-Capital Region, Brussels, Uccle°'																					BE																																					
+TEST_MERGEIRSNB M 0890	Europe	Belgium						Antwerp Province, Wommelghem, fort n°2°'																					BE																																					
+TEST_MERGEIRSNB M 0203	Europe	Belgium						Antwerp Province, Deurne, 3rd section°'																					BE																																					
+TEST_MERGEIRSNB M 0206	Europe	Belgium						Antwerp Province, Borgerhout°'																					BE																																					
+TEST_MERGEIRSNB M 0209	Europe	Belgium						Brussels-Capital Region, Brussels, Uccle°'																					BE																	gravier de base du Laeckenien																				
+TEST_MERGEIRSNB M 0213	Europe	Belgium						Antwerp Province, Antwerpen, 2nd section (Deurne)°'																					BE																																					
+TEST_MERGEIRSNB M 0219	Europe	Belgium						Antwerp Province, Borgerhout, 2ième section°'																					BE																																					
+TEST_MERGEIRSNB M 0295a-b²	Europe	Belgium						Antwerp Province, Antwerpen, Oude God (Vieux-Dieu, fort n°4), Mortsel°'																					BE																																					
+TEST_MERGEIRSNB M 0253	Europe	Belgium						Brussels-Capital Region, Brussels, St-Gilles°'																					BE																	gravier de base du Laeckenien																				
+TEST_MERGEIRSNB M 0254	Europe	Belgium						Brussels-Capital Region, Brussels, St-Gilles, butte entre la prison et la Chaussée de Waterloo°'																					BE																	gravier de base du Laeckenien																				
+TEST_MERGEIRSNB M 0259	Europe	Belgium						Brussels-Capital Region, Brussels, Uccle°'																					BE																	sables Bruxelliens, zone graveleuse																				
+TEST_MERGEIRSNB M 0274	Europe	Belgium						Antwerp Province, Borsbeek, fort n°3, 3ième section°'																					BE																																					
+TEST_MERGEIRSNB M 0278a-b	Europe	Belgium						Antwerp Province, Merxplas°'																					BE																																					
+TEST_MERGEIRSNB M 0286	Europe	Belgium						Dormaal, Orsmael (Pl.33, pt.1), Brabant flamand°'																					BE																																					
+TEST_MERGEIRSNB M 0291	Europe	Belgium						Antwerp Province, Anvers, Vieux-Dieu°'																					BE																	4eme section																				
+TEST_MERGEIRSNB M 0292a-d	Europe	Belgium						Antwerp Province, Anvers, 3th section°'																					BE																	4eme section																				
+TEST_MERGEIRSNB M 0293	Europe	Belgium						Antwerp Province, Anvers°'																					BE																	4eme section																				
+TEST_MERGEIRSNB M 0360a-e	Europe	Belgium						Antwerp Province, Antwerpen, Oude God (Vieux-Dieu, fort), Mortsel°'																					BE																																					
+TEST_MERGEIRSNB M 0374	Europe	Belgium						Antwerp Province, Antwerpen°'																					BE																	2eme section																				
+TEST_MERGEIRSNB M 0379a-b	Europe	Belgium						Antwerp Province, Antwerpen, 2nd section, partie du Stuyvenberg°'																					BE																																					
+TEST_MERGEIRSNB M 0399a-g	Europe	Belgium						Antwerp Province, Kessel, Antwerp, (fort)°'																					BE																																					
+TEST_MERGEIRSNB M 0402	Europe	Belgium						Antwerp Province, Antwerpen, Eeckeren, Darse 3, Mur Nord, cumulée 1080 cote 8,9 cm°'																					BE																																					
+TEST_MERGEIRSNB M 0403	Europe	Belgium						Antwerp Province, Anvers°'																					BE																	polder de Steenborgweert																				
+TEST_MERGEIRSNB M 0461a-e	Europe	Belgium						Antwerp Province, Merxplas (Pont 5 du canal)°'																					BE																	argile de la campine																				
+TEST_MERGEIRSNB M 0464	Europe	Belgium						Antwerp Province, Beersse (briqueterie Wouters)°'																					BE																	argile de la campine																				
+TEST_MERGEIRSNB M 0468	Europe	Belgium						Dormaal, Vlaamse Brabant Province°'																					BE																																					
+TEST_MERGEIRSNB M 0502a-b	Europe	Belgium						Antwerp Province, Antwerpen°'																					BE																	Crag noir																				
+TEST_MERGEIRSNB M 0511a-m	Europe	Belgium						Antwerp Province, Fort Wilryck (IV)°'																					BE																																					
+TEST_MERGEIRSNB M 0513	Europe	Belgium						Antwerp Province°'																					BE																																					
+TEST_MERGEIRSNB M 0517	Europe	Belgium						Antwerp Province°'																					BE																	Crag noir																				
+TEST_MERGEIRSNB M 0518	Europe	Belgium						Antwerp Province°'																					BE																	Crag gris																				
+TEST_MERGEIRSNB M 0519	Europe	Belgium						Antwerp Province°'																					BE																	Crag rouge																				
+TEST_MERGEIRSNB M 0715a-b	Europe	Belgium						Antwerp Province, Antwerpen, fort n°4?°'																					BE																																					
+TEST_MERGEIRSNB M 0525a-e	Europe	Belgium						Antwerp Province, Antwerpen°'																					BE																	Berchem Formation, Antwerpen Sands ?																				
+TEST_MERGEIRSNB M 0527a-f1	Europe	Belgium						Antwerp Province, Antwerpen, boundary between the communes of Deurne and Borgerhout°'																					BE																	Deurne Sands Member ?																				
+TEST_MERGEIRSNB M 0528a-l	Europe	Belgium						Antwerp Province, Antwerpen, 3rd section°'																					BE																	Antwerp Sands Member, Deurne Sands Member or Kettendijk Formation																				
+TEST_MERGEIRSNB M 0530a-j	Europe	Belgium						Antwerp Province, Antwerpen, Edeghem, briqueterie de la société Pauwels, Fort n°6°'																					BE																	Berchem Formation, Edeghem Sands Member																				
+TEST_MERGEIRSNB M 0533	Europe	Belgium						Antwerp Province, Antwerpen, nouvelle enceinte,  3th section. Canal d'Hersentals°'																					BE																																					
+TEST_MERGEIRSNB M 0534	Europe	Belgium						Antwerp Province, Antwerpen, Mortsel, Oude God (Vieux-Dieu), fort n°4°'																					BE																																					
+TEST_MERGEIRSNB M 0539	Europe	Belgium						Antwerp Province, Antwerpen, 3rd section°'																					BE																	"crag gris"""""																				
+TEST_MERGEIRSNB M 0542	Europe	Belgium						Antwerp Province, Antwerpen°'																					BE																	"crag gris"""""																				
+TEST_MERGEIRSNB M 0543	Europe	Belgium						Antwerp Province, Antwerpen, 3rd section°'																					BE																	"crag noir"""""																				
+TEST_MERGEIRSNB M 0606	Europe	Belgium						Antwerp Province, Antwerpen, 3rd section, nouveau canal d'Hérenthals°'																					BE																																					
+TEST_MERGEIRSNB M 0556	Europe	Belgium						Antwerp Province, Antwerpen, 4th section, sables noirs à Pétoncles°'																					BE																																					
+TEST_MERGEIRSNB M 0566	Europe	Belgium						Antwerp Province, Antwerpen, 3rd section, sables noirs à Pétoncles°'																					BE																																					
+TEST_MERGEIRSNB M 0559a-c	Europe	Belgium						Antwerp Province, Antwerpen, fort n°4, sables noirs à Pétoncles°'																					BE																																					
+TEST_MERGEIRSNB M 0562	Europe	Belgium						Antwerp Province, Antwerpen, fort n°3, sables noirs à Pétoncles°'																					BE																																					
+TEST_MERGEIRSNB M 0563a-b	Europe	Belgium						Antwerp Province, Antwerpen, fort n°2, sables noirs à Pétoncles°'																					BE																																					
+TEST_MERGEIRSNB M 0565	Europe	Belgium						Antwerp Province, Antwerpen, sables noirs à Pétoncles°'																					BE																																					
+TEST_MERGEIRSNB M 0567	Europe	Belgium						Antwerp Province, Antwerpen, 3rd section, face gauche de l'ancien fortin°'																					BE																																					
+TEST_MERGEIRSNB M 0575	Europe	Belgium						Antwerp Province, Antwerpen, 3rd section, fossé du ravelin°'																					BE																																					
+TEST_MERGEIRSNB M 0594a-b	Europe	Belgium						Antwerp Province, Antwerpen, 3rd section, front 6, fossé du ravelin°'																					BE																																					
+TEST_MERGEIRSNB M 0682a-c	Europe	Belgium						Antwerp Province, Antwerpen, Bassin du Nord°'																					BE																																					
+TEST_MERGEIRSNB M 0693	Europe	Belgium						Antwerp Province, Antwerpen, fort n°3°'																					BE																																					
+TEST_MERGEIRSNB M 0727	Europe	Belgium						Antwerp Province, Antwerpen, partie de l'ancien fortin n°1, 3rd section, fossé du ravelin°'																					BE																	sables noirs à pétoncles																				
+TEST_MERGEIRSNB M 0714	Europe	Belgium						Antwerp Province, Antwerpen, nouveau canal d'Herentals°'																					BE																	sables noirs à pétoncles																				
+TEST_MERGEIRSNB M 0716a-g	Europe	Belgium						Antwerp Province, Antwerpen, 3rd section°'																					BE																	sables noirs à pétoncles																				
+TEST_MERGEIRSNB M 0731	Europe	Belgium						Antwerp Province, Deurne°'																					BE																																					
+TEST_MERGEIRSNB M 0900	Europe	Belgium						Antwerp Province, Antwerpen, Wijneghem, fort 1°'																					BE																																					
+TEST_MERGEIRSNB M 0742	Europe	Belgium						Antwerp Province, Antwerpen, 1st section°'																					BE																																					
+TEST_MERGEIRSNB M 0746	Europe	Belgium						Antwerp Province, Antwerpen, citadelle du Nord°'																					BE																																					
+TEST_MERGEIRSNB M 0747	Europe	Belgium						Antwerp Province, Antwerpen, fort n°1°'																					BE																																					
+TEST_MERGEIRSNB M 0752a-d	Europe	Belgium						Antwerp Province, Stuyvenberg, 2nd section°'																					BE																																					
+TEST_MERGEIRSNB M 0772	Europe	Belgium						Antwerp Province, Wommelghem, fort n°2Coty°'																					BE																																					
+TEST_MERGEIRSNB M 0780	Europe	Belgium						Antwerp Province, Borsbeek, fort 3°'																					BE																																					
+TEST_MERGEIRSNB M 0800a-o	Europe	Belgium						Antwerp Province, Citadelle du Nord (Austruweel)°'																					BE																																					
+TEST_MERGEIRSNB M 0811a-b	Europe	Belgium						Antwerp Province, Antwerpen, Wijneghem°'																					BE																																					
+TEST_MERGEIRSNB M 0816	Europe	Belgium						Antwerp Province, Borsbeek°'																					BE																																					
+TEST_MERGEIRSNB M 0823	Europe	Belgium						Antwerp Province, Antwerpen, Austruweel, 1er section°'																					BE																																					
+TEST_MERGEIRSNB M 0825	Europe	Belgium						Antwerp Province, Antwerpen, 3rd section, fort n°6, fossé du ravelin°'																					BE																																					
+TEST_MERGEIRSNB M 0826	Europe	Belgium						Antwerp Province, Antwerpen, 2nd section (Stuyvenberg)°'																					BE																																					
+TEST_MERGEIRSNB M 0831	Europe	Belgium						Antwerp Province, Antwerpen, 3rd section, bord du fossé capital°'																					BE																																					
+TEST_MERGEIRSNB M 0832	Europe	Belgium						Antwerp Province, Antwerpen, 3rd section, niveau canal d'Herenthals°'																					BE																																					
+TEST_MERGEIRSNB M 0843a-b	Europe	Belgium						Antwerp Province, Antwerpen, fort n°2°'																					BE																																					
+TEST_MERGEIRSNB M 0853a-f²	Europe	Belgium						"Antwerp Province, Antwerpen, 2nd section (Stuyvenberg) lettre g, n°110, entre la ""copossière"" 3 et 4g°'"																					BE																	Formation Kattendijk																				
+TEST_MERGEIRSNB M 0854	Europe	Belgium						Antwerp Province, Antwerpen, 2nd section°'																					BE																	Formation Kattendijk																				
+TEST_MERGEIRSNB M 0857	Europe	Belgium						Antwerp Province, Antwerpen°'																					BE																	Formation Kattendijk																				
+TEST_MERGEIRSNB M 0879a-f	Europe	Belgium						Antwerp Province, Oorderen (old village in the north of Antwerp, destroyed in order to enlarge the port), 1st écluse du Kruisschans°'																					BE																	-3,70 m																				
+TEST_MERGEIRSNB M 0880a-c	Europe	Belgium						Antwerp Province, Oorderen (old village in the north of Antwerp, destroyed in order to enlarge the port), 1st écluse du Kruisschans°'																					BE																	-7,80 m																				
+TEST_MERGEIRSNB M 0881	Europe	Belgium						Antwerp Province, Antwerpen, darse, 1, 2°'																					BE																																					
+TEST_MERGEIRSNB M 0883	Europe	Belgium						Antwerp Province, Antwerpen, 2nd section (fossé capital, ?. 125, partie gauche de la camponière n°3, vers Stayoevebug)°'																					BE																																					
+TEST_MERGEIRSNB M 0903a-b	Europe	Belgium						Antwerp Province, Oosterweel (Austruweel), 1st section°'																					BE																																					
+TEST_MERGEIRSNB M 0892	Europe	Belgium						Antwerp Province, Antwerpen, 1st section°'																					BE																	Formation Kattendijk																				
+TEST_MERGEIRSNB M 0897	Europe	Belgium						Antwerp Province,  Wijnegem°'																					BE																																					
+TEST_MERGEIRSNB M 0905	Europe	Belgium						Flemish Brabant Province, Dormaal°'																					BE																																					
+TEST_MERGEIRSNB M 0915	Europe	Belgium						Province du Hainaut, Erquelinnes (Jeumont)°'																					BE																																					
+TEST_MERGEIRSNB M 0920	Europe	Belgium						Province de Flandre-Orientale, Canal de Zelzaete°'																					BE																																					
+TEST_MERGEIRSNB M 0973	Europe	Belgium						Province de Namur, Caverne de Hastière°'																					BE																	1er niveau																				
+TEST_MERGEIRSNB M 0929	Europe	Belgium						Province de Namur, Caverne de Hastière°'																					BE																	2eme niveau																				
+TEST_MERGEIRSNB M 0945	Europe	Belgium						Province de Namur, Caverne de Hastière°'																					BE																	3eme niveau																				
+TEST_MERGEIRSNB M 0956	Europe	Belgium						Province de Namur, Caverne de Hastière°'																					BE																	5eme niveau																				
+TEST_MERGEIRSNB M 0961	Europe	Belgium						Province de Namur, Caverne de Hastière°'																					BE																	4eme niveau																				
+TEST_MERGEIRSNB M 0988	Europe	Belgium						Province de Namur, Montaigles, Trou du Sureau°'																					BE																	4eme niveau																				
+TEST_MERGEIRSNB M 1003	Europe	Belgium						Province de Namur, Walzin, Trou de la Naulette°'																					BE																	3eme niveau																				
+TEST_MERGEIRSNB M 1104	Europe	Belgium						Province de Namur, Caverne de Goyet°'																					BE																																					
+TEST_MERGEIRSNB M 1107	Europe	Belgium						Province d'Anvers, Kontich (Contich) ou Burght (near Hoboken)°'																					BE																	Argile de Boom																				
+TEST_MERGEIRSNB M 1108	Europe	Belgium						Province d'Anvers, Antwerpeen°'																					BE																																					
+TEST_MERGEIRSNB M 1126	Europe	Belgium						Province du Brabant flamand, Boutersem (Hoogbutsel) (Pl. XXXII, pt.1)°'																					BE																																					
+TEST_MERGEIRSNB M 1136	Europe	Belgium						Province du Brabant flamand, Hoeleden (Pl. XXXII, pt.7)°'																					BE																																					
+TEST_MERGEIRSNB M 1150	Europe	France						Quercy, Caylux°'																					FR																	Phosphorite de Caylux																				
+TEST_MERGEIRSNB M 1153	Europe	Belgium						Province du Brabant flamand, Wemmel (Pl. XXXI, pt. 17)°'																					BE																	cailloutis de la base des sables chamois																				
+TEST_MERGEIRSNB M 1160	Europe	Belgium						Province du Brabant flamand, Dormaal (Pl. XXXIII, pt. 1)°'																					BE																	Tienen Formation																				
+TEST_MERGEIRSNB M 1191	Europe	Belgium						Province du Brabant flamand, Boutersem (Hoogbutsel)°'																					BE																																					
+TEST_MERGEIRSNB M 1235bis	Europe	Belgium						Province du Brabant flamand, Dormaal (Pl. XXXIII, pt. 1)°'																					BE																																					
+TEST_MERGEIRSNB M 1241	Europe	Belgium						Province du Brabant flamand, Dormaal°'																					BE																	Tienen Formation																				
+TEST_MERGEIRSNB M 1321	Europe	Belgium						Dormaal, Vlaamse Brabant Province (Pl. XXXIII, pt. 1)°'																					BE																																					
+TEST_MERGEIRSNB M 1324	Europe	Belgium						Dormaal, Vlaamse Brabant Province°'																					BE																	Tienen Formation																				
+TEST_MERGEIRSNB M 1329	Europe	Belgium						Dormaal, Vlaamse Brabant Province°'																					BE																	Tienen Formation, niveau DI																				
+TEST_MERGEIRSNB M 1331	Europe	Belgium						Vlaamse Brabant Province, Dormaal°'																					BE																	Tienen Formation																				
+TEST_MERGEIRSNB M 1343	Europe	Belgium						Dormaal, Vlaamse Brabant Province (Pl. XXXIII, pt. 1)°'																					BE																	Tienen Formation																				
+TEST_MERGEIRSNB M 1355	Europe	Belgium						Dormaal, Province du Brabant flamand°'																					BE																																					
+TEST_MERGEIRSNB M 1366	Europe	Belgium						Province de Namur, Montaigles, Trou de l'Erable°'																					BE																	2eme niveau																				
+TEST_MERGEIRSNB M 1368	Europe	Belgium						Province de Namur, Caverne de Walzin, Trou de la Naulette°'																					BE																	3eme niveau																				
+TEST_MERGEIRSNB M 1369	Europe	Belgium						Province de Namur, Caverne de Walzin, Trou de l'Hyène°'																					BE																	3eme niveau																				
+TEST_MERGEIRSNB M 1370	Europe	Belgium						Province de Namur, Pont-à-Lesse, Trou de Pont-à-Lesse°'																					BE																																					
+TEST_MERGEIRSNB M 1371	Europe	Belgium						Province de Namur, Pont-à-Lesse, Trou de la Martina°'																					BE																																					
+TEST_MERGEIRSNB M 1372	Europe	Belgium						Province de Namur, Pont-à-Lesse, Trou Magrite°'																					BE																																					
+TEST_MERGEIRSNB M 1384	Europe	Belgium						Province de Namur, Walzin, Trou de l'Hyène°'																					BE																																					
+TEST_MERGEIRSNB M 1386	Europe	Belgium						Province de Namur, Walzin, Trou de l'Ours°'																					BE																																					
+TEST_MERGEIRSNB M 1388	Europe	Belgium						Province de Namur, Hastière, Caverne de Freyr°'																					BE																	Limon fluvial																				
+TEST_MERGEIRSNB M 1408	Europe	Belgium						Province de Namur, Pont-à-Lesse, Trou Magrite°'																					BE																	3ème niveau																				
+TEST_MERGEIRSNB M 1438	Europe	Belgium						Flemish Brabant Province, Hofstade°'																					BE																																					
+TEST_MERGEIRSNB M 1453a-b	Europe	Germany						Messel°'																					DE																	Messel Formation																				
+TEST_MERGEIRSNB M 1454	Europe	Belgium						Province d'Anvers, Beerse-Merxplats°'																					BE																																					
+TEST_MERGEIRSNB M 1461	Europe	Belgium						Brabant wallon, Orp-le-Grand, Briqueterie°'																					BE																	Sable d'Orp																				
+TEST_MERGEIRSNB M 1462	Europe	Belgium						Province de Luxembourg, Habay-la-Vieille°'																					BE																	"Bonebed HLV-2, Sables de Mortinsart-Formation"""""																				
+TEST_MERGEIRSNB M 1476bis	Europe	Grand Duché du Luxembourg						Medenach°'																																						gisement du Rinckebierg																				
+TEST_MERGEIRSNB M 1566	Europe	Belgium						Evere, Brussels°'																					BE																	Argile d'Aalbeke																				
+TEST_MERGEIRSNB M 1581	Europe	Belgium						Province de Luxembourg, Attert°'																					BE																	A 6. 70 metres se distinguent I 0 em de sable fin vert-gris à galets: c'est le troisieme bone-bed. HLV 3																				
+TEST_MERGEIRSNB M 1795	Europe	Belgium						Province du Brabant flamand, Hoegaarden°'																					BE																	Brussels Formation																				
+TEST_MERGEIRSNB M 1796	Europe	Belgium						Hoegaarden, Vlaamse Brabant°'																					BE																	Brussels Formation																				
+TEST_MERGEIRSNB M 1798	Europe	Belgium						"province de Luxembourg, Habay-la-Vieille. (Coordonnées : Longitude 5° 37' E. Latitude 49° 44' N)°49'44"""	E																				BE		49°44'N	5°37'E														A 6. 70 metres se distinguent I 0 em de sable fin vert-gris à galets: c'est le troisieme bone-bed. HLV 3																				
+TEST_MERGEIRSNB M 1823	Europe	France						Varangéville°'																					FR																																					
+TEST_MERGEIRSNB M 1831	Europe	France						Saint-Nicolas-de-Port°'																					FR																																					
+TEST_MERGEIRSNB M 1837	Asia	China						Bayan Mandahu, Inner Mongolia, China°'																					CN																	Bayan Mandahu Formation = Djadokhta Formation ?																				
+TEST_MERGEIRSNB M 1853	Europe	Belgium						Antwerp Province, uncertain locality in the region of Antwerp°'																					BE																	Antwerp Sand Member																				
+TEST_MERGEIRSNB M 1854	Europe	Belgium						Antwerp Province, Kessel°'																					BE																	Antwerp Sand Member																				
+TEST_MERGEIRSNB M 1855	Europe	Belgium						Antwerp Province, Kessel°'																					BE																	terrain Bolderien, Antwerp Sand Member																				
+TEST_MERGEIRSNB M 1858	Europe	Belgium						Antwerp Province, Antwerpen°'																					BE																	Antwerpen Sands																				
+TEST_MERGEIRSNB M 1874	Europe	Belgium						Antwerp Province, Antwerp area°'																					BE																																					
+TEST_MERGEIRSNB M 1877	Europe	Belgium						Deurne, eastern suburbs of Antwerp°'																					BE																	Deurne Sands Member, Diest Formation																				
+TEST_MERGEIRSNB M 1880	Europe	Belgium						Antwerp Province, Antwerp area°'																					BE																	"crag gris"""""																				
+TEST_MERGEIRSNB M 1882	Europe	Belgium						"Antwerp Province, Antwerpen, ""bassins du port""°'"																					BE																	probably Deurne Sands																				
+TEST_MERGEIRSNB M 1890	Europe	Belgium						Antwerpen area, Doel (near the Indaver factory)°'																					BE																	Neogene sands																				
+TEST_MERGEIRSNB M 1891	Europe	Belgium						Antwerpen area, Doel°'																					BE																	Neogene sands																				
+TEST_MERGEIRSNB M 2012a-h	Europe	Belgium						Antwerp Province, Antwerpen area°'																					BE																	Antwerpen sand																				
+TEST_MERGEIRSNB M 1896	Europe	Belgium						Antwerp Province, Borgerhout°'																					BE																	Antwerpen sand																				
+TEST_MERGEIRSNB M 1898	Europe	Belgium						Antwerp Province, Kessel°'																					BE																	Antwerpen sand																				
+TEST_MERGEIRSNB M 1903	Europe	Belgium						Vlaams-Brabant Province, Hoogbutsel°'																					BE																	Borgloon Formation																				
+TEST_MERGEIRSNB M 1905	Europe	Belgium						Vlaams-Brabant Province, Boutsersem TGV°'																					BE																	Borgloon Formation																				
+TEST_MERGEIRSNB M 1922	Europe	Belgium						Antwerp Province, Eastern wall of Vrasene Dock, Kallo, western bank of Schelde River, (51°15'N-04°14'E)°'																					BE																	Kattendijk Formation, aboute 6 m above the basis																				
+TEST_MERGEIRSNB M 1923	Europe	Belgium						Antwerp Province, sands dredged from the Scheldt estuary°'																					BE																																					
+TEST_MERGEIRSNB M 1924	Europe	Belgium						Antwerp Province, sands removed from the Liefkenshoektunnel°'																					BE																																					
+TEST_MERGEIRSNB M 1925	Europe	Belgium						Antwerp Province, no presice locality°'																					BE																																					
+TEST_MERGEIRSNB M 1926	Europe	Belgium						Antwerp Province, sands dredged from Doeldok, Antwerp Port°'																					BE																																					
+TEST_MERGEIRSNB M 1929	Europe	Belgium						Vlaams-Brabant Province, Boutersem (Hoogbutsel), site du TGV°'																					BE																	Membre de Boutersem																				
+TEST_MERGEIRSNB M 1936	Europe	Belgium						Antwerp Province, Kessel, Fort of Kessel°'																					BE																	Berchem Formation, Antwerpen Sands																				
+TEST_MERGEIRSNB M 1937	Europe	Belgium						Antwerp, 3ième section of the inner fortification ring around Antwerp°'																					BE																	Diest Formation, Deurne Sands Member																				
+TEST_MERGEIRSNB M 1938a-b	Europe	Belgium						Namur Province, Trou des Nutons, Furfooz (1N)°'																					BE																	1er niveau ossifère																				
+TEST_MERGEIRSNB M 1939	Europe	Belgium						Namur Province, Goyet, 3ième caverne°'																					BE																	4ième niveau ossifère, niveau B4																				
+TEST_MERGEIRSNB M 1941	Europe	France						Mont de Berru, Marne°'																					FR																	Paris Basin																				
+TEST_MERGEIRSNB M 1945	Europe	Belgium						Hainin, Mons Basin, Hainaut Province°'																					BE																	Hainin Formation																				
+TEST_MERGEIRSNB M 2010	Europe	The Netherlands						"Western Scheedt estuary; in front of Nieuwvliet-Cadzand; Sluische Hompels, N51°26'40,30"" E3°25'02""°'"																																						dragned sands																				
+TEST_MERGEIRSNB M 2011	Europe	Belgium						Antwerp Province, Berchem, Williostraat°'																					BE																	Berchem Formation, Antwerp Sands Member, Turritella eryma horizon																				
+TEST_MERGEIRSNB M 2013	North America	United States of America						Meherrin River, Murfreesboro, Hertford County, NC, USA°'																					US																	?Eastover Formation																				
+TEST_MERGEIRSNB M 2015	Europe	Belgium						Province d'Anvers, Antwerpen area°'																					BE																	Antwerp basin																				
+TEST_MERGEIRSNB M 2017	Europe	Belgium						Maret, Brabant Wallon°'																					BE																	Orp Sand Member, Heers Formation																				
+TEST_MERGEIRSNB M 2020	Europe	Belgium						Maret, Brabant Wallon°'																					BE																	Lincent Limestone Member, Hannut Formation																				
+TEST_MERGEIRSNB M 2057	Europe	Belgium						Vlaams-Brabant Province, Hoogbutsel, localité type°'																					BE																	Borgloon Formation, Boutersem Member																				
+TEST_MERGEIRSNB M 2058	Europe	Belgium						Vlaams-Brabant Province, Boutsersem TGV°'																					BE																																					
+TEST_MERGEIRSNB M 2096	Europe	France						Berru, Bassin de Paris°'																					FR																																					
+TEST_MERGEIRSNB M 2119	Europe	Belgium						Erquelinnes, Mons Basin, Hainaut°'																					BE																																					
+TEST_MERGEIRSNB M 2143	Europe	Belgium						Erquelinnes, Mons Basin, Hainaut°'																					BE																	Tienen Formation																				
+TEST_MERGEIRSNB M 2150	Europe	Belgium						Egem, West Flanders Province°'																					BE																	Tielt Formation, Egemkapel Member																				
+TEST_MERGEIRSNB M 2169	Europe	Belgium						Antwerp Province, Antwerpen area°'																					BE																																					
+TEST_MERGEIRSNB M 2171	Europe	Belgium						Antwerp Province, Antwerpen area, Beverentunnel°'																					BE																	Kattendijk Formation																				
+TEST_MERGEIRSNB M 2232	Europe	Belgium						Anvers°'																					BE																																					
+TEST_MERGEIRSNB M 2234	Europe	Belgium						Anvers, Posthofbrug°'																					BE																	Berchem Formation																				
+TEST_MERGEIRSNB M 2235	North America	United States of America						Lee Creek Mine, Aurora, North Carolina°'																					US																	(?) Yorktown Formation																				
+TEST_MERGEIRSNB M 2236	North America	United States of America						North Carolina, Lee Creek Mine°'																					US																	Formation Yorktown																				
+TEST_MERGEIRSNB M 2238	Europe	Belgium						Namur Province, Walzin, Pont-à-Lesse, Trou Magrite°'																					BE																																					
+TEST_MERGEIRSNB M 2268	Europe	Belgium						Anvers, Rumst or Steendorp.°'																					BE																	Pliocene basal gravel																				
+TEST_MERGEIRSNB M 2269	Europe	Belgium						Anvers, Borgerhout°'																					BE																	Deurne Sands Member (Diest Formation)																				
+TEST_MERGEIRSNB M 2271	Europe	Belgium						Anvers, Swenden brickyard, Rumst-Reet°'																					BE																	Pliocene basal gravel, Kattendijk Formation																				
+TEST_MERGEIRSNB M 2272	Europe	Belgium						Anvers, Antwerp Airport°'																					BE																	unnamed 'Layer V' between the underlying Antwerpen Sands of the Berchem Formation and the overlying Deurne Sands of the Diest Formation																				
+TEST_MERGEIRSNB M 2276 a-q	Europe	Belgium						Anvers, Berchem District°'																					BE																	North of the Zurenborgbrug and between the R10 road and E19 highway, Berchem District																				
+TEST_MERGEIRSNB M 2277	Europe	Belgium						Anvers, Kessel°'																					BE																																					
+TEST_MERGEIRSNB M 2281	Europe	Belgium						Namur Province, Hastière-Lavaux, Caverne Marie-Jeanne, 5th level°'																					BE																	A et B																				
+TEST_MERGEIRSNB M 2283	Europe	Belgium						Namur Province, Hastière-Lavaux, Caverne Marie-Jeanne, 5th level°'																					BE																	sup. A																				
+TEST_MERGEIRSNB M 2288	Europe	Belgium						Namur Province, Hastière-Lavaux, Caverne Marie-Jeanne, 5th level°'																					BE																	Couche de la voûte																				
+TEST_MERGEIRSNB M 2289	Europe	Belgium						Namur Province, Hastière-Lavaux, Caverne Marie-Jeanne, 4N°'																					BE																	Couche de la voûte																				
+TEST_MERGEIRSNB M 2290	Europe	Belgium						Namur Province, Hastière-Lavaux, Caverne Marie-Jeanne, 4N°'																					BE																	Terre Jaune en-dessous de la concrétion																				
+TEST_MERGEIRSNB M 2292	Europe	Belgium						Namur Province, Hastière-Lavaux, Caverne Marie-Jeanne, 3rd level°'																					BE																																					
+TEST_MERGEIRSNB M 2300	Europe	France						Cernay, Haut-Rhin°'																					FR																	Paris Basin																				
+TEST_MERGEIRSNB M 2303	Europe	Belgium						East Flanders Province, Steendorp°'																					BE																	post-Miocene base gravel																				
+TEST_MERGEIRSNB M 2308	Europe	Belgium						Antwerp Province, Anvers, bassin canal (Bassin Lefèvre)°'																					BE																	membres des Sables d'Oorderen ou Sables de Kruisschans, Formation Lillo																				
+TEST_MERGEIRSNB M 2309	Europe	Belgium						aéroport de Deurne, Antwerp Province°'																					BE																	couche entre Antwerpen Sands Member et Deurne Sands Member																				
+TEST_MERGEIRSNB M 2314	Asia	Yemen						Hoq Cave, Socotra Island°'																					YE																																					
+TEST_MERGEIRSNB M 2315	Europe	Belgium						"Wommelgem (geographic co-ordinates: 51°12'27,75""N and 4°30'25,52""E), Province d'Anvers°'"																					BE																																					
+TEST_MERGEIRSNB M 2316	Europe	Belgium						Province d'Anvers, port d'Anvers, Deurganckdoksluis (Kallosluis), Sables de Oorderen°'																					BE																																					
+TEST_MERGEIRSNB M 2318	Europe	Belgium						Deurganckdok, Province d'Anvers°'																					BE																	Basal gravel of Kattendijk Sands																				
+TEST_MERGEIRSNB M 2319	Europe	Belgium						Borsbeek (Airport tunnel), Province d'Anvers°'																					BE																	Reworked Lillo Formation																				
+TEST_MERGEIRSNB M 2320	Europe	Belgium						Fortuinstraat, former fish market, Antwerp, Province d'Anvers°'																					BE																	Post Miocene basal gravel (‘derived Lillo formation’)																				
+TEST_MERGEIRSNB M 2321	North America	United States of America						Lee Creek Mine, Aurora, North Carolina°'																					US																	Yorktown Formation, River deposit																				
+TEST_MERGEIRSNB M 2323	Europe	Belgium						Province de Flandre Orientale, Sint-Niklaas, “De Ster”°'																					BE																	Post Oligocene basal gravel																				
+TEST_MERGEIRSNB M 2325	Europe	Belgium						Province d'Anvers, Kieldrecht Lock (previously known as Deurganckdoksluis, Port of Antwerp area)°'																					BE																	Formation de Lillo																				
+TEST_MERGEIRSNB M 2326	Europe	France						Pech de fraysse°'																					FR																																					
+TEST_MERGEIRSNB M 2330	Europe	Belgium						Province de Flandre Orientale, Deurganck Dock, Doel°'																					BE																	Kattendijk Formation																				
+TEST_MERGE

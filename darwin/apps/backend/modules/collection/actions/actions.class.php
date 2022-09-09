@@ -17,10 +17,10 @@ class collectionActions extends DarwinActions
     if(! $this->getUser()->isAtLeast(Users::MANAGER) ) $this->forwardToSecureAction();
 
     $this->forward404Unless($request->hasParameter('id'));
-    if(!$this->getUser()->isAtLeast(Users::ADMIN) &&  !Doctrine::getTable('CollectionsRights')->findOneByCollectionRefAndUserRef($request->getParameter('id'),$this->getUser()->getId()))
+    if(!$this->getUser()->isAtLeast(Users::ADMIN) &&  !Doctrine_Core::getTable('CollectionsRights')->findOneByCollectionRefAndUserRef($request->getParameter('id'),$this->getUser()->getId()))
       $this->forwardToSecureAction();
 
-    $this->collCodes = Doctrine::getTable('Collections')->find($request->getParameter('id'));
+    $this->collCodes = Doctrine_Core::getTable('Collections')->find($request->getParameter('id'));
     $this->form = new CollectionsCodesForm($this->collCodes);
 
     if($request->isMethod('post'))
@@ -44,12 +44,12 @@ class collectionActions extends DarwinActions
 
   public function executeExtdinfo(sfWebRequest $request)
   {
-    $this->manager = Doctrine::getTable('Users')->getManagerWithId($request->getParameter('id'));
+    $this->manager = Doctrine_Core::getTable('Users')->getManagerWithId($request->getParameter('id'));
     $this->forward404Unless($this->manager,'No such item');
 
-    $this->coms = Doctrine::getTable('UsersComm')->fetchByUser($this->manager->getId());
+    $this->coms = Doctrine_Core::getTable('UsersComm')->fetchByUser($this->manager->getId());
     if(ctype_digit($request->getParameter('staffid')))
-      $this->staff = Doctrine::getTable('Users')->find($request->getParameter('staffid'));
+      $this->staff = Doctrine_Core::getTable('Users')->find($request->getParameter('staffid'));
   }
 
   public function executeDeleteSpecCodes(sfWebRequest $request)
@@ -57,18 +57,18 @@ class collectionActions extends DarwinActions
     if(! $this->getUser()->isAtLeast(Users::MANAGER) ) $this->forwardToSecureAction();
 
     $this->forward404Unless($request->hasParameter('id'),'No id given');
-    if(!$this->getUser()->isAtLeast(Users::ADMIN) &&  !Doctrine::getTable('CollectionsRights')->findOneByCollectionRefAndUserRef($request->getParameter('id'),$this->getUser()->getId()))
+    if(!$this->getUser()->isAtLeast(Users::ADMIN) &&  !Doctrine_Core::getTable('CollectionsRights')->findOneByCollectionRefAndUserRef($request->getParameter('id'),$this->getUser()->getId()))
       $this->forwardToSecureAction();
 
-    $item = Doctrine::getTable('Collections')->find($request->getParameter('id'));
+    $item = Doctrine_Core::getTable('Collections')->find($request->getParameter('id'));
     $this->forward404Unless($item,'No such item');
     try
     {
-      $item->setCodePrefix(Doctrine::getTable('Collections')->getDefaultValueOf('code_prefix'));
-      $item->setCodePrefixSeparator(Doctrine::getTable('Collections')->getDefaultValueOf('code_prefix_separator'));
-      $item->setCodeSuffix(Doctrine::getTable('Collections')->getDefaultValueOf('code_suffix'));
-      $item->setCodeSuffixSeparator(Doctrine::getTable('Collections')->getDefaultValueOf('code_suffix_separator'));
-      $item->setCodeAutoIncrement(Doctrine::getTable('Collections')->getDefaultValueOf('code_auto_increment'));
+      $item->setCodePrefix(Doctrine_Core::getTable('Collections')->getDefaultValueOf('code_prefix'));
+      $item->setCodePrefixSeparator(Doctrine_Core::getTable('Collections')->getDefaultValueOf('code_prefix_separator'));
+      $item->setCodeSuffix(Doctrine_Core::getTable('Collections')->getDefaultValueOf('code_suffix'));
+      $item->setCodeSuffixSeparator(Doctrine_Core::getTable('Collections')->getDefaultValueOf('code_suffix_separator'));
+      $item->setCodeAutoIncrement(Doctrine_Core::getTable('Collections')->getDefaultValueOf('code_auto_increment'));
       $item->save();
       return $this->renderText('ok');
     }
@@ -83,7 +83,7 @@ class collectionActions extends DarwinActions
   {
     if(! $this->getUser()->isAtLeast(Users::MANAGER) ) $this->forwardToSecureAction();
 
-    $this->collections = Doctrine::getTable('Collections')->getDistinctCollectionByInstitution($request->getParameter('institution'));
+    $this->collections = Doctrine_Core::getTable('Collections')->getDistinctCollectionByInstitution($request->getParameter('institution'));
     $this->setLayout(false);
   }
 
@@ -93,7 +93,7 @@ class collectionActions extends DarwinActions
     if(! $this->getUser()->isAtLeast(Users::MANAGER) ) $this->forwardToSecureAction();
 
     $collection = new Collections() ;
-    $collection->setInstitutionRef(Doctrine::getTable('Collections')->getInstitutionNameByCollection($request->getParameter('parent_ref'))->getId()) ;
+    $collection->setInstitutionRef(Doctrine_Core::getTable('Collections')->getInstitutionNameByCollection($request->getParameter('parent_ref'))->getId()) ;
     $this->form = new CollectionsForm($collection);
     $this->setLayout(false);
   }
@@ -102,14 +102,14 @@ class collectionActions extends DarwinActions
   {
     if(! $this->getUser()->isAtLeast(Users::ENCODER) ) $this->forwardToSecureAction();
 
-    $this->institutions = Doctrine::getTable('Collections')->fetchByInstitutionList($this->getUser(),null,false,true);
+    $this->institutions = Doctrine_Core::getTable('Collections')->fetchByInstitutionList($this->getUser(),null,false,true);
     //ftheeten 2017 03 30
     //$this->statistics=$this->getCollectionStatistics();
   }
 
   public function executeIndex(sfWebRequest $request)
   {
-    $this->institutions = Doctrine::getTable('Collections')->fetchByInstitutionList($this->getUser());
+    $this->institutions = Doctrine_Core::getTable('Collections')->fetchByInstitutionList($this->getUser());
     //ftheeten 2017 03 30
     //$this->statistics=$this->getCollectionStatistics();
   }
@@ -123,7 +123,7 @@ class collectionActions extends DarwinActions
     $this->form = new CollectionsForm($collection, array('duplicate'=> true));
     if ($duplic)
     {
-      $User = Doctrine::getTable('CollectionsRights')->getAllUserRef($collection->getId()) ;
+      $User = Doctrine_Core::getTable('CollectionsRights')->getAllUserRef($collection->getId()) ;
       foreach ($User as $key=>$val)
       {
          $this->form->addValue($key, $val->getUserRef(),'encoder');
@@ -147,9 +147,9 @@ class collectionActions extends DarwinActions
   public function executeEdit(sfWebRequest $request)
   {
     if(! $this->getUser()->isAtLeast(Users::MANAGER) ) $this->forwardToSecureAction();
-    if(!$this->getUser()->isAtLeast(Users::ADMIN) &&  !Doctrine::getTable('CollectionsRights')->findOneByCollectionRefAndUserRef($request->getParameter('id'),$this->getUser()->getId()))
+    if(!$this->getUser()->isAtLeast(Users::ADMIN) &&  !Doctrine_Core::getTable('CollectionsRights')->findOneByCollectionRefAndUserRef($request->getParameter('id'),$this->getUser()->getId()))
       $this->forwardToSecureAction();
-    $collection = Doctrine::getTable('Collections')->find($request->getParameter('id'));
+    $collection = Doctrine_Core::getTable('Collections')->find($request->getParameter('id'));
     $this->forward404Unless($collection, 'collections does not exist');
     $this->level = $this->getUser()->getDbUserType() ;
     $this->form = new CollectionsForm($collection);
@@ -166,7 +166,7 @@ class collectionActions extends DarwinActions
     if($request->hasParameter('id'))
     {
       $this->ref_id = $request->getParameter('id') ;
-	    $collection = Doctrine::getTable('Collections')->find($this->ref_id) ;
+	    $collection = Doctrine_Core::getTable('Collections')->find($this->ref_id) ;
       $form = new CollectionsForm($collection);
     }
     else $form = new CollectionsForm();
@@ -180,7 +180,7 @@ class collectionActions extends DarwinActions
     if(! $this->getUser()->isAtLeast(Users::MANAGER) ) $this->forwardToSecureAction();
     $this->forward404Unless($request->isMethod('post') || $request->isMethod('put'));
     $this->level = $this->getUser()->getDbUserType() ;
-    $collection = Doctrine::getTable('Collections')->find($request->getParameter('id'));
+    $collection = Doctrine_Core::getTable('Collections')->find($request->getParameter('id'));
     $this->forward404Unless($collection, 'collections does not exist');
     $this->form = new CollectionsForm($collection);
 
@@ -196,10 +196,10 @@ class collectionActions extends DarwinActions
   public function executeDelete(sfWebRequest $request)
   {
     if(! $this->getUser()->isAtLeast(Users::MANAGER) ) $this->forwardToSecureAction();
-    if(!$this->getUser()->isAtLeast(Users::ADMIN) && !Doctrine::getTable('CollectionsRights')->findOneByCollectionRefAndUserRef($request->getParameter('id'),$this->getUser()->getId()))
+    if(!$this->getUser()->isAtLeast(Users::ADMIN) && !Doctrine_Core::getTable('CollectionsRights')->findOneByCollectionRefAndUserRef($request->getParameter('id'),$this->getUser()->getId()))
       $this->forwardToSecureAction();
     $request->checkCSRFProtection();
-    $collection = Doctrine::getTable('Collections')->find($request->getParameter('id'));
+    $collection = Doctrine_Core::getTable('Collections')->find($request->getParameter('id'));
 
     $this->forward404Unless($collection, 'collections does not exist');
 
@@ -227,7 +227,7 @@ class collectionActions extends DarwinActions
     $parent_ref = $request->getParameter('collection_ref');
 
     /*** Check if the user has rights on this collection ***/
-    if(!$this->getUser()->isAtLeast(Users::ADMIN) && !Doctrine::getTable('CollectionsRights')->findOneByCollectionRefAndUserRef($parent_ref,$this->getUser()->getId()))
+    if(!$this->getUser()->isAtLeast(Users::ADMIN) && !Doctrine_Core::getTable('CollectionsRights')->findOneByCollectionRefAndUserRef($parent_ref,$this->getUser()->getId()))
       $this->forwardToSecureAction();
 
     $this->form = new SubCollectionsForm(null, array('current_user' => $this->getUser(),'collection_ref' => $parent_ref ,'user_ref' => $user_ref));
@@ -275,11 +275,11 @@ class collectionActions extends DarwinActions
   {
     if($this->getUser()->getDbUserType() < Users::MANAGER ) $this->forwardToSecureAction();
     if(!$this->getUser()->isA(Users::ADMIN))
-      if (!Doctrine::getTable('collectionsRights')->findOneByCollectionRefAndUserRef($request->getParameter('collection_ref'),$this->getUser()->getId()))
+      if (!Doctrine_Core::getTable('collectionsRights')->findOneByCollectionRefAndUserRef($request->getParameter('collection_ref'),$this->getUser()->getId()))
         $this->forwardToSecureAction();
     $id = $request->getParameter('user_ref');
     $this->form = new WidgetRightsForm(null,array('user_ref' => $id,'collection_ref' => $request->getParameter('collection_ref'))) ;
-    $this->user = Doctrine::getTable("Users")->findUser($id) ;
+    $this->user = Doctrine_Core::getTable("Users")->findUser($id) ;
     if($request->isMethod('post'))
     {
       $this->form->bind($request->getParameter('widget_rights')) ;
@@ -486,12 +486,19 @@ class collectionActions extends DarwinActions
         return   $this->renderText(json_encode($this->execute_statistics_generic($request, "taxa")));
   }
   
+  public function executeDisplay_statistics_all_taxa(sfWebRequest $request)
+  {
+        $this->getResponse()->setHttpHeader('Content-type','application/json');
+        $this->setLayout('json');
+        return   $this->renderText(json_encode($this->execute_statistics_generic($request, "all_taxa")));
+  }
    public function executeDisplay_higher_taxa(sfWebRequest $request)
   {
         $this->getResponse()->setHttpHeader('Content-type','application/json');
         $this->setLayout('json');
         return   $this->renderText(json_encode($this->execute_statistics_generic($request, "highertaxa")));
   }
+  
   
   public function executeDisplay_all_statistics_csv(sfWebRequest $request)
   {
@@ -512,8 +519,16 @@ class collectionActions extends DarwinActions
         $returned[]=implode("\t", $row);
     }
     $returned[]="";
-    $returned[]="Taxa in specimen count";
+    $returned[]="Taxa in identification count";
     $tmp=$this->execute_statistics_generic($request, "taxa");
+    foreach($tmp as $row)
+    {
+        $returned[]=implode("\t", $row);
+    }
+	
+	$returned[]="";
+    $returned[]="Taxa in collection count";
+    $tmp=$this->execute_statistics_generic($request, "all_taxa");
     foreach($tmp as $row)
     {
         $returned[]=implode("\t", $row);

@@ -18,7 +18,7 @@ class DarwinActions extends sfActions
     $this->forward404Unless($request->hasParameter('table') && array_key_exists ($request->getParameter('table',''),self::$correspondingTable));
 
     if($request->hasParameter('id'))
-      $tableRecord = Doctrine::getTable(self::$correspondingTable[$request->getParameter('table')])->find($request->getParameter('id',0));
+      $tableRecord = Doctrine_Core::getTable(self::$correspondingTable[$request->getParameter('table')])->find($request->getParameter('id',0));
 
     if($request->getParameter('table','')== 'loans')
     {
@@ -83,11 +83,11 @@ class DarwinActions extends sfActions
   {
     $this->__set('widgetCategory',$this->widgetCategory);
     if($id == null) $id = $this->getUser()->getId();
-    $this->widgets = Doctrine::getTable('MyWidgets')
+    $this->widgets = Doctrine_Core::getTable('MyWidgets')
       ->setUserRef($this->getUser()->getId())
       ->setDbUserType($this->getUser()->getDbUserType())
       ->getWidgets($this->widgetCategory, $collection);
-    $this->widget_list = Doctrine::getTable('MyWidgets')->sortWidgets($this->widgets, $this->getI18N());
+    $this->widget_list = Doctrine_Core::getTable('MyWidgets')->sortWidgets($this->widgets, $this->getI18N());
     if(! $this->widgets) $this->widgets=array();   
   }
 
@@ -198,7 +198,7 @@ class DarwinActions extends sfActions
 			{
 				if(strlen($request->getParameter('specimennumber')))
 				{	
-					$tmp_id=Doctrine::getTable('Specimens')->getSpecimenIDCorrespondingToMainCollectionNumber($request->getParameter('specimennumber'));
+					$tmp_id=Doctrine_Core::getTable('Specimens')->getSpecimenIDCorrespondingToMainCollectionNumber($request->getParameter('specimennumber'));
 					$initialized=true;
 				}
 			}
@@ -214,7 +214,7 @@ class DarwinActions extends sfActions
         if($request->hasParameter('specimennumber'))
 		{
        
-            $results=Doctrine::getTable('Specimens')->getJSON($request->getParameter('specimennumber'));
+            $results=Doctrine_Core::getTable('Specimens')->getJSON($request->getParameter('specimennumber'));
             
             return  $results;
             
@@ -245,7 +245,7 @@ class DarwinActions extends sfActions
             {
                  $page=$request->getParameter('page');
             }
-            $results=Doctrine::getTable('Specimens')->getSpecimensInCollectionsJSON($collection_code, $host, $size, $page);
+            $results=Doctrine_Core::getTable('Specimens')->getSpecimensInCollectionsJSON($collection_code, $host, $size, $page);
             return  $results;
             
         }
@@ -256,7 +256,7 @@ class DarwinActions extends sfActions
     protected function getAllCollectionsAccessPointJSON(sfWebRequest $request)
     {
         $host=$request->getHost();
-        $results=Doctrine::getTable('Specimens')->getCollectionsAllAccessPointsJSON( $host);
+        $results=Doctrine_Core::getTable('Specimens')->getCollectionsAllAccessPointsJSON( $host);
         return  $results;
     }
     
@@ -311,7 +311,7 @@ class DarwinActions extends sfActions
         }
     }
     
-    $items=Doctrine::getTable('Collections')->countSpecimens($idCollection, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections) ;
+    $items=Doctrine_Core::getTable('Collections')->countSpecimens($idCollection, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections) ;
     if(count($items)>1)
     {
         
@@ -404,15 +404,19 @@ class DarwinActions extends sfActions
     }
     if($table_name=="types")
     {
-        $items=Doctrine::getTable('Collections')->countTypeSpecimens($idCollection, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections) ;
+        $items=Doctrine_Core::getTable('Collections')->countTypeSpecimens($idCollection, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections) ;
     }
     elseif($table_name=="taxa")
     {
-        $items=Doctrine::getTable('Collections')->countTaxaInSpecimen($idCollection, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections) ;
+        $items=Doctrine_Core::getTable('Collections')->countTaxaInSpecimen($idCollection, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections, false) ;
+    }
+	elseif($table_name=="all_taxa")
+    {
+        $items=Doctrine_Core::getTable('Collections')->countTaxaInSpecimen($idCollection, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections, true) ;
     }
     elseif($table_name=="highertaxa")
     {
-        $items=Doctrine::getTable('Collections')->countHigherTaxa($idCollection, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections) ;
+        $items=Doctrine_Core::getTable('Collections')->countHigherTaxa($idCollection, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections) ;
         return $items;
     }
     

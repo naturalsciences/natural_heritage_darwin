@@ -91,7 +91,10 @@ class Multimedia extends BaseMultimedia
 
   public function changeUri()
   {
+	  
     $this->checkUploadPathAvailable() ;
+	print("BUILDED\r\n");
+	print( sfConfig::get('sf_upload_dir')."/multimedia/".$this->getBuildedUrl());
     rename(
       sfConfig::get('sf_upload_dir')."/multimedia/temp/".$this->_get('uri'),
       sfConfig::get('sf_upload_dir')."/multimedia/".$this->getBuildedUrl()
@@ -127,6 +130,11 @@ class Multimedia extends BaseMultimedia
     if(!is_dir($path)) mkdir($path,0750,true) ;
     return true;
   }
+  
+  public static function getMimeTypeFor($key)
+  {
+    return self::$allowed_mime_type[$key] ;
+  }
 
   public static function CheckMimeType($mime_type)
   {
@@ -135,7 +143,12 @@ class Multimedia extends BaseMultimedia
 
   public function getFullURI()
   {
-    return sfConfig::get('sf_upload_dir').'/multimedia/'.$this->getUri();
+	$dir=sfConfig::get('dw_upload_dir');
+	if(strlen(trim($dir))==0)
+	{
+		$dir=sfConfig::get('sf_upload_dir');
+	}	
+    return $dir.'/multimedia/'.$this->getUri();
   }
 
   public function getSize()

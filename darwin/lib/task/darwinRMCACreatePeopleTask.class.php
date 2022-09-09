@@ -38,7 +38,7 @@ EOF;
 				$ctn = $conn->exec($sql);
 				$conn->commit();
 				$this->setImportAsWorking($conn, $id_import, false);
-				$import_obj = Doctrine::getTable('Imports')->find($id_import);
+				$import_obj = Doctrine_Core::getTable('Imports')->find($id_import);
 				 $import_obj->setState("pending");
 				  $import_obj->save();
 		  }
@@ -51,7 +51,7 @@ EOF;
                 $conn->rollback();
              }
              print($q->getId());
-             /*$import_obj = Doctrine::getTable('Imports')->find($q->getId());
+             /*$import_obj = Doctrine_Core::getTable('Imports')->find($q->getId());
              $import_obj->setErrorsInImport($e->getMessage());
              $import_obj->setState("error");
               $import_obj->setWorking(FALSE);

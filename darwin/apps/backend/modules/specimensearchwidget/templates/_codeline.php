@@ -57,6 +57,15 @@
     }
     checkBetween();
   });
+  
+    function find_category(index)
+  {
+
+	var ctrl="#specimen_search_filters_Codes_"+index.toString()+"_category";
+	var category=$(ctrl).val();
+
+	return category;
+  }
   //ftheeten 2018 03 08
   var url="<?php echo(url_for('catalogue/codesAutocomplete?'));?>";
    var autocomplete_rmca_array=Array();
@@ -64,7 +73,8 @@
 		source: function (request, response) {
 			$.getJSON(url, {
 						term : request.term,
-						collections: autocomplete_rmca_array.join()
+						collections: autocomplete_rmca_array.join(),
+						category:find_category(<?php echo $row_line;?>)
 					} , 
 					function (data) 
 						{

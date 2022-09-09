@@ -15,7 +15,7 @@ class savesearchActions extends sfActions
   {
     if($request->getParameter('search') && ctype_digit($request->getParameter('search')) && $request->getParameter('ids',"") != "" )
     {
-      $saved_search = Doctrine::getTable('MySavedSearches')->getSavedSearchByKey($request->getParameter('search'), $this->getUser()->getId());
+      $saved_search = Doctrine_Core::getTable('MySavedSearches')->getSavedSearchByKey($request->getParameter('search'), $this->getUser()->getId());
       $this->forward404Unless($saved_search);
 
       $prev_req = $saved_search->getUnserialRequest();
@@ -78,7 +78,7 @@ class savesearchActions extends sfActions
   {
     if($request->getParameter('id'))
     {
-      $saved_search = Doctrine::getTable('MySavedSearches')->getSavedSearchByKey($request->getParameter('id'), $this->getUser()->getId());
+      $saved_search = Doctrine_Core::getTable('MySavedSearches')->getSavedSearchByKey($request->getParameter('id'), $this->getUser()->getId());
     }
     $this->forward404Unless($saved_search);
     if($request->getParameter('status') === '1')
@@ -96,7 +96,7 @@ class savesearchActions extends sfActions
     /// FETCH an exisiting saved search for edition
     if($request->getParameter('id'))
     {
-      $saved_search = Doctrine::getTable('MySavedSearches')->getSavedSearchByKey($request->getParameter('id'), $this->getUser()->getId());
+      $saved_search = Doctrine_Core::getTable('MySavedSearches')->getSavedSearchByKey($request->getParameter('id'), $this->getUser()->getId());
     }
     else
     {
@@ -127,7 +127,7 @@ class savesearchActions extends sfActions
         }
         else
         {
-          $saved_search = Doctrine::getTable('MySavedSearches')->getSavedSearchByKey($request->getParameter('list_nr'), $this->getUser()->getId());
+          $saved_search = Doctrine_Core::getTable('MySavedSearches')->getSavedSearchByKey($request->getParameter('list_nr'), $this->getUser()->getId());
 
           $prev_req = $saved_search->getUnserialRequest();
           $old_ids = $saved_search->getAllSearchedId();
@@ -175,7 +175,7 @@ class savesearchActions extends sfActions
 
   public function executeDeleteSavedSearch(sfWebRequest $request)
   {
-    $r = Doctrine::getTable( DarwinTable::getModelForTable($request->getParameter('table')) )->find($request->getParameter('id'));
+    $r = Doctrine_Core::getTable( DarwinTable::getModelForTable($request->getParameter('table')) )->find($request->getParameter('id'));
     $this->forward404Unless($r,'No such item');
     try{
       $is_spec_search = $r->getIsOnlyId();
@@ -198,7 +198,7 @@ class savesearchActions extends sfActions
   
   public function executeIndex(sfWebRequest $request)
   {
-    $q = Doctrine::getTable('MySavedSearches')
+    $q = Doctrine_Core::getTable('MySavedSearches')
         ->addUserOrder(null, $this->getUser()->getId());
 
 		 
@@ -206,7 +206,7 @@ class savesearchActions extends sfActions
 
     if($request->getParameter('specimen') != '')
       $this->is_only_spec = true;
-    $this->searches = Doctrine::getTable('MySavedSearches')
+    $this->searches = Doctrine_Core::getTable('MySavedSearches')
         ->addIsSearch($q, ! $this->is_only_spec)
 		         //ftheeten 2018 02 16
 		 ->orderBy('modification_date_time DESC')
@@ -224,7 +224,7 @@ class savesearchActions extends sfActions
              $query_id=$request->getParameter('query_id');
              $user_id=$request->getParameter('user_id');
              $sql = "SELECT fct_rmca_dynamic_saved_search_geojson as geojson FROM fct_rmca_dynamic_saved_search_geojson(:query, :user);";
-              $saved_search = Doctrine::getTable('MySavedSearches')->getSavedSearchByKey($query_id, $user_id);
+              $saved_search = Doctrine_Core::getTable('MySavedSearches')->getSavedSearchByKey($query_id, $user_id);
               $conn = Doctrine_Manager::connection();
              $q = $conn->prepare($sql);
              
@@ -266,12 +266,12 @@ return sfView::NONE;
 			//$this->total_size= Doctrine_Core::getTable("MySavedSearches")->countRecursiveSQLRecords($this->user_id, $this->query_id);
 			$this->size=20000;
             $this->max_page =3;
-			$saved_search = Doctrine::getTable('MySavedSearches')->getSavedSearchByKey($this->query_id, $this->user_id);
+			$saved_search = Doctrine_Core::getTable('MySavedSearches')->getSavedSearchByKey($this->query_id, $this->user_id);
 			$this->name = $saved_search->getName();
             $nbpages=ceil($this->total_size/$this->size);
             
 
-             $dataset=Doctrine::getTable('MySavedSearches')->getSavedSearchData($this->user_id, $this->query_id);
+             $dataset=Doctrine_Core::getTable('MySavedSearches')->getSavedSearchData($this->user_id, $this->query_id);
                         
              $returned=Array();             
              $i=0;
@@ -316,12 +316,12 @@ return sfView::NONE;
 			//$this->total_size= Doctrine_Core::getTable("MySavedSearches")->countRecursiveSQLRecords($this->user_id, $this->query_id);
 			$this->size=20000;
             $this->max_page =3;
-			$saved_search = Doctrine::getTable('MySavedSearches')->getSavedSearchByKey($this->query_id, $this->user_id);
+			$saved_search = Doctrine_Core::getTable('MySavedSearches')->getSavedSearchByKey($this->query_id, $this->user_id);
 			$this->name = $saved_search->getName();
             $nbpages=ceil($this->total_size/$this->size);
             
 
-             $dataset=Doctrine::getTable('MySavedSearches')->getSavedSearchDataTaxonomy($this->user_id, $this->query_id);
+             $dataset=Doctrine_Core::getTable('MySavedSearches')->getSavedSearchDataTaxonomy($this->user_id, $this->query_id);
                         
              $returned=Array();             
              $i=0;
@@ -355,4 +355,84 @@ return sfView::NONE;
             return sfView::NONE;   
 	   }
     }
+	
+	  public function executeDownloadVirtualCollections(sfWebRequest $request)
+	  {
+		  $this->name="debug";
+		  if($request->getParameter('query_id','')!=='' && $request->getParameter('user_ref','')!=='')
+		  {
+			$this->query_id=$request->getParameter('query_id','');
+			$this->user_ref=$request->getParameter('user_ref','');
+			$this->name="Get Virtual Collection report for query".$this->query_id;
+			if(ctype_digit($this->query_id) && ctype_digit($this->user_ref))
+			{
+				$currentDir=getcwd();
+				chdir(sfconfig::get('sf_root_dir'));
+
+				$cmd='darwin:get-tab-report --type_report=specimen_virtual_collections --user_id='.$this->user_ref.' --query_id='.$this->query_id ;  
+				exec('nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );
+				chdir($currentDir);	
+			}
+		  }
+	  }
+	  
+	  public function executeTestVirtualCollectionsReportRunning(sfWebRequest $request)
+	  {
+		if($request->getParameter('query_id','')!=='')
+		  {
+			$query_id=$request->getParameter('query_id','');
+			if(ctype_digit($query_id))
+			{
+				$uri = sfConfig::get('sf_upload_dir').'/tab_report/Report_VC_' . $query_id.".txt";
+				$uri_2 = sfConfig::get('sf_upload_dir').'/tab_report/work_Report_VC_' . $query_id.".txt";
+				 $this->getResponse()->setContentType('application/json');
+				if(file_exists($uri_2))
+				{
+					 return  $this->renderText(json_encode(Array("state"=> "running"),JSON_UNESCAPED_SLASHES));
+				}
+				else
+				{
+					if(file_exists($uri))
+					{
+					 return  $this->renderText(json_encode(Array("state"=> "available"),JSON_UNESCAPED_SLASHES));
+					}
+					else
+					{
+						 return  $this->renderText(json_encode(Array("state"=> "issue"),JSON_UNESCAPED_SLASHES));
+					}
+				}
+			}
+		  }	  
+	  }
+	  
+	  public function executeDownloadVirtualCollectionsFile(sfWebRequest $request)
+	  {
+		$this->setLayout(false);
+		if($request->getParameter('query_id') != '')
+		 {
+			$this->query_id=$request->getParameter('query_id');
+			$uri = sfConfig::get('sf_upload_dir').'/tab_report/Report_VC_' . $this->query_id.".txt";			
+			$this->forward404Unless(file_exists($uri),sprintf('This file does not exist') );
+			$response = $this->getResponse();
+			// First clear HTTP headers
+			$response->clearHttpHeaders();
+			// Then define the necessary headers
+			$response->setContentType(Multimedia::getMimeTypeFor("txt"));
+			$response->setHttpHeader(
+			  'Content-Disposition',
+			  'attachment; filename="Report_VC_'.$this->query_id.'.txt"');
+			$response->setHttpHeader('Content-Description', 'File Transfer');
+			$response->setHttpHeader('Content-Transfer-Encoding', 'binary');
+			$response->setHttpHeader('Content-Length', filesize($uri));
+			$response->setHttpHeader('Cache-Control', 'public, must-revalidate');
+			// if https then always give a Pragma header like this  to overwrite the "pragma: no-cache" header which
+			// will hint IE8 from caching the file during download and leads to a download error!!!
+			$response->setHttpHeader('Pragma', 'public');
+			$response->sendHttpHeaders();
+			ob_end_flush();
+			return $this->renderText(readfile($uri));
+		 }	 
+			
+	  }
+  
 }

@@ -20,40 +20,43 @@
  * @property string $specimen_count
  * @property Loans $Loan
  * @property Igs $Ig
- * @property Specimens $DarwinParts
+ * @property Specimens $Specimens
+ * @property Doctrine_Collection $SpecimensStoragePartsView
  * 
- * @method integer   getId()                       Returns the current record's "id" value
- * @method integer   getLoanRef()                  Returns the current record's "loan_ref" value
- * @method integer   getIgRef()                    Returns the current record's "ig_ref" value
- * @method string    getFromDate()                 Returns the current record's "from_date" value
- * @method string    getToDate()                   Returns the current record's "to_date" value
- * @method integer   getSpecimenRef()              Returns the current record's "specimen_ref" value
- * @method string    getDetails()                  Returns the current record's "details" value
- * @method integer   getSpecimenCountTot()         Returns the current record's "specimen_count_tot" value
- * @method integer   getSpecimenCountMales()       Returns the current record's "specimen_count_males" value
- * @method integer   getSpecimenCountFemales()     Returns the current record's "specimen_count_females" value
- * @method integer   getSpecimenCountJuveniles()   Returns the current record's "specimen_count_juveniles" value
- * @method string    getSpecimenPart()             Returns the current record's "specimen_part" value
- * @method string    getSpecimenCount()            Returns the current record's "specimen_count" value
- * @method Loans     getLoan()                     Returns the current record's "Loan" value
- * @method Igs       getIg()                       Returns the current record's "Ig" value
- * @method Specimens getDarwinParts()              Returns the current record's "DarwinParts" value
- * @method LoanItems setId()                       Sets the current record's "id" value
- * @method LoanItems setLoanRef()                  Sets the current record's "loan_ref" value
- * @method LoanItems setIgRef()                    Sets the current record's "ig_ref" value
- * @method LoanItems setFromDate()                 Sets the current record's "from_date" value
- * @method LoanItems setToDate()                   Sets the current record's "to_date" value
- * @method LoanItems setSpecimenRef()              Sets the current record's "specimen_ref" value
- * @method LoanItems setDetails()                  Sets the current record's "details" value
- * @method LoanItems setSpecimenCountTot()         Sets the current record's "specimen_count_tot" value
- * @method LoanItems setSpecimenCountMales()       Sets the current record's "specimen_count_males" value
- * @method LoanItems setSpecimenCountFemales()     Sets the current record's "specimen_count_females" value
- * @method LoanItems setSpecimenCountJuveniles()   Sets the current record's "specimen_count_juveniles" value
- * @method LoanItems setSpecimenPart()             Sets the current record's "specimen_part" value
- * @method LoanItems setSpecimenCount()            Sets the current record's "specimen_count" value
- * @method LoanItems setLoan()                     Sets the current record's "Loan" value
- * @method LoanItems setIg()                       Sets the current record's "Ig" value
- * @method LoanItems setDarwinParts()              Sets the current record's "DarwinParts" value
+ * @method integer             getId()                        Returns the current record's "id" value
+ * @method integer             getLoanRef()                   Returns the current record's "loan_ref" value
+ * @method integer             getIgRef()                     Returns the current record's "ig_ref" value
+ * @method string              getFromDate()                  Returns the current record's "from_date" value
+ * @method string              getToDate()                    Returns the current record's "to_date" value
+ * @method integer             getSpecimenRef()               Returns the current record's "specimen_ref" value
+ * @method string              getDetails()                   Returns the current record's "details" value
+ * @method integer             getSpecimenCountTot()          Returns the current record's "specimen_count_tot" value
+ * @method integer             getSpecimenCountMales()        Returns the current record's "specimen_count_males" value
+ * @method integer             getSpecimenCountFemales()      Returns the current record's "specimen_count_females" value
+ * @method integer             getSpecimenCountJuveniles()    Returns the current record's "specimen_count_juveniles" value
+ * @method string              getSpecimenPart()              Returns the current record's "specimen_part" value
+ * @method string              getSpecimenCount()             Returns the current record's "specimen_count" value
+ * @method Loans               getLoan()                      Returns the current record's "Loan" value
+ * @method Igs                 getIg()                        Returns the current record's "Ig" value
+ * @method Specimens           getSpecimens()                 Returns the current record's "Specimens" value
+ * @method Doctrine_Collection getSpecimensStoragePartsView() Returns the current record's "SpecimensStoragePartsView" collection
+ * @method LoanItems           setId()                        Sets the current record's "id" value
+ * @method LoanItems           setLoanRef()                   Sets the current record's "loan_ref" value
+ * @method LoanItems           setIgRef()                     Sets the current record's "ig_ref" value
+ * @method LoanItems           setFromDate()                  Sets the current record's "from_date" value
+ * @method LoanItems           setToDate()                    Sets the current record's "to_date" value
+ * @method LoanItems           setSpecimenRef()               Sets the current record's "specimen_ref" value
+ * @method LoanItems           setDetails()                   Sets the current record's "details" value
+ * @method LoanItems           setSpecimenCountTot()          Sets the current record's "specimen_count_tot" value
+ * @method LoanItems           setSpecimenCountMales()        Sets the current record's "specimen_count_males" value
+ * @method LoanItems           setSpecimenCountFemales()      Sets the current record's "specimen_count_females" value
+ * @method LoanItems           setSpecimenCountJuveniles()    Sets the current record's "specimen_count_juveniles" value
+ * @method LoanItems           setSpecimenPart()              Sets the current record's "specimen_part" value
+ * @method LoanItems           setSpecimenCount()             Sets the current record's "specimen_count" value
+ * @method LoanItems           setLoan()                      Sets the current record's "Loan" value
+ * @method LoanItems           setIg()                        Sets the current record's "Ig" value
+ * @method LoanItems           setSpecimens()                 Sets the current record's "Specimens" value
+ * @method LoanItems           setSpecimensStoragePartsView() Sets the current record's "SpecimensStoragePartsView" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -126,7 +129,11 @@ abstract class BaseLoanItems extends DarwinModel
              'local' => 'ig_ref',
              'foreign' => 'id'));
 
-        $this->hasOne('Specimens as DarwinParts', array(
+        $this->hasOne('Specimens', array(
+             'local' => 'specimen_ref',
+             'foreign' => 'id'));
+
+        $this->hasMany('SpecimensStoragePartsView', array(
              'local' => 'specimen_ref',
              'foreign' => 'id'));
     }

@@ -17,6 +17,7 @@ class RMCATabToABCDXml
         $fields[] = "datasetName";
         $fields[] = "KindOfUnit";
         $fields[] = "TypeStatus";
+		$fields[] = "SpecimenStatus";
         $fields[] = "totalNumber";
         $fields[] = "maleCount";
         $fields[] = "femaleCount";
@@ -145,6 +146,26 @@ class RMCATabToABCDXml
         $fields[] = "ParasiteAuthority";
         $fields[] = "ParasiteCollector";
         $fields[] = "ParasiteIdentifier";
+		
+		/*
+		REPEATABLE FIELDS WITH | in template
+     categories 
+     specimen_parts  
+     buildings 
+     floors 
+     rooms 
+     rows  
+     cols  
+     shelves  
+     containers  
+     sub_containers 
+    containers_type  
+     sub_containers_type  
+     containers_storage 
+     sub_containers_storage 
+     statuses 
+     object_name  
+	 */
 		
         //ftheeten 2018 04 12
         for($i=1;$i<=$this->nbProperties;$i++)
@@ -544,78 +565,92 @@ class RMCATabToABCDXml
         $flagTrytoGuessDecimalCoordinates = false;
         $flagGuessedDecimal = false;
         
-        
+        print("TEST_COORD");
         
         if (array_key_exists(strtolower("LatitudeDecimal"), $this->headers_inverted) && array_key_exists(strtolower("LongitudeDecimal"), $this->headers_inverted)) {
+			print("DECIMAL");
+			
+			$p_valueArray[$this->headers_inverted[strtolower("LatitudeDecimal")]]=str_replace(",",".",$p_valueArray[$this->headers_inverted[strtolower("LatitudeDecimal")]]);
+			$p_valueArray[$this->headers_inverted[strtolower("LongitudeDecimal")]]=str_replace(",",".",$p_valueArray[$this->headers_inverted[strtolower("LongitudeDecimal")]]);
             if (is_numeric($p_valueArray[$this->headers_inverted[strtolower("LatitudeDecimal")]]) && is_numeric($p_valueArray[$this->headers_inverted[strtolower("LongitudeDecimal")]])) {
                 $flagDecimalDirect = true;
+				
             }
         }
         if ($flagDecimalDirect) {    
  
+ print("DECIMAL_2");
             $coord_node = $this->testAndAppendTag($p_parentElement, null, "SiteCoordinateSets/SiteCoordinates/CoordinatesLatLong", null, null, true);
             $this->testAndAppendTag($coord_node, "LatitudeDecimal", "LatitudeDecimal", $p_valueArray);
             $this->testAndAppendTag($coord_node, "LongitudeDecimal", "LongitudeDecimal", $p_valueArray);
         } 
         elseif (array_key_exists(strtolower("LatitudeDMSDegrees"), $this->headers_inverted) && array_key_exists(strtolower("LatitudeDMS_N_S"), $this->headers_inverted) && array_key_exists(strtolower("LongitudeDMSDegrees"), $this->headers_inverted) && array_key_exists(strtolower("LongitudeDMS_W_E"), $this->headers_inverted)) 
         {
+			 print("DMS_2");
+			
+			if(strlen($p_valueArray[$this->headers_inverted[strtolower("LatitudeDMSDegrees")]])>0&&strlen($p_valueArray[$this->headers_inverted[strtolower("LongitudeDMSDegrees")]])>0)
+			{
 
-            $rootLat  = (float) abs($p_valueArray[$this->headers_inverted[strtolower("LatitudeDMSDegrees")]]);
-            $rootLong = (float) abs($p_valueArray[$this->headers_inverted[strtolower("LongitudeDMSDegrees")]]);
-            $latText  = (string) abs($p_valueArray[$this->headers_inverted[strtolower("LatitudeDMSDegrees")]]) . "&#176;";
-            $longText = (string) abs($p_valueArray[$this->headers_inverted[strtolower("LongitudeDMSDegrees")]]) . "&#176;";
-            
-            if (array_key_exists(strtolower("LatitudeDMSMinutes"), $this->headers_inverted)) {
-                if (is_numeric($p_valueArray[$this->headers_inverted[strtolower("LatitudeDMSMinutes")]])) {
-                    $latMin  = (float) $p_valueArray[$this->headers_inverted[strtolower("LatitudeDMSMinutes")]];
-                    $latText = $latText . ((string) $latMin) . "'";
-                    $latMin  = (float) $latMin / 60;
-                    $rootLat = $rootLat + $latMin;
-                }
-            }
-            
-            if (array_key_exists(strtolower("LongitudeDMSMinutes"), $this->headers_inverted)) {
-                if (is_numeric($p_valueArray[$this->headers_inverted[strtolower("LongitudeDMSMinutes")]])) {
-                    $longMin  = (float) $p_valueArray[$this->headers_inverted[strtolower("LongitudeDMSMinutes")]];
-                    $longText = $longText . ((string) $longMin) . "'";
-                    $longMin  = (float) $longMin / 60;
-                    $rootLong = $rootLong + $longMin;
-                    
-                }
-            }
-            if (array_key_exists(strtolower("LatitudeDMSSeconds"), $this->headers_inverted)) {
-                if (is_numeric($p_valueArray[$this->headers_inverted[strtolower("LatitudeDMSSeconds")]])) {
-                    $latSec  = (float) $p_valueArray[$this->headers_inverted[strtolower("LatitudeDMSSeconds")]];
-                    $latText = $latText . ((string) $latSec) . '"';
-                    $latSec  = (float) $latSec / 3600;
-                    $rootLat = $rootLat + $latSec;
-                }
-            }
-            if (array_key_exists(strtolower("LongitudeDMSSeconds"), $this->headers_inverted)) {
-                if (is_numeric($p_valueArray[$this->headers_inverted[strtolower("LongitudeDMSSeconds")]])) {
-                    $longSec  = (float) $p_valueArray[$this->headers_inverted[strtolower("LongitudeDMSSeconds")]];
-                    $longText = $longText . ((string) $longSec) . '"';
-                    $longSec  = (float) $longSec / 3600;
-                    $rootLong = $rootLong + $longSec;
-                }
-            }
-            if (strtolower($p_valueArray[$this->headers_inverted[strtolower("LatitudeDMS_N_S")]]) == "s") {
-                $rootLat = $rootLat * -1;
-            }
-            if (strtolower($p_valueArray[$this->headers_inverted[strtolower("LongitudeDMS_W_E")]]) == "w") {
-                $rootLong = $rootLong * -1;
-            }
-            $latText  = $latText . strtoupper($p_valueArray[$this->headers_inverted[strtolower("LatitudeDMS_N_S")]]);
-            $longText = $longText . strtoupper($p_valueArray[$this->headers_inverted[strtolower("LongitudeDMS_W_E")]]);
-            
-            $coord_node = $this->testAndAppendTag($p_parentElement, null, "SiteCoordinateSets/SiteCoordinates/CoordinatesLatLong", null, null, true);
-            $this->testAndAppendTag($coord_node, "LatitudeDecimal", "LatitudeDecimal", null, $rootLat);
-            $this->testAndAppendTag($coord_node, "LongitudeDecimal", "LongitudeDecimal", null, $rootLong);
+				print("DEBUG");
+				$rootLat  = (float) abs($p_valueArray[$this->headers_inverted[strtolower("LatitudeDMSDegrees")]]);
+				$rootLong = (float) abs($p_valueArray[$this->headers_inverted[strtolower("LongitudeDMSDegrees")]]);
+				$latText  = (string) abs($p_valueArray[$this->headers_inverted[strtolower("LatitudeDMSDegrees")]]) . "&#176;";
+				$longText = (string) abs($p_valueArray[$this->headers_inverted[strtolower("LongitudeDMSDegrees")]]) . "&#176;";
+				
+				if (array_key_exists(strtolower("LatitudeDMSMinutes"), $this->headers_inverted)) {
+					if (is_numeric($p_valueArray[$this->headers_inverted[strtolower("LatitudeDMSMinutes")]])) {
+						$latMin  = (float) $p_valueArray[$this->headers_inverted[strtolower("LatitudeDMSMinutes")]];
+						$latText = $latText . ((string) $latMin) . "'";
+						$latMin  = (float) $latMin / 60;
+						$rootLat = $rootLat + $latMin;
+					}
+				}
+				
+				if (array_key_exists(strtolower("LongitudeDMSMinutes"), $this->headers_inverted)) {
+					if (is_numeric($p_valueArray[$this->headers_inverted[strtolower("LongitudeDMSMinutes")]])) {
+						$longMin  = (float) $p_valueArray[$this->headers_inverted[strtolower("LongitudeDMSMinutes")]];
+						$longText = $longText . ((string) $longMin) . "'";
+						$longMin  = (float) $longMin / 60;
+						$rootLong = $rootLong + $longMin;
+						
+					}
+				}
+				if (array_key_exists(strtolower("LatitudeDMSSeconds"), $this->headers_inverted)) {
+					if (is_numeric($p_valueArray[$this->headers_inverted[strtolower("LatitudeDMSSeconds")]])) {
+						$latSec  = (float) $p_valueArray[$this->headers_inverted[strtolower("LatitudeDMSSeconds")]];
+						$latText = $latText . ((string) $latSec) . '"';
+						$latSec  = (float) $latSec / 3600;
+						$rootLat = $rootLat + $latSec;
+					}
+				}
+				if (array_key_exists(strtolower("LongitudeDMSSeconds"), $this->headers_inverted)) {
+					if (is_numeric($p_valueArray[$this->headers_inverted[strtolower("LongitudeDMSSeconds")]])) {
+						$longSec  = (float) $p_valueArray[$this->headers_inverted[strtolower("LongitudeDMSSeconds")]];
+						$longText = $longText . ((string) $longSec) . '"';
+						$longSec  = (float) $longSec / 3600;
+						$rootLong = $rootLong + $longSec;
+					}
+				}
+				if (strtolower($p_valueArray[$this->headers_inverted[strtolower("LatitudeDMS_N_S")]]) == "s") {
+					print("REV");
+					$rootLat = $rootLat * -1;
+				}
+				if (strtolower($p_valueArray[$this->headers_inverted[strtolower("LongitudeDMS_W_E")]]) == "w") {
+					print("REV");
+					$rootLong = $rootLong * -1;
+				}
+				$latText  = $latText . strtoupper($p_valueArray[$this->headers_inverted[strtolower("LatitudeDMS_N_S")]]);
+				$longText = $longText . strtoupper($p_valueArray[$this->headers_inverted[strtolower("LongitudeDMS_W_E")]]);
+				
+				$coord_node = $this->testAndAppendTag($p_parentElement, null, "SiteCoordinateSets/SiteCoordinates/CoordinatesLatLong", null, null, true);
+				$this->testAndAppendTag($coord_node, "LatitudeDecimal", "LatitudeDecimal", null, $rootLat);
+				$this->testAndAppendTag($coord_node, "LongitudeDecimal", "LongitudeDecimal", null, $rootLong);
+			}
         }
         //try to calculate DD from DMS in text
         elseif (array_key_exists(strtolower("LatitudeText"), $this->headers_inverted) && array_key_exists(strtolower("LongitudeText"), $this->headers_inverted)) 
         {
-
+			print("FROM_TEXT");
             if (strlen(trim($p_valueArray[$this->headers_inverted[strtolower("LatitudeText")]]))>0 && strlen(trim($p_valueArray[$this->headers_inverted[strtolower("LongitudeText")]]))>0) {
                 $flagTrytoGuessDecimalCoordinates = true;
                 $latitudeDecimaltmp=$this->convertDMSToDecimal($p_valueArray[$this->headers_inverted[strtolower("LatitudeText")]]);
@@ -801,6 +836,7 @@ class RMCATabToABCDXml
         $this->testAndAppendTag($storageLocalisation, "Row", "storage:Row", $p_valueArray, null, false, $namespace_storage);
         $this->testAndAppendTag($storageLocalisation, "Column", "storage:Column", $p_valueArray, null, false, $namespace_storage);
         $this->testAndAppendTag($storageLocalisation, "Shelf", "storage:Shelf", $p_valueArray, null, false, $namespace_storage);
+		$this->testAndAppendTag($storageLocalisation, "specimenStatus", "storage:SpecimenStatus", $p_valueArray, null, false, $namespace_storage);
         
         $storageContainer = $this->testAndAppendTag($storageNode, null, "Container", null, null, true, $namespace_storage);
         $this->testAndAppendTag($storageContainer, "ContainerName", "storage:ContainerName", $p_valueArray, null, false, $namespace_storage);
@@ -1067,7 +1103,14 @@ class RMCATabToABCDXml
         
         
         //print($dom->saveXML($root, LIBXML_NOEMPTYTAG ));
-       
+		$xpath = new DOMXPath($dom);
+
+		foreach( $xpath->query('//*[not(node())]') as $node ) {
+			$node->parentNode->removeChild($node);
+		}
+
+		$dom->formatOutput = true;
+			   
         return $dom->saveXML($root, LIBXML_NOEMPTYTAG );
     }
     

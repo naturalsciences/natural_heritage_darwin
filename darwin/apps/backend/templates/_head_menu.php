@@ -173,6 +173,7 @@ if(array_key_exists("menu", $_SESSION))
                     <ul class="submenu lvl_2">
                         <li><?php echo link_to(__('Specimens'),'import/index');?></li>
                         <li><?php echo link_to(__('Taxonomy'),'import/indexTaxon');?></li>
+						<li><?php echo link_to(__('Localities'),'import/indexLocalities');?></li>
 						<li><?php echo link_to(__('Files'),'import/indexFiles');?></li>
 						<li><?php echo link_to(__('Related links'),'import/indexLinks');?></li>
                     </ul>
@@ -195,7 +196,14 @@ if(array_key_exists("menu", $_SESSION))
         <li>
             <a href="" class="subtitle"><?php echo __('Help');?></a>
             <ul class="submenu">
-                <li><?php echo link_to(__('Help'),'help/index');?></li>
+                <li><?php echo link_to(__('Help'),'help/index');?></li>				
+				<li>
+                    <a href="#" class="subtitle"><?php echo __('RMCA documents');?> »</a>
+					<ul class="submenu lvl_2">
+						<li><?php echo link_to(__('List of collection acronyms (word)'),'help/rmca_documents');?></li>
+                        <li><?php echo link_to(__('List of collection acronyms (web)'),'help/list_inv_acronyms');?></li>
+					</ul>
+                 </li>
                 <li><?php echo link_to(__('Contacts'),'help/contact');?></li>
                 <li><?php echo link_to(__('Contribute'),'help/contrib');?></li>
                 <li><?php echo link_to(__('About'),'help/about');?></li>

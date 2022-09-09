@@ -73,7 +73,7 @@
     });
 
 	$(document).ready(function (){
-		var $val_id=$("#specimen_taxon_ref_name").val();
+		var $val_id=$("#specimen_taxon_ref").val();
 
 		if ($val_id != ""){
 			var url=location.protocol + '//' + location.host + "/"+ location.pathname.split("/")[1] +  "/specimen/getCitesAndTaxonomy";

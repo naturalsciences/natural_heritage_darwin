@@ -20,7 +20,7 @@ class PeopleAssociationsForm extends BaseCataloguePeopleForm
     $people_id= $this->getObject()->getPeopleRef() ;
 
     if($people_id) {
-      $person = Doctrine::getTable('People')->find($people_id);
+      $person = Doctrine_Core::getTable('People')->find($people_id);
     } else {
       $this->widgetSchema['people_ref']->setAttribute('class','hidden_record');
     }

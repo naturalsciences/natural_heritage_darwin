@@ -11,8 +11,11 @@
 class ImportsForm extends BaseImportsForm
 {
   public function configure()
-  {    
-  //ftheeten july 2017 (fixed january 2018)
+  {  
+
+	//ftheeten 2018 07 23
+    $this->widgetSchema['source_database'] =  new sfWidgetFormInputText(); 
+    $this->validatorSchema['source_database'] =  new sfValidatorString() ;
     if($this->options['format'] == 'taxon')
     {
      //$this->useFields(array('format', 'exclude_invalid_entries', 'taxonomy_name', 'creation_date', 'is_reference_taxonomy', 'source_taxonomy', 'definition_taxonomy', 'url_website_taxonomy', 'url_webservice_taxonomy')) ;
@@ -32,6 +35,31 @@ class ImportsForm extends BaseImportsForm
     ));
          
     }
+	elseif($this->options['format'] == 'locality')
+	{
+		//ftheeten 2018 07 15
+		$this->useFields(array('gtu_include_date','gtu_tags_in_merge', 'sensitive_information_withheld', 'collection_ref')) ;
+		
+		$this->widgetSchema['collection_ref'] = new widgetFormButtonRef(
+        array(
+          'model' => 'Collections',
+          'link_url' => 'collection/choose',
+          'method' => 'getName',
+          'box_title' => $this->getI18N()->__('Choose'),
+          'button_class'=>'',
+        ),
+        array(
+          'class'=>'inline',
+        )
+      );
+	    //$this->validatorSchema['collection_ref'] = new sfValidatorInteger(array('required'=>true));
+		$category = array('locality'=>$this->getI18N()->__('Locality')) ;
+		$this->widgetSchema['include_date'] = new sfWidgetFormInputCheckbox();
+		$this->validatorSchema['include_date'] = new sfValidatorBoolean(array('required' => false));
+		$this->widgetSchema['tags_in_merge'] = new sfWidgetFormInputCheckbox();
+		$this->validatorSchema['tags_in_merge'] = new sfValidatorBoolean(array('required' => false));
+    
+	}
 	elseif($this->options['format'] == 'files')
 	{
 
@@ -103,7 +131,7 @@ class ImportsForm extends BaseImportsForm
 	}
     else
     {
-      $this->useFields(array('collection_ref', 'format','merge_gtu')) ;
+      $this->useFields(array('collection_ref', 'format','merge_gtu', 'add_collection_prefix')) ;
       /* Collection Reference */
       $this->widgetSchema['collection_ref'] = new widgetFormButtonRef(
         array(
@@ -130,12 +158,20 @@ class ImportsForm extends BaseImportsForm
       //2019 12 16
       $this->widget_schema['merge_gtu'] = new sfWidgetFormInputCheckbox();
       $this->validatorSchema['merge_gtu'] = new sfValidatorBoolean (array('required'=>false));
+	  
+	   //2019 12 16
+      $this->widget_schema['add_collection_prefix'] = new sfWidgetFormInputCheckbox();
+      $this->validatorSchema['add_collection_prefix'] = new sfValidatorBoolean (array('required'=>false));
     
     }
+	//ftheeten 2018 07 23810
+    $this->widgetSchema['source_database'] =  new sfWidgetFormInputText(); 
+    $this->validatorSchema['source_database'] =  new sfValidatorString() ;
+	
     $this->widgetSchema['uploadfield'] = new sfWidgetFormInputFile(array(),array('id'=>'uploadfield'));
     //$allowed_types = array('text/xml','application/xml') ;
     //ftheeten 2017 09 07
-    $allowed_types = array('text/xml','application/xml', 'application/zip', 'text/plain') ;
+    $allowed_types = array('text/xml','application/xml', 'application/zip', 'text/plain', 'text/x-c++') ;
     $this->widgetSchema['format'] = new sfWidgetFormChoice(
       array(
         'choices' => $category

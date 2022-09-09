@@ -181,7 +181,7 @@ Gtu:
         #ftheeten rmca 2010 02 05
         longitude_utm: {type: float}
         #ftheeten rmca 2010 02 05
-        utm_zone: {type: varchar}
+        utm_zone: {type: string}
         location: {type: string}
         lat_long_accuracy: {type: float}
         elevation: {type: float}
@@ -194,7 +194,18 @@ Gtu:
         #JMHerpers 2018 07 05
         wkt_str: {type: string}
         #JMHerpers 2019 05 07
-        nagoya: { type: varchar, notnull: true}
+        nagoya: { type: string, notnull: true}
+        collector_refs: {type: string}
+        expedition_refs: {type: string}
+        collection_ref: {type: integer}
+        expedition_ref: {type: ref}
+    relations:
+        Expeditions:
+            local: expedition_ref
+            foreign : id
+            class: Expeditions
+        
+        
 Properties:
     columns:
         id: { type: integer, primary: true, autoincrement: true }
@@ -417,7 +428,7 @@ Collections:
         loan_last_value: { type: integer, notnull: true, default: 0}
         code_ai_inherit: { type: boolean, notnull: true, default: false}
         #JMHerpers 2019 05 07
-        nagoya: { type: varchar, notnull: true}
+        nagoya: { type: string, notnull: true}
     relations:
         Institution:
             class: People
@@ -613,6 +624,7 @@ ClassificationSynonymies:
         order_by: { type: integer, notnull: true, default:0}
         #ftheeten 2017 08 02
         synonym_record_id: { type: integer}
+        original_synonym: { type: boolean, default: false}
 
 Chronostratigraphy:
     columns:
@@ -904,8 +916,11 @@ Specimens:
         valid_label: { type: boolean}
         label_created_on: { type: string}
         label_created_by: { type: string}         
-        nagoya: { type: varchar, notnull: true}
+        nagoya: { type: string, notnull: true}
         import_ref: { type: integer}
+        uuid: { type: string}
+        specimen_creation_date : { type: string, notnull: true }
+        collection_name_full_path : {type: string}       
     relations:
         Collections:
             local: collection_ref
@@ -967,7 +982,11 @@ Specimens:
             class: SpecimensStableIds
             local: id
             foreign: specimen_fk
-
+        LoanItems:
+            class: LoanItems
+            local: id
+            foreign: specimen_ref
+            
 SpecimensStableIds:
     tableName: specimens_stable_ids
     columns:
@@ -1194,6 +1213,13 @@ Imports:
         taxonomy_kingdom: {type: string}
         #ftheeten 2019 12 16
         merge_gtu: {type: boolean, default: false}
+        gtu_include_date: {type: boolean, default: false }
+        #ftheeten 2018 07 15
+        gtu_tags_in_merge: {type: boolean, default: false }
+        add_collection_prefix: {type: boolean, default: false}
+        sensitive_information_withheld: {type: boolean, default: false }
+        #ftheeten 2018 07 26
+        source_database: {type: string}
     relations:
         Collections:
             local: collection_ref
@@ -1351,6 +1377,7 @@ StagingRelationship:
         unit_type: { type: string, notnull: true, default: 'specimens'}
         quantity: { type: decimal, length: 16, scale: 2}
         unit: { type: string, default: '%'}
+        existing_specimen_ref: { type:string}
 
 StagingTagGroups:
     columns:
@@ -1449,6 +1476,10 @@ Multimedia:
         visible: {type:boolean, notnull: true, default: true}
         publishable: {type:boolean, notnull: true, default: true}
         extracted_info: { type: string }
+        technical_parameters: { type: string }
+        external_uri: { type: string }
+        internet_protocol: { type: string }
+        field_observations: { type: string }
 
 # This sub class is used for linking loans with actors
 LoanActors:
@@ -1516,7 +1547,7 @@ LoanItems:
             local: ig_ref
             foreign: id
             class: Igs
-        DarwinParts:
+        Specimens:
             local: specimen_ref
             foreign: id
             class: Specimens
@@ -1567,11 +1598,18 @@ Bibliography:
         reference : { type:string }
         doi : { type:string }
     relations:
-        CataloguePeople:
+        CataloguePeopleBibliography:
             local: id
             foreign: record_id
-            class: CataloguePeople
+            class: CataloguePeopleBibliography
 
+CataloguePeopleBibliography:
+    inheritance:
+        extends: CataloguePeople
+        type: column_aggregation
+        keyField: referenced_relation
+        keyValue: bibliography
+        
 
 CatalogueBibliography:
     columns:
@@ -1621,12 +1659,14 @@ SpecimensStoragePartsView:
         synonymy_status : {type: string}
         count_by_synonymy_status : {type: integer}
         synonymy_count_all_in_group : {type: integer}
-        nagoya: { type: varchar,  default: true}
+        nagoya: { type: string,  default: true}
         cites: { type: boolean,  default: false}
         determination_status : {type: string}
         #in_loan: { type: boolean}
         #last_loan_name : {type: string}
-        #last_loan_status : {type: string}          
+        #last_loan_status : {type: string}
+        specimen_creation_date : { type: string, notnull: true }
+        collection_name_full_path : {type: string}      		
   relations:
         CollectionsRights:
             local: collection_ref
@@ -1636,3 +1676,115 @@ SpecimensStoragePartsView:
             class: SubProperties
             local: id
             foreign: record_id
+        LoanItems:
+            class: LoanItems
+            local: id
+            foreign: specimen_ref
+            
+Identifiers:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        referenced_relation: { type: string, notnull: true}
+        record_id: { type: integer}
+        protocol: { type: string, notnull: true}
+        value: { type: string, notnull: true}
+        creation_date: { type: string, notnull: true }
+        
+        
+#ftheeten 2018 07 26        
+StagingGtu:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        import_ref:  { type: integer, notnull: true}
+        pos_in_file: {type: integer}
+        status: {type: string}
+        date_included: {type: boolean, default: false }
+        tags_merged: {type: boolean, default: false }
+        sensitive_information_withheld: {type: boolean, default: false }
+        gtu_ref : {type: integer}
+        #'station' or 'event'
+        station_type: {type: string, notnull:false, default: 'station'}
+        sampling_code: {type: string, notnull:true}
+        sampling_field_number: {type: string}
+        event_cluster_code : {type:string}
+        event_order: {type: string}
+        ig_num : {type: string}
+        ig_num_indexed: {type: string}
+        collections: {type: string}
+        collectors: {type: string}
+        expeditions: {type: string }
+        collection_refs: {type: string}
+        collector_refs: {type: string}
+        expedition_refs: {type: string}
+        iso3166: {type: string}
+        iso3166_subdivision: {type: string}
+        countries: {type: string}
+        tags: {type: string}
+        tags_indexed: {type: string}
+        locality_text: {type: string}
+        locality_text_indexed: {type: string}
+        ecology_text: {type: string}
+        ecology_text_indexed: {type: string}
+        coordinates_format: {type: string},
+        latitude1: {type: string},
+        longitude1: {type: string},
+        latitude2: {type: string},
+        longitude2: {type: string},
+        #point, polygon, linestring, eventually bbox
+        gis_type: {type: string} 
+        coordinates_wkt: {type: string}
+        coordinates_datum: {type: string}
+        coordinates_proj_ref: {type: integer}
+        coordinates_original: {type: string}
+        coordinates_accuracy: { type: decimal, length: 15, scale: 4}
+        coordinates_accuracy_text: { type: string}
+        station_baseline_elevation: { type: decimal, length: 10, scale: 4}
+        station_baseline_accuracy: { type: decimal, length: 10, scale: 4}
+        sampling_elevation_start: { type: decimal, length: 10, scale: 4}
+        sampling_elevation_end: { type: decimal, length: 10, scale: 4}
+        sampling_elevation_accuracy: { type: decimal, length: 10, scale: 4}
+        original_elevation_data: {type: string}
+        sampling_depth_start: { type: decimal, length: 10, scale: 4}
+        sampling_depth_end: { type: decimal, length: 10, scale: 4}
+        sampling_depth_accuracy: { type: decimal, length: 10, scale: 4}
+        original_depth_data: {type: string}
+        #this would be in the template but in property table in SQL
+        #event_notes: {type: array} 
+        #event_property: {type: string}
+        #event_properties_type: {type: array}
+        #event_properties_lower_value: {type: array}
+        #event_properties_upper_value: {type: array}
+        #event_properties_unit: {type: array}
+        #time mandatory if station_stype = event
+        collecting_date_begin: {type: string}
+        #VALUE : DAY; MONTH; YEAR
+        collecting_date_begin_mask: {type: string}
+        collecting_date_end: {type: string}
+        collecting_date_end_mask: {type: string}
+        collecting_time_begin: {type: string}        
+        collecting_time_end: {type: string}
+        sampling_method: {type: string }
+        sampling_fixation: {type: string }
+        imported: {type: boolean }
+        #ftheeten 2019 02 14
+        import_exception  : {type : string}
+    relations:
+        Import:
+            local: import_ref
+            foreign: id
+            class: Imports
+            
+            
+#ftheeten 2018 07 29
+StagingGtuTagGroups:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        staging_gtu_ref: { type: integer, notnull: true}
+        group_name: {type: string, notnull: true}
+        sub_group_name:  { type: string, notnull: true }
+        tag_value: { type: string, notnull: true}
+    relations:
+        StagingGtu:
+            local: staging_gtu_ref
+            foreign: id
+            class: StagingGtu

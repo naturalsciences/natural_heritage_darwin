@@ -220,11 +220,11 @@ class StoragePartsSubForm extends StoragePartsForm
     public function forceContainerChoices()
       {
         $this->widgetSchema['container_storage']->setOption('forced_choices',
-          Doctrine::getTable('StorageParts')->getDistinctContainerStorages($this->getObject()->getContainerType())
+          Doctrine_Core::getTable('StorageParts')->getDistinctContainerStorages($this->getObject()->getContainerType())
         );
 
         $this->widgetSchema['sub_container_storage']->setOption('forced_choices',
-          Doctrine::getTable('StorageParts')->getDistinctSubContainerStorages($this->getObject()->getSubContainerType())
+          Doctrine_Core::getTable('StorageParts')->getDistinctSubContainerStorages($this->getObject()->getSubContainerType())
         );
       }
 }

@@ -16,7 +16,7 @@ class BiblioAssociationsForm extends BaseCatalogueBibliographyForm
     $bib_id= $this->getObject()->getBibliographyRef() ;
     $this->widgetSchema['bibliography_ref'] = new sfWidgetFormInputHidden();
     if($bib_id) {
-      $this->widgetSchema['bibliography_ref']->setLabel(Doctrine::getTable('Bibliography')->find($bib_id)->getTitle()) ;
+      $this->widgetSchema['bibliography_ref']->setLabel(Doctrine_Core::getTable('Bibliography')->find($bib_id)->getTitle()) ;
     }
     else {
       $this->widgetSchema['bibliography_ref']->setAttribute('class','hidden_record');

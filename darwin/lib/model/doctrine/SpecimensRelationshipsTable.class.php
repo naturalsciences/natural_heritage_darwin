@@ -53,4 +53,38 @@ class SpecimensRelationshipsTable extends DarwinTable
 		
 		return $items;
   }
+  
+   public function getAllInverseRelationships($spec_id)
+  {
+	  
+	  $conn = Doctrine_Manager::connection();
+		$q = $conn->prepare("SELECT id  FROM fct_rmca_get_all_inverse_relationships(:id)");
+		 $q->bindParam(":id", $spec_id, PDO::PARAM_INT);
+	
+		$q->execute();
+		$items=$q->fetchAll(PDO::FETCH_NUM );
+		$tmp=Array();
+		foreach($items as $item)
+		{
+			if(is_numeric($item[0]))
+			{
+				$tmp[]="id =".$item[0] ;
+			}
+		}
+		if(count($tmp)>0)
+		{
+			$q = Doctrine_Query::create()->
+				from('SpecimensRelationships')->
+				where(implode(" OR ", $tmp));
+			return $q->execute();
+		}
+		else
+		{
+			$q = Doctrine_Query::create()->
+			from('SpecimensRelationships')->
+			where('id =-1');
+			return $q->execute();
+		}
+		//return $items;
+  }
 }

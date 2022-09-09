@@ -88,6 +88,8 @@
 				  <!--ftheeten 2017 08 29-->
                 <?php if (($import->getWorking()) && !(trim($import->getStateName()) == "Finished")): ?>
                     <td>WORKING, PLEASE WAIT</td>
+			    <?php elseif($format == 'locality'&& ( $import->getState() == 'loaded'|| $import->isEditableState())) : ?>
+					<td><?php echo link_to("Load GTU in DB",'import/loadGtuInDB?id='.$import->getId()); ?></td>
                 <?php elseif ($import->isEditableState()) : ?>
 					<td>
 					 <!--ftheeten 2017 02 27 replace icon by name-->
@@ -115,8 +117,9 @@
                 <?php endif ; ?>
               
 				<td>
-                
-                    <?php if (($import->getWorking()) && !(trim($import->getStateName()) == "Finished")): ?>
+					<?php if($format == 'locality'&& $import->getState() != 'processing'&& $import->getState() != 'aloaded'):?>
+							<?php echo link_to(image_tag('edit.png',array('title'=>__('Edit import'))),'import/viewUnimportedGtu?id='.$import->getId()); ?>
+					<?php elseif (($import->getWorking()) && !(trim($import->getStateName()) == "Finished")): ?>
                             <td></td>
 					<?php elseif ($import->isEditableState()) : ?>
 					<!--ftheeten 2017 02 27 replace icon by name-->

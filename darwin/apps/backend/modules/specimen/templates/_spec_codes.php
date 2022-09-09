@@ -36,7 +36,7 @@
   $(document).ready(function () {
   
     //2015 10 15 call mask handling
-    try_mask();
+    try_mask(<?php print($rownum) ?>);
 		
     $("#clear_code_<?php echo $rownum;?>").click( function()
     {
@@ -54,15 +54,47 @@
 
   });
   
-   //2015 10 15 define input mask handling for codes
-   function try_mask()
+   //2022 04 02 define input mask handling for codes
+   function try_mask(index)
    {
 		$(".take_mask").val(<?php if(isset($codemask)){print("\"".$codemask."\"");} else{print("");} ?>);
 		<?php if(sfContext::getInstance()->getActionName()=="addCode"):?>
-			$(".mrac_input_mask").inputmask(<?php if(isset($codemask)){print("\"".$codemask."\"");}else{print("");} ?>);
+			var ctrl1="#specimen_Codes_"+index.toString()+"_code";
+			var ctrl2="#specimen_newCodes_"+index.toString()+"_code";
+			$(ctrl1).inputmask(<?php if(isset($codemask)){print("\"".$codemask."\"");}else{print("");} ?>);
+			$(ctrl2).inputmask(<?php if(isset($codemask)){print("\"".$codemask."\"");}else{print("");} ?>);
 		<?php endif;?>
 		$(".class_rmca_mask_display").text('Mask: '+'<?php if(isset($codemask)){print("\"".$codemask."\"");}else{print("");} ?>');
    }
+   
+   //2022 04 02 disable code on secondary number
+   
+   $("#specimen_Codes_<?php print($rownum) ?>_code_category").change(
+	function()
+	{
+	 
+		
+		if($("#specimen_Codes_<?php print($rownum) ?>_code_category").val()!="main")
+		{
+			$("#specimen_Codes_<?php print($rownum) ?>_code").removeClass("mrac_input_mask");
+			$("#specimen_Codes_<?php print($rownum) ?>_code").inputmask("remove");
+		}
+	}
+   );
+   $("#specimen_newCodes_<?php print($rownum) ?>_code_category").change(
+	function()
+	{ 
+
+		if($("#specimen_newCodes_<?php print($rownum) ?>_code_category").val()!="main")
+		{
+			console.log($("#specimen_newCodes_<?php print($rownum) ?>_code_category").val());
+			$("#specimen_newCodes_<?php print($rownum) ?>_code").removeClass("mrac_input_mask");
+			$("#specimen_newCodes_<?php print($rownum) ?>_code").inputmask("remove");
+		}
+	}
+   );
+   
+
    
    
 </script>

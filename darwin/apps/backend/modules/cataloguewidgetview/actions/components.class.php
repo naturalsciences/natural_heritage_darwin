@@ -13,17 +13,17 @@ class cataloguewidgetViewComponents extends sfComponents
 
   public function executeRelationRecombination()
   {
-    $this->relations = Doctrine::getTable('CatalogueRelationships')->getRelationsForTable($this->table, $this->eid, 'recombined from');
+    $this->relations = Doctrine_Core::getTable('CatalogueRelationships')->getRelationsForTable($this->table, $this->eid, 'recombined from');
   }
 
   public function executeComment()
   {
-    $this->comments =  Doctrine::getTable('Comments')->findForTable($this->table, $this->eid);
+    $this->comments =  Doctrine_Core::getTable('Comments')->findForTable($this->table, $this->eid);
   }
 
   public function executeExtLinks()
   {
-    $this->links =  Doctrine::getTable('ExtLinks')->findForTable($this->table, $this->eid);
+    $this->links =  Doctrine_Core::getTable('ExtLinks')->findForTable($this->table, $this->eid);
      //ftheeten 2017 01 10
     $this->correspondingViewerLink=Array();
     foreach($this->links as $link)
@@ -43,52 +43,58 @@ class cataloguewidgetViewComponents extends sfComponents
   
   public function executeInsurances()
   {
-    $this->insurances =  Doctrine::getTable('Insurances')->findForTable($this->table, $this->eid);
+    $this->insurances =  Doctrine_Core::getTable('Insurances')->findForTable($this->table, $this->eid);
   }
 
   public function executeProperties()
   {
-    $this->properties = Doctrine::getTable('Properties')->findForTable($this->table, $this->eid);
+    $this->properties = Doctrine_Core::getTable('Properties')->findForTable($this->table, $this->eid);
   }
 
   public function executeVernacularNames()
   {
-    $this->vernacular_names =  Doctrine::getTable('VernacularNames')->findForTable($this->table, $this->eid);
+    $this->vernacular_names =  Doctrine_Core::getTable('VernacularNames')->findForTable($this->table, $this->eid);
   }
 
   public function executeSynonym()
   {
-    $this->synonyms = Doctrine::getTable('ClassificationSynonymies')->findAllForRecord($this->table, $this->eid);
+    $this->synonyms = Doctrine_Core::getTable('ClassificationSynonymies')->findAllForRecord($this->table, $this->eid);
+	$this->other_synonyms= Doctrine_Core::getTable('ClassificationSynonymies')->findOtherSynonymsForRecord($this->table, $this->eid);
   }
   
   public function executeCataloguePeople()
   {
-    $this->types = Doctrine::getTable('CataloguePeople')->findForTableByType($this->table, $this->eid);
+    $this->types = Doctrine_Core::getTable('CataloguePeople')->findForTableByType($this->table, $this->eid);
   }
 
   public function executeCollectionsCodes()
   {
-    $this->collCodes = Doctrine::getTable('Collections')->find($this->eid);
+    $this->collCodes = Doctrine_Core::getTable('Collections')->find($this->eid);
   }
 
   public function executeKeywords()
   {
-    $this->keywords = Doctrine::getTable('ClassificationKeywords')->findForTable($this->table, $this->eid);
+    $this->keywords = Doctrine_Core::getTable('ClassificationKeywords')->findForTable($this->table, $this->eid);
   }
   public function executeInformativeWorkflow()
   {
-    $this->informativeWorkflow = Doctrine::getTable('InformativeWorkflow')->findForTable($this->table, $this->eid);
+    $this->informativeWorkflow = Doctrine_Core::getTable('InformativeWorkflow')->findForTable($this->table, $this->eid);
   }
   public function executeBiblio()
   {
-    $this->Biblios = Doctrine::getTable('CatalogueBibliography')->findForTable($this->table, $this->eid);
+    $this->Biblios = Doctrine_Core::getTable('CatalogueBibliography')->findForTable($this->table, $this->eid);
   }
   public function executeRelatedFiles()
   {
     $this->atLeastOneFileVisible = $this->getUser()->isAtLeast(Users::ENCODER);
-    $this->files = Doctrine::getTable('Multimedia')->findForTable($this->table, $this->eid, !($this->atLeastOneFileVisible));
+    $this->files = Doctrine_Core::getTable('Multimedia')->findForTable($this->table, $this->eid, !($this->atLeastOneFileVisible));
     if(!($this->atLeastOneFileVisible)) {
       $this->atLeastOneFileVisible = ($this->files->count()>0);
     }
+  }
+  
+   public function executeIdentifiers()
+  {
+    $this->identifiers = Doctrine_Core::getTable('Identifiers')->findForTable($this->table, $this->eid);
   }
 }

@@ -8,239 +8,339 @@
  * @package    darwin
  * @subpackage form
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
+ * @version    SVN: $Id$
  */
-abstract class BaseStagingForm extends BaseFormDoctrine
+abstract class BaseStagingForm extends DarwinModelForm
 {
-  public function setup()
+  protected function setupInheritance()
   {
-    $this->setWidgets(array(
-      'id'                        => new sfWidgetFormInputHidden(),
-      'import_ref'                => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Import'), 'add_empty' => false)),
-      'category'                  => new sfWidgetFormTextarea(),
-      'expedition_ref'            => new sfWidgetFormInputText(),
-      'expedition_name'           => new sfWidgetFormTextarea(),
-      'expedition_from_date'      => new sfWidgetFormTextarea(),
-      'expedition_from_date_mask' => new sfWidgetFormInputText(),
-      'expedition_to_date'        => new sfWidgetFormTextarea(),
-      'expedition_to_date_mask'   => new sfWidgetFormInputText(),
-      'station_visible'           => new sfWidgetFormInputCheckbox(),
-      'gtu_ref'                   => new sfWidgetFormInputText(),
-      'gtu_code'                  => new sfWidgetFormTextarea(),
-      'gtu_from_date_mask'        => new sfWidgetFormInputText(),
-      'gtu_from_date'             => new sfWidgetFormTextarea(),
-      'gtu_to_date_mask'          => new sfWidgetFormInputText(),
-      'gtu_to_date'               => new sfWidgetFormTextarea(),
-      'gtu_latitude'              => new sfWidgetFormInputText(),
-      'gtu_longitude'             => new sfWidgetFormInputText(),
-      'gtu_lat_long_accuracy'     => new sfWidgetFormInputText(),
-      'gtu_elevation'             => new sfWidgetFormInputText(),
-      'gtu_elevation_accuracy'    => new sfWidgetFormInputText(),
-      'taxon_ref'                 => new sfWidgetFormInputText(),
-      'taxon_name'                => new sfWidgetFormTextarea(),
-      'taxon_level_ref'           => new sfWidgetFormInputText(),
-      'taxon_level_name'          => new sfWidgetFormTextarea(),
-      'taxon_status'              => new sfWidgetFormTextarea(),
-      'taxon_extinct'             => new sfWidgetFormInputCheckbox(),
-      'taxon_parents'             => new sfWidgetFormTextarea(),
-      'litho_ref'                 => new sfWidgetFormInputText(),
-      'litho_name'                => new sfWidgetFormTextarea(),
-      'litho_level_ref'           => new sfWidgetFormInputText(),
-      'litho_level_name'          => new sfWidgetFormTextarea(),
-      'litho_status'              => new sfWidgetFormTextarea(),
-      'litho_local'               => new sfWidgetFormInputCheckbox(),
-      'litho_color'               => new sfWidgetFormTextarea(),
-      'litho_parents'             => new sfWidgetFormTextarea(),
-      'chrono_ref'                => new sfWidgetFormInputText(),
-      'chrono_name'               => new sfWidgetFormTextarea(),
-      'chrono_level_ref'          => new sfWidgetFormInputText(),
-      'chrono_level_name'         => new sfWidgetFormTextarea(),
-      'chrono_status'             => new sfWidgetFormTextarea(),
-      'chrono_local'              => new sfWidgetFormInputCheckbox(),
-      'chrono_color'              => new sfWidgetFormTextarea(),
-      'chrono_lower_bound'        => new sfWidgetFormInputText(),
-      'chrono_upper_bound'        => new sfWidgetFormInputText(),
-      'chrono_parents'            => new sfWidgetFormTextarea(),
-      'lithology_ref'             => new sfWidgetFormInputText(),
-      'lithology_name'            => new sfWidgetFormTextarea(),
-      'lithology_level_ref'       => new sfWidgetFormInputText(),
-      'lithology_level_name'      => new sfWidgetFormTextarea(),
-      'lithology_status'          => new sfWidgetFormTextarea(),
-      'lithology_local'           => new sfWidgetFormInputCheckbox(),
-      'lithology_color'           => new sfWidgetFormTextarea(),
-      'lithology_parents'         => new sfWidgetFormTextarea(),
-      'mineral_ref'               => new sfWidgetFormInputText(),
-      'mineral_name'              => new sfWidgetFormTextarea(),
-      'mineral_level_ref'         => new sfWidgetFormInputText(),
-      'mineral_level_name'        => new sfWidgetFormTextarea(),
-      'mineral_status'            => new sfWidgetFormTextarea(),
-      'mineral_local'             => new sfWidgetFormInputCheckbox(),
-      'mineral_color'             => new sfWidgetFormTextarea(),
-      'mineral_parents'           => new sfWidgetFormTextarea(),
-      'mineral_classification'    => new sfWidgetFormTextarea(),
-      'ig_ref'                    => new sfWidgetFormInputText(),
-      'ig_num'                    => new sfWidgetFormTextarea(),
-      'ig_date_mask'              => new sfWidgetFormInputText(),
-      'ig_date'                   => new sfWidgetFormTextarea(),
-      'acquisition_category'      => new sfWidgetFormTextarea(),
-      'acquisition_date_mask'     => new sfWidgetFormInputText(),
-      'acquisition_date'          => new sfWidgetFormTextarea(),
-      'individual_type'           => new sfWidgetFormTextarea(),
-      'individual_sex'            => new sfWidgetFormTextarea(),
-      'individual_state'          => new sfWidgetFormTextarea(),
-      'individual_stage'          => new sfWidgetFormTextarea(),
-      'individual_social_status'  => new sfWidgetFormTextarea(),
-      'individual_rock_form'      => new sfWidgetFormTextarea(),
-      'individual_count_min'      => new sfWidgetFormInputText(),
-      'individual_count_max'      => new sfWidgetFormInputText(),
-      'part'                      => new sfWidgetFormTextarea(),
-      'institution_ref'           => new sfWidgetFormInputText(),
-      'institution_name'          => new sfWidgetFormTextarea(),
-      'building'                  => new sfWidgetFormTextarea(),
-      'floor'                     => new sfWidgetFormTextarea(),
-      'room'                      => new sfWidgetFormTextarea(),
-      'row'                       => new sfWidgetFormTextarea(),
-      'col'                       => new sfWidgetFormTextarea(),
-      'shelf'                     => new sfWidgetFormTextarea(),
-      'container_type'            => new sfWidgetFormTextarea(),
-      'container_storage'         => new sfWidgetFormTextarea(),
-      'container'                 => new sfWidgetFormTextarea(),
-      'sub_container_type'        => new sfWidgetFormTextarea(),
-      'sub_container_storage'     => new sfWidgetFormTextarea(),
-      'sub_container'             => new sfWidgetFormTextarea(),
-      'part_count_min'            => new sfWidgetFormInputText(),
-      'part_count_max'            => new sfWidgetFormInputText(),
-      'object_name'               => new sfWidgetFormTextarea(),
-      'specimen_status'           => new sfWidgetFormTextarea(),
-      'status'                    => new sfWidgetFormTextarea(),
-      'complete'                  => new sfWidgetFormInputCheckbox(),
-      'surnumerary'               => new sfWidgetFormInputCheckbox(),
-      'part_count_males_min'      => new sfWidgetFormInputText(),
-      'part_count_males_max'      => new sfWidgetFormInputText(),
-      'part_count_females_min'    => new sfWidgetFormInputText(),
-      'part_count_females_max'    => new sfWidgetFormInputText(),
-      'part_count_juveniles_min'  => new sfWidgetFormInputText(),
-      'part_count_juveniles_max'  => new sfWidgetFormInputText(),
-      'specimen_taxonomy_ref'     => new sfWidgetFormInputText(),
-    ));
+    parent::setupInheritance();
 
-    $this->setValidators(array(
-      'id'                        => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
-      'import_ref'                => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Import'))),
-      'category'                  => new sfValidatorString(array('required' => false)),
-      'expedition_ref'            => new sfValidatorInteger(array('required' => false)),
-      'expedition_name'           => new sfValidatorString(array('required' => false)),
-      'expedition_from_date'      => new sfValidatorString(array('required' => false)),
-      'expedition_from_date_mask' => new sfValidatorInteger(array('required' => false)),
-      'expedition_to_date'        => new sfValidatorString(array('required' => false)),
-      'expedition_to_date_mask'   => new sfValidatorInteger(array('required' => false)),
-      'station_visible'           => new sfValidatorBoolean(array('required' => false)),
-      'gtu_ref'                   => new sfValidatorInteger(),
-      'gtu_code'                  => new sfValidatorString(array('required' => false)),
-      'gtu_from_date_mask'        => new sfValidatorInteger(array('required' => false)),
-      'gtu_from_date'             => new sfValidatorString(array('required' => false)),
-      'gtu_to_date_mask'          => new sfValidatorInteger(array('required' => false)),
-      'gtu_to_date'               => new sfValidatorString(array('required' => false)),
-      'gtu_latitude'              => new sfValidatorNumber(array('required' => false)),
-      'gtu_longitude'             => new sfValidatorNumber(array('required' => false)),
-      'gtu_lat_long_accuracy'     => new sfValidatorNumber(array('required' => false)),
-      'gtu_elevation'             => new sfValidatorNumber(array('required' => false)),
-      'gtu_elevation_accuracy'    => new sfValidatorNumber(array('required' => false)),
-      'taxon_ref'                 => new sfValidatorInteger(array('required' => false)),
-      'taxon_name'                => new sfValidatorString(array('required' => false)),
-      'taxon_level_ref'           => new sfValidatorInteger(array('required' => false)),
-      'taxon_level_name'          => new sfValidatorString(array('required' => false)),
-      'taxon_status'              => new sfValidatorString(array('required' => false)),
-      'taxon_extinct'             => new sfValidatorBoolean(array('required' => false)),
-      'taxon_parents'             => new sfValidatorString(array('required' => false)),
-      'litho_ref'                 => new sfValidatorInteger(array('required' => false)),
-      'litho_name'                => new sfValidatorString(array('required' => false)),
-      'litho_level_ref'           => new sfValidatorInteger(array('required' => false)),
-      'litho_level_name'          => new sfValidatorString(array('required' => false)),
-      'litho_status'              => new sfValidatorString(array('required' => false)),
-      'litho_local'               => new sfValidatorBoolean(array('required' => false)),
-      'litho_color'               => new sfValidatorString(array('required' => false)),
-      'litho_parents'             => new sfValidatorString(array('required' => false)),
-      'chrono_ref'                => new sfValidatorInteger(array('required' => false)),
-      'chrono_name'               => new sfValidatorString(array('required' => false)),
-      'chrono_level_ref'          => new sfValidatorInteger(array('required' => false)),
-      'chrono_level_name'         => new sfValidatorString(array('required' => false)),
-      'chrono_status'             => new sfValidatorString(array('required' => false)),
-      'chrono_local'              => new sfValidatorBoolean(array('required' => false)),
-      'chrono_color'              => new sfValidatorString(array('required' => false)),
-      'chrono_lower_bound'        => new sfValidatorNumber(array('required' => false)),
-      'chrono_upper_bound'        => new sfValidatorNumber(array('required' => false)),
-      'chrono_parents'            => new sfValidatorString(array('required' => false)),
-      'lithology_ref'             => new sfValidatorInteger(array('required' => false)),
-      'lithology_name'            => new sfValidatorString(array('required' => false)),
-      'lithology_level_ref'       => new sfValidatorInteger(array('required' => false)),
-      'lithology_level_name'      => new sfValidatorString(array('required' => false)),
-      'lithology_status'          => new sfValidatorString(array('required' => false)),
-      'lithology_local'           => new sfValidatorBoolean(array('required' => false)),
-      'lithology_color'           => new sfValidatorString(array('required' => false)),
-      'lithology_parents'         => new sfValidatorString(array('required' => false)),
-      'mineral_ref'               => new sfValidatorInteger(array('required' => false)),
-      'mineral_name'              => new sfValidatorString(array('required' => false)),
-      'mineral_level_ref'         => new sfValidatorInteger(array('required' => false)),
-      'mineral_level_name'        => new sfValidatorString(array('required' => false)),
-      'mineral_status'            => new sfValidatorString(array('required' => false)),
-      'mineral_local'             => new sfValidatorBoolean(array('required' => false)),
-      'mineral_color'             => new sfValidatorString(array('required' => false)),
-      'mineral_parents'           => new sfValidatorString(array('required' => false)),
-      'mineral_classification'    => new sfValidatorString(array('required' => false)),
-      'ig_ref'                    => new sfValidatorInteger(array('required' => false)),
-      'ig_num'                    => new sfValidatorString(array('required' => false)),
-      'ig_date_mask'              => new sfValidatorInteger(array('required' => false)),
-      'ig_date'                   => new sfValidatorString(array('required' => false)),
-      'acquisition_category'      => new sfValidatorString(array('required' => false)),
-      'acquisition_date_mask'     => new sfValidatorInteger(array('required' => false)),
-      'acquisition_date'          => new sfValidatorString(array('required' => false)),
-      'individual_type'           => new sfValidatorString(array('required' => false)),
-      'individual_sex'            => new sfValidatorString(array('required' => false)),
-      'individual_state'          => new sfValidatorString(array('required' => false)),
-      'individual_stage'          => new sfValidatorString(array('required' => false)),
-      'individual_social_status'  => new sfValidatorString(array('required' => false)),
-      'individual_rock_form'      => new sfValidatorString(array('required' => false)),
-      'individual_count_min'      => new sfValidatorInteger(array('required' => false)),
-      'individual_count_max'      => new sfValidatorInteger(array('required' => false)),
-      'part'                      => new sfValidatorString(array('required' => false)),
-      'institution_ref'           => new sfValidatorInteger(array('required' => false)),
-      'institution_name'          => new sfValidatorString(array('required' => false)),
-      'building'                  => new sfValidatorString(array('required' => false)),
-      'floor'                     => new sfValidatorString(array('required' => false)),
-      'room'                      => new sfValidatorString(array('required' => false)),
-      'row'                       => new sfValidatorString(array('required' => false)),
-      'col'                       => new sfValidatorString(array('required' => false)),
-      'shelf'                     => new sfValidatorString(array('required' => false)),
-      'container_type'            => new sfValidatorString(array('required' => false)),
-      'container_storage'         => new sfValidatorString(array('required' => false)),
-      'container'                 => new sfValidatorString(array('required' => false)),
-      'sub_container_type'        => new sfValidatorString(array('required' => false)),
-      'sub_container_storage'     => new sfValidatorString(array('required' => false)),
-      'sub_container'             => new sfValidatorString(array('required' => false)),
-      'part_count_min'            => new sfValidatorInteger(array('required' => false)),
-      'part_count_max'            => new sfValidatorInteger(array('required' => false)),
-      'object_name'               => new sfValidatorString(array('required' => false)),
-      'specimen_status'           => new sfValidatorString(array('required' => false)),
-      'status'                    => new sfValidatorString(array('required' => false)),
-      'complete'                  => new sfValidatorBoolean(array('required' => false)),
-      'surnumerary'               => new sfValidatorBoolean(array('required' => false)),
-      'part_count_males_min'      => new sfValidatorInteger(array('required' => false)),
-      'part_count_males_max'      => new sfValidatorInteger(array('required' => false)),
-      'part_count_females_min'    => new sfValidatorInteger(array('required' => false)),
-      'part_count_females_max'    => new sfValidatorInteger(array('required' => false)),
-      'part_count_juveniles_min'  => new sfValidatorInteger(array('required' => false)),
-      'part_count_juveniles_max'  => new sfValidatorInteger(array('required' => false)),
-      'specimen_taxonomy_ref'     => new sfValidatorInteger(array('required' => false)),
-    ));
+    $this->widgetSchema   ['import_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Import'), 'add_empty' => false));
+    $this->validatorSchema['import_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Import'), 'column' => 'id'));
+
+    $this->widgetSchema   ['category'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['category'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['expedition_ref'] = new sfWidgetFormInputText();
+    $this->validatorSchema['expedition_ref'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['expedition_name'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['expedition_name'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['expedition_from_date'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['expedition_from_date'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['expedition_from_date_mask'] = new sfWidgetFormInputText();
+    $this->validatorSchema['expedition_from_date_mask'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['expedition_to_date'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['expedition_to_date'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['expedition_to_date_mask'] = new sfWidgetFormInputText();
+    $this->validatorSchema['expedition_to_date_mask'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['station_visible'] = new sfWidgetFormInputCheckbox();
+    $this->validatorSchema['station_visible'] = new sfValidatorBoolean(array('required' => false));
+
+    $this->widgetSchema   ['gtu_ref'] = new sfWidgetFormInputText();
+    $this->validatorSchema['gtu_ref'] = new sfValidatorInteger();
+
+    $this->widgetSchema   ['gtu_code'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['gtu_code'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['gtu_from_date_mask'] = new sfWidgetFormInputText();
+    $this->validatorSchema['gtu_from_date_mask'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['gtu_from_date'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['gtu_from_date'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['gtu_to_date_mask'] = new sfWidgetFormInputText();
+    $this->validatorSchema['gtu_to_date_mask'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['gtu_to_date'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['gtu_to_date'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['gtu_latitude'] = new sfWidgetFormInputText();
+    $this->validatorSchema['gtu_latitude'] = new sfValidatorNumber(array('required' => false));
+
+    $this->widgetSchema   ['gtu_longitude'] = new sfWidgetFormInputText();
+    $this->validatorSchema['gtu_longitude'] = new sfValidatorNumber(array('required' => false));
+
+    $this->widgetSchema   ['gtu_lat_long_accuracy'] = new sfWidgetFormInputText();
+    $this->validatorSchema['gtu_lat_long_accuracy'] = new sfValidatorNumber(array('required' => false));
+
+    $this->widgetSchema   ['gtu_elevation'] = new sfWidgetFormInputText();
+    $this->validatorSchema['gtu_elevation'] = new sfValidatorNumber(array('required' => false));
+
+    $this->widgetSchema   ['gtu_elevation_accuracy'] = new sfWidgetFormInputText();
+    $this->validatorSchema['gtu_elevation_accuracy'] = new sfValidatorNumber(array('required' => false));
+
+    $this->widgetSchema   ['taxon_ref'] = new sfWidgetFormInputText();
+    $this->validatorSchema['taxon_ref'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['taxon_name'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['taxon_name'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['taxon_level_ref'] = new sfWidgetFormInputText();
+    $this->validatorSchema['taxon_level_ref'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['taxon_level_name'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['taxon_level_name'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['taxon_status'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['taxon_status'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['taxon_extinct'] = new sfWidgetFormInputCheckbox();
+    $this->validatorSchema['taxon_extinct'] = new sfValidatorBoolean(array('required' => false));
+
+    $this->widgetSchema   ['taxon_parents'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['taxon_parents'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['litho_ref'] = new sfWidgetFormInputText();
+    $this->validatorSchema['litho_ref'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['litho_name'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['litho_name'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['litho_level_ref'] = new sfWidgetFormInputText();
+    $this->validatorSchema['litho_level_ref'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['litho_level_name'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['litho_level_name'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['litho_status'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['litho_status'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['litho_local'] = new sfWidgetFormInputCheckbox();
+    $this->validatorSchema['litho_local'] = new sfValidatorBoolean(array('required' => false));
+
+    $this->widgetSchema   ['litho_color'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['litho_color'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['litho_parents'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['litho_parents'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['chrono_ref'] = new sfWidgetFormInputText();
+    $this->validatorSchema['chrono_ref'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['chrono_name'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['chrono_name'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['chrono_level_ref'] = new sfWidgetFormInputText();
+    $this->validatorSchema['chrono_level_ref'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['chrono_level_name'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['chrono_level_name'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['chrono_status'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['chrono_status'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['chrono_local'] = new sfWidgetFormInputCheckbox();
+    $this->validatorSchema['chrono_local'] = new sfValidatorBoolean(array('required' => false));
+
+    $this->widgetSchema   ['chrono_color'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['chrono_color'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['chrono_lower_bound'] = new sfWidgetFormInputText();
+    $this->validatorSchema['chrono_lower_bound'] = new sfValidatorNumber(array('required' => false));
+
+    $this->widgetSchema   ['chrono_upper_bound'] = new sfWidgetFormInputText();
+    $this->validatorSchema['chrono_upper_bound'] = new sfValidatorNumber(array('required' => false));
+
+    $this->widgetSchema   ['chrono_parents'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['chrono_parents'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['lithology_ref'] = new sfWidgetFormInputText();
+    $this->validatorSchema['lithology_ref'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['lithology_name'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['lithology_name'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['lithology_level_ref'] = new sfWidgetFormInputText();
+    $this->validatorSchema['lithology_level_ref'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['lithology_level_name'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['lithology_level_name'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['lithology_status'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['lithology_status'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['lithology_local'] = new sfWidgetFormInputCheckbox();
+    $this->validatorSchema['lithology_local'] = new sfValidatorBoolean(array('required' => false));
+
+    $this->widgetSchema   ['lithology_color'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['lithology_color'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['lithology_parents'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['lithology_parents'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['mineral_ref'] = new sfWidgetFormInputText();
+    $this->validatorSchema['mineral_ref'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['mineral_name'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['mineral_name'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['mineral_level_ref'] = new sfWidgetFormInputText();
+    $this->validatorSchema['mineral_level_ref'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['mineral_level_name'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['mineral_level_name'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['mineral_status'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['mineral_status'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['mineral_local'] = new sfWidgetFormInputCheckbox();
+    $this->validatorSchema['mineral_local'] = new sfValidatorBoolean(array('required' => false));
+
+    $this->widgetSchema   ['mineral_color'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['mineral_color'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['mineral_parents'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['mineral_parents'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['mineral_classification'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['mineral_classification'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['ig_ref'] = new sfWidgetFormInputText();
+    $this->validatorSchema['ig_ref'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['ig_num'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['ig_num'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['ig_date_mask'] = new sfWidgetFormInputText();
+    $this->validatorSchema['ig_date_mask'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['ig_date'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['ig_date'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['acquisition_category'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['acquisition_category'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['acquisition_date_mask'] = new sfWidgetFormInputText();
+    $this->validatorSchema['acquisition_date_mask'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['acquisition_date'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['acquisition_date'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['individual_type'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['individual_type'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['individual_sex'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['individual_sex'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['individual_state'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['individual_state'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['individual_stage'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['individual_stage'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['individual_social_status'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['individual_social_status'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['individual_rock_form'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['individual_rock_form'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['individual_count_min'] = new sfWidgetFormInputText();
+    $this->validatorSchema['individual_count_min'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['individual_count_max'] = new sfWidgetFormInputText();
+    $this->validatorSchema['individual_count_max'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['part'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['part'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['institution_ref'] = new sfWidgetFormInputText();
+    $this->validatorSchema['institution_ref'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['institution_name'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['institution_name'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['building'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['building'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['floor'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['floor'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['room'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['room'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['row'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['row'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['col'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['col'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['shelf'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['shelf'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['container_type'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['container_type'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['container_storage'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['container_storage'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['container'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['container'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['sub_container_type'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['sub_container_type'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['sub_container_storage'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['sub_container_storage'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['sub_container'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['sub_container'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['part_count_min'] = new sfWidgetFormInputText();
+    $this->validatorSchema['part_count_min'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['part_count_max'] = new sfWidgetFormInputText();
+    $this->validatorSchema['part_count_max'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['object_name'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['object_name'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['specimen_status'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['specimen_status'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['status'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['status'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['complete'] = new sfWidgetFormInputCheckbox();
+    $this->validatorSchema['complete'] = new sfValidatorBoolean(array('required' => false));
+
+    $this->widgetSchema   ['surnumerary'] = new sfWidgetFormInputCheckbox();
+    $this->validatorSchema['surnumerary'] = new sfValidatorBoolean(array('required' => false));
+
+    $this->widgetSchema   ['part_count_males_min'] = new sfWidgetFormInputText();
+    $this->validatorSchema['part_count_males_min'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['part_count_males_max'] = new sfWidgetFormInputText();
+    $this->validatorSchema['part_count_males_max'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['part_count_females_min'] = new sfWidgetFormInputText();
+    $this->validatorSchema['part_count_females_min'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['part_count_females_max'] = new sfWidgetFormInputText();
+    $this->validatorSchema['part_count_females_max'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['part_count_juveniles_min'] = new sfWidgetFormInputText();
+    $this->validatorSchema['part_count_juveniles_min'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['part_count_juveniles_max'] = new sfWidgetFormInputText();
+    $this->validatorSchema['part_count_juveniles_max'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['specimen_taxonomy_ref'] = new sfWidgetFormInputText();
+    $this->validatorSchema['specimen_taxonomy_ref'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['import_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Import'), 'add_empty' => false));
+    $this->validatorSchema['import_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Import'), 'column' => 'id'));
+
+    $this->widgetSchema   ['parent_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'add_empty' => true));
+    $this->validatorSchema['parent_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'column' => 'id', 'required' => false));
 
     $this->widgetSchema->setNameFormat('staging[%s]');
-
-    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
-
-    $this->setupInheritance();
-
-    parent::setup();
   }
 
   public function getModelName()

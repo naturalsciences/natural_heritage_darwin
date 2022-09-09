@@ -19,6 +19,8 @@
            <td  style="font-weight:bold; text-align:center">
              <?php  if($link->getCategory()=="html_3d_snippet"):?>
                 <a  class="link_catalogue_view" href="<?php echo url_for("extlinks/snapchatSnippet?id=".$link->getId());?>/model/undefined">View (3D)</a></td>
+		     <?php  elseif($link->getCategory()=="iiif"):?>
+				<a  class="link_catalogue_view" href="<?php echo url_for("extlinks/iiifViewer?id=".$link->getId());?>/model/undefined">View (IIIF)</a></td>
              <?php  elseif($link->getCategory()=="thumbnail"):?>
                     <?php  if(array_key_exists($link->getDisplayOrder(),$sf_data->getRaw('correspondingViewerLink'))):?>
                         <a class="link_catalogue_view" href="<?php echo url_for("extlinks/extViewer?id=".$sf_data->getRaw('correspondingViewerLink')[$link->getDisplayOrder()]);?>"><img   style="max-width:100px" src="<?php echo url_for($link->getUrl());?>"/></a>

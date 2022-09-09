@@ -1857,12 +1857,12 @@ img.info
   display:none;
 }
 
-.basio_cell
+.basio_cell, .origi_cell
 {
   width: 5em;
 }
 
-.basio_cell a
+.basio_cell a, .origi_cell a
 {
   display:block;
   width:14px;
@@ -1870,12 +1870,12 @@ img.info
   background: transparent url(/images/checkbox.png) 0px 0px no-repeat;
 }
 
-.basio_cell:hover a
+.basio_cell:hover a,.origi_cell:hover a 
 {
   background-position: 0px -14px;
 }
 
-.basio_cell a.checked
+.basio_cell a.checked, .origi_cell a.checked
 {
   background-position: 0px -28px;
 }

@@ -261,7 +261,7 @@ class methods_and_toolsActions extends DarwinActions
     if($this->notion=='method')
     {
       // Forward to a 404 page if the requested method id is not found
-      $method = Doctrine::getTable('CollectingMethods')->find($request->getParameter('id'));
+      $method = Doctrine_Core::getTable('CollectingMethods')->find($request->getParameter('id'));
       $this->forward404Unless($method, sprintf('Object method does not exist (%s).', $request->getParameter('id')));
       // Otherwise initialize the method encoding form
       $this->form = new CollectingMethodsForm($method);
@@ -269,7 +269,7 @@ class methods_and_toolsActions extends DarwinActions
     else
     {
       // Forward to a 404 page if the requested tool id is not found
-      $tool = Doctrine::getTable('CollectingTools')->find($request->getParameter('id'));
+      $tool = Doctrine_Core::getTable('CollectingTools')->find($request->getParameter('id'));
       $this->forward404Unless($tool, sprintf('Object tool does not exist (%s).', $request->getParameter('id')));
       // Otherwise initialize the tool encoding form
       $this->form = new CollectingToolsForm($tool);
@@ -294,14 +294,14 @@ class methods_and_toolsActions extends DarwinActions
     $this->notion = $request->getParameter('notion');
     if($this->notion=='method')
     {
-      $method = Doctrine::getTable('CollectingMethods')->find($request->getParameter('id'));
+      $method = Doctrine_Core::getTable('CollectingMethods')->find($request->getParameter('id'));
       $this->forward404Unless($method, sprintf('Object method does not exist (%s).', $request->getParameter('id')));
       // Instantiate a new method form
       $this->form = new CollectingMethodsForm($method);
     }
     else
     {
-      $tool = Doctrine::getTable('CollectingTools')->find($request->getParameter('id'));
+      $tool = Doctrine_Core::getTable('CollectingTools')->find($request->getParameter('id'));
       $this->forward404Unless($tool, sprintf('Object tool does not exist (%s).', $request->getParameter('id')));
       // Instantiate a new tool form
       $this->form = new CollectingToolsForm($tool);
@@ -348,12 +348,12 @@ class methods_and_toolsActions extends DarwinActions
     $this->notion = $request->getParameter('notion');
     if($this->notion=='method')
     {
-      $tool_or_method = Doctrine::getTable('CollectingMethods')->find($request->getParameter('id'));
+      $tool_or_method = Doctrine_Core::getTable('CollectingMethods')->find($request->getParameter('id'));
       $this->forward404Unless($tool_or_method, sprintf('Object method does not exist (%s).', $request->getParameter('id')));
     }
     else
     {
-      $tool_or_method = Doctrine::getTable('CollectingTools')->find($request->getParameter('id'));
+      $tool_or_method = Doctrine_Core::getTable('CollectingTools')->find($request->getParameter('id'));
       $this->forward404Unless($tool_or_method, sprintf('Object tool does not exist (%s).', $request->getParameter('id')));
     }
     // Effectively triggers the delete method of the expedition table

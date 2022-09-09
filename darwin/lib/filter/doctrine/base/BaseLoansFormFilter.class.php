@@ -6,57 +6,66 @@
  * @package    darwin
  * @subpackage filter
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
+ * @version    SVN: $Id$
  */
-abstract class BaseLoansFormFilter extends BaseFormFilterDoctrine
+abstract class BaseLoansFormFilter extends DarwinModelFormFilter
 {
-  public function setup()
+  protected function setupInheritance()
   {
-    $this->setWidgets(array(
-      'name'                     => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'description'              => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'search_indexed'           => new sfWidgetFormFilterInput(),
-      'from_date'                => new sfWidgetFormFilterInput(),
-      'to_date'                  => new sfWidgetFormFilterInput(),
-      'extended_to_date'         => new sfWidgetFormFilterInput(),
-      'collection_ref'           => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Collections'), 'add_empty' => true)),
-      'address_receiver'         => new sfWidgetFormFilterInput(),
-      'institution_receiver'     => new sfWidgetFormFilterInput(),
-      'country_receiver'         => new sfWidgetFormFilterInput(),
-      'city_receiver'            => new sfWidgetFormFilterInput(),
-      'zip_receiver'             => new sfWidgetFormFilterInput(),
-      'collection_manager'       => new sfWidgetFormFilterInput(),
-      'collection_manager_title' => new sfWidgetFormFilterInput(),
-      'collection_manager_mail'  => new sfWidgetFormFilterInput(),
-      'non_cites'                => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
-    ));
+    parent::setupInheritance();
 
-    $this->setValidators(array(
-      'name'                     => new sfValidatorPass(array('required' => false)),
-      'description'              => new sfValidatorPass(array('required' => false)),
-      'search_indexed'           => new sfValidatorPass(array('required' => false)),
-      'from_date'                => new sfValidatorPass(array('required' => false)),
-      'to_date'                  => new sfValidatorPass(array('required' => false)),
-      'extended_to_date'         => new sfValidatorPass(array('required' => false)),
-      'collection_ref'           => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Collections'), 'column' => 'id')),
-      'address_receiver'         => new sfValidatorPass(array('required' => false)),
-      'institution_receiver'     => new sfValidatorPass(array('required' => false)),
-      'country_receiver'         => new sfValidatorPass(array('required' => false)),
-      'city_receiver'            => new sfValidatorPass(array('required' => false)),
-      'zip_receiver'             => new sfValidatorPass(array('required' => false)),
-      'collection_manager'       => new sfValidatorPass(array('required' => false)),
-      'collection_manager_title' => new sfValidatorPass(array('required' => false)),
-      'collection_manager_mail'  => new sfValidatorPass(array('required' => false)),
-      'non_cites'                => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
-    ));
+    $this->widgetSchema   ['name'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['name'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['description'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['description'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['search_indexed'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['search_indexed'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['from_date'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['from_date'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['to_date'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['to_date'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['extended_to_date'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['extended_to_date'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['collection_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Collections'), 'add_empty' => true));
+    $this->validatorSchema['collection_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Collections'), 'column' => 'id'));
+
+    $this->widgetSchema   ['address_receiver'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['address_receiver'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['institution_receiver'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['institution_receiver'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['country_receiver'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['country_receiver'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['city_receiver'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['city_receiver'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['zip_receiver'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['zip_receiver'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['collection_manager'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['collection_manager'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['collection_manager_title'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['collection_manager_title'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['collection_manager_mail'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['collection_manager_mail'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['non_cites'] = new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no')));
+    $this->validatorSchema['non_cites'] = new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0)));
+
+    $this->widgetSchema   ['collection_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Collections'), 'add_empty' => true));
+    $this->validatorSchema['collection_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Collections'), 'column' => 'id'));
 
     $this->widgetSchema->setNameFormat('loans_filters[%s]');
-
-    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
-
-    $this->setupInheritance();
-
-    parent::setup();
   }
 
   public function getModelName()
@@ -66,24 +75,24 @@ abstract class BaseLoansFormFilter extends BaseFormFilterDoctrine
 
   public function getFields()
   {
-    return array(
-      'id'                       => 'Number',
-      'name'                     => 'Text',
-      'description'              => 'Text',
-      'search_indexed'           => 'Text',
-      'from_date'                => 'Text',
-      'to_date'                  => 'Text',
-      'extended_to_date'         => 'Text',
-      'collection_ref'           => 'ForeignKey',
-      'address_receiver'         => 'Text',
-      'institution_receiver'     => 'Text',
-      'country_receiver'         => 'Text',
-      'city_receiver'            => 'Text',
-      'zip_receiver'             => 'Text',
-      'collection_manager'       => 'Text',
+    return array_merge(parent::getFields(), array(
+      'name' => 'Text',
+      'description' => 'Text',
+      'search_indexed' => 'Text',
+      'from_date' => 'Text',
+      'to_date' => 'Text',
+      'extended_to_date' => 'Text',
+      'collection_ref' => 'ForeignKey',
+      'address_receiver' => 'Text',
+      'institution_receiver' => 'Text',
+      'country_receiver' => 'Text',
+      'city_receiver' => 'Text',
+      'zip_receiver' => 'Text',
+      'collection_manager' => 'Text',
       'collection_manager_title' => 'Text',
-      'collection_manager_mail'  => 'Text',
-      'non_cites'                => 'Boolean',
-    );
+      'collection_manager_mail' => 'Text',
+      'non_cites' => 'Boolean',
+      'collection_ref' => 'ForeignKey',
+    ));
   }
 }

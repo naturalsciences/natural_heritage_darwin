@@ -124,7 +124,7 @@ class MySavedSearchesTable extends DarwinTable
     public function getSavedSearchData($user_id, $query_id)
   {
                         $sql="SELECT
-
+						DISTINCT 
                         string_agg(DISTINCT id::varchar,'; ' order by a.id::varchar desc ) as id,
                         collection_code,
 
@@ -445,9 +445,21 @@ longitude_text,
                         $dataset=$q->fetchAll(PDO::FETCH_ASSOC);
                         return $dataset;
 
-                 
+     }
+	 
+	  public function getVirtualCollectionsReport($query_id, $user_id)
+	  {
+		   $sql="SELECT DISTINCT *  FROM  darwin2.fct_rmca_dynamic_saved_search_get_specimen_collective_access(:ID_Q,:ID_USER);";
+                        
+           $conn = Doctrine_Manager::connection();
+		 
+           $q = $conn->prepare($sql);
+           $q->bindParam(":ID_Q", $query_id, PDO::PARAM_INT);
+           $q->bindParam(":ID_USER", $user_id, PDO::PARAM_INT);
+           $q->execute();
+           $dataset=$q->fetchAll(PDO::FETCH_ASSOC);
+		   return $dataset;
+	  }
+	  
 
-
-  
-  }
 }

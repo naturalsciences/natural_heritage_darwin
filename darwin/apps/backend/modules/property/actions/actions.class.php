@@ -54,8 +54,8 @@ class propertyActions extends DarwinActions
     {
       if($request->getParameter('table') == 'loans' || $request->getParameter('table') == 'loan_items')
       {
-        $loan = Doctrine::getTable($request->getParameter('table')=='loans'?'Loans':'LoanItems')->find($request->getParameter('id')) ;
-        if(!Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$request->getParameter('table')=='loans'?$loan->getId():$loan->getLoanRef()))
+        $loan = Doctrine_Core::getTable($request->getParameter('table')=='loans'?'Loans':'LoanItems')->find($request->getParameter('id')) ;
+        if(!Doctrine_Core::getTable('loanRights')->isAllowed($this->getUser()->getId(),$request->getParameter('table')=='loans'?$loan->getId():$loan->getLoanRef()))
           $this->forwardToSecureAction();
       }
       elseif($this->getUser()->isA(Users::REGISTERED_USER)) 
@@ -72,13 +72,13 @@ class propertyActions extends DarwinActions
       {      
 		  if((int)$request->getParameter('id')!=-1)
 		  {
-			  $r = Doctrine::getTable( DarwinTable::getModelForTable($request->getParameter('table')) )->find($request->getParameter('id'));
+			  $r = Doctrine_Core::getTable( DarwinTable::getModelForTable($request->getParameter('table')) )->find($request->getParameter('id'));
 			  $this->forward404Unless($r,'No such item');     
 			  if(!$this->getUser()->isA(Users::ADMIN))   
 			  {
 				if( $request->getParameter('table') == 'specimens' )
 				{
-				  if(! Doctrine::getTable('Specimens')->hasRights('spec_ref', $request->getParameter('id'), $this->getUser()->getId()))
+				  if(! Doctrine_Core::getTable('Specimens')->hasRights('spec_ref', $request->getParameter('id'), $this->getUser()->getId()))
 					$this->forwardToSecureAction();    
 				}
 			  }
@@ -88,7 +88,7 @@ class propertyActions extends DarwinActions
     $this->property = null;
     if($request->hasParameter('rid'))
     {
-      $this->property = Doctrine::getTable('Properties')->find($request->getParameter('rid'));
+      $this->property = Doctrine_Core::getTable('Properties')->find($request->getParameter('rid'));
     }
 
     if(! $this->property)
@@ -145,13 +145,13 @@ class propertyActions extends DarwinActions
   
   public function executeGetUnit(sfWebRequest $request)
   {
-    $this->items = Doctrine::getTable('Properties')->getDistinctUnit($request->getParameter('type'));
+    $this->items = Doctrine_Core::getTable('Properties')->getDistinctUnit($request->getParameter('type'));
     $this->setTemplate('options');
   }
 
   public function executeGetApplies(sfWebRequest $request)
   {
-    $this->items = Doctrine::getTable('Properties')->getDistinctApplies($request->getParameter('type'));
+    $this->items = Doctrine_Core::getTable('Properties')->getDistinctApplies($request->getParameter('type'));
     $this->setTemplate('options');
   }
 
@@ -161,7 +161,7 @@ class propertyActions extends DarwinActions
     $prop = null;
 
     if($request->hasParameter('id') && $request->getParameter('id'))
-      $prop = Doctrine::getTable('Properties')->find($request->getParameter('id') );
+      $prop = Doctrine_Core::getTable('Properties')->find($request->getParameter('id') );
 
     $form = new PropertiesForm($prop, array('ref_relation' => $request->getParameter('table')));
     $form->addValue($number);

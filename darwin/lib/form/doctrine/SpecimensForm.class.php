@@ -640,6 +640,13 @@ class SpecimensForm extends BaseSpecimensForm
 
     $this->widgetSchema['Insurances_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
     $this->validatorSchema['Insurances_holder'] = new sfValidatorPass();
+	
+	$this->widgetSchema['Properties_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
+    $this->validatorSchema['Properties_holder'] = new sfValidatorPass();
+
+	$this->widgetSchema['CollectionMaintenance_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
+    $this->validatorSchema['CollectionMaintenance_holder'] = new sfValidatorPass();
+
     
     #ftheeten 2017 02 10
    $this->widgetSchema['valid_label'] = new sfWidgetFormChoice(array(
@@ -686,11 +693,11 @@ class SpecimensForm extends BaseSpecimensForm
     //ftheeten 2016 09 21
     /*
     $this->widgetSchema['container_storage']->setOption('forced_choices',
-      Doctrine::getTable('Specimens')->getDistinctContainerStorages($this->getObject()->getContainerType())
+      Doctrine_Core::getTable('Specimens')->getDistinctContainerStorages($this->getObject()->getContainerType())
     );
 
     $this->widgetSchema['sub_container_storage']->setOption('forced_choices',
-      Doctrine::getTable('Specimens')->getDistinctSubContainerStorages($this->getObject()->getSubContainerType())
+      Doctrine_Core::getTable('Specimens')->getDistinctSubContainerStorages($this->getObject()->getSubContainerType())
     );
     */
     foreach($this->arrayFormsStorage as $tmpForm)
@@ -816,7 +823,7 @@ class SpecimensForm extends BaseSpecimensForm
     /* Collecting tools */
     $this->widgetSchema['collecting_tools_list'] = new widgetFormSelectDoubleListFilterable(
       array(
-        'choices' => new sfCallable(array(Doctrine::getTable('CollectingTools'),'fetchTools')),
+        'choices' => new sfCallable(array(Doctrine_Core::getTable('CollectingTools'),'fetchTools')),
         'label_associated'=>$this->getI18N()->__('Selected'),
         'label_unassociated'=>$this->getI18N()->__('Available'),
         'add_active'=>true,
@@ -842,7 +849,7 @@ class SpecimensForm extends BaseSpecimensForm
     /* Collecting methods */
     $this->widgetSchema['collecting_methods_list'] = new widgetFormSelectDoubleListFilterable(
       array(
-        'choices' => new sfCallable(array(Doctrine::getTable('CollectingMethods'), 'fetchMethods')),
+        'choices' => new sfCallable(array(Doctrine_Core::getTable('CollectingMethods'), 'fetchMethods')),
         'label_associated'=>$this->getI18N()->__('Selected'),
         'label_unassociated'=>$this->getI18N()->__('Available'),
         'add_active'=>true,
@@ -872,7 +879,7 @@ class SpecimensForm extends BaseSpecimensForm
     $this->embedForm('Identifications',$subForm);
     if($this->getObject()->getId() !='')
     {
-      foreach(Doctrine::getTable('Identifications')->getIdentificationsRelated('specimens', $this->getObject()->getId()) as $key=>$vals)
+      foreach(Doctrine_Core::getTable('Identifications')->getIdentificationsRelated('specimens', $this->getObject()->getId()) as $key=>$vals)
       {
         $form = new IdentificationsForm($vals);
         $this->embeddedForms['Identifications']->embedForm($key, $form);
@@ -1032,8 +1039,28 @@ class SpecimensForm extends BaseSpecimensForm
     }
     //ftheeten 2016 09 21
     $this->bindEmbed('StorageParts', 'addStorageParts' , $taintedValues);
+	
+	$this->bindEmbed('Properties', 'attachProperties' , $taintedValues);
+	$this->bindEmbed('CollectionMaintenance', 'attachMaintenance' , $taintedValues);
     parent::bind($taintedValues, $taintedFiles);
   }
+  
+  public function attachProperties($num, $values, $order_by=0)
+  {
+        $options =  array('referenced_relation' => 'specimens', 'record_id' => $this->getObject()->getId());
+		//has model initializes autocomplete
+		$tmp_form=new PropertiesForm(DarwinTable::newObjectFromArray('Properties',$options),array("hasmodel"=>true));
+		$tmp_form->setOption("hasmodel", true);
+		$this->attachEmbedRecord('Properties', $tmp_form, $num);      
+  }
+
+  public function attachMaintenance($num, $values, $order_by=0)
+  {
+        $options =  array('referenced_relation' => 'specimens', 'record_id' => $this->getObject()->getId());
+		//has model initializes autocomplete
+		$tmp_form=new CollectionMaintenanceForm(DarwinTable::newObjectFromArray('CollectionMaintenance',$options));
+		$this->attachEmbedRecord('CollectionMaintenance', $tmp_form, $num);     
+  }    
 
 
   public function addSpecimensRelationships($num, $values, $order_by=0)
@@ -1097,7 +1124,8 @@ class SpecimensForm extends BaseSpecimensForm
   //ftheeten 2015 10 12 add DirectLink (when new identification of specimen, values are already in the form)
   public function addCodes($num, $values, $order_by=0, $directLink=FALSE)
   {
-    $options = array('referenced_relation' => 'specimens', 'record_id' => $this->getObject()->getId());
+	$obj=$this->getObject();
+    $options = array('referenced_relation' => 'specimens', 'record_id' => $obj->getId());
     if(isset($values['collection_ref']))
       $col = $values['collection_ref'];
     else
@@ -1117,13 +1145,15 @@ class SpecimensForm extends BaseSpecimensForm
 		if($col != '') {
 			
 		
-		  $collection = Doctrine::getTable('Collections')->find($col);
+		  $collection = Doctrine_Core::getTable('Collections')->find($col);
 		  if($collection)
 		  {
 			$options['code_prefix'] = $collection->getCodePrefix();
 			$options['code_prefix_separator'] = $collection->getCodePrefixSeparator();
 			if($collection->getCodeAutoIncrement())
-			  $options['code'] = $collection->getCodeLastValue() + 1 ;
+			{
+			  $options['code'] = $collection->getAutoIncrementFromParent() + 1 ;
+			}
 			$options['code_suffix'] = $collection->getCodeSuffix();
 			$options['code_suffix_separator'] = $collection->getCodeSuffixSeparator();
 		  }
@@ -1144,29 +1174,37 @@ class SpecimensForm extends BaseSpecimensForm
     if($record_id === false)
       $record_id = $this->getObject()->getId();
     if( $emFieldName =='Biblio' )
-      return Doctrine::getTable('CatalogueBibliography')->findForTable('specimens', $record_id);
+      return Doctrine_Core::getTable('CatalogueBibliography')->findForTable('specimens', $record_id);
     if( $emFieldName =='Collectors' )
-      return Doctrine::getTable('CataloguePeople')->getPeopleRelated('specimens','collector', $record_id);
+      return Doctrine_Core::getTable('CataloguePeople')->getPeopleRelated('specimens','collector', $record_id);
     if( $emFieldName =='Donators' )
-      return Doctrine::getTable('CataloguePeople')->getPeopleRelated('specimens','donator', $record_id);
+      return Doctrine_Core::getTable('CataloguePeople')->getPeopleRelated('specimens','donator', $record_id);
     if( $emFieldName =='Codes' )
-      return Doctrine::getTable('Codes')->getCodesRelated('specimens', $record_id);
+      return Doctrine_Core::getTable('Codes')->getCodesRelated('specimens', $record_id);
     if( $emFieldName =='Comments' )
-      return Doctrine::getTable('Comments')->findForTableByNotion('specimens', $record_id,'ecology', 'different_from');
+      return Doctrine_Core::getTable('Comments')->findForTableByNotion('specimens', $record_id,'ecology', 'different_from');
     // ftheeten 2016 06 30
     if( $emFieldName =='Ecology' )
-      return Doctrine::getTable('Ecology')->findForTableByNotion('specimens', $record_id,'ecology');
+      return Doctrine_Core::getTable('Ecology')->findForTableByNotion('specimens', $record_id,'ecology');
     if( $emFieldName =='ExtLinks' )
-      return Doctrine::getTable('ExtLinks')->findForTable('specimens', $record_id);
+      return Doctrine_Core::getTable('ExtLinks')->findForTable('specimens', $record_id);
     if( $emFieldName =='RelatedFiles' )
-      return Doctrine::getTable('Multimedia')->findForTable('specimens', $record_id);
+      return Doctrine_Core::getTable('Multimedia')->findForTable('specimens', $record_id);
     if( $emFieldName =='SpecimensRelationships' )
-      return Doctrine::getTable('SpecimensRelationships')->findBySpecimenRef($record_id);
+      return Doctrine_Core::getTable('SpecimensRelationships')->findBySpecimenRef($record_id);
     if( $emFieldName =='Insurances' )
-      return Doctrine::getTable('Insurances')->findForTable('specimens', $record_id);
+      return Doctrine_Core::getTable('Insurances')->findForTable('specimens', $record_id);
     // ftheeten 2016 09 21
      if( $emFieldName =='StorageParts' )
-      return Doctrine::getTable('StorageParts')->findBySpecimenRef($record_id);
+      return Doctrine_Core::getTable('StorageParts')->findBySpecimenRef($record_id);
+    if( $emFieldName =='Properties' )
+      return Doctrine_Core::getTable('Properties')->findForTable('specimens', $record_id);
+    if( $emFieldName =='CollectionMaintenance' )
+      return Doctrine_Core::getTable('CollectionMaintenance')->getRelatedArray('specimens', $record_id);
+   if( $emFieldName =='Properties' )
+      return new PropertiesForm($values);
+	if( $emFieldName =='CollectionMaintenance' )
+      return new CollectionMaintenanceForm($values);
   }
 
   public function getEmbedRelationForm($emFieldName, $values)
@@ -1193,12 +1231,16 @@ class SpecimensForm extends BaseSpecimensForm
     //ftheeten 2016 08 11
      if( $emFieldName =='StorageParts' )
       return new StoragePartsSubForm($values);
+    if( $emFieldName =='Properties' )
+      return new PropertiesForm($values);
+	if( $emFieldName =='CollectionMaintenance' )
+      return new CollectionMaintenanceForm($values);
   }
 
   public function duplicate($id)
   {
     // reembed duplicated collector
-    $Catalogue = Doctrine::getTable('CataloguePeople')->findForTableByType('specimens',$id) ;
+    $Catalogue = Doctrine_Core::getTable('CataloguePeople')->findForTableByType('specimens',$id) ;
 
     if(isset($Catalogue['collector'])) {
       foreach ($Catalogue['collector'] as $key=>$val) {
@@ -1212,10 +1254,10 @@ class SpecimensForm extends BaseSpecimensForm
     }
 
     //Assume the collection_ref is set
-    $collection  = Doctrine::getTable('Collections')->find($this->getObject()->getCollectionRef());
+    $collection  = Doctrine_Core::getTable('Collections')->find($this->getObject()->getCollectionRef());
     if( $collection->getCodeSpecimenDuplicate())
     {
-      $Codes = Doctrine::getTable('Codes')->getCodesRelatedArray('specimens',$id) ;
+      $Codes = Doctrine_Core::getTable('Codes')->getCodesRelatedArray('specimens',$id) ;
       foreach ($Codes as $key=> $code)
       {
         $newCode = new Codes();
@@ -1232,7 +1274,7 @@ class SpecimensForm extends BaseSpecimensForm
     }
 
     // reembed duplicated comment
-    $Comments = Doctrine::getTable('Comments')->findForTableByNotion('specimens', $id, 'ecology', 'different_from') ;
+    $Comments = Doctrine_Core::getTable('Comments')->findForTableByNotion('specimens', $id, 'ecology', 'different_from') ;
     foreach ($Comments as $key=>$val)
     {
       $comment = new Comments();
@@ -1242,7 +1284,7 @@ class SpecimensForm extends BaseSpecimensForm
     }
     
     //ftheeten 2016 06 30
-     $Ecologies = Doctrine::getTable('Ecology')->findForTableByNotion('specimens', $id, 'ecology') ;
+     $Ecologies = Doctrine_Core::getTable('Ecology')->findForTableByNotion('specimens', $id, 'ecology') ;
     foreach ($Ecologies as $key=>$val)
     {
       $ecology = new Ecology();
@@ -1252,7 +1294,7 @@ class SpecimensForm extends BaseSpecimensForm
     }
 
     // reembed duplicated external url
-    $ExtLinks = Doctrine::getTable('ExtLinks')->findForTable('specimens', $id) ;
+    $ExtLinks = Doctrine_Core::getTable('ExtLinks')->findForTable('specimens', $id) ;
     foreach ($ExtLinks as $key=>$val)
     {
       $links = new ExtLinks() ;
@@ -1262,7 +1304,7 @@ class SpecimensForm extends BaseSpecimensForm
     }
 
     // reembed duplicated specimen Relationships
-    $spec_a = Doctrine::getTable('SpecimensRelationships')->findBySpecimen($id) ;
+    $spec_a = Doctrine_Core::getTable('SpecimensRelationships')->findBySpecimen($id) ;
     foreach ($spec_a as $key=>$val)
     {
       $spec = new SpecimensRelationships() ;
@@ -1272,7 +1314,7 @@ class SpecimensForm extends BaseSpecimensForm
     }
 
     // reembed duplicated insurances
-    $Insurances = Doctrine::getTable('Insurances')->findForTable('specimens',$id) ;
+    $Insurances = Doctrine_Core::getTable('Insurances')->findForTable('specimens',$id) ;
     foreach ($Insurances as $key=>$val)
     {
       $insurance = new Insurances() ;
@@ -1282,7 +1324,7 @@ class SpecimensForm extends BaseSpecimensForm
     }
     
     //ftheeten 2016 08 11
-    $StorageParts = Doctrine::getTable('StorageParts')->findBySpecimenRef($id) ;
+    $StorageParts = Doctrine_Core::getTable('StorageParts')->findBySpecimenRef($id) ;
     foreach ($StorageParts as $key=>$val)
     {
       $parts = new StorageParts() ;
@@ -1295,7 +1337,8 @@ class SpecimensForm extends BaseSpecimensForm
   }
   
 
-  public function saveEmbeddedForms($con = null, $forms = null)
+    //save EmbeddedForms replaced by saveObjectEmbeddedForms in Lexpress PHP 7 port
+  public function saveObjectEmbeddedForms($con = null, $forms = null)
   {
     $this->saveEmbed('Biblio', 'bibliography_ref', $forms, array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
     $this->saveEmbed('Collectors', 'people_ref', $forms, array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
@@ -1310,6 +1353,8 @@ class SpecimensForm extends BaseSpecimensForm
     $this->saveEmbed('Insurances', 'insurance_value' ,$forms, array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
     //ftheeten 2016 08 11
    $this->saveEmbed('StorageParts', 'check' ,$forms, array('specimen_ref' => $this->getObject()->getId()));
+   $this->saveEmbed('Properties', 'lower_value' ,$forms, array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
+	$this->saveEmbed('CollectionMaintenance', 'action_observation' ,$forms, array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
    
    if (null === $forms && $this->getValue('ident'))
     {
@@ -1382,7 +1427,7 @@ class SpecimensForm extends BaseSpecimensForm
          {
             if(is_integer($id_prop))
             {
-                $prop=Doctrine::getTable('Properties')->findOneById($id_prop);
+                $prop=Doctrine_Core::getTable('Properties')->findOneById($id_prop);
                 if($prop)
                 {
                     if((int)$prop->getRecordId()==-1)
@@ -1400,7 +1445,7 @@ class SpecimensForm extends BaseSpecimensForm
         $_SESSION["TEMP_DARWIN_PROPERTY"]=Array();
     }
     
-    return parent::saveEmbeddedForms($con, $forms);
+    return parent::saveObjectEmbeddedForms($con, $forms);
   }
   
   //ftheeten 2016 11 04 (dirty, SQL should be in the form, bug preventing deletion of empty list via bind)

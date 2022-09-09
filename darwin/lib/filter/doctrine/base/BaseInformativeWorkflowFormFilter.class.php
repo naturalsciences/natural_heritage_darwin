@@ -6,41 +6,42 @@
  * @package    darwin
  * @subpackage filter
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
+ * @version    SVN: $Id$
  */
-abstract class BaseInformativeWorkflowFormFilter extends BaseFormFilterDoctrine
+abstract class BaseInformativeWorkflowFormFilter extends DarwinModelFormFilter
 {
-  public function setup()
+  protected function setupInheritance()
   {
-    $this->setWidgets(array(
-      'record_id'              => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'referenced_relation'    => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'user_ref'               => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Users'), 'add_empty' => true)),
-      'formated_name'          => new sfWidgetFormFilterInput(),
-      'status'                 => new sfWidgetFormFilterInput(),
-      'modification_date_time' => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'comment'                => new sfWidgetFormFilterInput(),
-      'is_last'                => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
-    ));
+    parent::setupInheritance();
 
-    $this->setValidators(array(
-      'record_id'              => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
-      'referenced_relation'    => new sfValidatorPass(array('required' => false)),
-      'user_ref'               => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Users'), 'column' => 'id')),
-      'formated_name'          => new sfValidatorPass(array('required' => false)),
-      'status'                 => new sfValidatorPass(array('required' => false)),
-      'modification_date_time' => new sfValidatorPass(array('required' => false)),
-      'comment'                => new sfValidatorPass(array('required' => false)),
-      'is_last'                => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
-    ));
+    $this->widgetSchema   ['record_id'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['record_id'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
+
+    $this->widgetSchema   ['referenced_relation'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['referenced_relation'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['user_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Users'), 'add_empty' => true));
+    $this->validatorSchema['user_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Users'), 'column' => 'id'));
+
+    $this->widgetSchema   ['formated_name'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['formated_name'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['status'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['status'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['modification_date_time'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['modification_date_time'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['comment'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['comment'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['is_last'] = new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no')));
+    $this->validatorSchema['is_last'] = new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0)));
+
+    $this->widgetSchema   ['user_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Users'), 'add_empty' => true));
+    $this->validatorSchema['user_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Users'), 'column' => 'id'));
 
     $this->widgetSchema->setNameFormat('informative_workflow_filters[%s]');
-
-    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
-
-    $this->setupInheritance();
-
-    parent::setup();
   }
 
   public function getModelName()
@@ -50,16 +51,16 @@ abstract class BaseInformativeWorkflowFormFilter extends BaseFormFilterDoctrine
 
   public function getFields()
   {
-    return array(
-      'id'                     => 'Number',
-      'record_id'              => 'Number',
-      'referenced_relation'    => 'Text',
-      'user_ref'               => 'ForeignKey',
-      'formated_name'          => 'Text',
-      'status'                 => 'Text',
+    return array_merge(parent::getFields(), array(
+      'record_id' => 'Number',
+      'referenced_relation' => 'Text',
+      'user_ref' => 'ForeignKey',
+      'formated_name' => 'Text',
+      'status' => 'Text',
       'modification_date_time' => 'Text',
-      'comment'                => 'Text',
-      'is_last'                => 'Boolean',
-    );
+      'comment' => 'Text',
+      'is_last' => 'Boolean',
+      'user_ref' => 'ForeignKey',
+    ));
   }
 }

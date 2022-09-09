@@ -109,6 +109,33 @@ class Collections extends BaseCollections
     } while(true);
     return $this;
   }
+  
+ public function getAutoIncrementFromParent()
+  {
+	  if($this->getCodeAutoIncrement())
+	  {
+			if($this->getCodeAiInherit())
+			{
+				$conn = Doctrine_Manager::connection();				
+				$sql = "SELECT * FROM fct_rmca_collection_get_autoincrement_hierarchy(:coll_id);";
+				$q = $conn->prepare($sql);
+             
+			    $tmp_id=$this->getId();
+				$q->bindParam(":coll_id",$tmp_id );
+              
+				$q->execute();
+				$item=$q->fetch(PDO::FETCH_NUM);
+             
+				return $item[0];
+    
+			}
+			else
+			{
+				return $this->getCodeLastValue();
+			}
+	  }
+	  return -1;
+  }
 
   
 }

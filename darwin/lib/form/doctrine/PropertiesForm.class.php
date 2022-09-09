@@ -11,24 +11,43 @@ class PropertiesForm extends BasePropertiesForm
 {
   public function configure()
   {
-    $this->useFields(array(
-      'date_from',
-      'date_to',
-      'referenced_relation',
-      'record_id',
-      'property_type',
-      'property_unit',
-      'property_accuracy',
-      'applies_to',
-      'method',
-      'lower_value',
-      'upper_value',
-      'is_quantitative',
-    ));
+	//ftheeten 2022
+	if($this->getObject()->isNew())
+	{
+		$this->useFields(array(
+		  'date_from',
+		  'date_to',
+		  'referenced_relation',
+		  'property_type',
+		  'property_unit',
+		  'property_accuracy',
+		  'applies_to',
+		  'method',
+		  'lower_value',
+		  'upper_value',
+		  'is_quantitative',
+		));
+	}
+	else
+	{
+		$this->useFields(array(
+		  'date_from',
+		  'date_to',
+		  'referenced_relation',
+		  'record_id',
+		  'property_type',
+		  'property_unit',
+		  'property_accuracy',
+		  'applies_to',
+		  'method',
+		  'lower_value',
+		  'upper_value',
+		  'is_quantitative',
+		));
+	}
 
-					//JMHerpers 2018 02 15 Inversion of max and Min to have most recent dates on top
-	$yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')),intval(sfConfig::get('dw_yearRangeMin')));
-    $years = array_combine($yearsKeyVal, $yearsKeyVal);
+    $yearsKeyVal = range(1400, intval(sfConfig::get('dw_yearRangeMax')));
+    $years = array_reverse(array_combine($yearsKeyVal, $yearsKeyVal),true);
     $minDate = new FuzzyDateTime(strval(min($yearsKeyVal)).'/1/1 0:0:0');
     $maxDate = new FuzzyDateTime(strval(max($yearsKeyVal)).'/12/31 23:59:59');
     $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
@@ -87,10 +106,19 @@ class PropertiesForm extends BasePropertiesForm
     );
 
     $this->widgetSchema['referenced_relation'] = new sfWidgetFormInputHidden();
-    $this->widgetSchema['record_id'] = new sfWidgetFormInputHidden();
+	$this->widgetSchema['record_id'] = new sfWidgetFormInputHidden();
+	//ftheeten 2022
+	if($this->getObject()->isNew())
+	{
+		
 
-    $this->validatorSchema['record_id'] = new sfValidatorInteger();
-    $this->widgetSchema['property_type'] = new widgetFormSelectComplete(array(
+		$this->validatorSchema['record_id'] = new sfValidatorInteger(array("required"=>false));
+    }
+	else
+	{
+		$this->validatorSchema['record_id'] = new sfValidatorInteger();
+	}
+	$this->widgetSchema['property_type'] = new widgetFormSelectComplete(array(
       'model' => 'Properties',
       'table_method' => array('method' => 'getDistinctType', 'parameters' => array($this->options['ref_relation'])),
       'method' => 'getType',
@@ -106,11 +134,15 @@ class PropertiesForm extends BasePropertiesForm
       'add_label' => 'Add another sub-type',
     ));
 
-    if(! $this->getObject()->isNew() || isset($this->options['hasmodel']))
-      $this->widgetSchema['applies_to']->setOption('forced_choices', Doctrine::getTable('Properties')->getDistinctApplies($this->getObject()->getPropertyType()) );
-    else
-      $this->widgetSchema['applies_to']->setOption('forced_choices',array(''=>''));
 
+    if(! $this->getObject()->isNew() || isset($this->options['hasmodel']))
+	{
+      $this->widgetSchema['applies_to']->setOption('forced_choices', Doctrine_Core::getTable('Properties')->getDistinctApplies($this->getObject()->getPropertyType()) );
+    }
+	else
+	{
+      $this->widgetSchema['applies_to']->setOption('forced_choices',array(''=>''));
+	}
     $this->widgetSchema['property_unit'] = new widgetFormSelectComplete(array(
       'model' => 'Properties',
       'change_label' => 'Pick a unit in the list',
@@ -118,7 +150,7 @@ class PropertiesForm extends BasePropertiesForm
     ));
 
     if(! $this->getObject()->isNew() || isset($this->options['hasmodel']))
-      $this->widgetSchema['property_unit']->setOption('forced_choices', Doctrine::getTable('Properties')->getDistinctUnit($this->getObject()->getPropertyType()) );
+      $this->widgetSchema['property_unit']->setOption('forced_choices', Doctrine_Core::getTable('Properties')->getDistinctUnit($this->getObject()->getPropertyType()) );
     else
       $this->widgetSchema['property_unit']->setOption('forced_choices',array(''=>''));
 

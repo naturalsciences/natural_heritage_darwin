@@ -9,7 +9,11 @@ class Codes extends BaseCodes
 				 'additional id' => 'Addition.',
                  'secondary' => 'Second.',
                  'temporary' => 'Temp.',
-                 'inventory'=> 'Invent.'
+                 'inventory'=> 'Invent.',
+				 'barcode' => 'Barcode',
+				 'rack_id'=> 'Rack Id (specimen)',
+				 'dna_rack_id'=> 'Rack id (DNA)',
+				 'genbank number' => 'GenBank Nb.'
                 );
 
    //ftheeten 2018 06 14 (add all)
@@ -28,7 +32,7 @@ class Codes extends BaseCodes
 	}
 	else
 	{
-		return array_map(array($i18n_object, '__'), array_merge( array("all"=>"All"), self::$category));
+		return array_map(array($i18n_object, '__'), array_merge(  self::$category,array("all"=>"All")));
 		
 	}	
   }  

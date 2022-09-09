@@ -26,15 +26,28 @@ class ImportCatalogueXml implements ImportModelsInterface
     $this->referenced_relation = $table;
   }  
 
+   //ftheeten 2018 09 24
+  protected function csvLineIsNotEmpty($p_row)
+  {
+    $returned=FALSE;
+    foreach($p_row as $field=>$value)
+    {
+        if(strlen(trim((string)$value))>0)
+        {
+            return TRUE;
+        }
+    }
+    return $returned;
+  }
 
   public function parseFile($file,$id)
   {
     $this->import_id = $id ;
 	    //ftheeten 2017 07026
-	$importTmp=Doctrine::getTable('Imports')->find($this->import_id);
-	$taxonomyMetadataTmp=Doctrine::getTable('TaxonomyMetadata')->find($importTmp->getSpecimenTaxonomyRef());
+	$importTmp=Doctrine_Core::getTable('Imports')->find($this->import_id);
+	$taxonomyMetadataTmp=Doctrine_Core::getTable('TaxonomyMetadata')->find($importTmp->getSpecimenTaxonomyRef());
     //ftheeten 2018 03 22
-    $mime_type=Doctrine::getTable('Imports')->find($this->import_id)->getMimeType();
+    $mime_type=Doctrine_Core::getTable('Imports')->find($this->import_id)->getMimeType();
     $this->taxonomy_name=$taxonomyMetadataTmp->getTaxonomyName();
     $this->creation_date=$taxonomyMetadataTmp->getCreationDate();
     $this->creation_date_mask=$taxonomyMetadataTmp->getCreationDateMask();
@@ -44,9 +57,47 @@ class ImportCatalogueXml implements ImportModelsInterface
     $this->url_website_taxonomy=$taxonomyMetadataTmp->getUrlWebsite();
     $this->url_webservice_taxonomy=$taxonomyMetadataTmp->getUrlWebservice();
     //ftheeten 2018 03 21
-	if($mime_type==="text/plain")
+	if(strpos(strtolower($mime_type),"text/")==0&&strtolower($mime_type)!="text/xml")
     {
+		 //print("GO_CSV");
         if (!($fp = fopen($file, "r"))) {
+            return("could not open input file");
+        }
+       $tabParser = new RMCATabTaxonomyDirect($this->import_id,$importTmp->getSpecimenTaxonomyRef());
+	    $tabParser->configure($options);
+        $tabParser->identifyHeader($fp);
+        $i=1;
+		
+		try
+		{
+			while (($row = fgetcsv($fp, 0, "\t")) !== FALSE)
+			{
+				if($this->csvLineIsNotEmpty($row))
+				{
+					if (array(null) !== $row) 
+					{ // ignore blank lines
+							//ftheeten 2018 02 28
+						 $row=  Encoding::toUTF8($row);
+						 
+						 $tabParser->parseLineAndSaveToDB($row);
+					}
+				 }
+			}
+			
+         }
+		 catch(Doctrine_Exception $ne)
+		{
+			
+			throw $ne;
+		}
+		catch(Exception $e)		
+		{
+			
+			throw $e;
+		}
+		
+        fclose($fp);
+        /*if (!($fp = fopen($file, "r"))) {
             return("could not open input file");
         }
        
@@ -82,6 +133,7 @@ class ImportCatalogueXml implements ImportModelsInterface
         //if(! $this->version_defined)
         //  $this->errors_reported = $this->version_error_msg.$this->errors_reported;
         return $this->errors_reported ;
+		*/
     }
     //back to old XML parser
     else
@@ -151,7 +203,7 @@ class ImportCatalogueXml implements ImportModelsInterface
         case "Version":
           $this->version_defined = true;
           $authorized = sfConfig::get('tpl_authorizedversion');
-          Doctrine::getTable('Imports')->find($this->import_id)->setTemplateVersion(trim($this->version))->save();
+          Doctrine_Core::getTable('Imports')->find($this->import_id)->setTemplateVersion(trim($this->version))->save();
           if(
               !isset( $authorized['taxonomy'] ) ||
               empty( $authorized['taxonomy'] ) ||

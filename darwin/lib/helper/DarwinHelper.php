@@ -1,5 +1,10 @@
 <?php
 
+
+function mb_trim_custom($str) {
+
+  return preg_replace("/^\s+|\s+$/u", "", $str); 
+}
 //ftheeten 2018 04 17        
 function array_filter_recursive($array, $callback = null) {
     foreach ($array as $key => & $value) {
@@ -152,7 +157,7 @@ function getRecordIfDuplicate_helper($id , $obj, $is_spec = false)
 		
 		  public function getComments()
 		{
-			$tmpComments = Doctrine::getTable('Comments')->findForTable('specimens',$this->m_specimen->getId()) ;
+			$tmpComments = Doctrine_Core::getTable('Comments')->findForTable('specimens',$this->m_specimen->getId()) ;
 			return $tmpComments;
 		}
 	
@@ -160,7 +165,7 @@ function getRecordIfDuplicate_helper($id , $obj, $is_spec = false)
 		{
 			$tmpProperties=NULL;
 			
-			$tmpProperties= Doctrine::getTable('Properties')->findForTable('specimens', $this->m_specimen->getId());
+			$tmpProperties= Doctrine_Core::getTable('Properties')->findForTable('specimens', $this->m_specimen->getId());
 			
 			return $tmpProperties;
 		}
@@ -170,12 +175,12 @@ function getRecordIfDuplicate_helper($id , $obj, $is_spec = false)
 			$tmpProperties=NULL;
 			if(is_null($p_gtuID))
 			{
-				$tmpProperties = Doctrine::getTable('Properties')->findForTable('gtu',$p_gtuID) ;
+				$tmpProperties = Doctrine_Core::getTable('Properties')->findForTable('gtu',$p_gtuID) ;
 			}
 			else
 			{
 				 $gtuTmpRef=$this->m_specimen->getGtu();
-				 $tmpProperties = Doctrine::getTable('Properties')->findForTable('gtu',$gtuTmpRef->getId()) ;
+				 $tmpProperties = Doctrine_Core::getTable('Properties')->findForTable('gtu',$gtuTmpRef->getId()) ;
 			}
 			return $tmpProperties;
 		}
@@ -186,12 +191,12 @@ function getRecordIfDuplicate_helper($id , $obj, $is_spec = false)
 			$tmpComments=NULL;
 			if(is_null($p_gtuID))
 			{
-				$tmpComments = Doctrine::getTable('Comments')->findForTable('gtu',$p_gtuID) ;
+				$tmpComments = Doctrine_Core::getTable('Comments')->findForTable('gtu',$p_gtuID) ;
 			}
 			else
 			{
 				 $gtuTmpRef=$this->m_specimen->getGtu();
-				 $tmpComments = Doctrine::getTable('Comments')->findForTable('gtu',$gtuTmpRef->getId()) ;
+				 $tmpComments = Doctrine_Core::getTable('Comments')->findForTable('gtu',$gtuTmpRef->getId()) ;
 			}
 			return $tmpComments;
 		}
@@ -200,32 +205,36 @@ function getRecordIfDuplicate_helper($id , $obj, $is_spec = false)
 		{
 			$returned="";
 			$returned.= "<specimen>";
-			$returned.= xmlTag("id", $this->m_specimen->getId());
-			$returned.= xmlTag("collection_code", $this->m_specimen->getCollectionCode());
-			$returned.= xmlTag("collection_name", $this->m_specimen->getCollectionName());
-            $returned.= xmlTag("institution_name", $this->m_specimen->getInstitution()->getFormatedName());
+			$returned.= xmlTag("id", mb_trim_custom($this->m_specimen->getId()));
+			$returned.= xmlTag("collection_code", mb_trim_custom($this->m_specimen->getCollectionCode()));
+			$returned.= xmlTag("collection_name", mb_trim_custom($this->m_specimen->getCollectionName()));
+            $returned.= xmlTag("institution_name", mb_trim_custom($this->m_specimen->getInstitution()->getFormatedName()));
 			
 			//pb field institution empty (hard to rest)
-			$returned.= xmlTag("institution", $this->m_specimen->getInstitution()->getId());
+			$returned.= xmlTag("institution", mb_trim_custom($this->m_specimen->getInstitution()->getId()));
 			//$codeSpec=$this->m_specimen->getSpecimensCodes();//$codes[$this->m_specimen->getId()];
 			//print_r($codeSpec);
 			$returned.= "<specimen_codes>";
 			
-			$codes_collection = Doctrine::getTable('Codes')->getCodesRelated('specimens',$this->m_specimen->getId(), 'id ASC');
+			$codes_collection = Doctrine_Core::getTable('Codes')->getCodesRelated('specimens',$this->m_specimen->getId(), 'id ASC');
 			
 				foreach($codes_collection as $code) 
 				{
 					if($code->getCodeCategory() == 'main')
 					{
-						$returned.= xmlTag("specimen_code", $code->getCode());
+						$returned.= xmlTag("specimen_code", mb_trim_custom($code->getCode()));
+					}
+                    elseif($code->getCodeCategory() == 'additional id')
+					{                       
+						$returned.= xmlTag("specimen_code_additional", mb_trim_custom($code->getCode()));
 					}
 				}
 			
 			$returned.= "</specimen_codes>";
 			$taxon=$this->m_specimen->getTaxonomy();
-			$returned.= xmlTag("taxon", $taxon);
-			$returned.= xmlTag("taxon_without_author", $taxon->getNameWithoutAuthor());
-			$returned.= xmlTag("taxon_author_part", $taxon->getAuthorYear());
+			$returned.= xmlTag("taxon", mb_trim_custom($taxon));
+			$returned.= xmlTag("taxon_without_author", mb_trim_custom($taxon->getNameWithoutAuthor()));
+			$returned.= xmlTag("taxon_author_part", mb_trim_custom($taxon->getAuthorYear()));
 			
 			$tmpFamily=$taxon->getParentByLevelRef(34);
 			$returned.= xmlTag("family", $tmpFamily);
@@ -234,7 +243,7 @@ function getRecordIfDuplicate_helper($id , $obj, $is_spec = false)
 			{
 				$typeTmp=NULL;
 			}
-			$returned.= xmlTag("type_information",$typeTmp);
+			$returned.= xmlTag("type_information",mb_trim_custom($typeTmp));
 			$returned.= xmlTag("specimen_count_min",$this->m_specimen->getSpecimenCountMin());
 			$returned.= xmlTag("specimen_count_max",$this->m_specimen->getSpecimenCountMax());
             $returned.= xmlTag("specimen_count_males_min",$this->m_specimen->getSpecimenCountMalesMin());
@@ -243,47 +252,47 @@ function getRecordIfDuplicate_helper($id , $obj, $is_spec = false)
 			$returned.= xmlTag("specimen_count_females_max",$this->m_specimen->getSpecimenCountFemalesMax());
              $returned.= xmlTag("specimen_count_juveniles_min",$this->m_specimen->getSpecimenCountJuvenilesMin());
 			$returned.= xmlTag("specimen_count_juveniles_max",$this->m_specimen->getSpecimenCountJuvenilesMax());
-			$returned.= xmlTag("sex",$this->m_specimen->getSex());
+			$returned.= xmlTag("sex",mb_trim_custom($this->m_specimen->getSex()));
 
 			$returned.= "<identifications>";
-			$returned.= xmlTag("identifiers_ids",$this->m_specimen->getSpecIdentIds());
+			$returned.= xmlTag("identifiers_ids",mb_trim_custom($this->m_specimen->getSpecIdentIds()));
 				
 				//identification
-				$Identifications = Doctrine::getTable('Identifications')->getIdentificationsRelated('specimens',$this->m_specimen->getId()) ;
+				$Identifications = Doctrine_Core::getTable('Identifications')->getIdentificationsRelated('specimens',$this->m_specimen->getId()) ;
 				foreach ($Identifications as $key=>$val)
 				{
 					$returned.= "<identification>";
 					$identification = new Identifications() ;
 					$identification =getRecordIfDuplicate_helper($val->getId(),$identification);//$this->m_specimen->getRecordIfDuplicate($val->getId(),$identification);
-					  $Identifiers = Doctrine::getTable('CataloguePeople')->getPeopleRelated('identifications', 'identifier', $val->getId()) ;
+					  $Identifiers = Doctrine_Core::getTable('CataloguePeople')->getPeopleRelated('identifications', 'identifier', $val->getId()) ;
 					  foreach ($Identifiers as $Identifier)
 					  {
 							$identifier_desc=$Identifier->getPeople();
 							$returned.= "<identifier>";
-							$returned.= xmlTag("formated_name", trim($identifier_desc->getFormatedName()));
+							$returned.= xmlTag("formated_name", mb_trim_custom(trim($identifier_desc->getFormatedName())));
 							$returned.= "</identifier>";
 							
 					  }
 					  $returned.= "<date>";
 					  $date_ident=$identification->getNotionDate();
-					  $returned.= xmlTag("year", $date_ident["year"]);
+					  $returned.= xmlTag("year", mb_trim_custom($date_ident["year"]));
 					  $returned.= "</date>";
 					  $ident_status= $identification->getDeterminationStatus();
-					  $returned.= xmlTag("status", $ident_status);
+					  $returned.= xmlTag("status", mb_trim_custom($ident_status));
 					  $returned.= "</identification>";
 				}
 				$returned.= "</identifications>";
 				$returned.= "<gtu>";
 				$gtuTmpRef=$this->m_specimen->getGtu();
 				$returned.= xmlTag("gtu_code",$gtuTmpRef->getCode());
-				$gtuTmp = Doctrine::getTable('Gtu')->find($this->m_specimen->getGtuRef());
+				$gtuTmp = Doctrine_Core::getTable('Gtu')->find($this->m_specimen->getGtuRef());
 				$arrayElems=getGtuTagsValuesArray($gtuTmp, false);
 				//print_r($gtuTmp);
                 $ecologyFound=false;
 				foreach($arrayElems as $keyGtuGroup=>$valGtuArray)
 				{
 					$returned.= "<gtu_element>";
-					$returned.= xmlTag("gtu_element_name", $keyGtuGroup);
+					$returned.= xmlTag("gtu_element_name", mb_trim_custom($keyGtuGroup));
 					$returned.= "<gtu_element_values>";
 					
                     foreach($valGtuArray as $valGtu)
@@ -292,21 +301,21 @@ function getRecordIfDuplicate_helper($id , $obj, $is_spec = false)
                         {
                             $ecologyFound=true;
                         }
-						$returned.= xmlTag("gtu_element_value", $valGtu);
+						$returned.= xmlTag("gtu_element_value", mb_trim_custom($valGtu));
 					}
 					$returned.= "</gtu_element_values>";
 					$returned.= "</gtu_element>";
 				}
                 if(!$ecologyFound)
                 {
-                    $ecologies=Doctrine::getTable('Comments')->findForTableByNotion("specimens", $this->m_specimen->getId(),"ecology");
+                    $ecologies=Doctrine_Core::getTable('Comments')->findForTableByNotion("specimens", $this->m_specimen->getId(),"ecology");
                      $returned.= "<gtu_element>";
                      $returned.= xmlTag("gtu_element_name", "ecology");
                      $returned.= "<gtu_element_values>";
                      foreach ($ecologies as $key=>$val)
                     {
                        
-                        $returned.= xmlTag("gtu_element_value", $val->getComment());
+                        $returned.= xmlTag("gtu_element_value", mb_trim_custom($val->getComment()));
                     }
                     $returned.= "</gtu_element_values>";
 					$returned.= "</gtu_element>";
@@ -316,8 +325,8 @@ function getRecordIfDuplicate_helper($id , $obj, $is_spec = false)
 				foreach ($gtuComments as $valC)
 				{
 					$returned.="<gtu_comment>";
-					$returned.=xmlTag("comment_type", $valC->getNotionConcerned());
-					$returned.=xmlTag("comment_value", $valC->getComment());
+					$returned.=xmlTag("comment_type", mb_trim_custom($valC->getNotionConcerned()));
+					$returned.=xmlTag("comment_value", mb_trim_custom($valC->getComment()));
 					$returned.="</gtu_comment>";
 				}
 			
@@ -344,8 +353,8 @@ function getRecordIfDuplicate_helper($id , $obj, $is_spec = false)
                     $returned.= xmlTag("elevation",  $gtuTmp->getElevation());
                     if($source_coord=="DD")
                     {
-                        $returned.= xmlTag("latitude_label", $gtuTmp->getLatitude());
-                        $returned.= xmlTag("longitude_label", $gtuTmp->getLongitude());
+                        $returned.= xmlTag("latitude_label", mb_trim_custom($gtuTmp->getLatitude()));
+                        $returned.= xmlTag("longitude_label", mb_trim_custom($gtuTmp->getLongitude()));
                     }
                     elseif($source_coord=="DMS")
                     {
@@ -384,13 +393,13 @@ function getRecordIfDuplicate_helper($id , $obj, $is_spec = false)
                         {
                             $long_display.=" W";
                         }
-                        $returned.= xmlTag("latitude_label", $lat_display);
-                        $returned.= xmlTag("longitude_label", $long_display);
+                        $returned.= xmlTag("latitude_label", mb_trim_custom($lat_display));
+                        $returned.= xmlTag("longitude_label", mb_trim_custom($long_display));
                     }
                     elseif($source_coord=="UTM")
                     {
-                        $returned.= xmlTag("latitude_label", $gtuTmp->getLatitudeUtm());
-                        $returned.= xmlTag("longitude_label", $gtuTmp->getLongitudeUtm(). " Zone UTM ".$gtuTmp->getUtmZone());
+                        $returned.= xmlTag("latitude_label", mb_trim_custom($gtuTmp->getLatitudeUtm()));
+                        $returned.= xmlTag("longitude_label", mb_trim_custom($gtuTmp->getLongitudeUtm(). " Zone UTM ".$gtuTmp->getUtmZone()));
                         
                     }
                     $returned.= "</coordinates>";
@@ -398,7 +407,7 @@ function getRecordIfDuplicate_helper($id , $obj, $is_spec = false)
                     $returned.= "<date_begin>";
                     foreach($dateBegin as $dateElem=>$dateElemVal)
                     {
-                        $returned.= xmlTag($dateElem, $dateElemVal);
+                        $returned.= xmlTag($dateElem, mb_trim_custom($dateElemVal));
                     }
                     $returned.= "</date_begin>";
                     $dateEnd=$this->m_specimen->getGtuToDate();
@@ -415,10 +424,10 @@ function getRecordIfDuplicate_helper($id , $obj, $is_spec = false)
                     foreach ($gtuProperties as $valSP)
                     {
                         $returned.="<gtu_property>";
-                        $returned .= xmlTag("property_type", $valSP->getPropertyType());
-                        $returned .= xmlTag("lower_value", $valSP->getLowerValue());
-                        $returned .= xmlTag("upper_value", $valSP->getUpperValue());
-                        $returned .= xmlTag("property_unit", $valSP->getPropertyUnit());	
+                        $returned .= xmlTag("property_type", mb_trim_custom($valSP->getPropertyType()));
+                        $returned .= xmlTag("lower_value", mb_trim_custom($valSP->getLowerValue()));
+                        $returned .= xmlTag("upper_value", mb_trim_custom($valSP->getUpperValue()));
+                        $returned .= xmlTag("property_unit", mb_trim_custom($valSP->getPropertyUnit()));	
                         $returned.="</gtu_property>";
                     }
                     $returned.="</gtu_properties>";
@@ -433,11 +442,11 @@ function getRecordIfDuplicate_helper($id , $obj, $is_spec = false)
 						$returned.= "<expedition>";
 						if(isset($expRef))
 						{
-							$returned.= xmlTag("id", $expRef);	
+							$returned.= xmlTag("id", mb_trim_custom($expRef));	
 						}
 						if(isset($expName))
 						{
-							$returned.= xmlTag("name", $expName);	
+							$returned.= xmlTag("name", mb_trim_custom($expName));	
 						}
 						$returned.= "</expedition>";
 				}
@@ -445,12 +454,12 @@ function getRecordIfDuplicate_helper($id , $obj, $is_spec = false)
 				$returned.= "<collectors>";
 				$collector_ids=$this->m_specimen->getSpecCollIds();
 				$returned.= xmlTag("collector_ids", $collector_ids);
-				$Collectors = Doctrine::getTable('CataloguePeople')->getPeopleRelated('specimens', 'collector', $this->m_specimen->getId()) ;
+				$Collectors = Doctrine_Core::getTable('CataloguePeople')->getPeopleRelated('specimens', 'collector', $this->m_specimen->getId()) ;
 				foreach ($Collectors as $Collector)
 				{
 					$collector_desc=$Collector->getPeople();
 					$returned.= "<collector>";
-					$returned.= xmlTag("formated_name", trim($collector_desc->getFormatedName()));
+					$returned.= xmlTag("formated_name", mb_trim_custom(trim($collector_desc->getFormatedName())));
 					$returned.= "</collector>";
 								
 				}
@@ -461,17 +470,17 @@ function getRecordIfDuplicate_helper($id , $obj, $is_spec = false)
 				if(isset($expName))
 				{
 						$returned.= "<collector>";
-						$returned.= xmlTag("formated_name", trim($expName));
+						$returned.= xmlTag("formated_name", mb_trim_custom(trim($expName)));
 						$returned.= "</collector>";
 				}
 				else
 				{
-					$Collectors = Doctrine::getTable('CataloguePeople')->getPeopleRelated('specimens', 'collector', $this->m_specimen->getId()) ;
+					$Collectors = Doctrine_Core::getTable('CataloguePeople')->getPeopleRelated('specimens', 'collector', $this->m_specimen->getId()) ;
 					foreach ($Collectors as $Collector)
 					{
 						$collector_desc=$Collector->getPeople();
 						$returned.= "<collector>";
-						$returned.= xmlTag("formated_name", trim($collector_desc->getFormatedName()));
+						$returned.= xmlTag("formated_name", mb_trim_custom(trim($collector_desc->getFormatedName())));
 						$returned.= "</collector>";
 									
 					}
@@ -481,23 +490,23 @@ function getRecordIfDuplicate_helper($id , $obj, $is_spec = false)
 				
 				//find related specimen (child): untested and empty for now!
 				$returned.= "<related_specimens_child>";
-				$related_specimens_descriptions=Doctrine::getTable("SpecimensRelationships")->findBySpecimen($this->m_specimen->getId());
+				$related_specimens_descriptions=Doctrine_Core::getTable("SpecimensRelationships")->findBySpecimen($this->m_specimen->getId());
 				foreach($related_specimens_descriptions as $related_spec_desc)
 				{
 					$returned.= "<related_specimen_child>";
 					$relation_type=$related_spec_desc->getRelationshipType();
-					$returned.= xmlTag("relation_type",$relation_type );
+					$returned.= xmlTag("relation_type",mb_trim_custom($relation_type ));
 					$related_specimen=$related_spec_desc->getSpecimenRelated();
-					$returned.= xmlTag("related_specimen_id", $related_specimen->getId());
+					$returned.= xmlTag("related_specimen_id", mb_trim_custom($related_specimen->getId()));
 					
 					
-					$codes_collection = Doctrine::getTable('Codes')->getCodesRelated('specimens',$related_specimen->getId(), 'id ASC');
+					$codes_collection = Doctrine_Core::getTable('Codes')->getCodesRelated('specimens',$related_specimen->getId(), 'id ASC');
 				
 					foreach($codes_collection as $code) 
 					{
 						if($code->getCodeCategory() == 'main')
 						{
-							$returned.= xmlTag("related_specimen_code", $code->getCode());
+							$returned.= xmlTag("related_specimen_code", mb_trim_custom($code->getCode()));
 						}
 					}
 					$returned.= "</related_specimen_child>";
@@ -506,7 +515,7 @@ function getRecordIfDuplicate_helper($id , $obj, $is_spec = false)
 			
 				//find related specimen (parent): untested and empty or now!
 				$returned.= "<related_specimens_parent>";
-				$related_specimens_descriptions=Doctrine::getTable("SpecimensRelationships")->findByRelatedSpecimenRef($this->m_specimen->getId());
+				$related_specimens_descriptions=Doctrine_Core::getTable("SpecimensRelationships")->findByRelatedSpecimenRef($this->m_specimen->getId());
 				foreach($related_specimens_descriptions as $related_spec_desc)
 				{
 					$returned.= "<related_specimen_parent>";
@@ -515,23 +524,23 @@ function getRecordIfDuplicate_helper($id , $obj, $is_spec = false)
 					$related_specimen=$related_spec_desc->getSpecimen();
 					$returned.= xmlTag("related_specimen_id", $related_specimen->getId());
 					
-					$codes_collection = Doctrine::getTable('Codes')->getCodesRelated('specimens',$related_specimen->getId(), 'id ASC');
+					$codes_collection = Doctrine_Core::getTable('Codes')->getCodesRelated('specimens',$related_specimen->getId(), 'id ASC');
 				
 					foreach($codes_collection as $code) 
 					{
 						if($code->getCodeCategory() == 'main')
 						{
-							$returned.= xmlTag("related_specimen_code", $code->getCode());
+							$returned.= xmlTag("related_specimen_code", mb_trim_custom($code->getCode()));
 						}
 					}
 					
-					$codes_collection = Doctrine::getTable('Codes')->getCodesRelated('specimens',$this->m_specimen->getId(), 'id ASC');
+					$codes_collection = Doctrine_Core::getTable('Codes')->getCodesRelated('specimens',$this->m_specimen->getId(), 'id ASC');
 					$returned.= "<related_specimen_codes>";
 					foreach($codes_collection as $code) 
 					{
 						if($code->getCodeCategory() == 'main')
 						{
-							$returned.= xmlTag("related_specimen_code", $code->getCode());
+							$returned.= xmlTag("related_specimen_code", mb_trim_custom($code->getCode()));
 						}
 					}
 					$returned.= "</related_specimen_codes>";
@@ -544,10 +553,10 @@ function getRecordIfDuplicate_helper($id , $obj, $is_spec = false)
 				foreach($tmpSpecimenProperties as $valSP)
 				{
 					$returned .= "<specimen_property>";
-					$returned .= xmlTag("property_type", $valSP->getPropertyType());
-					$returned .= xmlTag("lower_value", $valSP->getLowerValue());
-					$returned .= xmlTag("upper_value", $valSP->getUpperValue());
-					$returned .= xmlTag("property_unit", $valSP->getPropertyUnit());					
+					$returned .= xmlTag("property_type", mb_trim_custom($valSP->getPropertyType()));
+					$returned .= xmlTag("lower_value", mb_trim_custom($valSP->getLowerValue()));
+					$returned .= xmlTag("upper_value", mb_trim_custom($valSP->getUpperValue()));
+					$returned .= xmlTag("property_unit", mb_trim_custom($valSP->getPropertyUnit()));					
 					$returned .= "</specimen_property>";
 				}
 				$returned .= "</specimen_properties>";
@@ -557,14 +566,14 @@ function getRecordIfDuplicate_helper($id , $obj, $is_spec = false)
 				foreach ($tmpComments as $valC)
 				{
 					$returned.="<specimen_comment>";
-					$returned.=xmlTag("comment_type", $valC->getNotionConcerned());
-					$returned.=xmlTag("comment_value", $valC->getComment());
+					$returned.=xmlTag("comment_type", mb_trim_custom($valC->getNotionConcerned()));
+					$returned.=xmlTag("comment_value", mb_trim_custom($valC->getComment()));
 					$returned.="</specimen_comment>";
 				}
 				
 				$returned .= "</specimen_comments>";
-                $returned.=xmlTag("creator", $this->m_specimen->getLabelCreatedBy());
-                $returned.=xmlTag("date_creation", $this->m_specimen->getLabelCreatedOn());
+                $returned.=xmlTag("creator", mb_trim_custom($this->m_specimen->getLabelCreatedBy()));
+                $returned.=xmlTag("date_creation", mb_trim_custom($this->m_specimen->getLabelCreatedOn()));
 				$returned.= "</specimen>";
 				
 				return $returned;
@@ -592,7 +601,7 @@ function getRecordIfDuplicate_helper($id , $obj, $is_spec = false)
     {
         if(isset($str))
         {
-            if(strlen($str)>0)
+            if(strlen(trim($str))>0)
             {
                 return TRUE;
             }
@@ -611,6 +620,13 @@ function getRecordIfDuplicate_helper($id , $obj, $is_spec = false)
             $this->message = $message;
         }
     }
+	
+	function hstore2array($param)
+  {
+        $param=html_entity_decode($param);
+        return json_decode('{' . str_replace('"=>"', '":"', $param) . '}', true);
+  }
+  
     
     
 ?>

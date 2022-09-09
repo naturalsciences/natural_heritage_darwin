@@ -62,7 +62,7 @@ class SpecimensRelationshipsForm extends BaseSpecimensRelationshipsForm
     $this->widgetSchema['specimen_related_ref'] = new widgetFormButtonRef(array(
        'model' => 'Specimens',
        'link_url' => 'specimen/choose',
-       'method' => 'getName',
+       'method' => 'getNamePartAndUuid',
        'box_title' => $this->getI18N()->__('Choose Specimen'),
        'nullable' => false,
        'button_class'=>'',

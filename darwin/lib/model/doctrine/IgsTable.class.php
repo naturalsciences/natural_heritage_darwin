@@ -18,9 +18,9 @@ class IgsTable extends DarwinTable
 
   public function findIgBySpecimenRef($id)
   {
-    $spec = Doctrine::getTable('Specimens')->find($id);
+    $spec = Doctrine_Core::getTable('Specimens')->find($id);
     if($spec) {
-      $ig = Doctrine::getTable('igs')->find($spec->getIgRef());
+      $ig = Doctrine_Core::getTable('igs')->find($spec->getIgRef());
       return $ig;
     }
     return null;

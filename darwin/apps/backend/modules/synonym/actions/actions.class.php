@@ -39,7 +39,7 @@ class synonymActions extends DarwinActions
 	          $conn = Doctrine_Manager::connection();
 	          $conn->beginTransaction();
 
-	          Doctrine::getTable('ClassificationSynonymies')
+	          Doctrine_Core::getTable('ClassificationSynonymies')
 	            ->mergeSynonyms(
 	              $request->getParameter('table'),
 	              $this->form->getValue('record_id'),
@@ -68,15 +68,15 @@ class synonymActions extends DarwinActions
     $conn = Doctrine_Manager::connection();
     $conn->beginTransaction();
 
-    $synonym = Doctrine::getTable('ClassificationSynonymies')->find($request->getParameter('id'));
+    $synonym = Doctrine_Core::getTable('ClassificationSynonymies')->find($request->getParameter('id'));
     
-    if( Doctrine::getTable('ClassificationSynonymies')->countRecordInGroup($synonym->getGroupId()) > 2)
+    if( Doctrine_Core::getTable('ClassificationSynonymies')->countRecordInGroup($synonym->getGroupId()) > 2)
     {
       $synonym->delete();
     }
     else     //Delete the entire group if there is only two record
     {
-      Doctrine::getTable('ClassificationSynonymies')->deleteAllItemInGroup( $synonym->getGroupId() );
+      Doctrine_Core::getTable('ClassificationSynonymies')->deleteAllItemInGroup( $synonym->getGroupId() );
     }
     $conn->commit();
     return $this->renderText('ok');
@@ -86,7 +86,7 @@ class synonymActions extends DarwinActions
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
     $this->forward404Unless($request->isMethod('post'));
-    Doctrine::getTable('ClassificationSynonymies')->saveOrder(substr($request->getParameter('order', ','),0,-1));
+    Doctrine_Core::getTable('ClassificationSynonymies')->saveOrder(substr($request->getParameter('order', ','),0,-1));
     return $this->renderText('ok');
   }
 
@@ -94,19 +94,31 @@ class synonymActions extends DarwinActions
   {
     $this->forward404Unless($request->isMethod('post'));
     if($request->getParameter('uncheck'))
-      Doctrine::getTable('ClassificationSynonymies')->resetBasionym($request->getParameter('group_id'));
+      Doctrine_Core::getTable('ClassificationSynonymies')->resetBasionym($request->getParameter('group_id'));
     else
-      Doctrine::getTable('ClassificationSynonymies')->setBasionym($request->getParameter('group_id'), $request->getParameter('id'));
+      Doctrine_Core::getTable('ClassificationSynonymies')->setBasionym($request->getParameter('group_id'), $request->getParameter('id'));
     return $this->renderText('ok');
   }
 
   public function executeChecks(sfWebRequest $request)
   {
     return $this->renderText(
-      Doctrine::getTable('ClassificationSynonymies')->findGroupIdFor(
+      Doctrine_Core::getTable('ClassificationSynonymies')->findGroupIdFor(
       $request->getParameter('table'),
       $request->getParameter('id'),
       $request->getParameter('type'))
     );
   }
+  
+  
+  public function executeSetOriginalSynonym(sfWebRequest $request)
+  {
+    $this->forward404Unless($request->isMethod('post'));
+    if($request->getParameter('uncheck'))
+      Doctrine_Core::getTable('ClassificationSynonymies')->resetOriginalSynonym($request->getParameter('group_id'));
+    else
+      Doctrine_Core::getTable('ClassificationSynonymies')->setOriginalSynonym($request->getParameter('group_id'), $request->getParameter('id'));
+    return $this->renderText('ok');
+  }
+
 }
