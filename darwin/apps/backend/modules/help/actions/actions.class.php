@@ -30,4 +30,12 @@ class helpActions extends DarwinActions
   public function executeContrib(sfWebRequest $request)
   {
   }
+  
+   public function executeRmca_documents(sfWebRequest $request)
+  {
+  }
+  
+   public function executeList_inv_acronyms(sfWebRequest $request)
+  {
+  }
 }

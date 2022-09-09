@@ -6,47 +6,51 @@
  * @package    darwin
  * @subpackage filter
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
+ * @version    SVN: $Id$
  */
-abstract class BaseSpecimensCodesFormFilter extends BaseFormFilterDoctrine
+abstract class BaseSpecimensCodesFormFilter extends DarwinModelFormFilter
 {
-  public function setup()
+  protected function setupInheritance()
   {
-    $this->setWidgets(array(
-      'referenced_relation'   => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'record_id'             => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Specimens'), 'add_empty' => true)),
-      'code_category'         => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'code_prefix'           => new sfWidgetFormFilterInput(),
-      'code_prefix_separator' => new sfWidgetFormFilterInput(),
-      'code'                  => new sfWidgetFormFilterInput(),
-      'code_suffix'           => new sfWidgetFormFilterInput(),
-      'code_suffix_separator' => new sfWidgetFormFilterInput(),
-      'full_code_indexed'     => new sfWidgetFormFilterInput(),
-      'code_date'             => new sfWidgetFormFilterInput(),
-      'code_date_mask'        => new sfWidgetFormFilterInput(array('with_empty' => false)),
-    ));
+    parent::setupInheritance();
 
-    $this->setValidators(array(
-      'referenced_relation'   => new sfValidatorPass(array('required' => false)),
-      'record_id'             => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Specimens'), 'column' => 'id')),
-      'code_category'         => new sfValidatorPass(array('required' => false)),
-      'code_prefix'           => new sfValidatorPass(array('required' => false)),
-      'code_prefix_separator' => new sfValidatorPass(array('required' => false)),
-      'code'                  => new sfValidatorPass(array('required' => false)),
-      'code_suffix'           => new sfValidatorPass(array('required' => false)),
-      'code_suffix_separator' => new sfValidatorPass(array('required' => false)),
-      'full_code_indexed'     => new sfValidatorPass(array('required' => false)),
-      'code_date'             => new sfValidatorPass(array('required' => false)),
-      'code_date_mask'        => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
-    ));
+    $this->widgetSchema   ['referenced_relation'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['referenced_relation'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['record_id'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Specimens'), 'add_empty' => true));
+    $this->validatorSchema['record_id'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Specimens'), 'column' => 'id'));
+
+    $this->widgetSchema   ['code_category'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['code_category'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['code_prefix'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['code_prefix'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['code_prefix_separator'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['code_prefix_separator'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['code'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['code'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['code_suffix'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['code_suffix'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['code_suffix_separator'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['code_suffix_separator'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['full_code_indexed'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['full_code_indexed'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['code_date'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['code_date'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['code_date_mask'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['code_date_mask'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
+
+    $this->widgetSchema   ['record_id'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Specimens'), 'add_empty' => true));
+    $this->validatorSchema['record_id'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Specimens'), 'column' => 'id'));
 
     $this->widgetSchema->setNameFormat('specimens_codes_filters[%s]');
-
-    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
-
-    $this->setupInheritance();
-
-    parent::setup();
   }
 
   public function getModelName()
@@ -56,19 +60,19 @@ abstract class BaseSpecimensCodesFormFilter extends BaseFormFilterDoctrine
 
   public function getFields()
   {
-    return array(
-      'id'                    => 'Number',
-      'referenced_relation'   => 'Text',
-      'record_id'             => 'ForeignKey',
-      'code_category'         => 'Text',
-      'code_prefix'           => 'Text',
+    return array_merge(parent::getFields(), array(
+      'referenced_relation' => 'Text',
+      'record_id' => 'ForeignKey',
+      'code_category' => 'Text',
+      'code_prefix' => 'Text',
       'code_prefix_separator' => 'Text',
-      'code'                  => 'Text',
-      'code_suffix'           => 'Text',
+      'code' => 'Text',
+      'code_suffix' => 'Text',
       'code_suffix_separator' => 'Text',
-      'full_code_indexed'     => 'Text',
-      'code_date'             => 'Text',
-      'code_date_mask'        => 'Number',
-    );
+      'full_code_indexed' => 'Text',
+      'code_date' => 'Text',
+      'code_date_mask' => 'Number',
+      'record_id' => 'ForeignKey',
+    ));
   }
 }

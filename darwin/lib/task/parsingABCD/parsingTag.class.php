@@ -120,7 +120,7 @@ class ParsingTag extends ImportABCDXml
 
   public function addMethod($data,$staging_id)
   {
-    $method = Doctrine::getTable('CollectingMethods')->checkIfMethod($data);
+    $method = Doctrine_Core::getTable('CollectingMethods')->checkIfMethod($data);
     if($method) $ref = $method->getId() ;
     else
     {

@@ -13,6 +13,11 @@
 			$path='import/search';
 			
 		}
+		elseif($format=="locality")
+		{
+			$path='import/searchLocality';
+			
+		}
 		elseif($format=="files")
 		{
 			$path='import/searchFiles';
@@ -52,6 +57,8 @@
     </div>
     <?php if($format == 'taxon') : ?>    
       <div class="new_link"><a href="<?php echo url_for('import/upload?format=taxon') ?>"><?php echo __('Import Taxons');?></a>
+	 <?php elseif($format == 'locality') : ?>    
+      <div class="new_link"><a href="<?php echo url_for('import/upload?format=locality') ?>"><?php echo __('Import Localities');?></a>
 	<?php elseif($format == 'files') : ?>    
       <div class="new_link"><a href="<?php echo url_for('import/upload?format=files') ?>"><?php echo __('Import Files');?></a>
 	<?php elseif($format == 'links') : ?>    

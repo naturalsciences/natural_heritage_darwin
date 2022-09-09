@@ -37,7 +37,7 @@ class myUser extends sfBasicSecurityUser
    */
   public function fetchVisibleCols()
   {
-    return explode('|',Doctrine::getTable('Preferences')->getPreference($this->getId(),'search_cols_specimen',true));
+    return explode('|',Doctrine_Core::getTable('Preferences')->getPreference($this->getId(),'search_cols_specimen',true));
   }
 
 
@@ -48,7 +48,7 @@ class myUser extends sfBasicSecurityUser
 
   public function fetchRecPerPage()
   {
-    return $this->getAttribute('rec_per_page',Doctrine::getTable('Preferences')->getPreference($this->getId(),'default_search_rec_pp',true));
+    return $this->getAttribute('rec_per_page',Doctrine_Core::getTable('Preferences')->getPreference($this->getId(),'default_search_rec_pp',true));
   }
 
 
@@ -113,6 +113,6 @@ class myUser extends sfBasicSecurityUser
 
   public function getPreference($name, $take_def)
   {
-    return Doctrine::getTable("Preferences")->getPreference($this->getId(), $name, $take_def);
+    return Doctrine_Core::getTable("Preferences")->getPreference($this->getId(), $name, $take_def);
   }
 }

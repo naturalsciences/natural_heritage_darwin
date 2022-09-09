@@ -8,7 +8,7 @@
  * @package    darwin
  * @subpackage form
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id: sfDoctrineFormGeneratedInheritanceTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
+ * @version    SVN: $Id$
  */
 abstract class BaseSpecimensStoragePartsViewForm extends SpecimensForm
 {
@@ -29,7 +29,7 @@ abstract class BaseSpecimensStoragePartsViewForm extends SpecimensForm
     $this->validatorSchema['complete'] = new sfValidatorBoolean(array('required' => false));
 
     $this->widgetSchema   ['institution_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Institution'), 'add_empty' => false));
-    $this->validatorSchema['institution_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Institution')));
+    $this->validatorSchema['institution_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Institution'), 'column' => 'id'));
 
     $this->widgetSchema   ['building'] = new sfWidgetFormTextarea();
     $this->validatorSchema['building'] = new sfValidatorString(array('required' => false));
@@ -96,6 +96,9 @@ abstract class BaseSpecimensStoragePartsViewForm extends SpecimensForm
 
     $this->widgetSchema   ['determination_status'] = new sfWidgetFormTextarea();
     $this->validatorSchema['determination_status'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['collection_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Collections'), 'add_empty' => false));
+    $this->validatorSchema['collection_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Collections'), 'column' => 'id'));
 
     $this->widgetSchema->setNameFormat('specimens_storage_parts_view[%s]');
   }

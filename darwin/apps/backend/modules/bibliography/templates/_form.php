@@ -131,6 +131,15 @@ function addAuthor(people_ref, people_name)
       $('#bib_author_table tbody').append(html);
       $.fn.catalogue_people.reorder($('#bib_author_table'));
       showAfterRefresh($('.ui-tooltip-content .page')) ; 
+	  //ftheeten 2020 12 11
+		try 
+		{
+		  $('body').trigger('close_modal');
+		}
+		catch(err) 
+		{
+		  
+		}
     }
   });
   return true;

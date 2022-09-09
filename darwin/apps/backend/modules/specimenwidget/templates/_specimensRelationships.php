@@ -19,17 +19,57 @@
       </td>
     </tr>
   </tfoot>
+  <?php if(strpos($_SERVER['REQUEST_URI'], '/edit/')):?>
 </table>
-<br/><br/>
-<a  target="_blank" href="<?php print(url_for("specimensearch/search/is_choose/",true)."/1?".http_build_query(array("specimen_search_filters[related_ref]"=>$eid)));?>">View all related specimens</a>
+<?php if(count($spec_related_inverse)>0): ?>
+<h3>Inverse and sister relationships</h3>
+<table>
+
+<?php endif;  ?>
+<?php $cpt=0; foreach($spec_related_inverse as $val):?>
+<tr>
+  <td style='max-width:20px;'><?php echo ++$cpt; ?></td>
+  <td>UUID</td>
+  <td colspan='2'><a target="_blank" href="<?php echo url_for('specimen/edit?id='.$val->getSpecimenRef()) ?>"><?php echo __('Specimen'); ?> : <?php echo $val->Specimen->getUuid(); ?></a></td>
+  </tr>
+  <tr>
+  <td></td>
+    <td><?php echo $val->getRelationshipType() ; ?></td>
+<!--ftheeten 2018 02 13 : add getTaxonName and reorganize layout-->
+      <?php if($val->getUnitType()=="specimens") : ?>
+        <td>
+			<?php echo $val->Specimen->getName(); ?>
+			</br>
+			<?php echo $val->Specimen->getTaxonName(); ?>
+		</td>
+		<!--ftheeten 2015 09 10-->
+		<td>
+				<?php echo ucfirst($val->Specimen->getLabelCreatedOn())?'Date created: '.$val->Specimen->getLabelCreatedOn():'';?>
+	    </td>
+		<?php if($val->getRelationshipType()=="part_of") : ?>
+		<td>
+				<?php echo ucfirst($val->Specimen->getSpecimenPart())?'Parts: '.$val->Specimen->getSpecimenPart():'';?>
+	    </td>
+		<?php endif; ?>
+		
+      <?php endif ; ?>
+    
+    <td>
+    </td>
+  </tr>
+  <?php endforeach;?>
+<?php endif;?>
+</table>
+ <br/><br/>
+
+	
+<a  target="_blank" href="<?php print(url_for("specimensearch/search/is_choose/",true)."/1?specimen_search_filters[related_ref]=".$eid);?>">View all related specimens</a>
 <?php echo $form['SpecimensRelationships_holder'];?>
 <script  type="text/javascript">
 $(document).ready(function () {
-
     $('#add_relship').click(function()
     {
         hideForRefresh('#SpecimensRelationships');
-
         parent_el = $(this).closest('table.property_values');
         $.ajax(
         {
@@ -43,7 +83,9 @@ $(document).ready(function () {
           }
         });
         return false;
-    });
+    }
+	);
+
 
 });
 </script>

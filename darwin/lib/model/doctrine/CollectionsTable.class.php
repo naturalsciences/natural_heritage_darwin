@@ -523,7 +523,7 @@ class CollectionsTable extends DarwinTable
   }
   
   
-  public function countTaxaInSpecimen($collectionID ="/", $year="", $creation_date_min="", $creation_date_max="", $ig_num="", $includeSubcollection=false, $detailSubCollections=false )
+  public function countTaxaInSpecimen($collectionID ="/", $year="", $creation_date_min="", $creation_date_max="", $ig_num="", $includeSubcollection=false, $detailSubCollections=false, $all=false )
   {
   
     $fields =Array();
@@ -610,9 +610,15 @@ class CollectionsTable extends DarwinTable
     ksort($fields);
     
     $all_fields=implode(", ", $fields);
-   
-    $sql ="SELECT ".$all_fields." FROM tv_reporting_taxa_in_specimen_per_rank_collection_ref_year_ig  WHERE ".implode(" AND ", $where);
-    
+    if($all)
+	{
+		$sql ="SELECT ".$all_fields." FROM tv_reporting_taxa_in_specimen_per_rank_collection_ref_year_igall  WHERE ".implode(" AND ", $where);
+	}
+	else
+	{
+		$sql ="SELECT ".$all_fields." FROM tv_reporting_taxa_in_specimen_per_rank_collection_ref_year_ig  WHERE ".implode(" AND ", $where);
+    }
+	
     if(count($groups)>0)
     {
         $sql = $sql." GROUP BY ".implode(", ", $groups);

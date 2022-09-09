@@ -1,0 +1,2 @@
+TaxonID	FullScientificName	Kingdom	Class	Order	Genus	species	author_team_and_year 	Family	referenceString	BasionymName	identificationNotes	AcceptedName	view_taxon	Synonymy_info
+SN17373	Abarema acreana	Plantae	Magnoliopsida	Fabales	Abarema	acreana	(J.F.Macbr.) L.Rico	Fabaceae	Novon 9(4): 555. 1999.	Pithecellobium acreanum J.F.Macbr.; Publ. Field Columbian Mus., Bot. Ser. xiii. III. 51 (1943). 		this name is accepted		Pithecellobium acreanum J.F.Macbr.

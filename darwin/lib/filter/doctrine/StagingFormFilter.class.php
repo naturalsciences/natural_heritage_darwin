@@ -61,7 +61,8 @@ class StagingFormFilter extends BaseStagingFormFilter
   }*/
   public function  getQuery()
   {
-    $query = parent::getQuery();
+    $query =DQ::create()
+      ->select('DISTINCT s.*, status::varchar as statusString')->from("Staging s");
     $query->andWhere('import_ref = ?',$this->options['import']->getId())
         ->andWhere('to_import = false')
         ->orderBy('id asc');

@@ -11,6 +11,8 @@
  */
 class importActions extends DarwinActions
 {
+  public $size_staging_catalogue=1000;
+  
   public function preExecute()
   {
     if(! $this->getUser()->isAtLeast(Users::ENCODER))
@@ -21,11 +23,11 @@ class importActions extends DarwinActions
 
   private function getRight($id)
   {
-    $import = Doctrine::getTable('Imports')->find($id);
+    $import = Doctrine_Core::getTable('Imports')->find($id);
 
     $collection_ref = $import->getCollectionRef();
     if(!empty($collection_ref)) {
-      if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$import->getCollectionRef()))
+      if(! Doctrine_Core::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$import->getCollectionRef()))
          $this->forwardToSecureAction();
     }
     elseif (! $this->getUser()->isAtLeast(Users::ENCODER)) {
@@ -65,12 +67,12 @@ class importActions extends DarwinActions
   {
     $this->forward404Unless($request->hasParameter('id'));
     $this->import = $this->getRight($request->getParameter('id')) ;
-    Doctrine::getTable('Imports')->UpdateStatus($request->getParameter('id'));
+    Doctrine_Core::getTable('Imports')->UpdateStatus($request->getParameter('id'));
     $this->redirect('import/index');
 	
 	//ftheeten 2018 06 11
 	                $mails=Array();
-                    $mailsTmp=Doctrine::getTable('UsersComm')->getProfessionalMailsByUser($this->getUser()->getId());
+                    $mailsTmp=Doctrine_Core::getTable('UsersComm')->getProfessionalMailsByUser($this->getUser()->getId());
                
                     foreach($mailsTmp as $mailRecord)
                     {
@@ -93,7 +95,7 @@ class importActions extends DarwinActions
                     chdir(sfconfig::get('sf_root_dir')); 
   
                 
-                    exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+                    exec('nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );
 
                     chdir($currentDir);
 					
@@ -121,7 +123,7 @@ class importActions extends DarwinActions
     $this->forward404Unless($request->hasParameter('id'));
     $this->import = $this->getRight($request->getParameter('id')) ;
 
-    Doctrine::getTable('Imports')->clearImport($this->import->getId());
+    Doctrine_Core::getTable('Imports')->clearImport($this->import->getId());
     if($request->isXmlHttpRequest())
     {
       return $this->renderText('ok');
@@ -152,7 +154,10 @@ class importActions extends DarwinActions
       {
         $this->type="taxon";
       }
-     
+      elseif($request->getParameter('format') == 'locality')
+      {
+        $this->type="locality";        
+      }
 	  elseif($request->getParameter('format') == 'files')
       {
         $this->type="files";        
@@ -177,7 +182,7 @@ class importActions extends DarwinActions
           if($this->form->isValid())
           {
            
-            if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$this->form->getValue('collection_ref')) && $this->type != 'taxon')
+            if(! Doctrine_Core::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$this->form->getValue('collection_ref')) && $this->type != 'taxon')
             {
              
               $error = new sfValidatorError(new sfValidatorPass(),'You don\'t have right on this collection');
@@ -199,7 +204,7 @@ class importActions extends DarwinActions
               $file->save(sfConfig::get('sf_upload_dir').'/'.$filename.$extension);
               $this->form->save() ;
                //ftheeten 2017 08 28 (begin)
-              $mails=Doctrine::getTable('UsersComm')->getProfessionalMailsByUser($this->getUser()->getId());
+              $mails=Doctrine_Core::getTable('UsersComm')->getProfessionalMailsByUser($this->getUser()->getId());
               //$mails=$mailsTmp->fetchAll();
               foreach($mails as $mail)
               {
@@ -213,6 +218,10 @@ class importActions extends DarwinActions
 				  elseif($this->type == 'files')
                   {
                     $this->redirect('import/indexFiles');
+                  }
+				  elseif($this->type == 'locality')
+                  {
+                    $this->redirect('import/indexLocalities');
                   }
 				  elseif($this->type == 'links')
                   {
@@ -275,6 +284,10 @@ class importActions extends DarwinActions
     {
       $this->s_url = 'import/searchCatalogue'.'?is_choose='.$this->is_choose;
     }
+	elseif($this->format == 'locality')
+    {
+      $this->s_url = 'import/searchLocality'.'?is_choose='.$this->is_choose;
+    }
 	elseif($this->format == 'files')
     {
       $this->s_url = 'import/searchFiles'.'?is_choose='.$this->is_choose;
@@ -317,7 +330,7 @@ class importActions extends DarwinActions
         {
           $ids[] = $v->getId();
         }
-        $imp_lines = Doctrine::getTable('Imports')->getNumberOfLines($ids) ;
+        $imp_lines = Doctrine_Core::getTable('Imports')->getNumberOfLines($ids) ;
         foreach($imp_lines as $k=>$v)
         {
           foreach($this->imports as $import)
@@ -351,9 +364,9 @@ class importActions extends DarwinActions
     {
   
         $idImport=$request->getParameter("id");
-        $importTmp=Doctrine::getTable("Imports")->find($idImport);
+        $importTmp=Doctrine_Core::getTable("Imports")->find($idImport);
         //if(!$this->getUser()->isAtLeast(Users::MANAGER)) $this->forwardToSecureAction();
-        if(!Doctrine::getTable("CollectionsRights")->hasEditRightsFor($this->getUser(), $importTmp->getCollectionRef()))
+        if(!Doctrine_Core::getTable("CollectionsRights")->hasEditRightsFor($this->getUser(), $importTmp->getCollectionRef()))
         {
 
             $this->forwardToSecureAction();
@@ -371,7 +384,7 @@ class importActions extends DarwinActions
                     chdir(sfconfig::get('sf_root_dir')); 
   
                 
-                    exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+                    exec('nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );
 
                     chdir($currentDir);
 					
@@ -379,6 +392,10 @@ class importActions extends DarwinActions
 					if($importTmp->getFormat()=="taxon")
 					{
 						$this->redirect('import/indexTaxon');
+					}
+					elseif($importTmp->getFormat()=="locality")
+					{
+						$this->redirect('import/indexLocalities');
 					}
 					else
 					{
@@ -398,9 +415,9 @@ class importActions extends DarwinActions
     public function executeCheckstaging(sfWebRequest $request)
     {
         $idImport=$request->getParameter("id");
-        $importTmp=Doctrine::getTable("Imports")->find($idImport);
+        $importTmp=Doctrine_Core::getTable("Imports")->find($idImport);
         
-        if(!Doctrine::getTable("CollectionsRights")->hasEditRightsFor($this->getUser(), $importTmp->getCollectionRef()))
+        if(!Doctrine_Core::getTable("CollectionsRights")->hasEditRightsFor($this->getUser(), $importTmp->getCollectionRef()))
         {
             
            $this->forwardToSecureAction();
@@ -412,7 +429,7 @@ class importActions extends DarwinActions
             {
                  
                     $mails=Array();
-                    $mailsTmp=Doctrine::getTable('UsersComm')->getProfessionalMailsByUser($this->getUser()->getId());
+                    $mailsTmp=Doctrine_Core::getTable('UsersComm')->getProfessionalMailsByUser($this->getUser()->getId());
                
                     foreach($mailsTmp as $mailRecord)
                     {
@@ -437,7 +454,7 @@ class importActions extends DarwinActions
                         $currentDir=getcwd();
                         chdir(sfconfig::get('sf_root_dir'));
  //print( 'nohup php symfony '.$cmd.'  >/dev/null &' );                        
-                        exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+                        exec('nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );
                        
                         
                         chdir($currentDir);                   
@@ -513,11 +530,34 @@ EOF
   {
      $idImport=$request->getParameter("id");
      $this->id= $idImport;
-     $this->items = Doctrine::getTable("StagingCatalogue")->getByImportRef($idImport);	 
-	 $this->stats= Doctrine::getTable("StagingCatalogue")->countExceptionMessages($idImport);
-     $this->import=Doctrine::getTable("Imports")->find($idImport);
+     $this->items = Doctrine_Core::getTable("StagingCatalogue")->getByImportRef($idImport);	 
+	 $this->stats= Doctrine_Core::getTable("StagingCatalogue")->countExceptionMessages($idImport);
+     $this->import=Doctrine_Core::getTable("Imports")->find($idImport);
      $this->metadata_ref=$this->import->getSpecimenTaxonomyRef();
      
+       
+  } 
+  
+  public function executeViewUnimportedGtu(sfWebRequest $request)
+  {
+    $idImport=$request->getParameter("id");
+    $this->id= $idImport;
+    $this->size_catalogue= (int)$this->size_staging_catalogue;
+	 
+	$this->page=$request->getParameter("page",1);
+	$offset=((int)$this->page-1)*$this->size_catalogue;
+	$this->items = Doctrine_Core::getTable("StagingGtu")->getImportData($idImport, $offset, $this->size_catalogue);	 
+	$this->stats= Doctrine_Core::getTable("StagingGtu")->countExceptionMessages($idImport, $offset, $this->size_catalogue);
+    	
+	 foreach($this->stats as $stat)
+	 {
+		$this->size_data=(int)$stat["count_all"];
+		$this->max_page= ceil((int)$this->size_data/(int)$this->size_catalogue);
+		 break;
+	 }
+	 $this->stats_all= Doctrine_Core::getTable("StagingGtu")->countExceptionMessages($idImport,0, $this->size_data);
+     $this->form = new ImportsLocalityForm(null,array('items' =>$this->items));
+	 
        
   } 
 
@@ -561,8 +601,8 @@ EOF
       chdir(sfconfig::get('sf_root_dir')); 
   
        $cmd='darwin:import-files --id='.$idImport;          
-      exec('nohup php symfony '.$cmd.'  >/dev/null &' );
-
+      exec('nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );
+//print('nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );
       chdir($currentDir);	 
 	  $this->redirect('import/indexFiles');
   }
@@ -590,11 +630,79 @@ EOF
       chdir(sfconfig::get('sf_root_dir')); 
   
        $cmd='darwin:import-links --id='.$idImport;          
-      exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+      exec('nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );
 
       chdir($currentDir);	 
 	  $this->redirect('import/indexLinks');
   }
   
+    //ftheeten 2018 08 05
+    public function executeIndexLocalities(sfWebRequest $request)
+  {
+    $this->format = 'locality' ;
+    $this->form = new ImportsLocalityFormFilter(null,array('user' =>$this->getUser()));    
+    $this->setTemplate('index');
+  }
+    //ftheeten 2018 07 15
+  public function executeSearchLocality(sfWebRequest $request)
+  {
+    $this->form = new ImportsLocalityFormFilter(null,array('user' =>$this->getUser()));
+    $this->andSearch($request,'locality') ;
+    $this->setTemplate('search');
+  
+  }
+  
+   //ftheeten 2018 08 06
+  public function executeLoadGtuInDB(sfWebRequest $request)
+  {
+	  $idImport=$request->getParameter("id");
+	  $currentDir=getcwd();
+
+      chdir(sfconfig::get('sf_root_dir')); 
+  
+       $cmd='darwin:import-gtu --id='.$idImport;          
+      exec('nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );
+
+      chdir($currentDir);	 
+	  $this->redirect('import/indexLocalities');
+  }
+  
+    //ftheeten 2019 02 28
+  public function executeLoadSingleGtuInDB(sfWebRequest $request)
+  {
+	  $idStagingGtu=$request->getParameter("staging_gtu_id");
+	  $currentDir=getcwd();
+
+      chdir(sfconfig::get('sf_root_dir')); 
+  
+       $cmd='darwin:import-staging-gtu --id='.$idStagingGtu;          
+       exec('nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );
+
+      chdir($currentDir);	 
+	  $this->redirect('import/indexLocalities');
+  }
+  
+  //2019 02 28
+  public function executeChangeStagingGtuCode(sfWebRequest $request)
+  {
+    $id_staging_gtu=$request->getParameter("staging_gtu_id");
+    $sampling_code=$request->getParameter("sampling_code");
+	$currentDir=getcwd();
+    if(is_numeric($id_staging_gtu) && strlen(trim($sampling_code))>0)
+    {
+        $staging_gtu=Doctrine_Core::getTable("StagingGtu")->find($id_staging_gtu);
+        if( $staging_gtu)
+        {
+            $staging_gtu->setSamplingCode($sampling_code);
+            $staging_gtu->save();
+        }
+	    chdir(sfconfig::get('sf_root_dir'));   
+        $cmd='darwin:import-gtu --id='.$staging_gtu->getImportRef();          
+        exec('nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );
+		chdir($currentDir);	 
+    }
+	  
+     $this->redirect('import/indexLocalities');
+  }
   
 }

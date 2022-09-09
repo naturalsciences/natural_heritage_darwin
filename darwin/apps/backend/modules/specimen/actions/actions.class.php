@@ -19,9 +19,9 @@ class specimenActions extends DarwinActions
     $spec = null;
 
     if ($fwd404)
-      $this->forward404Unless($spec = Doctrine::getTable('Specimens')->find($request->getParameter($parameter,0)));
+      $this->forward404Unless($spec = Doctrine_Core::getTable('Specimens')->find($request->getParameter($parameter,0)));
     elseif($request->hasParameter($parameter) && $request->getParameter($parameter))
-      $spec = Doctrine::getTable('Specimens')->find($request->getParameter($parameter) );
+      $spec = Doctrine_Core::getTable('Specimens')->find($request->getParameter($parameter) );
 
     $form = new SpecimensForm($spec);
     return $form;
@@ -34,9 +34,9 @@ class specimenActions extends DarwinActions
   public function executeGetStorage(sfWebRequest $request)
   {
     if($request->getParameter('item')=="container")
-      $items = Doctrine::getTable('Specimens')->getDistinctContainerStorages($request->getParameter('type'));
+      $items = Doctrine_Core::getTable('Specimens')->getDistinctContainerStorages($request->getParameter('type'));
     else
-      $items = Doctrine::getTable('Specimens')->getDistinctSubContainerStorages($request->getParameter('type'));
+      $items = Doctrine_Core::getTable('Specimens')->getDistinctSubContainerStorages($request->getParameter('type'));
     return $this->renderPartial('options', array('items'=> $items ));
   }
 
@@ -48,6 +48,10 @@ class specimenActions extends DarwinActions
     $form->addCodes($number, array('collection_ref' => $request->getParameter('collection_id', null)));
    	//mrac 2015 06 03 code mask
     $codeMask="";
+	$code_prefix="";
+	$code_prefix_sep="";
+	$code_suffix="";
+	$code_suffix_sep="";
     $testVal=$request->getParameter('collection_id', null);
     if(strlen(trim($testVal))>0)
     {
@@ -55,6 +59,7 @@ class specimenActions extends DarwinActions
 		if(is_object($collTmp))
 		{
     		$codeMask=$collTmp->getCodeMask();
+			
 		}
      }
 
@@ -190,27 +195,49 @@ class specimenActions extends DarwinActions
   public function executeNew(sfWebRequest $request)
   {
     if(!$this->getUser()->isAtLeast(Users::ENCODER)) $this->forwardToSecureAction();
-    if ($request->hasParameter('duplicate_id')) // then it's a duplicate specimen
+	$duplicate=false;
+    if ($request->hasParameter('duplicate_id')||$request->hasParameter('part_id')) // then it's a duplicate specimen
     {
       $specimen = new Specimens() ;
-      $duplic = $request->getParameter('duplicate_id','0') ;
+	  $duplic=0;
+	  if($request->hasParameter('duplicate_id'))
+	  {
+		  $duplic = $request->getParameter('duplicate_id','0') ;
+	  }
+	  elseif($request->hasParameter('part_id'))
+	  {
+		  $duplic = $request->getParameter('part_id','0') ;
+	  }
+	  
+      
       $specimen = $this->getRecordIfDuplicate($duplic,$specimen,true);
       // set all necessary widgets to visible
       if($request->hasParameter('all_duplicate'))
-        Doctrine::getTable('Specimens')->getRequiredWidget($specimen, $this->getUser()->getId(), 'specimen_widget',1);
-      $this->form = new SpecimensForm($specimen);
+      {
+        Doctrine_Core::getTable('Specimens')->getRequiredWidget($specimen, $this->getUser()->getId(), 'specimen_widget',1);
+      }
+	  elseif($request->hasParameter('keep_properties'))
+	  {
+		 
+	  }
+	  elseif($request->hasParameter('keep_comments'))
+	  {
+		  
+		  
+	  }
+	  $this->form = new SpecimensForm($specimen);
       if($duplic)
       {
         $this->form->duplicate($duplic);
 
         //reembed identification
-         $Identifications = Doctrine::getTable('Identifications')->getIdentificationsRelated('specimens',$duplic) ;
+         $Identifications = Doctrine_Core::getTable('Identifications')->getIdentificationsRelated('specimens',$duplic) ;
         foreach ($Identifications as $key=>$val)
         {
           $identification = new Identifications() ;
           $identification = $this->getRecordIfDuplicate($val->getId(),$identification);
           $this->form->addIdentifications($key, $val->getOrderBy(), $identification);
-          $Identifier = Doctrine::getTable('CataloguePeople')->getPeopleRelated('identifications', 'identifier', $val->getId()) ;
+          $Identifier = Doctrine_Core::getTable('CataloguePeople')->getPeopleRelated('identifications', 'identifier', $val->getId()) ;
           foreach ($Identifier as $key2=>$val2)
           {
             $ident = $this->form->getEmbeddedForm('newIdentification')->getEmbeddedForm($key);
@@ -245,6 +272,14 @@ class specimenActions extends DarwinActions
         //ftheeten 2016 06 16
         $this->duplicateFlag=true;
         $this->duplicate_id=$duplic;
+		if($request->hasParameter('duplicate_id'))
+		  {
+			  $this->split_mode="duplicate";
+		  }
+		  elseif($request->hasParameter('part_id'))
+		  {
+			   $this->split_mode="part";
+		  }
       }
       
     }
@@ -304,7 +339,7 @@ class specimenActions extends DarwinActions
     $this->form = $this->getSpecimenForm($request, true);
     if(!$this->getUser()->isA(Users::ADMIN))
     {
-      if(! Doctrine::getTable('Specimens')->hasRights('spec_ref',$request->getParameter('id'), $this->getUser()->getId()))
+      if(! Doctrine_Core::getTable('Specimens')->hasRights('spec_ref',$request->getParameter('id'), $this->getUser()->getId()))
         $this->redirect("specimen/view?id=".$request->getParameter('id')) ;
     }
     $this->loadWidgets();
@@ -345,6 +380,10 @@ class specimenActions extends DarwinActions
         {
             $this->redirect('specimen/newDuplicateconfirm?id='.$specimen->getId()."&duplicate_created=".$request->getParameter('duplicate_created'));
         }
+		 else if($request->hasParameter('part_created'))
+        {
+            $this->redirect('specimen/newPartconfirm?id='.$specimen->getId()."&part_created=".$request->getParameter('part_created'));
+        }
 		else
 		{
 			//ftheeten 2016 02 26
@@ -363,7 +402,7 @@ class specimenActions extends DarwinActions
         $extd_message = '';
         if(preg_match('/unique constraint "unq_specimens"/i',$ne->getMessage()))
         {
-          $dup_spec = Doctrine::getTable('Specimens')->findDuplicate($form->getObject());
+          $dup_spec = Doctrine_Core::getTable('Specimens')->findDuplicate($form->getObject());
           if(!$dup_spec)
           {
               $this->logMessage('Duplicate Specimen not found: '. json_encode($form->getObject()->toArray()), 'err');
@@ -458,7 +497,7 @@ class specimenActions extends DarwinActions
         {
           $specs[$specimen->getId()] = $specimen->getId();
         }
-        $specCodes = Doctrine::getTable('Codes')->getCodesRelatedArray('specimens', $specs);
+        $specCodes = Doctrine_Core::getTable('Codes')->getCodesRelatedArray('specimens', $specs);
         $this->codes = array();
         foreach($specCodes as $code)
         {
@@ -474,7 +513,7 @@ class specimenActions extends DarwinActions
   {
     if($request->getParameter('specId') && $request->getParameter('taxonId'))
     {
-      $result = Doctrine::getTable('Specimens')->findOneById($request->getParameter('specId'));
+      $result = Doctrine_Core::getTable('Specimens')->findOneById($request->getParameter('specId'));
       if($result)
       {
         return ($result->getTaxonRef() == $request->getParameter('taxonId'))?$this->renderText("ok"):$this->renderText("not ok");
@@ -487,7 +526,7 @@ class specimenActions extends DarwinActions
   {
     $this->forward404Unless($request->getParameter('specId') && $request->getParameter('targetField'));
     $targetField = $request->getParameter('targetField');
-    $specimen = Doctrine::getTable('Specimens')->findOneById($request->getParameter('specId'));
+    $specimen = Doctrine_Core::getTable('Specimens')->findOneById($request->getParameter('specId'));
     $this->forward404Unless($specimen);
     return $this->renderText(json_encode(array($targetField=> $specimen->Taxonomy->getId(), $targetField.'_name' => $specimen->Taxonomy->getName()) ));
   }
@@ -495,11 +534,11 @@ class specimenActions extends DarwinActions
   public function executeDelete(sfWebRequest $request)
   {
     if(!$this->getUser()->isAtLeast(Users::ENCODER)) $this->forwardToSecureAction();
-    $spec = Doctrine::getTable('Specimens')->find($request->getParameter('id'));
+    $spec = Doctrine_Core::getTable('Specimens')->find($request->getParameter('id'));
     $this->forward404Unless($spec, 'Specimen does not exist');
     if(!$this->getUser()->isA(Users::ADMIN))
     {
-      if(in_array($spec->getCollectionRef(),Doctrine::getTable('Specimens')->hasRights('spec_ref',$request->getParameter('id'), $this->getUser()->getId())))
+      if(in_array($spec->getCollectionRef(),Doctrine_Core::getTable('Specimens')->hasRights('spec_ref',$request->getParameter('id'), $this->getUser()->getId())))
         $this->forwardToSecureAction();
     }
     try
@@ -525,13 +564,13 @@ class specimenActions extends DarwinActions
 	 //ftheeten 2017 10 09 (replace $request->getParameter('id') by spec_id)
 	$spec_id= $this->getIDFromCollectionNumber($request);
 	
-    $this->specimen = Doctrine::getTable('Specimens')->fetchOneWithRights($spec_id, $this->getUser());
+    $this->specimen = Doctrine_Core::getTable('Specimens')->fetchOneWithRights($spec_id, $this->getUser());
 
     $this->hasEncodingRight = false;
 
     if($this->getUser()->isAtLeast(Users::ENCODER)) {
       if( $this->getUser()->isA(Users::ADMIN) ||
-        Doctrine::getTable('Specimens')->hasRights('spec_ref',$spec_id, $this->getUser()->getId())) {
+        Doctrine_Core::getTable('Specimens')->hasRights('spec_ref',$spec_id, $this->getUser()->getId())) {
 
         $this->hasEncodingRight = true;
       }
@@ -556,7 +595,7 @@ class specimenActions extends DarwinActions
 
     //We edit a maintenance
     if($request->getParameter('id', null) != null)
-      $maint = Doctrine::getTable('CollectionMaintenance')->find($request->getParameter('id'));
+      $maint = Doctrine_Core::getTable('CollectionMaintenance')->find($request->getParameter('id'));
     //We add a maintenance
     elseif($request->getParameter('rid', null) != null) {
       $maint = new CollectionMaintenance();
@@ -589,7 +628,7 @@ class specimenActions extends DarwinActions
   public function executeChoosePinned(sfWebRequest $request)
   {
     $items_ids = $this->getUser()->getAllPinned('specimen');
-    $this->items = Doctrine::getTable('Specimens')->getByMultipleIds($items_ids, $this->getUser()->getId(), $this->getUser()->isAtLeast(Users::ADMIN));
+    $this->items = Doctrine_Core::getTable('Specimens')->getByMultipleIds($items_ids, $this->getUser()->getId(), $this->getUser()->isAtLeast(Users::ADMIN));
   }
   
   
@@ -614,6 +653,12 @@ class specimenActions extends DarwinActions
 	    $this->origin_id = $request->getParameter('duplicate_created','0') ;
   }
   
+   public function executeNewPartconfirm(sfWebRequest $request)
+  {
+        $this->duplicate_id = $request->getParameter('id','0') ;
+	    $this->origin_id = $request->getParameter('part_created','0') ;
+  }
+  
     //ftheeten 2015 10 14 to handle duplication of information in new identifications
   //including code number
   
@@ -625,8 +670,10 @@ class specimenActions extends DarwinActions
       $specimen = $this->getRecordIfDuplicate($split,$specimen,true);
       // set all necessary widgets to visible
       if($request->hasParameter('all_duplicate'))
-        Doctrine::getTable('Specimens')->getRequiredWidget($specimen, $this->getUser()->getId(), 'specimen_widget',1);
-      $this->form = new SpecimensForm($specimen, array("new_identification_rmca"=> TRUE));
+	  {
+        Doctrine_Core::getTable('Specimens')->getRequiredWidget($specimen, $this->getUser()->getId(), 'specimen_widget',1);
+      }
+	  $this->form = new SpecimensForm($specimen, array("new_identification_rmca"=> TRUE));
 	 
       if($split)
       {
@@ -634,7 +681,7 @@ class specimenActions extends DarwinActions
 
        
 		//reembed codes
-		 $Codes = Doctrine::getTable('Codes')->getCodesRelated('specimens',$split) ;
+		 $Codes = Doctrine_Core::getTable('Codes')->getCodesRelated('specimens',$split) ;
         foreach ($Codes as $key=>$val)
         {
           $this->form->addCodes($key, $val,0, TRUE);
@@ -674,9 +721,10 @@ class specimenActions extends DarwinActions
   //ftheeten 2016 06 16
    protected function handleRelationsOfDuplicate(sfWebRequest $request)
   {
+	
         if($request->hasParameter('duplicate_mode'))
         {
-            if($request->getParameter('duplicate_mode')=="yes")
+            if($request->getParameter('duplicate_mode')=="yes"||$request->getParameter('duplicate_mode')=="part")
             {
                 if($request->hasParameter('create_duplicate_relationship'))
                 {
@@ -686,7 +734,12 @@ class specimenActions extends DarwinActions
                         $dest_id=$request->getParameter('id', '-1');
                         if($src_id!='-1'&&$dest_id!='-1')
                         {
+							
                            $relationship_type="duplicated_from";
+						   if($request->getParameter('duplicate_mode')=="part")
+						   {
+							   $relationship_type="part_of";
+						   }
                            $sql = "INSERT INTO specimens_relationships (specimen_ref, relationship_type, unit_type, specimen_related_ref) VALUES (:dest, :type, 'specimens', :src)";
 				
                             $conn = Doctrine_Manager::connection();
@@ -697,6 +750,62 @@ class specimenActions extends DarwinActions
                                         ':type' =>$relationship_type,
                                          ':src' => $src_id
                                         ));
+                        }
+                    } 
+                }
+				if($request->hasParameter('copy_properties'))
+                {
+                    if($request->getParameter('copy_properties')=="yes")
+                    {
+                        $src_id=$request->getParameter('origin_id', '-1');
+                        $dest_id=$request->getParameter('id', '-1');
+                        if($src_id!='-1'&&$dest_id!='-1')
+                        {       
+						 
+                           $props=Doctrine_Core::getTable('Properties')->findForTable('specimens',$src_id);
+						  
+						   foreach($props as $key=>$prop)
+						   {		
+								try
+								{
+									//$prop2=clone $prop;
+									$prop2=$prop->copy();
+									$prop2->setRecordId($dest_id);
+									$prop2->save();
+								}
+								catch(Exception $e)
+								{
+									
+									//capture duplicate
+								}
+						   }
+						
+                        }
+                    } 
+                }
+				if($request->hasParameter('copy_comments'))
+                {
+                    if($request->getParameter('copy_comments')=="yes")
+                    {
+                        $src_id=$request->getParameter('origin_id', '-1');
+                        $dest_id=$request->getParameter('id', '-1');
+                        if($src_id!='-1'&&$dest_id!='-1')
+                        {
+							$comments=Doctrine_Core::getTable('Comments')->getRelatedComment('specimens',Array($src_id));
+						   foreach($comments as $key=> $comment)
+						   {
+								try
+								{
+									$comment2= $comment->copy();
+									$comment2->setRecordId($dest_id);
+									$comment2->save();
+								}
+								catch(Exception $e)
+								{
+									
+									//capture duplicate
+								}
+						   }
                         }
                     } 
                 }
@@ -719,9 +828,9 @@ class specimenActions extends DarwinActions
 			$this->split_created=$old_id;
             
             //ftheeten 2016 09 26
-            /*$relationships=Doctrine::getTable('SpecimensRelationshipes')->findBySpecimenRef(old_id);*/
+            /*$relationships=Doctrine_Core::getTable('SpecimensRelationshipes')->findBySpecimenRef(old_id);*/
             
-			$properties = Doctrine::getTable('Properties')->findForTable("specimens", $old_id);
+			$properties = Doctrine_Core::getTable('Properties')->findForTable("specimens", $old_id);
 			 foreach($properties as $propertySrc)
 			 {
 				if($propertySrc->getPropertyType()!=="label_created_on"&&$propertySrc->getPropertyType()!=="valid_label"&&$propertySrc->getPropertyType()!=="label_created_by")
@@ -739,7 +848,7 @@ class specimenActions extends DarwinActions
 			if($request->getParameter("invalid_labels")=="yes")
 			{
 				$conn = Doctrine_Manager::connection();
-				$sql = "UPDATE specimens SET valid_label=FALSE WHERE id IN (SELECT specimen_ref FROM specimens_relationships WHERE specimen_related_ref= :id ) 
+				$sql = "UPDATE specimens SET valid_label=FALSE WHERE id IN (SELECT specimen_ref FROM specimens_relationships WHERE relationship_type='other_identification' AND specimen_related_ref= :id ) 
 						OR
 			   id IN (SELECT specimen_related_ref FROM specimens_relationships WHERE specimen_ref= :id )";
 				
@@ -748,7 +857,7 @@ class specimenActions extends DarwinActions
 				$q->execute(array(':id' => $request->getParameter('id')));
 			}
 		}
-		 $spec = Doctrine::getTable('Specimens')->find($request->getParameter('id') );
+		 $spec = Doctrine_Core::getTable('Specimens')->find($request->getParameter('id') );
 		if($request->hasParameter('create_date_label'))
 		{
 			if($request->getParameter("create_date_label")=="yes")
@@ -777,9 +886,9 @@ class specimenActions extends DarwinActions
 	}
   }
 	//ftheeten 2016 02 26
-    protected function addIdentificationMetadata($spec_id, $user_name)
+    protected function addIdentificationMetadata($spec_id)
    {
-        $spec = Doctrine::getTable('Specimens')->find($spec_id );
+        $spec = Doctrine_Core::getTable('Specimens')->find($spec_id );
         if($this->getActionName()=="create")
         {
 
@@ -820,7 +929,7 @@ class specimenActions extends DarwinActions
    
    //JMherpers 2019 05 02
     public function executeGetCitesAndTaxonomy(sfWebRequest $request) {
-		$taxonname=$request->getParameter('id', null);
+		$taxonid=$request->getParameter('id', null);
 		$cites = false;
 		$ref_taxonomy = false;
 		$taxonomyname = false;
@@ -831,7 +940,7 @@ class specimenActions extends DarwinActions
 		$cites=Doctrine_Query::create()->
 			select('t.cites')->
 			from('Taxonomy t')->
-			where('t.name = ?', $taxonname)->
+			where('t.id = ?', $taxonid)->
 			fetchOne();
 			
 		if($cites["cites"] == true ) {
@@ -841,7 +950,7 @@ class specimenActions extends DarwinActions
 		$ref_taxonomy=Doctrine_Query::create()->
 			select('t.metadata_ref')->
 			from('Taxonomy t')->
-			where('t.name = ?', $taxonname)->
+			where('t.id = ?', $taxonid)->
 			fetchOne();
 		
 		if($ref_taxonomy["metadata_ref"] != 0 ) {
@@ -918,5 +1027,52 @@ class specimenActions extends DarwinActions
 		$this->getResponse()->setHttpHeader('Content-type','application/json');
 		return $this->renderText(json_encode(array("nagoya"=>$nagoya2)));
    }
+   
+    //2019 04 24
+   public function executeDeleteLinkedObject(sfWebRequest $request)
+   {
+	   $id=$request->getParameter('id', null);
+	   $table=$request->getParameter('table', null);
+	   if($id !== null && $table !==null ) 
+	   {
+		   $obj=Doctrine_Core::getTable($table)->find($id);
+		   if($obj)
+		   {
+			   $obj->delete();
+                 $this->getResponse()->setHttpHeader('Content-type','application/json');
+				 return $this->renderText(json_encode(array("deleted"=> "yes") ));
+		   }
+		   else
+		   {
+               $this->getResponse()->setHttpHeader('Content-type','application/json');
+			  return $this->renderText(json_encode(array("deleted"=> "no") ));			   
+		   }
+	   }
+	      return sfView::NONE; 
+	   
+   }
+   
+   public function executeAttachProperties(sfWebRequest $request)
+  {
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
+    $number = intval($request->getParameter('num'));
+    $form = $this->getSpecimenForm($request);
+    $form->attachProperties($number, '');
+
+    return $this->renderPartial('specimen/newproperties',array('form' => $form['newProperties'][$number], 'rownum'=>$number, 'module'=>'specimen', 'referenced_relation'=> 'specimens', 'hasmodel'=>true));
+
+ }
+
+   public function executeAttachMaintenance(sfWebRequest $request)
+  {
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
+    $number = intval($request->getParameter('num'));
+    $form = $this->getSpecimenForm($request);
+    $form->attachMaintenance($number, '');
+
+    return $this->renderPartial('specimen/newmaintenance',array('form' => $form['newCollectionMaintenance'][$number], 'rownum'=>$number, 'module'=>'specimen', 'referenced_relation'=> 'specimens'));
+
+ }
+
 }
 

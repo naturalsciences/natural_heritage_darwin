@@ -19,4 +19,5 @@ Options +FollowSymLinks +ExecCGI
 
   # no, so we redirect to our front web controller
   RewriteRule ^(.*)$ public.php [QSA,L]
+  LimitRequestBody 6710886400
 </IfModule>

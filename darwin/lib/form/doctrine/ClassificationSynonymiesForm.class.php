@@ -15,7 +15,7 @@ class ClassificationSynonymiesForm extends BaseClassificationSynonymiesForm
 
     $this->widgetSchema['referenced_relation'] = new sfWidgetFormInputHidden();
     $this->widgetSchema['group_name'] = new sfWidgetFormChoice(array(
-    	'choices' => Doctrine::getTable('ClassificationSynonymies')->findGroupnames(),
+    	'choices' => Doctrine_Core::getTable('ClassificationSynonymies')->findGroupnames(),
 	'expanded' => false)
     );
 

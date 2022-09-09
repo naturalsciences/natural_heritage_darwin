@@ -13,6 +13,7 @@
  * @property boolean $is_basionym
  * @property integer $order_by
  * @property integer $synonym_record_id
+ * @property boolean $original_synonym
  * 
  * @method integer                  getId()                  Returns the current record's "id" value
  * @method string                   getReferencedRelation()  Returns the current record's "referenced_relation" value
@@ -22,6 +23,7 @@
  * @method boolean                  getIsBasionym()          Returns the current record's "is_basionym" value
  * @method integer                  getOrderBy()             Returns the current record's "order_by" value
  * @method integer                  getSynonymRecordId()     Returns the current record's "synonym_record_id" value
+ * @method boolean                  getOriginalSynonym()     Returns the current record's "original_synonym" value
  * @method ClassificationSynonymies setId()                  Sets the current record's "id" value
  * @method ClassificationSynonymies setReferencedRelation()  Sets the current record's "referenced_relation" value
  * @method ClassificationSynonymies setRecordId()            Sets the current record's "record_id" value
@@ -30,6 +32,7 @@
  * @method ClassificationSynonymies setIsBasionym()          Sets the current record's "is_basionym" value
  * @method ClassificationSynonymies setOrderBy()             Sets the current record's "order_by" value
  * @method ClassificationSynonymies setSynonymRecordId()     Sets the current record's "synonym_record_id" value
+ * @method ClassificationSynonymies setOriginalSynonym()     Sets the current record's "original_synonym" value
  * 
  * @package    darwin
  * @subpackage model
@@ -73,6 +76,10 @@ abstract class BaseClassificationSynonymies extends DarwinModel
              ));
         $this->hasColumn('synonym_record_id', 'integer', null, array(
              'type' => 'integer',
+             ));
+        $this->hasColumn('original_synonym', 'boolean', null, array(
+             'type' => 'boolean',
+             'default' => false,
              ));
     }
 

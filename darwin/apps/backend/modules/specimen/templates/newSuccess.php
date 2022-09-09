@@ -96,7 +96,11 @@ $(document).ready(function ()
         //ftheeten 2016 06 16
         elseif(isset($duplicateFlag))
         {
-            if($duplicateFlag===TRUE&&isset($duplicate_id))
+			if($duplicateFlag===TRUE&&isset($duplicate_id)&&$split_mode=="part")
+			{
+				$formDisplay=form_tag('specimen/'.($form->getObject()->isNew() ? 'create'.'?part_created='.$duplicate_id : 'update?id='.$form->getObject()->getId()), array('class'=>'edition no_border','enctype'=>'multipart/form-data'));
+			}
+            elseif($duplicateFlag===TRUE&&isset($duplicate_id)&&$split_mode=="duplicate")
             {
                $formDisplay=form_tag('specimen/'.($form->getObject()->isNew() ? 'create'.'?duplicate_created='.$duplicate_id : 'update?id='.$form->getObject()->getId()), array('class'=>'edition no_border','enctype'=>'multipart/form-data'));
             }
@@ -129,6 +133,7 @@ $(document).ready(function ()
       <?php if (!$form->getObject()->isNew()): ?>
         <?php echo link_to(__('New specimen'), 'specimen/new') ?>
         &nbsp;<a href="<?php echo url_for('specimen/new?duplicate_id='.$form->getObject()->getId());?>" class="duplicate_link"><?php echo __('Duplicate specimen');?></a>
+		&nbsp;<a href="<?php echo url_for('specimen/new?part_id='.$form->getObject()->getId());?>" class="duplicate_link"><?php echo __('Split into parts');?></a>
 		<!--RMCA 2015 10 19 new identifications-->
 	    &nbsp;<a href="<?php echo url_for('specimen/new?split_id='.$form->getObject()->getId());?>" class="duplicate_link"><?php echo __('New identification');?></a>
         &nbsp;<?php echo link_to(__('Delete'), 'specimen/delete?id='.$form->getObject()->getId(), array('method' => 'delete', 'confirm' => __('Are you sure?'))) ?>
@@ -214,6 +219,22 @@ $(document).ready(function () {
    }
    
    browseErrors();
+   
+   <?php if(strpos($_SERVER['REQUEST_URI'],"/part_id")&&strpos($_SERVER['REQUEST_URI'],"/new")):?>
+	var part_id=getUrlElem(window.location.href,"part_id");
+
+	if(part_id!==undefined)
+	{
+		if(part_id.length>0)
+		{ 
+			$("#copy_code").click();
+			$(".class_unicity_check").prop("checked", false);
+			$('form.main_form').attr('action', $('form.main_form').attr('action') + '/part_id/'+part_id);
+		}
+	}
+	<?php endif;?>
 });
+
+
 </script>
 </div></div>

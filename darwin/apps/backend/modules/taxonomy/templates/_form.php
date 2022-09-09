@@ -96,6 +96,20 @@
           <div class="warn_message ref_name button hidden" id="taxonomy_parent_ref_warning"><?php echo __('The parenty does not follow the possible upper level rule');?></div>
         </td>
       </tr>
+	  <?php if(!$form->getObject()->isNew()):?>
+	  <tr>
+	  <th><?php echo __("Hierarchy");?></th>
+	  <td>
+	  <?php if ($form['parent_ref']) : ?>
+          <?php echo image_tag('info.png',"title=info class=info");?>
+          <div class="tree">
+          </div>
+      <?php else : ?>
+          -
+      <?php endif ; ?>
+	  </td>
+	  </tr>
+	  <?php endif;?>
     </tbody>
     <tfoot>
       <tr>
@@ -122,6 +136,22 @@
 <script type="text/javascript">
 	$urltaxon = "";
 	$(document).ready(function () {
+		<?php if(!$form->getObject()->isNew()):?>
+			<?php if ($form['parent_ref']) : ?>
+			   $('table.classifications_edit').find('.info').click(function()
+			   {
+				 if($('.tree').is(":hidden"))
+				 {
+					var url_hierarch='<?php echo url_for('catalogue/tree?table=taxonomy&id='.$form->getObject()->getParentRef()) ; ?>';
+					$.get(url_hierarch,function (html){
+					 $('.tree').html(html).slideDown();
+					 });
+				 }
+				 $('.tree').slideUp();
+			   });
+			<?php endif;?>
+		<?php endif;?>
+		
 		<?php if($form->hasErrors())
 			echo "$('tr#parent_ref .button').show();";
 		?>

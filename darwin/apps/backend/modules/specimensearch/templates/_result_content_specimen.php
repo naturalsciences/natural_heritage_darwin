@@ -14,9 +14,9 @@
       <?php if($specimen->getCollectionRef() > 0) : ?>
         <?php echo image_tag('info.png',"title=info class=info id=collection_".$specimen->getId()."_info");?>
         <?php if($sf_user->isAtLeast(Users::ADMIN) || ($sf_user->isAtLeast(Users::MANAGER) && $specimen->getHasEncodingRights())) : ?>           
-          <a href="<?php echo url_for('collection/edit?id='.$specimen->getCollectionRef());?>"><?php echo $specimen->getCollectionName();?></a>
+          <a href="<?php echo url_for('collection/edit?id='.$specimen->getCollectionRef());?>"><?php echo trim($specimen->getCollectionNameFullPath(), "/");?></a>
         <?php else : ?>
-          <?php echo $specimen->getCollectionName();?>
+          <?php echo trim($specimen->getCollectionNameFullPath(), "/");?>
         <?php endif ; ?>
         <div id="collection_<?php echo $specimen->getId();?>_tree" class="tree"></div>
 		
@@ -57,8 +57,17 @@
                 <?php endif ; ?>
             <?php endif ; ?>
          <?php endif ; ?>
-		 <?php if(strlen($specimen->getDeterminationStatus())> 0 ) : ?>
-			 <div id="taxon_synonymy<?php echo $specimen->getId();?>" >Det. status : <?php print($specimen->getDeterminationStatus()); ?></div>
+		 <?php $status=$specimen->getDeterminationStatus(); ?>
+		 <?php if(strlen($status)>0) :?>
+		 <?php $statuses=explode(";",$status);?>
+		     <?php foreach($statuses as $status):?>  
+				<?php if(is_numeric($status)):?>
+					<?php $status_text= $status=Doctrine_Core::getTable('FlatDict')->findOneById($specimen->getDeterminationStatus($status));  ?>
+					<div id="taxon_synonymy<?php echo $specimen->getId().$status;?>" >Det. status : <?php print($status_text->getDictValue()); ?></div>
+					<?php else:?>
+					 <div id="taxon_synonymy<?php echo $specimen->getId().$status;?>" >Det. status : <?php print($status); ?></div>
+					<?php endif;?>
+			<?php endforeach;?>
 		 <?php endif ; ?>
 		<?php if($specimen->getCites() == TRUE ) : ?>
 			&nbsp;<B><font size="4" color="red">(CITES!!)</font></B>
@@ -116,16 +125,17 @@
         <?php endif;?>
 
           <div class="general_gtu">
-			<?php if($specimen->getOtherGtuTags() != ""): ?>
+			<?php if($specimen->getAllGtuTags() != ""): ?>
 				<!--JMHerpers 2018 02 22-->
 				<!--<strong><?php echo __('Locality (summary)');?> :</strong>-->
-				<?php echo $specimen->getOtherGtuTags(ESC_RAW);?>
+				<?php echo $specimen->getAllGtuTags(ESC_RAW);?>
 			<?php endif ; ?>
           </div>
           <div id="gtu_<?php echo $specimen->getId();?>_details" style="display:none;"></div>
 
       <?php endif ; ?>
-    </td> 
+    </td>
+		
 		    <!--JMHerpers 2018 02 22-->
     <td class="col_gtu_location">
 		<?php if($specimen->getGtuLocation() !== null) : ?>
@@ -162,8 +172,8 @@
     </td>
      <!--ftheeten 2016 09 13-->
     <td class="col_ecology">
-            <?php if(Doctrine::getTable('Comments')->findForTableByNotion('specimens',$specimen->getId(), "ecology")):?>
-            <?php echo(Doctrine::getTable('Comments')->findForTableByNotion('specimens',$specimen->getId(), "ecology")[0]->getComment()); ?>
+            <?php if(Doctrine_Core::getTable('Comments')->findForTableByNotion('specimens',$specimen->getId(), "ecology")):?>
+            <?php echo(Doctrine_Core::getTable('Comments')->findForTableByNotion('specimens',$specimen->getId(), "ecology")[0]->getComment()); ?>
             <?php endif ; ?>
     </td>
 
@@ -192,11 +202,17 @@
         </ul>
       <?php endif;?>
     </td>
+	<td class="col_import_ref">
+		<?php print($specimen->getImportRef());?>
+    </td>
+	<td class="col_uuid">
+		<?php print($specimen->getUuid());?>
+	</td>
 	<?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>
     <td  class="col_loans">
         <?php if($specimen->getLoanItems()!==NULL):?>
             <?php foreach($specimen->getLoanDescription() as $key=>$item):?>
-                <?php echo($item['name']);?>&nbsp;&nbsp;&nbsp;<?php echo($item['last_status']);?>
+                <?php echo(link_to($item['name'],'loan/view?id='.$key, Array("target"=>"_blank")));?>&nbsp;&nbsp;&nbsp;<br/><?php echo($item['last_status']);?>
                 <br/>
              <?php endforeach;?>
         <?php endif;?>
@@ -215,25 +231,25 @@
     </td>
 	<td class="col_nagoya"><?php echo $specimen->getNagoyastatus();?></td> 
 	<td class="col_col_peoples">
-		<?php $cpt = 0 ; foreach(Doctrine::getTable('CataloguePeople')->getPeopleRelated("specimens", array('collector'),$specimen->getId() ) as $key=>$people):?>
+		<?php $cpt = 0 ; foreach(Doctrine_Core::getTable('CataloguePeople')->getPeopleRelated("specimens", array('collector'),$specimen->getId() ) as $key=>$people):?>
 			<li>
-			<?php echo Doctrine::getTable('People')->findOneById($people->getPeopleRef())->getFormatedName() ; ?>
+			<?php echo Doctrine_Core::getTable('People')->findOneById($people->getPeopleRef())->getFormatedName() ; ?>
 			</li>
 		<?php endforeach; ?>		
 	</td>
 	<td class="col_ident_peoples">
-		 <?php foreach(Doctrine::getTable('Identifications')->getIdentificationsRelated("specimens", $specimen->getId() ) as $keyIdent=>$ident):?>
-			<?php $cpt = 0 ; foreach(Doctrine::getTable('CataloguePeople')->getPeopleRelated("identifications", array('identifier'), $ident->getId()) as $key=>$people):?>
+		 <?php foreach(Doctrine_Core::getTable('Identifications')->getIdentificationsRelated("specimens", $specimen->getId() ) as $keyIdent=>$ident):?>
+			<?php $cpt = 0 ; foreach(Doctrine_Core::getTable('CataloguePeople')->getPeopleRelated("identifications", array('identifier'), $ident->getId()) as $key=>$people):?>
 				<li>
-					<?php echo Doctrine::getTable('People')->findOneById($people->getPeopleRef())->getFormatedName() ; ?>
+					<?php echo Doctrine_Core::getTable('People')->findOneById($people->getPeopleRef())->getFormatedName() ; ?>
 				</li>
 			 <?php endforeach?>
 		 <?php endforeach?>
 	</td>
 	<td class="col_don_peoples">
-		<?php $cpt = 0 ; foreach(Doctrine::getTable('CataloguePeople')->getPeopleRelated("specimens", array('donator'),$specimen->getId() ) as $key=>$people):?>
+		<?php $cpt = 0 ; foreach(Doctrine_Core::getTable('CataloguePeople')->getPeopleRelated("specimens", array('donator'),$specimen->getId() ) as $key=>$people):?>
 			<li>
-			<?php echo Doctrine::getTable('People')->findOneById($people->getPeopleRef())->getFormatedName() ; ?>
+			<?php echo Doctrine_Core::getTable('People')->findOneById($people->getPeopleRef())->getFormatedName() ; ?>
 			</li>
 		<?php endforeach; ?>		
 	</td>

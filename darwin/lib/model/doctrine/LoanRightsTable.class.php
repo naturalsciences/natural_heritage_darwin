@@ -68,9 +68,9 @@ class LoanRightsTable extends Doctrine_Table
     if($result->getHasEncodingRight()) return true ;
     return 'view' ;*/
     //ftheeten 2018 03 07
-    $loan= Doctrine::getTable('Loans')->find($loan_id);
-    $user= Doctrine::getTable('Users')->find($user_id);
-    $testColLoan=Doctrine::getTable('CollectionsRights')->hasEditRightsFor($user, $loan->getCollectionRef());
+    $loan= Doctrine_Core::getTable('Loans')->find($loan_id);
+    $user= Doctrine_Core::getTable('Users')->find($user_id);
+    $testColLoan=Doctrine_Core::getTable('CollectionsRights')->hasEditRightsFor($user, $loan->getCollectionRef());
    
     return $testColLoan;
   }

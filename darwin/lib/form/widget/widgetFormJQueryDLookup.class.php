@@ -80,7 +80,7 @@ class widgetFormJQueryDLookup extends sfWidgetFormInputText
     public function getName($value)
     {
         if(is_numeric($value))
-            $object = Doctrine::getTable($this->getOption('model'))->find($value);
+            $object = Doctrine_Core::getTable($this->getOption('model'))->find($value);
         else
             return '';
         if(! $object)

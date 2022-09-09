@@ -52,7 +52,7 @@ class multimediaActions extends DarwinActions
   public function executeDownloadFile(sfWebRequest $request)
   {
     $this->setLayout(false);
-    $multimedia = Doctrine::getTable('Multimedia')->findOneById($request->getParameter('id')) ;
+    $multimedia = Doctrine_Core::getTable('Multimedia')->findOneById($request->getParameter('id')) ;
     if(!($this->getUser()->isAtLeast(Users::ADMIN) || $this->checkRights($multimedia))) $this->forwardToSecureAction();
     $this->forward404If(!($this->getUser()->isAtLeast(Users::ENCODER)) && !($multimedia->getVisible()));
     $this->forward404Unless(file_exists($file = $multimedia->getFullURI()),sprintf('This file does not exist') );
@@ -73,11 +73,11 @@ class multimediaActions extends DarwinActions
   public function checkRights($multimedia)
   {
     if($multimedia->getReferencedRelation() == 'loans')
-      return(Doctrine::getTable('LoanRights')->isAllowed($this->getUser()->getId(), $multimedia->getRecordId()));
+      return(Doctrine_Core::getTable('LoanRights')->isAllowed($this->getUser()->getId(), $multimedia->getRecordId()));
     if($multimedia->getReferencedRelation() == 'loan_items')
     {
-      $item = Doctrine::getTable('LoanItems')->findOneById($multimedia->getRecordId()) ;
-      return(Doctrine::getTable('LoanRights')->isAllowed($this->getUser()->getId(), $item->getLoanRef()));
+      $item = Doctrine_Core::getTable('LoanItems')->findOneById($multimedia->getRecordId()) ;
+      return(Doctrine_Core::getTable('LoanRights')->isAllowed($this->getUser()->getId(), $item->getLoanRef()));
     }
     /* Actualy multimedia is only in loans and loan items, so for the moment any otehr referenced relation
      returns false */
@@ -87,7 +87,9 @@ class multimediaActions extends DarwinActions
   public function executePreview(sfWebRequest $request)
   {
     $this->setLayout(false);
-    $multimedia = Doctrine::getTable('Multimedia')->findOneById($request->getParameter('id')) ;
+    $multimedia = Doctrine_Core::getTable('Multimedia')->findOneById($request->getParameter('id')) ;
+	$width=$request->getParameter('width',"100");
+	$height=$request->getParameter('width',"100");
     if(!($this->getUser()->isAtLeast(Users::ADMIN) || $this->checkRights($multimedia))) $this->forwardToSecureAction();
     $this->forward404If(!($this->getUser()->isAtLeast(Users::ENCODER)) && !($multimedia->getVisible()));
     $this->forward404Unless($multimedia,sprintf('This file does not exist') );
@@ -108,7 +110,7 @@ class multimediaActions extends DarwinActions
       return sfView::NONE;
     }
 
-    $preview = $multimedia->getPreview(100,100);
+    $preview = $multimedia->getPreview($width, $height);
     $this->getResponse()->setHttpHeader('Pragma: private', true);
     $this->getResponse()->setHttpHeader('Content-type', 'image/png');
     $this->getResponse()->sendHttpHeaders();
@@ -165,7 +167,7 @@ class multimediaActions extends DarwinActions
 
     if($request->hasParameter('rid'))
     {
-      $file_record = Doctrine::getTable('Multimedia')->find($request->getParameter('rid'));
+      $file_record = Doctrine_Core::getTable('Multimedia')->find($request->getParameter('rid'));
     }
 
     if(! $file_record)

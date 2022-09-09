@@ -24,7 +24,7 @@
  * @property integer $longitude_dms_direction
  * @property float $latitude_utm
  * @property float $longitude_utm
- * @property varchar $utm_zone
+ * @property string $utm_zone
  * @property string $location
  * @property float $lat_long_accuracy
  * @property float $elevation
@@ -33,7 +33,12 @@
  * @property string $iso3166
  * @property string $iso3166_subdivision
  * @property string $wkt_str
- * @property varchar $nagoya
+ * @property string $nagoya
+ * @property string $collector_refs
+ * @property string $expedition_refs
+ * @property integer $collection_ref
+ * @property ref $expedition_ref
+ * @property Expeditions $Expeditions
  * @property Doctrine_Collection $TagGroups
  * @property Doctrine_Collection $Tags
  * @property Doctrine_Collection $Specimens
@@ -57,7 +62,7 @@
  * @method integer             getLongitudeDmsDirection()   Returns the current record's "longitude_dms_direction" value
  * @method float               getLatitudeUtm()             Returns the current record's "latitude_utm" value
  * @method float               getLongitudeUtm()            Returns the current record's "longitude_utm" value
- * @method varchar             getUtmZone()                 Returns the current record's "utm_zone" value
+ * @method string              getUtmZone()                 Returns the current record's "utm_zone" value
  * @method string              getLocation()                Returns the current record's "location" value
  * @method float               getLatLongAccuracy()         Returns the current record's "lat_long_accuracy" value
  * @method float               getElevation()               Returns the current record's "elevation" value
@@ -66,7 +71,12 @@
  * @method string              getIso3166()                 Returns the current record's "iso3166" value
  * @method string              getIso3166Subdivision()      Returns the current record's "iso3166_subdivision" value
  * @method string              getWktStr()                  Returns the current record's "wkt_str" value
- * @method varchar             getNagoya()                  Returns the current record's "nagoya" value
+ * @method string              getNagoya()                  Returns the current record's "nagoya" value
+ * @method string              getCollectorRefs()           Returns the current record's "collector_refs" value
+ * @method string              getExpeditionRefs()          Returns the current record's "expedition_refs" value
+ * @method integer             getCollectionRef()           Returns the current record's "collection_ref" value
+ * @method ref                 getExpeditionRef()           Returns the current record's "expedition_ref" value
+ * @method Expeditions         getExpeditions()             Returns the current record's "Expeditions" value
  * @method Doctrine_Collection getTagGroups()               Returns the current record's "TagGroups" collection
  * @method Doctrine_Collection getTags()                    Returns the current record's "Tags" collection
  * @method Doctrine_Collection getSpecimens()               Returns the current record's "Specimens" collection
@@ -99,6 +109,11 @@
  * @method Gtu                 setIso3166Subdivision()      Sets the current record's "iso3166_subdivision" value
  * @method Gtu                 setWktStr()                  Sets the current record's "wkt_str" value
  * @method Gtu                 setNagoya()                  Sets the current record's "nagoya" value
+ * @method Gtu                 setCollectorRefs()           Sets the current record's "collector_refs" value
+ * @method Gtu                 setExpeditionRefs()          Sets the current record's "expedition_refs" value
+ * @method Gtu                 setCollectionRef()           Sets the current record's "collection_ref" value
+ * @method Gtu                 setExpeditionRef()           Sets the current record's "expedition_ref" value
+ * @method Gtu                 setExpeditions()             Sets the current record's "Expeditions" value
  * @method Gtu                 setTagGroups()               Sets the current record's "TagGroups" collection
  * @method Gtu                 setTags()                    Sets the current record's "Tags" collection
  * @method Gtu                 setSpecimens()               Sets the current record's "Specimens" collection
@@ -181,8 +196,8 @@ abstract class BaseGtu extends DarwinModel
         $this->hasColumn('longitude_utm', 'float', null, array(
              'type' => 'float',
              ));
-        $this->hasColumn('utm_zone', 'varchar', null, array(
-             'type' => 'varchar',
+        $this->hasColumn('utm_zone', 'string', null, array(
+             'type' => 'string',
              ));
         $this->hasColumn('location', 'string', null, array(
              'type' => 'string',
@@ -208,15 +223,31 @@ abstract class BaseGtu extends DarwinModel
         $this->hasColumn('wkt_str', 'string', null, array(
              'type' => 'string',
              ));
-        $this->hasColumn('nagoya', 'varchar', null, array(
-             'type' => 'varchar',
+        $this->hasColumn('nagoya', 'string', null, array(
+             'type' => 'string',
              'notnull' => true,
+             ));
+        $this->hasColumn('collector_refs', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('expedition_refs', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('collection_ref', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('expedition_ref', 'ref', null, array(
+             'type' => 'ref',
              ));
     }
 
     public function setUp()
     {
         parent::setUp();
+        $this->hasOne('Expeditions', array(
+             'local' => 'expedition_ref',
+             'foreign' => 'id'));
+
         $this->hasMany('TagGroups', array(
              'local' => 'id',
              'foreign' => 'gtu_ref'));

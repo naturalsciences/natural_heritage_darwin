@@ -1,0 +1,2 @@
+Kingdom	rank	class	order	family	phylum	genus	species	subspecies	author_team_and_year	original_taxon	gbif_full_name	gbif_reference	gbif_match_type	gbif_name_status			
+Animalia	species	Insecta	Lepidoptera	Hesperiidae	Arthropoda	Abantis	meneliki		Berger, 1979	Abantis menelik   Berger	Abantis meneliki Berger, 1979		MISSPELLING	accepted			

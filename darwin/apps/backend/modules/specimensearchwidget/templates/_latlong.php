@@ -41,7 +41,17 @@
     </style>
   <p><strong><?php echo __('Choose latitude/longitude on map');?></strong><input type="checkbox" id="show_as_map"></p>
   <br /><br />
+
   <table>
+	<tr>
+		<td>Coordinate format</td>	
+		<td colspan="2">
+			<select id="coord_format" name="coord_format">
+				<option value="dd">Decimal degrees (EPSG:4326)</option>
+				<option value="dms">Degrees Minutes seconds (EPSG:4326) </option>
+			</select>
+		</td>
+	</tr>
     <tr>
       <td>
       </td>
@@ -52,16 +62,73 @@
         <?php echo __("And");?>
       </th>
     </tr>
-    <tr>
+    <tr class="coord_dd">
       <th class="right_aligned"><?php echo $form['lat_from']->renderLabel();?></th>
       <td><?php echo $form['lat_from'];?></td>
       <td><?php echo $form['lat_to'];?><?php echo image_tag('remove.png', 'alt=Delete class=clear_prop'); ?></td>
     </tr>
-    <tr>
+	<!--DMS-->
+	<tr class="coord_dms" >	
+		<td>Lat (deg)</td>
+		<td><input type="text" class="coord_dms" id="lat_deg_from" name="lat_deg_from"></td>
+		<td><input type="text" class="coord_dms" id="lat_deg_to" name="lat_deg_to"></td>
+	</tr>
+	<tr class="coord_dms">	
+		<td>Lat (min)</td>
+		<td><input type="text" class="coord_dms" id="lat_min_from" name="lat_min_from"></td>
+		<td><input type="text"  class="coord_dms" id="lat_min_to" name="lat_min_to"></td>
+	</tr>
+	<tr class="coord_dms">	
+		<td>Lat (sec)</td>
+		<td><input type="text" class="coord_dms" id="lat_sec_from" name="lat_sec_from"></td>
+		<td><input type="text" class="coord_dms" id="lat_sec_to" name="lat_sec_to"></td>
+	</tr>
+	<tr class="coord_dms">
+		<td>Lat (dir)</td>
+		<td><select class="coord_dms" id="lat_dir_from" name="lat_dir_from" >
+			<option value="1">N</option>
+			<option value="-1">S</option>
+		</select></td>
+		<td><select class="coord_dms" id="lat_dir_to" name="lat_dir_to" >
+			<option value="1">N</option>
+			<option value="-1">S</option>
+		</select></td>
+	</tr>
+	<!--DMS-->
+    <tr class="coord_dd">
       <th class="right_aligned"><?php echo  $form['lon_from']->renderLabel();?></th>
       <td><?php echo $form['lon_from'];?></td>
       <td><?php echo $form['lon_to'];?><?php echo image_tag('remove.png', 'alt=Delete class=clear_prop'); ?></td>
     </tr>
+	
+	<!--DMS-->
+	<tr class="coord_dms" >	
+		<td>Long (deg)</td>
+		<td><input type="text" class="coord_dms" id="long_deg_from" name="long_deg_from"></td>
+		<td><input type="text" class="coord_dms" id="long_deg_to" name="long_deg_to"></td>
+	</tr>
+	<tr class="coord_dms">	
+		<td>Long (min)</td>
+		<td><input type="text" class="coord_dms" id="long_min_from" name="long_min_from"></td>
+		<td><input type="text" class="coord_dms" id="long_min_to" name="long_min_to"></td>
+	</tr>
+	<tr class="coord_dms">	
+		<td>Long (sec)</td>
+		<td><input type="text" class="coord_dms" id="long_sec_from" name="long_sec_from"></td>
+		<td><input type="text" class="coord_dms" id="long_sec_to" name="long_sec_to"></td>
+	</tr>
+	<tr class="coord_dms">
+		<td>Long (dir)</td>
+		<td><select class="coord_dms" id="long_dir_from" name="long_dir_from" >
+			<option value="-1">W</option>
+			<option value="1">E</option>
+		</select></td>
+		<td><select class="coord_dms" id="long_dir_to" name="long_dir_to" >
+			<option value="-1">W</option>
+			<option value="1">E</option>
+		</select></td>
+	</tr>
+	<!--DMS-->
   </table>
 </div>
   <div id="map_search_form" class="hidden">
@@ -86,7 +153,7 @@
         </table>
   </div>
 <div>
-<?php print(__("Include locality tags ?"));?><?php echo $form['include_text_place'];?>
+<!--<?php print(__("Include locality tags ?"));?><?php echo $form['include_text_place'];?>-->
 <div>
 
 <script  type="text/javascript">
@@ -349,6 +416,8 @@
                   $('#specimen_search_filters_lon_from').val("");
                   $('#specimen_search_filters_lat_to').val("");
                   $('#specimen_search_filters_lon_to').val("");
+				  
+				    $(".coord_dms").val("");	
                    
                   
                   $('#lat_long_set table').hide(); 
@@ -360,7 +429,113 @@
                 }
               });
 
-        }
+       
+		
+		//coord dms to dd
+		var test_coordinate_format=function()
+		{
+			if($("#coord_format").val()=="dd")
+			{
+				$(".coord_dd").show();
+				$(".coord_dms").hide();
+			}
+			else if($("#coord_format").val()=="dms")
+			{
+				$(".coord_dd").hide();
+				$(".coord_dms").show();
+			}
+		}
+		
+		$("#coord_format").change(function()
+			{
+				test_coordinate_format();
+			}
+		)
+		
+		$(".coord_dd").change(
+			function()
+			{			
+				if($("#specimen_search_filters_lat_from").val()!=="" &&$("#specimen_search_filters_lat_to").val()!=="")
+				{
+					var high=$("#specimen_search_filters_lat_to").val();
+					var low=$("#specimen_search_filters_lat_from").val();
+					if(parseFloat(high)<parseFloat(low))
+					{						
+						$("#specimen_search_filters_lat_to").val(low);
+						$("#specimen_search_filters_lat_from").val(high);
+					}
+				}
+				if($("#specimen_search_filters_lon_from").val()!=="" &&$("#specimen_search_filters_lon_to").val()!=="")
+				{
+					var high=$("#specimen_search_filters_lon_to").val();
+					var low=$("#specimen_search_filters_lon_from").val();
+					if(parseFloat(high)<parseFloat(low))
+					{						
+						$("#specimen_search_filters_lon_to").val(low);
+						$("#specimen_search_filters_lon_from").val(high);
+					}
+				}
+			}
+		);
+		
+		var convert_to_dms=function(deg, min, sec, direction, target_ctrl)
+		{			
+			if($.isNumeric(deg))
+			{
+				if(min=="")
+				{
+					min=0;
+				}
+				if(sec=="")
+				{
+					sec=0;
+				}
+			}
+			if($.isNumeric(deg)&&$.isNumeric(min)&&$.isNumeric(sec)&&$.isNumeric(direction))
+			{
+				console.log("convert2")
+				var dd=parseInt(deg);
+				dd=dd+(parseFloat(min)/60);
+				dd=dd+(parseFloat(sec)/3600);
+				dd=dd*parseInt(direction);				
+				$(target_ctrl).val(dd);
+
+			}
+		}
+		$(".coord_dms").change(
+			function()
+			{
+				
+				var deg_lat_from=$("#lat_deg_from").val();
+				var min_lat_from=$("#lat_min_from").val();
+				var sec_lat_from=$("#lat_sec_from").val();
+				var sec_dir_from=$("#lat_dir_from").val();
+				convert_to_dms(deg_lat_from, min_lat_from , sec_lat_from, sec_dir_from, "#specimen_search_filters_lat_from");
+				
+				
+				var deg_lat_to=$("#lat_deg_to").val();
+				var min_lat_to=$("#lat_min_to").val();
+				var sec_lat_to=$("#lat_sec_to").val();
+				var sec_dir_to=$("#lat_dir_to").val();
+				convert_to_dms(deg_lat_to, min_lat_to , sec_lat_to, sec_dir_to, "#specimen_search_filters_lat_to");
+				
+				var deg_long_from=$("#long_deg_from").val();
+				var min_long_from=$("#long_min_from").val();
+				var sec_long_from=$("#long_sec_from").val();
+				var sec_dir_from=$("#long_dir_from").val();
+				convert_to_dms(deg_long_from, min_long_from , sec_long_from, sec_dir_from, "#specimen_search_filters_lon_from");
+				
+				
+				var deg_long_to=$("#long_deg_to").val();
+				var min_long_to=$("#long_min_to").val();
+				var sec_long_to=$("#long_sec_to").val();
+				var sec_dir_to=$("#long_dir_to").val();
+				convert_to_dms(deg_long_to, min_long_to , sec_long_to, sec_dir_to, "#specimen_search_filters_lon_to");
+				
+			}
+		);
+		test_coordinate_format();
+	}
     );
 init_map();
 </script>

@@ -73,9 +73,9 @@ class CollectionsForm extends BaseCollectionsForm
     $this->validatorSchema['collection_type'] = new sfValidatorChoice(array('choices' => array('mix' => 'mix', 'observation' => 'observation', 'physical' => 'physical', 'title' => 'title'), 'required' => true));
 
     if(! $this->getObject()->isNew() || isset($this->options['duplicate']))
-      $this->widgetSchema['parent_ref']->setOption('choices', Doctrine::getTable('Collections')->getDistinctCollectionByInstitution($this->getObject()->getInstitutionRef()) );
+      $this->widgetSchema['parent_ref']->setOption('choices', Doctrine_Core::getTable('Collections')->getDistinctCollectionByInstitution($this->getObject()->getInstitutionRef()) );
     elseif(isset($this->options['new_with_error']))
-      $this->widgetSchema['parent_ref']->setOption('choices', Doctrine::getTable('Collections')->getDistinctCollectionByInstitution($this->options['institution']));
+      $this->widgetSchema['parent_ref']->setOption('choices', Doctrine_Core::getTable('Collections')->getDistinctCollectionByInstitution($this->options['institution']));
 
     $this->validatorSchema->setPostValidator(
       new sfValidatorCallback(array('callback' => array($this, 'checkSelfAttached')))
@@ -83,7 +83,7 @@ class CollectionsForm extends BaseCollectionsForm
 
     $subForm = new sfForm();
     $this->embedForm('CollectionsRights',$subForm);
-    foreach(Doctrine::getTable('CollectionsRights')->getAllUserRef($this->getObject()->getId()) as $key=>$vals)
+    foreach(Doctrine_Core::getTable('CollectionsRights')->getAllUserRef($this->getObject()->getId()) as $key=>$vals)
     {
       $form = new CollectionsRightsForm($vals);
       $this->embeddedForms['CollectionsRights']->embedForm($key, $form);
@@ -147,7 +147,7 @@ class CollectionsForm extends BaseCollectionsForm
     parent::bind($taintedValues, $taintedFiles);
   }
 
-  public function saveEmbeddedForms($con = null, $forms = null)
+  public function saveObjectEmbeddedForms($con = null, $forms = null)
   {
     if (null === $forms) {
       $value = $this->getValue('CollectionsRights');
@@ -157,7 +157,7 @@ class CollectionsForm extends BaseCollectionsForm
         {
           /* DO BE DONE WITH A TRIGGER
           if ($form->getObject()->getDbUserType() == Users::REGISTERED_USER ) // so we have to delete widget right for this guy
-          Doctrine::getTable('MyWidgets')->setUserRef($form->getObject()->getUserRef())->doUpdateWidgetRight($form->getObject()->getCollectionRef());
+          Doctrine_Core::getTable('MyWidgets')->setUserRef($form->getObject()->getUserRef())->doUpdateWidgetRight($form->getObject()->getCollectionRef());
           */
           $form->getObject()->delete();
           unset($this->embeddedForms['CollectionsRights'][$name]);
@@ -173,6 +173,6 @@ class CollectionsForm extends BaseCollectionsForm
         }
       }
     }
-    return parent::saveEmbeddedForms($con, $forms);
+    return parent::saveObjectEmbeddedForms($con, $forms);
   }
 }

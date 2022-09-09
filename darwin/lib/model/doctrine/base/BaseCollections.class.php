@@ -27,7 +27,7 @@
  * @property boolean $loan_auto_increment
  * @property integer $loan_last_value
  * @property boolean $code_ai_inherit
- * @property varchar $nagoya
+ * @property string $nagoya
  * @property People $Institution
  * @property Users $Manager
  * @property Users $Staff
@@ -60,7 +60,7 @@
  * @method boolean             getLoanAutoIncrement()       Returns the current record's "loan_auto_increment" value
  * @method integer             getLoanLastValue()           Returns the current record's "loan_last_value" value
  * @method boolean             getCodeAiInherit()           Returns the current record's "code_ai_inherit" value
- * @method varchar             getNagoya()                  Returns the current record's "nagoya" value
+ * @method string              getNagoya()                  Returns the current record's "nagoya" value
  * @method People              getInstitution()             Returns the current record's "Institution" value
  * @method Users               getManager()                 Returns the current record's "Manager" value
  * @method Users               getStaff()                   Returns the current record's "Staff" value
@@ -210,8 +210,8 @@ abstract class BaseCollections extends DarwinModel
              'notnull' => true,
              'default' => false,
              ));
-        $this->hasColumn('nagoya', 'varchar', null, array(
-             'type' => 'varchar',
+        $this->hasColumn('nagoya', 'string', null, array(
+             'type' => 'string',
              'notnull' => true,
              ));
     }

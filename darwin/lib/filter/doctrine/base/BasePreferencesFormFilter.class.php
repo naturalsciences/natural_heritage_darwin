@@ -6,31 +6,27 @@
  * @package    darwin
  * @subpackage filter
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
+ * @version    SVN: $Id$
  */
-abstract class BasePreferencesFormFilter extends BaseFormFilterDoctrine
+abstract class BasePreferencesFormFilter extends DarwinModelFormFilter
 {
-  public function setup()
+  protected function setupInheritance()
   {
-    $this->setWidgets(array(
-      'pref_key'   => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'pref_value' => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'user_ref'   => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('User'), 'add_empty' => true)),
-    ));
+    parent::setupInheritance();
 
-    $this->setValidators(array(
-      'pref_key'   => new sfValidatorPass(array('required' => false)),
-      'pref_value' => new sfValidatorPass(array('required' => false)),
-      'user_ref'   => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('User'), 'column' => 'id')),
-    ));
+    $this->widgetSchema   ['pref_key'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['pref_key'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['pref_value'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['pref_value'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['user_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('User'), 'add_empty' => true));
+    $this->validatorSchema['user_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('User'), 'column' => 'id'));
+
+    $this->widgetSchema   ['user_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('User'), 'add_empty' => true));
+    $this->validatorSchema['user_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('User'), 'column' => 'id'));
 
     $this->widgetSchema->setNameFormat('preferences_filters[%s]');
-
-    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
-
-    $this->setupInheritance();
-
-    parent::setup();
   }
 
   public function getModelName()
@@ -40,11 +36,11 @@ abstract class BasePreferencesFormFilter extends BaseFormFilterDoctrine
 
   public function getFields()
   {
-    return array(
-      'id'         => 'Number',
-      'pref_key'   => 'Text',
+    return array_merge(parent::getFields(), array(
+      'pref_key' => 'Text',
       'pref_value' => 'Text',
-      'user_ref'   => 'ForeignKey',
-    );
+      'user_ref' => 'ForeignKey',
+      'user_ref' => 'ForeignKey',
+    ));
   }
 }

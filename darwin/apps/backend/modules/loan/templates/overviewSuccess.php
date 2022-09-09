@@ -59,7 +59,7 @@
             &nbsp;
 			<?php echo link_to(__('Back to Loan'), 'loan/edit?id='.$loan->getId()) ?>
 			<a href="<?php echo url_for('loan/index') ?>"><?php echo __('Cancel');?></a>
-			<input type="button" id="submit_jquery" name="submit_jquery" value="<?php echo __('Add items and save');?>" />
+			<input type="button" id="submit_jquery" name="submit_jquery" value="<?php echo __('Add items or save changes');?>" />
 			<input style="display:none" id="submit" type="submit" />
         </div>
       </form>

@@ -51,7 +51,7 @@ th, td {
          <td><?php print($item['id']);?></td>
          <td><?php print($item['name']);?></td>
          <td><?php 
-                    $level=Doctrine::getTable("CatalogueLevels")->find($item['level_ref']);
+                    $level=Doctrine_Core::getTable("CatalogueLevels")->find($item['level_ref']);
                     print($level->getLevelName());?></td> 
          <td><?php print($item['name_cluster']);?></td>
          <td><?php print($item['imported'] ? "TRUE" : "FALSE");?></td>

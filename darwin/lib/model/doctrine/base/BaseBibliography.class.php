@@ -13,29 +13,29 @@
  * @property integer $year
  * @property string $reference
  * @property string $doi
- * @property CataloguePeople $CataloguePeople
+ * @property CataloguePeopleBibliography $CataloguePeopleBibliography
  * @property Doctrine_Collection $CatalogueBibliography
  * 
- * @method integer             getId()                    Returns the current record's "id" value
- * @method string              getTitle()                 Returns the current record's "title" value
- * @method string              getTitleIndexed()          Returns the current record's "title_indexed" value
- * @method string              getType()                  Returns the current record's "type" value
- * @method string              getAbstract()              Returns the current record's "abstract" value
- * @method integer             getYear()                  Returns the current record's "year" value
- * @method string              getReference()             Returns the current record's "reference" value
- * @method string              getDoi()                   Returns the current record's "doi" value
- * @method CataloguePeople     getCataloguePeople()       Returns the current record's "CataloguePeople" value
- * @method Doctrine_Collection getCatalogueBibliography() Returns the current record's "CatalogueBibliography" collection
- * @method Bibliography        setId()                    Sets the current record's "id" value
- * @method Bibliography        setTitle()                 Sets the current record's "title" value
- * @method Bibliography        setTitleIndexed()          Sets the current record's "title_indexed" value
- * @method Bibliography        setType()                  Sets the current record's "type" value
- * @method Bibliography        setAbstract()              Sets the current record's "abstract" value
- * @method Bibliography        setYear()                  Sets the current record's "year" value
- * @method Bibliography        setReference()             Sets the current record's "reference" value
- * @method Bibliography        setDoi()                   Sets the current record's "doi" value
- * @method Bibliography        setCataloguePeople()       Sets the current record's "CataloguePeople" value
- * @method Bibliography        setCatalogueBibliography() Sets the current record's "CatalogueBibliography" collection
+ * @method integer                     getId()                          Returns the current record's "id" value
+ * @method string                      getTitle()                       Returns the current record's "title" value
+ * @method string                      getTitleIndexed()                Returns the current record's "title_indexed" value
+ * @method string                      getType()                        Returns the current record's "type" value
+ * @method string                      getAbstract()                    Returns the current record's "abstract" value
+ * @method integer                     getYear()                        Returns the current record's "year" value
+ * @method string                      getReference()                   Returns the current record's "reference" value
+ * @method string                      getDoi()                         Returns the current record's "doi" value
+ * @method CataloguePeopleBibliography getCataloguePeopleBibliography() Returns the current record's "CataloguePeopleBibliography" value
+ * @method Doctrine_Collection         getCatalogueBibliography()       Returns the current record's "CatalogueBibliography" collection
+ * @method Bibliography                setId()                          Sets the current record's "id" value
+ * @method Bibliography                setTitle()                       Sets the current record's "title" value
+ * @method Bibliography                setTitleIndexed()                Sets the current record's "title_indexed" value
+ * @method Bibliography                setType()                        Sets the current record's "type" value
+ * @method Bibliography                setAbstract()                    Sets the current record's "abstract" value
+ * @method Bibliography                setYear()                        Sets the current record's "year" value
+ * @method Bibliography                setReference()                   Sets the current record's "reference" value
+ * @method Bibliography                setDoi()                         Sets the current record's "doi" value
+ * @method Bibliography                setCataloguePeopleBibliography() Sets the current record's "CataloguePeopleBibliography" value
+ * @method Bibliography                setCatalogueBibliography()       Sets the current record's "CatalogueBibliography" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -80,7 +80,7 @@ abstract class BaseBibliography extends DarwinModel
     public function setUp()
     {
         parent::setUp();
-        $this->hasOne('CataloguePeople', array(
+        $this->hasOne('CataloguePeopleBibliography', array(
              'local' => 'id',
              'foreign' => 'record_id'));
 

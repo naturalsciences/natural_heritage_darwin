@@ -26,13 +26,13 @@ class taxonomyActions extends DarwinActions
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     $this->forward404Unless(
-      $taxon = Doctrine::getTable('Taxonomy')->find($request->getParameter('id')),
+      $taxon = Doctrine_Core::getTable('Taxonomy')->find($request->getParameter('id')),
       sprintf('Object taxonomy does not exist (%s).',$request->getParameter('id'))
     );
 
     if(! $request->hasParameter('confirm'))
     {
-      $this->number_child = Doctrine::getTable('Taxonomy')->hasChildrens('Taxonomy',$taxon->getId());
+      $this->number_child = Doctrine_Core::getTable('Taxonomy')->hasChildrens('Taxonomy',$taxon->getId());
       if($this->number_child)
       {
         $this->link_delete = 'taxonomy/delete?confirm=1&id='.$taxon->getId();
@@ -54,7 +54,7 @@ class taxonomyActions extends DarwinActions
       $this->form = new TaxonomyForm($taxon);
       $this->form->getErrorSchema()->addError($error);
       $this->loadWidgets();
-      $this->no_right_col = Doctrine::getTable('Taxonomy')->testNoRightsCollections('taxon_ref',$request->getParameter('id'), $this->getUser()->getId());
+      $this->no_right_col = Doctrine_Core::getTable('Taxonomy')->testNoRightsCollections('taxon_ref',$request->getParameter('id'), $this->getUser()->getId());
       $this->setTemplate('edit');
     }
   }
@@ -93,9 +93,9 @@ class taxonomyActions extends DarwinActions
   public function executeEdit(sfWebRequest $request)
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
-    $taxa = Doctrine::getTable('Taxonomy')->find($request->getParameter('id'));
+    $taxa = Doctrine_Core::getTable('Taxonomy')->find($request->getParameter('id'));
 
-    $this->no_right_col = Doctrine::getTable('Taxonomy')->testNoRightsCollections('taxon_ref',$request->getParameter('id'), $this->getUser()->getId());
+    $this->no_right_col = Doctrine_Core::getTable('Taxonomy')->testNoRightsCollections('taxon_ref',$request->getParameter('id'), $this->getUser()->getId());
 
     $this->forward404Unless($taxa,'Taxa not Found');
     $this->form = new TaxonomyForm($taxa);
@@ -105,10 +105,10 @@ class taxonomyActions extends DarwinActions
   public function executeUpdate(sfWebRequest $request)
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
-    $taxa = Doctrine::getTable('Taxonomy')->find($request->getParameter('id'));
+    $taxa = Doctrine_Core::getTable('Taxonomy')->find($request->getParameter('id'));
 
     $this->forward404Unless($taxa,'Taxa not Found');
-    $this->no_right_col = Doctrine::getTable('Taxonomy')->testNoRightsCollections('taxon_ref',$request->getParameter('id'), $this->getUser()->getId());
+    $this->no_right_col = Doctrine_Core::getTable('Taxonomy')->testNoRightsCollections('taxon_ref',$request->getParameter('id'), $this->getUser()->getId());
     $this->form = new TaxonomyForm($taxa);
 
     $this->processForm($request,$this->form);
@@ -147,7 +147,7 @@ class taxonomyActions extends DarwinActions
 
   public function executeView(sfWebRequest $request)
   {
-    $this->taxon = Doctrine::getTable('Taxonomy')->find($request->getParameter('id'));
+    $this->taxon = Doctrine_Core::getTable('Taxonomy')->find($request->getParameter('id'));
     $this->forward404Unless($this->taxon,'Taxa not Found');
     $this->form = new TaxonomyForm($this->taxon);
     $this->loadWidgets();

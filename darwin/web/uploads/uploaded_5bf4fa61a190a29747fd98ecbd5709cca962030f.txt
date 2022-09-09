@@ -1,0 +1,18 @@
+UnitID	url	comment	type
+Tw8	http://www.africamuseum.be/xylarium/tw_pictures/Tw_8_ra_004.JPG	Radial section	image_link
+Tw8	http://www.africamuseum.be/xylarium/tw_pictures/Tw_8_ra_020.JPG	Radial section	image_link
+Tw8	http://www.africamuseum.be/xylarium/tw_pictures/Tw_8_ta_0025.JPG	Tangential section 	image_link
+Tw8	http://www.africamuseum.be/xylarium/tw_pictures/Tw_8_ta_010.JPG	Tangential section 	image_link
+Tw8	http://www.africamuseum.be/xylarium/tw_pictures/Tw_8_ta_020.JPG	Tangential section 	image_link
+Tw8	http://www.africamuseum.be/xylarium/tw_pictures/Tw_8_ta_040.JPG	Tangential section 	image_link
+Tw8	http://www.africamuseum.be/xylarium/tw_pictures/Tw_8_xa_004.JPG	Transversal section 	image_link
+Tw16	http://www.africamuseum.be/xylarium/tw_pictures/Tw_16_ra_004.JPG	Radial section	image_link
+Tw16	http://www.africamuseum.be/xylarium/tw_pictures/Tw_16_ra_020a.JPG	Radial section	image_link
+Tw16	http://www.africamuseum.be/xylarium/tw_pictures/Tw_16_ra_020b.JPG	Radial section	image_link
+Tw16	http://www.africamuseum.be/xylarium/tw_pictures/Tw_16_ra_040.JPG	Radial section	image_link
+Tw16	http://www.africamuseum.be/xylarium/tw_pictures/Tw_16_ta_004.JPG	Tangential section 	image_link
+Tw16	http://www.africamuseum.be/xylarium/tw_pictures/Tw_16_ta_010.jpg	Tangential section 	image_link
+Tw16	http://www.africamuseum.be/xylarium/tw_pictures/Tw_16_ta_020.JPG	Tangential section 	image_link
+Tw16	http://www.africamuseum.be/xylarium/tw_pictures/Tw_16_ta_040.JPG	Tangential section 	image_link
+Tw16	http://www.africamuseum.be/xylarium/tw_pictures/Tw_16_xa_004.jpg	Transversal section 	image_link
+Tw16	http://www.africamuseum.be/xylarium/tw_pictures/Tw_16_xa_010.JPG	Transversal section 	image_link

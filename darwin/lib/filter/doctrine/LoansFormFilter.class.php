@@ -31,7 +31,7 @@ class LoansFormFilter extends BaseLoansFormFilter
     $this->validatorSchema['collection_ref'] = new sfValidatorPass();
     
     $this->widgetSchema['status'] = new sfWidgetFormChoice(array(
-        'choices' => Doctrine::getTable('LoanStatus')->getDistinctStatus()
+        'choices' => Doctrine_Core::getTable('LoanStatus')->getDistinctStatus()
     ));
     $this->validatorSchema['status'] = new sfValidatorString(array('required' => false));
 

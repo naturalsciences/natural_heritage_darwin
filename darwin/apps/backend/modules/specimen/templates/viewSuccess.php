@@ -19,6 +19,9 @@
         <?php if($hasEncodingRight):?>
           <?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))), 'specimen/edit?id='.$specimen->getId()); ?>
         <?php endif;?>
+		<?php if($sf_user->isAtLeast(Users::MANAGER)):?>
+				<input type="button" id="print_spec_thermic" class="save_search" value="<?php echo __('Thermic print');?>" /> 
+		<?php endif;?>
     </span>
   </h3>
   <div class="encod_screen edition" id="intro">
@@ -57,5 +60,80 @@ $(document).ready(function () {
     }
     $.get( $(this).parent().attr('href') + '/status/' + pin_status,function (html){});
   });
+  
+  //printer
+  $("#print_spec_thermic").click(function(event){
+				var getip=function(){
+					return JSON.parse('<?php echo 	Doctrine_Core::getTable('Users')-> 
+													find($sf_user->getId())-> 
+													getIp() ?>');
+				}
+				var json_ip = getip();
+				if (json_ip[0] != null){
+					if ((trim(json_ip[0].user_ip)).length == 0) {
+						alert("IP address of local print server is not found !");
+					}else{
+						var classes = [];
+						var pass = false;
+						var pass2 = false;
+						var collect = false;
+						
+
+						//var url_printer_full=url_printer+'?op=on&id='+tmpArray.join("|");
+						$('.spec_results > tbody > tr ').each(function(){
+							$($(this).attr('class').split(' ')).each(function() {
+								if (this.length>0 && $.inArray(this.valueOf(), classes) === -1) {
+									if (this.valueOf().substring(0, 4) == 'rid_' ) {	
+										collect = false;
+										var id_spec=this.valueOf().match(/[0-9]+/g);
+										id_spec=id_spec[0];
+										
+										var coll = $('.'+this.valueOf()).children('.col_collection').children('.Collid').val();
+										var coll_list = "<?php 	$collist = sfConfig::get('dw_collect_to_print_thermic');
+																$cols = explode(",", $collist);
+																$collstr = "";
+																foreach ($cols as $c) {
+																	$q = Doctrine_Query::create()
+																		->select('*')
+																		->from('Collections')
+																		->where('id = ?',$c);
+																	$result =$q->FetchOne();
+																	$collstr = $collstr.",".$result->getName();
+																}
+																echo($collstr);	?>";
+										var i;
+										/*if(jQuery.inArray(coll, collect_array) == -1){
+											var collect = true;
+										}*/
+										/*if (collect == true && pass == false ) {
+											alert("Attention, only specimen from "+coll_list.substring(1)+" will be printed");
+											pass = true;
+										}*/
+										if (collect == false) {
+											if (pass2 == false ) {
+												alert("Labels are sent to thermic printer");
+											}
+																			
+											pass2 = true;
+										}
+										collect = false;
+									}
+								}    
+							});	
+						});
+						var url_printer_full="<?php echo url_for('specimensearch/averyDennisonPrinterCall');?>?id="+<?php print($specimen->getId())?>;
+							console.log(url_printer_full);				
+						
+							$.ajax({
+								url: url_printer_full												
+							}).done(
+							function()	{}
+							);
+						
+					}
+				}
+
+	
+			});
 });
 </script>

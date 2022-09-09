@@ -37,7 +37,7 @@
 			<input type="button" id="print_spec" class="save_search" value="<?php echo __('Print');?>" />
 			<!-- end added code -->
 			<!-- added by JMHerpers 2018/01/18-->
-			<?php if($sf_user->isAtLeast(Users::MANAGER)):?>
+			<?php if($sf_user->isAtLeast(Users::ENCODER)):?>
 				<input type="button" id="print_spec_thermic" class="save_search" value="<?php echo __('Thermic print');?>" /> 
 			<?php endif;?>			
 		<?php endif;?>
@@ -183,11 +183,12 @@
 
 			//var url_printer="<?php echo(sfConfig::get('dw_url_thermic_printer')); ?>";
 			var collect_to_print_thermic="<?php echo(sfConfig::get('dw_collect_to_print_thermic')); ?>";
-			var collect_array = collect_to_print_thermic.split(","); 
+			console.log(collect_to_print_thermic);
+            var collect_array = collect_to_print_thermic.split(","); 
 			
 			$("#print_spec_thermic").click(function(event){
 				var getip=function(){
-					return JSON.parse('<?php echo 	Doctrine::getTable('Users')-> 
+					return JSON.parse('<?php echo 	Doctrine_Core::getTable('Users')-> 
 													find($sf_user->getId())-> 
 													getIp() ?>');
 				}
@@ -225,13 +226,13 @@
 																}
 																echo($collstr);	?>";
 										var i;
-										if(jQuery.inArray(coll, collect_array) == -1){
+										/*if(jQuery.inArray(coll, collect_array) == -1){
 											var collect = true;
-										}
-										if (collect == true && pass == false ) {
+										}*/
+										/*if (collect == true && pass == false ) {
 											alert("Attention, only specimen from "+coll_list.substring(1)+" will be printed");
 											pass = true;
-										}
+										}*/
 										if (collect == false) {
 											if (pass2 == false ) {
 												alert("Labels are sent to thermic printer");
@@ -245,7 +246,7 @@
 							});	
 						});
 						var url_printer_full="<?php echo url_for('specimensearch/averyDennisonPrinterCall');?>?id="+tmpArray.join('_');
-											
+							console.log(url_printer_full);				
 						if (tmpArray.join('_') != "" ){
 							$.ajax({
 								url: url_printer_full												

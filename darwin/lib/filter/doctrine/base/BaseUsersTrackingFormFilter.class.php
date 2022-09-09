@@ -6,39 +6,39 @@
  * @package    darwin
  * @subpackage filter
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
+ * @version    SVN: $Id$
  */
-abstract class BaseUsersTrackingFormFilter extends BaseFormFilterDoctrine
+abstract class BaseUsersTrackingFormFilter extends DarwinModelFormFilter
 {
-  public function setup()
+  protected function setupInheritance()
   {
-    $this->setWidgets(array(
-      'referenced_relation'    => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'record_id'              => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'user_ref'               => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Users'), 'add_empty' => true)),
-      'action'                 => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'modification_date_time' => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'old_value'              => new sfWidgetFormFilterInput(),
-      'new_value'              => new sfWidgetFormFilterInput(),
-    ));
+    parent::setupInheritance();
 
-    $this->setValidators(array(
-      'referenced_relation'    => new sfValidatorPass(array('required' => false)),
-      'record_id'              => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
-      'user_ref'               => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Users'), 'column' => 'id')),
-      'action'                 => new sfValidatorPass(array('required' => false)),
-      'modification_date_time' => new sfValidatorPass(array('required' => false)),
-      'old_value'              => new sfValidatorPass(array('required' => false)),
-      'new_value'              => new sfValidatorPass(array('required' => false)),
-    ));
+    $this->widgetSchema   ['referenced_relation'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['referenced_relation'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['record_id'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['record_id'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
+
+    $this->widgetSchema   ['user_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Users'), 'add_empty' => true));
+    $this->validatorSchema['user_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Users'), 'column' => 'id'));
+
+    $this->widgetSchema   ['action'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['action'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['modification_date_time'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['modification_date_time'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['old_value'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['old_value'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['new_value'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['new_value'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['user_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Users'), 'add_empty' => true));
+    $this->validatorSchema['user_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Users'), 'column' => 'id'));
 
     $this->widgetSchema->setNameFormat('users_tracking_filters[%s]');
-
-    $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
-
-    $this->setupInheritance();
-
-    parent::setup();
   }
 
   public function getModelName()
@@ -48,15 +48,15 @@ abstract class BaseUsersTrackingFormFilter extends BaseFormFilterDoctrine
 
   public function getFields()
   {
-    return array(
-      'id'                     => 'Number',
-      'referenced_relation'    => 'Text',
-      'record_id'              => 'Number',
-      'user_ref'               => 'ForeignKey',
-      'action'                 => 'Text',
+    return array_merge(parent::getFields(), array(
+      'referenced_relation' => 'Text',
+      'record_id' => 'Number',
+      'user_ref' => 'ForeignKey',
+      'action' => 'Text',
       'modification_date_time' => 'Text',
-      'old_value'              => 'Text',
-      'new_value'              => 'Text',
-    );
+      'old_value' => 'Text',
+      'new_value' => 'Text',
+      'user_ref' => 'ForeignKey',
+    ));
   }
 }

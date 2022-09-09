@@ -33,7 +33,7 @@ class TagGroupsForm extends BaseTagGroupsForm
       'add_label' => 'Add another sub-type',
     ));
 
-    $this->widgetSchema['sub_group_name']->setOption('forced_choices', Doctrine::getTable('TagGroups')->getDistinctSubGroups($this->getObject()->getGroupName()) );
+    $this->widgetSchema['sub_group_name']->setOption('forced_choices', Doctrine_Core::getTable('TagGroups')->getDistinctSubGroups($this->getObject()->getGroupName()) );
 
     $this->widgetSchema['tag_value'] = new sfWidgetFormInputText(array(),array('class'=>'inline tag_val'));
 

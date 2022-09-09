@@ -32,6 +32,12 @@
     <td><?php echo __("UUID");?></td>
     <td><?php echo $stable? $stable->getUuid():"";?></td>
   </tr>
+  <?php $import_ref=$spec->getImportRef(); if($import_ref!==null):?>
+  <tr>
+		<td><b>Nr. import</td>
+		<td><?php print($import_ref); ?></td>
+	</tr>
+ <?php endif;?>
   </tbody>
  </table>
  <?php if($specCode->getValidLabel()!==null||strlen($specCode->getLabelCreatedOn())>0||strlen($specCode->getLabelCreatedBy())>0):?>
@@ -68,7 +74,7 @@
         <?php echo $specCode->getLabelCreatedBy();?>
       </td>
   </tr>
- 
+ </tbody>
  </table>
   <?php endif;?>
   <script  type="text/javascript">

@@ -20,6 +20,8 @@ class ImportABCDXml implements ImportModelsInterface
   private $code_suffix;
   private $code_suffix_separator;
   protected $configuration;
+  protected $in_identification=false;
+  protected $add_collection_prefix=false;
   
   
   public function __construct($p_configuration)
@@ -53,13 +55,14 @@ class ImportABCDXml implements ImportModelsInterface
     $this->configuration->loadHelpers(array('Darwin'));
     $this->import_id = $id ;
     //ftheeten 2017 08 03 added specimen_taxonomy_ref
-    $this->specimen_taxonomy_ref = Doctrine::getTable('Imports')->find($this->import_id)->getSpecimenTaxonomyRef();
+    $this->specimen_taxonomy_ref = Doctrine_Core::getTable('Imports')->find($this->import_id)->getSpecimenTaxonomyRef();
     //ftheeten 2017 09 13
-    $mime_type=Doctrine::getTable('Imports')->find($this->import_id)->getMimeType();
+    $mime_type=Doctrine_Core::getTable('Imports')->find($this->import_id)->getMimeType();
     //ftheeten 2017 09 13   
      //fwrite($myfile,"\n!!!!!!!!!!!!!!!!!IN PARSER!!!!!!!!!!!!!!!!!!");
 	     //jm herpers 2017 11 09 (auto increment in batches)
 	$this->collection_of_import=$this->getCollectionOfImport();
+	$this->add_collection_prefix=$this->getCollectionPrefixStatus();
 	$this->collection_has_autoincrement=$this->collection_of_import->getCodeAutoIncrement();
 	if($this->collection_has_autoincrement)
 	{
@@ -79,6 +82,81 @@ class ImportABCDXml implements ImportModelsInterface
 	$this->code_suffix=$this->collection_of_import->getCodeSuffix();	
     if($mime_type==="text/plain")
     {  
+	
+	
+		
+         //      fwrite($myfile, "\n!!!!!!!!!!!!!!!!!TEXT PLAIN MODE!!!!!!!!!!!!!!!!!!");
+        if (!($fp = fopen($file, "r"))) {
+            return("could not open input file");
+        }       
+        
+        $line = fgets($fp);
+		$this->current_encoding=mb_detect_encoding($line);						 
+        fclose($fp);
+		$fp = fopen($file, "r");
+        $tabParser = new RMCATabDataDirect(
+            $this->configuration,
+            $this->import_id, 
+            $this->collection_of_import,  
+            $this->specimen_taxonomy_ref , 
+            $this->collection_has_autoincrement, 
+            $this->code_last_value, 
+            $this->code_prefix,
+            $this->code_prefix_separator,
+            $this->code_suffix_separator,
+            $this->code_suffix);
+       
+        $options["tab_file"] = $file;
+        $tabParser->configure($options,$this->current_encoding);
+        $tabParser->identifyHeader($fp,$this->current_encoding);
+        $i=1;
+		$conn = Doctrine_Manager::connection();
+        
+		try
+		{
+			while (($row = fgetcsv($fp, 0, "\t")) !== FALSE)
+			{
+				if($this->csvLineIsNotEmpty($row))
+				{
+					if (array(null) !== $row) 
+					{ // ignore blank lines
+							//ftheeten 2018 02 28
+					     
+				
+						 
+						 $tabParser->parseLineAndSaveToDB($row,$this->current_encoding);
+					}
+				 }
+			}
+			
+         }
+		 catch(Doctrine_Exception $ne)
+		{
+			/*print("ERROR 1");
+			$conn->rollback();
+			$import_obj = Doctrine_Core::getTable('Imports')->find($q->getId());
+            $import_obj->setErrorsInImport($ne->getMessage());
+            $import_obj->setState("error");
+            $import_obj->setWorking(FALSE);
+            $import_obj->save();*/
+			throw $ne;
+		}
+		catch(Exception $e)
+		{
+			/*print("ERROR 2");
+			$conn->rollback();
+			$import_obj = Doctrine_Core::getTable('Imports')->find($q->getId());
+            $import_obj->setErrorsInImport($ne->getMessage());
+            $import_obj->setState("error");
+            $import_obj->setWorking(FALSE);
+            $import_obj->save();*/
+			throw $e;
+		}
+		
+        fclose($fp);
+	
+		/*
+	
          //      fwrite($myfile, "\n!!!!!!!!!!!!!!!!!TEXT PLAIN MODE!!!!!!!!!!!!!!!!!!");
         if (!($fp = fopen($file, "r"))) {
             return("could not open input file");
@@ -103,7 +181,7 @@ class ImportABCDXml implements ImportModelsInterface
                     xml_set_element_handler($xml_parser, "startElement", "endElement");
                     xml_set_character_data_handler($xml_parser, "characterData");
                     $xml_conv= $tabParser->parseLineAndGetString($row);
-                    //print($xml_conv);
+                    print($xml_conv);
                     if (!xml_parse($xml_parser, $xml_conv, feof($fp))) {
                         return (sprintf("XML error: %s at line %d for record $i",
                                     xml_error_string(xml_get_error_code($xml_parser)),
@@ -119,6 +197,8 @@ class ImportABCDXml implements ImportModelsInterface
         //if(! $this->version_defined)
         //  $this->errors_reported = $this->version_error_msg.$this->errors_reported;
         return $this->errors_reported ;
+		
+		*/
     }
     else //old xml parser
     {
@@ -160,27 +240,53 @@ class ImportABCDXml implements ImportModelsInterface
     $this->cdata = '' ;
     $this->inside_data = false ;
     switch ($name) {
-      case "Accessions" : $this->object = new parsingTag() ; break;
+      case "Accessions" :
+		if(!($this->in_identification))
+		{
+			$this->object = new parsingTag() ; 
+		}	
+		break;
       case "efg:ChronostratigraphicAttributions" : //SAME AS BELOW
       case "ChronostratigraphicAttributions" : $this->object = new ParsingCatalogue('chronostratigraphy') ; break;
       case "Country" : $this->object->tag_group_name="country" ; break;
       case "dna:DNASample" : $this->object = new ParsingMaintenance('DNA extraction') ; break;
       case "RockPhysicalCharacteristics" : //SAME AS BELOW
-      case "efg:RockPhysicalCharacteristics" : $this->object = new ParsingTag("lithology") ; break;
+      case "efg:RockPhysicalCharacteristics" : 
+		if(!($this->in_identification))
+		{
+			$this->object = new ParsingTag("lithology") ; 
+		}
+		break;
       case "LithostratigraphicAttribution" : //SAME AS BELOW
       case "efg:LithostratigraphicAttribution" : $this->object = new ParsingCatalogue('lithostratigraphy') ; break;
-      case "Gathering" : $this->object = new ParsingTag("gtu") ; $this->comment_notion = 'general comments'  ; break;
+      case "Gathering" : 
+		if(!($this->in_identification))
+		{
+			$this->object = new ParsingTag("gtu") ; 
+			$this->comment_notion = 'general comments'  ; 
+		}	
+		break;
       case "GatheringAgent" : $this->object->setPeopleType("collector"); break;
       case "efg:MineralRockIdentified" : break;
       case "HigherTaxa" : $this->object->catalogue_parent = new Hstore() ;break;
-      case "Identification" : $this->object = new ParsingIdentifications() ; break;
+      case "Identification" : $this->object = new ParsingIdentifications() ; $this->in_identification=true; break;
       case "MeasurementOrFactAtomised" : if($this->getPreviousTag()==('Altitude')||$this->getPreviousTag()==('Depth')) $this->property = new ParsingProperties($this->getPreviousTag()) ;
                                          else $this->property = new ParsingProperties() ; break;
-      case "Petrology" : $this->object = new ParsingTag("lithology") ; break;
+      case "Petrology" : 
+		if(!($this->in_identification))
+		{
+			$this->object = new ParsingTag("lithology") ;
+		}
+		break;
       case "efg:RockUnit" : //SAME AS BELOW
       case "RockUnit" : $this->object = new ParsingCatalogue('lithology') ; break;
       case "Sequence" : $this->object = new ParsingMaintenance('Sequencing') ; break;
-      case "SpecimenUnit" : $this->object = new ParsingTag("unit") ; break;
+      case "SpecimenUnit" : 
+		if(!($this->in_identification))
+		{
+			$this->object = new ParsingTag("unit") ; 			
+		}	
+		break;
       case "Unit" : $this->staging = new Staging(); $this->name = ""; $this->staging->setId($this->getStagingId()); $this->object = null;
 				 //jm herpers 2017 11 09 (auto increment in batches)
 				$this->main_code_found=false;
@@ -269,7 +375,7 @@ class ImportABCDXml implements ImportModelsInterface
           }
           break;
         case "HigherTaxa" : $this->object->getCatalogueParent($this->staging) ; break;
-        case "HigherTaxon" : $this->object->handleParent() ;break;;
+        case "HigherTaxon" : $this->object->handleParent() ;break;
         case "HigherTaxonName" : $this->object->higher_name = $this->cdata ;  break;
         case "HigherTaxonRank" : $this->object->higher_level = strtolower($this->cdata) ;  break;
         case "TaxonIdentified":  
@@ -279,7 +385,7 @@ class ImportABCDXml implements ImportModelsInterface
             break;
         case "efg:LithostratigraphicAttribution" : $this->staging["litho_parents"] = $this->object->getParent() ; break;
         case "Identification" :
-            $this->object->save($this->staging) ; break;
+            $this->object->save($this->staging) ;$this->object=null; $this->in_identification=false; break;
         case "IdentificationHistory" : $this->addComment(true, 'taxonomy'); break;
         case "ID-in-Database" : $this->object->desc .= "id in database :".$this->cdata." ;" ; break;
         case "ISODateTimeBegin" : if($this->getPreviousTag() == "DateTime")  { $this->object->GTUdate['from'] = $this->cdata ;} elseif($this->getPreviousTag() == "Date")  { $this->object->identification->setNotionDate(FuzzyDateTime::getValidDate($this->cdata)) ;} break;
@@ -402,6 +508,7 @@ class ImportABCDXml implements ImportModelsInterface
         case "storage:ContainerStorage" : $this->staging->setContainerStorage($this->cdata); break;
         case "storage:SubcontainerName" : $this->staging->setSubContainer($this->cdata) ; break;
         case "storage:SubcontainerType" : $this->staging->setSubContainerType($this->cdata); break;
+		case "storage:SpecimenStatus" : $this->staging->setSpecimenStatus($this->cdata); break;
         case "storage:SubcontainerStorage" : $this->staging->setSubContainerStorage($this->cdata); break;
         case "storage:Position" : $this->staging->setSubContainerType('position'); $this->staging->setSubContainer($this->cdata) ; break;
         case "Text":  if($this->getPreviousTag() == "Biotope") {
@@ -429,7 +536,7 @@ class ImportABCDXml implements ImportModelsInterface
         case "Version":
           $this->version_defined = true;
           $authorized = sfConfig::get('tpl_authorizedversion');
-          Doctrine::getTable('Imports')->find($this->import_id)->setTemplateVersion(trim($this->version))->save();
+          Doctrine_Core::getTable('Imports')->find($this->import_id)->setTemplateVersion(trim($this->version))->save();
           if(
             !isset( $authorized['specimens'] ) ||
             empty( $authorized['specimens'] ) ||
@@ -480,7 +587,7 @@ class ImportABCDXml implements ImportModelsInterface
         
 
 
-        if(string_isset($this->code_prefix)&&$category=="main")
+        if(string_isset($this->code_prefix)&&$category=="main"&& $this->add_collection_prefix)
         {
             $prefixTmp=$this->code_prefix;
             $sepFlag=FALSE;
@@ -500,7 +607,7 @@ class ImportABCDXml implements ImportModelsInterface
             }
             
         }
-        if(string_isset($this->code_suffix)&&$category=="main")
+        if(string_isset($this->code_suffix)&&$category=="main" && $this->add_collection_prefix)
         {
             $suffixTmp=$this->code_suffix;
             $sepFlag=FALSE;
@@ -521,7 +628,7 @@ class ImportABCDXml implements ImportModelsInterface
             
         }
         $code->setCode($tmpCode) ;
-        if(is_numeric($tmpCode)&&$this->collection_has_autoincrement&&$category=="main")
+        if(is_numeric($tmpCode)&&$this->collection_has_autoincrement&&$category=="main" )
         {
             print("test autoincrement");
             if((int)$tmpCode>(int)$this->collection_of_import->getCodeLastValue())
@@ -704,9 +811,18 @@ class ImportABCDXml implements ImportModelsInterface
   //know if collection is autoincremented
   private function getCollectionOfImport()
   {
-  	 $collection_ref=Doctrine::getTable('Imports')->find($this->import_id)->getCollectionRef();
-	 return Doctrine::getTable('Collections')->find($collection_ref);
+  	 $collection_ref=Doctrine_Core::getTable('Imports')->find($this->import_id)->getCollectionRef();
+	 return Doctrine_Core::getTable('Collections')->find($collection_ref);
   }
+  
+    private function getCollectionPrefixStatus()
+  {
+  	 $import=Doctrine_Core::getTable('Imports')->find($this->import_id);
+	 $flag= $import->getAddCollectionPrefix();
+	 return $flag;
+  }
+  
+  
   
   
   private function saveUnit()

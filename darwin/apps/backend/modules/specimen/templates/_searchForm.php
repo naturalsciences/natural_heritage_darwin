@@ -23,14 +23,17 @@
         <tr>
           <th><?php echo $form['code']->renderLabel() ?></th>
           <th><?php echo $form['ig_num']->renderLabel() ?></th>
-          <th></th>
+          <th><?php echo $form['uuid']->renderLabel() ?></th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td><?php echo $form['code']->render() ?></td>
           <td><?php echo $form['ig_num']->render() ?></td>
-          <td><?php echo $form->renderHiddenFields();?><input class="search_submit" type="submit" name="search" value="<?php echo __('Search'); ?>" /></td>
+		  <td><?php echo $form['uuid']->render() ?></td>
+		 </tr>
+		 <tr>
+          <td colspan="3"><?php echo $form->renderHiddenFields();?><input class="search_submit" type="submit" name="search" value="<?php echo __('Search'); ?>" /></td>
         </tr>
       </tbody>      
     </table>

@@ -58,6 +58,15 @@ function forceHelper(e,ui)
 
 $(document).ready(function()
 {
+	 //ftheeten 2020 12 11
+	try 
+	{
+	  $('body').trigger('close_modal');
+	}
+	catch(err) 
+	{
+	  
+	}
 
   $("#cataloguePeople .widget_sub_table tbody").sortable({
       placeholder: 'ui-state-highlight',

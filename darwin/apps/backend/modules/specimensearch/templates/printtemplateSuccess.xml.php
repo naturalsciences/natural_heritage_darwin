@@ -427,6 +427,8 @@ $field11Good2= LabelField::initialise('gtu > date_begin > month', array("line-he
 $field12Good2= LabelField::initialise('gtu > date_begin > year', array("line-height"=>"6pt","font-size"=> "6pt" ), NULL, -1,NULL,".",NULL, NULL);
 $field13Good2= LabelField::initialise('specimen_codes > specimen_code', array("line-height"=>"6pt","font-size"=> "6pt"   ), NULL, 1,"Mus R. Afr. Centr. ",".",NULL, NULL);
 
+$fieldCount_allforSmall= LabelField::initialise("specimen_count_max", array("padding-left"=>"3pt", "line-height"=>"6pt","font-size"=> "6pt"), "Spec. : ", 1,NULL,NULL,NULL, array("undefined"=>""), NULL, ".", "substring case insensitive");
+
 $fieldMaleforSmall= LabelField::initialise("specimen_count_males_min", array("padding-left"=>"3pt", "line-height"=>"6pt","font-size"=> "6pt"), html_entity_decode("&#9794;").": ", 1,NULL,NULL,NULL, array("undefined"=>""), NULL, ".", "substring case insensitive");
 
 $fieldFemaleforSmall= LabelField::initialise("specimen_count_females_min", array("padding-left"=>"3pt", "line-height"=>"6pt","font-size"=> "6pt"), html_entity_decode("&#9792;").": ", 1,NULL,NULL,NULL, array("undefined"=>""), NULL, ".", "substring case insensitive");
@@ -438,19 +440,20 @@ $tmpLabelGood2->addFieldIdx(1, 1,2,$field2Good2);
 //commented in ftheeten 2014 12 11
 //$tmpLabelGood2->addFieldIdx(2, 1,3,$field3Good2);
 //$tmpLabelGood2->addFieldIdx(3, 1,4,$field4Good2);
-$tmpLabelGood2->addFieldIdx(2, 1,3,$fieldMaleforSmall);
-$tmpLabelGood2->addFieldIdx(3, 1,4,$fieldFemaleforSmall);
-$tmpLabelGood2->addFieldIdx(4, 1,5,$fieldJuvenilesforSmall);
-$tmpLabelGood2->addFieldIdx(5, 2,1,$field5Good2);
-$tmpLabelGood2->addFieldIdx(6, 2,2,$field6Good2);
-$tmpLabelGood2->addFieldIdx(7, 3,1,$field7Good2);
-$tmpLabelGood2->addFieldIdx(8, 4,1,$field8Good2NoEcology);
-$tmpLabelGood2->addFieldIdx(9, 5,1,$field8Good2WithEcology);
-$tmpLabelGood2->addFieldIdx(10, 6,1,$field9Good2);
-$tmpLabelGood2->addFieldIdx(11, 6,2,$field10Good2);
-$tmpLabelGood2->addFieldIdx(12, 6,3,$field11Good2);
-$tmpLabelGood2->addFieldIdx(13, 6,4,$field12Good2);
-$tmpLabelGood2->addFieldIdx(14, 7,1,$field13Good2);
+$tmpLabelGood2->addFieldIdx(2, 1,3,$fieldCount_allforSmall);
+$tmpLabelGood2->addFieldIdx(3, 1,3,$fieldMaleforSmall);
+$tmpLabelGood2->addFieldIdx(4, 1,4,$fieldFemaleforSmall);
+$tmpLabelGood2->addFieldIdx(5, 1,5,$fieldJuvenilesforSmall);
+$tmpLabelGood2->addFieldIdx(6, 2,1,$field5Good2);
+$tmpLabelGood2->addFieldIdx(7, 2,2,$field6Good2);
+$tmpLabelGood2->addFieldIdx(8, 3,1,$field7Good2);
+$tmpLabelGood2->addFieldIdx(9, 4,1,$field8Good2NoEcology);
+$tmpLabelGood2->addFieldIdx(10, 5,1,$field8Good2WithEcology);
+$tmpLabelGood2->addFieldIdx(11, 6,1,$field9Good2);
+$tmpLabelGood2->addFieldIdx(12, 6,2,$field10Good2);
+$tmpLabelGood2->addFieldIdx(13, 6,3,$field11Good2);
+$tmpLabelGood2->addFieldIdx(14, 6,4,$field12Good2);
+$tmpLabelGood2->addFieldIdx(15, 7,1,$field13Good2);
 
 $tmpLabelGoodEcology=new Label("7*3 Good Ecology", 'search_result > specimens > specimen', "Test 7*3 Good Ecology", 7,3, array("line-height"=>"8pt","width"=> "58mm", "height"=>"28mm","border-style"=> "solid", "border-width"=>"1px", "font-family"=> "Arial,  Helvetica, sans-serif"), "true", 250, "true");
 
@@ -653,6 +656,53 @@ $barcodeEntomo->addFieldIdx(0, 1,1,$fieldIDSpecimenBarcode);
 $barcodeEntomo->addFieldIdx(2, 1,2,$fieldIDSpecimenEntomo);
 
 
+/**------------------**/
+$tmpLabelGood2021=new Label("8*3 Gastropoda 2021", 'search_result > specimens > specimen', "8*3 Gastropoda 2021", 8,3, array("width"=> "39mm", "height"=>"15mm","padding"=>"3mm", "line-height"=>"8pt", "overflow"=>"hidden", "font-family"=> "Arial,  Helvetica, sans-serif"), "true", -1, "true");
+//$field1= LabelField::initialise('abcd\\:UnitID', array("font-size"=> "4mm", " font-family"=>"\"Times New Roman\", Times, serif;", "font-style"=>"italic"), NULL, 1);
+
+$field1Good2021= LabelField::initialise('family', array("line-height"=>"6pt","font-size"=> "6pt"), NULL, 1);
+$field2Good2021= LabelField::initialise('type_information', array("line-height"=>"6pt", "padding-left"=>"3pt","font-size"=> "6pt"), NULL, 1,NULL,NULL,NULL, NULL);
+
+
+
+$field5Good2021= LabelField::initialise('taxon_without_author', array("line-height"=>"6pt","font-size"=> "6pt", "font-style"=>"italic"  ), NULL, 1,NULL,NULL,NULL, NULL);
+$field6Good2021= LabelField::initialise('taxon_author_part', array("line-height"=>"6pt","padding-left"=>"3pt", "font-size"=> "6pt" ), NULL, 1,NULL,NULL,NULL, NULL);
+$field7Good2021= LabelField::initialise('specimen_codes > specimen_code_additional', array("line-height"=>"6pt","font-size"=> "6pt","font-weight"=>"bold" ), "", 1,NULL,NULL,NULL, NULL);
+
+$field8Good2021NoEcology= LabelField::initialise('gtu > gtu_element > gtu_element_name:not(:contains(ecology)) ~ gtu_element_values > gtu_element_value', array("line-height"=>"6pt","font-size"=> "6pt"), "Loc. ", -1,NULL,NULL,".", Array("Africa"=>""));
+$field8Good2021WithEcology= LabelField::initialise('gtu > gtu_element > gtu_element_name::contains(ecology) ~ gtu_element_values > gtu_element_value', array("line-height"=>"6pt","font-size"=> "6pt"), "Eco. ", -1,NULL,NULL,".", Array("Africa"=>""));
+$field9Good2021= LabelField::initialise('collectors > collector > formated_name', array("line-height"=>"6pt","font-size"=> "6pt", "text-overflow" => "ellipsis" , "overflow"=>"hidden", "white-space" => "nowrap","padding-right"=>"3pt", "width" =>"65%" ), "Rec. ", -1,NULL,NULL,".", NULL, "50", "...");
+$field10Good2021= LabelField::initialise('gtu > date_begin > day', array("line-height"=>"6pt","font-size"=> "6pt" , "text-overflow" => "ellipsis" , "overflow"=>"hidden", "white-space" => "nowrap" ), NULL, -1,NULL,".",NULL, NULL);
+$field11Good2021= LabelField::initialise('gtu > date_begin > month', array("line-height"=>"6pt","font-size"=> "6pt" ), NULL, -1,NULL,".",NULL, Array("1"=>"I", "2"=>"II", "3"=>"III", "4"=>"IV", "5"=>"V", "6"=>"VI", "7"=>"VII", "8"=>"VIII", "9"=>"IX", "10"=>"X", "11"=>"XI", "12"=>"XII" ), NULL, ".", "full");
+$field12Good2021= LabelField::initialise('gtu > date_begin > year', array("line-height"=>"6pt","font-size"=> "6pt" ), NULL, -1,NULL,".",NULL, NULL);
+$field13Good2021= LabelField::initialise('specimen_codes > specimen_code', array("line-height"=>"6pt","font-size"=> "6pt"   ), NULL, 1,"Mus R. Afr. Centr. ",".",NULL, NULL);
+
+$fieldCount_allforSmall= LabelField::initialise("specimen_count_max", array("padding-left"=>"3pt", "line-height"=>"6pt","font-size"=> "6pt"), "Spec. : ", 1,NULL,NULL,NULL, array("undefined"=>""), NULL, ".", "substring case insensitive");
+
+$fieldMaleforSmall= LabelField::initialise("specimen_count_males_min", array("padding-left"=>"3pt", "line-height"=>"6pt","font-size"=> "6pt"), html_entity_decode("&#9794;").": ", 1,NULL,NULL,NULL, array("undefined"=>""), NULL, ".", "substring case insensitive");
+
+$fieldFemaleforSmall= LabelField::initialise("specimen_count_females_min", array("padding-left"=>"3pt", "line-height"=>"6pt","font-size"=> "6pt"), html_entity_decode("&#9792;").": ", 1,NULL,NULL,NULL, array("undefined"=>""), NULL, ".", "substring case insensitive");
+
+$fieldJuvenilesforSmall= LabelField::initialise("specimen_count_juveniles_min", array("padding-left"=>"3pt", "line-height"=>"6pt","font-size"=> "6pt"), "juv.: ", 1,NULL,NULL,NULL, array("undefined"=>""), NULL, ".", "substring case insensitive");
+
+$tmpLabelGood2021->addFieldIdx(0, 1,1,$field7Good2021);
+$tmpLabelGood2021->addFieldIdx(1, 2,1,$field1Good2021);
+$tmpLabelGood2021->addFieldIdx(2, 2,2,$field2Good2021);
+
+$tmpLabelGood2021->addFieldIdx(3, 2,3,$fieldCount_allforSmall);
+$tmpLabelGood2021->addFieldIdx(5, 2,3,$fieldMaleforSmall);
+$tmpLabelGood2021->addFieldIdx(5, 2,4,$fieldFemaleforSmall);
+$tmpLabelGood2021->addFieldIdx(6, 2,5,$fieldJuvenilesforSmall);
+$tmpLabelGood2021->addFieldIdx(7, 3,1,$field5Good2021);
+$tmpLabelGood2021->addFieldIdx(8, 3,2,$field6Good2021);
+
+$tmpLabelGood2021->addFieldIdx(9, 4,1,$field8Good2NoEcology);
+$tmpLabelGood2021->addFieldIdx(10, 5,1,$field8Good2WithEcology);
+$tmpLabelGood2021->addFieldIdx(11, 6,1,$field9Good2021);
+$tmpLabelGood2021->addFieldIdx(12, 6,2,$field10Good2021);
+$tmpLabelGood2021->addFieldIdx(13, 6,3,$field11Good2021);
+$tmpLabelGood2021->addFieldIdx(14, 6,4,$field12Good2021);
+$tmpLabelGood2021->addFieldIdx(15, 7,1,$field13Good2021);
 /*-------------------------------*/
 $labelGroup=new LabelGroup();
 $labelGroup->addLabelIdx(1,$tmpLabelGood );
@@ -661,6 +711,7 @@ $labelGroup->addLabelIdx(3,$tmpLabelGoodEcology );
 $labelGroup->addLabelIdx(4,$tmpLabelGoodEcologyFullLoc );
 $labelGroup->addLabelIdx(5,$tmpLabelIchtyo );
 $labelGroup->addLabelIdx(6,$barcodeEntomo );  
+$labelGroup->addLabelIdx(7,$tmpLabelGood2021 );
 
 
 

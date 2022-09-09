@@ -13,7 +13,8 @@
   <td class="col_container_storage"><?php echo html_entity_decode($specimen->getStoragePartFieldHTML("container_storage"));?></td> 
   <td class="col_sub_container"><?php echo html_entity_decode($specimen->getStoragePartFieldHTML("sub_container"));?></td> 
   <td class="col_sub_container_type"><?php echo html_entity_decode($specimen->getStoragePartFieldHTML("sub_container_type"));?></td> 
-  <td class="col_sub_container_storage"><?php echo html_entity_decode($specimen->getStoragePartFieldHTML("sub_container_storage"));?></td> 
+  <td class="col_sub_container_storage"><?php echo html_entity_decode($specimen->getStoragePartFieldHTML("sub_container_storage"));?>
+  <td class="col_specimen_creation_date"><?php echo html_entity_decode($specimen->getSpecimenCreationDate());?></td> 
   <?php endif ; ?>
 <td class="col_specimen_count">
   <?php if($specimen->getSpecimenCountMin() != $specimen->getSpecimenCountMax()):?>

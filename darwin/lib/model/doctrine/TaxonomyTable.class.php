@@ -226,10 +226,10 @@ WHERE taxonomy_level_ref= min_taxonomy_level_ref";
             ->orderBy("t.name");
 		}
 		$res= $q->execute();
-		if($addAll===TRUE)
+		/*if($addAll===TRUE)
 		{
 			$returned[''] = "All";
-		}
+		}*/
 		foreach($res as $row)
 		{
           if($with_taxon_ref)

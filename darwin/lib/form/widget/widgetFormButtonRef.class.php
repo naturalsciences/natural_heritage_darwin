@@ -98,7 +98,7 @@ $("#'.$this->generateId($name).'_button a.but_text").click(button_ref_modal);';
         if(array_key_exists('collection_ref_session',$_COOKIE ))
          {
 			
-			$findCol=Doctrine::getTable("Collections")->find($_COOKIE['collection_ref_session']);
+			$findCol=Doctrine_Core::getTable("Collections")->find($_COOKIE['collection_ref_session']);
 			if(!($findCol))
 		    {
 				
@@ -121,7 +121,7 @@ $("#'.$this->generateId($name).'_button a.but_text").click(button_ref_modal);';
         if(array_key_exists('institution_ref_session',$_COOKIE ))
          {
 			
-			$findCol=Doctrine::getTable("Institutions")->find($_COOKIE['institution_ref_session']);
+			$findCol=Doctrine_Core::getTable("Institutions")->find($_COOKIE['institution_ref_session']);
 			if(!($findCol))
 		    {
 				
@@ -147,7 +147,7 @@ $("#'.$this->generateId($name).'_button a.but_text").click(button_ref_modal);';
   public function getName($value, $default='')
   {
     if(is_numeric($value) && $value !=0)
-        $object = Doctrine::getTable($this->getOption('model'))->find($value);
+        $object = Doctrine_Core::getTable($this->getOption('model'))->find($value);
     else
         return $default;
     if(! $object)

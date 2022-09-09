@@ -15,7 +15,7 @@ class ExtLinks extends BaseExtLinks{
      /*RBINS values values*/
 	'no'=>'',
     'ext' => 'External',
-    'vc' => 'Virtual Collection',
+    'iiif' => 'IIIF',
 	'nagoya'=> 'Nagoya',
 	'ltp' => 'LTP',
 	/*RMCA values*/

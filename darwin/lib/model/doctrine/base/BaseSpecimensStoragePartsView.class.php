@@ -31,11 +31,14 @@
  * @property string $synonymy_status
  * @property integer $count_by_synonymy_status
  * @property integer $synonymy_count_all_in_group
- * @property varchar $nagoya
+ * @property string $nagoya
  * @property boolean $cites
  * @property string $determination_status
+ * @property string $specimen_creation_date
+ * @property string $collection_name_full_path
  * @property CollectionsRights $CollectionsRights
  * @property SubProperties $SubProperties
+ * @property LoanItems $LoanItems
  * 
  * @method integer                   getId()                          Returns the current record's "id" value
  * @method string                    getCategory()                    Returns the current record's "category" value
@@ -63,11 +66,14 @@
  * @method string                    getSynonymyStatus()              Returns the current record's "synonymy_status" value
  * @method integer                   getCountBySynonymyStatus()       Returns the current record's "count_by_synonymy_status" value
  * @method integer                   getSynonymyCountAllInGroup()     Returns the current record's "synonymy_count_all_in_group" value
- * @method varchar                   getNagoya()                      Returns the current record's "nagoya" value
+ * @method string                    getNagoya()                      Returns the current record's "nagoya" value
  * @method boolean                   getCites()                       Returns the current record's "cites" value
  * @method string                    getDeterminationStatus()         Returns the current record's "determination_status" value
+ * @method string                    getSpecimenCreationDate()        Returns the current record's "specimen_creation_date" value
+ * @method string                    getCollectionNameFullPath()      Returns the current record's "collection_name_full_path" value
  * @method CollectionsRights         getCollectionsRights()           Returns the current record's "CollectionsRights" value
  * @method SubProperties             getSubProperties()               Returns the current record's "SubProperties" value
+ * @method LoanItems                 getLoanItems()                   Returns the current record's "LoanItems" value
  * @method SpecimensStoragePartsView setId()                          Sets the current record's "id" value
  * @method SpecimensStoragePartsView setCategory()                    Sets the current record's "category" value
  * @method SpecimensStoragePartsView setSpecimenRef()                 Sets the current record's "specimen_ref" value
@@ -97,8 +103,11 @@
  * @method SpecimensStoragePartsView setNagoya()                      Sets the current record's "nagoya" value
  * @method SpecimensStoragePartsView setCites()                       Sets the current record's "cites" value
  * @method SpecimensStoragePartsView setDeterminationStatus()         Sets the current record's "determination_status" value
+ * @method SpecimensStoragePartsView setSpecimenCreationDate()        Sets the current record's "specimen_creation_date" value
+ * @method SpecimensStoragePartsView setCollectionNameFullPath()      Sets the current record's "collection_name_full_path" value
  * @method SpecimensStoragePartsView setCollectionsRights()           Sets the current record's "CollectionsRights" value
  * @method SpecimensStoragePartsView setSubProperties()               Sets the current record's "SubProperties" value
+ * @method SpecimensStoragePartsView setLoanItems()                   Sets the current record's "LoanItems" value
  * 
  * @package    darwin
  * @subpackage model
@@ -210,8 +219,8 @@ abstract class BaseSpecimensStoragePartsView extends Specimens
         $this->hasColumn('synonymy_count_all_in_group', 'integer', null, array(
              'type' => 'integer',
              ));
-        $this->hasColumn('nagoya', 'varchar', null, array(
-             'type' => 'varchar',
+        $this->hasColumn('nagoya', 'string', null, array(
+             'type' => 'string',
              'default' => true,
              ));
         $this->hasColumn('cites', 'boolean', null, array(
@@ -219,6 +228,13 @@ abstract class BaseSpecimensStoragePartsView extends Specimens
              'default' => false,
              ));
         $this->hasColumn('determination_status', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('specimen_creation_date', 'string', null, array(
+             'type' => 'string',
+             'notnull' => true,
+             ));
+        $this->hasColumn('collection_name_full_path', 'string', null, array(
              'type' => 'string',
              ));
     }
@@ -233,5 +249,9 @@ abstract class BaseSpecimensStoragePartsView extends Specimens
         $this->hasOne('SubProperties', array(
              'local' => 'id',
              'foreign' => 'record_id'));
+
+        $this->hasOne('LoanItems', array(
+             'local' => 'id',
+             'foreign' => 'specimen_ref'));
     }
 }

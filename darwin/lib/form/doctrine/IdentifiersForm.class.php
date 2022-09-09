@@ -16,7 +16,7 @@ class IdentifiersForm extends BaseCataloguePeopleForm
     $this->widgetSchema['people_type'] = new sfWidgetFormInputHidden(array('default'=>'identifier'));
     $people_id= $this->getObject()->getPeopleRef() ;
     $this->widgetSchema['people_ref'] = new sfWidgetFormInputHidden();
-    if($people_id) $this->widgetSchema['people_ref']->setLabel(Doctrine::getTable('People')->findPeople($people_id)->getFormatedName()) ;
+    if($people_id) $this->widgetSchema['people_ref']->setLabel(Doctrine_Core::getTable('People')->findPeople($people_id)->getFormatedName()) ;
     else $this->widgetSchema['people_ref']->setAttribute('class','hidden_record');
     
     $this->validatorSchema['people_ref'] = new sfValidatorInteger(array('required'=>false));

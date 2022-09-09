@@ -12,6 +12,7 @@
  * @property string $expedition_from_date
  * @property integer $expedition_to_date_mask
  * @property string $expedition_to_date
+ * @property Doctrine_Collection $Gtu
  * @property Doctrine_Collection $Specimens
  * 
  * @method integer             getId()                        Returns the current record's "id" value
@@ -21,6 +22,7 @@
  * @method string              getExpeditionFromDate()        Returns the current record's "expedition_from_date" value
  * @method integer             getExpeditionToDateMask()      Returns the current record's "expedition_to_date_mask" value
  * @method string              getExpeditionToDate()          Returns the current record's "expedition_to_date" value
+ * @method Doctrine_Collection getGtu()                       Returns the current record's "Gtu" collection
  * @method Doctrine_Collection getSpecimens()                 Returns the current record's "Specimens" collection
  * @method Expeditions         setId()                        Sets the current record's "id" value
  * @method Expeditions         setName()                      Sets the current record's "name" value
@@ -29,6 +31,7 @@
  * @method Expeditions         setExpeditionFromDate()        Sets the current record's "expedition_from_date" value
  * @method Expeditions         setExpeditionToDateMask()      Sets the current record's "expedition_to_date_mask" value
  * @method Expeditions         setExpeditionToDate()          Sets the current record's "expedition_to_date" value
+ * @method Expeditions         setGtu()                       Sets the current record's "Gtu" collection
  * @method Expeditions         setSpecimens()                 Sets the current record's "Specimens" collection
  * 
  * @package    darwin
@@ -76,6 +79,10 @@ abstract class BaseExpeditions extends DarwinModel
     public function setUp()
     {
         parent::setUp();
+        $this->hasMany('Gtu', array(
+             'local' => 'id',
+             'foreign' => 'expedition_ref'));
+
         $this->hasMany('Specimens', array(
              'local' => 'id',
              'foreign' => 'expedition_ref'));

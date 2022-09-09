@@ -6,7 +6,7 @@
  * @package    darwin
  * @subpackage filter
  * @author     DB team <darwin-ict@naturalsciences.be>
- * @version    SVN: $Id: sfDoctrineFormFilterGeneratedInheritanceTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
+ * @version    SVN: $Id$
  */
 abstract class BaseSpecimensStoragePartsViewFormFilter extends SpecimensFormFilter
 {
@@ -95,6 +95,9 @@ abstract class BaseSpecimensStoragePartsViewFormFilter extends SpecimensFormFilt
     $this->widgetSchema   ['determination_status'] = new sfWidgetFormFilterInput();
     $this->validatorSchema['determination_status'] = new sfValidatorPass(array('required' => false));
 
+    $this->widgetSchema   ['collection_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Collections'), 'add_empty' => true));
+    $this->validatorSchema['collection_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Collections'), 'column' => 'id'));
+
     $this->widgetSchema->setNameFormat('specimens_storage_parts_view_filters[%s]');
   }
 
@@ -133,6 +136,7 @@ abstract class BaseSpecimensStoragePartsViewFormFilter extends SpecimensFormFilt
       'synonymy_count_all_in_group' => 'Number',
       'cites' => 'Boolean',
       'determination_status' => 'Text',
+      'collection_ref' => 'ForeignKey',
     ));
   }
 }

@@ -13,7 +13,7 @@ class multimediaActions extends DarwinActions
   public function executeDownloadFile(sfWebRequest $request)
   {
     $this->setLayout(false);
-    $multimedia = Doctrine::getTable('Multimedia')->findOneById($request->getParameter('id')) ;
+    $multimedia = Doctrine_Core::getTable('Multimedia')->findOneById($request->getParameter('id')) ;
     if(!$multimedia || $multimedia->getReferencedRelation() == 'loans' || $multimedia->getReferencedRelation() == 'loan_items')
       $this->forward404('Multimedia not found or not authorized');
     $this->forward404If(!($multimedia->getVisible()));
@@ -38,7 +38,7 @@ class multimediaActions extends DarwinActions
   public function executePreview(sfWebRequest $request)
   {
     $this->setLayout(false);
-    $multimedia = Doctrine::getTable('Multimedia')->findOneById($request->getParameter('id')) ;
+    $multimedia = Doctrine_Core::getTable('Multimedia')->findOneById($request->getParameter('id')) ;
     if(! $multimedia || $multimedia->getReferencedRelation() == 'loans' || $multimedia->getReferencedRelation() == 'loan_items')
       $this->forwardToSecureAction('Multimedia not found or not authorized');
     $this->forward404If(!($multimedia->getVisible()));
