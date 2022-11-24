@@ -2384,10 +2384,10 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 
 	$query = DQ::create()
       ->select('s.*,
-
+(s.collection_ref in ('.implode(',',$this->encoding_collection).')) as has_encoding_rights,
         gtu_location[0] as latitude,
-        gtu_location[1] as longitude,
-        (collection_ref in ('.implode(',',$this->encoding_collection).')) as has_encoding_rights
+        gtu_location[1] as longitude
+        
         '
       )
       ->from('Specimens s');

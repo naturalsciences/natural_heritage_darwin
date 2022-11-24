@@ -160,6 +160,7 @@ class RMCATabImportFiles
 	
 	protected function logThrowError($ex, $message)
 	{
+		print("THROW");
 		$import_obj = Doctrine_Core::getTable('Imports')->find($this->import_id );
 		$import_obj->setErrorsInImport(Encoding::toUTF8($message));
 		$import_obj->setState("error");
@@ -170,12 +171,14 @@ class RMCATabImportFiles
 
   public function changeUri($record_id, $relation,$uri)
   {
+  print( sfConfig::get('sf_upload_dir')."/multimedia/".$this->getBuildedUrl($record_id, $relation,$uri));
     $this->checkUploadPathAvailable($record_id, $relation) ;
+	$tmp_uri=$this->getBuildedUrl($record_id, $relation,$uri);
     rename(
       sfConfig::get('sf_upload_dir')."/multimedia/temp/".$uri,
-      sfConfig::get('sf_upload_dir')."/multimedia/".$this->getBuildedUrl($record_id, $relation,$uri)
+      sfConfig::get('sf_upload_dir')."/multimedia/".$tmp_uri
     );
-   return $this->getBuildedUrl($record_id, $relation,$uri) ;
+   return $tmp_uri;
   }
   
   protected function checkUploadPathAvailable($record_id, $relation)
@@ -189,17 +192,19 @@ class RMCATabImportFiles
 
  public function getBuildedUrl($record_id, $relation,$uri)
   {
-    return $this->getBuildedDir($record_id, $relation).'/'.$uri;
+	$tmp_file_arr=explode("/",$uri);
+	$suffix=end($tmp_file_arr);
+    return $this->getBuildedDir($record_id, $relation).'/'.$suffix;
   }
 
   public function getBuildedDir($record_id, $relation)
   {
-    //Make something like multimedia/00/01/01/12  for the multimed of id= 10112
+    //Make something like multimedia/00/01/01/12  for the multimedia of id= 10112
     $num = sprintf('%08d', $record_id);
     return $relation.'/'.implode('/',str_split($num,'2'));
   }
 	
-	public function create_multimedia($p_filename, $p_record_id, $p_title=NULL, $p_description=NULL, $p_sub_type=NULL, $p_mime_type=NULL, $p_technical_parameters=NULL, $p_internet_protocol=NULL, $p_field_observations=NULL, $p_external_uri=NULL)
+	public function create_multimedia($p_filename, $p_record_id, $p_title=NULL, $p_description=NULL, $p_sub_type=NULL, $pdb_filenamedb_filename_mime_type=NULL, $p_technical_parameters=NULL, $p_internet_protocol=NULL, $p_field_observations=NULL, $p_external_uri=NULL)
 	{
 		try
 		{
@@ -209,6 +214,14 @@ class RMCATabImportFiles
 							//rename(sfConfig::get('sf_upload_dir')."/multimedia/temp/".$p_filename, sfConfig::get('sf_upload_dir')."/multimedia/temp/".$target_filename);
 							
 							$code=$this->zip->extractTo(sfConfig::get('sf_upload_dir')."/multimedia/temp/",$p_filename );
+							if($code)
+							{
+								print("ZIPPED");
+							}
+							else
+							{
+								print("NO_ZIP");
+							}
 							
 							$mime= mime_content_type(sfConfig::get('sf_upload_dir')."/multimedia/temp/".$p_filename);
 							
@@ -225,8 +238,10 @@ class RMCATabImportFiles
 							$sql= "INSERT INTO multimedia (referenced_relation, filename, uri, record_id, creation_date, mime_type, title, description, type, sub_type, technical_parameters, internet_protocol, field_observations, external_uri, import_ref) 
 													VALUES(:referenced_relation, :filename, :uri, :record_id, :creation_date, :mime_type, :title, :description, :type, :sub_type, :technical_parameters, :internet_protocol, :field_observations, :external_uri, :import_ref); ";
 							$q = $conn->prepare($sql);
+							$file_array=explode("/",$p_filename);
+							$file_suffix=end($file_array);
 							$q->execute(array(':referenced_relation'=>"specimens", 
-												":filename"=> $p_filename, 
+												":filename"=> $file_suffix, 
 												":uri"=>  $this->changeUri($p_record_id, "specimens",  $p_filename), 
 												":record_id"=> $p_record_id, 
 												":creation_date"=> date('Y-m-d'), 
@@ -328,6 +343,8 @@ class RMCATabImportFiles
         {
 			
 				//print($filename);
+				$dir = trim($this->zip->getNameIndex(0), '/');
+				$filename=$dir."/".$filename;
 				$file=$this->zip->getFromName($filename);
 				if($file)
 				{
@@ -396,6 +413,7 @@ class RMCATabImportFiles
 				else
 				{
 					print("file not found");
+					$this->logThrowError(new Exception("file not found : ".$filename),"file not found : ".$filename);
 				}
 			
 		}

@@ -6,7 +6,7 @@ class RMCATabTaxonomyDirect
     protected $headers_inverted=Array();
     protected $name_cluster=0;
     protected $last_subspecific=-1;
-    protected $last_subspecific_calculated=false;
+    //protected $last_subspecific_calculated=false;
     protected $tab_for_full_name=Array();
     protected $explodedVal=Array();
 	protected $parent;
@@ -195,21 +195,23 @@ class RMCATabTaxonomyDirect
         
             if($level_ref<=54)
             {
-                $this->explodedVal=explode(" ",$name);
+                $this->explodedVal=explode(" ",trim($name));
 				$this->explodedVal = array_map('trim', $this->explodedVal);
-                
-                if($level_ref>48&&$this->last_subspecific_calculated===false)
+                print("EXPLODED_VAL\n");
+				print_r($this->explodedVal);
+				 print("\n");
+                if($level_ref>48)//&&$this->last_subspecific_calculated===false)
                 {
 					$this->last_subspecific=$this->getLastSubspecificRank($this->row);
 					//print(" last_subspecific = ".$last_subspecific);
-					$this->$last_subspecific_calculated=true;
+					//$this->last_subspecific_calculated=true;
 				}
                 if($level_ref>=41)
                 {
                     $first_char=substr(trim($this->explodedVal[0]),0,1);
                     if(count($this->explodedVal)>1)//&&strtoupper($first_char)==$first_char)
 					{
-							
+						print("FULL_NAME\n");
 						//tab_for_full_name is an array
 						$this->tab_for_full_name=$this->explodedVal;
 								
@@ -217,6 +219,7 @@ class RMCATabTaxonomyDirect
                     else
                     {
 						//concatenate arrays ? probably genus= Canis species = lupus
+						print("\nCONCAT________\n");
                         $this->tab_for_full_name=array_merge($this->tab_for_full_name,$this->explodedVal );
                                 
                     }
@@ -256,6 +259,9 @@ class RMCATabTaxonomyDirect
                          //throw new Exception('Name not in binomial form for '.$tab_for_full_name[0]);
                     }
                     $name=implode(' ',$this->tab_for_full_name );
+					print("NAME AFTER CONCAT\n");
+					print($name);
+					print("\n");
                 }
                 else
                 {
@@ -298,6 +304,7 @@ class RMCATabTaxonomyDirect
   }
     protected function isset_and_not_null($param)
   {
+	  $param=trim($param);
 	  $returned=false;
 	  if(isset($param))
 	  {

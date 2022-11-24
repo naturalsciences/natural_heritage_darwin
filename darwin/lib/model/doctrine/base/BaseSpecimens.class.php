@@ -132,7 +132,6 @@
  * @property string $uuid
  * @property string $ig_main_code_indexed
  * @property integer $mids_level
- * @property string $collection_name_full_path
  * @property Collections $Collections
  * @property Expeditions $Expeditions
  * @property Gtu $Gtu
@@ -287,7 +286,6 @@
  * @method string                           getUuid()                             Returns the current record's "uuid" value
  * @method string                           getIgMainCodeIndexed()                Returns the current record's "ig_main_code_indexed" value
  * @method integer                          getMidsLevel()                        Returns the current record's "mids_level" value
- * @method string                           getCollectionNameFullPath()           Returns the current record's "collection_name_full_path" value
  * @method Collections                      getCollections()                      Returns the current record's "Collections" value
  * @method Expeditions                      getExpeditions()                      Returns the current record's "Expeditions" value
  * @method Gtu                              getGtu()                              Returns the current record's "Gtu" value
@@ -441,7 +439,6 @@
  * @method Specimens                        setUuid()                             Sets the current record's "uuid" value
  * @method Specimens                        setIgMainCodeIndexed()                Sets the current record's "ig_main_code_indexed" value
  * @method Specimens                        setMidsLevel()                        Sets the current record's "mids_level" value
- * @method Specimens                        setCollectionNameFullPath()           Sets the current record's "collection_name_full_path" value
  * @method Specimens                        setCollections()                      Sets the current record's "Collections" value
  * @method Specimens                        setExpeditions()                      Sets the current record's "Expeditions" value
  * @method Specimens                        setGtu()                              Sets the current record's "Gtu" value
@@ -915,9 +912,6 @@ abstract class BaseSpecimens extends DarwinModel
              ));
         $this->hasColumn('mids_level', 'integer', null, array(
              'type' => 'integer',
-             ));
-        $this->hasColumn('collection_name_full_path', 'string', null, array(
-             'type' => 'string',
              ));
     }
 

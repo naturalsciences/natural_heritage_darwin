@@ -44,7 +44,15 @@ EOF;
                                                        and i.state='deleted' 
                                                     limit $batch_nbr
                                                    );";
+       $sql2 = "delete from staging_gtu where ctid = ANY (select s.ctid 
+                                                    from staging_gtu s 
+                                                    inner join imports i 
+                                                       on s.import_ref = i.id 
+                                                       and i.state='deleted' 
+                                                    limit $batch_nbr
+                                                   );";
       $ctn = $conn->getDbh()->exec($sql);
+	  $ctn = $conn->getDbh()->exec($sql2);
 
       // Remove the import reference from imports table if no more lines in staging for this import
       $sql = "delete from imports i WHERE i.state='deleted' AND NOT EXISTS (select 1 from staging where import_ref = i.id)";

@@ -62,8 +62,6 @@ EOF;
                 break;
 				//ftheeten 2018 07 15 				
               case 'locality':
-
-				 //fwrite($myfile, "\n!!!!!!!!!!!!!!!!!GTU detected!!!!!!!!!!!!!!!!!!");
 				$import = new ImportGtuCSV() ;
 				$result = $import->parseFile($file,$id) ;
                 $count_line = "(select count(*) from staging_gtu where import_ref = $id )" ;

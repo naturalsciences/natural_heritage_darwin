@@ -8,7 +8,16 @@
           'data-manid'=> $spec->getCollections()->getMainManagerRef(),
           'data-staffid'=> $spec->getCollections()->getStaffRef())
           );?>
-        <?php echo trim($spec->getCollectionNameFullPath(), "/");?>
+        <?php if($sf_user->isAtLeast(Users::ADMIN) || ($sf_user->isAtLeast(Users::MANAGER) )) : ?>  
+		  <?php 		  
+		  $assoc_cols=explode("|",trim(Collections::getCollectionPathName($spec->getCollectionRef(), $sf_user),'|'));			
+           array_walk($assoc_cols, function(&$k, $v){ $k=link_to($k,url_for('collection/statistics?id='.$v), array('target' => '_blank')); });         	   
+		   $full_urls=implode("/",$assoc_cols);		  
+		  ?>
+          <?php print($full_urls);?>
+        <?php else : ?>
+         <?php echo trim(implode("/",Collections::getCollectionPathName($spec->getCollectionRef(), $sf_user)),"/");?></a>
+        <?php endif ; ?>
       </td>
     </tr>
     

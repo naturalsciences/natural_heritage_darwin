@@ -161,6 +161,7 @@
                   <?php echo link_to(image_tag('duplicate.png', array("title" => __("Duplicate"))),$searchForm->getValue('table').'/new?duplicate_id='.$item->getId(),array('target'=>"_blank"));?>
 				  <?php if($searchForm->getValue('table')=="taxonomy"):?>
 					 <?php echo link_to(image_tag('csv.png', array("title" => __("File export"))),$searchForm->getValue('table').'/downloadTaxon?taxon_ref='.$item->getId(),array('target'=>"_blank"));?>
+					  <?php echo link_to(image_tag('catalogueoflife.png', array("title" => __("CoL report"))),$searchForm->getValue('table').'/checkCatalogueOfLife?taxon_ref='.$item->getId(),array('target'=>"_blank"));?>
 				  <?php endif;?>
                 <?php endif ; ?>
               <?php else:?>

@@ -11,7 +11,7 @@ class MaExpeditionRefForm extends BaseForm
       'box_title' => $this->getI18N()->__('Choose Expedition'),
       'nullable' => true,
       'button_class'=>'',
-      'complete_url' => 'catalogue/completeName?table=expedetitions',
+      'complete_url' => 'catalogue/completeName?table=expeditions',
     ));
 
     $this->widgetSchema['expedition_ref']->setLabel('Choose New Expedition');

@@ -270,7 +270,7 @@ class SpecimensForm extends BaseSpecimensForm
       'add_empty' => false,
       'change_label' => 'Pick parts in the list',
       'add_label' => 'Add another part',
-    ));
+    ), array("style"=>"max-width: 420px"));
 
     $this->widgetSchema['institution_ref'] = new widgetFormCompleteButtonRef(array(
       'model' => 'Institutions',
@@ -293,7 +293,7 @@ class SpecimensForm extends BaseSpecimensForm
       'add_empty' => true,
       'change_label' => 'Pick a building in the list',
       'add_label' => 'Add another building',
-    ));
+    ) , array("style"=>"max-width: 420px"));
 
     $this->widgetSchema['floor'] = new widgetFormSelectComplete(array(
       'model' => 'Specimens',
@@ -303,7 +303,7 @@ class SpecimensForm extends BaseSpecimensForm
       'add_empty' => true,
       'change_label' => 'Pick a floor in the list',
       'add_label' => 'Add another floor',
-    ));
+    ), array("style"=>"max-width: 420px"));
 
     $this->widgetSchema['row'] = new widgetFormSelectComplete(array(
       'model' => 'Specimens',
@@ -313,7 +313,7 @@ class SpecimensForm extends BaseSpecimensForm
       'add_empty' => true,
       'change_label' => 'Pick a row in the list',
       'add_label' => 'Add another row',
-    ));
+    ), array("style"=>"max-width: 420px"),);
 
 
     $this->widgetSchema['col'] = new widgetFormSelectComplete(array(
@@ -324,7 +324,7 @@ class SpecimensForm extends BaseSpecimensForm
       'add_empty' => true,
       'change_label' => 'Pick a col in the list',
       'add_label' => 'Add another col',
-    ));
+    ), array("style"=>"max-width: 420px"));
 
     $this->widgetSchema['room'] = new widgetFormSelectComplete(array(
       'model' => 'Specimens',
@@ -334,7 +334,7 @@ class SpecimensForm extends BaseSpecimensForm
       'add_empty' => true,
       'change_label' => 'Pick a room in the list',
       'add_label' => 'Add another room',
-    ));
+    ), array("style"=>"max-width: 420px"));
 
     $this->widgetSchema['shelf'] = new widgetFormSelectComplete(array(
       'model' => 'Specimens',
@@ -344,7 +344,7 @@ class SpecimensForm extends BaseSpecimensForm
       'add_empty' => true,
       'change_label' => 'Pick a shelf in the list',
       'add_label' => 'Add another shelf',
-    ));
+    ), array("style"=>"max-width: 420px"));
 
     $this->widgetSchema['container_type'] = new widgetFormSelectComplete(array(
       'model' => 'Specimens',
@@ -354,7 +354,7 @@ class SpecimensForm extends BaseSpecimensForm
       'add_empty' => true,
       'change_label' => 'Pick a container in the list',
       'add_label' => 'Add another container',
-      ));
+      ), array("style"=>"max-width: 420px"));
 
     $this->widgetSchema['sub_container_type'] = new widgetFormSelectComplete(array(
       'model' => 'Specimens',
@@ -364,7 +364,7 @@ class SpecimensForm extends BaseSpecimensForm
       'add_empty' => true,
       'change_label' => 'Pick a sub container type in the list',
       'add_label' => 'Add another sub container type',
-    ));
+    ), array("style"=>"max-width: 420px"));
 
     $this->widgetSchema['specimen_status'] = new widgetFormSelectComplete(array(
       'model' => 'Specimens',
@@ -374,7 +374,7 @@ class SpecimensForm extends BaseSpecimensForm
       'add_empty' => true,
       'change_label' => 'Pick a status in the list',
       'add_label' => 'Add another status',
-    ));
+    ), array("style"=>"max-width: 420px"));
 
     $this->widgetSchema['container'] = new sfWidgetFormInput();
     $this->widgetSchema['sub_container'] = new sfWidgetFormInput();

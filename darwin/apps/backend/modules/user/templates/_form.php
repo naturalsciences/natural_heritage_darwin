@@ -98,6 +98,15 @@
           <?php echo $form['default_widget_collection_ref'] ?>
         </td>
       </tr>
+	  <?php if($source=="edit"):?>
+	  <tr>
+        <th><?php echo $form['db_user_type']->renderLabel() ?></th>
+        <td>
+          <?php echo $form['db_user_type']->renderError() ?>
+          <?php echo $form['db_user_type'] ?>
+        </td>
+      </tr>
+	  <?php endif;?>
       <?php if(!$form->getObject()->isNew()) : ?>
         <tr>
           <td colspan="2"><hr /></td>

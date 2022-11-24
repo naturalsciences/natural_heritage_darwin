@@ -13,10 +13,15 @@
     <td  class="col_collection">
       <?php if($specimen->getCollectionRef() > 0) : ?>
         <?php echo image_tag('info.png',"title=info class=info id=collection_".$specimen->getId()."_info");?>
-        <?php if($sf_user->isAtLeast(Users::ADMIN) || ($sf_user->isAtLeast(Users::MANAGER) && $specimen->getHasEncodingRights())) : ?>           
-          <a href="<?php echo url_for('collection/edit?id='.$specimen->getCollectionRef());?>"><?php echo trim($specimen->getCollectionNameFullPath(), "/");?></a>
+		
+        <?php if($sf_user->isAtLeast(Users::ADMIN) || ($sf_user->isAtLeast(Users::MANAGER) && $specimen->getHasEncodingRights())) : ?>   
+		  <?php $assoc_cols=explode("|",trim(Collections::getCollectionPathName($specimen->getCollectionRef(), $sf_user),'|'));	
+           array_walk($assoc_cols, function(&$k, $v){ $k=link_to($k,url_for('collection/statistics?id='.$v), array('target' => '_blank')); });         	   
+		   $full_urls=implode("/",$assoc_cols);		  
+		  ?>
+          <?php print($full_urls);?>
         <?php else : ?>
-         <?php echo trim($specimen->getCollectionNameFullPath(), "/");?></a>
+         <?php echo trim(implode("/",Collections::getCollectionPathName($specimen->getCollectionRef(), $sf_user)), "/");?></a>
         <?php endif ; ?>
         <div id="collection_<?php echo $specimen->getId();?>_tree" class="tree"></div>
         <script type="text/javascript">
