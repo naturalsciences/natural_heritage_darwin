@@ -162,13 +162,12 @@ class DarwinActions extends sfActions
   
   protected function loadWidgets_profile($id_profile,  $id = null,$collection = null)
   {
-  print("PROFILE");
+
 	 $this->__set('widgetCategory',$this->widgetCategory);   
-  print($this->widgetCategory);  
+
     if($id === null) {
       $id = $this->getUser()->getId();
     }
-	print($this->getUser()->getDbUserType());
     $this->widgets = Doctrine_Core::getTable('WidgetProfiles')
       ->setProfileRef($id_profile)
       ->setDbUserType($this->getUser()->getDbUserType())
@@ -177,7 +176,6 @@ class DarwinActions extends sfActions
  
     if(! $this->widgets)
 	{	
-		print("nullify");
 		$this->widgets=array();
 	}
   }

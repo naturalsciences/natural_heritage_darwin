@@ -51,6 +51,8 @@ class BaseMassActionForm extends sfFormSymfony
         'add_property' => self::getI18N()->__('Add property in specimen'),
         'add_gtu_tag' => self::getI18N()->__('Add Locality tag'),
         'sampling_date' => self::getI18N()->__('Change Sampling date'),
+		'collectors' => self::getI18N()->__('Replace collectors'),
+		'donators' => self::getI18N()->__('Replace donators of sellers'),
     );
     return $result;
   }
@@ -133,26 +135,37 @@ class BaseMassActionForm extends sfFormSymfony
       return 'MaAddGtuTagForm';
    elseif($action == 'sampling_date')
       return 'MaSamplingDateForm';
+   elseif($action == 'collectors')
+      return 'MaCollectorForm';	
+   elseif($action == 'donators')
+      return 'MaDonatorForm';	 	  
+	  
     else
       return 'sfForm';
   }
 
   public function doMassAction($user_id, $is_admin = false)
   {
+    
     if($this->isBound() && $this->isValid())
     {
+	   
       $_SESSION['mass_action_messages']=Array();
       $actions_values = $this->getValue('MassActionForm');
-
+	
       $query = Doctrine_Query::create()->update('Specimens s');
       if($is_admin === false)
+	  {
         $query->andWhere('s.id in (select fct_filter_encodable_row(?,?,?))', array(implode(',',$this->getValue('item_list')),'spec_ref', $user_id));
+	  }
       else
+	  {
         $query->andWhere('s.id in ('. implode(',',$this->getValue('item_list')) .')');
-
+	  }
       $group_action = 0;
       foreach($this->embeddedForms['MassActionForm'] as $key=> $form)
       {
+		print($key);
         if (method_exists($this->getEmbeddedForm('MassActionForm')->getEmbeddedForm($key), 'doGroupedAction')) {
           $this->getEmbeddedForm('MassActionForm')->getEmbeddedForm($key)->doGroupedAction($query, $actions_values[$key], $this->getValue('item_list'));
           $group_action++;
@@ -177,9 +190,20 @@ class BaseMassActionForm extends sfFormSymfony
       //Re-embedding the container
     $this->embedForm('MassActionForm', $this->embeddedForms['MassActionForm']);
   }
+  
+
+  
+  public function add_people($name_action, $num)
+  {
+	 $tmp=$this->getEmbeddedForm('MassActionForm')->getEmbeddedForm($name_action)->addPeopleValue($num);
+	 return $tmp;
+	
+	
+  }
 
   public function bind(array $taintedValues = null, array $taintedFiles = null)
   {
+	
     if(
       isset($taintedValues['field_action'])
       && is_array(($taintedValues['field_action']))
@@ -198,6 +222,7 @@ class BaseMassActionForm extends sfFormSymfony
           $this->addSubForm($form_name);
       }
     }
+
     parent::bind($taintedValues,$taintedFiles);
   }
 

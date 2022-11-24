@@ -359,8 +359,8 @@ class importActions extends DarwinActions
   }
   
     //ftheeten 2017 08 28 (end)
-    public function executeLoadstaging(sfWebRequest $request)
-    {
+  public function executeLoadstaging(sfWebRequest $request)
+  {
   
         $idImport=$request->getParameter("id");
         $importTmp=Doctrine_Core::getTable("Imports")->find($idImport);
@@ -603,7 +603,7 @@ EOF
       chdir(sfconfig::get('sf_root_dir')); 
   
        $cmd='darwin:import-gtu --id='.$idImport;          
-      exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+      exec('nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );
 
       chdir($currentDir);	 
 	  $this->redirect('import/indexLocalities');

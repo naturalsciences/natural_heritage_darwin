@@ -238,7 +238,7 @@ Gtu:
         location: {type: string}
         #JMHerpers 2019 05 07
         nagoya: { type: string, notnull: true, default: 'not defined'}
-    #ftheeten 2018 12 11
+        #ftheeten 2018 12 11
         expedition_ref: {type: ref}
     relations:
         Tags:
@@ -1002,8 +1002,7 @@ Specimens:
         nagoya: { type: string, notnull: true, default: 'not defined'}
         uuid: { type: string}
         ig_main_code_indexed: { type: string}
-        mids_level: {type: integer}
-        collection_name_full_path : {type: string}    
+        mids_level: {type: integer}  
     relations:
         Collections:
             local: collection_ref
@@ -2371,3 +2370,76 @@ WidgetProfilesDefinition:
             class: WidgetProfiles
             local: profile_ref
             foreign: id
+            
+VCollectionsFullPathRecursive:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true}
+        collection_type: { type: enum, notnull: true, default: mix, values: [mix, observation, physical] }
+        code: { type: string, notnull: true}
+        name: { type: string, notnull: true}
+        name_indexed: { type: string}
+        institution_ref: { type: integer, notnull: true}
+        main_manager_ref: { type: integer, notnull: true}
+        staff_ref: { type: integer}
+        parent_ref: { type: integer}
+        path: { type: string, notnull: true, default: '/'}
+        code_auto_increment: { type: boolean, notnull: true, default: false}
+        code_auto_increment_for_insert_only: { type: boolean, notnull: true, default: true}
+        code_last_value: { type: integer, notnull: true, default: 0}
+        code_prefix: { type: string}
+        code_prefix_separator: { type: string}
+        code_suffix: { type: string}
+        code_suffix_separator: { type: string}
+        code_specimen_duplicate: { type: boolean, notnull: true, default: false}
+        is_public: { type:boolean, notnull:true,default:true}
+        code_mask: { type: string}
+        #ftheeten 2018 08 08
+        allow_duplicates: { type:boolean, notnull:true,default:false}
+        code_ai_inherit: { type: boolean, notnull: true, default: false}
+        #JMHerpers 2019 05 07
+        nagoya: { type: string, notnull: true, default: 'not defined'}
+        preferred_taxonomy: {type: integer}
+        uid : {type: string}
+        code_full_path:  {type: string}
+        name_full_path:  {type: string}
+        
+        
+VCodesSeries:
+  inheritance:
+    type:             concrete
+    extends:          Codes
+  columns:
+        id: { type: integer, primary: true, autoincrement: true}
+        referenced_relation : { type: string, notnull: true}
+        record_id: { type: integer, notnull: true}
+        code_category: { type: string, notnull: true, default: main}
+        code_prefix: { type: string}
+        code_prefix_separator: { type: string}
+        code: { type: string}
+        code_suffix: { type: string}
+        code_suffix_separator: { type: string}
+        full_code_indexed: { type: string}
+        code_date: { type: string}
+        code_date_mask: { type: integer, notnull: true, default:0}
+        code_full: {type: string},
+        serie_indexed: {type: string}
+
+MvCodesSeries:
+  inheritance:
+    type:             concrete
+    extends:          Codes
+  columns:
+        id: { type: integer, primary: true, autoincrement: true}
+        referenced_relation : { type: string, notnull: true}
+        record_id: { type: integer, notnull: true}
+        code_category: { type: string, notnull: true, default: main}
+        code_prefix: { type: string}
+        code_prefix_separator: { type: string}
+        code: { type: string}
+        code_suffix: { type: string}
+        code_suffix_separator: { type: string}
+        full_code_indexed: { type: string}
+        code_date: { type: string}
+        code_date_mask: { type: integer, notnull: true, default:0}
+        code_full: {type: string},
+        serie_indexed: {type: string}

@@ -3,6 +3,7 @@
   <div class="import_filter">
     <?php 
 		//ftheeten 2018 07 15
+
 		if($format=="taxon")
 		{
 			$path='import/searchCatalogue';
@@ -33,6 +34,7 @@
 			$path='import/searchLinks';
 			
 		}
+	
 		print(form_tag($path, array('class'=>'search_form','id'=>'import_filter')));?>
   <div class="container">
     <table class="search" id="search">

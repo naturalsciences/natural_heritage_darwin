@@ -11,7 +11,7 @@
 <span>
 	   <div id="iiif_map" class="map" style="width: 100%; height:500px; display:inline-block"></div>
 	   <select id="iiif_chooser" name="iiif_chooser"></select>
-       <a href="<?php print( sfConfig::get('dw_iiif_viewer').$link->getUrl());?>" target="_blank" class='complete_widget'>
+		<a href="<?php print( sfConfig::get('dw_iiif_viewer').$link->getUrl());?>" target="_blank" class='complete_widget'>
         <?php echo __('To IIIF Viewer for full screen');?>
       </a>
                   
