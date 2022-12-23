@@ -18,6 +18,7 @@ class CodesForm extends BaseCodesForm
     $this->widgetSchema['code_category'] = new sfWidgetFormChoice(array(
         'choices' => Codes::getCategories()
       ));
+	 $this->widgetSchema['code_category']->setAttributes(array('class'=>'code_category'));
     $this->validatorSchema['code_category'] = new sfValidatorChoice(array('required' => false, 'choices'=>array_keys(Codes::getCategories())));
     $this->widgetSchema['code_prefix'] = new sfWidgetFormInput();
     $this->widgetSchema['code_prefix']->setAttributes(array('class'=>'lsmall_size'));
@@ -34,7 +35,7 @@ class CodesForm extends BaseCodesForm
     $this->widgetSchema['code_prefix_separator']->setAttributes(array('class'=>'vvsmall_size'));
     $this->widgetSchema['code'] = new sfWidgetFormInput();
 	//mrac 2015 06 03 new css class 'mrac_input_mask' for input mask
-    $this->widgetSchema['code']->setAttributes(array('class'=>'medium_small_size mrac_input_mask'));
+    $this->widgetSchema['code']->setAttributes(array('class'=>'medium_small_size mrac_input_mask main_code'));
     $this->validatorSchema['code'] = new sfValidatorString(array('required' => false, 'trim'=>true));
     $this->widgetSchema['code_suffix'] = new sfWidgetFormInput();
     $this->widgetSchema['code_suffix']->setAttributes(array('class'=>'lsmall_size'));

@@ -2,7 +2,6 @@
 <?php use_javascripts_for_form($form) ?>
 
 <?php echo form_tag('user/'.($form->getObject()->isNew() ? 'create' : 'edit?id='.$form->getObject()->getId()), array('class'=>'edition'));?>
-
   <table>
     <tbody>
       <?php echo $form->renderGlobalErrors() ?>
@@ -99,6 +98,24 @@
           <?php echo $form['user_ip'] ?>
         </td>
       </tr>
+	  <?php if($is_admin===true):?>
+	  <tr>
+        <th><?php echo $form['db_user_type']->renderLabel() ?></th>
+        <td>
+          <?php echo $form['db_user_type']->renderError() ?>
+          <?php echo $form['db_user_type'] ?>
+        </td>
+      </tr>
+	  <?php elseif($is_admin===false): ?>
+	  <tr style="display:none;">
+        <th style="display:none;"><?php echo $form['db_user_type']->renderLabel() ?></th>
+        <td style="display:none;">
+          <?php echo $form['db_user_type']->renderError() ?>
+          <?php echo $form['db_user_type'] ?>
+        </td>
+      </tr>
+	  
+	  <?php endif;?>
       <?php if(!$form->getObject()->isNew()) : ?>
         <tr>
           <td colspan="2"><hr /></td>

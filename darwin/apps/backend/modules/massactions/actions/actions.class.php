@@ -52,4 +52,24 @@ class massactionsActions extends DarwinActions
     $this->form = new BaseMassActionForm();
     $this->form->addSubForm($this->mAction);
   }
+  
+   public function executeAddPeople(sfWebRequest $request)
+  {
+    $number = intval($request->getParameter('num'));
+	$this->form = new BaseMassActionForm();
+	$this->form->addSubForm("collectors");
+	$sub_form=$this->form->add_people("collectors", $number);
+	
+	return $this->renderPartial('addPeople',array('form' => $sub_form, 'row_line'=>$number));
+  }
+  
+   public function executeAddDonator(sfWebRequest $request)
+  {
+    $number = intval($request->getParameter('num'));
+	$this->form = new BaseMassActionForm();
+	$this->form->addSubForm("donators");
+	$sub_form=$this->form->add_people("donators", $number);
+	
+	return $this->renderPartial('addDonator',array('form' => $sub_form, 'row_line'=>$number));
+  }
 }

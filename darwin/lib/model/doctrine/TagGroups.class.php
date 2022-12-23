@@ -6,6 +6,7 @@
 class TagGroups extends BaseTagGroups
 {
   private static $groups =  array(
+	  'administrative' => 'Administrative',
       'administrative area' => 'Administrative area',
       'topographic' => 'Topographic structure',
       'hydrographic' => 'Hydrographic',

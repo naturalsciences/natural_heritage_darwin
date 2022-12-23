@@ -1,20 +1,60 @@
 <?php
 class LoanOverviewForm extends sfForm
 {
-
+  
   public function configure()
   {
+	$size_page=25;
     $subForm = new sfForm();
     if(isset($this->options['no_load']))
+	{
       $items = array();
-    else
-      $items = Doctrine_Core::getTable('LoanItems')->findForLoan($this->options['loan']->getId());
-    foreach ($items as $index => $childObject)
-    {
-      $form = new LoanItemsForm($childObject);
-      $subForm->embedForm($index, $form);
-     // $subForm->getWidgetSchema()->setLabel($index, (string) $childObject);
     }
+	else
+	{
+      $items = Doctrine_Core::getTable('LoanItems')->findForLoan($this->options['loan']->getId());
+    }
+	 $nb_page=1;
+	 $offset=1;
+	if(count($items)<=$size_page)
+	{
+		foreach ($items as $index => $childObject)
+		{
+		 
+		  $form = new LoanItemsForm($childObject);
+		  $subForm->embedForm($index, $form);
+		 // $subForm->getWidgetSchema()->setLabel($index, (string) $childObject);
+		}
+	}
+	else
+	{
+		$nb_page=ceil(count($items)/$size_page);
+		$current_page=1;
+		if(array_key_exists('current_page', $this->options))
+		{
+			$test_page=$this->options['current_page'];
+			if(strlen($test_page)>0)
+			{
+			  if(is_numeric($test_page))
+			  {
+				  if((int)$test_page>=1&&(int)$test_page<=$nb_page)
+				  {
+					  $current_page=(int)$test_page;
+					  
+				  }
+			  }
+			}
+			$offset=($current_page-1)*$size_page;
+			
+			for($i=$offset;$i<min($offset+$size_page,count($items));$i++)
+			{
+				$childObject=$items[$i];
+				$form = new LoanItemsForm($childObject);
+				$subForm->embedForm($i, $form);
+			}
+		}
+		
+	}
     $this->embedForm('LoanItems', $subForm);
 
     $subForm2 = new sfForm();
@@ -30,7 +70,33 @@ class LoanOverviewForm extends sfForm
     $this->widgetSchema['selected_id']= new sfWidgetFormInputHidden();
     $this->widgetSchema['selected_id']->setAttributes(array('class'=>'catch_selection'));
     $this->validatorSchema['selected_id'] = new sfValidatorPass();
+	$this->widgetSchema['nb_pages']= new sfWidgetFormInputHidden(array("default"=>$nb_page));
+	$this->validatorSchema['nb_pages'] = new sfValidatorPass();
+	$this->widgetSchema['nb_specimens']= new sfWidgetFormInput(array("default"=>count($items)));
+	 $this->widgetSchema['nb_specimens']->setAttributes(array('readonly'=>'readonly','class'=>'vvvsmall_size'));
+	$this->validatorSchema['nb_specimens'] = new sfValidatorPass();
+	$this->widgetSchema['offset']= new sfWidgetFormInputHidden(array("default"=>$offset));
+	$this->validatorSchema['offset'] = new sfValidatorPass();
+	
+	$page_list=array();
+	for ($i = 1; $i <= $nb_page; $i++) {
+		$page_list[$i] = $i;
+	}
+	$this->widgetSchema['current_page'] = new sfWidgetFormChoice(array('choices'=> $page_list, "default"=>$current_page));
+	 $this->widgetSchema['current_page']->setAttributes(array("class"=>'change_page'));
+	$this->validatorSchema['current_page'] = new sfValidatorPass();
 
+
+  }
+
+
+  public function addItemObj($num, $item)
+  {
+	  
+	  $form = new LoanItemsForm($item);
+	  $this->embeddedForms['newLoanItems']->embedForm($num, $form);
+	  $this->embedForm('newLoanItems', $this->embeddedForms['newLoanItems']);
+	  
   }
 
   
@@ -53,6 +119,7 @@ class LoanOverviewForm extends sfForm
 
   public function bind(array $taintedValues = null, array $taintedFiles = null)
   {
+	
     if(isset($taintedValues['newLoanItems']))
     {
       foreach($taintedValues['newLoanItems'] as $key=>$newVal)
@@ -78,6 +145,7 @@ class LoanOverviewForm extends sfForm
 
   public function save()
   {
+	
     $value = $this->getValues();
     foreach($this->embeddedForms['newLoanItems']->getEmbeddedForms() as $name => $form)
     {

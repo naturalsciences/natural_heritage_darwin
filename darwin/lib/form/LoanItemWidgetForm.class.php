@@ -14,6 +14,9 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
   {
     $this->useFields(array('id'));
     /* input file for related files */
+	$this->widgetSchema['details'] = new sfWidgetFormInput();
+	$this->validatorSchema['details'] = new sfValidatorPass();  
+	
     $this->widgetSchema['filenames'] = new sfWidgetFormInputFile();
     $this->widgetSchema['filenames']->setLabel("Add File") ;
     $this->widgetSchema['filenames']->setAttributes(array('class' => 'Add_related_file'));        

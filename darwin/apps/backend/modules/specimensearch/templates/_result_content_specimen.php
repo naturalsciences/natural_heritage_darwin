@@ -61,12 +61,9 @@
 		 <?php if(strlen($status)>0) :?>
 		 <?php $statuses=explode(";",$status);?>
 		     <?php foreach($statuses as $status):?>  
-				<?php if(is_numeric($status)):?>
-					<?php $status_text= $status=Doctrine_Core::getTable('FlatDict')->findOneById($specimen->getDeterminationStatus($status));  ?>
-					<div id="taxon_synonymy<?php echo $specimen->getId().$status;?>" >Det. status : <?php print($status_text->getDictValue()); ?></div>
-					<?php else:?>
+				<?php if(strlen(trim($status))>0):?>				   
 					 <div id="taxon_synonymy<?php echo $specimen->getId().$status;?>" >Det. status : <?php print($status); ?></div>
-					<?php endif;?>
+				<?php endif;?>
 			<?php endforeach;?>
 		 <?php endif ; ?>
 		<?php if($specimen->getCites() == TRUE ) : ?>

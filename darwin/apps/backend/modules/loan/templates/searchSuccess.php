@@ -42,7 +42,7 @@
 	      <?php if($orderBy=='description') echo $orderSign ?>
 	    </a>
           </th>
-          <th></th>
+          <th colspan="5"></th>
         <tr>
       </thead>
       <tbody>
@@ -71,19 +71,32 @@
             </td>
             <td class="<?php echo ( isset( $is_choose ) && $is_choose ) ? 'choose' : 'edit';?>">
               <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),'loan/view?id='.$item->getId(),array('target'=>"_blank"));?>
+			 </td>
               <?php if(! $is_choose):?>
                 <?php if(in_array($item->getId(),sfOutputEscaper::unescape($rights)) || $sf_user->isAtLeast(Users::ADMIN)) : ?>
+				<td>
                   <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit loan'))),'loan/edit?id='.$item->getId(), array('target'=>"_blank"));?>
+				</td>
+				<td>
                   <?php echo link_to(image_tag('duplicate.png',array('title'=>__('Duplicate loan'))),'loan/new?duplicate_id='.$item->getId(),array('target'=>"_blank"));?>
+				</td>
+				<td>
                   <?php echo link_to(image_tag('remove.png',array('title'=>__('Remove loan'))),'loan/delete?id='.$item->getId(), array('class'=>'clear_item'));?>
+				</td>
                 <?php endif ; ?>
                 <?php if (isset($printable) && in_array($item->getId(), $printable->getRawValue())): ?>
+				  <td>
                   <?php echo link_to("PDF", "http://172.16.11.138/merge_pdf?loan=".$item->getId(), array("target"=> "_blank"));?>
+				  </td>
                 <?php endif; ?>
               <?php else:?>
                 <?php if(in_array($item->getId(),sfOutputEscaper::unescape($rights)) || $sf_user->isAtLeast(Users::ADMIN)) : ?>
+				<td>
                   <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit loan'))),'loan/edit?id='.$item->getId(),array('target'=>"_blank"));?>
+				</td>
+				<td>
                   <?php echo link_to(image_tag('duplicate.png',array('title'=>__('Duplicate loan'))),'loan/new?duplicate_id='.$item->getId(),array('target'=>"_blank"));?>
+				</td>
                 <?php endif ; ?>
                 <div class="result_choose"><?php echo __('Choose');?></div>
               <?php endif ; ?>

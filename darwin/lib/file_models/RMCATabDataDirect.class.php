@@ -170,6 +170,7 @@ class RMCATabDataDirect
         $fields[] = "SubcontainerName";
         $fields[] = "SubcontainerStorage";
         $fields[] = "SubcontainerType";
+		$fields[] = "SpecimenStatus";
         // reltionships between taxas
         $fields[] = "HostClass";
         $fields[] = "HostOrder";
@@ -525,6 +526,16 @@ class RMCATabDataDirect
 		if($this->isset_and_not_null($valTmp))
 		{
 			 $this->staging['individual_social_status'] = $valTmp;
+		}
+    }
+	
+	public function addSpecimenStatus()
+    {
+     
+        $valTmp=$this->getCSVValue("SpecimenStatus");
+		if($this->isset_and_not_null($valTmp))
+		{
+			 $this->staging['specimen_status'] = $valTmp;
 		}
     }
 	
@@ -2026,6 +2037,7 @@ class RMCATabDataDirect
 		$this->addSex();
         $this->addAssociations();
 		$this->addSocialStatus();
+		$this->addSpecimenStatus();
 		$this->addObjectName();
         
         $this->addLocalityAndCollectors();

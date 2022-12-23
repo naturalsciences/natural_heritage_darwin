@@ -292,7 +292,8 @@ class loanActions extends DarwinActions
 
   public function executeOverview(sfWebRequest $request) {
     $this->loan = $this->checkRight($request->getParameter('id')) ;
-    $this->form = new LoanOverviewForm(null, array('loan'=>$this->loan));
+	$this->page=$request->getParameter('current_page',$request->getParameter('page',1));
+    $this->form = new LoanOverviewForm(null, array('loan'=>$this->loan, "current_page"=>$this->page));
     if($request->getParameter('loan_overview','') !== '')
     {
       $this->form->bind($request->getParameter($this->form->getName()));
@@ -301,7 +302,7 @@ class loanActions extends DarwinActions
         try
         {
           $this->form->save();
-          return $this->redirect('loan/overview?id='.$this->loan->getId());
+          return $this->redirect('loan/overview?id='.$this->loan->getId()."&page=".$this->page);
         }
         catch(Doctrine_Exception $ne)
         {
@@ -325,9 +326,15 @@ class loanActions extends DarwinActions
     $this->loan = $this->checkRight($request->getParameter('id'));
     $item = new LoanItems();
     $specimen_ref = $request->getParameter('specimen_ref',null);
-    $this->form = new LoanOverviewForm(null, array('loan'=>$this->loan));
-    $this->form->addItem($number,$specimen_ref);
-    return $this->renderPartial('loanLine',array('form' => $this->form['newLoanItems'][$number], 'lineObj'=> $item));
+    $this->form = new LoanOverviewForm(null, array('loan'=>$this->loan,  "item_visible"=>true));
+    //$this->form->addItem($number,$specimen_ref);
+	$item->setLoanRef($this->loan);
+	$item->setSpecimenRef($specimen_ref);
+	$this->form->addItemObj($number,$item);
+	//$item->save();
+	
+	//$form->bind(array("loan_ref"=>$this->loan,"specimen_ref"=>$specimen_ref));
+    return $this->renderPartial('loanLine',array('form' => $this->form['newLoanItems'][$number], 'lineObj'=> $item, 'row_id'=>'new'));
   }
 
   public function executeGetPartInfo(sfWebRequest $request)
@@ -433,4 +440,36 @@ class loanActions extends DarwinActions
     Doctrine_Core::getTable('Loans')->syncHistory($request->getParameter('id'));
     return $this->renderText('ok') ;
   }
+  
+  public function executeAddSpecToLoan(sfWebRequest $request)
+ {
+	$result=array();
+	$result["status"]="false";
+	try
+    {
+		$loan_id= $request->getParameter("loan_id");
+		$spec_id= $request->getParameter("spec_id");
+		if(is_numeric($loan_id)&&is_numeric($spec_id))
+		{
+			$loanitem = new LoanItems() ;
+			$loanitem->setLoanRef($loan_id);
+			$loanitem->setSpecimenRef($spec_id);
+			$loanitem->save();
+			
+			$result["status"]="true";
+			
+		}
+	}
+	catch(Exception $e)
+    {
+          $result["exception"]=$e->getMessage();         
+    }
+	finally
+	{
+		$this->getResponse()->setHttpHeader('Content-type','application/json');
+		$this->setLayout('json');
+		return $this->renderText(json_encode($result));
+	}
+	
+ }
 }

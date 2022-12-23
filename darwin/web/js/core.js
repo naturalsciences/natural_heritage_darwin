@@ -1,3 +1,9 @@
+var flag_split=false;
+var current_val=0;
+var current_categ="";
+var c_b=0;
+var c_e=0;
+
 function getIdInClasses(el)
 {
     var classes = $(el).attr("class").split(" ");
@@ -633,3 +639,7 @@ console.log("C");
 	  }
 	  return returned;	  
 	}	
+	
+	//split code
+	
+	

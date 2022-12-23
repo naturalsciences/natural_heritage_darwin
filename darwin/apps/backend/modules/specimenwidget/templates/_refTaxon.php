@@ -6,7 +6,7 @@
 
 <?php echo $form['taxon_ref']->renderError() ?>
 <?php echo $form['taxon_ref']->render() ?>
-
+</BR><div><?php print($hasSynonyms);?></div></BR>
 <!--<B><label class="cites"></label></B></BR>-->
 <table>
 	<tr>
@@ -32,6 +32,7 @@
 			</table>
 		</td>
 	</tr>
+
 	<tr>
 		<B><label class="taxonomy1"></label></B>
 		<label class="taxonomy2"></label></BR></BR>

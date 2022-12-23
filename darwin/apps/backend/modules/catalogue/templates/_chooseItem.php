@@ -82,6 +82,20 @@
             <td><?php echo $searchForm['ig_number'];?></td>
           <?php endif;?>
         </tr>
+		<?php if(isset($searchForm['workflow_statuses']) && !$is_choose): ?>
+		<tr>
+			<th><?php echo $searchForm['workflow_statuses']->renderLabel();?></th>
+			<th><?php echo $searchForm['workflow_people_ref']->renderLabel();?></th>
+			<th><?php echo $searchForm['workflow_from_date']->renderLabel();?></th>
+			<th><?php echo $searchForm['workflow_to_date']->renderLabel();?></th>
+		</tr>
+		<tr>
+			<td><?php echo $searchForm['workflow_statuses'];?></td>
+			<td><?php echo $searchForm['workflow_people_ref'];?></td>
+			<td><?php echo $searchForm['workflow_from_date'];?></td>
+			<td><?php echo $searchForm['workflow_to_date'];?></td>
+		</tr>
+		<?php endif;?>
 
         <tr>
           <td><input class="search_submit" type="submit" name="search" value="<?php echo __('Search');?>" /></td>

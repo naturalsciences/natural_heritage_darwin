@@ -101,6 +101,56 @@
  
 </table>
 <script  type="text/javascript">
+
+ onElementInserted('body', '.code_category', function(element)
+	{
+		if(flag_split)
+		{
+			$(element).val(current_categ);
+		}
+	});
+
+ onElementInserted('body', '.main_code', function(element)
+	{
+		console.log("inserted");
+		var id=element.id;
+		console.log(id);
+		console.log(flag_split);
+		console.log(current_val);
+		console.log(c_e);
+		if(flag_split&& (current_val<c_e))
+		{
+			console.log("AA");
+			$(element).val(current_val);
+			current_val++;
+			setTimeout(
+				function()
+				{}
+				,500
+			);
+			$("#add_code").click();
+			
+		}
+		else if(flag_split&& (current_val==c_e))
+		{
+			console.log("AA");
+			$(element).val(current_val);
+			current_val++;
+			setTimeout(
+				function()
+				{}
+				,500
+			);
+			
+		}
+		else
+		{
+			console.log("BB");
+			flag_split=false;
+		}
+	}
+ );
+
 $(document).ready(function () {
  
     $('#add_code').click(function()
