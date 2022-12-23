@@ -29,12 +29,68 @@
     <td class="widget_row_delete">
       <?php echo image_tag('remove.png', 'alt=Delete class=clear_code id=clear_code_'.$rownum); ?>
       <?php echo $form->renderHiddenFields();?>
-    </td>    
+    </td>
+  </tr>
+  <tr>
+	<td> <input type="button" id="split_code_<?php echo $rownum;?>" value="<?php print(__("Split on -")); ?>"></button></td>
   </tr>
 </tbody>
 <script type="text/javascript">
+	
+	
+
   $(document).ready(function () {
   
+	$("#specimen_newCodes_<?php echo $rownum;?>_code_category").change(
+		function()
+		{			
+			if($(this).val()!="main")
+			{
+				$("#specimen_newCodes_<?php echo $rownum;?>_code_prefix").val("");
+				$("#specimen_newCodes_<?php echo $rownum;?>_code_prefix_separator").val("");
+				$("#specimen_newCodes_<?php echo $rownum;?>_code_suffix").val("");
+				$("#specimen_newCodes_<?php echo $rownum;?>_code_suffix_separator").val("");
+				
+			}
+		}
+	);
+	$("#split_code_<?php echo $rownum;?>").click(
+		function()
+		{
+			var tmp_val=$("#specimen_newCodes_<?php echo $rownum;?>_code").val();
+			current_categ=$("#specimen_newCodes_<?php echo $rownum;?>_code_category").val();
+			console.log(tmp_val);
+			if(tmp_val.includes("-"))
+			{
+				var boundaries=tmp_val.split('-');
+				if(boundaries.length>=2)
+				{
+					var begin=boundaries[0];
+					var end=boundaries[boundaries.length-1];
+					if($.isNumeric(begin)&&$.isNumeric(end))
+					{
+						c_b=parseInt(begin);
+						c_e=parseInt(end);
+						if(c_b<c_e)
+						{
+							 flag_split=true;
+							 console.log(flag_split);
+							//for(i=c_b;i<=c_e;i++)
+							//{
+								console.log(c_b);
+								current_val=c_b;
+								//if(i==c_b)
+								//{
+									$("#add_code").click();
+								//}
+							//}
+							 //flag_split=false;
+						}
+					}
+				}
+			}
+		}
+	);
     //2015 10 15 call mask handling
     try_mask(<?php print($rownum) ?>);
 		

@@ -1,10 +1,11 @@
 <tr class="loanlines_top" >
   <td colspan="9"></td>
 </tr>
-<tr class="line_<?php echo $form->getparent()->getName().'_'.$form->getName();?>">
+<tr class="line_<?php echo $form->getparent()->getName().'_'.$form->getName();?> main_line_loan">
   <td>
     <?php echo $form->renderError();?>
-    <?php if(!$lineObj->isNew()):?>
+	<?php print($row_id);?>
+   <?php if(!$lineObj->isNew()):?>
       <input value="<?php echo $lineObj->getId();?>" type="checkbox" class="select_chk_box" />
     <?php endif;?>
   </td>
@@ -16,11 +17,15 @@
   <td>
   <!--JMHerpers 2018 04 19-->
     <a  target='_blank' href='<?php echo url_for('specimen/view?id='.$form['specimen_ref']->getValue());?>'>
-		<?php echo include_component('specimenwidgetview', 'refMainCodes', array('eid'=>$form['specimen_ref']->getValue()));?> 
+	   <?php if(strlen(trim($form['specimen_ref']->getValue()))):?>
+			<?php echo include_component('specimenwidgetview', 'refMainCodes', array('eid'=>$form['specimen_ref']->getValue()));?> 
+	    <?php endif;?>
 	</a>
   </td>
   <td style="font-size:11px">
+  <?php if(strlen(trim($form['specimen_ref']->getValue()))):?>
     <?php echo include_component('specimenwidgetview', 'refTaxon', array('eid'=>$form['specimen_ref']->getValue()));?>
+  <?php endif;?>
   </td>
   <td colspan="2">
     <?php echo $form['details']->renderError();?>
@@ -45,6 +50,7 @@
     </div>
   </td>
   <td class="loan_actions_button">
+
     <?php echo $form['item_visible'];?>
     <!--<?php if(! $lineObj->isNew()):?>
       <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),'loanitem/view?id='.$lineObj->getId());?>
@@ -127,7 +133,7 @@
       }
     });
 
-    <?php if(!$lineObj->isNew()):?>
+    <?php if(!$lineObj->isNew()  && array_key_exists("specimen_ref", $form)):?>
 		$(".main_but_line_<?php echo $form->getparent()->getName().'_'.$form->getName();?> .maint_butt").click(function(){
 		  but_link = $(this);
 		  el = $(".maint_line_<?php echo $form->getparent()->getName().'_'.$form->getName();?> .maintenance_details");

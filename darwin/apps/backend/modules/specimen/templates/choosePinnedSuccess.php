@@ -1,11 +1,13 @@
 <div class="page">
 
 <?php if(count($items) !=0 ):?>
+<?php $cpt=1;?>
 <div><a class="result_choose_all"><?php echo __('Choose all');?></a></div>
   <table class="part_pinned_choose results">
   <?php use_helper('Text');?>
   <?php foreach($items as $i => $item):?>
     <tr class="rid_<?php echo $item->getId(); ?>">
+	  <td><?php print($cpt);?></td>
       <td>
         <?php echo image_tag('info.png',"title=info class=extd_info");?>
         <div class="extended_info" style="display:none;">
@@ -20,6 +22,7 @@
         <div class="result_choose"><?php echo __('Choose');?></div>
       </td>
     </tr>
+	<?php $cpt=$cpt+1;?>
   <?php endforeach;?>
   </table>
 

@@ -15,6 +15,16 @@ class LoanItemsTable extends DarwinTable
       ->orderBy('to_date DESC, i.id');
     return $q->execute();
   }
+  
+    public function findForLoanPage($id, $page=1, $size=25)
+  {
+    $q = Doctrine_Query::create()
+      ->From('LoanItems i')
+      ->andwhere('i.loan_ref = ?', $id)
+      ->orderBy('to_date DESC, i.id')->limit((int)$size)->offset((((int)$page)-1)*((int)$size));
+    return $q->execute();
+  }
+
 
   public function deleteChecked($ids)
   {

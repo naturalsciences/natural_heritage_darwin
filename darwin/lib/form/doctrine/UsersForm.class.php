@@ -13,7 +13,7 @@ class UsersForm extends BaseUsersForm
   {
     if ($this->options['mode'] == 'new') 
     {
-      $this->useFields(array('is_physical','sub_type','title','family_name','given_name','additional_names','gender','user_ip')) ;
+      $this->useFields(array('is_physical','sub_type','title','family_name','given_name','additional_names','gender','user_ip', 'db_user_type')) ;
       $this->widgetSchema['sub_type'] = new widgetFormSelectComplete(array('model' => 'Users',
                                                                    'table_method' => 'getDistinctSubType',
                                                                    'method' => 'getSubType',
@@ -41,7 +41,7 @@ class UsersForm extends BaseUsersForm
     }
     elseif($this->options['is_physical'])
     {
-      $this->useFields(array('title','family_name','given_name','additional_names','gender','people_id')) ;      
+      $this->useFields(array('title','family_name','given_name','additional_names','gender','people_id','db_user_type' )) ;      
       $this->widgetSchema['people_id'] = new widgetFormButtonRef(array('model' => 'People',
                                                                 'method' => 'getFormatedName',
                                                                 'link_url' => 'people/choose?with_js=1',
@@ -64,7 +64,7 @@ class UsersForm extends BaseUsersForm
     }
     else
     {
-      $this->useFields(array('sub_type','family_name','given_name','additional_names','people_id')) ;
+      $this->useFields(array('sub_type','family_name','given_name','additional_names','people_id', 'db_user_type')) ;
       $this->widgetSchema['sub_type'] = new widgetFormSelectComplete(array('model' => 'Users',
                                                                    'table_method' => 'getDistinctSubType',
                                                                    'method' => 'getSubType',
@@ -132,5 +132,19 @@ class UsersForm extends BaseUsersForm
       ),
       array('invalid' => 'Date provided is not valid')
     );
+	
+	$params=array('screen' => 2,'db_user_type' => Users::ADMIN);
+	if(isset($this->options['is_admin']))
+	{
+		if($this->options['is_admin']===true)
+		{
+			
+			$params["include_admin"]=true;
+		}
+	}
+	$this->widgetSchema['db_user_type'] = new sfWidgetFormChoice(array(
+      'choices' =>  Users::getTypes($params),
+    ));    
+    $this->widgetSchema->setDefault('db_user_type',Users::REGISTERED_USER) ;
   }
 }

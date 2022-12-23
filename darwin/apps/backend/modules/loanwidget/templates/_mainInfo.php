@@ -21,8 +21,9 @@
 			<?php echo $form['name']->renderError() ?>
 			<?php echo $form['name'] ?>
 		</td>
-		<td  colspan="6" class="hide_helper_name" style="display:none;"><?php echo __('Last value in collection = ') ?><label class="last_loan_id_in_collection"></label>&nbsp;&nbsp;&nbsp;
-			<input id="Paste_code_loan" type="button"  class="copy_loan_id_in_collection"  style="display:hide" value='<?php echo __('Paste to code of loan');?>'></input>
+		<td  colspan="6" class="hide_helper_name" style=""><?php echo __('Last value in collection = ') ?><label class="last_loan_id_in_collection"></label>&nbsp;&nbsp;&nbsp;
+			<input id="Get_code_loan" type="button"  class="get_loan_id_in_collection"  style="" value='<?php echo __('Get code of loan');?>'></input>
+			<input id="Paste_code_loan" type="button"  class="copy_loan_id_in_collection"  style="" value='<?php echo __('Paste to code of loan');?>'></input>
         </td>
     </tr>
     <tr>
@@ -231,6 +232,14 @@
 				}
 				$(".loan_class").val(name_loan);
 			}
+			);
+			$(".get_loan_id_in_collection").click(
+				function()
+				{
+					colval = $(".rmca_coll_4_loan").val();
+					getloanlast(colval);
+					console.log("nr="+colval);
+				}
 			);
 		});
 	</script>

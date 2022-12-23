@@ -15,7 +15,7 @@
           <?php endforeach; ?>
         </ul>
       <?php endif;?>
-
+		<?php echo $form['details']->render();?>
         <?php include_partial('widgets/screen', array(
           'widgets' => $widgets,
           'category' => 'loanitemwidget',

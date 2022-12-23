@@ -62,21 +62,15 @@ $(document).ready(function () {
   });
   
   //printer
-  $("#print_spec_thermic").click(function(event){
-				var getip=function(){
-					return JSON.parse('<?php echo 	Doctrine_Core::getTable('Users')-> 
-													find($sf_user->getId())-> 
-													getIp() ?>');
-				}
-				var json_ip = getip();
-				if (json_ip[0] != null){
-					if ((trim(json_ip[0].user_ip)).length == 0) {
-						alert("IP address of local print server is not found !");
-					}else{
-						var classes = [];
-						var pass = false;
-						var pass2 = false;
-						var collect = false;
+  $("#print_spec_thermic").click(function(event)
+  {
+				
+				
+			
+					var classes = [];
+					var pass = false;
+					var pass2 = false;
+					var collect = false;
 						
 
 						//var url_printer_full=url_printer+'?op=on&id='+tmpArray.join("|");
@@ -109,13 +103,13 @@ $(document).ready(function () {
 											alert("Attention, only specimen from "+coll_list.substring(1)+" will be printed");
 											pass = true;
 										}*/
-										if (collect == false) {
-											if (pass2 == false ) {
+										//if (collect == false) {
+											//if (pass2 == false ) {
 												alert("Labels are sent to thermic printer");
-											}
+											//}
 																			
-											pass2 = true;
-										}
+											//pass2 = true;
+										//}
 										collect = false;
 									}
 								}    
@@ -127,11 +121,14 @@ $(document).ready(function () {
 							$.ajax({
 								url: url_printer_full												
 							}).done(
-							function()	{}
+							function()	{
+								
+								alert("Labels are sent to thermic printer");
+							}
 							);
 						
-					}
-				}
+					
+				
 
 	
 			});

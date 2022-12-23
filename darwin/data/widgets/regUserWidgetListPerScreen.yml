@@ -458,6 +458,17 @@ sps32:
    title_perso: External links
    all_public: true
 
+sps33:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: maintenanceOrWorkflow
+   mandatory: false
+   order_by: 16
+   opened: false
+   visible: false
+   title_perso: Maintenance / Workflow
+   all_public: true
+
    
 sw1:
    col_num: 1
@@ -1652,16 +1663,16 @@ litw1:
    title_perso: Loan Item
    all_public: true
 
-litw2:
-   col_num: 1
-   category: loanitem_widget
-   group_name: actors
-   order_by: 2
-   opened: true
-   visible: true
-   is_available: true
-   title_perso: People involved
-   all_public: true
+#litw2:
+#   col_num: 1
+#   category: loanitem_widget
+#   group_name: actors
+#   order_by: 2
+#   opened: true
+#   visible: true
+#   is_available: true
+#   title_perso: People involved
+#   all_public: true
 
 
 litw4:

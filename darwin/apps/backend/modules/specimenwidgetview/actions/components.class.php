@@ -79,6 +79,21 @@ class specimenwidgetviewComponents extends sfComponents
   public function executeRefTaxon()
   {
     $this->defineObject();
+	$this->hasSynonyms="";
+	
+	$test1=Doctrine_Core::getTable('ClassificationSynonymies')->findGroupsIdsForRecord("taxonomy",$this->spec->getTaxonRef());
+	if(count($test1)>0)
+	{
+		if($this->spec->getTaxonStatus()=="valid")
+		{
+			$this->hasSynonyms="Has synonyms";
+		}
+		else
+		{
+			$this->hasSynonyms="Is synonym";
+		}
+	}
+	
   }
 
   public function executeRefChrono()

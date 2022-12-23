@@ -16,12 +16,22 @@ class userActions extends DarwinActions
   {
     if($this->getUser()->getDbUserType() < Users::MANAGER) $this->forwardToSecureAction();
     $this->mode = 'new' ;
-    $this->form = new UsersForm(null, array('mode' => $this->mode));
+	$this->is_admin=false;
+	
+	$params=array('mode' => $this->mode);
+	
+	if($this->getUser()->getDbUserType() == Users::ADMIN)
+    {
+		$params["is_admin"]=true;
+		$this->is_admin=true;
+	}	
+    $this->form = new UsersForm(null,$params);
   }
   
   public function executeEdit(sfWebRequest $request)
   {
     $this->user = Doctrine_Core::getTable('Users')->find( $request->getparameter('id') );
+	$this->is_admin=false;
     $this->forward404Unless($this->user, sprintf('User does not exist (%s).', $request->getParameter('id')));
     if($this->getUser()->getId() == $this->user->getId() && !$request->isMethod('post')) 
       $this->redirect('user/profile'); 
@@ -33,7 +43,13 @@ class userActions extends DarwinActions
         $this->forwardToSecureAction();
     }
     $this->mode = 'edit' ;
-    $this->form = new UsersForm($this->user, array('mode' => $this->mode,'is_physical'=>$this->user->getIsPhysical()));
+	$params=array('mode' => $this->mode,'is_physical'=>$this->user->getIsPhysical());
+	if($this->getUser()->getDbUserType() == Users::ADMIN)
+    {		
+		$params["is_admin"]=true;
+		$this->is_admin=true;
+	}
+    $this->form = new UsersForm($this->user,$params );
     $users = $request->getParameter('users');
 
     if($request->isMethod('post'))
@@ -55,9 +71,16 @@ class userActions extends DarwinActions
   public function executeProfile(sfWebRequest $request)
   { 
     $this->user =  Doctrine_Core::getTable('Users')->find( $this->getUser()->getId() );
+	$this->is_admin=false;
     $this->forward404Unless($this->user);
     $this->mode = 'profile' ;
-    $this->form = new UsersForm($this->user,array("db_user_type" => $this->getUser()->getDbUserType(),'mode' => $this->mode,'is_physical'=>$this->user->getIsPhysical()));
+	
+	if((int)$this->getUser()->getDbUserType() >= Users::ADMIN)
+    {		
+		
+		$this->is_admin=true;
+	}
+    $this->form = new UsersForm($this->user,array("db_user_type" => $this->getUser()->getDbUserType(),'mode' => $this->mode,'is_physical'=>$this->user->getIsPhysical(), 'is_admin'=> $this->is_admin ));
     $this->loadWidgets();
   }
 

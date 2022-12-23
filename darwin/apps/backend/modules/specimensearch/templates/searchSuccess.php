@@ -187,16 +187,8 @@
             var collect_array = collect_to_print_thermic.split(","); 
 			
 			$("#print_spec_thermic").click(function(event){
-				var getip=function(){
-					return JSON.parse('<?php echo 	Doctrine_Core::getTable('Users')-> 
-													find($sf_user->getId())-> 
-													getIp() ?>');
-				}
-				var json_ip = getip();
-				if (json_ip[0] != null){
-					if ((trim(json_ip[0].user_ip)).length == 0) {
-						alert("IP address of local print server is not found !");
-					}else{
+				
+					
 						var classes = [];
 						var pass = false;
 						var pass2 = false;
@@ -254,8 +246,8 @@
 							function()	{}
 							);
 						}
-					}
-				}
+					
+				
 
 	
 			});

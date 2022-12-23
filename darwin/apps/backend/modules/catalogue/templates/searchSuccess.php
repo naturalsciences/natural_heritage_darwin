@@ -40,6 +40,20 @@
             <?php if($orderBy=='level_ref') echo $orderSign ?>
           </a>
         </th>
+		<?php if($searchForm->getValue('table')=="taxonomy"):?>
+		<th>			
+			  <a class="sort" href="<?php echo url_for($s_url.'&orderby=status'.( ($orderBy=='status' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
+				<?php echo __('Status');?>
+				<?php if($orderBy=='status') echo $orderSign ?>
+			  </a>			
+        </th>
+		<th>			
+			  <a class="sort" href="<?php echo url_for($s_url.'&orderby=nb_synonyms'.( ($orderBy=='nb_synonyms' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
+				<?php echo __('Synonyms');?>
+				<?php if($orderBy=='nb_synonyms') echo $orderSign ?>
+			  </a>			
+        </th>
+		<?php endif; ?>
         <!--ftheeten 2018 07 19-->
         <?php if($items[0]['taxonomy_metadata_name']&&$items[0]['metadata_ref']): ?>
             <th> <?php echo __('Taxonomy name');?></th>
@@ -105,6 +119,18 @@
             <td>
 				<span><?php echo $item->getLevel();?></span>
             </td>
+			<?php if($searchForm->getValue('table')=="taxonomy"):?>
+				<td>
+					 <?php if($item->getStatus()!="valid"):?>
+						<span class="item_status"><?php echo $item->getStatus();?></span>
+					<?php endif;?>						
+				</td>
+				<td>
+				    <?php if($item->getNbSynonyms()>0):?>
+						<span class="nb_synonyms"><?php echo $item->getNbSynonyms();?></span>
+					<?php endif;?>
+				</td>
+			<?php endif;?>
             <!--ftheeten 2018 07 19-->
 			<?php if($item['taxonomy_metadata_name']&&$item['metadata_ref']): ?>
 				<td>

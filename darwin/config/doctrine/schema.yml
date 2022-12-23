@@ -590,6 +590,10 @@ Taxonomy:
         TaxonomyMetadata:
             local: metadata_ref
             foreign: id
+        TaxonomicSynonymies:
+            class: TaxonomicSynonymies
+            local: id
+            foreign: record_id
 
 #ftheeten 2017 07 17
 TaxonomyMetadata:
@@ -1788,3 +1792,51 @@ StagingGtuTagGroups:
             local: staging_gtu_ref
             foreign: id
             class: StagingGtu
+
+TaxonomicSynonymies:
+    inheritance:
+        extends: ClassificationSynonymies
+        type: column_aggregation
+        keyField: referenced_relation
+        keyValue: taxonomy
+        
+VCodesSeries:
+  inheritance:
+    type:             concrete
+    extends:          Codes
+  columns:
+        id: { type: integer, primary: true, autoincrement: true}
+        referenced_relation : { type: string, notnull: true}
+        record_id: { type: integer, notnull: true}
+        code_category: { type: string, notnull: true, default: main}
+        code_prefix: { type: string}
+        code_prefix_separator: { type: string}
+        code: { type: string}
+        code_suffix: { type: string}
+        code_suffix_separator: { type: string}
+        full_code_indexed: { type: string}
+        code_date: { type: string}
+        code_date_mask: { type: integer, notnull: true, default:0}
+        code_full: {type: string},
+        serie_indexed: {type: string}
+
+MvCodesSeries:
+  inheritance:
+    type:             concrete
+    extends:          Codes
+  columns:
+        id: { type: integer, primary: true, autoincrement: true}
+        referenced_relation : { type: string, notnull: true}
+        record_id: { type: integer, notnull: true}
+        code_category: { type: string, notnull: true, default: main}
+        code_prefix: { type: string}
+        code_prefix_separator: { type: string}
+        code: { type: string}
+        code_suffix: { type: string}
+        code_suffix_separator: { type: string}
+        full_code_indexed: { type: string}
+        code_date: { type: string}
+        code_date_mask: { type: integer, notnull: true, default:0}
+        code_full: {type: string},
+        serie_indexed: {type: string}
+        

@@ -81,6 +81,13 @@ abstract class BaseClassificationSynonymies extends DarwinModel
              'type' => 'boolean',
              'default' => false,
              ));
+
+        $this->setSubClasses(array(
+             'TaxonomicSynonymies' => 
+             array(
+              'referenced_relation' => 'taxonomy',
+             ),
+             ));
     }
 
     public function setUp()

@@ -47,11 +47,19 @@ EOF;
                                                        and i.state='deleted' 
                                                     limit $batch_nbr
                                                    );";
+	  $sql2 = "delete from staging_gtu where ctid = ANY (select s.ctid 
+                                                    from staging_gtu s 
+                                                    inner join imports i 
+                                                       on s.import_ref = i.id 
+                                                       and i.state='deleted' 
+                                                    limit $batch_nbr
+                                                   );";
       //ftheeten  2018 02 28
 	  if(!empty($options['id']) && ctype_digit($options['id']) )
 	  {
-		print("RECHECK");
+		print("RECHECK\r\n");
 		$this->setImportAsWorking($conn, $options['id'], true);
+		print("FLAG_WORKING\r\n");
 	  }
 	  $ctn = $conn->getDbh()->exec($sql);
 	  /*//ftheeten  2018 02 28
@@ -61,8 +69,9 @@ EOF;
 	  }*/
 
       // Remove the import reference from imports table if no more lines in staging for this import
-      $sql = "delete from imports i WHERE i.state='deleted' AND NOT EXISTS (select 1 from staging where import_ref = i.id)";
+      $sql = "delete from imports i WHERE i.state='deleted' AND NOT EXISTS (select 1 from staging where import_ref = i.id )";
       $conn->getDbh()->exec($sql);
+	  $conn->getDbh()->exec($sql2);
       $this->logSection('Delete', sprintf('Check %d : Removed %d lines',$randnum, $ctn)) ;
 
     }
@@ -110,6 +119,7 @@ print("full : loaded, pending, processing");
       // Begin here the transactional process
       $conn->beginTransaction();
       try {
+	    print("\r\n00");
         $conn->execute("select fct_importer_catalogue(?,'taxonomy',?)",
                        array(
                          $catalogue->getId(),
@@ -144,7 +154,8 @@ print("full : loaded, pending, processing");
           $conn->beginTransaction();
           $this->logSection('checking', sprintf('Check %d : (%s) Start checking staging',$randnum,date('G:i:s')));
           // now let's check all checkable staging - the checkability is coming from list of id in imports array
-          $conn->exec("SELECT fct_imp_checker_manager(s.*)
+          print("\r\nAA");
+		  $conn->exec("SELECT fct_imp_checker_manager(s.*)
                         FROM staging s, imports i
                         WHERE s.import_ref=i.id
                           AND i.id = ANY('{ $imports_ids_string }'::int[])
@@ -155,6 +166,7 @@ print("full : loaded, pending, processing");
           // of checking
           $conn->commit();
           // Check done, all loaded import won' t be imported again. So we can put then into pending state
+		print("\r\nBB");
           Doctrine_Query::create()
                   ->update('imports p')
                   ->set('p.state','?','pending')
@@ -204,6 +216,7 @@ print("full : loaded, pending, processing");
 						try
 						{
 							print("TRY");
+							  print("\r\nCC");
 							$sql_prepared = $conn->prepare("select fct_importer_abcd(?)");
 							$sql_prepared->execute(array($import->getId()));
 							//ftheeten 2017 09 18 handle host/parasite at taxonlevel

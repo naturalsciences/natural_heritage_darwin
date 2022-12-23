@@ -48,6 +48,7 @@ class InformativeWorkflowTable extends DarwinTable
 
   public function deleteRow($id, $user)
   {
+  print($id);
     $q = Doctrine_Query::create()
     ->delete('InformativeWorkflow i')
     ->where('i.id = ?',$id);

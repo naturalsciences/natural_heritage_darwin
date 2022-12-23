@@ -58,7 +58,7 @@ class IdentificationsForm extends BaseIdentificationsForm
         'model' => 'Identifications',
         'table_method' => Array('method'=> 'getDistinctDeterminationStatus', 'parameters' => array(/*$this->options['ref_relation']*/)),
 		'method' => 'getDeterminationStatus',
-        'key_method' => 'getId',
+        'key_method' => 'getDeterminationStatus',
         'add_empty' => true,
         'change_label' => '',
         'add_label' => '',

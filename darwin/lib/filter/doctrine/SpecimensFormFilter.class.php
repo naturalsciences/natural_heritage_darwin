@@ -927,6 +927,79 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
 	
 	$this->validatorSchema['determination_status'] = new sfValidatorPass();
 	
+	$this->widgetSchema["maintenance_or_workflow_people_ref"]= new sfWidgetFormDoctrineChoice(array(
+      'model' =>'Users',
+      'add_empty' => true,
+      'table_method' => 'getTrackingUsers',
+    ));
+	 $this->widgetSchema['maintenance_or_workflow_people_ref']->setLabel("Agent (problem/suggestion)");
+	 
+	 $this->validatorSchema['maintenance_or_workflow_people_ref'] = new sfValidatorString(array('required' => false));
+	 
+	  $this->widgetSchema['maintenance_or_workflow_maintenance_people_ref'] = new widgetFormCompleteButtonRef(array(
+      'model' => 'People',
+      'method' => 'getFormatedName',
+      'link_url' => 'people/choose',
+      'nullable' => true,
+      'box_title' => $this->getI18N()->__('Choose Yourself'),
+      'complete_url' => 'catalogue/completeName?table=people',
+    ));
+	
+	$this->widgetSchema['maintenance_or_workflow_maintenance_people_ref']->setLabel("Agent (maintenance)");
+	 
+	$this->validatorSchema['maintenance_or_workflow_maintenance_people_ref'] = new sfValidatorString(array('required' => false));
+	
+	 
+	 $this->widgetSchema['maintenance_or_workflow_from_date'] = new widgetFormJQueryFuzzyDate(
+      $this->getDateItemOptions(),
+      array('class' => 'from_date')
+    );
+
+    $this->widgetSchema['maintenance_or_workflow_to_date'] = new widgetFormJQueryFuzzyDate(
+      $this->getDateItemOptions(),
+      array('class' => 'to_date')
+    );
+
+    $this->validatorSchema['maintenance_or_workflow_from_date'] = new fuzzyDateValidator(array(
+      'required' => false,
+      'from_date' => true,
+      'min' => $minDate,
+      'max' => $maxDate,
+      'empty_value' => $dateLowerBound,
+      ),
+      array('invalid' => 'Date provided is not valid',)
+    );
+
+    $this->validatorSchema['maintenance_or_workflow_to_date'] = new fuzzyDateValidator(array(
+      'required' => false,
+      'min' => $minDate,
+      'from_date' => false,
+      'max' => $maxDate,
+      'empty_value' => $dateUpperBound,
+      ),
+      array('invalid' => 'Date provided is not valid',)
+    );
+	
+	
+	$workflow_statuses =  informativeWorkflow::getAvailableStatus(8); 		
+	$workflow_statuses=array_merge([''=>''],$workflow_statuses);
+    $this->widgetSchema['workflow_statuses'] = new sfWidgetFormChoice(array(
+        'choices'  => $workflow_statuses,
+    ));
+	$this->validatorSchema['workflow_statuses'] = new sfValidatorPass();
+	
+	$this->widgetSchema['maintenance_action_observation'] = new widgetFormSelectComplete(array(
+      'model' => 'CollectionMaintenance',
+      'table_method' => 'getDistinctActions',
+      'method' => 'getAction',
+      'key_method' => 'getAction',
+      'add_empty' => false,
+      'change_label' => 'Pick an action in the list',
+      'add_label' => 'Add another action',
+    ));
+	$this->validatorSchema['maintenance_action_observation'] = new sfValidatorPass();
+	
+	
 	//madam 2019 01 28
 	$this->validatorSchema['gtu_ref'] = new sfValidatorString(array(
       'required' => false,
@@ -958,6 +1031,105 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
       $this->embeddedForms['Codes']->embedForm($num, $form);
       $this->embedForm('Codes', $this->embeddedForms['Codes']);
   }
+  
+  public function addMaintenanceOrWorkflowQuery($query, $workflow_statuses, $maintenance_action_observation, $user_workflow_ref, $people_maintenance_ref, $date_from, $date_to)
+  {
+	$sql_member1=Array();
+	$sql_params1=Array();
+	$sql_member2=Array();
+	$sql_params2=Array();
+	if($workflow_statuses!="" || $user_workflow_ref!='')
+	{	
+		//date
+		if($date_from != '' && $date_to != '' )
+		{
+			$sql_member1[]='modification_date_time BETWEEN ? AND ? ';
+			$sql_params1[]=$date_from;
+			$sql_params1[]=$date_to;
+		}			
+		elseif($date_from != '')
+		{
+			$sql_member1[]='modification_date_time >= ?';
+			$sql_params1[]=$date_from;
+		}
+		elseif($date_to != '')
+		{
+			$sql_member1[]='modification_date_time <= ?';
+			$sql_params1[]=$date_to;
+		}
+		
+		if($workflow_statuses!="")
+		{
+			$sql_member1[]='status = ?';
+			$sql_params1[]=$workflow_statuses;
+		}		
+		if($user_workflow_ref !="")
+		{
+			$sql_member1[]='user_ref = ?';
+			$sql_params1[]=$user_workflow_ref;
+		}	
+	}
+	
+	if($maintenance_action_observation!="" || $people_maintenance_ref!="")
+	{
+		
+		//date
+		if($date_from != '' && $date_to != '' )
+		{
+			$sql_member2[]='modification_date_time BETWEEN ? AND ? ';
+			$sql_params2[]=$date_from;
+			$sql_params2[]=$date_to;
+		}			
+		elseif($date_from != '')
+		{
+			$sql_member2[]='modification_date_time >= ?';
+			$sql_params2[]=$date_from;
+		}
+		elseif($date_to != '')
+		{
+			$sql_member2[]='modification_date_time <= ?';
+			$sql_params2[]=$date_to;
+		}
+		
+		if($maintenance_action_observation!="" )
+		{
+			$sql_member2[]='action_observation = ?';
+			$sql_params2[]=$maintenance_action_observation;
+		}
+		if($people_maintenance_ref!="" )
+		{
+			$sql_member2[]='people_ref = ?';
+			$sql_params2[]=$people_maintenance_ref;
+		}
+		
+	}
+	$array_params = Array();
+	$sql="";
+	if(count($sql_member1)>0)
+	{
+		print("___1");
+		$sql.="EXISTS(SELECT 1 FROM informative_workflow   WHERE record_id=s.id AND referenced_relation='specimens' AND ".implode(" AND ", $sql_member1).")";
+		
+		$array_params=array_merge($array_params, $sql_params1 );
+	}
+	if(count($sql_member2)>0)
+	{
+		print("___2");
+		if(strlen($sql))
+		{
+			$sql.=" OR ";
+		}
+		$sql.="EXISTS(SELECT 1 FROM collection_maintenance   WHERE record_id=s.id AND referenced_relation='specimens' AND ".implode(" AND ", $sql_member2).")";
+		$array_params=array_merge($array_params, $sql_params2 );
+	}
+	if(count($array_params)>0 && strlen($sql)>0)
+	{
+		print("___3");
+		$query->andWhere("(".$sql.")",$array_params);
+	}	
+    return $query ;
+  }
+  
   public function addCommentsQuery($query, $notion, $comment)
   {
 	$sql_member=Array();
@@ -1679,61 +1851,7 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
     return $query ;
   }
 
-  /*public function addPeopleSearchColumnQuery(Doctrine_Query $query, $people_id, $field_to_use, $alias_id=NULL, $boolean="AND")
-  {
-	$alias1="cp";
-
-	if($alias_id)
-	{
-		$alias1=$alias1.$alias_id;
-
-	}
-    $build_query = '';
-    if(! is_array($field_to_use) || count($field_to_use) < 1)
-      $field_to_use = array('ident_ids','spec_coll_ids','spec_don_sel_ids') ;
-
-	$nb2=0;  
-    foreach($field_to_use as $field)
-    {
-       $alias1=$alias1.$nb2;
-
-	  if($field == 'ident_ids')
-      {
-		$build_query .= "s.spec_ident_ids @> ARRAY[$people_id]::int[] OR " ;
-      }
-      elseif($field == 'spec_coll_ids')
-      {
-         $build_query .= "(s.spec_coll_ids @> ARRAY[$people_id]::int[] OR (s.expedition_ref IN (SELECT $alias1.record_id FROM CataloguePeople $alias1 WHERE $alias1.referenced_relation= 'expeditions' AND $alias1.people_ref= $people_id) )) OR " ;
-
-      }
-      else
-      {
-        $build_query .= "s.spec_don_sel_ids @> ARRAY[$people_id]::int[] OR " ;
-      }
-	  $nb2++;
-    }
-    // I remove the last 'OR ' at the end of the string
-    $build_query = substr($build_query,0,strlen($build_query) -3) ;
-	if($boolean=="AND")
-	{
-		$query->andWhere($build_query) ;
-	}
-	elseif($boolean=="OR")
-	{
-		if($alias_id>1)
-		{
-		 $query->orWhere($build_query) ;
-		}
-		else
-		{
-		 $query->andWhere($build_query) ;
-		}
-	}
-	
-
-    return $query ;
-  }
-  */
+  
   
     public function addPeopleSearchColumnQuerySQL($people_id, $field_to_use, $alias_id=NULL)
   {
@@ -1775,71 +1893,7 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
 	return $build_query;
   }
 
-  
-   /*public function addPeopleSearchColumnQueryFuzzy(Doctrine_Query $query, $people_name, $field_to_use, $alias_id=NULL, $boolean="AND")
-  {
-    $alias1="ppa";
-	$alias2="ppb";
-	$alias3="cp";
-	$alias4="ppc";
-	$alias5="ppd";
-	$idxAlias1=1;
-	if($alias_id)
-	{
-			$idxAlias1=	$idxAlias1+$alias_id;
-		
-	}
-	$alias1=$alias1.$idxAlias1;
-	$idxAlias1++;
-	$alias2=$alias2.$idxAlias1;
-	$idxAlias1++;
-	$alias3=$alias3.$idxAlias1;
-	$idxAlias1++;
-	$alias4=$alias4.$idxAlias1;
-	$idxAlias1++;
-	$alias5=$alias5.$idxAlias1;
-    $build_query = '';
-    if(! is_array($field_to_use) || count($field_to_use) < 1)
-      $field_to_use = array('ident_ids','spec_coll_ids','spec_don_sel_ids') ;
-	 $sql_params = array();
-    foreach($field_to_use as $field)
-    {
-      if($field == 'ident_ids')
-      {
-        $build_query .= "s.spec_ident_ids && (SELECT array_agg($alias1.id) FROM people $alias1 WHERE fulltoindex(formated_name_indexed) LIKE  '%'||fulltoindex(?)||'%' ) OR " ;
-		$sql_params[]=$people_name;
-      }
-      elseif($field == 'spec_coll_ids')
-      {
-        $build_query .= "(s.spec_coll_ids && (SELECT array_agg($alias2.id) FROM people $alias2 WHERE fulltoindex(formated_name_indexed)LIKE '%'||fulltoindex(?)||'%' ) OR s.expedition_ref IN (SELECT $alias3.record_id FROM CataloguePeople $alias3 WHERE $alias3.referenced_relation= 'expeditions' AND $alias3.people_ref IN (SELECT $alias4.id FROM people $alias4 WHERE fulltoindex(formated_name_indexed) LIKE '%'||fulltoindex(?)||'%')) ) OR " ;
-		$sql_params[]=$people_name;
-		$sql_params[]=$people_name;
-      }
-      else
-      {
-        $build_query .= "s.spec_don_sel_ids && (SELECT array_agg($alias5.id) FROM people $alias5 WHERE fulltoindex(formated_name_indexed) LIKE '%'||fulltoindex(?)||'%' ) OR " ;
-		$sql_params[]=$people_name;
-      }
-    }
-    // I remove the last 'OR ' at the end of the string
-    $build_query = substr($build_query,0,strlen($build_query) -3) ;
-    if($boolean=="AND")
-	{
-		$query->andWhere($build_query, $sql_params) ;
-	}
-	elseif($boolean=="OR")
-	{
-		if($alias_id>1)
-		{
-		 $query->orWhere($build_query, $sql_params) ;
-		}
-		else
-		{
-		 $query->andWhere($build_query, $sql_params) ;
-		}
-	}
-    return $query ;
-  }*/
+ 
   
   
   public function addPeopleSearchColumnQueryFuzzySQL( $people_name, $field_to_use, $alias_id=NULL, &$count_names)
@@ -2267,26 +2321,9 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
       )
       //->from('Specimens s');
       ->from('SpecimensStoragePartsView s');
-	 //JMHerpers 17/09/2019
-	 // ->leftJoin("s.CollectionsRights cr ON s.collection_ref = cr.collection_ref");
-     
-        //$go_tag=TRUE;
-        
-        //if(isset($values['include_text_place'])) 
-        //{
-      
-        //    if($values['include_text_place']==TRUE)
-        //    {
-        //         $go_tag=false;
-                
-        //    }
-        //}
-        //if($go_tag)
-        //{
-	       $this->addTagsColumn($query, $values['Tags'], $values["Tags"]);
-        //}
-	   //$query->andWhere("(cr.user_ref= ? OR ? =8) ", Array($user->getId(),  $user->getDbUserType()));
-      //ftheeten 2018 07 13 (force exectuion of GTU search in first position, as complex query makes precedence order bewtenen OR/AND unsure)
+	 
+	  $this->addTagsColumn($query, $values['Tags'], $values["Tags"]);
+       
 
     if($values['with_multimedia'])
           $query->andWhere("EXISTS (select m.id from multimedia m where m.referenced_relation = 'specimens' AND m.record_id = s.id)") ;
@@ -2374,6 +2411,7 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
     $this->addCatalogueRelationColumnQuery($query, $values['litho_item_ref'], $values['litho_relation'],'lithostratigraphy','litho');
     $this->addCatalogueRelationColumnQuery($query, $values['lithology_item_ref'], $values['lithology_relation'],'lithology','lithology');
     $this->addCatalogueRelationColumnQuery($query, $values['mineral_item_ref'], $values['mineral_relation'],'mineralogy','mineral');
+	$this->addMaintenanceOrWorkflowQuery($query,$values['workflow_statuses'], $values['maintenance_action_observation'], $values['maintenance_or_workflow_people_ref'], $values['maintenance_or_workflow_maintenance_people_ref'],   $values['maintenance_or_workflow_from_date'], $values['maintenance_or_workflow_to_date']);
     
     
     //THIS group of storage fields ftheeten 2016 09 27
