@@ -37,6 +37,26 @@ class MultimediaForm extends BaseMultimediaForm
     
     $this->widgetSchema['type'] = new sfWidgetFormInputHidden(); 
     $this->validatorSchema['type'] = new sfValidatorString(array('required'=>false));
+	
+	
+	$this->widgetSchema['sub_type'] = new widgetFormSelectComplete(array(
+      'model' => 'Multimedia',
+	  'table_method' => 'getDistinctSubTypes',
+      'method' => 'getDistinctSubTypes',
+      'key_method' => 'getDistinctSubTypes',
+	   'add_empty' => false,
+      'change_label' => 'Pick a type of file',
+      'add_label' => 'Add another sub type',
+    ));
+	$this->widgetSchema['sub_type']->setOption('forced_choices', 
+		array_merge(
+			Doctrine_Core::getTable('Multimedia')->getDistinctSubTypes($this->getObject()->getReferencedRelation()) 
+			,
+			Multimedia::getSubTypes(),		  
+			)
+		);
+	
+    $this->validatorSchema['sub_type'] = new sfValidatorString(array('required'=>false));
     
     $this->widgetSchema['creation_date'] = new sfWidgetFormInputHidden(); 
     $this->validatorSchema['creation_date'] = new sfValidatorPass();  

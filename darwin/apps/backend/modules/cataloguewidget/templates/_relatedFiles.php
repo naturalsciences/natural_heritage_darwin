@@ -13,6 +13,12 @@
       <th>
         <?php echo __('Format'); ?>
       </th>
+	  <th>
+        <?php echo __('Type'); ?>
+      </th>
+	  <th>
+        <?php echo __('Sub-type'); ?>
+      </th>
       <th>
         <?php echo __('Created At') ; ?>
       </th>
@@ -41,6 +47,8 @@
         (<?php echo $file->getHumanSize();?>)
       </td>
       <td><?php echo $file->getMimeType(); ?></td>
+	  <td><?php echo $file->getType(); ?></td>
+	  <td><?php echo $file->getSubType(); ?></td>
       <td><?php $date = new DateTime($file->getCreationDate());
                 echo $date->format('d/m/Y'); ?></td>
       <td><?php echo image_tag(($file->getVisible())?'checkbox_checked.png':'checkbox_unchecked.png', array("title" => __('Visible ?'), "alt" => __('Publicly display this file ?')));?></td>

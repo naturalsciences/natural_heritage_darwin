@@ -16,6 +16,13 @@
         <?php echo $form['url'];?>
       </td>
 	</tr>  
+	<tr>
+      <th><?php echo $form['category']->renderLabel();?></th>
+      <td>
+        <?php echo $form['category']->renderError(); ?>
+        <?php echo $form['category'];?>
+      </td>
+	</tr>  
     <tr>
       <th class="top_aligned"><?php echo $form['comment']->renderLabel();?></th>
       <td>

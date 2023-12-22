@@ -1,4 +1,4 @@
-<?php slot('title', __( $form->isNew() ? 'Add specimens' : 'Edit Specimen'));  ?>
+<?php slot('title', __( $form->isNew() ? 'Add specimen(s)' : 'Edit Specimen'));  ?>
 
 <script type="text/javascript">
 $(document).ready(function ()
@@ -43,7 +43,7 @@ $(document).ready(function ()
   <div class="page">
 
 <?php if($form->isNew()):?>
-  <h3 class="spec"><span class="title"><?php echo __( 'Add specimens');?></span></h3>
+  <h3 class="spec"><span class="title"><?php echo __( 'Add specimen(s)');?></span></h3>
 <?php else:?>
   <h3 class="spec">
   <span class="title"><?php echo __('Edit Specimen');?></span>
@@ -58,6 +58,9 @@ $(document).ready(function ()
 
         <?php echo link_to($txt, 'savesearch/pin?source=specimen&id='.$form->getObject()->getId(), array('class'=>'pin_link'));?>
         <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))), 'specimen/view?id='.$form->getObject()->getId()); ?>
+		<?php if($form->getObject()->getRestrictedAccess()):?>
+			<i><b> Non public</b></i>
+		<?php endif;?>
     </span>
   </h3>
 <?php endif;?>
@@ -83,7 +86,7 @@ $(document).ready(function ()
   </div>
 
   <?php 
-		//RMCA 2015 10 19 (new identification, to redirect to a new acction: split_created
+		//RMCA 2015 10 19 (new identification, to redirect to a new action: split_created
 		$formDisplay= form_tag('specimen/'.($form->getObject()->isNew() ? 'create' : 'update?id='.$form->getObject()->getId()), array('class'=>'edition no_border','enctype'=>'multipart/form-data'));
 		if(isset($newIdentification)&&isset($original_id))
 		{
@@ -107,6 +110,13 @@ $(document).ready(function ()
         }
 		print($formDisplay);
 	?>
+	<?php if(!$form->getObject()->isNew()): ?>
+		<?php if($user_rights_on_spec>=4): ?>
+			<span class="specimen_actions">
+				<?php print(__("Non public")); ?> : <?php print($form["restricted_access"]); ?>
+			</span>
+		<?php endif;?>
+	<?php endif;?>	
     <?php echo $form['timestamp']->renderError(); ?>
     <?php echo $form['timestamp'];?>
     <div>
@@ -233,6 +243,8 @@ $(document).ready(function () {
 		}
 	}
 	<?php endif;?>
+	$(".show_on_load").toggle();
+	
 });
 
 

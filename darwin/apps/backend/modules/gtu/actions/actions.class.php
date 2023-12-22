@@ -337,4 +337,29 @@ class gtuActions extends DarwinActions
     return  $this->renderText(json_encode($results));
   
   }
+  
+  public function executeGet_iso_3166_code(sfWebRequest $request)
+  {
+	$results=Array();
+	if($request->hasParameter('q') )
+    {
+        $tag=$request->getParameter('q');
+        $results=Doctrine_Core::getTable('GtuIso3166')->findISO3166Code($tag);
+    }
+    $this->getResponse()->setContentType('application/json');
+    return  $this->renderText(json_encode($results));
+  }
+  
+  
+   public function executeGet_iso_3166_level_2_code(sfWebRequest $request)
+  {
+	$results=Array();
+	if($request->hasParameter('q') )
+    {
+        $tag=$request->getParameter('q');
+        $results=Doctrine_Core::getTable('GtuIso3166')->findISO3166Level2Code($tag);
+    }
+    $this->getResponse()->setContentType('application/json');
+    return  $this->renderText(json_encode($results));
+  }
 }

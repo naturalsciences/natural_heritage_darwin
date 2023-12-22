@@ -2216,6 +2216,8 @@ class RMCATabDataDirect
 		}
 		catch(Doctrine_Exception $ne)
 		{
+			print("??????????????ISSUE");
+			print($ne->getMessage());
 			/*print(">>>>>>>>>>failed Doctrine");
 			//$e = new DarwinPgErrorParser($ne);
 			$this->errors_reported .= "Unit ".$this->name." object were not saved: ".$ne->getMessage().";";

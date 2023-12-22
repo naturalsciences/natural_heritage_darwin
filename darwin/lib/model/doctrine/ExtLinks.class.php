@@ -17,6 +17,7 @@ class ExtLinks extends BaseExtLinks{
     'ext' => 'External',
     'iiif' => 'IIIF',
 	'nagoya'=> 'Nagoya',
+	'nagoya_int_certicate'=> 'Nagoya (link to international certificate of compliance)',
 	'ltp' => 'LTP',
 	/*RMCA values*/
 	'dna' => 'DNA link',

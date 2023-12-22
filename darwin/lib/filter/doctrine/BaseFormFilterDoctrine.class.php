@@ -401,6 +401,11 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
   //ftheeten 2018 10 01 $item_refs=array of taxon keys
   public function addCatalogueRelationColumnQueryArrayRelations($query, $item_refs, $relations, $table, $field_prefix)
   {
+	
+	if($relations===null)
+	{
+		$relations=Array();
+	}
     if(strlen( $item_refs)>0)
     {
         $queryTmpGlobal=Array();
@@ -410,126 +415,68 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
             
             if($item_ref != 0)
             {
-                $queryTmp="";
-                $i=0;
-                
-				$child_and_exact=false;
-				if(in_array('equal',$relations)&&in_array('child',$relations))
+				if(is_numeric($item_ref))
 				{
 					
-					$child_and_exact=true;
-					$item  = Doctrine_Core::getTable($table)->find($item_ref);
-                            //$query->andWhere($field_prefix."_path like ?", $item->getPath().''.$item->getId().'/%');
-                        $queryTmp.=$field_prefix."_path||".$field_prefix."_ref||'/' like '".$item->getPath().$item->getId().'/%'."'" ;
-				}
-				
-                foreach($relations as $relation)
-                {
-                    
-                    $arrayParams=Array();
-                        if($relation == 'equal'&& !$child_and_exact)
-                        {
-                        if($i>0)
-                            {
-                                $queryTmp.= " OR ";
-                            }
-                            //$query->andWhere($field_prefix."_ref = ?", $item_ref);
-                        $queryTmp.=$field_prefix."_ref = ".$item_ref ;
-
-                        }
-                        if($relation == 'child' && !$child_and_exact)
-                        {
-                        if($i>0)
-                            {
-                                $queryTmp.= " OR ";
-                            }
-                            $item  = Doctrine_Core::getTable($table)->find($item_ref);
-                            //$query->andWhere($field_prefix."_path like ?", $item->getPath().''.$item->getId().'/%');
-                        $queryTmp.=$field_prefix."_path like '".$item->getPath().$item->getId().'/%'."'" ;
-
-                        }
-                        if($relation == 'direct_child' && !$child_and_exact)
-                        {
-                        if($i>0)
-                            {
-                                $queryTmp.= " OR ";
-                            }
-                            //$query->andWhere($field_prefix."_parent_ref = ?",$item_ref);
-                        $queryTmp.=$field_prefix."_parent_ref = ".$item_ref;
-                        }
-                        if($relation =='synonym')
-                        {
-                            
-                            if($i>0)
-                            {
-                                $queryTmp.= " OR ";
-
-
-                            }
-                            $queryTmp.= " ( ";
-
-                            $synonyms = Doctrine_Core::getTable('ClassificationSynonymies')->findSynonymsIds($table, $item_ref);
-                            $super_synonyms=Array();
-                             if(in_array("child",$relations))
-                            {
-								$synonyms_2 = Doctrine_Core::getTable('ClassificationSynonymies')->getAllChildSynonyms($item_ref);
-								$super_synonyms=array_merge($synonyms,$synonyms_2 );
-							}
-							elseif(in_array("direct_child",$relations))
-                            {
-								$synonyms_2 = Doctrine_Core::getTable('ClassificationSynonymies')->getAllDirectChildSynonyms($item_ref);
-								$super_synonyms=array_merge($synonyms,$synonyms_2 );
-						    }
-							$super_synonyms=array_unique($super_synonyms);
-
-                            //if(empty($synonyms))
-                            //$query->andWhere('0=1'); //False
-                            //$query->andWhereIn($field_prefix."_ref",$synonyms)
-                            //->andWhere($field_prefix."_ref != ?",$item_ref); // remove himself
-                            if(empty($synonyms))
-                            {
-                                $queryTmp.=" 0=1 ";
-                            }
-                            else
-                            {
-                                $queryTmp.=$field_prefix."_ref IN (".implode(",", $synonyms ).")";
-                                $queryTmp.=" AND ".$field_prefix."_ref != ".$item_ref;
-                                //ftheeten 2018 09 03
-                                if(in_array("child",$relations))
-                                {
-                                    //$queryTmp.=" OR 24=24 ";
-                                    foreach($synonyms as $syno_object)
-                                    {
-                                        $queryTmp.=" OR ".$field_prefix."_path like '%/".$syno_object."/%'" ;
-                                    }
-                                }
-                                elseif(in_array("direct_child",$relations))
-                                {
-                                    foreach($synonyms as $syno_object)
-                                    {
-                                        $queryTmp.=" OR ".$field_prefix."_parent_ref = ".$syno_object ;
-                                    }
-                                }
-                                
-                                
-                                
-                                
-                            }
-                            $queryTmp.= " ) ";
-                            
-                            if(count($super_synonyms)>0)
-                                {
-                                   $queryTmp.=" OR (EXISTS(SELECT 1 FROM taxonomy WHERE taxonomy.id=taxon_ref AND taxonomy.id IN (".implode(",", $super_synonyms ).") ))"; ;
-                                   
-                                }
-
-                        }
-                   
-                    $i++;
-                }
+					$queryTmp="";
+					$i=0;
+					
+					$child_and_exact=false;
+					if(in_array('synonym',$relations))
+					{
+						if(in_array("child",$relations))
+						{
+							
+							$queryTmp.=$field_prefix."_ref IN (select fct_rmca_taxo_get_syno_children(".$item_ref.") )";
+						}
+						elseif(in_array("direct_child",$relations))
+						{
+							
+							$queryTmp.=$field_prefix."_ref IN (select fct_rmca_taxo_get_syno_direct_children(".$item_ref.") )";
+						}
+						else
+						{
+							
+							$queryTmp.=$field_prefix."_ref IN (select fct_rmca_taxo_get_syno(".$item_ref.") )";
+						}
+					}
+					elseif(in_array('equal',$relations)&&in_array('child',$relations))
+					{
+						
+						$queryTmp.=$field_prefix."_path LIKE '%/".$item_ref."/%' OR ".$field_prefix."_ref=".$item_ref;
+					}
+					elseif(in_array('equal',$relations)&&in_array('direct_child',$relations))
+					{
+						
+						$queryTmp.=$field_prefix."_path LIKE '%/".$item_ref."/' OR ".$field_prefix."_ref=".$item_ref;
+					}
+					elseif(in_array('child',$relations))
+					{
+						
+						$queryTmp.=$field_prefix."_path LIKE '%/".$item_ref."/%'";
+					}
+					elseif(in_array('direct_child',$relations))
+					{
+						
+						$queryTmp.=$field_prefix."_path LIKE '%/".$item_ref."/'";
+					}
+					elseif(in_array('equal',$relations))
+					{
+						
+						$queryTmp.=$field_prefix."_ref=".$item_ref;
+					}
+					else
+					{
+						print("equal_default");
+						$queryTmp.=$field_prefix."_ref=".$item_ref;
+					}
+					$i++;
+					
                  $queryTmpGlobal[]="(".$queryTmp." ) ";
+				}
             }
         }
+		
 		if(count($queryTmpGlobal)>0)
 		{
 			$query->andWhere(implode(" OR ", $queryTmpGlobal));
@@ -569,6 +516,36 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
         $sql .= " and db_user_type >= 2";
       }
 	  
+      $q = $conn->prepare($sql);
+      $q->execute(array(':userid' => $user->getId()));
+      $colls = $q->fetchAll();
+      $results = array(0=>0);
+      foreach($colls as $col)
+      {
+        $results[] = $col[0];
+      }
+      return $results;
+  }
+  
+  //ftheeten 2023 05 12
+   public static function getCollectionWithAdminRights($user)
+  {
+      if($user->isA(Users::ADMIN))
+      {
+        $res = array(0=>0);
+        $results = Doctrine_Query::create()
+          ->select('id')
+          ->from('Collections')->fetchArray();
+        foreach($results as $row)
+        {
+          $res[] = $row['id'];
+        }
+        return $res;
+      }
+      $conn = Doctrine_Manager::connection();
+      $sql = "SELECT collection_ref from collections_rights where user_ref = :userid ";
+      $sql .= " and db_user_type >= 4";
+
       $q = $conn->prepare($sql);
       $q->execute(array(':userid' => $user->getId()));
       $colls = $q->fetchAll();

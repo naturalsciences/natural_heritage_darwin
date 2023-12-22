@@ -17,6 +17,7 @@ class BaseMassActionForm extends sfFormSymfony
   {
     $result = array(
         'collection_ref' => self::getI18N()->__('Change Collection'),
+		'restricted_access' => self::getI18N()->__('Change public access'),
         'taxon_ref' => self::getI18N()->__('Change Taxonomy'),
         'lithology_ref' => self::getI18N()->__('Change Lithology'),
         'chronostratigraphy_ref' => self::getI18N()->__('Change Chronostratigraphy'),
@@ -34,6 +35,7 @@ class BaseMassActionForm extends sfFormSymfony
 
         'maintenance' => self::getI18N()->__('Add Maintenance'),
 		'informative_workflow' => self::getI18N()->__('Add Suggestion / Problem'),
+		'specimen_part' => self::getI18N()->__('Change Specimen part'),
         'building' => self::getI18N()->__('Change Building'),
         'floor' => self::getI18N()->__('Change Floor'),
         'room' => self::getI18N()->__('Change Room'),
@@ -56,7 +58,9 @@ class BaseMassActionForm extends sfFormSymfony
   {
     if($action == 'collection_ref')
       return 'MaCollectionRefForm';
-
+    if($action == 'restricted_access')
+      return 'MaRestrictedAccessForm';
+	  
     elseif($action == 'taxon_ref')
       return 'MaTaxonomyRefForm';
 
@@ -95,6 +99,8 @@ class BaseMassActionForm extends sfFormSymfony
       return 'MaMaintenanceForm';
     elseif($action == 'informative_workflow')
       return 'MaInformativeWorkflowForm';
+	elseif($action == 'specimen_part')
+      return 'MaSpecimenPartForm';
     elseif($action == 'building')
       return 'MaBuildingForm';
     elseif($action == 'floor')
@@ -138,6 +144,8 @@ class BaseMassActionForm extends sfFormSymfony
 
       $query = Doctrine_Query::create()->update('Specimens s');
       //ftheeten 2017 07 27
+	  //$query_test_storage=Doctrine_Query::create()->select('StorageParts p')->andWhere();
+	  
       $query_storage=Doctrine_Query::create()->update('StorageParts p');
       if($is_admin == false)
       {
@@ -168,11 +176,37 @@ class BaseMassActionForm extends sfFormSymfony
               $this->getEmbeddedForm('MassActionForm')->getEmbeddedForm($key)->doGroupedAction($query, $actions_values[$key], $this->getValue('item_list'));
               $group_action_specimen++;
            }
-           //ftheeten 2017 07 27
+           //ftheeten 2017 07 27 storage
            elseif(array_key_exists("p", $tableTmp))
            {
-                $this->getEmbeddedForm('MassActionForm')->getEmbeddedForm($key)->doGroupedAction($query_storage, $actions_values[$key], $this->getValue('item_list'));
-              $group_action_storage++;
+				//2023 12 14 check only one part by specimen
+				$key_specimens=$this->getValue('item_list');
+				$go=true;
+				$list_errors=[];
+				foreach($key_specimens as $pk)
+				{
+					$parts= Doctrine_Core::getTable('StorageParts')->findBySpecimenRef( $pk);
+					$nb_parts=count($parts);
+					print($nb_parts);
+					if($nb_parts>1)
+					{
+						$go=false;
+						//$_SESSION['mass_action_messages'][]="Error : one specimen has more than one storage part, can't update";
+						$list_errors[]="http://darwin/backend.php/specimen/view/id/".$pk;
+						
+					}
+				}
+				if($go)
+				{
+		   
+					$this->getEmbeddedForm('MassActionForm')->getEmbeddedForm($key)->doGroupedAction($query_storage, $actions_values[$key], $this->getValue('item_list'));
+					$group_action_storage++;
+				}
+				else
+				{
+					$_SESSION['mass_action_messages'][]="Error : one specimen at least has more than one storage part, can't update.  Check ".implode(" ", $list_errors);
+				}
+              
            }
         }
 
@@ -181,12 +215,17 @@ class BaseMassActionForm extends sfFormSymfony
           $this->getEmbeddedForm('MassActionForm')->getEmbeddedForm($key)->doMassAction($user_id, $this->getValue('item_list'), $actions_values[$key]);
         }
       }
-      //ftheeten 2017 07 27
-      if($group_action_specimen)
-        $query->execute();
-     if($group_action_storage)
-        $query_storage->execute();
-    }
+		  //ftheeten 2017 07 27
+		  if($group_action_specimen)
+		  {
+			$query->execute();
+		  }
+		 if($group_action_storage>0)
+		 {
+			$query_storage->execute();
+		 }
+    
+	}
   }
 
   public function addSubForm($field_name)

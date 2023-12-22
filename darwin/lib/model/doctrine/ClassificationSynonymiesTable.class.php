@@ -71,7 +71,7 @@ class ClassificationSynonymiesTable extends DarwinTable
    * @param array $groups array of group ids to filter the research
    * @return array of array of result. each item has keys  id, record_id, group_id, is_basionym, order_by, item_id, name (of the referenced record)
   */
-  public function findAllForRecord($table_name, $record_id, $groups = null)
+    public function findAllForRecord($table_name, $record_id, $groups = null)
   {
     if($groups === null)
       $groups = $this->findGroupsIdsForRecord($table_name, $record_id);
@@ -80,7 +80,7 @@ class ClassificationSynonymiesTable extends DarwinTable
       return array();
 
     $q = Doctrine_Query::create()
-      ->select('s.group_name, s.id, s.record_id, s.group_id, s.is_basionym, s.order_by, s.synonym_record_id, s.original_synonym, t.name, t.id ' .($table_name=='taxonomy' ? ', t.extinct, t.status' : ''))
+      ->select("s.syn_date , s.group_name, s.id, s.record_id, s.group_id, s.is_basionym, s.order_by, s.synonym_record_id, s.original_synonym, t.name, t.id " .($table_name=='taxonomy' ? ', t.extinct, t.status' : ''))
       ->from('ClassificationSynonymies s, '.DarwinTable::getModelForTable($table_name). ' t')
       ->where('s.referenced_relation = ?',$table_name) //Not really necessay but....
       ->andWhere('s.record_id=t.id')
@@ -94,27 +94,35 @@ class ClassificationSynonymiesTable extends DarwinTable
     {
       $catalogue = DarwinTable::getModelForTable($table_name);
       $cRecord = new $catalogue();
-      $cRecord->setName($item[8]);
-      $cRecord->setId($item[9]);
+      $cRecord->setName($item[9]);
+      $cRecord->setId($item[10]);
 	  
-	  if($table_name=='taxonomy')
+	 if($table_name=='taxonomy')
 	  {
-        $cRecord->setExtinct($item[10]);
-		$cRecord->setStatus($item[11]);
+        $cRecord->setExtinct($item[11]);
+		if(count($item)>=11)
+		{
+			$cRecord->setStatus($item[12]);
+		}
 	  }
+		if($item[0]=='0001-01-01 00:00:00')
+		{
+			$item[0]="";
+		}
       //group_name 
-      if(! isset($results[$item[0]]) )
-        $results[$item[0]]=array();
-      $results[$item[0]][] = array(
-        'id' => $item[1],
-        'record_id' => $item[2],
-        'group_id' => $item[3],
-        'is_basionym' => $item[4],
-        'order_by' => $item[5],
+      if(! isset($results[$item[1]]) )
+        $results[$item[1]]=array();
+      $results[$item[1]][] = array(
+        'id' => $item[2],
+        'record_id' => $item[3],
+        'group_id' => $item[4],
+        'is_basionym' => $item[5],
+        'order_by' => $item[6],
         
         'ref_item' => $cRecord,
-        'synonym_record_id' => $item[6],
-		'original_synonym' => $item[7]
+        'synonym_record_id' => $item[7],
+		'original_synonym' => $item[8],
+		'syn_date' => $item[0]
       );
     }
     return $results;
@@ -283,7 +291,7 @@ class ClassificationSynonymiesTable extends DarwinTable
    * @param int $record_id_2 id of the second referenced record
    * @param string $group_name the type of the group (synonym, homonym,...)
   */
-  public function mergeSynonyms($table, $record_id_1, $record_id_2, $group_name)
+  public function mergeSynonyms($table, $record_id_1, $record_id_2, $group_name, $date, $date_mask)
   {
     //Get id For the element to be linked
     $ref_group_id_1 = $this->findGroupIdFor($table, $record_id_1, $group_name);
@@ -299,6 +307,8 @@ class ClassificationSynonymiesTable extends DarwinTable
       $c1->setRecordId($record_id_2);
       //ftheeten 2017 02 08
       $c1->setSynonymRecordId($record_id_2);
+	  $c1->setSynDate($date);
+	  $c1->setSynDateMask($date_mask);
       
       if($ref_group_id_1 == 0 && $ref_group_id_2 == 0) //If there is no group
       {

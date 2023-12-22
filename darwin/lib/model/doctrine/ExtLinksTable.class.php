@@ -21,4 +21,6 @@ class ExtLinksTable extends DarwinTable
      $q = $this->addCatalogueReferences($q, $table_name, $record_id, 'e', true);
     return $q->execute();
   }    
+  
+  
 }

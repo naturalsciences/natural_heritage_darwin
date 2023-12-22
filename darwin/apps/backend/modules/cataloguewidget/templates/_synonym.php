@@ -29,6 +29,7 @@
           <?php endif;?>
         </th>
 		<th><?php echo __('Original synonym');?></th>
+		<th><?php echo __('Date');?></th>
         <th></th>
             </tr>
           </thead>
@@ -78,6 +79,11 @@
 			  <td class="origi_cell">
                 
                   <a href="#" <?php if($synonym['original_synonym']):?> class="origi_check checked"<?php else: ?> class="origi_check"<?php endif;?>></a>
+           
+              </td>
+			   <td class="date_cell">
+                
+                 <?php print($synonym['syn_date']); ?>
            
               </td>
               <td class="widget_row_delete">

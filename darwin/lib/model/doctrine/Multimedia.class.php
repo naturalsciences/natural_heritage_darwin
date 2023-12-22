@@ -70,12 +70,25 @@ class Multimedia extends BaseMultimedia
     'doc' => 'application/msword',
     'rtf' => 'application/rtf',
     'xls' => 'application/vnd.ms-excel',
+	 'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     'ppt' => 'application/vnd.ms-powerpoint',
 
     // open office
     'odt' => 'application/vnd.oasis.opendocument.text',
     'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
         );
+		
+  private static $sub_types=array(
+	null=>"undefined",
+    "nagoya_pic"=>"Nagoya - Prior Informed Consent (PIC)",
+	"nagoya_mat"=>"Nagoya - Mutally Agreed terms (MAT)",
+	"nagoya_mta"=>"Nagoya - Material Transfert Agreement (MTA)",	
+  );
+  
+   static public function getSubTypes()
+   {
+	return self::$sub_types ;
+   }
 
   public function getCreationDateMasked()
   {
@@ -93,8 +106,8 @@ class Multimedia extends BaseMultimedia
   {
 	  
     $this->checkUploadPathAvailable() ;
-	print("BUILDED\r\n");
-	print( sfConfig::get('sf_upload_dir')."/multimedia/".$this->getBuildedUrl());
+	//print("BUILDED\r\n");
+	//print( sfConfig::get('sf_upload_dir')."/multimedia/".$this->getBuildedUrl());
     rename(
       sfConfig::get('sf_upload_dir')."/multimedia/temp/".$this->_get('uri'),
       sfConfig::get('sf_upload_dir')."/multimedia/".$this->getBuildedUrl()

@@ -1,6 +1,9 @@
 <?php echo $form['ig_ref']->renderError() ?>
 <?php echo $form['ig_ref']->render() ?>
 
+<!--<div class="add_code">-->
+<!--<?php echo link_to(__('Check and create I.G.'),'igs/new', array("target"=>"_blank"));?>-->
+<!--</div>-->
 <script type="text/javascript">
 $('#specimen_ig_ref_check').change(function(){
   if($(this).val()) 

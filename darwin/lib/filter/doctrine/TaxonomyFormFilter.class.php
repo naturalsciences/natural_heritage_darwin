@@ -175,6 +175,11 @@ class TaxonomyFormFilter extends BaseTaxonomyFormFilter
        
         ), array( 'style' => "display: inline-block;text-align:center"));
     $this->validatorSchema['cites'] = new sfValidatorString(array('required' => false));
+	
+	 //2019 03 29
+	$this->widgetSchema['name_fuzzy'] = new sfWidgetFormInputCheckbox(array('default' => FALSE));
+  	////ftheeten 2015 09 09
+	$this->validatorSchema['name_fuzzy'] = new sfValidatorPass();
   }
 
   public function doBuildQuery(array $values)
@@ -213,7 +218,23 @@ class TaxonomyFormFilter extends BaseTaxonomyFormFilter
     
     if ($values['name'] != '')
     {
-     $query->andWhere("  name_indexed LIKE  fulltoindex(?)||'%' ", $values['name']);
+	
+	$fuzzy=false;
+		if($values['name_fuzzy']!="")
+		{
+			if(strtolower($values['name_fuzzy'])=="on")
+			{
+				$fuzzy=true;
+			}
+		}
+		if($fuzzy)
+		{
+			$query->andWhere("  name_indexed LIKE   '%'||fulltoindex(?)||'%' ", $values['name']);
+		}
+		else
+		{
+			$query->andWhere("  name_indexed LIKE fulltoindex(?)||'%' ", $values['name']);
+		}
     }
 
 	//JMHerpers 2019 04 29

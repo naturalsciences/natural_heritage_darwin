@@ -10,6 +10,9 @@
  * @property string $ig_num_indexed
  * @property integer $ig_date_mask
  * @property string $ig_date
+ * @property string $nagoya_status
+ * @property string $ig_type
+ * @property boolean $complete
  * @property Specimens $Specimens
  * @property Doctrine_Collection $LoanItems
  * 
@@ -18,6 +21,9 @@
  * @method string              getIgNumIndexed()   Returns the current record's "ig_num_indexed" value
  * @method integer             getIgDateMask()     Returns the current record's "ig_date_mask" value
  * @method string              getIgDate()         Returns the current record's "ig_date" value
+ * @method string              getNagoyaStatus()   Returns the current record's "nagoya_status" value
+ * @method string              getIgType()         Returns the current record's "ig_type" value
+ * @method boolean             getComplete()       Returns the current record's "complete" value
  * @method Specimens           getSpecimens()      Returns the current record's "Specimens" value
  * @method Doctrine_Collection getLoanItems()      Returns the current record's "LoanItems" collection
  * @method Igs                 setId()             Sets the current record's "id" value
@@ -25,6 +31,9 @@
  * @method Igs                 setIgNumIndexed()   Sets the current record's "ig_num_indexed" value
  * @method Igs                 setIgDateMask()     Sets the current record's "ig_date_mask" value
  * @method Igs                 setIgDate()         Sets the current record's "ig_date" value
+ * @method Igs                 setNagoyaStatus()   Sets the current record's "nagoya_status" value
+ * @method Igs                 setIgType()         Sets the current record's "ig_type" value
+ * @method Igs                 setComplete()       Sets the current record's "complete" value
  * @method Igs                 setSpecimens()      Sets the current record's "Specimens" value
  * @method Igs                 setLoanItems()      Sets the current record's "LoanItems" collection
  * 
@@ -59,6 +68,15 @@ abstract class BaseIgs extends DarwinModel
         $this->hasColumn('ig_date', 'string', null, array(
              'type' => 'string',
              'default' => '0001-01-01',
+             ));
+        $this->hasColumn('nagoya_status', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('ig_type', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('complete', 'boolean', null, array(
+             'type' => 'boolean',
              ));
     }
 

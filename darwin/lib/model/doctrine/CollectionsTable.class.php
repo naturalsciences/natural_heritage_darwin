@@ -319,6 +319,7 @@ class CollectionsTable extends DarwinTable
     }
     
     $conn = Doctrine_Manager::connection();
+
     $q = $conn->prepare($sql);
     
      if(strlen($year)>0)

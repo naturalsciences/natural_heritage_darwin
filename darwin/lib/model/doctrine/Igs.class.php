@@ -12,6 +12,19 @@
  */
 class Igs extends BaseIgs
 {
+
+   private static $ig_type_allowed_value = array(
+	 ''=>'Undefined',
+   'field_mission' => 'Field mission',
+   'donation' => 'Donation'
+   ) ;
+
+  static public function getIgTypeAllowedValue()
+  {
+    return self::$ig_type_allowed_value ;
+  }
+
+
   public function getIgDateMasked ()
   {
     $dateTime = new FuzzyDateTime($this->_get('ig_date'), $this->_get('ig_date_mask'));

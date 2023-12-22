@@ -5,7 +5,7 @@ import io
 from threading import Lock
 import socket, select, sys
 
-PG_CONNEX = "host='' dbname='' user='' password=''"
+PG_CONNEX = "host='172.16.11.113' dbname='darwin2' user='darwin2' password='phvisodu$ft'"
 LOGFILE = 'D:\Thermic_printer\log\main_printer_darwin.log' 
 #IP_SERVICE =  'fp2.museum.africamuseum.be'
 #IP_SERVICE =  '172.16.1.12'

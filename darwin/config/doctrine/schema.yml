@@ -629,6 +629,8 @@ ClassificationSynonymies:
         #ftheeten 2017 08 02
         synonym_record_id: { type: integer}
         original_synonym: { type: boolean, default: false}
+        syn_date_mask: { type: integer, notnull: true, default:0}
+        syn_date: { type: string, default:'0001-01-01'}
 
 Chronostratigraphy:
     columns:
@@ -728,6 +730,9 @@ Igs:
         ig_num_indexed: { type: string, notnull: true}
         ig_date_mask: { type: integer, notnull: true, default:0}
         ig_date: { type: string, default:'0001-01-01'}
+        nagoya_status: {type: string}
+        ig_type: {type: string}
+        complete: { type: boolean}
     relations:
         Specimens:
             local: id
@@ -787,7 +792,7 @@ Specimens:
         acquisition_date: { type: string, default: '0001-01-01'}
         station_visible: { type: boolean, default: true}
         ig_ref: { type: integer}
-
+        restricted_access: { type: boolean}
         spec_coll_ids: { type:string}
         spec_ident_ids: { type:string}
         spec_don_sel_ids: { type:string}
@@ -1840,3 +1845,31 @@ MvCodesSeries:
         code_full: {type: string},
         serie_indexed: {type: string}
         
+VIgsSpecStats:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true}
+        ig_num: { type: string, notnull: true}
+        ig_num_indexed: { type: string, notnull: true}
+        ig_date_mask: { type: integer, notnull: true, default:0}
+        ig_date: { type: string, default:'0001-01-01'}
+        nagoya_status: {type: string}
+        ig_type: {type: string}
+        spec_count_by_collection: { type: integer}
+        spec_count: { type: integer}
+        complete: {type: boolean}
+    relations:
+        Specimens:
+            local: id
+            foreign: ig_ref
+
+GtuIso3166:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true}            
+        iso3166_code: { type: string, notnull: true}
+        iso3166_name: { type: string, notnull: true}
+        iso3166_2_code: { type: string }
+        iso3166_2_name: { type: string }
+        level2_subdivision_code: { type: string }
+        level2_subdivision_name: { type: string }
+        search_field: { type: string }
+

@@ -17,12 +17,19 @@
           </td>
         </tr>
         <tr>
-          <th class="top_aligned"><?php echo $form['description']->renderLabel();?></th>
+          <th class="top_aligned"><?php echo $form['sub_type']->renderLabel();?></th>
           <td>
-            <?php echo $form['description']->renderError(); ?>
-            <?php echo $form['description'];?>
+            <?php echo $form['sub_type']->renderError(); ?>
+            <?php echo $form['sub_type'];?>
           </td>
         </tr>
+		<tr>
+			<th class="top_aligned"><?php echo $form['description']->renderLabel();?></th>
+			<td>
+				<?php echo $form['description']->renderError(); ?>
+				<?php echo $form['description'];?>
+			</td>
+		</tr>
         <tr>
           <th class="top_aligned"><?php echo $form['visible']->renderLabel();?></th>
           <td>

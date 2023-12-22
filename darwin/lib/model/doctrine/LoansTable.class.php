@@ -83,7 +83,6 @@ class LoansTable extends DarwinTable
     $q = Doctrine_Query::create()
       ->from('Loans l')
       ->innerJoin('l.LoanStatus')
-//       ->andWhere("EXISTS (SELECT ls.id FROM LoanStatus ls WHERE loan_ref = l.id AND ls.status IN ('running', 'extended') AND is_last = TRUE )")
       ->andWhere('EXISTS (SELECT li.id FROM LoanItems li WHERE li.loan_ref = l.id AND li.specimen_ref = ? )', $id);
     return $q->execute();
   }
@@ -188,5 +187,24 @@ class LoansTable extends DarwinTable
       ->orderBy("formated_name ASC");
 	$res = $q->execute();
     return $res;
+  }
+  
+  public function getLastCodeForLoan($collection_ref)
+  {
+	$results=Array();
+	$conn = Doctrine_Manager::connection();
+		 $sql="SELECT name FROM loans WHERE collection_ref=:coll ORDER BY id DESC LIMIT 1;";
+		 $q = $conn->prepare($sql);
+		 $q->execute(array(':coll' => $request->getParameter('coll_nr')));
+		 $collections = $q->fetchAll();
+		
+		 $i=0;
+		 if(count($collections)>0)
+		 {
+			$results[0]['name_loan']= $collections[0][0];
+			
+		 }
+	return $results;
+	
   }
 }

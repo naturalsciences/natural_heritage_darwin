@@ -44,7 +44,9 @@ class synonymActions extends DarwinActions
 	              $request->getParameter('table'),
 	              $this->form->getValue('record_id'),
 	              $request->getParameter('id'),
-	              $this->form->getValue('group_name')
+	              $this->form->getValue('group_name'),
+				   $this->form->getValue('syn_date'),
+				  $this->form->getValue('syn_date_mask')
 	            );
 	          $conn->commit();
 	          return $this->renderText('ok');

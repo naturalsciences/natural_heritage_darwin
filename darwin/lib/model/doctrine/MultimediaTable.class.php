@@ -79,4 +79,21 @@ class MultimediaTable extends DarwinTable
       $files[] = sfConfig::get('sf_upload_dir')."/multimedia/".$media->getUri();
     return $files ;
   }
+  
+    public function getDistinctSubTypes($table="specimens")
+   {
+		 $q = Doctrine_Query::create()
+		  ->select('m.sub_type')
+		  ->from('Multimedia m')
+          ->andWhere("referenced_relation=?", $table) 		  
+		  ->distinct(true);
+		$results = $q->fetchArray();
+		$response = array();
+		foreach ( $results as $item ) 
+		{
+		  $response[$item['sub_type']] = $item['sub_type'];
+		}
+		asort($response);
+		return $response;
+   }
 }

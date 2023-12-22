@@ -6,6 +6,12 @@
 
 <?php echo $form['taxon_ref']->renderError() ?>
 <?php echo $form['taxon_ref']->render() ?>
+<div>
+	<input type="radio" id="coll_scope_coll_only" name="coll_scope"  class="coll_scope" value="coll_only" />
+	<?php print(__("Names in chosen collection"));?>
+		<input type="radio" id="coll_scope_all_colls" name="coll_scope"  class="coll_scope"  value="all_cols" checked />
+	<?php print(__("All names"));?>
+</div>
 </BR><div><?php print($hasSynonyms);?></div></BR>
 <!--<B><label class="cites"></label></B></BR>-->
 <table>
@@ -73,7 +79,9 @@
         }
     });
 
-	$(document).ready(function (){
+	$(document).ready(function ()
+	{
+		
 		var $val_id=$("#specimen_taxon_ref").val();
 
 		if ($val_id != ""){
@@ -105,6 +113,49 @@
 				testcites($("#specimen_taxon_ref_name").val(),$taxonarr);
 			}
 		 });
+		 
+		 console.log("init_taxon");
+		 if(!url_autocomplete_taxon_init_from_coll)
+		 {
+			console.log("_BB");
+			url_autocomplete_taxon="<?php print(url_for("catalogue/completeNameTaxonomyWithRef")); ?>";
+		 }
+		 console.log("_B");
+		 console.log(url_autocomplete_taxon);
+		 $("#specimen_taxon_ref_name").catcomplete(
+			{
+				"source":url_autocomplete_taxon
+			}
+		 );
+		 
+		 $(".coll_scope").change(
+			function()
+			{
+				
+				var tmp=$('input[name="coll_scope"]:checked').val();
+				console.log(tmp);
+				mode_autocomplete_taxa=tmp;
+				if(mode_autocomplete_taxa=="coll_only")
+				{
+					var tmp_coll=$("#specimen_collection_ref").val();
+					if($.isNumeric(tmp_coll))
+					{
+						url_autocomplete_taxon_init_from_coll_current_coll=tmp_coll;
+						url_autocomplete_taxon="<?php print(url_for("catalogue/completeNameTaxonomyWithRef")); ?>?coll="+url_autocomplete_taxon_init_from_coll_current_coll;
+					}
+				}
+				else
+				{
+					url_autocomplete_taxon="<?php print(url_for("catalogue/completeNameTaxonomyWithRef")); ?>";
+				}
+				 $("#specimen_taxon_ref_name").catcomplete(
+					{
+						"source":url_autocomplete_taxon
+					}
+				 );
+				console.log(url_autocomplete_taxon);
+			}
+		 );
 	});
 	
 	//JMHerpers 12/9/2019
@@ -122,4 +173,6 @@
 		
 		$urltaxon = "http://checklist.cites.org/#/en/search/output_layout=alphabetical&level_of_listing=0&show_synonyms=1&show_author=1&show_english=1&show_spanish=1&show_french=1&scientific_name=" + $taxonval + "&page=1&per_page=20";
 	}
+	
+
 </script>

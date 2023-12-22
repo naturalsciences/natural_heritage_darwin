@@ -26,6 +26,8 @@ class StorageParts extends BaseStorageParts
           'observation' => 'Observation',
           'figurate' => 'Figurate',
           'figurate-physical' => 'Figurate-Physical',
+		  'dna_voucher'=> "DNA (voucher)",
+		  'dna_tissue'=> "DNA (tissue)",
         );
       }
 }

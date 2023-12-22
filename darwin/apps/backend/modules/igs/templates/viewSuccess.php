@@ -2,6 +2,10 @@
 <?php slot('title', __('View I.G.'));  ?>
 <div class="page">
     <h1><?php echo __('View I.G.');?></h1>
+	
+	<?php if(count($no_right_col) == 0 || $sf_user->isA(Users::ADMIN) ):?>
+		<div style="margin-bottom:5px"><b>Edit: </b><?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))), 'igs/edit?id='.$igs->getId()); ?></div>
+	<?php endif ?>
   <div class="table_view">
   <table>
     <tbody>

@@ -39,7 +39,8 @@ class SpecimensForm extends BaseSpecimensForm
       'specimen_count_females_min', 'specimen_count_females_max', 
       'specimen_count_juveniles_min', 'specimen_count_juveniles_max',
        'gtu_from_date', 'gtu_to_date',   
-	   'nagoya'
+	   'nagoya',
+	   'restricted_access'
     ));
     
     //ftheeten 2016 09 21

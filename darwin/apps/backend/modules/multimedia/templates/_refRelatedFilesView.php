@@ -49,7 +49,9 @@
 		<thead>
 		  <tr>
 			<th><?php echo __('Download'); ?></th>
-			<th colspan="2"><?php echo __('MIME'); ?></th>
+			<th><?php echo __('MIME'); ?></th>
+			<th><?php echo __('Type'); ?></th>
+			<th><?php echo __('Sub type'); ?></th>
 		  </tr>
 		</thead>
         <tr class="row_num_<?php echo $row_num;?>">
@@ -59,7 +61,9 @@
               <?php echo link_to($file->getFileName()." ".image_tag('criteria.png'),'multimedia/downloadFile?id='.$file->getId(), array('alt'=>$alt, 'title'=>$alt)) ; ?>
            
           </td>
-          <td colspan="2"><?php echo $file->getMimeType(); ?></td>
+          <td ><?php echo $file->getMimeType(); ?></td>
+		  <td ><?php echo $file->getType(); ?></td>
+		   <td ><?php echo $file->getSubType(); ?></td>
         </tr>
 		<?php if(stripos($file->getMimeType(), "image")===0):?>
 		   <tr>

@@ -5,6 +5,7 @@
     <?php if(count($no_right_col) > 0 && !$sf_user->isA(Users::ADMIN) ):?>
       <?php include_partial('catalogue/warnedit', array('no_right_col' => $no_right_col)); ?>
     <?php endif;?>
+	<div style="margin-bottom:5px"><b>View: </b><?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))), 'igs/view?id='.$form->getObject()->getId()); ?></div>
     <?php include_partial('form', array('form' => $form)) ?>
     <?php include_partial('widgets/float_button', array('form' => $form,
                                                         'module' => 'igs',

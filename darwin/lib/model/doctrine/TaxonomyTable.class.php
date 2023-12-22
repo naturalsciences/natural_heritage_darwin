@@ -245,32 +245,83 @@ WHERE taxonomy_level_ref= min_taxonomy_level_ref";
   }
   
   //ftheeten 2018 10 12                  
-  public function completeTaxonomyDisambiguateMetadata($user, $needle, $exact, $limit = 30)
+  public function completeTaxonomyDisambiguateMetadata($user, $needle, $exact, $limit = 30, $collection=null)
   {
         $conn = Doctrine_Manager::connection();
-        if($exact)
-        {
-            $sql = "SELECT  taxonomy.id as value, CASE WHEN count(taxonomy.id) OVER (partition BY name) =1 THEN name
-                ELSE
-                name||' (taxonomy: '||fct_rmca_sort_taxon_path_alphabetically_not_indexed(path)||')'
-                END as label
-                  FROM taxonomy                 
-                   WHERE name=:term ORDER BY name LIMIT :limit;
-                ";
-        
-        }
-        else
-        {
-            $sql = "SELECT  taxonomy.id as value, CASE WHEN count(taxonomy.id) OVER (partition BY name) =1 THEN name
-                ELSE
-                name||' (taxonomy: '||fct_rmca_sort_taxon_path_alphabetically_not_indexed(path)||')'
-                END as label
-                  FROM taxonomy 
-                   WHERE name_indexed like concat(fulltoindex(:term),'%') ORDER BY name LIMIT :limit;
-                ";
-        }       
-        $q = $conn->prepare($sql);
-		$q->execute(array(':term' => $needle, ':limit'=> $limit));
+	
+		
+		$coll_flag=false;
+		if($collection!==null)
+		{
+			if(strlen($collection)>0)
+			{
+				if(is_numeric($collection))
+				{
+					$coll_flag=true;
+				}
+			}
+		}
+		if($coll_flag)
+		{
+			
+			if($exact)
+			{
+				$sql="WITH recursive a(taxon_name, taxon_name_indexed, taxon_ref, taxon_parent_ref, collection_ref)  as
+					(SELECT distinct taxon_name, taxon_name_indexed,  taxon_ref, taxon_parent_ref , collection_Ref
+						FROM darwin2.specimens WHERE collection_ref=:coll AND taxon_name=:term
+						UNION ALL 
+						SELECT name, name_indexed, t.id, t.parent_ref, a.collection_ref
+						FROM taxonomy t, a WHERE t.id=a.taxon_parent_ref AND name=:term
+					)
+				select distinct  taxon_ref as value, taxon_name as label from a ORDER BY taxon_name LIMIT :limit;";
+			}
+			else
+			{
+				$sql="WITH recursive a(taxon_name, taxon_name_indexed, taxon_ref, taxon_parent_ref, collection_ref)  as
+					(SELECT distinct taxon_name, taxon_name_indexed,  taxon_ref, taxon_parent_ref , collection_Ref
+						FROM darwin2.specimens WHERE collection_ref=:coll AND taxon_name_indexed like concat(fulltoindex(:term),'%')
+						UNION ALL 
+						SELECT name, name_indexed, t.id, t.parent_ref, a.collection_ref
+						FROM taxonomy t, a WHERE t.id=a.taxon_parent_ref AND name_indexed like concat(fulltoindex(:term),'%')
+					)
+					select distinct  taxon_ref as value, taxon_name as label from a ORDER BY taxon_name LIMIT :limit;";
+			}
+			$q = $conn->prepare($sql);
+			$criterias=array(':term' => $needle, ':coll'=> $collection,':limit'=> $limit, );
+			
+		}
+		else
+		{
+			
+			if($exact)
+			{
+				$sql = "SELECT  taxonomy.id as value, CASE WHEN count(taxonomy.id) OVER (partition BY name) =1 THEN name
+					ELSE
+					name||' (taxonomy: '||fct_rmca_sort_taxon_path_alphabetically_not_indexed(path)||')'
+					END as label
+					  FROM taxonomy                 
+					   WHERE name=:term ORDER BY name LIMIT :limit;
+					";
+			
+			}
+			else
+			{
+				$sql = "SELECT  taxonomy.id as value, CASE WHEN count(taxonomy.id) OVER (partition BY name) =1 THEN name
+					ELSE
+					name||' (taxonomy: '||fct_rmca_sort_taxon_path_alphabetically_not_indexed(path)||')'
+					END as label
+					  FROM taxonomy 
+					   WHERE name_indexed like concat(fulltoindex(:term),'%')  ORDER BY name LIMIT :limit;
+					";
+			}       
+			
+			
+			
+			$q = $conn->prepare($sql);
+			$criterias=array(':term' => $needle, ':limit'=> $limit);
+		
+		}
+		$q->execute($criterias);
         $results = $q->fetchAll(PDO::FETCH_ASSOC);        
 		
 		return  $results;

@@ -18,6 +18,7 @@ class LoanOverviewForm extends sfForm
 	 $offset=1;
 	if(count($items)<=$size_page)
 	{
+		$current_page=1;
 		foreach ($items as $index => $childObject)
 		{
 		 

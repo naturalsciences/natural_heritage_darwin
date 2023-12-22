@@ -19,6 +19,7 @@
  * @property string $acquisition_date
  * @property boolean $station_visible
  * @property integer $ig_ref
+ * @property boolean $restricted_access
  * @property string $spec_coll_ids
  * @property string $spec_ident_ids
  * @property string $spec_don_sel_ids
@@ -139,6 +140,7 @@
  * @property Doctrine_Collection $SpecimensCodes
  * @property Doctrine_Collection $SpecimensMethods
  * @property Doctrine_Collection $SpecimensTools
+ * @property Doctrine_Collection $VIgsSpecStats
  * 
  * @method integer                getId()                           Returns the current record's "id" value
  * @method integer                getCollectionRef()                Returns the current record's "collection_ref" value
@@ -154,6 +156,7 @@
  * @method string                 getAcquisitionDate()              Returns the current record's "acquisition_date" value
  * @method boolean                getStationVisible()               Returns the current record's "station_visible" value
  * @method integer                getIgRef()                        Returns the current record's "ig_ref" value
+ * @method boolean                getRestrictedAccess()             Returns the current record's "restricted_access" value
  * @method string                 getSpecCollIds()                  Returns the current record's "spec_coll_ids" value
  * @method string                 getSpecIdentIds()                 Returns the current record's "spec_ident_ids" value
  * @method string                 getSpecDonSelIds()                Returns the current record's "spec_don_sel_ids" value
@@ -274,6 +277,7 @@
  * @method Doctrine_Collection    getSpecimensCodes()               Returns the current record's "SpecimensCodes" collection
  * @method Doctrine_Collection    getSpecimensMethods()             Returns the current record's "SpecimensMethods" collection
  * @method Doctrine_Collection    getSpecimensTools()               Returns the current record's "SpecimensTools" collection
+ * @method Doctrine_Collection    getVIgsSpecStats()                Returns the current record's "VIgsSpecStats" collection
  * @method Specimens              setId()                           Sets the current record's "id" value
  * @method Specimens              setCollectionRef()                Sets the current record's "collection_ref" value
  * @method Specimens              setExpeditionRef()                Sets the current record's "expedition_ref" value
@@ -288,6 +292,7 @@
  * @method Specimens              setAcquisitionDate()              Sets the current record's "acquisition_date" value
  * @method Specimens              setStationVisible()               Sets the current record's "station_visible" value
  * @method Specimens              setIgRef()                        Sets the current record's "ig_ref" value
+ * @method Specimens              setRestrictedAccess()             Sets the current record's "restricted_access" value
  * @method Specimens              setSpecCollIds()                  Sets the current record's "spec_coll_ids" value
  * @method Specimens              setSpecIdentIds()                 Sets the current record's "spec_ident_ids" value
  * @method Specimens              setSpecDonSelIds()                Sets the current record's "spec_don_sel_ids" value
@@ -408,6 +413,7 @@
  * @method Specimens              setSpecimensCodes()               Sets the current record's "SpecimensCodes" collection
  * @method Specimens              setSpecimensMethods()             Sets the current record's "SpecimensMethods" collection
  * @method Specimens              setSpecimensTools()               Sets the current record's "SpecimensTools" collection
+ * @method Specimens              setVIgsSpecStats()                Sets the current record's "VIgsSpecStats" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -468,6 +474,9 @@ abstract class BaseSpecimens extends DarwinModel
              ));
         $this->hasColumn('ig_ref', 'integer', null, array(
              'type' => 'integer',
+             ));
+        $this->hasColumn('restricted_access', 'boolean', null, array(
+             'type' => 'boolean',
              ));
         $this->hasColumn('spec_coll_ids', 'string', null, array(
              'type' => 'string',
@@ -887,5 +896,9 @@ abstract class BaseSpecimens extends DarwinModel
         $this->hasMany('SpecimensTools', array(
              'local' => 'id',
              'foreign' => 'specimen_ref'));
+
+        $this->hasMany('VIgsSpecStats', array(
+             'local' => 'ig_ref',
+             'foreign' => 'id'));
     }
 }
