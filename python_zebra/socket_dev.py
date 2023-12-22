@@ -15,7 +15,7 @@ while byte != b"":
 print(all_v)
 
 
-host = ""
+host = "172.16.1.200"
 port = 9100                   # The same port as used by the server
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((host, port))

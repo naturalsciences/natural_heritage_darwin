@@ -114,6 +114,10 @@ class igsActions extends DarwinActions
     $this->setCommonValues('igs', 'ig_num', $request);
     // Instantiate a new expedition form
     $this->form = new IgsFormFilter();
+	if(strtolower($request->getParameter('increment', 'off'))=="on")
+	{
+		$this->increment="on";
+	}
     // Triggers the search result function
     $this->searchResults($this->form,$request);
   }
@@ -245,6 +249,7 @@ class igsActions extends DarwinActions
   {
     $this->igs = Doctrine_Core::getTable('igs')->find($request->getParameter('id'));
     $this->forward404Unless($this->igs,'IG not Found');
+	$this->no_right_col = Doctrine_Core::getTable('Igs')->testNoRightsCollections('ig_ref',$request->getParameter('id'), $this->getUser()->getId());
     $this->form = new igsForm($this->igs);
     $this->loadWidgets();
   }
@@ -268,5 +273,83 @@ class igsActions extends DarwinActions
         return($error);
       }
     }
+  }
+  
+  
+  public function executeDownloadTab(sfWebRequest $request)
+  {
+	   if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
+	   
+	   $this->getResponse()->setHttpHeader('Content-type','text/tab-separated-values');
+		$this->getResponse()->setHttpHeader('Content-disposition','attachment; filename="darwin_ig_statistics.txt"');
+		$this->getResponse()->setHttpHeader('Pragma', 'no-cache');
+		$this->getResponse()->setHttpHeader('Expires', '0');
+		
+		$this->getResponse()->sendHttpHeaders(); //edited to add the missed sendHttpHeaders
+		//$this->getResponse()->setContent($returned);
+		$this->getResponse()->sendContent();   
+	    //$q=$query->execute();
+		//$items=$q->fetchAll(PDO::FETCH_ASSOC);
+		  $this->setCommonValues('igs', 'ig_num', $request);
+		  
+		 $form = new IgsFormFilter();
+		if($request->getParameter('searchIg','') !== '')
+		{
+		  // Bind form with data contained in searchIg array
+		  print_r($request->getParameter('searchIg'));
+		  $form->bind($request->getParameter('searchIg'));
+		  // Test that the form binded is still valid (no errors)
+		  if ($form->isValid())
+		  {
+			$query = $form->getQuery();			
+			 $igss = $query->execute();
+			 print(count($igss));
+			 $comment_ids = array();
+			 $comments=Array();
+			 foreach($igss as $i)
+			 {
+				
+				$comment_ids[] = $i->getId();
+			 }
+			$comments_groups  = Doctrine_Core::getTable('Comments')->getRelatedComment('igs',$comment_ids);
+			foreach($comments_groups as $comment)
+			{
+			  if(isset($comments[$comment->getRecordId()])) $comments[$comment->getRecordId()] .= '/'.$comment->getComment() ;
+			  else $comments[$comment->getRecordId()] = $comment->getComment() ;
+			}
+			
+			$result=Array();
+			foreach($igss as $igs)
+			{
+					$line=Array();
+					$line[]=$igs->getId();
+					$line[]=$igs->getIgNum();
+					$line[]=$igs->getIgDateMasked();
+					if(isset($comments[$igs->getId()]))
+					{
+						 $line[]=preg_replace('/\r\n?/', ".", $comments[$igs->getId()]);
+					}
+					else
+					{
+						$line[]="";
+					}
+					$line[]=$igs->countSpecimens();
+					$line[]=$igs->countSpecimensByCollectionsString();
+					$result[]=implode("\t", $line);
+			}
+			print(implode("\t", array("id","I.G. Num.", "date_html_mask", "Comments", "NB. specimens", "Specimens By collections"))."\r\n");
+			print(implode("\r\n", $result));
+			
+		  }
+		}
+		
+		return sfView::NONE;           
+	  
+  }
+  
+  public function executeIgSearchModal(sfWebRequest $request)
+  {
+	  
+	   $this->searchform = new IgsFormFilter();    
   }
 }

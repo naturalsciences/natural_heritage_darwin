@@ -38,6 +38,12 @@ abstract class BaseClassificationSynonymiesFormFilter extends DarwinModelFormFil
     $this->widgetSchema   ['original_synonym'] = new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no')));
     $this->validatorSchema['original_synonym'] = new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0)));
 
+    $this->widgetSchema   ['syn_date_mask'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['syn_date_mask'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
+
+    $this->widgetSchema   ['syn_date'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['syn_date'] = new sfValidatorPass(array('required' => false));
+
     $this->widgetSchema->setNameFormat('classification_synonymies_filters[%s]');
   }
 
@@ -57,6 +63,8 @@ abstract class BaseClassificationSynonymiesFormFilter extends DarwinModelFormFil
       'order_by' => 'Number',
       'synonym_record_id' => 'Number',
       'original_synonym' => 'Boolean',
+      'syn_date_mask' => 'Number',
+      'syn_date' => 'Text',
     ));
   }
 }

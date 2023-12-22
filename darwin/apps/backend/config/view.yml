@@ -9,9 +9,9 @@ default:
     #language:     en
     #robots:       index, follow
 
-  stylesheets:    [reset.css, main.css?version=20210212, menu.css, /qtip2/dist/jquery.qtip.min.css, ui.datepicker.css, superfish.css,  /openlayers/v6.5.0-dist/ol.css]
+  stylesheets:    [reset.css, main.css?version=20230323, menu.css, /qtip2/dist/jquery.qtip.min.css, ui.datepicker.css, superfish.css,  /openlayers/v6.5.0-dist/ol.css]
 
-  javascripts:    [jquery-1.7.1.min.js, jquery-ui-1.8.17.custom.min.js, core.js?version=20190927, /qtip2/dist/jquery.qtip.min.js , catalogue.js?version=20190527, superclick.js,/js/mousetrap/mousetrap.min.js, /openlayers/v6.5.0-dist/ol.js ]
+  javascripts:    [jquery-1.7.1.min.js, jquery-ui-1.8.17.custom.min.js, core.js?version=20230323, /qtip2/dist/jquery.qtip.min.js , catalogue.js?version=20190527, superclick.js,/js/mousetrap/mousetrap.min.js, /openlayers/v6.5.0-dist/ol.js ]
 
   has_layout:     true
   layout:         layout

@@ -41,4 +41,26 @@ class CollectionsRightsTable extends DarwinTable
       ->andWhere('db_user_type >= 2');
       return $q->count() != 0;
   }
+  
+   public function getUserCollectionRights($user,$collection_ref)
+  {
+	if($user->isA(Users::ADMIN))
+	{
+		return Users::ADMIN;
+	}
+	$q = Doctrine_Query::create()->select("db_user_type")
+      ->from('CollectionsRights')
+      ->andWhere('collection_ref = ?', $collection_ref)
+      ->andWhere('user_ref = ?',$user->getId())
+      ->orderBy('db_user_type DESC');
+	$vals = $q->execute();
+	if(count($vals)>0)
+	{
+		return $vals[0]->getDbUserType();
+	}
+	else
+	{
+		return 0;
+	}
+  }
 }

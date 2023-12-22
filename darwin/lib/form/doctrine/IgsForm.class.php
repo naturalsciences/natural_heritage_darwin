@@ -8,7 +8,7 @@
  * @author     DB team (darwin-ict@naturalsciences.be)
  * @version    SVN: $Id: sfDoctrineFormTemplate.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  *
- */
+ */ 
 class IgsForm extends BaseIgsForm
 {
  /**
@@ -38,7 +38,7 @@ class IgsForm extends BaseIgsForm
                                                                         ),
                                                                    array('class' => 'to_date')
                                                                   );
-    $this->widgetSchema['ig_num']->setAttributes(array('class'=>'small_size'));
+    $this->widgetSchema['ig_num']->setAttributes(array('class'=>'small_size ig_num'));
     $this->validatorSchema['ig_num'] = new sfValidatorString(array('required' => true, 'trim' => true));
     $this->validatorSchema['ig_date'] = new fuzzyDateValidator(array('required' => false,
                                                                      'from_date' => true,
@@ -49,6 +49,21 @@ class IgsForm extends BaseIgsForm
                                                                array('invalid' => 'Date provided is not valid',
                                                                     )
                                                               );
+															  
+    $this->widgetSchema['nagoya_status'] = new sfWidgetFormTextarea();
+	$this->validatorSchema['nagoya_status'] = new sfValidatorString(array('required' => false, 'trim' => true));
+	
+	//phv 2023/03/09  add listbox ig type
+	$this->widgetSchema['ig_type']= new sfWidgetFormChoice(array(
+         'choices' =>  Igs::getIgTypeAllowedValue(),
+         ));
+  $this->validatorSchema['ig_type'] = new sfValidatorString(array('trim'=>true, 'required'=>false));
+  
+	$this->widgetSchema   ['complete'] = new sfWidgetFormInputCheckbox();
+    $this->validatorSchema['complete'] = new sfValidatorBoolean(array('required' => false));
+  
+	
+	
   }
 
 }

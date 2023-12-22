@@ -29,6 +29,7 @@ class widgetFormSelectComplete extends sfWidgetFormDarwinDoctrineChoice
       $class = (!isset($attributes['class']))?'':$attributes['class'];
       if( isset($this->choices[$value]) )
       {
+		
         $widget .= $this->renderTag('input', array( 'type' => 'text', 'id' => $id = $this->generateId($name).'_input', 'class' => 'hidden ' . $class ));
         $widget .= parent::render($name, $value, $attributes, $errors);
         $add_class='';

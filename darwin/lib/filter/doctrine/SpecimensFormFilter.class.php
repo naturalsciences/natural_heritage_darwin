@@ -8,7 +8,7 @@
  * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: sfDoctrineFormFilterTemplate.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
- error_reporting(E_ERROR | E_PARSE);
+
  class SpecimensFormFilter extends BaseSpecimensFormFilter
 {
 	
@@ -24,7 +24,7 @@
         'ig_ref',
 		//JMherpers 2019 04 25
 		'nagoya',
-        'import_ref'
+        'import_ref', 'restricted_access'
         ));
 
     $this->addPagerItems();
@@ -915,7 +915,15 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
         ), array( 'style' => "display: inline-block;text-align:center"));
     $this->widgetSchema['action']->setDefault("insert");
 	$this->validatorSchema['action'] = new sfValidatorPass();
-
+	
+	$this->widgetSchema['restricted_access']=new sfWidgetFormChoice(array(
+        'expanded' => true,
+        'choices'  => array('yes' => 'yes', 'no' => 'no', ''=>'all'),
+        ), array( 'style' => "display: inline-block;text-align:center"));
+    $this->validatorSchema['restricted_access'] = new sfValidatorString(array('required' => false)); 
+    $this->widgetSchema['restricted_access']->setLabel("Restricted access");
+    //$this->validatorSchema['restricted_access'] = new sfValidatorPass(); 
+	
     $this->widgetSchema['determination_status'] = new sfWidgetFormDarwinDoctrineChoice(array(
       'model' => 'Identifications',
       'add_empty'=> true,
@@ -2013,7 +2021,22 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
 		}
 		return $query ;
 	}
-  
+	
+   public function addRestrictedAccess_query($query, $val) 
+   {
+		if(isset($val))
+		{
+			if($val=="yes")
+			{
+				$query->andWhere( "COALESCE(s.restricted_access,FALSE)=TRUE");
+			}
+			elseif($val=="no")
+			{
+				$query->andWhere( "COALESCE(s.restricted_access,FALSE)=FALSE");
+			}
+		}
+    return $query ;
+  }
 
   public function addPropertiesQuery($query, $type , $applies_to, $value_from, $value_to, $unit, $taintedValues=Array()) 
   {
@@ -2126,7 +2149,17 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
   {  
     // the line below is used to avoid with_multimedia checkbox to remains checked when we click to back to criteria
     if(!isset($taintedValues['with_multimedia'])) $taintedValues['with_multimedia'] = false ;
-
+	/*$tmp_restrict=false;
+	if(isset($taintedValues['restricted_access']))
+	{
+		
+		if($taintedValues['restricted_access']=="on")
+		{
+			$tmp_restrict=true;
+		}
+	}*/
+	//$taintedValues['restricted_access']=$tmp_restrict;
+	
     if(isset($taintedValues['Codes'])&& is_array($taintedValues['Codes'])) {
       foreach($taintedValues['Codes'] as $key=>$newVal) {
         if (!isset($this['Codes'][$key])) {
@@ -2281,7 +2314,10 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
 
 	$statuses=Array();
 	$i=0;
-	
+	if($field==null)
+	{
+		$field=Array();
+	}
     if(count($field)>0)
 	{
 		foreach($field as $tmp)
@@ -2305,7 +2341,8 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
   public function doBuildQuery(array $values)
   {
     $this->consultation_collection = $this->getCollectionWithRights( sfContext::getInstance()->getUser());
-    $this->encoding_collection = $this->getCollectionWithRights( sfContext::getInstance()->getUser(), true); 	
+    $this->encoding_collection = $this->getCollectionWithRights( sfContext::getInstance()->getUser(), true);
+	$this->admin_collections = $this->getCollectionWithAdminRights($this->options['user']); 	
 	//$this->encoding_collection = $this->getCollectionWithRights( sfContext::getInstance()->getUser()); 
 	$user=$this->options['user'];
      $query = DQ::create()
@@ -2460,7 +2497,8 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
 	
 	$this->addDeterminationStatus($query, $values["determination_status"], $values["determination_status"]);
    
-   
+	$this->addRestrictedAccess_query($query,$values["restricted_access"]);
+	$query->andWhere('( s.collection_ref in ('.implode(',',$this->admin_collections).') or COALESCE(s.restricted_access, FALSE)=false )');
     //ftheeten 2016 06 222
     $query->limit($this->getCatalogueRecLimits());
 

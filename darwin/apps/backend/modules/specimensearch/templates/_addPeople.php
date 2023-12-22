@@ -1,5 +1,3 @@
-
-
   <tr class="tag_button_line_people_<?php echo($row_line);?>">
       <td colspan="2">
         <input type="button" id='people_switch_precise_<?php echo($row_line);?>' value="<?php echo __('Precise search'); ?>" disabled>
@@ -11,8 +9,6 @@
 	  <th  colspan="2"class="fuzzy_people_<?php echo($row_line);?> hidden"><?php echo $form['people_fuzzy']->renderLabel();?></th>
       <th><?php echo $form['role_ref']->renderLabel();?></th>
     </tr>
- 
-
     <tr class="tag_content_line_people_<?php echo($row_line);?>">
       <td class="precise_people_<?php echo($row_line);?>" colspan="2"><?php echo $form['people_ref'];?></td>
 	  <td class="fuzzy_people_<?php echo($row_line);?> hidden" colspan="2"><?php echo $form['people_fuzzy'];?></td>
@@ -21,8 +17,6 @@
 			<?php echo image_tag('remove.png', 'alt=Delete class=clear_prop id=clear_tag_people_'.$row_line); ?>
 		</td>
     </tr>
-
-
 <script  type="text/javascript">
   $(document).ready(function () {
   $('#people_switch_precise_<?php echo($row_line);?>').click(function() {

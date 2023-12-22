@@ -323,7 +323,7 @@ class catalogueActions extends DarwinActions
   //ftheeten 2018 10 12
   public function executeCompleteNameTaxonomyWithRef(sfWebRequest $request) {
   
-    $result = Doctrine_Core::getTable("Taxonomy")->completeTaxonomyDisambiguateMetadata($this->getUser(), $request->getParameter('term'), $request->getParameter('exact'),30);
+    $result = Doctrine_Core::getTable("Taxonomy")->completeTaxonomyDisambiguateMetadata($this->getUser(), $request->getParameter('term'), $request->getParameter('exact'),30, $request->getParameter('coll',""));
     $this->getResponse()->setContentType('application/json');
     return $this->renderText(json_encode($result));
   }
@@ -591,28 +591,15 @@ class catalogueActions extends DarwinActions
   //rmca 2016 11 23 increment number for loans
   public function executeNameForLoan(sfWebRequest $request)
   {
-        $results=Array();
+     
+    $results=Array();
 	if($request->getParameter('coll_nr'))
 	{
-		 $conn = Doctrine_Manager::connection();
-		 $sql="SELECT name FROM loans WHERE collection_ref=:coll ORDER BY id DESC LIMIT 1;";
-		 $q = $conn->prepare($sql);
-		 $q->execute(array(':coll' => $request->getParameter('coll_nr')));
-		 $collections = $q->fetchAll();
-		
-		 $i=0;
-		 if(count($collections)>0)
-		 {
-			$results[0]['name_loan']= $collections[0][0];
-			
-		 }
+		 $results=Doctrine_Core::getTable('Loans')->getLastCodeForLoan($request->getParameter('coll_nr',0)); 
 
 	}
 	$this->getResponse()->setContentType('application/json');
-        return  $this->renderText(json_encode($results));
-
-
-
+    return  $this->renderText(json_encode($results));
   }
   
 

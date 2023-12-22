@@ -1,8 +1,16 @@
+//globals variables (often use to communicate state between widgets)
+
 var flag_split=false;
 var current_val=0;
 var current_categ="";
 var c_b=0;
 var c_e=0;
+var url_autocomplete_taxon="";
+var url_autocomplete_taxon_init_from_coll=false;
+var url_autocomplete_taxon_init_from_coll_current_coll=false;
+var widgcol_loaded=false;
+var mode_autocomplete_taxa="all_cols";
+
 
 function getIdInClasses(el)
 {

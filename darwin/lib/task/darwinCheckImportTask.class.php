@@ -69,7 +69,7 @@ EOF;
 	  }*/
 
       // Remove the import reference from imports table if no more lines in staging for this import
-      $sql = "delete from imports i WHERE i.state='deleted' AND NOT EXISTS (select 1 from staging where import_ref = i.id )";
+      $sql = "delete from imports i WHERE i.state='deleted' AND NOT EXISTS (select 1 from staging where import_ref = i.id ) AND NOT EXISTS (select 1 from staging_gtu where import_ref = i.id )";
       $conn->getDbh()->exec($sql);
 	  $conn->getDbh()->exec($sql2);
       $this->logSection('Delete', sprintf('Check %d : Removed %d lines',$randnum, $ctn)) ;

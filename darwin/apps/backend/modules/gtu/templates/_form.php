@@ -401,9 +401,9 @@ $(document).ready(function () {
         $('.iso3166').autocomplete({
         source: function (request, response) {
             $.ajax({
-                url: "http://darwin/natural_heritage_webservice/service_nh_iso3166.php",
+                url: "<?php echo url_for('gtu/get_iso_3166_code');?>",
                 dataType: 'json',
-                data: { query: "iso3166_list", namepattern:request.term },
+                data: {q:request.term },
                 success: function (data) {
                     data.unshift({'iso3166_code': request.term, 'iso3166_name': request.term});
                     response(data.map(function (value) {
@@ -449,15 +449,15 @@ $(document).ready(function () {
     $('.iso3166_subdivision').autocomplete({
         source: function (request, response) {
             $.ajax({
-                url: "http://darwin/natural_heritage_webservice/service_nh_iso3166.php",
+                url: "<?php echo url_for('gtu/get_iso_3166_level_2_code');?>",
                 dataType: 'json',
-                data: { query: "subdivisions_list", namepattern:request.term, iso3166:$('.iso3166_value').val()},
+                data: {  q:request.term},
                 success: function (data) {
                     data.unshift({'returned_code': request.term, 'returned': request.term});
                     response(data.map(function (value) {
                         return {
-                            'label': value.returned,
-                            'value': value.returned_code
+                            'value': value.iso3166_2_code,
+                            'label': value.iso3166_2_name
                         };  
                     }));
                 } 
@@ -469,8 +469,8 @@ $(document).ready(function () {
               set_iso3166_subdivision(event, ui);
               $(".iso3166_subdivision_value").val(ui.item.value);
               
-              ui.item.value = ui.item.label;
-              $('.iso3166_subdivision').val(ui.item.value);              
+              //ui.item.value = ui.item.label;
+              $('.iso3166_subdivision').val(ui.item.label);              
                 return false;
               
         },          

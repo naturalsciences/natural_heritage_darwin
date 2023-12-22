@@ -147,11 +147,13 @@
     <td class="col_collecting_dates">
 			<!--jmherpers 2018 01 29-->
 			<?php if(null !==$specimen->getGtuFromDateMasked() && $specimen->getGtuFromDateMask()):?>
-				<?php if($specimen->getGtuFromDateMask() == 56):?>
+				<?php if($specimen->getGtuFromDateMask() > 56):?>
+					<b>From: </b><?php echo $specimen->getGtuFromDateMasked(ESC_RAW);?>
+				<?php elseif($specimen->getGtuFromDateMask() == 56):?>
 					<b>From: </b><?php echo substr($specimen->getGtuFromDateMasked(ESC_RAW),0,14);?>
-					<?php elseif($specimen->getGtuFromDateMask() == 48):?>
+				<?php elseif($specimen->getGtuFromDateMask() == 48):?>
 						<b>From: </b><?php echo substr($specimen->getGtuFromDateMasked(ESC_RAW),12,10);?>
-						<?php elseif($specimen->getGtuFromDateMask() == 32):?>
+				<?php elseif($specimen->getGtuFromDateMask() == 32):?>
 							<b>From: </b><?php echo substr($specimen->getGtuFromDateMasked(ESC_RAW),15,8);?>
 				<?php endif ; ?>
             <?php endif ; ?>

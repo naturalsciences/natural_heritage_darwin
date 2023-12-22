@@ -337,6 +337,11 @@ class specimenActions extends DarwinActions
     $this->handleRelationsOfDuplicate($request);
     
     $this->form = $this->getSpecimenForm($request, true);
+	$this->user_rights_on_spec=  Doctrine_Core::getTable('CollectionsRights')->getUserCollectionRights($this->getUser(), $this->form->getObject()->getCollectionRef());
+	if($this->user_rights_on_spec<4 && $this->form->getObject()->getRestrictedAccess() )
+	{
+		$this->forward404("No access to data");
+	}
     if(!$this->getUser()->isA(Users::ADMIN))
     {
       if(! Doctrine_Core::getTable('Specimens')->hasRights('spec_ref',$request->getParameter('id'), $this->getUser()->getId()))
@@ -575,6 +580,11 @@ class specimenActions extends DarwinActions
         $this->hasEncodingRight = true;
       }
     }
+	$this->user_rights_on_spec=  Doctrine_Core::getTable('CollectionsRights')->getUserCollectionRights($this->getUser(), $this->specimen->getCollectionRef());
+	if($this->user_rights_on_spec<4 && $this->specimen->getRestrictedAccess() )
+	{
+		$this->forward404("No access to data");
+	}
     $this->forward404Unless($this->specimen,'Specimen does not exist');
 
     $this->loadWidgets(null,$this->specimen->getCollectionRef());

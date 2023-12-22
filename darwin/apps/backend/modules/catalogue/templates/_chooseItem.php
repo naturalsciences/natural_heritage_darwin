@@ -31,7 +31,7 @@
           <?php if(isset($searchForm['code'])):?>
             <td><?php echo $searchForm['code'];?></td>
           <?php endif;?>
-          <td><?php echo $searchForm['name'];?><?php echo $searchForm->renderHiddenFields();?></td>
+          <td><?php echo $searchForm['name'];?>&nbsp; fuzzy <?php echo $searchForm['name_fuzzy'];?><?php echo $searchForm->renderHiddenFields();?></td>
           <?php if(isset($searchForm['classification'])):?>
             <td><?php echo $searchForm['classification'];?></td>
           <?php endif;?>

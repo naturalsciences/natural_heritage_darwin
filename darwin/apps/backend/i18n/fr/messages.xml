@@ -5325,7 +5325,7 @@
       </trans-unit>
       <trans-unit id="1167">
         <source>Advanced: Search By ID</source>
-        <target>Avancée: recherche par ID</target>
+         <target>Advanced: Search By ID and administrative status of data</target>
         
       </trans-unit>
       <trans-unit id="1168">
@@ -5410,12 +5410,12 @@
       </trans-unit>
       <trans-unit id="1185">
         <source>Via this widget you can perform a search in order to find all records where a specific person (or institution) appears. You can also choose one or more roles for this person (such as collector, identifier and/or donator/seller)</source>
-        <target>Via cette widget, vous pouvez effectuer une recherche afin de trouver tous les enregistrements où une personne spécifique (ou un institut) apparait. Vous pouvez aussi choisir un ou plusieurs rôles pour cette personne (tel que collecteur, Identificateur et/ou donnateur/vendeur)</target>
+        <target>Via cette widget, vous pouvez effectuer une recherche afin de trouver tous les enregistrements où une personne spécifique (ou un institut) apparait. Vous pouvez aussi choisir un ou plusieurs rôles pour cette personne (tel que collecteur, Identificateur et/ou donateur/vendeur)</target>
         
       </trans-unit>
       <trans-unit id="1186">
         <source>Donator or seller</source>
-        <target>Donnateur ou vendeur</target>
+        <target>Donateur ou vendeur</target>
         
       </trans-unit>
       <trans-unit id="1187">

@@ -21,6 +21,7 @@ class MaRoomForm extends BaseForm
 
   public function doGroupedAction($query,$values, $items)
   {
+	print_r($values);
     $new_taxon = $values['room'];
     $query->set('p.room', '?', $new_taxon);
     return $query;

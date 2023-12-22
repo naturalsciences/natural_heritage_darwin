@@ -31,8 +31,15 @@ class IgsFormFilter extends BaseIgsFormFilter
                                          'to_date' => 'and',
                                         )
                                   );
-    $this->widgetSchema['ig_num']->setAttributes(array('class'=>'small_size'));
+    $this->widgetSchema['ig_num']->setAttributes(array('class'=>'small_size ig_num_search'));
     $this->validatorSchema['ig_num'] = new sfValidatorString(array('required' => false, 'trim' => true));
+	
+	$this->widgetSchema['ig_num_exact'] = new sfWidgetFormInputCheckbox();
+	$this->setDefault('ig_num_exact', false);
+	$this->widgetSchema['ig_num_exact']->setAttributes(array('class'=>'ig_num_exact'));
+
+    $this->validatorSchema['ig_num_exact'] = new sfValidatorPass();
+	
     $this->validatorSchema['from_date'] = new fuzzyDateValidator(array('required' => false,
                                                                        'from_date' => true,
                                                                        'min' => $minDate,
@@ -89,55 +96,121 @@ class IgsFormFilter extends BaseIgsFormFilter
 	$this->widgetSchema['people_fuzzy']->setAttributes(array("class"=> 'class_fuzzy_people_0'));
 	$this->validatorSchema['people_fuzzy'] = new sfValidatorString(array('required' => false)) ;
 	$this->validatorSchema['people_fuzzy'] = new sfValidatorPass() ;
+	
+	$this->widgetSchema['collection_ref'] = new sfWidgetCollectionList(array('choices' => array()));
+    $this->widgetSchema['collection_ref']->addOption('public_only',false);
+    $this->validatorSchema['collection_ref'] = new sfValidatorPass(); //Avoid duplicate the query
+	
+	$this->widgetSchema['nagoya_status'] = new sfWidgetFormInputText();
+	$this->validatorSchema['nagoya_status'] = new sfValidatorPass(); 
+  
+  //phv 2023/03/09
+  $this->widgetSchema['ig_type']= new sfWidgetFormChoice(array(
+         'choices' =>  Igs::getIgTypeAllowedValue(),
+         ));
+  $this->validatorSchema['ig_type'] = new sfValidatorPass(array('trim'=>true, 'required'=>false));
+  
+    $this->widgetSchema   ['complete'] = new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no')));
+    $this->validatorSchema['complete'] = new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0)));
+  
+  	$this->widgetSchema['comment_indexed'] = new sfWidgetFormInputText();
+	$this->validatorSchema['comment_indexed'] = new sfValidatorPass(); 
+  
+  
+  
   
   }
 
-  public function addIgNumColumnQuery(Doctrine_Query $query, $field, $values)
+  
+  public function nagoyaStatusColumnQuery(Doctrine_Query $query, $field, $values)
   {
-     if ($values != "")
+	if ($values != "")
      {
        $conn_MGR = Doctrine_Manager::connection();
-       $query->andWhere("ig_num_indexed like concat(fullToIndex(".$conn_MGR->quote($values, 'string')."), '%') ");
+       $query->andWhere("LOWER(nagoya_status) like concat('%', ?, '%') ", strtolower( $values));
+     }
+     return $query;
+  }
+  public function addIgNumColumnQuery(Doctrine_Query $query, $field, $values, $exact)
+  {
+	
+     if ($values != "")
+     {
+	   $field="ig_num_indexed";
+	   $fct="fullToIndex";
+	   if(isset($exact))
+		{
+			 if(strtolower($exact)=="on")
+			 {
+				  $field="ig_num";
+				  $fct="LOWER";
+			 }
+		}
+		 $conn_MGR = Doctrine_Manager::connection();
+		$query->andWhere($field." like concat('%',".$fct."(?), '%') ", $values);
+      
+       
      }
      return $query;
   }
   
   public function addPeopleSearchColumnQuery(Doctrine_Query $query, $people_id, $field_to_use)
-  {
-	
-   $query->leftJoin("i.Specimens s on i.id=s.ig_ref");
+  {	
+	$query->leftJoin("i.Specimens s on i.id=s.ig_ref");
     $alias1="cp";
 
 	
     $build_query = '';
     if(! is_array($field_to_use) || count($field_to_use) < 1)
+	{
       $field_to_use = array('ident_ids','spec_coll_ids','spec_don_sel_ids') ;
-
+	}
 	$nb2=0;  
     foreach($field_to_use as $field)
     {
-       $alias1=$alias1.$nb2;
+		   $alias1=$alias1.$nb2;
 
-	  if($field == 'ident_ids')
-      {
-		$build_query .= "s.spec_ident_ids @> ARRAY[$people_id]::int[] OR " ;
-      }
-      elseif($field == 'spec_coll_ids')
-      {
-         $build_query .= "(s.spec_coll_ids @> ARRAY[$people_id]::int[] OR (s.expedition_ref IN (SELECT $alias1.record_id FROM CataloguePeople $alias1 WHERE $alias1.referenced_relation= 'expeditions' AND $alias1.people_ref= $people_id) )) OR " ;
+		  if($field == 'ident_ids')
+		  {
+			$build_query .= "s.spec_ident_ids @> ARRAY[$people_id]::int[] OR " ;
+		  }
+		  elseif($field == 'spec_coll_ids')
+		  {
+			 $build_query .= "(s.spec_coll_ids @> ARRAY[$people_id]::int[] OR (s.expedition_ref IN (SELECT $alias1.record_id FROM CataloguePeople $alias1 WHERE $alias1.referenced_relation= 'expeditions' AND $alias1.people_ref= $people_id) )) OR " ;
 
-      }
-      else
-      {
-        $build_query .= "s.spec_don_sel_ids @> ARRAY[$people_id]::int[] OR " ;
-      }
-	  $nb2++;
+		  }
+		  else
+		  {
+			$build_query .= "s.spec_don_sel_ids @> ARRAY[$people_id]::int[] OR " ;
+		  }
+		  $nb2++;
     }
     // I remove the last 'OR ' at the end of the string
     $build_query = substr($build_query,0,strlen($build_query) -3) ;
 
     $query->andWhere($build_query) ;
     return $query ;
+  }
+  
+  public function addCollectionRef(Doctrine_Query $query, $collection_ref_array)
+  {
+		if ( count( $collection_ref_array ) === count( array_filter( $collection_ref_array, 'is_numeric' ) ) ) 
+		{		
+			$str_col=implode(",", $collection_ref_array);
+			$sql_where=  " EXISTS (SELECT p.id FROM Specimens p WHERE p.ig_ref=i.id AND p.collection_ref= ANY ('{".$str_col."}') ) ";		
+			$query->andWhere($sql_where) ;
+		}
+	return $query;
+  }
+  
+  
+  public function addIgType(Doctrine_Query $query, $ig_type)
+  {
+		if ( $ig_type != '' )  
+		{		
+			$query->andWhere("ig_type =? " , $ig_type) ;
+		}
+	return $query;
   }
   
   
@@ -184,17 +257,58 @@ class IgsFormFilter extends BaseIgsFormFilter
     return $query ;
   }
   
+  
+  public function addComplete(Doctrine_Query $query, $complete)
+  {
+	return $query->andWhere("complete=?", $complete) ;
+  }
+  
+    public function addCommentIndexed(Doctrine_Query $query, $val)
+  {
+	return $query->andWhere("EXISTS (SELECT c.id FROM Comments c WHERE referenced_relation='igs' AND LOWER(comment) LIKE '%'||LOWER(?)||'%' AND record_id=i.id)", $val) ;
+  }
 
   public function doBuildQuery(array $values)
   {
+
     $query = DQ::create()
-      ->select('DISTINCT i.*')->from("Igs i"); //parent::doBuildQuery($values);
+      ->select('DISTINCT i.*')->from("VIgsSpecStats i"); //parent::doBuildQuery($values);
     $fields = array('ig_date');
-    $this->addIgNumColumnQuery($query, $fields, $values['ig_num']);
+    $this->addIgNumColumnQuery($query, $fields, $values['ig_num'], $values['ig_num_exact']);
     $this->addDateFromToColumnQuery($query, $fields, $values['from_date'], $values['to_date']);
-    if ($values['people_ref'] != '') $this->addPeopleSearchColumnQuery($query, $values['people_ref'], $values['role_ref']);
-	if ($values['people_fuzzy'] != '') $this->addPeopleSearchColumnQueryFuzzy($query, $values['people_fuzzy'], $values['role_ref']);
-    $query->andWhere("id > 0 ");
+    if ($values['people_ref'] != '')
+	{	
+		$this->addPeopleSearchColumnQuery($query, $values['people_ref'], $values['role_ref']);
+	}
+	if ($values['people_fuzzy'] != '') 
+	{
+		$this->addPeopleSearchColumnQueryFuzzy($query, $values['people_fuzzy'], $values['role_ref']);
+	}
+  	if (is_array($values['collection_ref']))
+	{
+		if(count($values['collection_ref'])>0)
+		{
+			$this->addCollectionRef($query, $values['collection_ref']);
+		}
+    }
+	if($values["nagoya_status"]!="")
+	{
+		$this->nagoyaStatusColumnQuery($query, $values['nagoya_status'], $values['nagoya_status']);
+	}
+	
+	if($values["complete"]!="")
+	{
+		$this->addComplete($query, $values['complete']);
+	}
+	
+	if($values["comment_indexed"]!="")
+	{
+		$this->addCommentIndexed($query, $values['comment_indexed']);
+	}
+	$this->addIgType($query, $values['ig_type']);
+	$query->andWhere("id > 0 ");
     return $query;
   }
+  
+  
 }

@@ -22,6 +22,9 @@
 		<?php if($sf_user->isAtLeast(Users::MANAGER)):?>
 				<input type="button" id="print_spec_thermic" class="save_search" value="<?php echo __('Thermic print');?>" /> 
 		<?php endif;?>
+		<?php if($specimen->getRestrictedAccess()):?>
+			<i><b> Non public</b></i>
+		<?php endif;?>
     </span>
   </h3>
   <div class="encod_screen edition" id="intro">

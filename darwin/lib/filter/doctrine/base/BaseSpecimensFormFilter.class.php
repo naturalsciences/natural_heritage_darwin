@@ -53,6 +53,9 @@ abstract class BaseSpecimensFormFilter extends DarwinModelFormFilter
     $this->widgetSchema   ['ig_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Igs'), 'add_empty' => true));
     $this->validatorSchema['ig_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Igs'), 'column' => 'id'));
 
+    $this->widgetSchema   ['restricted_access'] = new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no')));
+    $this->validatorSchema['restricted_access'] = new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0)));
+
     $this->widgetSchema   ['spec_coll_ids'] = new sfWidgetFormFilterInput();
     $this->validatorSchema['spec_coll_ids'] = new sfValidatorPass(array('required' => false));
 
@@ -446,6 +449,7 @@ abstract class BaseSpecimensFormFilter extends DarwinModelFormFilter
       'acquisition_date' => 'Text',
       'station_visible' => 'Boolean',
       'ig_ref' => 'ForeignKey',
+      'restricted_access' => 'Boolean',
       'spec_coll_ids' => 'Text',
       'spec_ident_ids' => 'Text',
       'spec_don_sel_ids' => 'Text',

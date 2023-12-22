@@ -87,7 +87,7 @@
 				}
 				$url_copy = 'specimen/copyCode?id='.$matches[1];
 				?>
-             <div class="add_code"> &nbsp;<a href="<?php echo url_for($url_copy);?>/num/" id="copy_code"><?php echo __('Copy code');?></a></div>
+             <div class="add_code" > &nbsp;<a href="<?php echo url_for($url_copy);?>/num/" id="copy_code"><?php echo __('Copy code');?></a></div>
            
           <?php endif;?>
           <div class="add_code">

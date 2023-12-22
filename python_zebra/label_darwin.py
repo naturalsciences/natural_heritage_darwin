@@ -11,7 +11,7 @@ import traceback
 
 
 
-HOST = ""
+HOST = "172.16.1.200"
 PORT = 9100                   # The same port as used by the server
 
 def xstr(s):
@@ -98,6 +98,7 @@ class DarwinClientZebra(object):
                 nbrsex = nbrsexundef + bl1 + nbrsexmale + bl2 + nbrsexfem + bl3 + nbrsexjuv
 
             #######Type
+            """
             if (str(record['type']) == None) | (str(record['type']) == 'specimen') :
                 if record['status'] != None:
                     typesp = str(record['status'])
@@ -105,9 +106,17 @@ class DarwinClientZebra(object):
                     typesp = ""
             else:
                 typesp = str(record['type'])
-                
+            """   
+            typesp = ""
+            if record['status'] != None:
+                typesp = str(record['type'])
             #######Scientific name
             sciName = str(record['name'])
+            status=""
+            if record['status'] != None:
+                status=str(record['status'])
+            #if record['status'] != None:
+            #    sciName= sciName+ " "+str(record['status'])
             author =  str(record['author'])
 
             #######Identifier
@@ -170,8 +179,13 @@ class DarwinClientZebra(object):
             #######code
             code = str(record['code'])
             #print(code)
+            if code.upper().startswith("BE_"):
+                code=code[3:]
             if (code[0:10] == 'RMCA_Vert_'):
                 code1 = code[0:10].replace("_", " ")
+                code2 = code[10:]
+            elif (code[0:10] == 'RMCA_Vert.'):
+                code1 = code[0:10].replace(".", " ")
                 code2 = code[10:]
             elif (code[0:9] == 'RMCA_Mam_'):
                 code1 = code[0:9].replace("_", " ")
@@ -275,7 +289,7 @@ class DarwinClientZebra(object):
             #print(code1)
             #print(code2)
            
-            img=generator.build_label(sci_name=sciName, author=author, typesp=typesp, det=det, det_year=datedet, code1=code2, nbr=nbrsex, locality=loc, country=country, latlong=latlong, collector=recol, collecting_date=dateRecol, collection=code1, prop1=prop1, prop2=prop2, prop3= prop3, prop4=prop4, prop5=prop5)
+            img=generator.build_label(sci_name=sciName, status=status, author=author, typesp=typesp, det=det, det_year=datedet, code1=code2, nbr=nbrsex, locality=loc, country=country, latlong=latlong, collector=recol, collecting_date=dateRecol, collection=code1, prop1=prop1, prop2=prop2, prop3= prop3, prop4=prop4, prop5=prop5)
             
             zpl=Class_zpl()
             zpl.set_compress(False)
@@ -303,7 +317,7 @@ class DarwinClientZebra(object):
             s.ig_num,
             s.collection_ref as collection,
             (fct_rmca_taxonomy_split_name_author(t.name, level_ref))[1] as name,
-            j.dict_value as status,
+            i.determination_status as status,
             (fct_rmca_taxonomy_split_name_author(t.name, level_ref))[2] as author,
             fct_rmca_sort_taxon_get_parent_level_text(s.taxon_ref,28) as order,
             fct_rmca_sort_taxon_get_parent_level_text(s.taxon_ref,34) as family,
@@ -328,7 +342,14 @@ class DarwinClientZebra(object):
             COALESCE(to_char(s.gtu_to_date, 'DD/MM/YYYY'),'') as collecting_end_date, 
             s.gtu_from_date_mask as collecting_start_date_mask,
             s.gtu_to_date_mask as collecting_end_date_mask, 
-            (SELECT string_agg(p.formated_name, '; ') as identifier
+            (SELECT string_agg(case
+                when given_name  is not NULL then
+
+                TRIM(family_name||', '||given_name||COALESCE(' ('||NULLIF(title,'')||')',''))
+                ELSE
+                formated_name
+                end
+                , '; ') as identifier
                 FROM (SELECT unnest( spec_ident_ids::int[] ) as idpeople 
                        FROM specimens WHERE id = %s ) i
                 LEFT JOIN 
@@ -338,7 +359,13 @@ class DarwinClientZebra(object):
               COALESCE(to_char(i.notion_date, 'DD/MM/YYYY'),'')
             END as date_determ, 
             i.notion_date_mask as date_determ_mask,
-            (SELECT string_agg(p.formated_name, '; ') as collector
+            (SELECT string_agg(case
+when given_name  is not NULL then
+
+TRIM(family_name||', '||given_name||COALESCE(' ('||NULLIF(title,'')||')',''))
+ELSE
+formated_name
+end, '; ') as collector
                 FROM (SELECT unnest( spec_coll_ids::int[] ) as idpeople FROM specimens WHERE id = %s ) i
                 LEFT JOIN 
                   people p

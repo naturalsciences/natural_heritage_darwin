@@ -7,7 +7,7 @@ import sys
 from label_darwin import DarwinClientZebra
 import time
 
-PG_CONNEX = "host='' dbname='' user='' password=''"
+PG_CONNEX = "host='172.16.11.113' dbname='darwin2' user='darwin2' password='phvisodu$ft'"
 
 def RepresentsInt(s):
     try: 
