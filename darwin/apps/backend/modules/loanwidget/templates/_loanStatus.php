@@ -27,6 +27,8 @@
       <th><?php echo __('Status');?></th>
       <th><?php echo __('Comments');?></th>
       <th><?php echo __('By');?></th>
+	  <!--ftheeten 2017 10 27-->
+	  <th><?php echo __('Remove');?></th>
     </tr>
   </thead>
   <tbody>
@@ -36,7 +38,12 @@
       		echo $date->format('d/m/Y H:i:s'); ?></td>
       <td><?php echo $info->getFormattedStatus();?></td>
       <td><?php echo $info->getComment();?></td>
-      <td><?php echo $info->Users->__toString() ;?></td>      
+      <td><?php echo $info->Users->__toString() ;?></td>
+		<!--ftheeten 2017 10 27-->
+		<td class="widget_row_delete">
+        <a class="widget_row_delete" href="<?php echo url_for('loan/removeStatus?id='.$info->getId());?>" title="<?php echo __('Delete Status') ?>"><?php echo image_tag('remove.png'); ?>
+        </a>
+      </td>
     </tr>
     <?php endforeach ; ?>
     <?php if ($loanstatus->count() == 5 ) : ?>

@@ -89,9 +89,12 @@ class DarwinActions extends sfActions
     $this->only_role = (!$request->hasParameter('only_role'))?'0':$request->getParameter('only_role');
   }
 
-  protected function loadWidgets($id = null,$collection = null)
-  {
-    $this->__set('widgetCategory',$this->widgetCategory);
+
+ //modif 2022 03 31 widgets by url ftheeten pvignaux
+  protected function loadWidgets_db($id = null,$collection = null)
+  {      
+    $this->__set('widgetCategory',$this->widgetCategory);   
+    
     if($id === null) {
       $id = $this->getUser()->getId();
     }
@@ -100,9 +103,138 @@ class DarwinActions extends sfActions
       ->setDbUserType($this->getUser()->getDbUserType())
       ->getWidgets($this->widgetCategory, $collection);
     $this->widget_list = Doctrine_Core::getTable('MyWidgets')->sortWidgets($this->widgets, $this->getI18N());
+   
     if(! $this->widgets) $this->widgets=array();   
   }
+  
+  //https://naturalheritage.africamuseum.be/darwin_dev/backend.php/specimen/new?widget=on&listwidgets=1;litho;open|2;refTaxon;close
+   protected function loadWidgets_url($request, $id = null,$collection = null)
+  {      
+    if($id === null) 
+    {
+      $id = $this->getUser()->getId();
+    }
+    $widgets_build=$request->getParameter('listwidgets');
+    $array_widgets=explode("|",$widgets_build);
+    //$this-Widget=> main table containing widget infos of the controller
+    $this->widgets=array();
+    foreach($array_widgets as $widget_conf)
+    {
+      $array_conf=explode(";",$widget_conf);
+      if(count($array_conf)>=2)
+      {
+       
+        $widget=$array_conf[0];
+        $state=$array_conf[1];
+        $record=Doctrine_Core::getTable('MyWidgets')->getWidget($id, $widget, 'specimen_widget');
+        $opened=TRUE;
+        $visible=TRUE;
+        if(strtolower($state)=="open")
+        {
+           $opened=TRUE;
+           $visible=TRUE;
+        }
+        elseif(strtolower($state)=="closed")
+        {
+           $opened=FALSE;
+          $visible=TRUE;
+        }
+        elseif(strtolower($state)=="hidden")
+        {
+           $opened=FALSE;
+          $visible=FALSE;
+        }
+        $record->setOpened($opened);
+        $record->setVisible($visible);
+        $this->widgets[]=$record;
+         
+      }
+    }
+    
+    
+      $this->widget_list = Doctrine_Core::getTable('MyWidgets')->sortWidgets($this->widgets, $this->getI18N());
+   
+       if(! $this->widgets) $this->widgets=array();   
 
+    
+    
+  }
+  
+  protected function loadWidgets_profile($id_profile,  $id = null,$collection = null)
+  {
+
+	 $this->__set('widgetCategory',$this->widgetCategory);   
+
+    if($id === null) {
+      $id = $this->getUser()->getId();
+    }
+    $this->widgets = Doctrine_Core::getTable('WidgetProfiles')
+      ->setProfileRef($id_profile)
+      ->setDbUserType($this->getUser()->getDbUserType())
+      ->getWidgets($this->widgetCategory, $collection);
+    $this->widget_list = Doctrine_Core::getTable('MyWidgets')->sortWidgets($this->widgets, $this->getI18N());
+ 
+    if(! $this->widgets)
+	{	
+		$this->widgets=array();
+	}
+  }
+  
+  
+  protected function loadWidgets($id = null,$collection = null,  $request=null, $id_profile=null)
+  {
+		$go_type="db";
+		if($request!==null)
+		{
+			if(strtolower($request->getParameter('widget',"off"))=="on" && $request->hasParameter('listwidgets'))
+			{
+			  $go_type="url";
+			}
+		}
+		elseif($id_profile!==null )
+		{
+			if(is_numeric($id_profile))
+			{
+				 $go_type="id_profile";
+			}
+		}
+		if($go_type=="url")
+		{
+			$this->loadWidgets_url($request, $id, $collection);
+		}
+		elseif($go_type=="id_profile")
+		{
+			$this->loadWidgets_profile($id_profile, $id, $collection);
+		}
+		else
+		{
+			 $this->loadWidgets_db($id, $collection);
+		}	
+		
+  }
+  
+ //modif 2022 03 31 widgets by url
+ /* protected function loadWidgets($id = null,$collection = null, $request=null)
+  {
+  
+    $go_db=TRUE;
+	if($request!==null)
+	{
+		if(strtolower($request->getParameter('widget',"off"))=="on" && $request->hasParameter('listwidgets'))
+		{
+		  $go_db=FALSE;
+		}
+    }
+    if($go_db)
+    {
+      $this->loadWidgets_db($id, $collection);
+    }
+    else
+    {
+       $this->loadWidgets_url($request, $id, $collection);
+    }
+  }*/
+ 
   protected function getI18N()
   {
      return sfContext::getInstance()->getI18N();
@@ -415,6 +547,12 @@ class DarwinActions extends sfActions
 			}
 			
 		}
+		
+		if(!is_array($tmp_id)&&!is_countable($tmp_id))
+		{
+			
+			$tmp_id=array();
+		}
 		return $tmp_id;
 	}
     
@@ -513,10 +651,8 @@ class DarwinActions extends sfActions
         }
        
         return Array();
-    }
+    }   
+	
 	
 
-    
-    
-   
 }

@@ -33,8 +33,8 @@ class ProjectConfiguration extends sfProjectConfiguration
   {
 	$manager = $event->getSubject();
 
-    $manager->setAttribute(Doctrine_Core::ATTR_QUERY_CACHE, new Doctrine_Cache_Apc());
-    $manager->setAttribute(Doctrine_Core::ATTR_RESULT_CACHE, new Doctrine_Cache_Apc());
+    $manager->setAttribute(Doctrine_Core::ATTR_QUERY_CACHE, new Doctrine_Cache_Memcached(array("servers"=>["host"=>"localhost", "port"=>11211])));
+    $manager->setAttribute(Doctrine_Core::ATTR_RESULT_CACHE, new Doctrine_Cache_Memcached(array("servers"=>["host"=>"localhost", "port"=>11211])));
     //$options = array('baseClassName' => 'DarwinModel');
     //sfConfig::set('doctrine_model_builder_options', $options);
 	//return $options;

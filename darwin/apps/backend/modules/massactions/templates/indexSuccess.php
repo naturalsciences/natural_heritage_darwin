@@ -1,3 +1,4 @@
+<?php use_javascript('button_ref.js') ?>
 <?php slot('title','Mass Actions');?>
 
 <div class="page" id="mass_action">

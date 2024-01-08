@@ -113,6 +113,7 @@
 var map;
 var mousePositionControl;
 var scaleLineControl;
+
 var json_points='<?php print(html_entity_decode($geojson));?>';
 var clusters;
 var layerLoaded=false;
@@ -136,6 +137,7 @@ var openSpecimen=function(id)
 //main search function
  var getFeaturesRow=function(geoJSON)
  {    
+	console.log(geoJSON)
     var tmpFeatures=(new ol.format.GeoJSON()).readFeatures(jQuery.parseJSON(geoJSON), {
                 dataProjection: 'EPSG:4326',
                 featureProjection: 'EPSG:3857'
@@ -411,6 +413,8 @@ $(document).ready(
 	function()
 	{
 		init_map();
+		console.log("json_point=");
+		console.log(json_points);
 		getFeaturesRow(json_points);
 		
 		$("#browse_wms").click(

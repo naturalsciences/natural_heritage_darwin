@@ -39,17 +39,21 @@ class sfFilterChain
    */
   public function execute()
   {
+  
+  
     // skip to the next filter
     ++$this->index;
 
     if ($this->index < count($this->chain))
     {
       if (sfConfig::get('sf_logging_enabled'))
-      {
+      {		
         sfContext::getInstance()->getEventDispatcher()->notify(new sfEvent($this, 'application.log', array(sprintf('Executing filter "%s"', get_class($this->chain[$this->index])))));
       }
 
-      // execute the next filter
+	  
+	
+      // execute the next filter	 
       $this->chain[$this->index]->execute($this);
     }
   }

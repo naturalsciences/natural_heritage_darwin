@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html id="darwin-app" ng-controller='darwin-detail-controller'>
+<head>
+
+    <title>{{specimen.taxon_name}} | {{specimen.collection_name_full_path}} | Darwin | RMCA</title>
+	<meta name="MobileOptimized" content="width">
+	<meta name="HandheldFriendly" content="true">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+	<meta charset="UTF-8">
+	<meta name="google-site-verification" content="googlea676d101458b4793.html" />
+	<link rel="stylesheet" href="https://darwin.naturalsciences.be/dw_public/form//css/common/darwin.css">
+	<link rel="stylesheet" href="https://darwin.naturalsciences.be/dw_public/form/js/code/common/openlayers/v6.5.0-dist/ol.css">
+	<link rel="stylesheet" href="https://darwin.naturalsciences.be/dw_public/form/js/code/common/select.min.css">
+	<link rel="stylesheet" href="https://darwin.naturalsciences.be/dw_public/form/css/normalize.css">
+	<link rel="stylesheet" href="https://darwin.naturalsciences.be/dw_public/form/css/fonts.css">
+	<link rel="stylesheet" href="https://darwin.naturalsciences.be/dw_public/form/css/darwinweb.css">
+	<link rel="stylesheet" href="https://darwin.naturalsciences.be/dw_public/form/css/ol_darwinweb.css">	
+
+	<script type="text/javascript" src="https://darwin.naturalsciences.be/dw_public/form/js/libs/jquery/jquery.js"></script>
+
+	<script type="text/javascript" src="https://darwin.naturalsciences.be/dw_public/form/js/libs/angular-1.3.9/angular.js?v=1.3.4"></script>
+	<script type="text/javascript" src="https://darwin.naturalsciences.be/dw_public/form/js/libs/angular-1.3.9/angular-cookies.js?v=1.3.9"></script>
+	<script type="text/javascript" src="https://darwin.naturalsciences.be/dw_public/form/js/libs/angular-1.3.9/angular-loader.js?v=1.3.9"></script>
+
+	<script type="text/javascript" src="https://darwin.naturalsciences.be/dw_public/form/js/libs/angular-1.3.9/angular-resource.js?v=1.3.9"></script>
+	<script type="text/javascript" src="https://darwin.naturalsciences.be/dw_public/form/js/libs/angular-1.3.9/angular-route.js?v=1.3.9"></script>
+	<script type="text/javascript" src="https://darwin.naturalsciences.be/dw_public/form/js/libs/angular-1.3.9/angular-sanitize.js?v=1.3.9"></script>
+
+
+	<script type="text/javascript" src="https://darwin.naturalsciences.be/dw_public/form/js/code/common/classList.js"></script>
+	<script type="text/javascript" src="https://darwin.naturalsciences.be/dw_public/form/js/libs/angular-1.3.9/angular-mocks.js"></script>
+	<script type="text/javascript" src="https://darwin.naturalsciences.be/dw_public/form/js/code/common/underscore-min.js"></script>
+	<script type="text/javascript" src="https://darwin.naturalsciences.be/dw_public/form/js/code/common/ui-bootstrap-tpls-0.14.3.min.js"></script>
+	<script type="text/javascript" src="https://darwin.naturalsciences.be/dw_public/form/js/code/common/angular-translate.min.js"></script>
+	<script type="text/javascript" src="https://darwin.naturalsciences.be/dw_public/form/js/code/common/moment.js"></script>
+	<script type="text/javascript" src="https://darwin.naturalsciences.be/dw_public/form/js/code/common/angular-moment.js"></script>
+	<script type="text/javascript" src="https://darwin.naturalsciences.be/dw_public/form/js/code/common/select.min.js"></script>
+
+	<script type="text/javascript" src="https://darwin.naturalsciences.be/dw_public/form/js/code/common/messages.js"></script>
+	<script type="text/javascript" src="https://darwin.naturalsciences.be/dw_public/form/js/code/filters/filter.js"></script>
+	<script type="text/javascript" src="https://darwin.naturalsciences.be/dw_public/form/js/code/services/app_no_frame.js?v=20231213"></script>
+	<script type="text/javascript" src="https://darwin.naturalsciences.be/dw_public/form/js/code/services/app_content.js?v=20231213"></script>
+	<script type="text/javascript" src="https://darwin.naturalsciences.be/dw_public/form/js/code/controllers/darwinController.js?v=20231213"></script>
+	<script type="text/javascript" src="https://darwin.naturalsciences.be/dw_public/form/js/code/controllers/darwinControllerDetail.js?v=20231213"></script>
+	<script type="text/javascript" src="https://darwin.naturalsciences.be/dw_public/form/js/code/common/clickoutside.directive.js"></script>
+	<script type="text/javascript" src="https://darwin.naturalsciences.be/dw_public/form/js/code/common/spin.min.js"></script>
+	<script type="text/javascript" src="https://darwin.naturalsciences.be/dw_public/form/js/code/common/angular-spinner.min.js"></script>
+	<script type="text/javascript" src="https://darwin.naturalsciences.be/dw_public/form/js/code/common/angular-loading-spinner.js"></script>
+	<script type="text/javascript" src="https://darwin.naturalsciences.be/dw_public/form/js/code/common/tmhDynamicLocale.min.js"></script>
+	<script type="text/javascript" src="https://darwin.naturalsciences.be/dw_public/form/js/code/common/openlayers/v6.5.0-dist/ol.js"></script>
+
+	<base href="/">	
+		
+</head>
+
+<body>
+
+<!---------------------------    HEADER   --------------------------->
+
+<header id="site-header">
+
+	<div class="maxwidthwrapper clearfix">
+	
+		<div class="header__logo">
+		
+			<a href="https://naturalsciences.be" target="_self"  class="site-logo">
+				<img src="/dw_public/form/images/logo_irsnb.svg" alt="Home" />
+			</a>
+		
+		</div>
+		
+		<div class="header__secondary">
+		
+			<div id="block-languageswitcher">
+				 <ul>
+					<li><a ng-click="ctrl.setLanguage('nl')" class="language-link">NL</a></li>
+					<li><a ng-click="ctrl.setLanguage('fr')" class="language-link">FR</a></li>
+					<li><a ng-click="ctrl.setLanguage('en')" class="language-link">EN</a></li>
+				</ul>
+			</div>
+			
+		</div>
+	
+	</div>
+	
+</header>
+
+<!---------------------------    END HEADER    --------------------------->
+
+<!---------------------------    SUBMENU    --------------------------->
+
+<div class="submenu">
+
+	<div class="maxwidthwrapper clearfix">
+		<ul>
+			<li>
+				<a href="https://darwin.naturalsciences.be/dw_public/form/specimen_result.html" target="_self">{{'SEARCH' | translate}}</a>
+			</li>
+			<li>
+				<a href="https://darwin.naturalsciences.be" target="_blank" >{{ 'ADVANCED_SEARCH_INTERFACE' | translate }}</a>
+			</li>
+		</ul>
+	</div>
+
+</div>
+
+<!---------------------------    END SUBMENU    --------------------------->
+
+<!---------------------------    MAIN CONTENT    --------------------------->
+
+<div id="main-content" class="page-area page-detail" style="overflow: visible">
+
+	<div class="maxwidthwrapper clearfix">
+
+		<div class="title_result">
+						
+			<h1>{{specimen.taxon_name}}</h1>
+			<h2>{{specimen.id_spec}}</h3>
+		
+		</div>
+					
+		<div>&gt;&nbsp;<a ng-href="{{getStableIdentifierUrl()}}" target="_blank">{{'STABLE_CETAF_IDENTIFIER'| translate}}</a></div>
+		<div ng-show="show_image">&gt;&nbsp;<a ng-href="{{getImageUrl()}}" target="_blank">{{'IMAGE_LINK'| translate}}</a></div>
+		<br/>
+						
+		<!---------------------------   2 COLUMNS    --------------------------->
+						
+		<div class="grid--twodown clearfix detail-label-field">
+						
+			<!---------------------------   LEFT COLUMN    --------------------------->						
+						
+			<div class="row">
+
+				<div class="row-label-field"  ng-if="specimen.collection_name_full_path">
+					<span class="label">{{'COLLECTION'| translate}}:</span>
+					<span class="field">{{specimen.collection_name_full_path}}</span>
+				</div>
+				<div class="row-label-field"  ng-if="specimen.id_spec">
+					<span class="label">{{'SPECIMEN_NUMBER'| translate}}:</span>
+					<span class="field">{{specimen.id_spec}}</span>
+				</div>
+				<div class="row-label-field" ng-if="specimen.ig_num">
+					<span class="label">{{'IG_NUMBER'| translate}}:</span>
+					<span class="field">{{specimen.ig_num}}</span>
+				</div>
+				<div class="row-label-field" ng-if="specimen.taxon_name">
+					<span class="label">{{'TAXON_NAME'| translate}}:</span>
+					<span class="field"><i>{{specimen.taxon_name}}</i></span>
+				</div>
+				<div class="row-label-field" ng-if="specimen.class">
+					<span class="label">{{'CLASS'| translate}}:</span>
+					<span class="field"><i>{{specimen.class}}</i></span>
+				</div>
+				<div class="row-label-field" ng-if="specimen.order">
+					<span class="label">{{'ORDER'| translate}}:</span>
+					<span class="field"><i>{{specimen.order}}</i></span>
+				</div>
+				<div class="row-label-field" ng-if="specimen.family">
+					<span class="label">{{'FAMILY'| translate}}:</span>
+					<span class="field"><i>{{specimen.family}}</i></span>
+				</div>
+				<div class="row-label-field" ng-if="specimen.date_from_display">
+					<span class="label">{{'COLLECTING_DATE_FROM'| translate}}:</span>
+					<span class="field">{{specimen.date_from_display}}</span>
+				</div>	
+				<div class="row-label-field" ng-if="specimen.date_to_display">
+					<span class="label">{{'COLLECTING_DATE_TO'| translate}}:</span>
+					<span class="field">{{specimen.date_to_display}}</span>
+				</div>	
+				<div class="row-label-field" ng-if="specimen.collectors">
+					<span class="label">{{'COLLECTORS'| translate}}:</span>
+					<span class="field">{{specimen.collectors}}</span>
+				</div>	
+				<div class="row-label-field" ng-if="specimen.donators">
+					<span class="label">{{'DONATORS'| translate}}:</span>
+					<span class="field">{{specimen.donators}}</span>
+				</div>	
+				<div class="row-label-field" ng-if="specimen.history_identification.length > 0">
+					<span class="label">{{'IDENTIFICATION_HISTORY'| translate}}:</span>
+					<ul >
+						<li ng-repeat="identification in specimen.history_identification"> 
+							<span class="field">{{identification}}</span>    
+						</li>
+					</ul>
+				</div>	
+				<div class="row-label-field" ng-if="specimen.type">
+					<span class="label">{{'TYPE_STATUS'| translate}}:</span>
+					<span class="field">{{specimen.type}}</span>
+				</div>							
+				<div class="row-label-field" ng-if="specimen.specimen_count">
+					<span class="label">{{'SPECIMEN_COUNT'| translate}}:</span>
+					<span class="field">{{specimen.specimen_count}}</span>
+				</div>	
+				<div class="row-label-field" ng-if="specimen.specimen_count_males">
+					<span class="label">{{'SPECIMEN_COUNT_MALES'| translate}}:</span>
+					<span class="field">{{specimen.specimen_count_males}}</span>
+				</div>
+				<div class="row-label-field" ng-if="specimen.specimen_count_females">
+					<span class="label">{{'SPECIMEN_COUNT_FEMALES'| translate}}:</span>
+					<span class="field">{{specimen.specimen_count_females}}</span>
+				</div>
+						
+			</div>
+							
+			<!---------------------------   END LEFT COLUMN    --------------------------->		
+
+			<!---------------------------   RIGHT COLUMN    --------------------------->	
+							
+			<div class="row">
+							
+				<div class="row-label-field" ng-if="specimen.gtu_country_tag_value">
+					<span class="label">{{'COUNTRY'| translate}}:</span>
+					<span class="field">{{specimen.gtu_country_tag_value}}</span>
+				</div>
+				<!--<div class="row-label-field">
+					<span class="label">{{'LOCALITY'| translate}}:</span>
+				</div>						
+				<ul>
+					<li ng-repeat="(key, locality) in specimen.structureLoc">
+						<span class="label">{{key}}:</span>
+						<ul>
+							<li ng-repeat="(key2, locality2) in locality">
+								<span class="label">{{key2}}:</span>
+								<span class="field">{{locality2}}</span>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<input type="hidden" id="latitude" name="latitude" ng-model="specimen.latitude"></input>
+				<input type="hidden" id="longitude" name="longitude" ng-model="specimen.longitude"></input>
+				<div class="row-label-field">
+					<span class="label">{{'LATITUDE'| translate}}:</span>
+					<span class="field">{{specimen.latitude}}</span>
+				</div>						
+				<div class="row-label-field">
+					<span class="label">{{'LONGITUDE'| translate}}:</span>
+					<span class="field">{{specimen.longitude}}</span>
+				</div>-->
+				<div class="row-label-field" ng-if="specimen.properties.length > 0" >
+					<span class="label">{{'PROPERTIES'| translate}}:</span>
+					<li style="list-style-type: none; /* Remove bullets */">
+						<ul ng-repeat="(k, p) in parse_json(specimen.properties)"> <b>{{ k }}</b> : {{ p }}</ul>
+					</li>
+				</div>
+				
+			</div>
+							
+			<!---------------------------   END RIGHT COLUMN    --------------------------->	
+							
+		</div>
+		<!---------------------------    END 2 COLUMNS    --------------------------->
+					
+		<div class="images_list">
+					
+			<div class="grid--threedown clearfix">
+							
+				<ul ng-if="specimen.has_images">
+					<li ng-repeat="(keyIm, valueIm) in specimen.image_obj | orderBy: keyIm" class="row">
+						<img  ng-if="valueIm.thumbnail" style="max-width:100%" src="{{valueIm.thumbnail}}"/>
+						<a ng-if="valueIm.image_link" target="_blank" href="{{valueIm.image_link}}">To viewer</a>
+						<div ng-if="valueIm.contributor">Contributor: {{valueIm.contributor}}</div>
+					</li>
+				</ul>
+						
+			</div>
+						
+		</div>
+					
+		<div class="images3d_list">
+					
+			<div class="clearfix">
+																									
+				<ul ng-if="specimen.has_3d">
+					<li ng-repeat="(keyIm, valueIm) in specimen.d3d_obj | orderBy: keyIm" class="row">
+						<span ng-if="valueIm.snippet ">
+							<div style="position:relative;padding-bottom:56.25%;padding-top:30px;height:0;overflow:hidden">
+								<iframe src="{{valueIm.snippet |  trustAsResourceUrl}}" allowfullscreen allowvr="yes" mozallowfullscreen="true" webkitallowfullscreen="true" onmousewheel="" style="position:absolute;top:0;left:0;width:100%;height:100%" frameborder="0"></iframe>
+							</div>
+						</span>
+						<div>Contributor: {{valueIm.contributor}}</div>
+					</li>
+				</ul>
+							
+			</div>
+							
+		</div>
+
+		<div ng-show="goMap" style="margin: 20px auto 0">
+			<div class=" button-showhide">
+				<p class="expand-one button-showhide"><a href="#" ng-click="collapseMapSwitch()">Show/Hide Map</a></p>
+			</div>
+			<div ng-show="collapseMap"  class="map_detail">
+				<div  style="width: 100%" id="map" class="map"></div>
+				<div id="mouse-position"></div>
+				<div id="popup" class="ol-popup">
+					<a href="#" id="popup-closer" class="ol-popup-closer"></a>
+					<div id="popup-content"></div>
+				</div>
+			</div>	
+		</div>
+					
+		<div ng-show="show_image" class="image_iiif_detail">
+			<div id="iiif_map" class="iiif_map" style="width:100%; height: 360px; display:inline-block"></div>
+			<select id="iiif_chooser" name="iiif_chooser"></select><br/>
+		</div>
+		
+	</div>
+
+</div>
+
+<!---------------------------    END MAIN CONTENT    --------------------------->
+
+<!---------------------------    FOOTER   --------------------------->
+
+<footer id="site-footer">
+
+	<div class="maxwidthwrapper clearfix">
+
+		<div class="footer__sponsors clearfix">
+			
+				<ul>
+					<li>
+						<a href="https://www.naturalsciences.be" target="_blank" title="naturalsciences.be"><img alt="Royal Museum for Central Africa" src="/dw_public/form/images/logo_irsnb.svg"></a>
+					</li>
+					<li>
+						<a href="http://www.belspo.be/" target="_blank" title="belspo.be"><img alt="Belspo" src="/dw_public/form/images/logo_belspo.png"></a>
+					</li>
+					<li>
+						<a href="https://diplomatie.belgium.be/en/policy/development_cooperation" target="_blank" title="diplomatie.belgium.be"><img alt="Development cooperation" src="/dw_public/form/images/logo_belgian_development_cooperation_en.png"></a>
+					</li>
+				</ul>
+				
+		</div>
+	
+		<div class="footer__bottom clearfix">
+				
+				<div class="footer__legal-notices">
+
+					<div style="font-size: 0.9em">
+						Copyright (c) - {{ 'RMCA' | translate }} - 2023
+					</div>
+					<div>
+						<a href="https://www.africamuseum.be/en/legal" target="_blank" style="font-weight: 800; border-bottom: none">{{ 'LEGAL_NOTICES' | translate }}</a>
+					</div>
+
+				</div>
+		</div>
+		
+	</div>
+
+</footer>
+
+<!---------------------------    END FOOTER    --------------------------->
+
+<script type="text/javascript" ng-show="goMap" >
+  
+        var moveDraw=false;
+        var modeRemovePage=false;
+        var clusters;
+        var layerLoaded=false;
+        var selectionBox;
+        var overlay;
+        var map;
+        var container = document.getElementById('popup');
+        var content = document.getElementById('popup-content');
+        var closer = document.getElementById('popup-closer');
+		
+	var img_list=Array();
+	//var layers=Array();
+	//var maps=Array();
+	var map_iiif;
+	var layer_iiif;
+
+        
+jQuery('.expand-one').click(function(){
+    jQuery('.collapse').slideToggle('slow');
+});
+  
+    function isCluster(feature) {
+      if (!feature || !feature.get('features')) { 
+            return false; 
+      }
+      return feature.get('features').length >= 1;
+    }
+  
+
+  
+        var mousePositionControl= new ol.control.MousePosition(
+            {
+                coordinateFormat: ol.coordinate.createStringXY(4),
+                projection:'EPSG:4326',
+                className: 'custom-mouse-position',
+                target: document.getElementById('mouse-position'),
+                undefinedHTML: '&nbsp;'
+                
+            }
+        );
+        
+                var sourceSelection = new ol.source.Vector();
+        var interactionMove = new ol.interaction.DragBox({
+        condition: ol.events.condition.noModifierKeys,
+        style: new ol.style.Style({
+            stroke: new ol.style.Stroke({
+                color: [0, 0, 255, 1]
+            })
+        })
+    });
+
+    interactionMove.on('boxend', function(evt){
+        if(moveDraw===true)
+        {
+            var geom = evt.target.getGeometry();
+            ////console.log(geom);
+            var feat = new ol.Feature({geometry: geom});
+            //source.clear();
+            sourceSelection.addFeature(feat);
+            getSelectionZone(geom);
+             selectionBox=new ol.layer.Vector({
+            source: sourceSelection
+            });
+           map.addLayer(selectionBox);
+       }
+    });
+    
+    
+      var bingBackground= new ol.layer.Tile(
+            {
+                preload: Infinity,
+                source: new ol.source.BingMaps({key: 'Ap3eFRefFd94_D4cqsicw-Fk1-d4kRat9pstTO4oo_i9anyUqrfQcqL9Ew9CJahg', imagerySet:'AerialWithLabels' })
+            }
+        );
+        
+        
+        
+        var view= new ol.View({
+            center: [-4,15],
+            zoom: 5
+        }); 
+        
+        
+       
+        map=new ol.Map({
+            layers:[bingBackground],
+            target: 'map',
+            view: view,
+            controls: ol.control.defaults({
+                attributionOptions: ({collapsible: false})
+            }).extend([mousePositionControl,  new ol.control.ScaleLine()]),
+            // interactions: [interaction]
+            // overlays: [overlay],
+        }); 
+        jQuery('#map').css("height", "500px");
+        map.updateSize()
+        
+        
+      //main search function
+      var getFeaturesRow=function(geoJSON)
+      {
+     
+           
+           
+            
+            var tmpFeatures=(new ol.format.GeoJSON()).readFeatures(jQuery.parseJSON(geoJSON), {
+                dataProjection: 'EPSG:4326',
+                featureProjection: 'EPSG:3857'
+            });
+            var vectorSource = new ol.source.Vector({features: tmpFeatures});
+   
+       
+      
+        var clusterSource = new ol.source.Cluster({
+          distance: 40,
+          source: vectorSource
+        });
+        
+      var styleCache = {};
+     var keysForClick=[];
+      clusters = new ol.layer.Vector({
+        source: clusterSource,
+        style: function(feature) {
+        
+        jQuery(feature.get('features')).each(
+                    function(idx, item)
+                    {
+                        keysForClick[item.get('code_display')||'']=item.get('taxon')||'';
+                     
+                    }
+                );
+               
+          var size = feature.get('features').length;
+          var style = styleCache[size];
+          if (!style) {
+            style = new ol.style.Style({
+              image: new ol.style.Circle({
+                radius: 10,
+                stroke: new ol.style.Stroke({
+                  color: '#fff'
+                }),
+                fill: new ol.style.Fill({
+                  color: '#3399CC'
+                })
+              }),
+              text: new ol.style.Text({
+                text: size.toString(),
+                fill: new ol.style.Fill({
+                  color: '#fff'
+                })
+              })
+            });
+            styleCache[size] = style;
+          }
+          return style;
+        },
+        keysForClick: keysForClick
+      });
+
+
+      
+        map.addLayer(clusters);
+        map.removeLayer(selectionBox);
+        layerLoaded=true;
+        
+        var extent = vectorSource.getExtent();
+        
+        //alert(vectorSource.getExtent());
+        map.getView().fit(extent);
+        map.getView().setZoom(10);
+        
+      //alert("end selection");
+         
+      };
+
+            
+
+
+      
+      jQuery(document).ready(
+        function()
+        {
+            modeRemovePage=true;
+
+            
+
+            
+           var tmpLat=-180
+           var tmpLong=-180;
+           var tmpListenerCoord=angular.element(jQuery('#darwin-app')).scope();
+            tmpListenerCoord.$watch('specimen.geoJSON', function(newVal, oldVal){
+       
+                if(undefined !=newVal)
+                {   
+                    if(newVal.length>0)
+                    {
+                        getFeaturesRow(newVal);
+                      
+                    }
+                }
+            });
+            
+            
+
+                
+
+                  /**
+                   * Create an overlay to anchor the popup to the map.
+                   */
+                    overlay = new ol.Overlay(/** @type {olx.OverlayOptions} */ ({
+                    element: container,
+                    autoPan: true,
+                    autoPanAnimation: {
+                      duration: 250
+                    }
+                  }));
+                  
+                   /**
+                   * Add a click handler to hide the popup.
+                   * @return {boolean} Don't follow the href.
+                   */
+                  closer.onclick = function() {
+                    overlay.setPosition(undefined);
+                    closer.blur();
+                    return false;
+                  };
+                  
+                  map.addOverlay(overlay);
+				  
+				  
+				  ///IIIF
+				  
+		
+
+					var get_img=function(data)
+					{
+						if("images" in data)
+						{
+							$.each(data.images, function( index, value ) {
+								
+								img_list.push(value["@id"]);
+							});
+						}		
+					}
+
+					var seqs=function(data)
+					{
+						if("canvases" in data)
+						{
+							$.each(data.canvases, function( index, value ) {
+								
+								get_img(value);
+							});
+						}		
+					}
+
+					function refreshMap(imageInfoUrl) {
+					  fetch(imageInfoUrl)
+						.then(function (response) {
+						  response
+							.json()
+							.then(function (imageInfo) {
+							  var options = new ol.format.IIIFInfo(imageInfo).getTileSourceOptions();
+							  if (options === undefined || options.version === undefined) {
+								//notifyDiv.textContent =
+								//  'Data seems to be no valid IIIF image information.';
+								//console.log('Data seems to be no valid IIIF image information.');
+								return;
+							  }
+							  options.zDirection = -1;
+							  var iiifTileSource = new ol.source.IIIF(options);
+							  layer_iiif.setSource(iiifTileSource);
+							  map_iiif.setView(
+								new ol.View({
+								  resolutions: iiifTileSource.getTileGrid().getResolutions(),
+								  extent: iiifTileSource.getTileGrid().getExtent(),
+								  constrainOnlyCenter: true,
+								})
+							  );
+							  map_iiif.getView().fit(iiifTileSource.getTileGrid().getExtent());
+							  //console.log('initialized');
+							  //notifyDiv.textContent = '';
+							})
+							.catch(function (body) {
+							  //console.log('Could not read image info json. ' + body);
+							});
+						})
+						.catch(function () {
+						   //console.log('Could not read data from URL.');
+						});
+					}
+
+					var create_ol_iiif=function()
+					{
+						if(img_list.length>0)
+						{
+							 //console.log(img_list);
+							 layer_iiif = new ol.layer.Tile(),
+							 map_iiif = new ol.Map({
+								layers: [layer_iiif],
+								target: 'iiif_map'
+							  });
+							  refreshMap(img_list[0]);
+							  for(var i=0;i<img_list.length; i++)
+							  {
+								  $('#iiif_chooser').append($('<option>', {
+										value: img_list[i],
+										text: img_list[i]
+									}));
+							  }
+						}
+						
+					}
+
+					$('#iiif_chooser').change(
+						function()
+						{
+							refreshMap($('#iiif_chooser').val());
+						}
+					);
+		
+				  
+				  tmpListenerCoord.$watch('url_virtual_col_iiif_complete', function(newVal, oldVal){
+       
+                if(undefined !=newVal)
+                {   
+                    if(newVal.length>0)
+                    {
+                        //console.log(newVal);
+						$.getJSON( newVal, {				
+						format: "json"
+					  }).done(function( data ) 
+						{
+							//console.log(data);
+							if("sequences" in data)
+							{
+								
+								$.each(data.sequences, function( index, value ) {
+									seqs(value);
+								});
+							}
+							create_ol_iiif();
+						}
+						);
+                      
+                    }
+                }
+            });
+
+            
+        }
+      );
+      
+  </script>
+
+</body>
+
+</html>

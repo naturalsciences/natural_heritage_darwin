@@ -24,6 +24,8 @@
  * @property string $upper_value
  * @property float $upper_value_unified
  * @property string $property_accuracy
+ * @property integer $import_ref
+ * @property Imports $Imports
  * 
  * @method integer    getId()                  Returns the current record's "id" value
  * @method string     getReferencedRelation()  Returns the current record's "referenced_relation" value
@@ -44,6 +46,8 @@
  * @method string     getUpperValue()          Returns the current record's "upper_value" value
  * @method float      getUpperValueUnified()   Returns the current record's "upper_value_unified" value
  * @method string     getPropertyAccuracy()    Returns the current record's "property_accuracy" value
+ * @method integer    getImportRef()           Returns the current record's "import_ref" value
+ * @method Imports    getImports()             Returns the current record's "Imports" value
  * @method Properties setId()                  Sets the current record's "id" value
  * @method Properties setReferencedRelation()  Sets the current record's "referenced_relation" value
  * @method Properties setRecordId()            Sets the current record's "record_id" value
@@ -63,6 +67,8 @@
  * @method Properties setUpperValue()          Sets the current record's "upper_value" value
  * @method Properties setUpperValueUnified()   Sets the current record's "upper_value_unified" value
  * @method Properties setPropertyAccuracy()    Sets the current record's "property_accuracy" value
+ * @method Properties setImportRef()           Sets the current record's "import_ref" value
+ * @method Properties setImports()             Sets the current record's "Imports" value
  * 
  * @package    darwin
  * @subpackage model
@@ -151,6 +157,9 @@ abstract class BaseProperties extends DarwinModel
              'type' => 'string',
              'default' => '',
              ));
+        $this->hasColumn('import_ref', 'integer', null, array(
+             'type' => 'integer',
+             ));
 
         $this->setSubClasses(array(
              'SubProperties' => 
@@ -163,6 +172,8 @@ abstract class BaseProperties extends DarwinModel
     public function setUp()
     {
         parent::setUp();
-        
+        $this->hasOne('Imports', array(
+             'local' => 'import_ref',
+             'foreign' => 'id'));
     }
 }

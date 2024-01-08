@@ -1,5 +1,8 @@
 <?php
-
+//ftheeten
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
@@ -508,6 +511,8 @@ class sfContext implements ArrayAccess
    *
    * @return Boolean true if the context object exists, false otherwise
    */
+  #ftheeten 2023 04 07
+  #[\ReturnTypeWillChange]
   public function offsetExists($name)
   {
     return $this->has($name);
@@ -520,6 +525,8 @@ class sfContext implements ArrayAccess
    *
    * @return mixed The context object if exists, null otherwise
    */
+  #ftheeten 2023 04 07
+  #[\ReturnTypeWillChange]
   public function offsetGet($name)
   {
     return $this->get($name);
@@ -531,6 +538,8 @@ class sfContext implements ArrayAccess
    * @param string $offset Service name
    * @param mixed  $value Service
    */
+  #ftheeten 2023 04 07
+  #[\ReturnTypeWillChange]
   public function offsetSet($offset, $value)
   {
     $this->set($offset, $value);
@@ -541,6 +550,8 @@ class sfContext implements ArrayAccess
    *
    * @param string $offset The parameter name
    */
+  #ftheeten 2023 04 07
+  #[\ReturnTypeWillChange]
   public function offsetUnset($offset)
   {
     unset($this->factories[$offset]);

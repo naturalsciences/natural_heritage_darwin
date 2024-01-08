@@ -13,6 +13,7 @@
 class Staging extends BaseStaging
 {
   public $codes = array();
+  public $linkedInfo=null;
 
   private static $errors = array(
     'not_found' => 'This %field% was not found in our database, please choose an existing one or remove it',
@@ -283,14 +284,16 @@ class Staging extends BaseStaging
     }
     elseif($field == "code")
     {      
-      if(array_key_exists("code", $this->getStatus())) 
+		//ftheeten cast Hstore as array
+      if(array_key_exists("code", (array)$this->getStatus())) 
 		  return $tb_completed ;
       else
         return $tb_ok;
     }
 	elseif($field == "category")
     {      
-      if(array_key_exists("category", $this->getStatus())) 
+	//ftheeten cast Hstore as array
+      if(array_key_exists("category", (array)$this->getStatus())) 
 		  return $tb_completed ;
       else
         return $tb_ok;

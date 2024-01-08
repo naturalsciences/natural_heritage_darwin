@@ -68,6 +68,8 @@ class MaAddGtuTagForm extends DarwinModelForm
 		
 		
 	}
+	
+
   
     public function doMassAction($user_id, $items, $values)
   {

@@ -37,7 +37,7 @@
       </li>
       <li>
         <a href="<?php echo __('http://www.naturalsciences.be');?>">
-          <?php echo image_tag('public/rbins_logo.png');?>
+          <?php echo image_tag('public/rbins_logo_new.png');?>
           <span><?php echo __('Royal Belgian Institute of Natural Sciences');?></span>
         </a>
       </li>

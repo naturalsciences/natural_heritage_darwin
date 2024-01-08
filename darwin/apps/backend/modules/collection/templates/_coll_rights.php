@@ -24,6 +24,11 @@
         name="<?php echo __('List of Widgets') ; ?>"><?php echo __('Manage widgets');?></a>
 	   </div>
     </td>
+	<td>
+		<div id="widget_profile_ref">
+			<?php echo $form['widget_profile_ref'];?>
+		</div>
+	<td>
     <?php else : ?>
       <td colspan="2">&nbsp;</td>
     <?php endif ; ?>

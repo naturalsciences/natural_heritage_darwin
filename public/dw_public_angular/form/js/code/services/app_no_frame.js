@@ -1,0 +1,1 @@
+var darwinApp=  angular.module('darwin',['darwinFilters','ui.bootstrap', 'pascalprecht.translate', 'ui.select','ngSanitize', 'ngMessages',  'angular-click-outside', 'angularSpinner', 'ngLoadingSpinner', 'tmh.dynamicLocale']);

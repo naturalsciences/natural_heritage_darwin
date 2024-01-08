@@ -543,5 +543,8 @@ class sfCoreAutoload
     'sfyamldumper' => 'yaml/sfYamlDumper.class.php',
     'sfyamlinline' => 'yaml/sfYamlInline.class.php',
     'sfyamlparser' => 'yaml/sfYamlParser.class.php',
+	//ftheeten PHP8
+	'i18nhelper'=> 'helper/I18NHelper.php',
+	'escapinghelper'=> 'helper/EscapingHelper.php',
   );
 }

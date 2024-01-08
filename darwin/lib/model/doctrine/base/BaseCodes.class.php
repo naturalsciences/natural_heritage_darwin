@@ -17,6 +17,8 @@
  * @property string $full_code_indexed
  * @property string $code_date
  * @property integer $code_date_mask
+ * @property integer $import_ref
+ * @property Imports $Imports
  * 
  * @method integer getId()                    Returns the current record's "id" value
  * @method string  getReferencedRelation()    Returns the current record's "referenced_relation" value
@@ -30,6 +32,8 @@
  * @method string  getFullCodeIndexed()       Returns the current record's "full_code_indexed" value
  * @method string  getCodeDate()              Returns the current record's "code_date" value
  * @method integer getCodeDateMask()          Returns the current record's "code_date_mask" value
+ * @method integer getImportRef()             Returns the current record's "import_ref" value
+ * @method Imports getImports()               Returns the current record's "Imports" value
  * @method Codes   setId()                    Sets the current record's "id" value
  * @method Codes   setReferencedRelation()    Sets the current record's "referenced_relation" value
  * @method Codes   setRecordId()              Sets the current record's "record_id" value
@@ -42,6 +46,8 @@
  * @method Codes   setFullCodeIndexed()       Sets the current record's "full_code_indexed" value
  * @method Codes   setCodeDate()              Sets the current record's "code_date" value
  * @method Codes   setCodeDateMask()          Sets the current record's "code_date_mask" value
+ * @method Codes   setImportRef()             Sets the current record's "import_ref" value
+ * @method Codes   setImports()               Sets the current record's "Imports" value
  * 
  * @package    darwin
  * @subpackage model
@@ -97,11 +103,16 @@ abstract class BaseCodes extends DarwinModel
              'notnull' => true,
              'default' => 0,
              ));
+        $this->hasColumn('import_ref', 'integer', null, array(
+             'type' => 'integer',
+             ));
     }
 
     public function setUp()
     {
         parent::setUp();
-        
+        $this->hasOne('Imports', array(
+             'local' => 'import_ref',
+             'foreign' => 'id'));
     }
 }

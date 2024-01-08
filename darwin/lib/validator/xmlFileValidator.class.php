@@ -1,9 +1,12 @@
 <?php
 
-class xmlFileValidator extends sfValidatorFile
+//class xmlFileValidator extends sfValidatorFile
+//ftheeten FOR PHP8
+class xmlFileValidator extends sfValidatorFilePHP8
 {
   protected function configure($options = array(), $messages = array())
   {
+	
     $this->addMessage('invalid_format', 'Invalid Xml file format <br /><u>Detail :</u>');
     $this->addMessage('invalid_line', '- %error%');
     $this->addMessage('unreadable_file', 'This file is unreadable.');
@@ -12,10 +15,40 @@ class xmlFileValidator extends sfValidatorFile
     $this->addMessage('notab', 'The imported text file is not a tab delimited file');
     parent::configure($options, $messages);
   }
+  
+  
+   public function clean($value)
+  {
+	//print("CLEAN");
+    $clean = $value;
+	// empty value?
+	//print("VALUE=");
+	//print_r($clean);
+    if ($this->options['trim'] && is_string($clean))
+    {
+      $clean = trim($clean);
+    }
+
+    // empty value?
+	//print_r($clean);
+    if ($this->isEmpty($clean))
+    {
+      // required?
+      if ($this->options['required'])
+      {
+		//print("THROW_CLEAN");
+        throw new sfValidatorError($this, 'required');
+      }
+
+      return $this->getEmptyValue();
+    }
+	//print("CALL DO CLEAN");
+    return $this->doClean($clean);
+  }
 
   protected function doClean($value)
   {
- 
+	//print("DEBUG_CLEAN_XML");
     //ftheeten 2016 02 22
 	$disableXSDValidation=sfConfig::get('dw_disableXSDValidation');
 	

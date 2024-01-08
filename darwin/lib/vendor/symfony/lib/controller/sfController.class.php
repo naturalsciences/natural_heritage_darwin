@@ -177,6 +177,7 @@ abstract class sfController
    */
   public function forward($moduleName, $actionName)
   {
+
     // replace unwanted characters
     $moduleName = preg_replace('/[^a-z0-9_]+/i', '', $moduleName);
     $actionName = preg_replace('/[^a-z0-9_]+/i', '', $actionName);
@@ -200,6 +201,8 @@ abstract class sfController
 
       throw new sfError404Exception(sprintf('Action "%s/%s" does not exist.', $moduleName, $actionName));
     }
+	
+
 
     // create an instance of the action
     $actionInstance = $this->getAction($moduleName, $actionName);
@@ -209,6 +212,7 @@ abstract class sfController
 
     // include module configuration
     $viewClass = sfConfig::get('mod_'.strtolower($moduleName).'_view_class', false);
+
     require($this->context->getConfigCache()->checkConfig('modules/'.$moduleName.'/config/module.yml'));
     if (false !== $viewClass)
     {
@@ -218,6 +222,7 @@ abstract class sfController
     // module enabled?
     if (sfConfig::get('mod_'.strtolower($moduleName).'_enabled'))
     {
+
       // check for a module config.php
       $moduleConfig = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/config/config.php';
       if (is_readable($moduleConfig))
@@ -227,12 +232,15 @@ abstract class sfController
 
       // create a new filter chain
       $filterChain = new sfFilterChain();
+	  
+	  //print_r((array)$actionInstance);
       $filterChain->loadConfiguration($actionInstance);
 
       $this->context->getEventDispatcher()->notify(new sfEvent($this, 'controller.change_action', array('module' => $moduleName, 'action' => $actionName)));
 
       if ($moduleName == sfConfig::get('sf_error_404_module') && $actionName == sfConfig::get('sf_error_404_action'))
       {
+
         $this->context->getResponse()->setStatusCode(404);
         $this->context->getResponse()->setHttpHeader('Status', '404 Not Found');
 
@@ -241,8 +249,9 @@ abstract class sfController
 
       // process the filter chain
       $filterChain->execute();
+
     }
-    else
+    else	
     {
       $moduleName = sfConfig::get('sf_module_disabled_module');
       $actionName = sfConfig::get('sf_module_disabled_action');

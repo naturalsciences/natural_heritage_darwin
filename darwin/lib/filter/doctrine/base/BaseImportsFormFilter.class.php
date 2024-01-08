@@ -89,6 +89,12 @@ abstract class BaseImportsFormFilter extends DarwinModelFormFilter
     $this->widgetSchema   ['enforce_code_unicity'] = new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no')));
     $this->validatorSchema['enforce_code_unicity'] = new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0)));
 
+    $this->widgetSchema   ['update'] = new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no')));
+    $this->validatorSchema['update'] = new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0)));
+
+    $this->widgetSchema   ['synonymy_taxonomy_ref'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['synonymy_taxonomy_ref'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
+
     $this->widgetSchema   ['collection_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Collections'), 'add_empty' => true));
     $this->validatorSchema['collection_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Collections'), 'column' => 'id'));
 
@@ -131,6 +137,8 @@ abstract class BaseImportsFormFilter extends DarwinModelFormFilter
       'history_taxonomy' => 'Text',
       'collection_ref_for_gtu' => 'Number',
       'enforce_code_unicity' => 'Boolean',
+      'update' => 'Boolean',
+      'synonymy_taxonomy_ref' => 'Number',
       'collection_ref' => 'ForeignKey',
       'user_ref' => 'ForeignKey',
     ));

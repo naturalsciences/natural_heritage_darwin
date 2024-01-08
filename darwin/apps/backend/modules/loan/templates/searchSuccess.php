@@ -42,7 +42,7 @@
 	      <?php if($orderBy=='description') echo $orderSign ?>
 	    </a>
           </th>
-          <th></th>
+          <th colspan="5"></th>
         <tr>
       </thead>
       <tbody>
@@ -70,34 +70,33 @@
               <?php echo $item->getDescription();?>
             </td>
             <td class="<?php echo ( isset( $is_choose ) && $is_choose ) ? 'choose' : 'edit';?>">
-              <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),'loan/view?id='.$item->getId());?>
+              <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),'loan/view?id='.$item->getId(),array('target'=>"_blank"));?>
+			 </td>
               <?php if(! $is_choose):?>
                 <?php if(in_array($item->getId(),sfOutputEscaper::unescape($rights)) || $sf_user->isAtLeast(Users::ADMIN)) : ?>
-                  <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit loan'))),'loan/edit?id='.$item->getId());?>
-                  <?php echo link_to(image_tag('duplicate.png',array('title'=>__('Duplicate loan'))),'loan/new?duplicate_id='.$item->getId());?>
+				<td>
+                  <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit loan'))),'loan/edit?id='.$item->getId(), array('target'=>"_blank"));?>
+				</td>
+				<td>
+                  <?php echo link_to(image_tag('duplicate.png',array('title'=>__('Duplicate loan'))),'loan/new?duplicate_id='.$item->getId(),array('target'=>"_blank"));?>
+				</td>
+				<td>
                   <?php echo link_to(image_tag('remove.png',array('title'=>__('Remove loan'))),'loan/delete?id='.$item->getId(), array('class'=>'clear_item'));?>
+				</td>
                 <?php endif ; ?>
                 <?php if (isset($printable) && in_array($item->getId(), $printable->getRawValue())): ?>
-                  <?php echo link_to(
-                    image_tag(
-                      'print.png',
-                      array(
-                        'title'=>__('Print loan')
-                      )
-                    ),
-                    'report/getReport?'.http_build_query(array(
-                                                           'name'=>'loans_form_complete',
-                                                           'default_vals'=>array(
-                                                             'loan_id'=>$item->getId()
-                                                           )
-                                                         )),
-                    array('class'=>'print_item')
-                  );?>
+				  <td>
+                  <?php echo link_to("PDF", "http://172.16.11.138/merge_pdf?loan=".$item->getId(), array("target"=> "_blank"));?>
+				  </td>
                 <?php endif; ?>
               <?php else:?>
                 <?php if(in_array($item->getId(),sfOutputEscaper::unescape($rights)) || $sf_user->isAtLeast(Users::ADMIN)) : ?>
+				<td>
                   <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit loan'))),'loan/edit?id='.$item->getId(),array('target'=>"_blank"));?>
+				</td>
+				<td>
                   <?php echo link_to(image_tag('duplicate.png',array('title'=>__('Duplicate loan'))),'loan/new?duplicate_id='.$item->getId(),array('target'=>"_blank"));?>
+				</td>
                 <?php endif ; ?>
                 <div class="result_choose"><?php echo __('Choose');?></div>
               <?php endif ; ?>

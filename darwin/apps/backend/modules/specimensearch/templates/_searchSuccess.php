@@ -34,13 +34,13 @@
 				$obj["properties"]["dw_taxon_name"]="";
 				if($spec->getTaxonName()!==null)
 				{
-					$obj["properties"]["dw_taxon_name"]=addslashes($spec->getTaxonName());
+					$obj["properties"]["dw_taxon_name"]=addslashes(preg_replace('/\t/',' ',preg_replace('/\xc2\xa0/', ' ',$spec->getTaxonName())));
 				}
 				foreach($code_list[$spec->getId()] as $key=>$code)
 				{
 					if($code->getCodeCategory() == 'main')
 					{
-						$obj["properties"]["dw_code"]=addslashes(str_replace(","," ", $code->getFullCode()));
+						$obj["properties"]["dw_code"]=addslashes(preg_replace('/\t/',' ',str_replace(","," ", preg_replace('/\xc2\xa0/', ' ',$code->getFullCode()))));
 					}
 				}
 				$points[]=$obj;
@@ -52,6 +52,26 @@
 	$has_coordinates=false;
 	$array_coords=init_map_json($specimensearch, $codes, $has_coordinates);
 	
+	/*
+	$callback_coords=false;
+	print("test1");
+	if(array_key_exists("specimen_search_filters", $_REQUEST))
+	{
+		print("test2");
+		if(array_key_exists("wkt_search", $_REQUEST["specimen_search_filters"]))
+		{
+			print("test3");
+			$callback_coords=true;
+			$has_coordinates=true;
+			$array_coords= $_REQUEST["specimen_search_filters"]["wkt_search"];
+			print($array_coords);
+		}
+	}
+	if(!$callback_coords)
+	{
+		$array_coords=init_map_json($specimensearch, $codes, $has_coordinates);
+	}
+	*/
 
 ?>
     <!-- ftheeten 2014 04 17-->

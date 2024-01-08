@@ -1,4 +1,7 @@
 <?php
+ //ftheeten PHP8
+const ESC_RAW='esc_raw';
+
 class DarwinTable extends Doctrine_Table
 {
 
@@ -285,7 +288,8 @@ class DarwinTable extends Doctrine_Table
   * @param $level the level used to get the possible upper ones
   * @return Array of results
   */
-  public function completeAsArray($user, $needle, $exact, $limit = 30, $level)
+  //php 8 level has to have a default value
+  public function completeAsArray($user, $needle, $exact, $limit = 30, $level='')
   {
 
     $conn_MGR = Doctrine_Manager::connection();
@@ -326,7 +330,8 @@ class DarwinTable extends Doctrine_Table
   * @param $level the level used to get the possible upper ones
   * @return Array of results
   */
-  public function completeWithLevelAsArray($user, $needle, $exact, $limit = 30, $level)
+   //php 8 level has to have a default value
+  public function completeWithLevelAsArray($user, $needle, $exact, $limit = 30, $level='')
   {
     $conn_MGR = Doctrine_Manager::connection();
       $q = Doctrine_Query::create()
@@ -438,13 +443,19 @@ class DarwinTable extends Doctrine_Table
       foreach($res as $result) 
       {
         if(! isset($this->flat_results[$result->getDictField()]))
+		{
           $this->flat_results[$result->getDictField()] = array();
-        $this->flat_results[$result->getDictField()][$result->getDictValue()] = $result->getDictValue();
+        }
+		$this->flat_results[$result->getDictField()][$result->getDictValue()] = $result->getDictValue();
       }
     }
+	
     if(isset($this->flat_results[$column]))
+	{
       return $this->flat_results[$column];
-    return array();
+    }
+	return array();
   }
+  
 
 }

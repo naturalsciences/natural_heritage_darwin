@@ -19,7 +19,7 @@
  * @property $firstOptional int
  * @property $segments array
  */
-class sfRoute implements Serializable
+class sfRoute #implements Serializable
 {
   protected
     $isBound           = false,
@@ -38,6 +38,10 @@ class sfRoute implements Serializable
     $requirements      = array(),
     $tokens            = array(),
     $customToken       = false;
+	
+   //ftheeten
+   public $firstOptional;
+   public $segments;
 
   /**
    * Constructor.
@@ -845,7 +849,7 @@ class sfRoute implements Serializable
     }
   }
 
-  public function serialize()
+  /*public function serialize()
   {
     // always serialize compiled routes
     $this->compile();
@@ -855,6 +859,29 @@ class sfRoute implements Serializable
 
   public function unserialize($data)
   {
+    list($this->tokens, $this->defaultOptions, $this->options, $this->pattern, $this->staticPrefix, $this->regex, $this->variables, $this->defaults, $this->requirements, $this->suffix, $this->customToken) = unserialize($data);
+    $this->compiled = true;
+  }*/
+ 
+  //ftheeten php 8.2 Serialize deprecated
+   public function __serialize()
+  {
+    // always serialize compiled routes
+    $this->compile();
+
+    // sfPatternRouting will always re-set defaultParameters, so no need to serialize them
+   // return serialize(array($this->tokens, $this->defaultOptions, $this->options, $this->pattern, $this->staticPrefix, $this->regex, $this->variables, $this->defaults, $this->requirements, $this->suffix, $this->customToken));
+   //ftheeten
+   return (array)serialize(array($this->tokens, $this->defaultOptions, $this->options, $this->pattern, $this->staticPrefix, $this->regex, $this->variables, $this->defaults, $this->requirements, $this->suffix, $this->customToken));
+  }
+  
+  
+
+  public function __unserialize($data)
+  {
+	
+	//ftheeten
+	$data=$data[0];
     list($this->tokens, $this->defaultOptions, $this->options, $this->pattern, $this->staticPrefix, $this->regex, $this->variables, $this->defaults, $this->requirements, $this->suffix, $this->customToken) = unserialize($data);
     $this->compiled = true;
   }

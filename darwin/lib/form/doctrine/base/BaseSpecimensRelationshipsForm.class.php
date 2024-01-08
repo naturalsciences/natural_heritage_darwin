@@ -49,6 +49,9 @@ abstract class BaseSpecimensRelationshipsForm extends DarwinModelForm
     $this->widgetSchema   ['source_id'] = new sfWidgetFormTextarea();
     $this->validatorSchema['source_id'] = new sfValidatorString(array('required' => false));
 
+    $this->widgetSchema   ['import_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Imports'), 'add_empty' => true));
+    $this->validatorSchema['import_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Imports'), 'column' => 'id', 'required' => false));
+
     $this->widgetSchema   ['specimen_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Specimen'), 'add_empty' => false));
     $this->validatorSchema['specimen_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Specimen'), 'column' => 'id'));
 
@@ -63,6 +66,9 @@ abstract class BaseSpecimensRelationshipsForm extends DarwinModelForm
 
     $this->widgetSchema   ['institution_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Institutions'), 'add_empty' => true));
     $this->validatorSchema['institution_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Institutions'), 'column' => 'id', 'required' => false));
+
+    $this->widgetSchema   ['import_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Imports'), 'add_empty' => true));
+    $this->validatorSchema['import_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Imports'), 'column' => 'id', 'required' => false));
 
     $this->widgetSchema->setNameFormat('specimens_relationships[%s]');
   }

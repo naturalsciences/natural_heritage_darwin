@@ -20,8 +20,11 @@
  * @property integer $db_user_type
  * @property integer $people_id
  * @property string $selected_lang
+ * @property integer $default_widget_collection_ref
+ * @property boolean $taxonomic_manager
  * @property People $People
  * @property IdentifiersUsers $IdentifiersUsers
+ * @property Collections $DefaultWidgetCollection
  * @property Doctrine_Collection $UsersComm
  * @property Doctrine_Collection $UsersAddresses
  * @property Doctrine_Collection $UsersLoginInfos
@@ -37,71 +40,80 @@
  * @property Doctrine_Collection $LoanRights
  * @property Doctrine_Collection $LoanStatus
  * @property Doctrine_Collection $Reports
+ * @property Doctrine_Collection $WidgetProfiles
  * 
- * @method integer             getId()                     Returns the current record's "id" value
- * @method boolean             getIsPhysical()             Returns the current record's "is_physical" value
- * @method string              getSubType()                Returns the current record's "sub_type" value
- * @method string              getFormatedName()           Returns the current record's "formated_name" value
- * @method string              getFormatedNameIndexed()    Returns the current record's "formated_name_indexed" value
- * @method string              getTitle()                  Returns the current record's "title" value
- * @method string              getFamilyName()             Returns the current record's "family_name" value
- * @method string              getGivenName()              Returns the current record's "given_name" value
- * @method string              getAdditionalNames()        Returns the current record's "additional_names" value
- * @method integer             getBirthDateMask()          Returns the current record's "birth_date_mask" value
- * @method string              getBirthDate()              Returns the current record's "birth_date" value
- * @method enum                getGender()                 Returns the current record's "gender" value
- * @method integer             getDbUserType()             Returns the current record's "db_user_type" value
- * @method integer             getPeopleId()               Returns the current record's "people_id" value
- * @method string              getSelectedLang()           Returns the current record's "selected_lang" value
- * @method People              getPeople()                 Returns the current record's "People" value
- * @method IdentifiersUsers    getIdentifiersUsers()       Returns the current record's "IdentifiersUsers" value
- * @method Doctrine_Collection getUsersComm()              Returns the current record's "UsersComm" collection
- * @method Doctrine_Collection getUsersAddresses()         Returns the current record's "UsersAddresses" collection
- * @method Doctrine_Collection getUsersLoginInfos()        Returns the current record's "UsersLoginInfos" collection
- * @method Doctrine_Collection getCollections()            Returns the current record's "Collections" collection
- * @method Doctrine_Collection getCollectionsRights()      Returns the current record's "CollectionsRights" collection
- * @method Doctrine_Collection getUsersTracking()          Returns the current record's "UsersTracking" collection
- * @method Doctrine_Collection getUsersTrackingSpecimens() Returns the current record's "UsersTrackingSpecimens" collection
- * @method Doctrine_Collection getInformativeWorkflow()    Returns the current record's "InformativeWorkflow" collection
- * @method Doctrine_Collection getMySavedSearches()        Returns the current record's "MySavedSearches" collection
- * @method Doctrine_Collection getMyWidgets()              Returns the current record's "MyWidgets" collection
- * @method Doctrine_Collection getPreferences()            Returns the current record's "Preferences" collection
- * @method Doctrine_Collection getImports()                Returns the current record's "Imports" collection
- * @method Doctrine_Collection getLoanRights()             Returns the current record's "LoanRights" collection
- * @method Doctrine_Collection getLoanStatus()             Returns the current record's "LoanStatus" collection
- * @method Doctrine_Collection getReports()                Returns the current record's "Reports" collection
- * @method Users               setId()                     Sets the current record's "id" value
- * @method Users               setIsPhysical()             Sets the current record's "is_physical" value
- * @method Users               setSubType()                Sets the current record's "sub_type" value
- * @method Users               setFormatedName()           Sets the current record's "formated_name" value
- * @method Users               setFormatedNameIndexed()    Sets the current record's "formated_name_indexed" value
- * @method Users               setTitle()                  Sets the current record's "title" value
- * @method Users               setFamilyName()             Sets the current record's "family_name" value
- * @method Users               setGivenName()              Sets the current record's "given_name" value
- * @method Users               setAdditionalNames()        Sets the current record's "additional_names" value
- * @method Users               setBirthDateMask()          Sets the current record's "birth_date_mask" value
- * @method Users               setBirthDate()              Sets the current record's "birth_date" value
- * @method Users               setGender()                 Sets the current record's "gender" value
- * @method Users               setDbUserType()             Sets the current record's "db_user_type" value
- * @method Users               setPeopleId()               Sets the current record's "people_id" value
- * @method Users               setSelectedLang()           Sets the current record's "selected_lang" value
- * @method Users               setPeople()                 Sets the current record's "People" value
- * @method Users               setIdentifiersUsers()       Sets the current record's "IdentifiersUsers" value
- * @method Users               setUsersComm()              Sets the current record's "UsersComm" collection
- * @method Users               setUsersAddresses()         Sets the current record's "UsersAddresses" collection
- * @method Users               setUsersLoginInfos()        Sets the current record's "UsersLoginInfos" collection
- * @method Users               setCollections()            Sets the current record's "Collections" collection
- * @method Users               setCollectionsRights()      Sets the current record's "CollectionsRights" collection
- * @method Users               setUsersTracking()          Sets the current record's "UsersTracking" collection
- * @method Users               setUsersTrackingSpecimens() Sets the current record's "UsersTrackingSpecimens" collection
- * @method Users               setInformativeWorkflow()    Sets the current record's "InformativeWorkflow" collection
- * @method Users               setMySavedSearches()        Sets the current record's "MySavedSearches" collection
- * @method Users               setMyWidgets()              Sets the current record's "MyWidgets" collection
- * @method Users               setPreferences()            Sets the current record's "Preferences" collection
- * @method Users               setImports()                Sets the current record's "Imports" collection
- * @method Users               setLoanRights()             Sets the current record's "LoanRights" collection
- * @method Users               setLoanStatus()             Sets the current record's "LoanStatus" collection
- * @method Users               setReports()                Sets the current record's "Reports" collection
+ * @method integer             getId()                            Returns the current record's "id" value
+ * @method boolean             getIsPhysical()                    Returns the current record's "is_physical" value
+ * @method string              getSubType()                       Returns the current record's "sub_type" value
+ * @method string              getFormatedName()                  Returns the current record's "formated_name" value
+ * @method string              getFormatedNameIndexed()           Returns the current record's "formated_name_indexed" value
+ * @method string              getTitle()                         Returns the current record's "title" value
+ * @method string              getFamilyName()                    Returns the current record's "family_name" value
+ * @method string              getGivenName()                     Returns the current record's "given_name" value
+ * @method string              getAdditionalNames()               Returns the current record's "additional_names" value
+ * @method integer             getBirthDateMask()                 Returns the current record's "birth_date_mask" value
+ * @method string              getBirthDate()                     Returns the current record's "birth_date" value
+ * @method enum                getGender()                        Returns the current record's "gender" value
+ * @method integer             getDbUserType()                    Returns the current record's "db_user_type" value
+ * @method integer             getPeopleId()                      Returns the current record's "people_id" value
+ * @method string              getSelectedLang()                  Returns the current record's "selected_lang" value
+ * @method integer             getDefaultWidgetCollectionRef()    Returns the current record's "default_widget_collection_ref" value
+ * @method boolean             getTaxonomicManager()              Returns the current record's "taxonomic_manager" value
+ * @method People              getPeople()                        Returns the current record's "People" value
+ * @method IdentifiersUsers    getIdentifiersUsers()              Returns the current record's "IdentifiersUsers" value
+ * @method Collections         getDefaultWidgetCollection()       Returns the current record's "DefaultWidgetCollection" value
+ * @method Doctrine_Collection getUsersComm()                     Returns the current record's "UsersComm" collection
+ * @method Doctrine_Collection getUsersAddresses()                Returns the current record's "UsersAddresses" collection
+ * @method Doctrine_Collection getUsersLoginInfos()               Returns the current record's "UsersLoginInfos" collection
+ * @method Doctrine_Collection getCollections()                   Returns the current record's "Collections" collection
+ * @method Doctrine_Collection getCollectionsRights()             Returns the current record's "CollectionsRights" collection
+ * @method Doctrine_Collection getUsersTracking()                 Returns the current record's "UsersTracking" collection
+ * @method Doctrine_Collection getUsersTrackingSpecimens()        Returns the current record's "UsersTrackingSpecimens" collection
+ * @method Doctrine_Collection getInformativeWorkflow()           Returns the current record's "InformativeWorkflow" collection
+ * @method Doctrine_Collection getMySavedSearches()               Returns the current record's "MySavedSearches" collection
+ * @method Doctrine_Collection getMyWidgets()                     Returns the current record's "MyWidgets" collection
+ * @method Doctrine_Collection getPreferences()                   Returns the current record's "Preferences" collection
+ * @method Doctrine_Collection getImports()                       Returns the current record's "Imports" collection
+ * @method Doctrine_Collection getLoanRights()                    Returns the current record's "LoanRights" collection
+ * @method Doctrine_Collection getLoanStatus()                    Returns the current record's "LoanStatus" collection
+ * @method Doctrine_Collection getReports()                       Returns the current record's "Reports" collection
+ * @method Doctrine_Collection getWidgetProfiles()                Returns the current record's "WidgetProfiles" collection
+ * @method Users               setId()                            Sets the current record's "id" value
+ * @method Users               setIsPhysical()                    Sets the current record's "is_physical" value
+ * @method Users               setSubType()                       Sets the current record's "sub_type" value
+ * @method Users               setFormatedName()                  Sets the current record's "formated_name" value
+ * @method Users               setFormatedNameIndexed()           Sets the current record's "formated_name_indexed" value
+ * @method Users               setTitle()                         Sets the current record's "title" value
+ * @method Users               setFamilyName()                    Sets the current record's "family_name" value
+ * @method Users               setGivenName()                     Sets the current record's "given_name" value
+ * @method Users               setAdditionalNames()               Sets the current record's "additional_names" value
+ * @method Users               setBirthDateMask()                 Sets the current record's "birth_date_mask" value
+ * @method Users               setBirthDate()                     Sets the current record's "birth_date" value
+ * @method Users               setGender()                        Sets the current record's "gender" value
+ * @method Users               setDbUserType()                    Sets the current record's "db_user_type" value
+ * @method Users               setPeopleId()                      Sets the current record's "people_id" value
+ * @method Users               setSelectedLang()                  Sets the current record's "selected_lang" value
+ * @method Users               setDefaultWidgetCollectionRef()    Sets the current record's "default_widget_collection_ref" value
+ * @method Users               setTaxonomicManager()              Sets the current record's "taxonomic_manager" value
+ * @method Users               setPeople()                        Sets the current record's "People" value
+ * @method Users               setIdentifiersUsers()              Sets the current record's "IdentifiersUsers" value
+ * @method Users               setDefaultWidgetCollection()       Sets the current record's "DefaultWidgetCollection" value
+ * @method Users               setUsersComm()                     Sets the current record's "UsersComm" collection
+ * @method Users               setUsersAddresses()                Sets the current record's "UsersAddresses" collection
+ * @method Users               setUsersLoginInfos()               Sets the current record's "UsersLoginInfos" collection
+ * @method Users               setCollections()                   Sets the current record's "Collections" collection
+ * @method Users               setCollectionsRights()             Sets the current record's "CollectionsRights" collection
+ * @method Users               setUsersTracking()                 Sets the current record's "UsersTracking" collection
+ * @method Users               setUsersTrackingSpecimens()        Sets the current record's "UsersTrackingSpecimens" collection
+ * @method Users               setInformativeWorkflow()           Sets the current record's "InformativeWorkflow" collection
+ * @method Users               setMySavedSearches()               Sets the current record's "MySavedSearches" collection
+ * @method Users               setMyWidgets()                     Sets the current record's "MyWidgets" collection
+ * @method Users               setPreferences()                   Sets the current record's "Preferences" collection
+ * @method Users               setImports()                       Sets the current record's "Imports" collection
+ * @method Users               setLoanRights()                    Sets the current record's "LoanRights" collection
+ * @method Users               setLoanStatus()                    Sets the current record's "LoanStatus" collection
+ * @method Users               setReports()                       Sets the current record's "Reports" collection
+ * @method Users               setWidgetProfiles()                Sets the current record's "WidgetProfiles" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -175,6 +187,13 @@ abstract class BaseUsers extends DarwinModel
              'notnull' => true,
              'default' => 'en',
              ));
+        $this->hasColumn('default_widget_collection_ref', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('taxonomic_manager', 'boolean', null, array(
+             'type' => 'boolean',
+             'notnull' => true,
+             ));
     }
 
     public function setUp()
@@ -187,6 +206,10 @@ abstract class BaseUsers extends DarwinModel
         $this->hasOne('IdentifiersUsers', array(
              'local' => 'id',
              'foreign' => 'record_id'));
+
+        $this->hasOne('Collections as DefaultWidgetCollection', array(
+             'local' => 'default_widget_collection_ref',
+             'foreign' => 'id'));
 
         $this->hasMany('UsersComm', array(
              'local' => 'id',
@@ -247,5 +270,9 @@ abstract class BaseUsers extends DarwinModel
         $this->hasMany('Reports', array(
              'local' => 'id',
              'foreign' => 'user_ref'));
+
+        $this->hasMany('WidgetProfiles', array(
+             'local' => 'id',
+             'foreign' => 'creator_ref'));
     }
 }

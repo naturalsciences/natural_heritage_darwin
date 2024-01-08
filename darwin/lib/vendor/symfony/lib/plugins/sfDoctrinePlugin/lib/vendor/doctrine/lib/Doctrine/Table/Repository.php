@@ -102,7 +102,8 @@ class Doctrine_Table_Repository implements Countable, IteratorAggregate
      * Doctrine_Registry implements interface Countable
      * @return integer                      the number of records this registry has
      */
-    public function count()
+	 //ftheeten php 8 return type
+    public function count():int
     {
         return count($this->registry);
     }
@@ -138,7 +139,8 @@ class Doctrine_Table_Repository implements Countable, IteratorAggregate
      * getIterator
      * @return ArrayIterator
      */
-    public function getIterator()
+	//ftheeten PHP 8 give return type
+    public function getIterator():Traversable
     {
         return new ArrayIterator($this->registry);
     }

@@ -26,6 +26,7 @@
           <?php endif;?>
         </th>
 		 <th><?php echo __('Original synonym');?></th>
+		 <th><?php echo __('Date');?></th>
         <th></th>
             </tr>
           </thead>
@@ -69,7 +70,14 @@
         </td>
 		 <td class="origi_cell">          
             <?php if($synonym['original_synonym']) echo image_tag('checkbox_checked.png') ; else echo image_tag('checkbox_unchecked.png') ;?>       
-        </td>
+        </td>  
+				
+				<td>
+				  
+				  <?php echo $synonym['syn_date'];?>
+				 
+				</td>
+			  
             </tr>
           <?php endforeach;?>
           </tbody>

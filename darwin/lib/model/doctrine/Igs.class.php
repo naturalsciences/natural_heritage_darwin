@@ -12,6 +12,19 @@
  */
 class Igs extends BaseIgs
 {
+
+   private static $ig_type_allowed_value = array(
+	 ''=>'Undefined',
+   'field_mission' => 'Field mission',
+   'donation' => 'Donation'
+   ) ;
+
+  static public function getIgTypeAllowedValue()
+  {
+    return self::$ig_type_allowed_value ;
+  }
+
+
   public function getIgDateMasked ()
   {
     $dateTime = new FuzzyDateTime($this->_get('ig_date'), $this->_get('ig_date_mask'));
@@ -38,7 +51,7 @@ class Igs extends BaseIgs
       $this->_set('ig_date_mask', $dateTime->getMask());
     }
   }
-     
+  
     //ftheeten 2018 04 10
   public function countSpecimens()
   {
@@ -81,6 +94,5 @@ class Igs extends BaseIgs
     }
     
   }
-
 
 }

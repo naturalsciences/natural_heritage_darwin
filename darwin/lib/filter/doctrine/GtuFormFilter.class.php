@@ -117,6 +117,31 @@ class GtuFormFilter extends BaseGtuFormFilter
     
     $subForm = new sfForm();
     $this->embedForm('Tags',$subForm);
+	
+	//People 
+	 $fields_to_search = array(
+      'spec_coll_ids' => $this->getI18N()->__('Collector'),
+      'spec_don_sel_ids' => $this->getI18N()->__('Donator or seller'),
+      'ident_ids' => $this->getI18N()->__('Identifier')
+    );
+	$this->widgetSchema["people_ref"]= new sfWidgetFormChoice(array('choices'=>array(), "multiple"=>true));
+	$this->widgetSchema['people_ref']->setAttributes(array("class"=> 'select2_people'));
+	 $this->widgetSchema['role_ref'] = new sfWidgetFormChoice(
+      array('choices'=> $fields_to_search,
+            'multiple' => true,
+            'expanded' => true,
+			 'label' => $this->getI18N()->__('Choose people role'),
+      ),
+	  array('class'=> 'role_ref'));
+    //$this->validatorSchema['people_ref'] = new sfValidatorInteger(array('required' => false)) ;
+	$this->validatorSchema['people_ref'] = new sfValidatorPass() ;
+    $this->validatorSchema['role_ref'] = new sfValidatorChoice(array('choices'=>array_keys($fields_to_search), 'required'=>false)) ;
+    $this->validatorSchema['role_ref'] = new sfValidatorPass() ;
+	//ftheeten 2016/01/07
+		$this->widgetSchema['people_fuzzy'] = new sfWidgetFormInputText();
+	$this->widgetSchema['people_fuzzy']->setAttributes(array("class"=> 'class_fuzzy_people'));
+	$this->validatorSchema['people_fuzzy'] = new sfValidatorString(array('required' => false)) ;
+	$this->validatorSchema['people_fuzzy'] = new sfValidatorPass() ;
   }
 
   public function addCodeColumnQuery($query, $field, $val)
@@ -142,7 +167,7 @@ class GtuFormFilter extends BaseGtuFormFilter
     foreach($val as $line)
     {
       $line_val = $line['tag'];
-      print($line_val);
+      
       if( $line_val != '')
       {
         //$tagList = $conn_MGR->quote($line_val, 'string');
@@ -205,6 +230,7 @@ class GtuFormFilter extends BaseGtuFormFilter
     if($this->hasTags)
       {
 		    $query->select('d.*')->from('DoctrineTemporalInformationGtuGroupTags d');
+			$query->addOrderBy(" (select count(*) from Tags where gtu_Ref=d.id)");
 			$query->addOrderBy("LENGTH(tag)");
 			$query->addOrderBy("fct_rmca_gtu_orderby_pattern(tag,$tagvalue )");
 	  }
@@ -345,6 +371,79 @@ class GtuFormFilter extends BaseGtuFormFilter
     return $query;
   }
   
+  
+  public function add_people_query($query, $val)
+  {
+	  $people_ref=$val["people_ref"];
+	  $fuzzy=$val["people_fuzzy"];
+	  $roles=$val["role_ref"];
+	  $flag_fuzzy=false;
+	  if($roles===null)
+	  {
+		   $roles=Array("spec_coll_ids","spec_don_sel_id", "ident_ids" );
+	  }
+	  if(count($roles)==0)
+	  {
+		  $roles=Array("spec_coll_ids","spec_don_sel_id", "ident_ids" );
+	  }
+	  if($fuzzy!==null)
+	  {
+			if(strlen(trim($fuzzy))>0)
+			{
+			 
+			  $flag_fuzzy=true;
+			  $id_fuzzy=Doctrine_Core::getTable('People')->completeAsArray(null, $fuzzy, false);
+			  
+			  
+			  foreach($id_fuzzy as $item)
+			  {
+				  $people_ref[]=$item["value"];
+			  }
+		  
+		}  
+	  }
+	  $params=Array();
+	  $elems=Array();
+	  print_r($people_ref);
+	  if($people_ref===null)
+	  {
+		  $people_ref=Array();
+	  }
+	  if(count($people_ref)>0)
+	  {
+		  foreach($people_ref as $p)
+		  {
+			  foreach($roles as $r)
+			  {
+				  if($r=="spec_coll_ids")
+				  {
+					  $elems[]="s.spec_coll_ids @> ARRAY[?]::int[]";
+					  $params[]=$p;
+				  }
+				  elseif($r=="spec_don_sel_ids")
+				  {
+					  $elems[]="s.spec_don_sel_ids @> ARRAY[?]::int[]";
+					   $params[]=$p;
+				  }
+				  elseif($r=="ident_ids")
+				  {
+					  $elems[]="s.spec_ident_ids @> ARRAY[?]::int[]";
+					   $params[]=$p;
+				  }
+			  }
+		  }
+		  $part_sql="EXISTS (SELECT s.id FROM Specimens s WHERE (".implode(" OR ",$elems ).") AND ".$query->getRootAlias().".id=s.gtu_ref )";
+		 
+		  $query->andWhere($part_sql, $params);
+	  }
+	  elseif($flag_fuzzy)
+	  {
+		$query->andWhere("1=2");
+	  }
+	 
+	  return $query;
+  }
+  
   public function bind(array $taintedValues = null, array $taintedFiles = null)
   {
     $this->tag_boolean='AND';
@@ -390,7 +489,7 @@ class GtuFormFilter extends BaseGtuFormFilter
     $this->addCollectionRefColumnQuery($query, $values,$values["collection_ref"]);
     $this->addLatLonColumnQuery($query,$values);
 	$this->addImportRefColumnQuery($query,$values,$values["import_ref"]);
-    
+    $this->add_people_query($query,$values);
 
     $fields = array('from_date', 'to_date');    
     $this->addDateFromToColumnQuery($query, $fields, $values['gtu_from_date'], $values['gtu_to_date']);
@@ -404,6 +503,7 @@ class GtuFormFilter extends BaseGtuFormFilter
     $javascripts[]='/leaflet/leaflet.markercluster-src.js';
     $javascripts[]='/js/map.js';
     $javascripts[]= '/Leaflet.draw/dist/leaflet.draw.js';
+	$javascripts[]= "/select2-4.0.5/dist/js/select2.full.min.js";
     return $javascripts;
   }
 
@@ -412,6 +512,7 @@ class GtuFormFilter extends BaseGtuFormFilter
     $items['/leaflet/leaflet.css']='all';
     $items['leaflet/MarkerCluster.css']='all';
   	$items['/Leaflet.draw/dist/leaflet.draw.css']='all';
+	$items["/select2-4.0.5/dist/css/select2.min.css"]=  'all';
     return $items;
   }
 

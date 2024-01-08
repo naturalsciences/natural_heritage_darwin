@@ -252,7 +252,7 @@ public function getSavedSearchData($user_id, $query_id, $p_is_admin=false)
                          row else 'NOT_APPLICABLE' END as row,
 
                              CASE WHEN coll_user_type>= 4 OR is_adm is true THEN
-                         shelf else 'NOT_APPLICABLE' END as shel,
+                         shelf else 'NOT_APPLICABLE' END as shelf,
 
                             CASE WHEN coll_user_type>= 4 OR is_adm is true THEN
                          container else 'NOT_APPLICABLE' END as container,

@@ -47,6 +47,12 @@ abstract class BaseCodesFormFilter extends DarwinModelFormFilter
     $this->widgetSchema   ['code_date_mask'] = new sfWidgetFormFilterInput(array('with_empty' => false));
     $this->validatorSchema['code_date_mask'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
 
+    $this->widgetSchema   ['import_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Imports'), 'add_empty' => true));
+    $this->validatorSchema['import_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Imports'), 'column' => 'id'));
+
+    $this->widgetSchema   ['import_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Imports'), 'add_empty' => true));
+    $this->validatorSchema['import_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Imports'), 'column' => 'id'));
+
     $this->widgetSchema->setNameFormat('codes_filters[%s]');
   }
 
@@ -69,6 +75,8 @@ abstract class BaseCodesFormFilter extends DarwinModelFormFilter
       'full_code_indexed' => 'Text',
       'code_date' => 'Text',
       'code_date_mask' => 'Number',
+      'import_ref' => 'ForeignKey',
+      'import_ref' => 'ForeignKey',
     ));
   }
 }

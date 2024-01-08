@@ -313,10 +313,16 @@ class Doctrine_Connection_Statement implements Doctrine_Adapter_Statement_Interf
      *
      * @return mixed
      */
+	//ftheeten PHP 8 replacing $cursorOffset = null
     public function fetch($fetchMode = Doctrine_Core::FETCH_BOTH,
                           $cursorOrientation = Doctrine_Core::FETCH_ORI_NEXT,
-                          $cursorOffset = null)
+                          $cursorOffset = -999999)
     {
+		//ftheeten PHP 8
+		if($cursorOffset==-999999)
+		{
+			$cursorOffset=null;
+		}
         $event = new Doctrine_Event($this, Doctrine_Event::STMT_FETCH, $this->getQuery());
 
         $event->fetchMode = $fetchMode;
@@ -326,7 +332,8 @@ class Doctrine_Connection_Statement implements Doctrine_Adapter_Statement_Interf
         $data = $this->_conn->getListener()->preFetch($event);
 
         if ( ! $event->skipOperation) {
-            $data = $this->_stmt->fetch($fetchMode, $cursorOrientation, $cursorOffset);
+			//ftheetebn coalesce null
+            $data = $this->_stmt->fetch($fetchMode, $cursorOrientation, $cursorOffset ?? -999999);
         }
 
         $this->_conn->getListener()->postFetch($event);

@@ -100,6 +100,8 @@ abstract class Doctrine_Access extends Doctrine_Locator_Injectable implements Ar
      * @param   mixed $offset
      * @return  boolean Whether or not this object contains $offset
      */
+	#ftheeten 2023 04 07
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return $this->contains($offset);
@@ -112,6 +114,8 @@ abstract class Doctrine_Access extends Doctrine_Locator_Injectable implements Ar
      * @param   mixed $offset
      * @return  mixed
      */
+	#ftheeten 2023 04 07
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         // array notation with no index was causing 'undefined variable: $offset' notices in php7,
@@ -131,6 +135,8 @@ abstract class Doctrine_Access extends Doctrine_Locator_Injectable implements Ar
      * @param   mixed $value
      * @return  void
      */
+	#ftheeten 2023 04 07
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         if ( ! isset($offset)) {
@@ -146,6 +152,8 @@ abstract class Doctrine_Access extends Doctrine_Locator_Injectable implements Ar
      * @see   set, offsetSet, __set
      * @param mixed $offset
      */
+	#ftheeten 2023 04 07
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         return $this->remove($offset);

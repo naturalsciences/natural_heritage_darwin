@@ -1,4 +1,12 @@
 <table>
+   <thead>
+     <tr>
+      <th><?php echo $form['restricted_access']->renderLabel();?></th>
+    </tr>
+     </thead>
+     <tr>
+      <td><?php echo $form['restricted_access'];?></td>
+    </tr>
   <thead>
     <tr>
       <th><?php echo $form['spec_ids']->renderLabel();?></th>
@@ -35,6 +43,8 @@
      <tr>
       <td><?php echo $form['user_ref'];?></td>
     </tr>
+  </tbody>
+ 
   </tbody>
 </table>
 

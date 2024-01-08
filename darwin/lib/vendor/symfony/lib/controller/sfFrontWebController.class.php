@@ -31,6 +31,7 @@ class sfFrontWebController extends sfWebController
   {
     try
     {
+
       // reinitialize filters (needed for unit and functional tests)
       sfFilter::$filterCalled = array();
 
@@ -47,6 +48,8 @@ class sfFrontWebController extends sfWebController
 
       // make the first request
       $this->forward($moduleName, $actionName);
+
+
     }
     catch (sfException $e)
     {

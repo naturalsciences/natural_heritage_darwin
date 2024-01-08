@@ -51,6 +51,6 @@ vous y trouverez tout autre statut non reconnu par le CINZ (par exemple topotype
 
 <p>
   <a href="<?php echo __('http://www.sciencesnaturelles.be');?>">
-            <?php echo image_tag('public/rbins_logo.png', 'class=logo_center_align');?><br />
+            <?php echo image_tag('public/rbins_logo_new.png', 'class=logo_center_align');?><br />
           </a>
 </p>

@@ -35,6 +35,6 @@ De hoeksteen van de DARWIN database is het specimen en de informatie over de her
 
 <p>
   <a href="<?php echo __('http://www.natuurwetenschappen.be');?>">
-            <?php echo image_tag('public/rbins_logo.png', 'class=logo_center_align');?><br />
+            <?php echo image_tag('public/rbins_logo_new.png', 'class=logo_center_align');?><br />
           </a>
 </p>

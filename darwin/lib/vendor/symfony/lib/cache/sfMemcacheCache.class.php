@@ -54,23 +54,36 @@ class sfMemcacheCache extends sfCache
     }
     else
     {
-      $this->memcache = new Memcache();
-
+      //$this->memcache = new Memcache();
+	  //ftheeten
+		$this->memcache = new Memcached();
       if ($this->getOption('servers'))
       {
         foreach ($this->getOption('servers') as $server)
         {
           $port = isset($server['port']) ? $server['port'] : 11211;
-          if (!$this->memcache->addServer($server['host'], $port, isset($server['persistent']) ? $server['persistent'] : true))
-          {
+          //if (!$this->memcache->addServer($server['host'], $port, isset($server['persistent']) ? $server['persistent'] : true))
+          if (!$this->memcache->addServer($server['host'], $port))
+		  {
             throw new sfInitializationException(sprintf('Unable to connect to the memcache server (%s:%s).', $server['host'], $port));
           }
         }
       }
       else
       {
-        $method = $this->getOption('persistent', true) ? 'pconnect' : 'connect';
-        if (!$this->memcache->$method($this->getOption('host', 'localhost'), $this->getOption('port', 11211), $this->getOption('timeout', 1)))
+       //$method = $this->getOption('persistent', true) ? 'pconnect' : 'connect';
+	   //ftheeten avoid dynamlic property php8
+	    /*$test1=$this->getOption('persistent', true);
+		if($test1)
+		{
+			$test2=$this->memcache->pconnect($this->getOption('host', 'localhost'), $this->getOption('port', 11211), $this->getOption('timeout', 1));
+		}
+		else
+		{
+			$test2=$this->memcache->connect($this->getOption('host', 'localhost'), $this->getOption('port', 11211), $this->getOption('timeout', 1));
+		}*/
+		$test2=$this->memcache->addServer($this->getOption('host', 'localhost'), $this->getOption('port', 11211));
+        if(!$test2)
         {
           throw new sfInitializationException(sprintf('Unable to connect to the memcache server (%s:%s).', $this->getOption('host', 'localhost'), $this->getOption('port', 11211)));
         }

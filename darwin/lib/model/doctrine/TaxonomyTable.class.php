@@ -464,4 +464,71 @@ INNER JOIN taxonomy ON taxonomy.id=record_id) a ORDER BY LEVENSHTEIN(SUBSTR(labe
 		
 		return  $results;
   }
+  
+    public function countDescendingTaxa($id_taxon)
+  {
+	 $conn = Doctrine_Manager::connection()->getDbh();
+	 $statement = $conn->prepare("SELECT COUNT(*) as nbr FROM taxonomy  WHERE path||parent_ref::varchar||'/'||id::varchar||'/' like '%/'||:id_taxon ||'/%' ");
+	 $statement->execute(array('id_taxon' => $id_taxon));
+	 $resultset = $statement->fetchAll(PDO::FETCH_ASSOC);
+	 return $resultset[0]['nbr'];
+  }
+  
+  public function getCatalogOfLifeCorrespondence($id_taxon, $size=100, $page=1)
+  {
+	$offset=(((int)$page)-1)*(int)$size;
+	$sql="SELECT catalogue_levels.level_name,
+    v_taxonomy_remove_authors_for_check.name_no_author,
+    v_taxonomy_remove_authors_for_check.no_parenthesis,
+    v_taxonomy_remove_authors_for_check.name,
+    v_taxonomy_remove_authors_for_check.name_indexed,
+    v_taxonomy_remove_authors_for_check.level_ref,
+    v_taxonomy_remove_authors_for_check.status,
+    v_taxonomy_remove_authors_for_check.local_naming,
+    v_taxonomy_remove_authors_for_check.color,
+    v_taxonomy_remove_authors_for_check.path,
+    v_taxonomy_remove_authors_for_check.parent_ref,
+    v_taxonomy_remove_authors_for_check.metadata_ref,
+    v_taxonomy_remove_authors_for_check.id,
+    v_taxonomy_remove_authors_for_check.extinct,
+    v_taxonomy_remove_authors_for_check.taxonomy_creation_date,
+    v_taxonomy_remove_authors_for_check.import_ref,
+    v_taxonomy_remove_authors_for_check.sensitive_info_withheld,
+    v_taxonomy_remove_authors_for_check.is_reference_taxonomy,
+    v_taxonomy_remove_authors_for_check.cites,
+    v_taxonomy_remove_authors_for_check.nomen_nodum,
+    col_api.url_col,
+    col_api.count_col,
+    col_api.current_col,
+    col_api.col_usage_key,
+    col_api.col_status,
+    col_api.col_rank,
+    col_api.col_scientific_name,
+    col_api.col_authorship,
+    col_api.col_link,
+    col_api.col_hierarchy_names,
+    col_api.col_hierarchy_ranks,
+        CASE
+            WHEN col_api.col_scientific_name IS NULL THEN 'not_found'::text
+            WHEN \"position\"(v_taxonomy_remove_authors_for_check.name::text, ('('::text || col_api.col_authorship::text) || ')'::text) > 0 THEN 'same_author_different_parenthesis'::text
+            WHEN \"position\"(v_taxonomy_remove_authors_for_check.name::text, col_api.col_authorship::text) > 0 THEN 'same_author'::text
+            ELSE 'other_author'::text
+        END AS col_match_type
+   FROM (select * from  v_taxonomy_remove_authors_for_check 
+		 
+		 where path||parent_ref::varchar||'/'||id::varchar||'/' like '%/'||:id_taxon ||'/%'
+		 order by level_ref, name 
+		limit :size
+		 offset :offset
+		) v_taxonomy_remove_authors_for_check
+     JOIN catalogue_levels ON v_taxonomy_remove_authors_for_check.level_ref = catalogue_levels.id
+     LEFT JOIN LATERAL fct_rmca_taxon_to_catalogolife_api_rank(v_taxonomy_remove_authors_for_check.name_no_author::character varying, catalogue_levels.level_name) col_api(url_col, count_col, current_col, col_usage_key, col_status, col_rank, col_scientific_name, col_authorship, col_link, col_hierarchy_names, col_hierarchy_ranks, json_col) ON 1 = 1;";
+	 $conn = Doctrine_Manager::connection()->getDbh();
+	 $q = $conn->prepare($sql);
+     $q->execute(array(':id_taxon' => $id_taxon, ':size'=>$size, ':offset' => $offset ));
+        
+     $results = $q->fetchAll(PDO::FETCH_ASSOC);        
+		
+   return  $results;
+  }
 }

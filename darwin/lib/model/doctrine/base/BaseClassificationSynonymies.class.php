@@ -14,6 +14,8 @@
  * @property integer $order_by
  * @property integer $synonym_record_id
  * @property boolean $original_synonym
+ * @property integer $syn_date_mask
+ * @property string $syn_date
  * 
  * @method integer                  getId()                  Returns the current record's "id" value
  * @method string                   getReferencedRelation()  Returns the current record's "referenced_relation" value
@@ -24,6 +26,8 @@
  * @method integer                  getOrderBy()             Returns the current record's "order_by" value
  * @method integer                  getSynonymRecordId()     Returns the current record's "synonym_record_id" value
  * @method boolean                  getOriginalSynonym()     Returns the current record's "original_synonym" value
+ * @method integer                  getSynDateMask()         Returns the current record's "syn_date_mask" value
+ * @method string                   getSynDate()             Returns the current record's "syn_date" value
  * @method ClassificationSynonymies setId()                  Sets the current record's "id" value
  * @method ClassificationSynonymies setReferencedRelation()  Sets the current record's "referenced_relation" value
  * @method ClassificationSynonymies setRecordId()            Sets the current record's "record_id" value
@@ -33,6 +37,8 @@
  * @method ClassificationSynonymies setOrderBy()             Sets the current record's "order_by" value
  * @method ClassificationSynonymies setSynonymRecordId()     Sets the current record's "synonym_record_id" value
  * @method ClassificationSynonymies setOriginalSynonym()     Sets the current record's "original_synonym" value
+ * @method ClassificationSynonymies setSynDateMask()         Sets the current record's "syn_date_mask" value
+ * @method ClassificationSynonymies setSynDate()             Sets the current record's "syn_date" value
  * 
  * @package    darwin
  * @subpackage model
@@ -80,6 +86,15 @@ abstract class BaseClassificationSynonymies extends DarwinModel
         $this->hasColumn('original_synonym', 'boolean', null, array(
              'type' => 'boolean',
              'default' => false,
+             ));
+        $this->hasColumn('syn_date_mask', 'integer', null, array(
+             'type' => 'integer',
+             'notnull' => true,
+             'default' => 0,
+             ));
+        $this->hasColumn('syn_date', 'string', null, array(
+             'type' => 'string',
+             'default' => '0001-01-01',
              ));
 
         $this->setSubClasses(array(

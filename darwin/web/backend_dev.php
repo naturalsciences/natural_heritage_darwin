@@ -1,8 +1,18 @@
 <?php
-
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 // this check prevents access to debug front controllers that are deployed by accident to production servers.
 // feel free to remove this, extend it or make something more sophisticated.
-$src=$_SERVER['HTTP_X_FORWARDED_FOR'];
+//ftheeten 2023 04 07
+if(array_key_exists("HTTP_X_FORWARDED_FOR",$_SERVER))
+{
+	$src=$_SERVER['HTTP_X_FORWARDED_FOR'];
+}
+else
+{
+	$src=$_SERVER['REMOTE_ADDR'];
+}
 if(!filter_var($src, FILTER_VALIDATE_IP))
 {
 	$src=$_SERVER['REMOTE_ADDR'];
@@ -22,14 +32,15 @@ foreach($list_ips as $url)
 		$go=true;
 	}	
 }
-#uncomment to debug
-#$go=true;
+$go=true;
 if ($go)
 {
+
 	require_once(dirname(__FILE__).'/../config/ProjectConfiguration.class.php');
 
 	$configuration = ProjectConfiguration::getApplicationConfiguration('backend', 'dev', true);
 	sfContext::createInstance($configuration)->dispatch();
+
 }
 else
 {

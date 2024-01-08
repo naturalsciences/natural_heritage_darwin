@@ -23,7 +23,14 @@
       <span class="synonym_name"></span>
     </td>
   </tr>
-
+  <tr>
+    <th><?php echo $form['syn_date']->renderLabel('Date');?></th>
+    <td>
+      <?php echo $form['syn_date']->renderError(); ?>
+      <?php echo $form['syn_date'];?>
+      <span class="synonym_name"></span>
+    </td>
+  </tr>
   <tr class="<?php if(! $form['merge']->hasError() || $form['record_id']->hasError()) echo 'hidden';?> merge_question">
    <th><?php echo $form['merge']->renderLabel('Confirm');?></th>
    <td>
@@ -78,7 +85,12 @@ function checkGroup()
 
 $(document).ready(function () 
 {
+
+	
   $('form.qtiped_form').modal_screen();
+  
+  $("#classification_synonymies_syn_date_day").prop("selectedIndex", 0);
+   $("#classification_synonymies_syn_date_month").prop("selectedIndex", 0);
 
     $('.result_choose').live('click',function () {
       el = $(this).closest('tr');

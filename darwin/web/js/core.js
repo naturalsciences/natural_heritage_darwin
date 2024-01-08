@@ -782,3 +782,15 @@ $.fn.customRadioCheck = function() {
 	  }
 	  return returned;	  
 	}	
+	
+	var hoover_option=function(v_class)
+	{		
+		$(document).ready(
+			function()
+			{					
+				 $(v_class+' option').prop('title', function(){
+					return this.value;
+				});
+			}
+		);
+	}

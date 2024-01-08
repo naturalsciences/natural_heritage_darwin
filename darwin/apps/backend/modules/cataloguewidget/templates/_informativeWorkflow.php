@@ -8,7 +8,13 @@
     <tr>
       <td><?php echo $form["status"] ; ?></td>
       <td><ul class="comment_error error_list hidden"><li><?php echo __('Error: The comment is missing');?></li></ul>
-        <?php echo $form["comment"] ; ?><a title="<?php echo __('Add Workflow');?>" id="add_workflow" href="<?php echo url_for('informativeWorkflow/add?table='.$table.'&id='.$eid); ?>"><?php echo __('Add');?></a></td>
+        <?php echo $form["comment"] ; ?>
+	</td>
+    <tr>
+		<td>
+		<div class="add_code" style="float:left;"><a title="<?php echo __('Add Workflow');?>" id="add_workflow" href="<?php echo url_for('informativeWorkflow/add?table='.$table.'&id='.$eid); ?>"><?php echo __('Save new Status');?></a>
+		</div>
+		</td>
     </tr>
   </thead>
 </table>

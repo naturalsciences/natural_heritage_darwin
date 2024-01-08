@@ -18,7 +18,10 @@ class loanActions extends DarwinActions
     // Forward to a 404 page if the requested expedition id is not found
     $this->forward404Unless($loan = Doctrine_Core::getTable('Loans')->find($loan_id), sprintf('Object loan does not exist (%s).', $loan_id));
     if($this->getUser()->isAtLeast(Users::ADMIN)) return $loan ;
-    $right = Doctrine_Core::getTable('loanRights')->isAllowed($this->getUser()->getId(),$loan->getId()) ;
+    $right = Doctrine_Core::getTable('loanRights')->isAllowed($this->getUser()->getId(),$loan->getId()) 
+    //ftheeten 2017 10 30
+    ||Doctrine_Core::getTable("CollectionsRights")->hasEditRightsFor($this->getUser(), $loan->getCollectionRef())
+    ;
     if(!$right) {
       if ($this->getUser()->isAtLeast(Users::MANAGER))
         $this->redirect('loan/view?id='.$loan->getId());
@@ -59,6 +62,8 @@ class loanActions extends DarwinActions
 
   public function executeSearch(sfWebRequest $request)
   {
+    //ftheeten 2017 10 30
+    $editTest=false;
     $this->forward404Unless($request->isMethod('post'));
     $this->setCommonValues('loan', 'from_date', $request);
 
@@ -66,12 +71,29 @@ class loanActions extends DarwinActions
     $this->is_choose = ($request->getParameter('is_choose', '') == '') ? 0 : intval($request->getParameter('is_choose') );
     if($request->getParameter('loans_filters','') !== '')
     {
+      //ftheeten 2017 1030
+      if(array_key_exists("collection_ref",$request->getParameter('loans_filters','')))
+      {
+        if(is_numeric($request->getParameter('loans_filters','')['collection_ref']))
+        {           
+            $editTest=Doctrine_Core::getTable("CollectionsRights")->hasEditRightsFor($this->getUser(), $request->getParameter('loans_filters','')['collection_ref']);           
+        }
+      }
       $this->form->bind($request->getParameter('loans_filters'));
 
       if ($this->form->isValid())
       {
+  
         $query = $this->form->getQuery()->orderBy($this->orderBy .' '.$this->orderDir);
-
+        //ftheeten 2017 10 22
+         /*if($editTest===true)
+         {
+            $query = $this->form->getQuery()->orWhere("collection_ref=?",$request->getParameter('loans_filters','')['collection_ref'])->orderBy($this->orderBy .' '.$this->orderDir);
+         }
+         else
+         {
+            $query = $this->form->getQuery()->orderBy($this->orderBy .' '.$this->orderDir);
+         }*/
 
         $pager = new DarwinPager($query,
           $this->currentPage,
@@ -99,6 +121,14 @@ class loanActions extends DarwinActions
         $loan_list = array();
         foreach($this->items as $loan) {
           $loan_list[] = $loan->getId() ;
+           //ftheeten 2017 10 30
+          if(!in_array($loan->getId(), $this->rights))
+          {
+                if($editTest===true)
+                {
+                    $this->rights[]=$loan->getId();
+                }
+          }
         }
         $this->printable = Doctrine_Core::getTable('Loans')->getPrintableLoans($loan_list,$this->getUser());
         $status = Doctrine_Core::getTable('LoanStatus')->getStatusRelatedArray($loan_list) ;
@@ -125,7 +155,11 @@ class loanActions extends DarwinActions
     $duplic = $request->getParameter('duplicate_id','0') ;
     if ($duplic != 0){
       if (in_array(Doctrine_Core::getTable('LoanRights')->isAllowed($this->getUser()->getId(), $duplic), array(false,'view')) &&
-          !$this->getUser()->isAtLeast(Users::ADMIN)) $this->forwardToSecureAction();
+      //ftheeten 2018 03 07 ADMIN to Manager
+          !$this->getUser()->isAtLeast(Users::MANAGER)) 
+      {
+      $this->forwardToSecureAction();
+      }
       $id = Doctrine_Core::getTable('Loans')->duplicateLoan($duplic);
       if ($id != 0) {
         $this->redirect('loan/edit?id='.$id);
@@ -153,8 +187,14 @@ class loanActions extends DarwinActions
     $this->loan = Doctrine_Core::getTable('Loans')->find($request->getParameter('id'));
     $this->forward404Unless($this->loan, sprintf('Object loan does not exist (%s).', $request->getParameter('id')));
     if(!$this->getUser()->isAtLeast(Users::MANAGER)) {
-      if(!Doctrine_Core::getTable('loanRights')->isAllowed($this->getUser()->getId(),$this->loan->getId()))
+      if(!Doctrine_Core::getTable('loanRights')->isAllowed($this->getUser()->getId(),$this->loan->getId())||
+      //ftheeten 2017 10 29
+      !Doctrine_Core::getTable("CollectionsRights")->hasEditRightsFor($this->getUser(), $this->loan->getCollectionRef())
+      )
+      {
+        
         $this->forwardToSecureAction();
+      }
     }
     $this->loadWidgets();
   }
@@ -252,7 +292,8 @@ class loanActions extends DarwinActions
 
   public function executeOverview(sfWebRequest $request) {
     $this->loan = $this->checkRight($request->getParameter('id')) ;
-    $this->form = new LoanOverviewForm(null, array('loan'=>$this->loan));
+	$this->page=$request->getParameter('current_page',$request->getParameter('page',1));
+    $this->form = new LoanOverviewForm(null, array('loan'=>$this->loan, "current_page"=>$this->page));
     if($request->getParameter('loan_overview','') !== '')
     {
       $this->form->bind($request->getParameter($this->form->getName()));
@@ -261,7 +302,7 @@ class loanActions extends DarwinActions
         try
         {
           $this->form->save();
-          return $this->redirect('loan/overview?id='.$this->loan->getId());
+          return $this->redirect('loan/overview?id='.$this->loan->getId()."&page=".$this->page);
         }
         catch(Doctrine_Exception $ne)
         {
@@ -285,9 +326,15 @@ class loanActions extends DarwinActions
     $this->loan = $this->checkRight($request->getParameter('id'));
     $item = new LoanItems();
     $specimen_ref = $request->getParameter('specimen_ref',null);
-    $this->form = new LoanOverviewForm(null, array('loan'=>$this->loan));
-    $this->form->addItem($number,$specimen_ref);
-    return $this->renderPartial('loanLine',array('form' => $this->form['newLoanItems'][$number], 'lineObj'=> $item));
+    $this->form = new LoanOverviewForm(null, array('loan'=>$this->loan,  "item_visible"=>true));
+    //$this->form->addItem($number,$specimen_ref);
+	$item->setLoanRef($this->loan);
+	$item->setSpecimenRef($specimen_ref);
+	$this->form->addItemObj($number,$item);
+	//$item->save();
+	
+	//$form->bind(array("loan_ref"=>$this->loan,"specimen_ref"=>$specimen_ref));
+    return $this->renderPartial('loanLine',array('form' => $this->form['newLoanItems'][$number], 'lineObj'=> $item, 'row_id'=>'new'));
   }
 
   public function executeGetPartInfo(sfWebRequest $request)
@@ -310,7 +357,7 @@ class loanActions extends DarwinActions
     $form->addActorsReceiver($number,$people_ref,$request->getParameter('order_by',0));
     return $this->renderPartial('actors_association',array('type'=>'receiver','form' => $form['newActorsReceiver'][$number], 'row_num'=>$number));
   }
-
+  
   public function executeAddUsers(sfWebRequest $request)
   {
     $number = intval($request->getParameter('num'));
@@ -344,16 +391,25 @@ class loanActions extends DarwinActions
       $form->bind(array('comment'=>$request->getParameter('comment'),'status'=>$request->getParameter('status'))) ;
       if($form->isValid())
       {
-        $data = array(
-            'loan_ref' => $request->getParameter('id'),
-            'status' => $request->getParameter('status'),
-            'comment' => $request->getParameter('comment'),
-            'user_ref' => $this->getUser()->getId()) ;
+		//ftheeten 2017 11 29
+		try
+		{
+			$data = array(
+				'loan_ref' => $request->getParameter('id'),
+				'status' => $request->getParameter('status'),
+				'comment' => $request->getParameter('comment'),
+				'user_ref' => $this->getUser()->getId()) ;
 
-        $loanstatus = new LoanStatus() ;
-        $loanstatus->fromArray($data) ;
-        $loanstatus->save();
-        return $this->renderText('ok');
+			$loanstatus = new LoanStatus() ;
+			$loanstatus->fromArray($data) ;
+			$loanstatus->save();
+			return $this->renderText('ok');
+		}
+		//ftheeten 2017 11 29
+		catch(Doctrine_Exception $ne)
+		{
+			return $this->renderText('<script>alert("Cannot add status, maybe duplicate one?");</script>');
+		}
       }
       else {
         return $this->renderText('notok'.$form->getErrorSchema());
@@ -364,10 +420,56 @@ class loanActions extends DarwinActions
     $this->redirect('board/index') ;
   }
 
+    //rmca 2017 10 27
+    public function executeRemoveStatus(sfWebRequest $request)
+  {
+    if($request->isXmlHttpRequest())
+    {
+        
+	  $id=$request->getParameter('id');
+	  $statusTmp=Doctrine_Core::getTable("LoanStatus")->find($id);
+	  $statusTmp->delete();
+	  return $this->renderText('ok');
+    }
+    $this->redirect('board/index') ;
+  }
+  
   public function executeSync(sfWebRequest $request)
   {
     $this->checkRight($request->getParameter('id'));
     Doctrine_Core::getTable('Loans')->syncHistory($request->getParameter('id'));
     return $this->renderText('ok') ;
   }
+  
+  public function executeAddSpecToLoan(sfWebRequest $request)
+ {
+	$result=array();
+	$result["status"]="false";
+	try
+    {
+		$loan_id= $request->getParameter("loan_id");
+		$spec_id= $request->getParameter("spec_id");
+		if(is_numeric($loan_id)&&is_numeric($spec_id))
+		{
+			$loanitem = new LoanItems() ;
+			$loanitem->setLoanRef($loan_id);
+			$loanitem->setSpecimenRef($spec_id);
+			$loanitem->save();
+			
+			$result["status"]="true";
+			
+		}
+	}
+	catch(Exception $e)
+    {
+          $result["exception"]=$e->getMessage();         
+    }
+	finally
+	{
+		$this->getResponse()->setHttpHeader('Content-type','application/json');
+		$this->setLayout('json');
+		return $this->renderText(json_encode($result));
+	}
+	
+ }
 }

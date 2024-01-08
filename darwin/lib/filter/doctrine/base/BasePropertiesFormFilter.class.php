@@ -68,6 +68,12 @@ abstract class BasePropertiesFormFilter extends DarwinModelFormFilter
     $this->widgetSchema   ['property_accuracy'] = new sfWidgetFormFilterInput();
     $this->validatorSchema['property_accuracy'] = new sfValidatorPass(array('required' => false));
 
+    $this->widgetSchema   ['import_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Imports'), 'add_empty' => true));
+    $this->validatorSchema['import_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Imports'), 'column' => 'id'));
+
+    $this->widgetSchema   ['import_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Imports'), 'add_empty' => true));
+    $this->validatorSchema['import_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Imports'), 'column' => 'id'));
+
     $this->widgetSchema->setNameFormat('properties_filters[%s]');
   }
 
@@ -97,6 +103,8 @@ abstract class BasePropertiesFormFilter extends DarwinModelFormFilter
       'upper_value' => 'Text',
       'upper_value_unified' => 'Number',
       'property_accuracy' => 'Text',
+      'import_ref' => 'ForeignKey',
+      'import_ref' => 'ForeignKey',
     ));
   }
 }

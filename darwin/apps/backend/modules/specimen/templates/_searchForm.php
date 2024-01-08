@@ -46,5 +46,26 @@
 <script type="text/javascript">
  $(document).ready(function () {
   $('.host_search').choose_form({});
+  
+
+	
+	$(".select2_code_values").autocomplete({
+     
+					source: function (request, response) {
+						$.getJSON('<?php echo url_for('catalogue/codesAutocomplete?');?>', {
+									term : request.term
+								} , 
+								function (data) 
+									{
+								response($.map(data, function (value, key) {
+								return value;
+								}));
+						});
+					},
+					
+					minLength: 2,
+					delay: 100
+				});
+	
 });
 </script>

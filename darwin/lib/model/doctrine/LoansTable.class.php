@@ -87,14 +87,16 @@ class LoansTable extends DarwinTable
     return $q->execute();
   }
 
-  /**
+ /*
    * Used for autocompletion in widgetFormSelectComplete
    * @param $user object The user that serves at filtering the list of loans we can get access to
    * @param $needle string The string already entered
    * @param $exact boolean Indicates if an exact match has to be performed
    * @param $limit integer The limit number of records to be retrieved
    */
-  public function completeAsArray($user, $needle, $exact, $limit = 30, $level)
+    //ftheeten added default to level 2016 11 04
+      //ftheeten added default to array_agg 2018 10 01
+  public function completeAsArray($user, $needle, $exact, $limit = 30, $level='', $agg=false)
   {
     $conn_MGR = Doctrine_Manager::connection();
     $q = Doctrine_Query::create()
@@ -164,6 +166,7 @@ class LoansTable extends DarwinTable
     foreach ( $results as $loans ) {
       $response[] = $loans['id'];
     }
+	echo $q->getSQL(); 
     return $response;
   }
 
@@ -222,6 +225,45 @@ class LoansTable extends DarwinTable
     $statement->execute($params);
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
     return $results;
+  }
+  
+    //JMHerpers 2018 03 26
+    public function getDistinctCountries()
+  {
+	$res = $this->createFlatDistinct('loans', 'country_receiver', 'countries')->execute();
+    return $res;
+  }
+  
+    public function getDistinctInstitutions()
+  {  
+    $q = Doctrine_Query::create()
+      ->useResultCache(true)
+      ->setResultCacheLifeSpan(5) //5 sec
+      ->From('people')
+      ->select("formated_name,(formated_name ||'§§§'|| id) as valinstit")
+      ->where("is_physical = 'f'")
+      ->orderBy("formated_name ASC");
+	$res = $q->execute();
+    return $res;
+  }
+  
+  public function getLastCodeForLoan($collection_ref)
+  {
+	$results=Array();
+	$conn = Doctrine_Manager::connection();
+		 $sql="SELECT name FROM loans WHERE collection_ref=:coll ORDER BY id DESC LIMIT 1;";
+		 $q = $conn->prepare($sql);
+		 $q->execute(array(':coll' => $request->getParameter('coll_nr')));
+		 $collections = $q->fetchAll();
+		
+		 $i=0;
+		 if(count($collections)>0)
+		 {
+			$results[0]['name_loan']= $collections[0][0];
+			
+		 }
+	return $results;
+	
   }
 
 }

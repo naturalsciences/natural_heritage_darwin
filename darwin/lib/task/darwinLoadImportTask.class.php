@@ -13,9 +13,7 @@ class darwinLoadImportTask extends sfBaseTask
     $this->namespace        = 'darwin';
     $this->name             = 'load-import';
     $this->briefDescription = 'Import uploaded file to potgresql staging table';
-    $this->detailedDescription = <<<EOF
-Nothing
-EOF;
+    $this->detailedDescription ="";
   }
 
   protected function execute($arguments = array(), $options = array())
@@ -31,6 +29,8 @@ EOF;
     $conn->beginTransaction();    
     while($id= $conn->fetchOne('SELECT get_import_row()'))
     {
+		print("!!!!!id=");
+		print($id);
         $q = Doctrine_Query::create()
           ->from('imports p')
           ->where('p.id=?',$id)
@@ -44,12 +44,15 @@ EOF;
 
         if(file_exists($file))
         {
+			print("======>");
+			print($q->getFormat());
         //print("GO");
           try{
             switch ($q->getFormat())
             {
               case 'taxon':
-              //print("TAXON");
+				
+                 print("TAXON");
                 $import = new importCatalogueXml('taxonomy') ;
 				$result = $import->parseFile($file,$id) ;
 				//ftheeten 2019 02 07
@@ -62,8 +65,6 @@ EOF;
                 break;
 				//ftheeten 2018 07 15 				
               case 'locality':
-
-				 //fwrite($myfile, "\n!!!!!!!!!!!!!!!!!GTU detected!!!!!!!!!!!!!!!!!!");
 				$import = new ImportGtuCSV() ;
 				$result = $import->parseFile($file,$id) ;
                 $count_line = "(select count(*) from staging_gtu where import_ref = $id )" ;
@@ -75,7 +76,7 @@ EOF;
                 $count_line = "(select count(*) from staging_catalogue where import_ref = $id )" ;
                 break;              
               case 'abcd':
-              default:
+              //default:
                     /*$import_obj = Doctrine_Core::getTable('Imports')->find($id);
                     $import_obj->setWorking(TRUE);
                     $import_obj->save();*/

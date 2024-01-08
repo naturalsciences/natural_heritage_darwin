@@ -16,35 +16,38 @@
  * @property string $date_to
  * @property integer $date_to_mask
  * @property integer $contact_ref
+ * @property integer $disaster_recovery_score
  * @property People $People
  * @property People $Contact
  * 
- * @method integer    getId()                  Returns the current record's "id" value
- * @method string     getReferencedRelation()  Returns the current record's "referenced_relation" value
- * @method integer    getRecordId()            Returns the current record's "record_id" value
- * @method decimal    getInsuranceValue()      Returns the current record's "insurance_value" value
- * @method string     getInsuranceCurrency()   Returns the current record's "insurance_currency" value
- * @method integer    getInsurerRef()          Returns the current record's "insurer_ref" value
- * @method string     getDateFrom()            Returns the current record's "date_from" value
- * @method integer    getDateFromMask()        Returns the current record's "date_from_mask" value
- * @method string     getDateTo()              Returns the current record's "date_to" value
- * @method integer    getDateToMask()          Returns the current record's "date_to_mask" value
- * @method integer    getContactRef()          Returns the current record's "contact_ref" value
- * @method People     getPeople()              Returns the current record's "People" value
- * @method People     getContact()             Returns the current record's "Contact" value
- * @method Insurances setId()                  Sets the current record's "id" value
- * @method Insurances setReferencedRelation()  Sets the current record's "referenced_relation" value
- * @method Insurances setRecordId()            Sets the current record's "record_id" value
- * @method Insurances setInsuranceValue()      Sets the current record's "insurance_value" value
- * @method Insurances setInsuranceCurrency()   Sets the current record's "insurance_currency" value
- * @method Insurances setInsurerRef()          Sets the current record's "insurer_ref" value
- * @method Insurances setDateFrom()            Sets the current record's "date_from" value
- * @method Insurances setDateFromMask()        Sets the current record's "date_from_mask" value
- * @method Insurances setDateTo()              Sets the current record's "date_to" value
- * @method Insurances setDateToMask()          Sets the current record's "date_to_mask" value
- * @method Insurances setContactRef()          Sets the current record's "contact_ref" value
- * @method Insurances setPeople()              Sets the current record's "People" value
- * @method Insurances setContact()             Sets the current record's "Contact" value
+ * @method integer    getId()                      Returns the current record's "id" value
+ * @method string     getReferencedRelation()      Returns the current record's "referenced_relation" value
+ * @method integer    getRecordId()                Returns the current record's "record_id" value
+ * @method decimal    getInsuranceValue()          Returns the current record's "insurance_value" value
+ * @method string     getInsuranceCurrency()       Returns the current record's "insurance_currency" value
+ * @method integer    getInsurerRef()              Returns the current record's "insurer_ref" value
+ * @method string     getDateFrom()                Returns the current record's "date_from" value
+ * @method integer    getDateFromMask()            Returns the current record's "date_from_mask" value
+ * @method string     getDateTo()                  Returns the current record's "date_to" value
+ * @method integer    getDateToMask()              Returns the current record's "date_to_mask" value
+ * @method integer    getContactRef()              Returns the current record's "contact_ref" value
+ * @method integer    getDisasterRecoveryScore()   Returns the current record's "disaster_recovery_score" value
+ * @method People     getPeople()                  Returns the current record's "People" value
+ * @method People     getContact()                 Returns the current record's "Contact" value
+ * @method Insurances setId()                      Sets the current record's "id" value
+ * @method Insurances setReferencedRelation()      Sets the current record's "referenced_relation" value
+ * @method Insurances setRecordId()                Sets the current record's "record_id" value
+ * @method Insurances setInsuranceValue()          Sets the current record's "insurance_value" value
+ * @method Insurances setInsuranceCurrency()       Sets the current record's "insurance_currency" value
+ * @method Insurances setInsurerRef()              Sets the current record's "insurer_ref" value
+ * @method Insurances setDateFrom()                Sets the current record's "date_from" value
+ * @method Insurances setDateFromMask()            Sets the current record's "date_from_mask" value
+ * @method Insurances setDateTo()                  Sets the current record's "date_to" value
+ * @method Insurances setDateToMask()              Sets the current record's "date_to_mask" value
+ * @method Insurances setContactRef()              Sets the current record's "contact_ref" value
+ * @method Insurances setDisasterRecoveryScore()   Sets the current record's "disaster_recovery_score" value
+ * @method Insurances setPeople()                  Sets the current record's "People" value
+ * @method Insurances setContact()                 Sets the current record's "Contact" value
  * 
  * @package    darwin
  * @subpackage model
@@ -73,7 +76,7 @@ abstract class BaseInsurances extends DarwinModel
              'type' => 'decimal',
              'length' => 16,
              'scale' => 2,
-             'notnull' => true,
+             'notnull' => false,
              ));
         $this->hasColumn('insurance_currency', 'string', null, array(
              'type' => 'string',
@@ -104,6 +107,9 @@ abstract class BaseInsurances extends DarwinModel
              'default' => 0,
              ));
         $this->hasColumn('contact_ref', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('disaster_recovery_score', 'integer', null, array(
              'type' => 'integer',
              ));
     }

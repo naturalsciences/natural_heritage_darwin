@@ -70,6 +70,12 @@ abstract class BasePropertiesForm extends DarwinModelForm
     $this->widgetSchema   ['property_accuracy'] = new sfWidgetFormTextarea();
     $this->validatorSchema['property_accuracy'] = new sfValidatorString(array('required' => false));
 
+    $this->widgetSchema   ['import_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Imports'), 'add_empty' => true));
+    $this->validatorSchema['import_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Imports'), 'column' => 'id', 'required' => false));
+
+    $this->widgetSchema   ['import_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Imports'), 'add_empty' => true));
+    $this->validatorSchema['import_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Imports'), 'column' => 'id', 'required' => false));
+
     $this->widgetSchema->setNameFormat('properties[%s]');
   }
 

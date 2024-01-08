@@ -138,6 +138,41 @@ class ImportsForm extends BaseImportsForm
         )
       );
 	}
+	elseif($this->options['format'] == 'synonymies')
+	{
+		$this->useFields(array('format', 'specimen_taxonomy_ref', 'synonymy_taxonomy_ref')) ;
+		$category = array('synonymies'=>$this->getI18N()->__('Synonymies')) ;
+		$this->widgetSchema['collection_ref'] =  new sfWidgetFormInputText() ;
+		$this->validatorSchema['collection_ref'] = new sfValidatorPass();
+		 $this->widgetSchema['specimen_taxonomy_ref'] =new sfWidgetFormChoice(array(
+		//'choices' => array_merge( array(''=>'All'), TaxonomyMetadataTable::getAllTaxonomicMetadata())
+		'choices' =>  TaxonomyMetadataTable::getAllTaxonomicMetadata('id ASC', true)
+			));
+		$this->widgetSchema['specimen_taxonomy_ref']->setLabel("Valid name taxonomy");
+		$this->validatorSchema['specimen_taxonomy_ref'] = new sfValidatorInteger(array('required'=>false));
+		
+		 $this->widgetSchema['synonymy_taxonomy_ref'] =new sfWidgetFormChoice(array(
+		//'choices' => array_merge( array(''=>'All'), TaxonomyMetadataTable::getAllTaxonomicMetadata())
+		'choices' =>  TaxonomyMetadataTable::getAllTaxonomicMetadata('id ASC', true)
+			));
+		$this->widgetSchema['synonymy_taxonomy_ref']->setLabel("Syonymym taxonomy");
+		$this->validatorSchema['synonymy_taxonomy_ref'] = new sfValidatorInteger(array('required'=>false));
+	}
+	elseif($this->options['format'] == 'properties')
+	{
+		$this->useFields(array('format', 'update')) ;
+		$category = array('properties'=>$this->getI18N()->__('Properties')) ;
+	}
+	elseif($this->options['format'] == 'codes')
+	{
+		$this->useFields(array('format', 'update')) ;
+		$category = array('codes'=>$this->getI18N()->__('Codes')) ;
+	}
+	elseif($this->options['format'] == 'relationships')
+	{
+		$this->useFields(array('format', 'update')) ;
+		$category = array('relationships'=>$this->getI18N()->__('Relationships')) ;
+	}
 	else
     {
       $this->useFields(array('collection_ref', 'format')) ;
@@ -183,14 +218,15 @@ class ImportsForm extends BaseImportsForm
       $this->widgetSchema['enforce_code_unicity'] = new sfWidgetFormInputCheckbox(array("default"=>true));
 	  $this->validatorSchema['enforce_code_unicity'] = new sfValidatorBoolean(array('required' => false));
       
-      $category = imports::getFormats();
+      $category = Imports::getFormats();
       //ftheeten 2018 08 07    
      
     
     }
+	
     
         //ftheeten 2018 12 14 collection also optional for taxon
-    if($this->options['format'] == 'locality' || $this->options['format'] == 'taxon' || $this->options['format'] == 'lithostratigraphy'  )
+    if($this->options['format'] == 'locality' || $this->options['format'] == 'taxon' || $this->options['format'] == 'lithostratigraphy' || $this->options['format'] == 'synonymies' || $this->options['format'] == 'codes'  || $this->options['format'] == 'properties'|| $this->options['format'] == 'relationships')
       {
          $this->validatorSchema['collection_ref'] = new sfValidatorInteger(array('required'=>false));
       }
@@ -231,6 +267,9 @@ class ImportsForm extends BaseImportsForm
         'validated_file_class' => 'myValidatedFile',
     ));
 	
+		//ftheeten 2023 04 11 PHP8
+	 $this->validatorSchema->addOption('allow_extra_fields', true);
+	
 	//ftheeten 2017 09 13
      $this->mergePostValidator(new sfValidatorCallback(
 			array('callback' => array($this, 'setValidatorSetMimeType'))));
@@ -250,5 +289,93 @@ class ImportsForm extends BaseImportsForm
      }
     }
      return $values;
+  }
+  
+  //ftheeten php 8
+  protected function doBind(array $values)
+  {
+	print("value in bind");
+	print_r($values);
+	$go_map=true;
+	if(!array_key_exists("name", $values))
+	{
+		$go_map=false;
+	}
+	elseif(!array_key_exists("uploadfield", $values["name"]))
+	{
+		$go_map=false;	
+	}
+	if(!array_key_exists("full_path", $values))
+	{
+		$go_map=false;
+	}
+	elseif(!array_key_exists("uploadfield", $values["full_path"]))
+	{
+		$go_map=false;	
+	}
+	if(!array_key_exists("type", $values))
+	{
+		$go_map=false;
+	}
+	elseif(!array_key_exists("uploadfield", $values["type"]))
+	{
+		$go_map=false;	
+	}
+	if(!array_key_exists("tmp_name", $values))
+	{
+		$go_map=false;
+	}
+	elseif(!array_key_exists("uploadfield", $values["tmp_name"]))
+	{
+		$go_map=false;	
+	}
+	if(!array_key_exists("error", $values))
+	{
+		$go_map=false;
+	}
+	elseif(!array_key_exists("uploadfield", $values["error"]))
+	{
+		$go_map=false;	
+	}
+	if(!array_key_exists("size", $values))
+	{
+		$go_map=false;
+	}
+	elseif(!array_key_exists("uploadfield", $values["size"]))
+	{
+		$go_map=false;	
+	}
+	if($go_map)
+	{
+		//print("MAP");
+		$values["uploadfield"]=Array();
+		$values["uploadfield"]["error"]=$values["error"]["uploadfield"];
+		$values["uploadfield"]["name"]=$values["name"]["uploadfield"];
+		$values["uploadfield"]["type"]=$values["type"]["uploadfield"];
+		$values["uploadfield"]["tmp_name"]=$values["tmp_name"]["uploadfield"];
+		$values["uploadfield"]["size"]=$values["size"]["uploadfield"];
+		
+	}
+	//else
+	//{
+		//print("NO_MAP");
+	//}
+	
+	
+    $this->values = $this->validatorSchema->clean($values);
+  }
+  
+   public function getJavaScripts()
+  {
+    $javascripts=parent::getJavascripts();   
+    $javascripts[]='/js/button_ref.js'; 
+    $javascripts[]='/js/catalogue_people.js';   
+    return $javascripts;
+  }
+
+  public function getStylesheets()
+  {
+    $javascripts=parent::getStylesheets();    
+    return $javascripts;
   }
 }

@@ -238,7 +238,7 @@ Gtu:
         location: {type: string}
         #JMHerpers 2019 05 07
         nagoya: { type: string, notnull: true, default: 'not defined'}
-    #ftheeten 2018 12 11
+        #ftheeten 2018 12 11
         expedition_ref: {type: ref}
     relations:
         Tags:
@@ -287,6 +287,12 @@ Properties:
         upper_value: {type: string, notnull: true , default:''}
         upper_value_unified: {type: float}
         property_accuracy: {type: string, default:''}
+        import_ref: {type: integer}
+    relations:
+        Imports:
+            class: Imports
+            local: import_ref
+            foreign: id
 
 # This sub class is used just for comment search in specimen search filter
 SubProperties:
@@ -354,6 +360,8 @@ Users:
         db_user_type: { type: integer, notnull: true, default: 1}
         people_id: { type: integer}
         selected_lang: { type: string,notnull:true, default:en}
+        default_widget_collection_ref: { type: integer}
+        taxonomic_manager: { type: boolean, notnull: true}
     relations:
         People:
             local: people_id
@@ -361,7 +369,11 @@ Users:
         IdentifiersUsers:
             local: id
             foreign: record_id
-            class: IdentifiersUsers  
+            class: IdentifiersUsers
+        DefaultWidgetCollection:
+            local: default_widget_collection_ref
+            foreign: id
+            class: Collections            
 
 PeopleLanguages:
     columns:
@@ -526,12 +538,16 @@ CollectionsRights:
         collection_ref: { type: integer, notnull: true }
         user_ref: { type: integer, notnull: true}
         db_user_type: { type: integer, notnull: true, default:1 }
+        widget_profile_ref: { type: integer}
     relations:
         Collections:
             local: collection_ref
             foreign: id
         Users:
             local: user_ref
+            foreign: id
+        WidgetProfiles:
+            local: widget_profile_ref
             foreign: id
 
 
@@ -713,6 +729,8 @@ ClassificationSynonymies:
         order_by: { type: integer, notnull: true, default:0}
         synonym_record_id: { type: integer}
         original_synonym: { type: boolean, default: false}
+        syn_date_mask: { type: integer, notnull: true, default:0}
+        syn_date: { type: string, default:'0001-01-01'}
         
 TaxonomicSynonymies:
     inheritance:
@@ -845,6 +863,9 @@ Igs:
         ig_num_indexed: { type: string, notnull: true}
         ig_date_mask: { type: integer, notnull: true, default:0}
         ig_date: { type: string, default:'0001-01-01'}
+        nagoya_status: {type: string}
+        ig_type: {type: string}
+        complete: { type: boolean}
 
 Specimens:
     columns:
@@ -863,6 +884,7 @@ Specimens:
         acquisition_date: { type: string, default: '0001-01-01'}
         station_visible: { type: boolean, default: true}
         ig_ref: { type: integer}
+        restricted_access: { type: boolean}
 
         spec_coll_ids: { type:string}
         spec_ident_ids: { type:string}
@@ -993,6 +1015,7 @@ Specimens:
         nagoya: { type: string, notnull: true, default: 'not defined'}
         uuid: { type: string}
         ig_main_code_indexed: { type: string}
+        mids_level: {type: integer}  
     relations:
         Collections:
             local: collection_ref
@@ -1120,7 +1143,7 @@ CollectingTools:
             foreign: specimen_ref
 
 Codes:
-  columns:
+    columns:
         id: { type: integer, primary: true, autoincrement: true}
         referenced_relation : { type: string, notnull: true}
         record_id: { type: integer, notnull: true}
@@ -1133,6 +1156,12 @@ Codes:
         full_code_indexed: { type: string}
         code_date: { type: string}
         code_date_mask: { type: integer, notnull: true, default:0}
+        import_ref: {type: integer}
+    relations:
+        Imports:
+            class: Imports
+            local: import_ref
+            foreign: id
 
 Preferences:
     columns:
@@ -1151,7 +1180,7 @@ Insurances:
         id: { type: integer, primary: true, autoincrement: true }
         referenced_relation: { type: string, notnull: true}
         record_id: { type: integer, notnull: true}
-        insurance_value: { type: decimal, length: 16, scale: 2, notnull: true}
+        insurance_value: { type: decimal, length: 16, scale: 2, notnull: false}
         insurance_currency: { type: string, notnull: true, default: '€'}
         insurer_ref: { type: integer}
         date_from: { type: string, notnull: true, default: '0001-01-01'}
@@ -1159,6 +1188,7 @@ Insurances:
         date_to: { type: string, notnull: true, default: '2038-12-31'}
         date_to_mask: { type: integer, notnull: true, default:0}
         contact_ref: { type: integer}
+        disaster_recovery_score : { type: integer}
     relations:
         People:
             local: insurer_ref
@@ -1181,6 +1211,7 @@ SpecimensRelationships:
         institution_ref: { type: integer}
         source_name: { type: string}
         source_id: { type: string}
+        import_ref: { type: integer}
     relations:
         Specimen:
             local: specimen_ref
@@ -1198,6 +1229,10 @@ SpecimensRelationships:
             foreign: id
         Institutions:
             local: institution_ref
+            foreign: id
+        Imports:
+            class: Imports
+            local: import_ref
             foreign: id
 
 
@@ -1296,6 +1331,8 @@ Imports:
         #2019 03 01
         collection_ref_for_gtu : { type: integer, notnull: true}
         enforce_code_unicity : { type:boolean}
+        update : { type:boolean}
+        synonymy_taxonomy_ref: {type:integer}
     relations:
         Collections:
             local: collection_ref
@@ -1538,7 +1575,138 @@ StagingCatalogue:
             class: Imports
             local: import_ref
             foreign: id
+            
+StagingProperties:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true}
+        import_ref: { type: integer, notnull: true}
+        specimen_main_id: { type: string}
+        specimen_uuid: { type: string}
+        specimen_ref: { type: integer}
+        property_type: {type: string, notnull: true}
+        applies_to: {type: string}
+        applies_to_indexed: {type: string}
+        date_from_mask: { type: integer, notnull: true, default:0}
+        date_from: { type: string, notnull: true, default: '0001-01-01'}
+        date_to_mask: { type: integer, notnull: true, default:0}
+        date_to: { type: string, notnull: true, default: '2038-12-31'}
+        is_quantitative: {type: boolean, default: false }
+        property_unit: {type: string, default: ''}
+        method: {type: string}
+        method_indexed: {type: string}
+        lower_value: {type: string, notnull: true, default:''}
+        lower_value_unified: {type: float}
+        upper_value: {type: string, notnull: true , default:''}
+        upper_value_unified: {type: float}
+        property_accuracy: {type: string, default:''}
+        status: {type: string}
+        to_import: {type: boolean}
+        imported: {type: boolean, notnull: true, default: false}
+    relations:
+        Import:
+            class: Imports
+            local: import_ref
+            foreign: id
+        Specimen:
+            class: Specimens
+            local: specimen_ref
+            foreign: id
 
+StagingCodes:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true}
+        import_ref: { type: integer, notnull: true}
+        specimen_main_id: { type: string}
+        specimen_uuid: { type: string}
+        specimen_ref: { type: integer}
+        code_category: { type: string, notnull: true, default: main}
+        code_prefix: { type: string}
+        code_prefix_separator: { type: string}
+        code: { type: string}
+        code_suffix: { type: string}
+        code_suffix_separator: { type: string}
+        code_date_mask: { type: integer, notnull: true, default:0}
+        status: {type: string}
+        to_import: {type: boolean}
+        imported: {type: boolean, notnull: true, default: false}
+    relations:
+        Import:
+            class: Imports
+            local: import_ref
+            foreign: id
+        Specimen:
+            class: Specimens
+            local: specimen_ref
+            foreign: id
+
+StagingSynonymies:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true}
+        import_ref: { type: integer, notnull: true}
+        taxo_valid_name: {type: string}
+        taxo_valid_name_ref: {type: integer}
+        valid_name: {type: string}
+        valid_name_ref: {type: integer}
+        valid_name_is_basionym : {type: string}
+        taxo_syn: {type: string}
+        taxo_syn_ref : {type: integer}
+        syn_name: {type: string}
+        syn_ref: {type: integer}
+        status: {type: string}
+        to_import: {type: boolean}
+        imported: {type: boolean, notnull: true, default: false}
+    relations:
+        Import:
+            class: Imports
+            local: import_ref
+            foreign: id
+        TaxoValidNameRef:
+            class: TaxonomyMetadata
+            local: taxo_valid_name_ref
+            foreign: id
+        ValidNameRef:
+            class: Taxonomy
+            local: valid_name_ref
+            foreign: id
+        TaxoSynRef:
+            class: TaxonomyMetadata
+            local: taxo_syn_ref
+            foreign: id
+        SynRef:
+            class: Taxonomy
+            local: syn_ref
+            foreign: id
+            
+StagingUpdateSpecimenRelationship:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        relationship_type: { type: string, notnull: true}
+        specimen_submitted_ref: {type: integer}
+        specimen_uuid: { type: string}
+        specimen_main_code: { type: string}
+        specimen_ref: {type: integer}
+        specimen_related_submitted_ref: {type: integer}
+        specimen_related_uuid: { type: string}
+        specimen_related_main_code: { type: string}
+        specimen_related_ref : {type: integer}
+        import_ref : {type: integer}
+        status: {type: string}
+        to_import: {type: boolean}
+        imported: {type: boolean, notnull: true, default: false}
+    relations:
+        Import:
+            class: Imports
+            local: import_ref
+            foreign: id
+        Specimen1:
+            class: Specimens
+            local: specimen_ref
+            foreign: id
+        Specimen2:
+            class: Specimens
+            local: specimen_related_ref
+            foreign: id
+        
 Multimedia:
     columns:
         id: { type: integer, primary: true, autoincrement: true }
@@ -1579,12 +1747,29 @@ Loans:
         from_date: { type: string}
         to_date: { type: string}
         extended_to_date: { type: string}
+        #ftheeten 2016 11 23
+        collection_ref: { type: integer}
+        #JMHerpers 2018 03 26
+        address_receiver: { type: string}
+        institution_receiver: { type: string}
+        country_receiver: { type: string}
+        city_receiver: { type: string}
+        zip_receiver: { type: string}
+        #ftheeten 2019 02 26
+        collection_manager: { type: string}
+        collection_manager_title: { type: string}
+        collection_manager_mail: { type: string}
+        #ftheeten 2019 02 26
+        non_cites: { type: boolean}
     relations:
         CataloguePeople:
             class: LoanActors
             local: id
             foreign: record_id
             type: many
+        Collections:
+            local: collection_ref
+            foreign: id
 
 LoanItems:
     columns:
@@ -1595,6 +1780,12 @@ LoanItems:
         to_date: { type: string}
         specimen_ref: { type: integer}
         details: { type: string, notnull: true, default:''}
+        specimen_count_tot: { type: integer}
+        specimen_count_males: { type: integer}
+        specimen_count_females: { type: integer}
+        specimen_count_juveniles: { type: integer}
+        specimen_part: { type: string, notnull: true, default:''}
+        specimen_count: { type: string, notnull: true, default:''}
     relations:
         Loan:
             local: loan_ref
@@ -1604,7 +1795,7 @@ LoanItems:
             local: ig_ref
             foreign: id
             class: Igs
-        DarwinParts:
+        Specimens:
             local: specimen_ref
             foreign: id
             class: Specimens
@@ -2324,3 +2515,129 @@ PeopleSubTypes:
             local: people_ref
             foreign: id
             class: People
+
+WidgetProfiles:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true } 
+        name: { type: string, notnull: true}
+        creator_ref: { type: integer, notnull: true}  
+        creation_date_mask: { type: integer, notnull: true, default:0}
+        creation_date: { type: string, notnull: true, default: '0001-01-01'}        
+    relations:
+        Users:
+            class: Users
+            local: creator_ref
+            foreign: id
+            
+WidgetProfilesDefinition:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        profile_ref: { type: integer, notnull: true}
+        category: { type: string, notnull: true, default: board_widget}
+        group_name: { type: string, notnull: true}
+        order_by: { type: integer, notnull: true, default:1 }
+        col_num: { type: integer, notnull: true, default:1 }
+        mandatory: { type: boolean, notnull: true, default: false}
+        visible: { type: boolean, notnull: true, default: true}
+        opened: { type: boolean, notnull: true, default: true}
+        color: { type: string, default:'#5BAABD'}
+        is_available: { type: boolean, default: true}
+        icon_ref: { type: integer}
+        title_perso: { type: string}
+        all_public: {type: boolean, notnull:true, default:false}
+    relations:
+        WidgetProfiles:
+            class: WidgetProfiles
+            local: profile_ref
+            foreign: id
+            
+VCollectionsFullPathRecursive:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true}
+        collection_type: { type: enum, notnull: true, default: mix, values: [mix, observation, physical] }
+        code: { type: string, notnull: true}
+        name: { type: string, notnull: true}
+        name_indexed: { type: string}
+        institution_ref: { type: integer, notnull: true}
+        main_manager_ref: { type: integer, notnull: true}
+        staff_ref: { type: integer}
+        parent_ref: { type: integer}
+        path: { type: string, notnull: true, default: '/'}
+        code_auto_increment: { type: boolean, notnull: true, default: false}
+        code_auto_increment_for_insert_only: { type: boolean, notnull: true, default: true}
+        code_last_value: { type: integer, notnull: true, default: 0}
+        code_prefix: { type: string}
+        code_prefix_separator: { type: string}
+        code_suffix: { type: string}
+        code_suffix_separator: { type: string}
+        code_specimen_duplicate: { type: boolean, notnull: true, default: false}
+        is_public: { type:boolean, notnull:true,default:true}
+        code_mask: { type: string}
+        #ftheeten 2018 08 08
+        allow_duplicates: { type:boolean, notnull:true,default:false}
+        code_ai_inherit: { type: boolean, notnull: true, default: false}
+        #JMHerpers 2019 05 07
+        nagoya: { type: string, notnull: true, default: 'not defined'}
+        preferred_taxonomy: {type: integer}
+        uid : {type: string}
+        code_full_path:  {type: string}
+        name_full_path:  {type: string}
+        
+        
+VCodesSeries:
+  inheritance:
+    type:             concrete
+    extends:          Codes
+  columns:
+        id: { type: integer, primary: true, autoincrement: true}
+        referenced_relation : { type: string, notnull: true}
+        record_id: { type: integer, notnull: true}
+        code_category: { type: string, notnull: true, default: main}
+        code_prefix: { type: string}
+        code_prefix_separator: { type: string}
+        code: { type: string}
+        code_suffix: { type: string}
+        code_suffix_separator: { type: string}
+        full_code_indexed: { type: string}
+        code_date: { type: string}
+        code_date_mask: { type: integer, notnull: true, default:0}
+        code_full: {type: string},
+        serie_indexed: {type: string}
+        
+VIgsSpecStats:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true}
+        ig_num: { type: string, notnull: true}
+        ig_num_indexed: { type: string, notnull: true}
+        ig_date_mask: { type: integer, notnull: true, default:0}
+        ig_date: { type: string, default:'0001-01-01'}
+        nagoya_status: {type: string}
+        ig_type: {type: string}
+        spec_count_by_collection: { type: integer}
+        spec_count: { type: integer}
+        complete: {type: boolean}
+    relations:
+        Specimens:
+            local: id
+            foreign: ig_ref
+
+MvCodesSeries:
+  inheritance:
+    type:             concrete
+    extends:          Codes
+  columns:
+        id: { type: integer, primary: true, autoincrement: true}
+        referenced_relation : { type: string, notnull: true}
+        record_id: { type: integer, notnull: true}
+        code_category: { type: string, notnull: true, default: main}
+        code_prefix: { type: string}
+        code_prefix_separator: { type: string}
+        code: { type: string}
+        code_suffix: { type: string}
+        code_suffix_separator: { type: string}
+        full_code_indexed: { type: string}
+        code_date: { type: string}
+        code_date_mask: { type: integer, notnull: true, default:0}
+        code_full: {type: string},
+        serie_indexed: {type: string}
+        

@@ -20,6 +20,13 @@
  */
 class sfDoctrineConnectionListener extends Doctrine_EventListener
 {
+
+  //ftheeten PHP8 20230407 dynamic properties
+  public $connection;
+  public $encoding;
+  
+  
+  
   public function __construct($connection, $encoding)
   {
     $this->connection = $connection;

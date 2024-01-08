@@ -5,6 +5,9 @@
   <?php if(count($no_right_col) > 0 && !$sf_user->isA(Users::ADMIN) ):?>
     <?php include_partial('catalogue/warnedit', array('no_right_col' => $no_right_col)); ?>
   <?php endif;?>
+  <div style="margin-bottom:5px; ">
+			<a target='_blank' href="<?php print(url_for('specimensearch/search')."?specimen_search_filters[expedition_name]=".$form->getObject()->getName());?>"><?php print(__("Search specimens"));?></a>
+	</div>
   <?php include_partial('form', array('form' => $form)) ?>
   <?php include_partial('widgets/float_button', array('form' => $form,
                                                       'module' => 'expedition',

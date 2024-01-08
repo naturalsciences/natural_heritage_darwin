@@ -3,6 +3,11 @@
 <?php
 	$flagMenu=detect_menu_hidden();
 ?>
+<style>
+.select2-dropdown.increasedzindexclass {
+  z-index: 999999;
+}
+</style>
 <div class="catalogue_gtu">
 <?php echo form_tag('gtu/search'.( isset($is_choose) && $is_choose  ? '?is_choose='.$is_choose : '') , array('class'=>'search_form','id'=>'gtu_filter'));?>
   <div class="container">
@@ -36,13 +41,37 @@
              <a href="<?php echo url_for('gtu/andSearch');?>" class="and_tag"><?php echo image_tag('add_blue.png');?></a><?php print($form['tag_boolean']->render()); ?>
           </td>
         </tr>
+		<tr>		
+			<td colspan="3">
+				<table style="border:solid;">
+				<tr> <th ><?php print(__("People")); ?>:</th></tr>
+				 <tr class="tag_button_line_people">
+				  <td colspan="2">
+					<input type="button" id='people_switch_precise' value="<?php echo __('Precise search'); ?>" disabled>
+					<input type="button" id='people_switch_fuzzy' value="<?php echo __('Fuzzy search'); ?>">
+				  </td>
+				</tr>
+				 <tr class="tag_header_line_people">
+					<th colspan="2" class="precise_people"><?php echo $form['people_ref']->renderLabel();?></th>
+					<th  colspan="2"class="fuzzy_people hidden"><?php echo $form['people_fuzzy']->renderLabel();?></th>
+					<th><?php echo $form['role_ref']->renderLabel();?></th>
+				 </tr>
+				 <tr class="tag_content_line_people">
+				  <td class="precise_people" colspan="2"><?php echo $form['people_ref'];?></td>
+				  <td class="fuzzy_people hidden" colspan="2"><?php echo $form['people_fuzzy'];?></td>
+				  <td><?php echo $form['role_ref'];?></td> 				  
+				</tr>
+				</table>
+			</td>
+			
+		</tr>
         <!--ftheeten 2018 08 08-->
         <tr>
             <th><?php echo $form['ig_number']->renderLabel() ?></th>
 		  <th><?php echo $form['expedition']->renderLabel() ?></th>
            <th><?php echo __("Technical ID") ?></th>
         </tr>
-        <tr>
+        
         <td><?php echo $form['ig_number']->render() ?></td>
         <td><?php echo $form['expedition']->render() ?></td>
          <td><?php echo $form['id']->render() ?></td>
@@ -123,6 +152,40 @@
         initSearchMap();
 
         $(document).ready(function () {
+		
+		$('.select2_people').select2({
+			 width: "500px",
+			 multiple:true, 
+			 dropdownCssClass: "increasedzindexclass",
+			 ajax: {
+					url: '<?php echo(url_for('catalogue/completeName'));?>',
+					data: function (params) {
+						//console.log(params);
+					  var query = {
+						table:"people",
+						term: params.term,
+						
+					  }
+
+					 
+					  return query;
+					},
+						  
+					processResults: function(data) {
+						   var myResults = [];
+							$.each(data, function (index, item) {
+								myResults.push({
+									'id': item.value,
+									'text': item.label
+								});
+							});
+							return {
+								results: myResults
+							};
+						}
+				},
+				
+		});
 			
 				
 		$(".but_more").click(
@@ -220,7 +283,40 @@
                     
                         $("#gtu_filters_ig_number").val(decodeURIComponent(ig_num));
                         $( ".search_form" ).submit();
-                  }                
+                  } 
+
+
+//people ctrl part
+		
+		$('#people_switch_precise').click(function() {
+
+			$('#people_switch_precise').attr('disabled','disabled') ;
+			$('#people_switch_fuzzy').removeAttr('disabled') ;
+			$('.fuzzy_people').hide();
+			$('.precise_people').show();
+			$(this).closest('table').find('.people_switch_fuzzy').toggle() ;
+		   
+			check_state();
+			// $('#specimen_search_filters_Peoples_people_ref_name').html("") ;
+			// $('#specimen_search_filters_Peoples_people_ref').val("") ;
+		  });
+
+		  $('#people_switch_fuzzy').click(function() {
+
+			$('#people_switch_precise').removeAttr('disabled') ;
+			$('#people_switch_fuzzy').attr('disabled','disabled') ;
+			$('.fuzzy_people').show();
+			$('.precise_people').hide();
+			$('.fuzzy_people').find('input:text').val("") ;
+			check_state();
+		  });
+		  
+		   if($('.class_fuzzy_people').val() != '')
+		  {
+			tmpVal=$('.class_fuzzy_people').val();
+			$('#people_switch_fuzzy').trigger("click") ;
+			$('.class_fuzzy_people').val(tmpVal);
+		  }				  
 
         });
         

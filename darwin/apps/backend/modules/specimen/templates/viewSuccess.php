@@ -19,6 +19,9 @@
         <?php if($hasEncodingRight):?>
           <?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))), 'specimen/edit?id='.$specimen->getId()); ?>
         <?php endif;?>
+		<?php if($specimen->getRestrictedAccess()):?>
+			<i><b> Non public</b></i>
+		<?php endif;?>
     </span>
   </h3>
   <div class="encod_screen edition" id="intro">

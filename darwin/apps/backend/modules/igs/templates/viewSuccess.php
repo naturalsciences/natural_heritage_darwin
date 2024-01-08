@@ -2,6 +2,20 @@
 <?php slot('title', __('View I.G.'));  ?>
 <div class="page">
     <h1><?php echo __('View I.G.');?></h1>
+	
+	<?php if(count($no_right_col) == 0 || $sf_user->isA(Users::ADMIN) ):?>
+		<div style="margin-bottom:5px;">
+		<div style="margin-bottom:5px;  float: left;"><b>Edit: </b><?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))), 'igs/edit?id='.$igs->getId()); ?></div>
+		&nbsp;
+		<div style="margin-bottom:5px; margin-left:15px; float: left;vertical-align: top;">
+			<a target='_blank' href="<?php print(url_for('specimensearch/search')."?specimen_search_filters[ig_num]=".$igs->getIgNum().( isset($is_choose) ? '&is_choose='.$is_choose : ''));?>"><?php print(__("Search specimens"));?></a>
+			</div>
+		</div>
+	<?php else: ?>
+		<div style="margin-bottom:5px; float: left;">
+			<a target='_blank' href="<?php print(url_for('specimensearch/search')."?specimen_search_filters[ig_num]=".$igs->getIgNum().( isset($is_choose) ? '&is_choose='.$is_choose : ''));?>"><?php print(__("Search specimens"));?></a>
+			</div>
+	<?php endif ?>
   <div class="table_view">
   <table>
     <tbody>

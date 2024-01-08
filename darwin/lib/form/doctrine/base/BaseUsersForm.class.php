@@ -58,11 +58,20 @@ abstract class BaseUsersForm extends DarwinModelForm
     $this->widgetSchema   ['selected_lang'] = new sfWidgetFormTextarea();
     $this->validatorSchema['selected_lang'] = new sfValidatorString(array('required' => false));
 
+    $this->widgetSchema   ['default_widget_collection_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('DefaultWidgetCollection'), 'add_empty' => true));
+    $this->validatorSchema['default_widget_collection_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('DefaultWidgetCollection'), 'column' => 'id', 'required' => false));
+
+    $this->widgetSchema   ['taxonomic_manager'] = new sfWidgetFormInputCheckbox();
+    $this->validatorSchema['taxonomic_manager'] = new sfValidatorBoolean();
+
     $this->widgetSchema   ['people_id'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('People'), 'add_empty' => true));
     $this->validatorSchema['people_id'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('People'), 'column' => 'id', 'required' => false));
 
     $this->widgetSchema   ['id'] = new sfWidgetFormInputHidden();
     $this->validatorSchema['id'] = new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false));
+
+    $this->widgetSchema   ['default_widget_collection_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('DefaultWidgetCollection'), 'add_empty' => true));
+    $this->validatorSchema['default_widget_collection_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('DefaultWidgetCollection'), 'column' => 'id', 'required' => false));
 
     $this->widgetSchema->setNameFormat('users[%s]');
   }

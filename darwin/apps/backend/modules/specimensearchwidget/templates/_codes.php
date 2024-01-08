@@ -151,6 +151,7 @@ $(document).ready(function () {
                        
                         if(params.data.term.length>=3)
                         {
+
                             var $request= $.ajax(
                                  {
                                   dataType: "json",

@@ -33,4 +33,57 @@ class IgsTable extends DarwinTable
       ->where('i.ig_num = ?', $object->getIgNum());
     return $q->fetchOne(); 
   }
+  
+  public function countExpeditionsInIg($ig_ref)
+  {
+	 
+	  $rows=array();
+	  
+		   $conn_MGR = Doctrine_Manager::connection();
+           $conn = $conn_MGR->getDbh();
+           $query="SELECT distinct expedition_ref, expedition_name, count(id) as count_records, sum(specimen_count_min) specimen_count_min, sum(specimen_count_max) specimen_count_max, string_agg(distinct type,',' order by type) as taxo_types
+				FROM specimens WHERE ig_ref=:ig_ref
+				GROUP BY expedition_ref, expedition_name;";
+		   $stmt=$conn->prepare($query);
+           $stmt->bindValue(":ig_ref", $ig_ref);
+		   $stmt->execute();
+		   $rs=$stmt->fetchAll(PDO::FETCH_ASSOC);
+       
+         if(count($rs)>0)
+         {
+              return $rs;
+         }
+          
+            
+	  
+	  return $rows;
+  }
+  
+   public function countCollectionsInIg($ig_ref)
+  {
+	 
+	  $rows=array();
+	  
+		   $conn_MGR = Doctrine_Manager::connection();
+           $conn = $conn_MGR->getDbh();
+           $query="SELECT distinct collection_ref, name_full_path, count(specimens.id) as count_records, sum(specimen_count_min) specimen_count_min, sum(specimen_count_max) specimen_count_max, string_agg(distinct type,',' order by type) as taxo_types
+				FROM specimens 
+				INNER JOIN 
+					v_collections_full_path_recursive ON specimens.collection_ref=v_collections_full_path_recursive.id 
+				WHERE ig_ref=:ig_ref
+				GROUP BY collection_ref, name_full_path;";
+		   $stmt=$conn->prepare($query);
+           $stmt->bindValue(":ig_ref", $ig_ref);
+		   $stmt->execute();
+		   $rs=$stmt->fetchAll(PDO::FETCH_ASSOC);
+       
+         if(count($rs)>0)
+         {
+              return $rs;
+         }
+          
+            
+	  
+	  return $rows;
+  }
 }

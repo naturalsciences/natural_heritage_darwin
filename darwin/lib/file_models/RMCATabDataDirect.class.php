@@ -34,7 +34,8 @@ class RMCATabDataDirect
     
     protected $configuration;
 
-    protected $parsed_fields=Array();   
+    protected $parsed_fields=Array(); 
+	protected $headers_properties=Array();		
 	
 	public function __construct($p_configuration, $p_import_id, $p_collection_of_import, $p_taxonomy_ref, $p_code_has_auto_increment=false, $p_code_last_value=NULL, $p_code_prefix=NULL, $p_code_prefix_separator=NULL, $p_code_suffix_separator=NULL, $p_code_suffix=NULL)
     {
@@ -81,6 +82,7 @@ class RMCATabDataDirect
         $fields[] = "juvenileCount";
         $fields[] = "sexUnknownCount";
         $fields[] = "socialStatus";
+		$fields[] = "SpecimenStatus";
         $fields[] = "CollectedBy";
         $fields[] = "SamplingCode";
 		$fields[] = "Sampling_code";
@@ -150,7 +152,7 @@ class RMCATabDataDirect
         $fields[] = "associatedUnitCollection";
         $fields[] = "associatedUnitID";
         $fields[] = "associationType"; /* host, parasite, commensalism etc...*/
-        $fields[] = "associationDomain"; /* values : darwin_id, darwin_uuid, darwin_file, taxonomy, mineralogy, external */
+        $fields[] = "associationDomain"; /* values : darwin_full_code, darwin_id, darwin_uuid, darwin_file, taxonomy, mineralogy, external in associatedUnitID */
         
         
         //field in ABCD extensions
@@ -196,6 +198,14 @@ class RMCATabDataDirect
         $fields[] = "ParasiteCollector";
         $fields[] = "ParasiteIdentifier";
 		
+		$this->prop_patterns=Array();
+        //$this->prop_patterns[]="/sampling_property_\d+/i";
+        $this->prop_patterns[]="/property_type_\d+/i";
+        $this->prop_patterns[]="/property_lower_value_\d+/i";
+        $this->prop_patterns[]="/property_upper_value_\d+/i";
+        $this->prop_patterns[]="/property_is_quantitative_\d+/i";
+        $this->prop_patterns[]="/property_unit_\d+/i";
+		
         //ftheeten 2018 04 12
         for($i=1;$i<=$this->nbProperties;$i++)
         {
@@ -235,7 +245,21 @@ class RMCATabDataDirect
     
     
     
-   
+  public function createDarwinAssociations($id)
+ {
+	$this->object = new stagingRelationship() ;
+	$associationType=$this->getCSVValue("associationType");
+	if($this->isset_and_not_null($associationType))
+	{
+		$this->object->setRelationshipType($associationType) ; 
+		$this->object->setExistingSpecimenRef($id); 
+		$this->object->setUnitType("specimens") ; 
+		$this->staging->addRelated($this->object) ; 
+		$this->object=null; 
+		
+	}
+ }
+ 
     
     public function configure($options, $encoding="UTF-8")
     {
@@ -506,6 +530,16 @@ class RMCATabDataDirect
 		}
     }
 	
+	public function addSpecimenStatus()
+    {
+     
+        $valTmp=$this->getCSVValue("SpecimenStatus");
+		if($this->isset_and_not_null($valTmp))
+		{
+			 $this->staging['specimen_status'] = $valTmp;
+		}
+    }
+	
 	public function addSocialStatus()
     {
      
@@ -554,118 +588,149 @@ class RMCATabDataDirect
 		}
 	}
     
-    public function addAssociations()
-    {
+   public function addAssociations()
+ {
          
          if (array_key_exists(strtolower("associatedUnitID"), $this->headers_inverted)||array_key_exists(strtolower("AssociationType"), $this->headers_inverted)) 
          {
-            if(strlen($this->row[$this->headers_inverted[strtolower("associatedUnitID")]])>0 || strlen($this->row[$this->headers_inverted[strtolower("AssociationType")]])>0)
-            {
-				$this->object = new stagingRelationship() ;
-                            
-				
-                $valTmp=$this->getCSVValue("associatedUnitInstitution");
-                if($this->isset_and_not_null($valTmp))
+            
+			
+			
+			$valTmp=$this->getCSVValue("associatedUnitID");
+			$associationDomain=$this->getCSVValue("associationDomain");
+			if($this->isset_and_not_null($valTmp)&&$this->isset_and_not_null($valTmp))
+			{
+				if( $associationDomain=="darwin_full_code")
 				{
-					$this->object->setInstitutionName($valTmp) ;
-				}
-                
-                $valTmp=$this->getCSVValue("associatedUnitCollection");
-				if($this->isset_and_not_null($valTmp))
-				{
-					$this->object->setSourceName($valTmp) ;
-				}
-                
-                
-                $associationType=$this->getCSVValue("associationType");
-				if($this->isset_and_not_null($associationType))
-				{
-					$this->object->setRelationshipType($associationType) ; 
-				}
-                
-                $valTmp=$this->getCSVValue("associatedUnitID");
-                $associationDomain=$this->getCSVValue("associationDomain");
-				if($this->isset_and_not_null($valTmp)&&$this->isset_and_not_null($valTmp))
-				{
-					/*if(in_array($valTmp, array_keys($this->unit_id_ref)))
-                    {
-						$this->object->setStagingRelatedRef($this->unit_id_ref[$this->cdata]); 
+					$codes=Doctrine_Core::getTable('Codes')->getByCodesFull($valTmp) ;
+					$counter=0;
+					foreach($codes as $rec)
+					{
+						$tmp_id=$rec->getRecordId();
+						$this->createDarwinAssociations($tmp_id);
+						$counter++;
 					}
-                    else 
-					{ 
-						$this->object->setSourceId($valTmp) ; 
-						$this->object->setUnitType('external') ;
-					} */
-                    if( $associationDomain=="external")
-                    {
-                        $this->object->setSourceId($valTmp) ; 
-                        $this->object->setUnitType('external') ; 
-                    }
-                    elseif( $associationDomain=="taxon")
-                    {
-                        $this->object->setSourceId($valTmp) ; 
-                         $this->object->setUnitType("taxonomy") ; 
-                    }
-                    elseif( $associationDomain=="mineral")
-                    {
-                        $this->object->setSourceId($valTmp) ; 
-                        $this->object->setUnitType("mineralogy") ; 
-                    }
-                    elseif( $associationDomain=="darwin_id")
-                    {
-                    
-                        $spec=Doctrine_Core::getTable('Specimens')->findOneById($valTmp);
-                        
-                        if(is_object($spec))
-                        {                            
-                            $this->object->setExistingSpecimenRef($spec->getId()); 
-                            $this->object->setUnitType("specimens") ; 
-                        }
-                        else
-                        {
-                            $this->object->setSourceId($valTmp. " (not_found_in_darwin)") ; 
-                            $this->object->setUnitType('external') ;
-                        }
-                    }
-					elseif( $associationDomain=="darwin_uuid")
-                    {
-                    
-                        $stable=Doctrine_Core::getTable('SpecimensStableIds')->findOneByUuid($valTmp);
-                        
-                        if(is_object($stable))
-                        {                            
-                            $this->object->setExistingSpecimenRef($stable->getSpecimenRef()); 
-                            $this->object->setUnitType("specimens") ; 
-                        }
-                        else
-                        {
-                            $this->object->setSourceId($valTmp. " (not_found_in_darwin)") ; 
-                            $this->object->setUnitType('external') ;
-                        }
-                    }
-                    elseif( $associationDomain=="darwin_file")
-                    {
-                        if(array_key_exists($valTmp,$this->unit_id_ref))
-                        {
-                            $this->object->setStagingRelatedRef($this->unit_id_ref[$valTmp]); 
-                            $this->object->setUnitType("specimens") ; 
-                        }
-                        else
-                        {
-                            $this->object->setStagingRelatedRef($valTmp. " (not_found_in_import_file)"); 
-                            $this->object->setUnitType("specimens") ; 
-                        }
-                    }
-                    else //external by default
-                    {
-                        $this->object->setSourceId($valTmp) ; 
-						$this->object->setUnitType('external') ;
-                    }
+					if($counter==0)
+					{
+							
+						//$this->errors_reported = "Record not found code : ".$valTmp;
+						//$e = new DarwinPgErrorParser($this->errors_reported);							
+						$ok = false ;
+						//$this->import->setErrorsInImport("Table error for staging");
+						//$conn->rollback();
+						$import_obj = Doctrine_Core::getTable('Imports')->find($this->import_id);
+						$ne=new Doctrine_Exception( "Record not found code : ".$valTmp);
+						$import_obj->setErrorsInImport($ne->getMessage());
+						$import_obj->setState("error");
+						$import_obj->setWorking(FALSE);
+						$import_obj->save();
+						
+						throw $ne;
+					}
 				}
-				$this->staging->addRelated($this->object) ; 
-				$this->object=null; 
-				
-            }
+				else
+				{
+					if(strlen($this->row[$this->headers_inverted[strtolower("associatedUnitID")]])>0 || strlen($this->row[$this->headers_inverted[strtolower("AssociationType")]])>0)
+					{
+							$this->object = new stagingRelationship() ;
+										
+							
+							$valTmp=$this->getCSVValue("associatedUnitInstitution");
+							if($this->isset_and_not_null($valTmp))
+							{
+								$this->object->setInstitutionName($valTmp) ;
+							}
+							
+							$valTmp=$this->getCSVValue("associatedUnitCollection");
+							if($this->isset_and_not_null($valTmp))
+							{
+								$this->object->setSourceName($valTmp) ;
+							}
+							
+							
+							$associationType=$this->getCSVValue("associationType");
+							if($this->isset_and_not_null($associationType))
+							{
+								$this->object->setRelationshipType($associationType) ; 
+							}
+							
+							$valTmp=$this->getCSVValue("associatedUnitID");
+							$associationDomain=$this->getCSVValue("associationDomain");
+							if($this->isset_and_not_null($valTmp)&&$this->isset_and_not_null($valTmp))
+							{
+								
+								if( $associationDomain=="external")
+								{
+									$this->object->setSourceId($valTmp) ; 
+									$this->object->setUnitType('external') ; 
+								}
+								elseif( $associationDomain=="taxon")
+								{
+									$this->object->setSourceId($valTmp) ; 
+									 $this->object->setUnitType("taxonomy") ; 
+								}
+								elseif( $associationDomain=="mineral")
+								{
+									$this->object->setSourceId($valTmp) ; 
+									$this->object->setUnitType("mineralogy") ; 
+								}
+								elseif( $associationDomain=="darwin_id")
+								{
+								
+									$spec=Doctrine_Core::getTable('Specimens')->findOneById($valTmp);
+									
+									if(is_object($spec))
+									{                            
+										$this->object->setExistingSpecimenRef($spec->getId()); 
+										$this->object->setUnitType("specimens") ; 
+									}
+									else
+									{
+										$this->object->setSourceId($valTmp. " (not_found_in_darwin)") ; 
+										$this->object->setUnitType('external') ;
+									}
+								}
+								elseif( $associationDomain=="darwin_uuid")
+								{
+								
+									$stable=Doctrine_Core::getTable('SpecimensStableIds')->findOneByUuid($valTmp);
+									
+									if(is_object($stable))
+									{                            
+										$this->object->setExistingSpecimenRef($stable->getSpecimenRef()); 
+										$this->object->setUnitType("specimens") ; 
+									}
+									else
+									{
+										$this->object->setSourceId($valTmp. " (not_found_in_darwin)") ; 
+										$this->object->setUnitType('external') ;
+									}
+								}
+								elseif( $associationDomain=="darwin_file")
+								{
+									if(array_key_exists($valTmp,$this->unit_id_ref))
+									{
+										$this->object->setStagingRelatedRef($this->unit_id_ref[$valTmp]); 
+										$this->object->setUnitType("specimens") ; 
+									}
+									else
+									{
+										$this->object->setStagingRelatedRef($valTmp. " (not_found_in_import_file)"); 
+										$this->object->setUnitType("specimens") ; 
+									}
+								}							
+								else //external by default
+								{
+									$this->object->setSourceId($valTmp) ; 
+									$this->object->setUnitType('external') ;
+								}
+							}
+							$this->staging->addRelated($this->object) ; 
+							$this->object=null; 
+						
+					}
+				}
+			}		
         }
     }
     
@@ -821,7 +886,7 @@ class RMCATabDataDirect
         $coordDMS = str_replace(' ', '', $coordDMS);       
        
         
-        $hexDeg="\x".dechex(ord("°"));
+        $hexDeg="\x".dechex(ord("ï¿½"));
 
 
         $returned=NULL;
@@ -1190,7 +1255,37 @@ class RMCATabDataDirect
          }        
     }
 
-    
+    public function handleFullProperty($property_type, $lower_value, $upper_value=null, $is_quantitative=null, $unit=null)
+	{
+		if($this->isset_and_not_null($property_type) && $this->isset_and_not_null($lower_value))
+		{
+			$this->property = new ParsingProperties() ;
+			$this->property->property->setPropertyType($property_type) ;
+			$this->property->property->setLowerValue($lower_value) ;
+			if($this->isset_and_not_null($upper_value))
+			{
+				$this->property->property->setUpperValue($upper_value) ;
+			}
+			if($this->isset_and_not_null($is_quantitative))
+			{
+				if(trim(strtolower(trim($is_quantitative)))=="true")
+				{
+					$is_quantitative=true;
+				}
+				else
+				{
+					$is_quantitative=false;
+				}
+				$this->property->property->setIsQuantitative($is_quantitative) ;
+			}
+			if($this->isset_and_not_null($unit))
+			{
+				$this->property->property->setPropertyUnit($unit) ;
+			}
+			$this->addProperty(true) ;
+		}
+	}
+	
      public function addMeasurementDynamicField(  $p_index_csv, $is_geographical=false)
     {
         if($is_geographical)
@@ -1835,6 +1930,14 @@ class RMCATabDataDirect
 		   {			
 					$this->headers_inverted[strtolower(trim($value))]= $key;           
 		   }
+		   foreach($this->prop_patterns as $prop_pattern)
+           {
+               if(preg_match($prop_pattern,$value))
+               {
+                    //print("PROPERTY_FOUND_".$value);
+                    $this->headers_properties[$value]=$key;
+               }
+           }
 		}
 			
         //print_r($this->headers_inverted);
@@ -1904,7 +2007,6 @@ class RMCATabDataDirect
 					$row_tmp[$index]=iconv($encoding, "UTF-8//TRANSLIT",$value);
 				}
 			}
-			print_r($row_tmp);
 			$p_row=$row_tmp;
 		}
 		$this->staging = new Staging();
@@ -1928,6 +2030,7 @@ class RMCATabDataDirect
         $this->addKindOfUnit();
 		$this->addSex();
         $this->addAssociations();
+		$this->addSpecimenStatus();
 		$this->addSocialStatus();
 		$this->addObjectName();
         
@@ -1997,13 +2100,33 @@ class RMCATabDataDirect
 				
 				if(!array_key_exists(strtolower(trim($field_name)), $this->fields_inverted))
 				{			               
-						if(!in_array($field_name, $this->parsed_fields))
+						if(!in_array($field_name, $this->parsed_fields)
+						&&
+						!array_key_exists(strtolower(trim($field_name)), $this->headers_properties)
+						)
                         {
                             $this->addMeasurement_free($field_name, $field_name);
                         }
                 }
 			}
 			
+		}
+		foreach($this->headers_properties as $name_field=>$pos_field)
+        {
+			if (strpos($name_field, 'property_lower_value_') === 0) 
+            {
+				$idx=str_ireplace('property_lower_value_','',$name_field);
+				$lower_val=$this->getCSVValue($name_field);
+				$prop_type_name="property_type_".$idx;
+				$prop_type=$this->getCSVValue($prop_type_name);
+				if($this->isset_and_not_null($lower_val) && $this->isset_and_not_null($prop_type) )
+				{
+					$upper_value=$this->getCSVValue('property_upper_value_'.$idx);
+					$is_quantitative=$this->getCSVValue('property_is_quantitative_'.$idx);
+					$unit=$this->getCSVValue('property_unit_'.$idx);
+					$this->handleFullProperty($prop_type , $lower_val, $upper_value, $is_quantitative, $unit);
+				}
+			}
 		}
         $this->addStorage();
         $this->addNotes();
@@ -2266,15 +2389,15 @@ class RMCATabDataDirect
     }
 
 
-    $pattern = '/^(\d+([\,\.]\d+)?)\W?([a-zA-Z\°]+)$/';
+    $pattern = '/^(\d+([\,\.]\d+)?)\W?([a-zA-Z\ï¿½]+)$/';
     // if unit not defined
     if($this->property && $this->property->property && $this->property->property->getPropertyUnit() =='') {
 
       // try to guess unit
       $val = $this->property->getLowerValue();
-      $val = str_replace('°', 'deg',$val);
+      $val = str_replace('ï¿½', 'deg',$val);
       if(preg_match($pattern, $val, $matches)) {
-        $val = str_replace('deg', '°',$matches[3]);
+        $val = str_replace('deg', 'ï¿½',$matches[3]);
         $this->property->property->setPropertyUnit($val);
         $this->property->property->setLowerValue($matches[1]);
       }

@@ -34,19 +34,15 @@ class sfExecutionFilter extends sfFilter
     // get the current action instance
     /** @var sfAction $actionInstance */
     $actionInstance = $this->context->getController()->getActionStack()->getLastEntry()->getActionInstance();
-
     // execute the action, execute and render the view
     if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
     {
       $timer = sfTimerManager::getTimer(sprintf('Action "%s/%s"', $actionInstance->getModuleName(), $actionInstance->getActionName()));
 
       $viewName = $this->handleAction($filterChain, $actionInstance);
-
       $timer->addTime();
       $timer = sfTimerManager::getTimer(sprintf('View "%s" for "%s/%s"', $viewName, $actionInstance->getModuleName(), $actionInstance->getActionName()));
-
       $this->handleView($filterChain, $actionInstance, $viewName);
-
       $timer->addTime();
     }
     else

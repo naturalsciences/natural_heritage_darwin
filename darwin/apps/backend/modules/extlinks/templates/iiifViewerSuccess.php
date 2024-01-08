@@ -10,13 +10,13 @@
 
 <span>
 	   <div id="iiif_map" class="map" style="width: 100%; height:500px; display:inline-block"></div>
-	   <select id="iiif_chooser" name="iiif_chooser"></select><br/>
-       <a href="<?php print( sfConfig::get('dw_iiif_viewer').$link->getUrl());?>" target="_blank" class='complete_widget'>
-        <?php echo __('To IIIF Viewer');?>
+	   <select id="iiif_chooser" name="iiif_chooser"></select>
+		<a href="<?php print( sfConfig::get('dw_iiif_viewer').$link->getUrl());?>" target="_blank" class='complete_widget'>
+        <?php echo __('To IIIF Viewer for full screen');?>
       </a>
                   
 </span>
-  <div  style="text-align:center;"><?php echo __("URL");?>: <a target="_blank" href="<?php echo(str_replace('/embed','', $link->getUrl()));?>" ><?php echo(str_replace('/embed','', $link->getUrl()));?></a></div>
+  <!--<div  style="text-align:center;"><?php echo __("URL");?>: <a target="_blank" href="<?php echo(str_replace('/embed','', $link->getUrl()));?>" ><?php echo(str_replace('/embed','', $link->getUrl()));?></a></div>-->
 
 
 <script>
@@ -34,6 +34,7 @@ var layers=Array();
 var maps=Array();
 var map;
 var layer;
+var linkpic;
 
 var get_img=function(data)
 {
@@ -58,6 +59,7 @@ var seqs=function(data)
 }
 
 function refreshMap(imageInfoUrl) {
+  linkpic = imageInfoUrl;
   fetch(imageInfoUrl)
     .then(function (response) {
       response
@@ -105,10 +107,10 @@ var create_ol_iiif=function()
 		  });
 		  refreshMap(img_list[0]);
 		  for(var i=0;i<img_list.length; i++)
-		  {
+		  {		NrPhoto = i +1;
 			  $('#iiif_chooser').append($('<option>', {
 					value: img_list[i],
-					text: img_list[i]
+					text: "Photo " + NrPhoto
 				}));
 		  }
 	}

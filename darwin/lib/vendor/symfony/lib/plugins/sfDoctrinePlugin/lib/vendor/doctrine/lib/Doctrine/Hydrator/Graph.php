@@ -36,6 +36,8 @@
 abstract class Doctrine_Hydrator_Graph extends Doctrine_Hydrator_Abstract
 {
     protected $_tables = array();
+	//ftheetenPHP8
+	protected $_rootAlias=null;
 
     /**
      * Gets the custom field used for indexing for the specified component alias.
@@ -391,6 +393,16 @@ abstract class Doctrine_Hydrator_Graph extends Doctrine_Hydrator_Abstract
      * @return string The name of the class to create
      *
      */
+	 
+	//ftheeten each deprecated 2023 04 08
+    
+	protected function old_each(&$arr) {
+		$key = key($arr);
+		$result = ($key === null) ? false : [$key, current($arr), 'key' => $key, 'value' => current($arr)];
+		next($arr);
+		return $result;
+	}
+	
     protected function _getClassnameToReturn(array &$data, $component)
     {
         if ( ! isset($this->_tables[$component])) {
@@ -417,7 +429,7 @@ abstract class Doctrine_Hydrator_Graph extends Doctrine_Hydrator_Abstract
                     $matchedComponents[] = $table->getComponentName();
                 }
             } else {
-                list($key, $value) = each($inheritanceMap);
+                list($key, $value) = $this->old_each($inheritanceMap);
                 $key = $this->_tables[$component]->getFieldName($key);
                 if ( ! isset($data[$key]) || $data[$key] != $value) {
                     continue;

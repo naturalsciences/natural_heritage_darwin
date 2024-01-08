@@ -40,7 +40,7 @@ $(document).ready(function ()
           <?php echo $form['format'] ?>
         </td>
       </tr>
-      <?php if($type != 'taxon'&&$type != 'lithostratigraphy') : ?>
+      <?php if($type != 'taxon'&&$type != 'lithostratigraphy'&& $type != 'taxonomy'&&$type != 'synonymies'&&$type != 'codes'&&$type != 'properties'&&$type != 'relationships') : ?>
       <tr>
         <th><?php echo $form['collection_ref']->renderLabel() ?> :</th>
         <td>
@@ -66,6 +66,31 @@ $(document).ready(function ()
             </td>
           </tr>
       <?php endif ?>
+	  <?php if($type == 'properties'||$type == 'codes') : ?>
+		<tr>
+            <th><?php echo $form['update']->renderLabel() ?> :</th>
+            <td>
+              <?php echo $form['update']->renderError() ?>
+              <?php echo $form['update'] ?>
+            </td>
+		</tr>
+	  <?php endif; ?>
+	  <?php if($type == 'synonymies') : ?>
+		<tr>
+            <th><?php echo $form['specimen_taxonomy_ref']->renderLabel() ?> :</th>
+            <td>
+              <?php echo $form['specimen_taxonomy_ref']->renderError() ?>
+              <?php echo $form['specimen_taxonomy_ref'] ?>
+            </td>
+          </tr>
+		  <tr>
+            <th><?php echo $form['synonymy_taxonomy_ref']->renderLabel() ?> :</th>
+            <td>
+              <?php echo $form['synonymy_taxonomy_ref']->renderError() ?>
+              <?php echo $form['synonymy_taxonomy_ref'] ?>
+            </td>
+          </tr>
+	  <?php endif; ?>
       <?php if($type == 'taxon') : ?>
       <tr>
         <th><?php echo $form['exclude_invalid_entries']->renderLabel() ?> :</th>

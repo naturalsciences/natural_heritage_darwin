@@ -28,8 +28,9 @@ class massactionsActions extends DarwinActions
       {
         $this->form->doMassAction($this->getUser()->getId(), $this->getUser()->isAtLeast(Users::ADMIN));
         $nb_item = count($this->form->getValue('item_list'));
-        $this->redirect('massactions/status?nb_item='.$nb_item);
+       $this->redirect('massactions/status?nb_item='.$nb_item);
       }
+	 
       $items_ids = $this->getUser()->getAllPinned('specimen');
       $this->items = Doctrine_Core::getTable('Specimens')->getByMultipleIds($items_ids, $this->getUser()->getId());
     } else {
@@ -52,4 +53,26 @@ class massactionsActions extends DarwinActions
     $this->form = new BaseMassActionForm();
     $this->form->addSubForm($this->mAction);
   }
+  
+    //ftheeten 2018 11 22
+   public function executeAddPeople(sfWebRequest $request)
+  {
+    $number = intval($request->getParameter('num'));
+	$this->form = new BaseMassActionForm();
+	$this->form->addSubForm("collectors");
+	$sub_form=$this->form->add_people("collectors", $number);
+	
+	return $this->renderPartial('addPeople',array('form' => $sub_form, 'row_line'=>$number));
+  }
+  
+   public function executeAddDonator(sfWebRequest $request)
+  {
+    $number = intval($request->getParameter('num'));
+	$this->form = new BaseMassActionForm();
+	$this->form->addSubForm("donators");
+	$sub_form=$this->form->add_people("donators", $number);
+	
+	return $this->renderPartial('addDonator',array('form' => $sub_form, 'row_line'=>$number));
+  }
+  
 }

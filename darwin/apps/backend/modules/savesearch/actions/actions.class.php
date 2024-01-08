@@ -257,9 +257,9 @@ class savesearchActions extends sfActions
            $response->sendHttpHeaders(); //edited to add the missed sendHttpHeaders
            $response->setContent($returned);
 
-           $response->sendContent();
+           //$response->sendContent();
            
-           print($returned);
+          
 
 return sfView::NONE;           
   }

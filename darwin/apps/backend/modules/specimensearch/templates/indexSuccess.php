@@ -38,5 +38,7 @@ $(document).ready(function () {
   $(window).resize(function(){
     check_screen_size();
   });
+  
+  hoover_option(".choice_hoover");
 });
 </script>

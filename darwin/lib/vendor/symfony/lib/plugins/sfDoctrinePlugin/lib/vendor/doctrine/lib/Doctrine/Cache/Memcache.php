@@ -31,6 +31,8 @@
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Jonathan H. Wage <jonwage@gmail.com>
  */
+#ftheeten
+#[AllowDynamicProperties] 
 class Doctrine_Cache_Memcache extends Doctrine_Cache_Driver
 {
     /**
@@ -45,7 +47,10 @@ class Doctrine_Cache_Memcache extends Doctrine_Cache_Driver
      */
     public function __construct($options = array())
     {
-        if ( ! extension_loaded('memcache')) {
+        /*if ( ! extension_loaded('memcache')) {
+            throw new Doctrine_Cache_Exception('In order to use Memcache driver, the memcache extension must be loaded.');
+        }*/
+		if ( ! extension_loaded('memcached')) {
             throw new Doctrine_Cache_Exception('In order to use Memcache driver, the memcache extension must be loaded.');
         }
         parent::__construct($options);
@@ -59,8 +64,9 @@ class Doctrine_Cache_Memcache extends Doctrine_Cache_Driver
             $this->setOption('servers', $value);
         }
 
-        $this->_memcache = new Memcache;
-
+        //$this->_memcache = new Memcache;
+		//ftheeten
+		$this->_memcache = new Memcache;
         foreach ($this->_options['servers'] as $server) {
             if ( ! array_key_exists('persistent', $server)) {
                 $server['persistent'] = true;
@@ -68,7 +74,9 @@ class Doctrine_Cache_Memcache extends Doctrine_Cache_Driver
             if ( ! array_key_exists('port', $server)) {
                 $server['port'] = 11211;
             }
-            $this->_memcache->addServer($server['host'], $server['port'], $server['persistent']);
+            //$this->_memcache->addServer($server['host'], $server['port'], $server['persistent']);
+			//ftheeten
+			$this->_memcache->addServer($server['host'], $server['port'], $server['persistent']);
         }
     }
 
@@ -147,5 +155,7 @@ class Doctrine_Cache_Memcache extends Doctrine_Cache_Driver
             }
         }
         return $keys;
+		
+		
     }
 }

@@ -44,7 +44,7 @@ class InstitutionsFormFilter extends BaseInstitutionsFormFilter
     if($val != '')
     {
       //$alias = $query->getRootAlias() ;
-      $query->andWhere("LOWER(formated_name_indexed) LIKE '%'||LOWER(fulltoindex(?))||'%' ",$val);
+      $query->andWhere("LOWER(formated_name_indexed) LIKE '%'||LOWER(fulltoindex(?, true))||'%' ",$val);
     }
     return $query;
   }

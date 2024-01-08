@@ -13,21 +13,23 @@ class ldapAuth
    */
   public function __construct()
   {
+
     // Retrieve configuration
     $ldap_host = sfConfig::get('app_ldap_host', 'localhost');
-    $ldap_port = sfConfig::get('app_ldap_port', 389);
+    $ldap_port =sfConfig::get('app_ldap_port', 389);
     $ldap_user = sfConfig::get('app_ldap_user');
-    $ldap_pass = sfConfig::get('app_ldap_pass');
+    $ldap_pass =  sfConfig::get('app_ldap_pass');
     $this->id_attr = sfConfig::get('app_ldap_attr_id','uid');
     $ldap_version = sfConfig::get('app_ldap_version', 3);
     $this->base_user = sfConfig::get('app_ldap_baseuser');
-    
+	
+	
     if (is_array($ldap_host)) {
       foreach ($ldap_host as $host) {
-        if (!$this->ds) $this->ds = @ldap_connect($ldap_host[0], $ldap_port);
+        if (!$this->ds) $this->ds = ldap_connect($ldap_host[0], $ldap_port);
       }
     } else {
-      $this->ds = @ldap_connect($ldap_host, $ldap_port);
+      $this->ds = ldap_connect($ldap_host, $ldap_port);
     }
     
     if (!$this->ds)
@@ -41,6 +43,7 @@ class ldapAuth
     if (!$binded) {
       throw new ldapException("Unable to connect to LDAP server : authentication error");
     }
+	
   }
 
   public function __destruct()
@@ -64,22 +67,29 @@ class ldapAuth
    */
   public function authenticate($login, $password)
   {
+     
     // Search the user
     $sr = ldap_search($this->ds, $this->base_user, $this->id_attr."=$login");
 
     if (ldap_count_entries($this->ds, $sr) <= 0)
-      return false;
+	{
+        
+     	 return false;
+	}
     $entry = ldap_first_entry($this->ds, $sr);
     $dn = ldap_get_dn($this->ds, $entry);
     ldap_free_result($sr);
 
     if (is_string($dn) && !empty($dn)) {
-      if (!@ldap_bind($this->ds, $dn, $password)) {
+      if (!ldap_bind($this->ds, $dn, $password)) {
+	     
         return false;
       } else {
+	  
         return true;
       }
     }
+	
     return false;
   }
 

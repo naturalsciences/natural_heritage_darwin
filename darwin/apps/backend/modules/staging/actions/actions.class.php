@@ -1,5 +1,6 @@
 <?php
 
+
 class stagingActions extends DarwinActions
 {
   public function preExecute()
@@ -180,6 +181,7 @@ class stagingActions extends DarwinActions
 
   public function executeSearch(sfWebRequest $request)
   {
+	print("ENTRY");
     $this->forward404Unless($request->hasParameter('import'));
     $this->import = Doctrine_Core::getTable('Imports')->find($request->getParameter('import'));
     if(! Doctrine_Core::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$this->import->getCollectionRef()))
@@ -250,7 +252,10 @@ class stagingActions extends DarwinActions
       $this->search_type = $this->form->getValue('bio_geo');
       $this->fields = $this->displayModel->getColumns($this->search_type);
     }
+	print("EXIT");
   }
+  
+  
   public function executeIndex(sfWebRequest $request)
   {
     $this->forward404Unless($request->hasParameter('import'));
