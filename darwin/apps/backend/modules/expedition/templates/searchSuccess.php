@@ -33,6 +33,7 @@
               </a>
             </th>
             <th>&nbsp;</th>
+			 <th>&nbsp;</th>
           </tr>
         </thead>
         <tbody>
@@ -43,8 +44,14 @@
 			   <td><?php echo $expedition->getCollectors();?></td>
               <td style="text-align:left;" class="datesNum"><?php echo $expedition->getExpeditionFromDateMasked(ESC_RAW);?></td>
               <td style="text-align:left;" class="datesNum"><?php echo $expedition->getExpeditionToDateMasked(ESC_RAW);?></td>
+			  <?php if(! $is_choose):?>
+				 <td>
+							<a target='_blank' href="<?php print(url_for('specimensearch/search')."?specimen_search_filters[expedition_name]=".$expedition->getName());?>"><?php print(__("Search specimens"));?></a>
+				</td>
+			  <?php endif;?>
                 <td class="<?php echo (! $is_choose)?'edit':'choose';?>">
-                  <?php if(! $is_choose):?>
+                  <?php if(! $is_choose):?>    
+						   
                     <?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>                  
                       <?php echo link_to(image_tag('edit.png',array('title'=>'Edit expedition')),'expedition/edit?id='.$expedition->getId(), array("target"=>"_blank"));?>
                       <?php echo link_to(image_tag('duplicate.png',array('title'=>'Duplicate expedition')),'expedition/new?duplicate_id='.$expedition->getId(), array("target"=>"_blank"));?>

@@ -53,7 +53,7 @@
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (MDB2 library)
  */
-abstract class Doctrine_Connection extends Doctrine_Configurable implements Countable, IteratorAggregate, Serializable
+abstract class Doctrine_Connection extends Doctrine_Configurable implements Countable, IteratorAggregate #, Serializable
 {
     /**
      * @var $dbh                                the database handler
@@ -1178,6 +1178,8 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
      *
      * @return ArrayIterator        SPL ArrayIterator object
      */
+	    #ftheeten 2023 04 07
+    #[\ReturnTypeWillChange] 
     public function getIterator()
     {
         return new ArrayIterator($this->tables);
@@ -1188,6 +1190,8 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
      *
      * @return integer
      */
+	    #ftheeten 2023 04 07
+    #[\ReturnTypeWillChange] 
     public function count()
     {
         return $this->_count;
@@ -1643,6 +1647,35 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
      * @return void
      */
     public function unserialize($serialized)
+    {
+        $array = unserialize($serialized);
+
+        foreach ($array as $name => $values) {
+            $this->$name = $values;
+        }
+    }
+	
+	//ftheeten PHP8 
+	 /**
+     * Serialize. Remove database connection(pdo) since it cannot be serialized
+     *
+     * @return string $serialized
+     */
+    public function __serialize()
+    {
+        $vars = get_object_vars($this);
+        $vars['dbh'] = null;
+        $vars['isConnected'] = false;
+        return serialize($vars);
+    }
+
+    /**
+     * Unserialize. Recreate connection from serialized content
+     *
+     * @param string $serialized
+     * @return void
+     */
+    public function __unserialize($serialized)
     {
         $array = unserialize($serialized);
 

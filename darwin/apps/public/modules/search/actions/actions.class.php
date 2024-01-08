@@ -163,7 +163,10 @@ class searchActions extends DarwinActions
         $this->specimen = Doctrine_Core::getTable('Specimens')->find((int) $request->getParameter('id'));
         $this->comments = Doctrine_Core::getTable('Comments')->getRelatedComment('specimens', (int) $request->getParameter('id'));
    }
+	
+    
     $this->forward404Unless($this->specimen);
+	$this->forward404Unless(!$this->specimen->getRestrictedAccess());
     if(!$this->specimen->getCollectionIsPublic()) $this->forwardToSecureAction();
 
     $collection = Doctrine_Core::getTable('Collections')->findOneById($this->specimen->getCollectionRef());

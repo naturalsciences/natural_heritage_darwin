@@ -177,7 +177,7 @@ function constructReportBaseUrl($name, $lang, $format){
     {
         if(isset($str))
         {
-            if(strlen($str)>0)
+            if(strlen(trim($str))>0)
             {
                 return TRUE;
             }
@@ -231,7 +231,7 @@ function constructReportBaseUrl($name, $lang, $format){
     return $flagMenu;
   }
   
-  
+ 
 
 ?>
 

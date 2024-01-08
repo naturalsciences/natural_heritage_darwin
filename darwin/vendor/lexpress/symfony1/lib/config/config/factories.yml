@@ -46,12 +46,13 @@ default:
       cache_key_use_host_name:    true
 
   view_cache:
-    class: sfFileCache
+    class: sfMemcacheCache
     param:
       automatic_cleaning_factor: 0
-      cache_dir:                 %SF_TEMPLATE_CACHE_DIR%
-      lifetime:                  86400
-      prefix:                    %SF_APP_DIR%/template
+      servers:
+        localhost:
+          host: localhost
+          port: 112111
 
   i18n:
     class: sfI18N

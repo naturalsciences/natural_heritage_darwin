@@ -28,6 +28,35 @@
 	<th class="top_aligned"><?php echo $form['sub_container_storage']->renderLabel();?></th>
 	<td><?php echo $form['sub_container_storage']->render() ?></td>
   </tr>
+  <!--JMHerpers 18-01-2023
+  <tr>
+	<th class="top_aligned">-----DNA----</th>
+	<td></td>
+  </tr>
+  <tr>
+	<th class="top_aligned"><? php echo $form['DNA_box']->renderLabel();?></th>
+	<td><? php echo $form['DNA_box']->render() ?></td>
+  </tr>
+    <tr>
+	<th class="top_aligned"><? php echo $form['DNA_HPos']->renderLabel();?></th>
+	<td><? php echo $form['DNA_HPos']->render() ?></td>
+  </tr>
+    <tr>
+	<th class="top_aligned"><? php echo $form['DNA_VPos']->renderLabel();?></th>
+	<td><? php echo $form['DNA_VPos']->render() ?></td>
+  </tr>
+    <tr>
+	<th class="top_aligned"><? php echo $form['DNA_Tag']->renderLabel();?></th>
+	<td><? php echo $form['DNA_Tag']->render() ?></td>
+  </tr>
+    <tr>
+	<th class="top_aligned"><? php echo $form['DNA_Tube']->renderLabel();?></th>
+	<td><? php echo $form['DNA_Tube']->render() ?></td>
+  </tr>
+    <tr>
+	<th class="top_aligned"><? php echo $form['DNA_Notes']->renderLabel();?></th>
+	<td><? php echo $form['DNA_Notes']->render() ?></td>
+  </tr>-->
 </table>
 
 <script type="text/javascript">

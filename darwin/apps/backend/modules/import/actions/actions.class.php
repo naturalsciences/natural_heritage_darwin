@@ -170,6 +170,22 @@ class importActions extends DarwinActions
       elseif($request->getParameter('format') == 'lithostratigraphy')
       {
         $this->type="lithostratigraphy";        
+      }                                           
+	  elseif($request->getParameter('format') == 'synonymies')
+      {
+        $this->type="synonymies";        
+      }
+	  elseif($request->getParameter('format') == 'properties')
+      {
+        $this->type="properties";        
+      }
+	   elseif($request->getParameter('format') == 'codes')
+      {
+        $this->type="codes";        
+      }
+	   elseif($request->getParameter('format') == 'relationships')
+      {
+        $this->type="relationships";        
       }
       else
       {
@@ -227,6 +243,22 @@ class importActions extends DarwinActions
                   {
                     $this->redirect('import/indexLinks');
                   }
+				   elseif($this->type == 'synonymies')
+                  {
+                    $this->redirect('import/indexSynonymies');
+                  }
+				  elseif($this->type == 'codes')
+                  {
+                    $this->redirect('import/indexCodes');
+                  }
+				   elseif($this->type == 'properties')
+                  {
+                    $this->redirect('import/indexProperties');
+                  }
+				   elseif($this->type == 'relationships')
+                  {
+                    $this->redirect('import/indexRelationships');
+                  }
                   else
                   {          
                     $this->redirect('import/index?complete=true');
@@ -239,6 +271,17 @@ class importActions extends DarwinActions
               $this->form->getErrorSchema()->addError($error, 'Darwin2 :');
             }
           }
+		  else
+		  {
+			  print($this->type);
+			  foreach ($this->form->getErrorSchema() as $key => $err) {  
+				if ($key) 
+				{  
+					 $this->form->getErrorSchema()->addError($err, 'Darwin2 :');
+				}  
+			}
+
+		  }
       }
       catch(Doctrine_Exception $e)
      {
@@ -294,6 +337,22 @@ class importActions extends DarwinActions
 	elseif($this->format == 'links')
     {
       $this->s_url = 'import/searchLinks'.'?is_choose='.$this->is_choose;
+    }
+	elseif($this->format == 'properties')
+    {
+      $this->s_url = 'import/searchProperties'.'?is_choose='.$this->is_choose;
+    }
+	elseif($this->format == 'codes')
+    {
+      $this->s_url = 'import/searchCodes'.'?is_choose='.$this->is_choose;
+    }
+	elseif($this->format == 'relationships')
+    {
+      $this->s_url = 'import/searchRelationships'.'?is_choose='.$this->is_choose;
+    }
+	elseif($this->format == 'synonymies')
+    {
+      $this->s_url = 'import/searchSynonymies'.'?is_choose='.$this->is_choose;
     }
     elseif($this->format == 'abcd')
     {
@@ -359,8 +418,8 @@ class importActions extends DarwinActions
   }
   
     //ftheeten 2017 08 28 (end)
-    public function executeLoadstaging(sfWebRequest $request)
-    {
+  public function executeLoadstaging(sfWebRequest $request)
+  {
   
         $idImport=$request->getParameter("id");
         $importTmp=Doctrine_Core::getTable("Imports")->find($idImport);
@@ -411,6 +470,22 @@ class importActions extends DarwinActions
                      elseif($importTmp->getFormat()=="lithostratigraphy")
 					{
 						$this->redirect('import/indexLithostratigraphy');
+					}
+					elseif($importTmp->getFormat()=="synonymies")
+					{
+						$this->redirect('import/indexSynonymies');
+					}
+                     elseif($importTmp->getFormat()=="codes")
+					{
+						$this->redirect('import/indexCodes');
+					}
+					 elseif($importTmp->getFormat()=="properties")
+					{
+						$this->redirect('import/indexProperties');
+					}
+					 elseif($importTmp->getFormat()=="relationships")
+					{
+						$this->redirect('import/indexRelationships');
 					}
 					else
 					{
@@ -469,7 +544,7 @@ class importActions extends DarwinActions
                         $this->setImportAsWorking($conn, array($request->getParameter('id')), true);
                         $currentDir=getcwd();
                         chdir(sfconfig::get('sf_root_dir'));
- print( 'nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );                        
+ //print( 'nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );                        
                         exec('nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );
                        
                         
@@ -484,6 +559,26 @@ class importActions extends DarwinActions
                     elseif($importTmp->getFormat()=="lithostratigraphy")
 					{
 						$this->redirect('import/indexLithostratigraphy');
+					}
+					/*elseif($importTmp->getFormat()=="synonymies")
+					{
+						$this->redirect('import/indexSynonymies');
+					}*/
+                     elseif($importTmp->getFormat()=="codes")
+					{
+						$this->redirect('import/indexCodes');
+					}
+					 elseif($importTmp->getFormat()=="properties")
+					{
+						$this->redirect('import/indexProperties');
+					}
+					 elseif($importTmp->getFormat()=="relationships")
+					{
+						$this->redirect('import/indexRelationships');
+					}
+					elseif($importTmp->getFormat()=="locality")
+					{
+						$this->redirect('import/indexLocalities');
 					}
 					else
 					{
@@ -603,7 +698,7 @@ EOF
       chdir(sfconfig::get('sf_root_dir')); 
   
        $cmd='darwin:import-gtu --id='.$idImport;          
-      exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+      exec('nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );
 
       chdir($currentDir);	 
 	  $this->redirect('import/indexLocalities');
@@ -736,7 +831,104 @@ EOF
 	$this->stats_all= Doctrine_Core::getTable("StagingCatalogue")->countExceptionMessages($idImport,0, $this->size_data);
      
        
-  }    
+  } 
+
+ public function executeViewUnimportedSynonymies(sfWebRequest $request)
+  {
+     $idImport=$request->getParameter("id");
+     $this->id= $idImport;
+	 $this->import=Doctrine_Core::getTable("Imports")->findOneById($this->id);
+	 $this->size_catalogue= (int)$this->size_staging_catalogue;
+	 $this->form= new ImportsForm($this->import);
+	$this->page=$request->getParameter("page",1);
+	$offset=((int)$this->page-1)*$this->size_catalogue;
+	$this->items = Doctrine_Core::getTable("StagingSynonymies")->getByImportRef($idImport, $offset, $this->size_catalogue);	 
+	$this->stats= Doctrine_Core::getTable("StagingSynonymies")->countExceptionMessages($idImport, $offset, $this->size_catalogue);
+    	
+	 foreach($this->stats as $stat)
+	 {
+		$this->size_data=(int)$stat["count_all"];
+		$this->max_page= ceil((int)$this->size_data/(int)$this->size_catalogue);
+		 break;
+	 }
+     $this->import=Doctrine_Core::getTable("Imports")->find($idImport);
+     $this->metadata_ref=$this->import->getSpecimenTaxonomyRef();
+	$this->stats_all= Doctrine_Core::getTable("StagingSynonymies")->countExceptionMessages($idImport,0, $this->size_data);
+     
+       
+  }  
+
+	public function executeViewUnimportedCodes(sfWebRequest $request)
+  {
+     $idImport=$request->getParameter("id");
+     $this->id= $idImport;
+	 $this->size_catalogue= (int)$this->size_staging_catalogue;
+	  $this->form= new ImportsForm($this->import);
+	$this->page=$request->getParameter("page",1);
+	$offset=((int)$this->page-1)*$this->size_catalogue;
+	$this->items = Doctrine_Core::getTable("StagingCodes")->getByImportRef($idImport, $offset, $this->size_catalogue);	 
+	$this->stats= Doctrine_Core::getTable("StagingCodes")->countExceptionMessages($idImport, $offset, $this->size_catalogue);
+    	
+	 foreach($this->stats as $stat)
+	 {
+		$this->size_data=(int)$stat["count_all"];
+		$this->max_page= ceil((int)$this->size_data/(int)$this->size_catalogue);
+		 break;
+	 }
+     $this->import=Doctrine_Core::getTable("Imports")->find($idImport);
+     $this->metadata_ref=$this->import->getSpecimenTaxonomyRef();
+	$this->stats_all= Doctrine_Core::getTable("StagingCodes")->countExceptionMessages($idImport,0, $this->size_data);
+     
+       
+  }  
+
+public function executeViewUnimportedProperties(sfWebRequest $request)
+  {
+     $idImport=$request->getParameter("id");
+     $this->id= $idImport;
+	 $this->size_catalogue= (int)$this->size_staging_catalogue;
+	  $this->form= new ImportsForm($this->import);
+	$this->page=$request->getParameter("page",1);
+	$offset=((int)$this->page-1)*$this->size_catalogue;
+	$this->items = Doctrine_Core::getTable("StagingProperties")->getByImportRef($idImport, $offset, $this->size_catalogue);	 
+	$this->stats= Doctrine_Core::getTable("StagingProperties")->countExceptionMessages($idImport, $offset, $this->size_catalogue);
+    	
+	 foreach($this->stats as $stat)
+	 {
+		$this->size_data=(int)$stat["count_all"];
+		$this->max_page= ceil((int)$this->size_data/(int)$this->size_catalogue);
+		 break;
+	 }
+     $this->import=Doctrine_Core::getTable("Imports")->find($idImport);
+     $this->metadata_ref=$this->import->getSpecimenTaxonomyRef();
+	$this->stats_all= Doctrine_Core::getTable("StagingProperties")->countExceptionMessages($idImport,0, $this->size_data);
+     
+       
+  }   
+  
+public function executeViewUnimportedRelationships(sfWebRequest $request)
+  {
+     $idImport=$request->getParameter("id");
+     $this->id= $idImport;
+	 $this->size_catalogue= (int)$this->size_staging_catalogue;
+	  $this->form= new ImportsForm($this->import);
+	$this->page=$request->getParameter("page",1);
+	$offset=((int)$this->page-1)*$this->size_catalogue;
+	$this->items = Doctrine_Core::getTable("StagingUpdateSpecimenRelationship")->getByImportRef($idImport, $offset, $this->size_catalogue);	 
+	$this->stats= Doctrine_Core::getTable("StagingUpdateSpecimenRelationship")->countExceptionMessages($idImport, $offset, $this->size_catalogue);
+    	
+	 foreach($this->stats as $stat)
+	 {
+		$this->size_data=(int)$stat["count_all"];
+		$this->max_page= ceil((int)$this->size_data/(int)$this->size_catalogue);
+		 break;
+	 }
+     $this->import=Doctrine_Core::getTable("Imports")->find($idImport);
+     $this->metadata_ref=$this->import->getSpecimenTaxonomyRef();
+	$this->stats_all= Doctrine_Core::getTable("StagingUpdateSpecimenRelationship")->countExceptionMessages($idImport,0, $this->size_data);
+     
+       
+  }   
   
   public function executeDownloadTaxonomicStaging(sfWebRequest $request)
   {
@@ -847,7 +1039,7 @@ EOF
             
     $this->getResponse()->sendHttpHeaders(); //edited to add the missed sendHttpHeaders
     $this->getResponse()->sendContent();           
-    print(implode("\r\n",$returned));
+    //print(implode("\r\n",$returned));
     return sfView::NONE;   
         
         
@@ -882,8 +1074,64 @@ EOF
     $this->andSearch($request,'files') ;
     $this->setTemplate('search');
   }
+  
+  public function executeIndexSynonymies(sfWebRequest $request)
+  {
+		$this->format = 'synonymies' ;
+		$this->form = new ImportsSynonymiesFormFilter(null,array('user' =>$this->getUser()));    
+		$this->setTemplate('index');
+  }
+  
+   public function executeIndexProperties(sfWebRequest $request)
+  {
+		$this->format = 'properties' ;
+		$this->form = new ImportsPropertiesFormFilter(null,array('user' =>$this->getUser()));    
+		$this->setTemplate('index');
+  }
+  
+   public function executeIndexCodes(sfWebRequest $request)
+  {
+		$this->format = 'codes' ;
+		$this->form = new ImportsPropertiesFormFilter(null,array('user' =>$this->getUser()));    
+		$this->setTemplate('index');
+  }
+
+  public function executeIndexRelationships(sfWebRequest $request)
+  {
+		$this->format = 'relationships' ;
+		$this->form = new ImportsRelationshipsFormFilter(null,array('user' =>$this->getUser()));    
+		$this->setTemplate('index');
+  }
 
 
+   public function executeSearchSynonymies(sfWebRequest $request)
+  {
+    $this->form = new ImportsSynonymiesFormFilter(null,array('user' =>$this->getUser()));
+    $this->andSearch($request,'synonymies') ;
+    $this->setTemplate('search');
+  }
+
+  
+   public function executeSearchProperties(sfWebRequest $request)
+  {
+    $this->form = new ImportsPropertiesFormFilter(null,array('user' =>$this->getUser()));
+    $this->andSearch($request,'properties') ;
+    $this->setTemplate('search');
+  }
+  
+   public function executeSearchRelationships(sfWebRequest $request)
+  {
+    $this->form = new ImportsRelationshipsFormFilter(null,array('user' =>$this->getUser()));
+    $this->andSearch($request,'relationships') ;
+    $this->setTemplate('search');
+  }
+  
+   public function executeSearchCodes(sfWebRequest $request)
+  {
+    $this->form = new ImportsCodesFormFilter(null,array('user' =>$this->getUser()));
+    $this->andSearch($request,'codes') ;
+    $this->setTemplate('search');
+  }
 
   public function executeLoadfiles(sfWebRequest $request)
   {
@@ -899,6 +1147,61 @@ EOF
 	  $this->redirect('import/indexFiles');
   }
   
+  public function executeLoadsynonyms(sfWebRequest $request)
+  {
+    $idImport=$request->getParameter("id");
+	  $currentDir=getcwd();
+
+      chdir(sfconfig::get('sf_root_dir')); 
+  
+       $cmd='darwin:import-synonyms --id='.$idImport;          
+      exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+      chdir($currentDir);	
+  
+	  $this->redirect('import/indexSynonymies');
+  }
+  
+    public function executeLoadproperties(sfWebRequest $request)
+  {
+    $idImport=$request->getParameter("id");
+	  $currentDir=getcwd();
+
+      chdir(sfconfig::get('sf_root_dir')); 
+  
+       $cmd='darwin:import-properties --id='.$idImport;          
+      exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+      chdir($currentDir);	
+  
+	  $this->redirect('import/indexProperties');
+  }
+  
+    public function executeLoadcodes(sfWebRequest $request)
+  {
+    $idImport=$request->getParameter("id");
+	  $currentDir=getcwd();
+
+      chdir(sfconfig::get('sf_root_dir')); 
+  
+       $cmd='darwin:import-codes --id='.$idImport;          
+      exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+      chdir($currentDir);	
+  
+	  $this->redirect('import/indexCodes');
+  }
+ 
+   public function executeLoadrelationships(sfWebRequest $request)
+  {
+    $idImport=$request->getParameter("id");
+	  $currentDir=getcwd();
+
+      chdir(sfconfig::get('sf_root_dir')); 
+  
+       $cmd='darwin:import-relationships --id='.$idImport;          
+      exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+      chdir($currentDir);	
+  
+	  $this->redirect('import/indexRelationships');
+  }
  
     public function executeIndexLinks(sfWebRequest $request)
   {
@@ -927,6 +1230,303 @@ EOF
       chdir($currentDir);	 
 	  $this->redirect('import/indexLinks');
   }
+  
+  public function executeChecksynonyms(sfWebRequest $request)
+  {
+		
+		
+		if($this->getUser()->getTaxonomicManager())
+		{
+			$import_ref=$request->getParameter("id");
+			$conn = Doctrine_Manager::connection();
+            $this->setImportAsWorking($conn, array($request->getParameter('id')), true);
+            $currentDir=getcwd();
+            chdir(sfconfig::get('sf_root_dir'));
+			$cmd='darwin:check-import-synonymy --id='.$import_ref;    
+			print( 'nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );                        
+            exec('nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );
+                       
+                        
+            chdir($currentDir);                   
+			
+			
+		}
+		$this->redirect('import/indexSynonymies');
+		//
+  }
+  
+    public function executeCheckproperties(sfWebRequest $request)
+  {
+		
+		
+		if($this->getUser()->isAtLeast(Users::ENCODER))
+		{
+			$import_ref=$request->getParameter("id");
+			$conn = Doctrine_Manager::connection();
+            $this->setImportAsWorking($conn, array($request->getParameter('id')), true);
+            $currentDir=getcwd();
+            chdir(sfconfig::get('sf_root_dir'));
+			$cmd='darwin:check-import-properties --id='.$import_ref;    
+			print( 'nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );                        
+            exec('nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );
+                       
+                        
+            chdir($currentDir);                   
+			
+			
+		}
+		$this->redirect('import/indexProperties');
+		//
+  }
+  
+      public function executeCheckcodes(sfWebRequest $request)
+  {
+		
+		
+		if($this->getUser()->isAtLeast(Users::ENCODER))
+		{
+			$import_ref=$request->getParameter("id");
+			$conn = Doctrine_Manager::connection();
+            $this->setImportAsWorking($conn, array($request->getParameter('id')), true);
+            $currentDir=getcwd();
+            chdir(sfconfig::get('sf_root_dir'));
+			$cmd='darwin:check-import-codes --id='.$import_ref;    
+			print( 'nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );                        
+            exec('nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );
+                       
+                        
+            chdir($currentDir);                   
+			
+			
+		}
+		$this->redirect('import/indexCodes');
+		//
+  }
+  
+      public function executeCheckrelationships(sfWebRequest $request)
+  {
+		
+		
+		if($this->getUser()->isAtLeast(Users::ENCODER))
+		{
+			$import_ref=$request->getParameter("id");
+			$conn = Doctrine_Manager::connection();
+            $this->setImportAsWorking($conn, array($request->getParameter('id')), true);
+            $currentDir=getcwd();
+            chdir(sfconfig::get('sf_root_dir'));
+			$cmd='darwin:check-import-relationships --id='.$import_ref;    
+			print( 'nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );                        
+            exec('nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );
+                       
+                        
+            chdir($currentDir);                   
+			
+			
+		}
+		$this->redirect('import/indexRelationships');
+		//
+  }
+  
+  public function executeUpdateStagingSyn(sfWebRequest $request)
+  {
+	  $result=array();
+	  if($this->getUser()->getTaxonomicManager())
+	  {
+		  $syn_row=(string)$request->getParameter("current_row_id");
+		  $syn_type=(string)$request->getParameter("current_type_name");
+		  $name_id=(string)$request->getParameter("name_id");
+		  $name_str=(string)$request->getParameter("name");
+		  $result=["syn_row"=>$syn_row, "syn_type"=>$syn_type, "name_id"=>$name_id];
+		  $stagingObj=Doctrine_Core::getTable("StagingSynonymies")->find($syn_row);
+		  
+		  //print_r( $stagingObj);
+		  $stagingObj->save();
+		  if($syn_type=="valid")
+		  {
+			 $stagingObj->setValidNameRef($name_id);
+			 $stagingObj->setValidName($name_str);
+		  }
+		  elseif($syn_type=="synonym")
+		  {
+			  $stagingObj->setSynRef($name_id);
+			  $stagingObj->setSynName($name_str);
+		  }
+		   $stagingObj->save();
+		   $result["status"]="done";
+	  }
+	  $this->getResponse()->setHttpHeader('Content-type','application/json');
+	  return $this->renderText(json_encode($result));
+	  
+  }
+  
+    public function executeUpdateStagingProp(sfWebRequest $request)
+  {
+	  $result=array();
+	  if($this->getUser()->getTaxonomicManager())
+	  {
+		  $stag_id=(string)$request->getParameter("stag_id");
+		  $spec_id=(string)$request->getParameter("spec_id");
+		 
+		 
+		  $result=["stag_id"=>$stag_id, "spec_id"=>$spec_id];
+		  $stagingObj=Doctrine_Core::getTable("StagingProperties")->find($stag_id);
+		  
+		  //print_r( $stagingObj);
+		  $stagingObj->save();
+		  $stagingObj->setSpecimenRef($spec_id);
+		   $stagingObj->save();
+		   $result["status"]="done";
+	  }
+	  $this->getResponse()->setHttpHeader('Content-type','application/json');
+	  return $this->renderText(json_encode($result));
+	  
+  }
+  
+  public function executeUpdateStagingCodes(sfWebRequest $request)
+  {
+	  $result=array();
+	  if($this->getUser()->getTaxonomicManager())
+	  {
+		  $stag_id=(string)$request->getParameter("stag_id");
+		  $spec_id=(string)$request->getParameter("spec_id");
+		 
+		 
+		  $result=["stag_id"=>$stag_id, "spec_id"=>$spec_id];
+		  $stagingObj=Doctrine_Core::getTable("StagingCodes")->find($stag_id);
+		  
+		  //print_r( $stagingObj);
+		  $stagingObj->save();
+		  $stagingObj->setSpecimenRef($spec_id);
+		   $stagingObj->save();
+		   $result["status"]="done";
+	  }
+	  $this->getResponse()->setHttpHeader('Content-type','application/json');
+	  return $this->renderText(json_encode($result));
+	  
+  }
+  
+  public function executeUpdateStagingRelationship(sfWebRequest $request)
+  {
+	  $result=array();
+	  if($this->getUser()->getTaxonomicManager())
+	  {
+		  $stag_id=(string)$request->getParameter("stag_id");
+		  $spec_id=(string)$request->getParameter("spec_id");
+		  $field_id=(string)$request->getParameter("field_id");
+		 
+		 
+		  $result=["stag_id"=>$stag_id, "spec_id"=>$spec_id, "field_id"=>$spec_id];
+		  $stagingObj=Doctrine_Core::getTable("StagingUpdateSpecimenRelationship")->find($stag_id);
+		  
+		  //print_r( $stagingObj);
+		  $stagingObj->save();
+		  if(strtolower( $field_id)=="main")
+		  {
+			 $stagingObj->setSpecimenRef($spec_id);
+		  }
+		  elseif(strtolower( $field_id)=="related")
+		  {
+			$stagingObj->setSpecimenRelatedRef($spec_id);
+		  }
+		  
+		   $stagingObj->save();
+		   //$result["status"]="done";
+	  }
+	  $this->getResponse()->setHttpHeader('Content-type','application/json');
+	  return $this->renderText(json_encode($result));
+	  
+  }
+  
+  
+  public function executeImportsynonyms(sfWebRequest $request)
+  {
+	if($this->getUser()->getTaxonomicManager())
+		{
+			$import_ref=$request->getParameter("id");
+			$conn = Doctrine_Manager::connection();
+            $this->setImportAsWorking($conn, array($request->getParameter('id')), true);
+            $currentDir=getcwd();
+            chdir(sfconfig::get('sf_root_dir'));
+			$cmd='darwin:do-import-synonymy --id='.$import_ref;    
+			print( 'nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );                        
+            exec('nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );
+                       
+                        
+            chdir($currentDir);                   
+			
+			
+		}
+		$this->redirect('import/indexSynonymies');
+  }
+  
+   public function executeImportproperties(sfWebRequest $request)
+  {
+	if($this->getUser()->getTaxonomicManager())
+		{
+			$import_ref=$request->getParameter("id");
+			$conn = Doctrine_Manager::connection();
+            $this->setImportAsWorking($conn, array($request->getParameter('id')), true);
+            $currentDir=getcwd();
+            chdir(sfconfig::get('sf_root_dir'));
+			$cmd='darwin:do-import-properties --id='.$import_ref;    
+			print( 'nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );                        
+            exec('nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );
+                       
+                        
+            chdir($currentDir);                   
+			
+			
+		}
+		$this->redirect('import/indexProperties');
+		
+  }
+  
+     public function executeImportcodes(sfWebRequest $request)
+  {
+	if($this->getUser()->getTaxonomicManager())
+		{
+			$import_ref=$request->getParameter("id");
+			$conn = Doctrine_Manager::connection();
+            $this->setImportAsWorking($conn, array($request->getParameter('id')), true);
+            $currentDir=getcwd();
+            chdir(sfconfig::get('sf_root_dir'));
+			$cmd='darwin:do-import-codes --id='.$import_ref;    
+			print( 'nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );                        
+            exec('nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );
+                       
+                        
+            chdir($currentDir);                   
+			
+			
+		}
+		$this->redirect('import/indexCodes');
+		
+  }
+  
+   public function executeImportrelationships(sfWebRequest $request)
+  {
+	if($this->getUser()->getTaxonomicManager())
+		{
+			$import_ref=$request->getParameter("id");
+			$conn = Doctrine_Manager::connection();
+            $this->setImportAsWorking($conn, array($request->getParameter('id')), true);
+            $currentDir=getcwd();
+            chdir(sfconfig::get('sf_root_dir'));
+			$cmd='darwin:do-import-relationships --id='.$import_ref;    
+			print( 'nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );                        
+            exec('nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );
+                       
+                        
+            chdir($currentDir);                   
+			
+			
+		}
+		$this->redirect('import/indexRelationships');
+		
+		
+  }
+  
+  
   
 
   

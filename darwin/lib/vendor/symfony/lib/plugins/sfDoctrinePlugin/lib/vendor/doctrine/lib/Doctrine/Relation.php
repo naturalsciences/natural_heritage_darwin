@@ -169,12 +169,13 @@ abstract class Doctrine_Relation implements ArrayAccess
         return $this->definition['equal'];
     }
 
-    public function offsetExists($offset)
+    //ftheeten PHP8 added return type
+    public function offsetExists($offset):bool
     {
         return isset($this->definition[$offset]);
     }
-
-    public function offsetGet($offset)
+	//ftheeten PHP8 added return type
+    public function offsetGet($offset):mixed
     {
         if (isset($this->definition[$offset])) {
             return $this->definition[$offset];
@@ -182,15 +183,15 @@ abstract class Doctrine_Relation implements ArrayAccess
         
         return null;
     }
-
-    public function offsetSet($offset, $value)
+	//ftheeten PHP8 added return type
+    public function offsetSet($offset, $value):void
     {
         if (isset($this->definition[$offset])) {
             $this->definition[$offset] = $value;
         }
     }
-
-    public function offsetUnset($offset)
+	//ftheeten PHP8 added return type
+    public function offsetUnset($offset):void
     {
         $this->definition[$offset] = false;
     }

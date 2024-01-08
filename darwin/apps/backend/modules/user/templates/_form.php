@@ -91,6 +91,29 @@
           <?php echo $form['selected_lang'] ?>
         </td>
       </tr>
+	  <tr>
+      <th><?php echo $form['default_widget_collection_ref']->renderLabel("Default widget collection") ?></th>
+        <td>
+          <?php echo $form['default_widget_collection_ref']->renderError() ?>
+          <?php echo $form['default_widget_collection_ref'] ?>
+        </td>
+      </tr>
+	  <?php if($source=="edit"||$sf_user->isAtLeast(Users::ADMIN)):?>
+	  <tr>
+        <th><?php echo $form['db_user_type']->renderLabel() ?></th>
+        <td>
+          <?php echo $form['db_user_type']->renderError() ?>
+          <?php echo $form['db_user_type'] ?>
+        </td>
+      </tr>
+	  <tr>
+        <th><?php echo $form['taxonomic_manager']->renderLabel() ?></th>
+        <td>
+          <?php echo $form['taxonomic_manager']->renderError() ?>
+          <?php echo $form['taxonomic_manager'] ?>
+        </td>
+      </tr>
+	  <?php endif;?>
       <?php if(!$form->getObject()->isNew()) : ?>
         <tr>
           <td colspan="2"><hr /></td>

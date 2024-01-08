@@ -1,10 +1,9 @@
 all:
   .general:
-    upload_dir:
     salt: salt
     root_url_darwin: https://darwin.naturalsciences.be
     yearRangeMin: 1700
-    yearRangeMax:  2038
+    yearRangeMax:  2038 
     dateUpperBound: '2038/12/31'
     dateLowerBound: '0001/01/01'
     yearUpperBound: '2038'
@@ -28,9 +27,9 @@ all:
            rbins_osm: "Open Street Map"	
            rbins_generic: "RBINS Other layers"
     bing_key: "Ap3eFRefFd94_D4cqsicw-Fk1-d4kRat9pstTO4oo_i9anyUqrfQcqL9Ew9CJahg"
-    iiif_viewer: "https://darwinweb.africamuseum.be/mirador/index.php?manifest="
+    iiif_viewer: "https://virtual-collections.naturalsciences.be/mirador/index.php?manifest="
     gbif_url: "https://www.gbif.org/species/search?q="
-
+	
   mailer:
     sender: your_send_email@example.com
 

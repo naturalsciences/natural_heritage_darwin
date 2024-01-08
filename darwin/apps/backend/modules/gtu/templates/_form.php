@@ -60,18 +60,19 @@ $(document).ready(function ()
         </td>
       </tr>
 	  <?php endif; ?>
-	  <?php if(count($date_array)>0):?>
-		   <?php foreach($date_array as $date_elem):?>
-		  <tr>
-			<th><?php echo __("Date").":"; ?></th>
-			<td>
-			  <?php $from_date=$date_elem["from_date"]; $to_date=$date_elem["to_date"]; ?>
-			  <?php print(html_entity_decode($from_date."-". $to_date)); ?>
-			</td>
-		  </tr>
-		  <?php endforeach;?>		  
-	 <?php endif; ?>
-	
+	  <?php if(is_array($date_array)||is_countable($date_array)): ?>
+		  <?php if(count($date_array)>0):?>
+			   <?php foreach($date_array as $date_elem):?>
+			  <tr>
+				<th><?php echo __("Date").":"; ?></th>
+				<td>
+				  <?php $from_date=$date_elem["from_date"]; $to_date=$date_elem["to_date"]; ?>
+				  <?php print(html_entity_decode($from_date."-". $to_date)); ?>
+				</td>
+			  </tr>
+			  <?php endforeach;?>		  
+		 <?php endif; ?>
+	<?php endif; ?>
     </tbody>
 </table>
 <!--JMHerpers 2019 05 29-->

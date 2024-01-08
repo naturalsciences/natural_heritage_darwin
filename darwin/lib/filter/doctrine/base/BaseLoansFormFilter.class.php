@@ -32,6 +32,39 @@ abstract class BaseLoansFormFilter extends DarwinModelFormFilter
     $this->widgetSchema   ['extended_to_date'] = new sfWidgetFormFilterInput();
     $this->validatorSchema['extended_to_date'] = new sfValidatorPass(array('required' => false));
 
+    $this->widgetSchema   ['collection_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Collections'), 'add_empty' => true));
+    $this->validatorSchema['collection_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Collections'), 'column' => 'id'));
+
+    $this->widgetSchema   ['address_receiver'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['address_receiver'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['institution_receiver'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['institution_receiver'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['country_receiver'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['country_receiver'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['city_receiver'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['city_receiver'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['zip_receiver'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['zip_receiver'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['collection_manager'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['collection_manager'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['collection_manager_title'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['collection_manager_title'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['collection_manager_mail'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['collection_manager_mail'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['non_cites'] = new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no')));
+    $this->validatorSchema['non_cites'] = new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0)));
+
+    $this->widgetSchema   ['collection_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Collections'), 'add_empty' => true));
+    $this->validatorSchema['collection_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Collections'), 'column' => 'id'));
+
     $this->widgetSchema->setNameFormat('loans_filters[%s]');
   }
 
@@ -49,6 +82,17 @@ abstract class BaseLoansFormFilter extends DarwinModelFormFilter
       'from_date' => 'Text',
       'to_date' => 'Text',
       'extended_to_date' => 'Text',
+      'collection_ref' => 'ForeignKey',
+      'address_receiver' => 'Text',
+      'institution_receiver' => 'Text',
+      'country_receiver' => 'Text',
+      'city_receiver' => 'Text',
+      'zip_receiver' => 'Text',
+      'collection_manager' => 'Text',
+      'collection_manager_title' => 'Text',
+      'collection_manager_mail' => 'Text',
+      'non_cites' => 'Boolean',
+      'collection_ref' => 'ForeignKey',
     ));
   }
 }

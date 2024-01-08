@@ -2,9 +2,17 @@
 <?php slot('title', __('Edit I.G. number'));  ?>
 <div class="page">
     <h1 class="edit_mode"><?php echo __('Edit I.G.');?></h1>
+	
     <?php if(count($no_right_col) > 0 && !$sf_user->isA(Users::ADMIN) ):?>
       <?php include_partial('catalogue/warnedit', array('no_right_col' => $no_right_col)); ?>
     <?php endif;?>
+	<div style="margin-bottom:5px;">
+		<div style="margin-bottom:5px;float: left;"><b>View: </b><?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))), 'igs/view?id='.$form->getObject()->getId()); ?></div>
+		<div style="margin-bottom:5px; margin-left:75px;">
+			<a target='_blank' href="<?php print(url_for('specimensearch/search')."?specimen_search_filters[ig_num]=".$form->getObject()->getIgNum().( isset($is_choose) ? '&is_choose='.$is_choose : ''));?>"><?php print(__("Search specimens"));?></a>
+		</div>
+	</div>
+	
     <?php include_partial('form', array('form' => $form)) ?>
     <?php include_partial('widgets/float_button', array('form' => $form,
                                                         'module' => 'igs',

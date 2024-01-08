@@ -6,7 +6,8 @@ Options +FollowSymLinks +ExecCGI
   # uncomment the following line, if you are having trouble
   # getting no_script_name to work
   RewriteBase /darwin
-
+  #RewriteBase /
+  
   # we skip all files with .something
   RewriteCond %{REQUEST_URI} \..+$
   RewriteCond %{REQUEST_URI} !\.html$
@@ -18,5 +19,9 @@ Options +FollowSymLinks +ExecCGI
   RewriteCond %{REQUEST_FILENAME} !-f
 
   # no, so we redirect to our front web controller
-  RewriteRule ^(.*)$ public.php [QSA,L]
+ RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(.*)$ https://darwin.naturalsciences.be/dw_public/form/ [QSA,L]
+  #RewriteRule ^(.*)$ public.php [QSA,L]
+  
 </IfModule>

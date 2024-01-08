@@ -19,6 +19,17 @@ class LoansFormFilter extends BaseLoansFormFilter
     $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
     $dateUpperBound = new FuzzyDateTime(sfConfig::get('dw_dateUpperBound'));
 
+    //ftheeten 2016 11 23
+     $this->widgetSchema['collection_ref'] = new widgetFormCompleteButtonRef(array(
+      'model' => 'Collections',
+      'link_url' => 'collection/choose',
+      'method' => 'getName',
+      'box_title' => $this->getI18N()->__('Choose Collection'),
+      'button_class'=>'',
+      'complete_url' => 'catalogue/completeName?table=collections',
+    ));   
+    $this->validatorSchema['collection_ref'] = new sfValidatorPass();
+    
     $this->widgetSchema['status'] = new sfWidgetFormChoice(array(
         'choices' => Doctrine_Core::getTable('LoanStatus')->getDistinctStatus()
     ));
@@ -95,13 +106,6 @@ class LoansFormFilter extends BaseLoansFormFilter
       'only_darwin' => 'Contains Darwin items',
       'people_ref' => 'Person involved',
     ));
-
-    $this->widgetSchema['table'] = new sfWidgetFormInputHidden();
-    $this->widgetSchema['level'] = new sfWidgetFormInputHidden();
-    $this->widgetSchema['caller_id'] = new sfWidgetFormInputHidden();
-    $this->validatorSchema['table'] = new sfValidatorString(array('required' => false));
-    $this->validatorSchema['level'] = new sfValidatorString(array('required' => false));
-    $this->validatorSchema['caller_id'] = new sfValidatorString(array('required' => false));
   }
 
 
@@ -155,15 +159,41 @@ class LoansFormFilter extends BaseLoansFormFilter
     $alias = $query->getRootAlias() ;
     $query->andWhere("EXISTS (select lr.id from LoanRights lr where $alias.id = lr.loan_ref and user_ref = ?)", $user->getId());
   }
+  
+  //ftheeten 2016 11 13
+  
+ /* public function addCollectionRefColumnQuery($query, $field, $val)
+  {
+    if($val != '') {
+      $alias = $query->getRootAlias() ;
+      $query->andWhere("$alias.collection_ref = ?", $val);
+    }
+    return $query;
+  }
+  */
+    public function addNameColumnsQuery($query, $field, $val)
+  {
+    if($val != '') {
+          $alias = $query->getRootAlias() ;
+          $query->andWhere("$alias.search_indexed LIKE fulltoindex(?)||'%'", $val);
+    }
+    return $query;
+  }
+  
+
 
   public function doBuildQuery(array $values)
   {
     $query = parent::doBuildQuery($values);
     $fields = array('from_date', 'to_date');
-    $this->addNamingColumnQuery($query, 'loans', 'search_indexed', $values['name']);
+    //$this->addCollectionRefColumnQuery($query, 'collection_ref', $values['collection_ref']);
+    $this->addNameColumnsQuery($query, 'search_indexed', $values['name']);
     $this->addExactDateFromToColumnQuery($query, $fields, $values['from_date'], $values['to_date']);
     $this->filterByRight($query, $this->options['user']);
     return $query;
   }
+  
+ 
+
 
 }

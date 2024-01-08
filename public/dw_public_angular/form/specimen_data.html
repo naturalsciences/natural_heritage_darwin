@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+
+<html id="darwin-app" ng-controller='darwin-controller-data'>
+
+<head >
+    <meta name="MobileOptimized" content="width">
+	<meta name="HandheldFriendly" content="true">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+	<meta name="google-site-verification" content="googlea676d101458b4793.html" />
+    <meta charset="UTF-8">
+
+	<link rel="stylesheet" href="./css/common/bootstrap.min.css">
+	<link rel="stylesheet" href="./css/common/darwin.css">
+	<link rel="stylesheet" href="./js/code/common/openlayers/v6.5.0-dist/ol.css">
+	<link rel="stylesheet" href="./js/code/common/select.min.css">
+	<link rel="stylesheet" href="css/normalize.css">
+	<link rel="stylesheet" href="css/fonts.css">
+	<link rel="stylesheet" href="css/darwinweb.css">
+	<link rel="stylesheet" href="css/ol_darwinweb.css">		
+
+	<script type="text/javascript" src="./js/libs/jquery/jquery.js"></script>
+
+	<script type="text/javascript" src="./js/libs/angular-1.3.9/angular.js?v=1.3.4"></script>
+	<script type="text/javascript" src="./js/libs/angular-1.3.9/angular-cookies.js?v=1.3.9"></script>
+	<script type="text/javascript" src="./js/libs/angular-1.3.9/angular-loader.js?v=1.3.9"></script>
+
+	<script type="text/javascript" src="./js/libs/angular-1.3.9/angular-resource.js?v=1.3.9"></script>
+	<script type="text/javascript" src="./js/libs/angular-1.3.9/angular-route.js?v=1.3.9"></script>
+	<script type="text/javascript" src="./js/libs/angular-1.3.9/angular-sanitize.js?v=1.3.9"></script>
+
+	<script type="text/javascript" src="./js/code/common/classList.js"></script>
+	<script type="text/javascript" src="./js/libs/angular-1.3.9/angular-mocks.js"></script>
+	<script type="text/javascript" src="./js/code/common/underscore-min.js"></script>
+	<script type="text/javascript" src="./js/code/common/ui-bootstrap-tpls-0.14.3.min.js"></script>
+	<script type="text/javascript" src="./js/code/common/angular-translate.min.js"></script>
+	<script type="text/javascript" src="./js/code/common/moment.js"></script>
+	<script type="text/javascript" src="./js/code/common/angular-moment.js"></script>
+	<script type="text/javascript" src="./js/code/common/select.min.js"></script>
+
+	<script type="text/javascript" src="./js/code/common/messages.js"></script>
+	<script type="text/javascript" src="./js/code/filters/filter.js"></script>
+	<script type="text/javascript" src="./js/code/services/app_no_frame.js"></script>
+	<script type="text/javascript" src="./js/code/services/app_content.js"></script>
+	<script type="text/javascript" src="./js/code/controllers/darwinControllerData.js"></script>
+	<script type="text/javascript" src="./js/code/controllers/darwinControllerDetail.js"></script>
+	<script type="text/javascript" src="./js/code/common/clickoutside.directive.js"></script>
+	<script type="text/javascript" src="./js/code/common/spin.min.js"></script>
+	<script type="text/javascript" src="./js/code/common/angular-spinner.min.js"></script>
+	<script type="text/javascript" src="./js/code/common/angular-loading-spinner.js"></script>
+	<script type="text/javascript" src="./js/code/common/tmhDynamicLocale.min.js"></script>
+	<script type="text/javascript" src="./js/code/common/openlayers/v6.5.0-dist/ol.js"></script>
+	<!--changed for intermediate page-->
+	<base href="/dw_public/form/">	
+</head>
+
+<body>
+
+<!---------------------------    HEADER   --------------------------->
+
+<header id="site-header">
+
+	<div class="maxwidthwrapper clearfix">
+	
+		<!--<div class="header__logo">
+		
+			<a href="https://naturalsciences.be" target="_self"  class="site-logo">
+				<img src="/dw_public/form/images/logo_irsnb.png" alt="Home" />
+			</a>
+		
+		</div>-->
+		
+		<div class="header__secondary">
+		
+			<div id="block-languageswitcher">
+				 <ul>
+					<li><a ng-click="ctrl.setLanguage('nl')" class="language-link">NL</a></li>
+					<li><a ng-click="ctrl.setLanguage('fr')" class="language-link">FR</a></li>
+					<li><a ng-click="ctrl.setLanguage('en')" class="language-link">EN</a></li>
+				</ul>
+			</div>
+			
+		</div>
+	
+	</div>
+	
+</header>
+
+<!---------------------------    END HEADER    --------------------------->
+
+<!---------------------------    SUBMENU    --------------------------->
+
+<div class="submenu">
+
+	<div class="maxwidthwrapper clearfix">
+		<ul>
+			<li>
+				<a href="specimen_result.html" target="_self">{{'SEARCH' | translate}}</a>
+			</li>
+			<li>
+				<a href="https://darwin.naturalsciences.be/backend.php" target="_blank" >{{ 'ADVANCED_BACKEND_INTERFACE' | translate }}</a>
+			</li>
+		</ul>
+	</div>
+
+</div>
+
+<!---------------------------    END SUBMENU    --------------------------->
+
+<!--<form action="./specimen_data.html"  method="get">-->
+
+<!--id needed to bind to AngularJS-->
+
+<div class="page-specimen-data">
+
+	<div ng-init="ctrl.sort_direction='ascending'">	
+	
+	<!--SPINNER-->
+		<span us-spinner style="position:fixed; top:50%; left:50%;  z-index: 10;"></span>
+
+	
+	<!--DIV_MAP-->	 
+	   
+			<div  id="map" class="map" style="height:500px; display:none;"></div>
+			<div id="mouse-position"></div>
+			<div id="popup" class="ol-popup">
+				<a href="#" id="popup-closer" class="ol-popup-closer"></a>
+				<div id="popup-content"></div>
+			</div>
+			<!--do not remove used by map (results)-->
+			<input type="hidden" name="localJSON" id="localJSON" ng-model="geoJSON" ></input>
+		
+	
+			
+		<!--BEGIN_RESULT-->
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<div id="div_result" style="text-align: center" >
+						<span style="font-size: 1.4em; font-weight: bold">{{pager.totalItems}} {{'SPECIMEN_FOUND' | translate}}</span>
+						<br />
+						{{'Page' | translate}}  {{pager.currentPage}}  / {{displayNbPages()}}
+						<br />
+						({{'R25_SPECIMENS_IN_PAGE' | translate}} )
+						<br/>
+						{{ getGeoRefInPage() }}  {{'GEOREFERENCED_IN_PAGE' | translate}} 
+						<br/>
+						{{ getGeoRefInDataset() }}  {{'GEOREFERENCED_IN_DATASET' | translate}} 
+						<div ng-if="pager.totalItems>pager.pageSize">       
+							<!-- pager -->
+							<ul ng-if="pager.pages.length" class="pagination">
+								<li ng-class="{disabled:pager.currentPage === 1}">
+									<a ng-click="getPage(1)">{{'FIRST' | translate}}</a>
+								</li>
+								<li ng-class="{disabled:pager.currentPage === 1}">
+									<a ng-click="getPage(pager.currentPage - 1)">{{'PREVIOUS' | translate}}</a>
+								</li>
+								<li ng-repeat="page in pager.pages" ng-class="{active:pager.currentPage === page}">
+									<a ng-click="getPage(page)">{{page}}</a>
+								</li>                
+								<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+									<a ng-click="getPage(pager.currentPage + 1)">{{'NEXT' | translate}}</a>
+								</li>
+								<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+									<a ng-click="getPage(pager.totalPages)">{{'LAST' | translate}}</a>
+								</li>
+							</ul>
+						</div>
+								
+						<div>
+							<ul ng-if="pager.totalItems>20" class="pagination" style="margin-top: 5px">
+								<li ng-if="displayNbPages()>1000 && pager.currentPage >1000" ng-class="{disabled:pager.currentPage < 1000}">
+									<a ng-click="getPage(pager.currentPage - 1000)">- 1000</a>
+								</li>
+								<li ng-if="displayNbPages()>100  && pager.currentPage >100" ng-class="{disabled:pager.currentPage < 100}">
+									<a ng-click="getPage(pager.currentPage - 100)">- 100</a>
+								</li>
+								<li ng-if="displayNbPages()>10 && pager.currentPage >10" ng-class="{disabled:pager.currentPage < 10}">
+									<a ng-click="getPage(pager.currentPage - 10)">- 10</a>
+								</li>
+								<li ng-if="displayNbPages()>10 && (displayNbPages() - pager.currentPage) >10 " ng-class="{disabled:(displayNbPages() - pager.currentPage) < 10}">
+									<a ng-click="getPage(pager.currentPage + 10)">+ 10</a>
+								</li>              
+								<li ng-if="displayNbPages()>100 && (displayNbPages()- pager.currentPage) > 100" ng-class="{disabled:(displayNbPages() - pager.currentPage) < 100}">
+									<a ng-click="getPage(pager.currentPage + 100)">+ 100</a>
+								</li>              
+								<li ng-if="displayNbPages()>1000 && (displayNbPages() - pager.currentPage) > 1000" ng-class="{disabled:(displayNbPages() - pager.currentPage) < 1000}">
+									<a ng-click="getPage(pager.currentPage + 1000)">+ 1000</a>
+								</li>					
+							</ul>
+						</div>
+								
+					</div>
+
+					<br/>
+					
+					<span style="margin-right: 20px">
+					{{'SORT_RESULT' | translate}}
+					<select  name="sort_results" id="sort_results" class="sort_results" ng-model="ctrl.current_sort_order"  ng-options="key for (key,value) in ctrl.sort_criteria" ng-change="changeSortOrder()"></select>
+					</span>
+					<label>
+					<input type="radio" ng-model="ctrl.sort_direction" value="ascending" ng-change="getPage(1)">
+						<span style="font-weight: normal">{{'ASCENDING' | translate}}</span>
+					</label>
+					
+					<label>
+					<input type="radio" ng-model="ctrl.sort_direction" value="descending" ng-change="getPage(1)">
+						<span style="font-weight: normal">{{'DESCENDING' | translate}}</span>
+					</label>
+	
+	
+					</br/>
+					<div  ng-if="items.length||0 > 0" class="row row_header">
+						<div class="col-md-2">{{'SPECIMEN_NUMBER' | translate}}</div>
+						<div class="col-md-2" >{{'TAXON_NAME' | translate}}</div>
+						<!-- <div class="col-md-1">{{'COLLECTING_DATE_FROM' | translate}}</div> -->
+						<div class="col-md-1">{{'TYPES' | translate}}</div>
+						<div class="col-md-1">{{'COUNTRY' | translate}}</div>
+						<div class="col-md-2" >{{'LOCALITY' | translate}}</div>
+						<!-- <div class="col-md-1">{{'SEX' | translate}}</div> -->
+						<div class="col-md-3">{{'SPECIMEN_COUNT' | translate}}</div>
+					</div>
+					<div  ng-repeat="obj in items" class="row row_result" name="row_{{obj.id}}" id="row_{{obj.id}}">
+						<div name="code_{{obj.id}}" class="row_code col-md-2" id="code_{{obj.id}}"><a target="_self" ng-href="{{pages_specimen[obj.id]}}">{{ obj.code_display }}</a></div>
+						<div class="col-md-2" name="taxon_{{obj.id}}" id="taxon_{{obj.id}}">{{obj.taxon_name}}</div>
+						<!-- <div class="col-md-1">{{obj.date_from_display}}</div> -->                   
+						<div class="col-md-1">{{obj.coll_type}}</div>
+						<div class="col-md-1">{{obj.gtu_country_tag_value}}</div>
+						<div class="col-md-2">{{obj.gtu_others_tag_value}}</div>
+						<!-- <div class="col-md-1">{{obj.sex}}</div> -->
+						<div class="col-md-3">{{obj.specimen_count_min}}</div>
+					</div>
+				   
+					<!--<ul>
+							<li  ng-repeat="obj in items">
+								{{obj.code_display}}  {{obj.taxon_name}} {{obj.gtu_country_tag_value}} {{obj.gtu_others_tag_value}} {{obj.coll_type}} {{obj.latitude}} {{obj.longitude}}
+							</li>        
+					</ul>-->
+					
+					<div id="div_result" style="text-align: center" >
+					
+						<div ng-if="pager.totalItems>pager.pageSize">       
+							<!-- pager -->
+							<ul ng-if="pager.pages.length" class="pagination">
+								<li ng-class="{disabled:pager.currentPage === 1}">
+									<a ng-click="getPage(1)">{{'FIRST' | translate}}</a>
+								</li>
+								<li ng-class="{disabled:pager.currentPage === 1}">
+									<a ng-click="getPage(pager.currentPage - 1)">{{'PREVIOUS' | translate}}</a>
+								</li>
+								<li ng-repeat="page in pager.pages" ng-class="{active:pager.currentPage === page}">
+									<a ng-click="getPage(page)">{{page}}</a>
+								</li>                
+								<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+									<a ng-click="getPage(pager.currentPage + 1)">{{'NEXT' | translate}}</a>
+								</li>
+								<li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+									<a ng-click="getPage(pager.totalPages)">{{'LAST' | translate}}</a>
+								</li>
+							</ul>
+						</div>
+								
+						<div>
+							<ul ng-if="pager.totalItems>20" class="pagination" style="margin-top: 5px">
+								<li ng-if="displayNbPages()>1000 && pager.currentPage >1000" ng-class="{disabled:pager.currentPage < 1000}">
+									<a ng-click="getPage(pager.currentPage - 1000)">- 1000</a>
+								</li>
+								<li ng-if="displayNbPages()>100  && pager.currentPage >100" ng-class="{disabled:pager.currentPage < 100}">
+									<a ng-click="getPage(pager.currentPage - 100)">- 100</a>
+								</li>
+								<li ng-if="displayNbPages()>10 && pager.currentPage >10" ng-class="{disabled:pager.currentPage < 10}">
+									<a ng-click="getPage(pager.currentPage - 10)">- 10</a>
+								</li>
+								<li ng-if="displayNbPages()>10 && (displayNbPages() - pager.currentPage) >10 " ng-class="{disabled:(displayNbPages() - pager.currentPage) < 10}">
+									<a ng-click="getPage(pager.currentPage + 10)">+ 10</a>
+								</li>              
+								<li ng-if="displayNbPages()>100 && (displayNbPages()- pager.currentPage) > 100" ng-class="{disabled:(displayNbPages() - pager.currentPage) < 100}">
+									<a ng-click="getPage(pager.currentPage + 100)">+ 100</a>
+								</li>              
+								<li ng-if="displayNbPages()>1000 && (displayNbPages() - pager.currentPage) > 1000" ng-class="{disabled:(displayNbPages() - pager.currentPage) < 1000}">
+									<a ng-click="getPage(pager.currentPage + 1000)">+ 1000</a>
+								</li>					
+							</ul>
+						</div>
+								
+					</div>
+							
+				</div>
+						
+			</div>
+
+		</div>
+		<!--END_RESULT-->
+</div>
+
+<!---------------------------    FOOTER   --------------------------->
+
+<footer id="site-footer">
+
+	<div class="maxwidthwrapper clearfix">
+
+		<!--<div class="footer__sponsors clearfix">
+			
+				<ul>
+					<li>
+						<a href="https://www.naturalsciences.be" target="_blank" title="naturalsciences.be"><img alt="Royal Museum for Central Africa" src="/dw_public/form/images/logo_irsnb.png"></a>
+					</li>
+					<li>
+						<a href="http://www.belspo.be/" target="_blank" title="belspo.be"><img alt="Belspo" src="/dw_public/form/images/logo_belspo.png"></a>
+					</li>
+					<li>
+						<a href="https://diplomatie.belgium.be/en/policy/development_cooperation" target="_blank" title="diplomatie.belgium.be"><img alt="Development cooperation" src="/dw_public/form/images/logo_belgian_development_cooperation_en.png"></a>
+					</li>
+				</ul>
+				
+		</div>-->
+	
+		<div class="footer__bottom clearfix">
+				
+				<div class="footer__legal-notices">
+
+					<div style="font-size: 0.9em">
+						Copyright (c) - {{ 'RMCA' | translate }} - 2023
+					</div>
+					<div>
+						<a href="https://www.africamuseum.be/en/legal" target="_blank" style="font-weight: 800; border-bottom: none">{{ 'LEGAL_NOTICES' | translate }}</a>
+					</div>
+
+				</div>
+		</div>
+		
+	</div>
+
+</footer>
+
+<!---------------------------    END FOOTER    --------------------------->
+
+ <script type="text/javascript">
+		var clusters;
+		var overlay;
+        var map;
+        var container = document.getElementById('popup');
+        var content = document.getElementById('popup-content');
+        var closer = document.getElementById('popup-closer');
+		var layerLoaded=false;
+		var modeRemovePage=false;
+		var dw_items=0;
+		var overlay;
+		var map_init=false;
+		var map_first=false;
+		
+		var root_page_detail="https://darwin.naturalsciences.be/dw_public/form/specimen_detail.html?uuid=";
+		
+		var openSpecimen=function(uuid)
+		{
+		
+		    var tmp_scope=angular.element($('#localJSON')).scope();
+			var tmp_lang=tmp_scope.ctrl.language;
+			//console.log(tmp_lang);
+			var tmp_url=root_page_detail+uuid+"&lang="+tmp_lang;
+			//console.log(tmp_url);
+			window.open(tmp_url, '_blank').focus();
+		}
+		
+		      //main search function
+      var getFeaturesRow=function(geoJSON)
+      {
+			//console.log("geojson=");
+			//console.log(geoJSON);
+			dw_items=0;
+            if(layerLoaded===true&&modeRemovePage===true)
+            {
+                //console.log("remove");
+                map.removeLayer(clusters);
+            }
+           
+            
+            var tmpFeatures=(new ol.format.GeoJSON()).readFeatures($.parseJSON(geoJSON), {
+                dataProjection: 'EPSG:4326',
+                featureProjection: 'EPSG:3857'
+            });
+			//console.log("FEATURES:");
+			//console.log(tmpFeatures);
+			if(tmpFeatures.length>0)
+			{
+				//console.log("SHOW_MAP");
+				$("#map").show();
+				$(".ol-popup").show();
+				//$('#map_frame').css("height", "60%");
+				if(!map_init)
+				{
+					map_init=true;
+					if(! map_first)
+					{
+						initMap();
+						addMapOverlay();
+						map_first=true;
+					}
+					
+					map.on('click', function(evt) {
+					var coordinate = evt.coordinate;
+					var hdms = ol.coordinate.toStringHDMS(ol.proj.transform(
+					coordinate, 'EPSG:3857', 'EPSG:4326'));
+					var feature = map.forEachFeatureAtPixel(evt.pixel, 
+								  function(feature) { return feature; });
+					if (isCluster(feature)) 
+						{
+						//var popup = new ol.Overlay.Popup();
+						//map.addOverlay(popup);
+					 
+					   var html="";
+						// is a cluster, so loop through all the underlying features
+						var features = feature.get('features');
+						for(var i = 0; i < features.length; i++) {
+						  // here you'll have access to your normal attributes:
+						  ////console.log(features[i].get('name'));
+					   
+						  html+="<a onclick=\"openSpecimen('"+(features[i].get('uuid')||'')+"')\" '>"+(features[i].get('code_display')||'')+" "+(features[i].get('taxon')||'')+"</a>"+"<br/>";
+						  
+						}
+					   
+						 content.innerHTML = '<p>' + html +'</p>';
+						overlay.setPosition(coordinate);
+					} 
+					});
+					map.updateSize();
+					
+					     var vectorSource = new ol.source.Vector({features: tmpFeatures});
+   
+       
+      
+						var clusterSource = new ol.source.Cluster({
+						  distance: 40,
+						  source: vectorSource
+						});
+						
+					  var styleCache = {};
+					 var keysForClick=[];
+					  clusters = new ol.layer.Vector({
+						source: clusterSource,
+						style: function(feature) {
+						
+						$(feature.get('features')).each(
+									function(idx, item)
+									{
+										keysForClick[item.get('code_display')||'']=item.get('taxon')||'';
+										
+									 
+									}
+								);
+               
+					  var size = feature.get('features').length;
+					  var style = styleCache[size];
+					  if (!style) {
+						style = new ol.style.Style({
+						  image: new ol.style.Circle({
+							radius: 10,
+							stroke: new ol.style.Stroke({
+							  color: '#fff'
+							}),
+							fill: new ol.style.Fill({
+							  color: '#3399CC'
+							})
+						  }),
+						  text: new ol.style.Text({
+							text: size.toString(),
+							fill: new ol.style.Fill({
+							  color: '#fff'
+							})
+						  })
+						});
+						styleCache[size] = style;
+					  }
+					  return style;
+					},
+					keysForClick: keysForClick
+				  });
+
+
+      
+						map.addLayer(clusters);
+						//map.removeLayer(selectionBox);
+						layerLoaded=true;
+						
+						var extent = vectorSource.getExtent();
+						//alert(vectorSource.getExtent());
+						map.getView().fit(extent, map.getSize(),{maxZoom:10});
+					   if(map.getView().getZoom()>10)
+					   {
+						 map.getView().setZoom(10);
+					   }
+					   map.getView().setZoom(map.getView().getZoom()-1);
+					   
+					  //alert("end selection");
+				}
+				
+			}
+			else
+			{
+				//console.log("HIDE_MAP");
+				modeRemovePage=true;
+				map_init=false;
+				$("#map").hide();	
+				$(".ol-popup").hide();
+			}
+       
+         
+      };
+		
+		var view= new ol.View({
+            center: [-4,15],
+            zoom: 5
+        }); 
+		var mousePositionControl= new ol.control.MousePosition(
+            {
+                coordinateFormat: ol.coordinate.createStringXY(4),
+                projection:'EPSG:4326',
+                className: 'custom-mouse-position',
+                target: document.getElementById('mouse-position'),
+                undefinedHTML: '&nbsp;'
+                
+            }
+        );
+        
+ 		var osmLayer= new ol.layer.Tile(
+            {
+                preload: Infinity,
+                source: new ol.source.OSM()
+            }
+        );
+		
+	function isCluster(feature) 
+	{
+		  if (!feature || !feature.get('features')) { 
+				return false; 
+		  }
+		  return feature.get('features').length >= 1;
+    }
+  
+        
+		
+		function initMap()
+		{
+			map=new ol.Map({
+            layers:[osmLayer],
+            target: 'map',
+            view: view,
+            controls: ol.control.defaults({
+                attributionOptions: ({collapsible: false})
+            }).extend([mousePositionControl,  new ol.control.ScaleLine()]),
+            // interactions: [interaction]
+            // overlays: [overlay],
+			}); 
+			//$('#map').css("height", "480px");
+			map.updateSize();
+			
+		}
+		
+		function addMapOverlay()
+		{
+			 /**
+                   * Create an overlay to anchor the popup to the map.
+                   */
+                    overlay = new ol.Overlay(/** @type {olx.OverlayOptions} */ ({
+                    element: container,
+                    autoPan: true,
+                    autoPanAnimation: {
+                      duration: 250
+                    }
+                  }));
+                  
+                   /**
+                   * Add a click handler to hide the popup.
+                   * @return {boolean} Don't follow the href.
+                   */
+                  closer.onclick = function() {
+                    overlay.setPosition(undefined);
+                    closer.blur();
+                    return false;
+                  };
+                  
+                
+                  
+                  map.addOverlay(overlay);
+		}
+		
+		
+		 //detect angular provided data
+		 
+		  $(document).ready(      
+			function()
+			{
+			  /*var tmpListener=angular.element($('#detectLoad')).scope();
+				 tmpListener.$watch('pager.currentPage', function(newVal, oldVal){
+					
+				});*/
+			 var tmpListenerPageMap=angular.element($('#localJSON')).scope();
+			 //console.log(tmpListenerPageMap);
+				 tmpListenerPageMap.$watch('geoJSON', function(newVal, oldVal){
+					if(undefined !=newVal)
+					{   
+						if(newVal.length>0)
+						{
+							//console.log("MAP_REFRESH");
+							modeRemovePage=true;
+							map_init=false;
+							getFeaturesRow(newVal);
+							//forceMove();
+						}
+					}
+				});
+			
+			}
+		);
+ </script>
+</body>
+</html>

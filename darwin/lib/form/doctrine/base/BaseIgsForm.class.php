@@ -28,6 +28,15 @@ abstract class BaseIgsForm extends DarwinModelForm
     $this->widgetSchema   ['ig_date'] = new sfWidgetFormTextarea();
     $this->validatorSchema['ig_date'] = new sfValidatorString(array('required' => false));
 
+    $this->widgetSchema   ['nagoya_status'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['nagoya_status'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['ig_type'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['ig_type'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['complete'] = new sfWidgetFormInputCheckbox();
+    $this->validatorSchema['complete'] = new sfValidatorBoolean(array('required' => false));
+
     $this->widgetSchema->setNameFormat('igs[%s]');
   }
 

@@ -94,6 +94,15 @@ class expeditionActions extends DarwinActions
     $this->no_right_col = Doctrine_Core::getTable('Expeditions')->testNoRightsCollections('expedition_ref',$request->getParameter('id'), $this->getUser()->getId());
     $this->form = new ExpeditionsForm($expeditions);
     $this->loadWidgets();
+	//remove read-only widgets
+	
+		foreach($this->widgets as $key=>$tmp)
+		{
+			if($tmp->getGroupName()=="igs"||$tmp->getGroupName()=="collections")
+			{
+				unset($this->widgets[$key]);
+			}
+		}	
   }
 
   /**
@@ -114,6 +123,15 @@ class expeditionActions extends DarwinActions
     // Process the form for saving informations
     $this->processForm($request, $this->form);
     $this->loadWidgets();
+	//remove read-only widgets
+	
+		foreach($this->widgets as $key=>$tmp)
+		{
+			if($tmp->getGroupName()=="igs"||$tmp->getGroupName()=="collections")
+			{
+				unset($this->widgets[$key]);
+			}
+		}	
     // Set the template to edit
     $this->setTemplate('edit');
   }

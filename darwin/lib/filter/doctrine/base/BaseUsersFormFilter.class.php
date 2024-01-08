@@ -56,11 +56,20 @@ abstract class BaseUsersFormFilter extends DarwinModelFormFilter
     $this->widgetSchema   ['selected_lang'] = new sfWidgetFormFilterInput(array('with_empty' => false));
     $this->validatorSchema['selected_lang'] = new sfValidatorPass(array('required' => false));
 
+    $this->widgetSchema   ['default_widget_collection_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('DefaultWidgetCollection'), 'add_empty' => true));
+    $this->validatorSchema['default_widget_collection_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('DefaultWidgetCollection'), 'column' => 'id'));
+
+    $this->widgetSchema   ['taxonomic_manager'] = new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no')));
+    $this->validatorSchema['taxonomic_manager'] = new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0)));
+
     $this->widgetSchema   ['people_id'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('People'), 'add_empty' => true));
     $this->validatorSchema['people_id'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('People'), 'column' => 'id'));
 
     $this->widgetSchema   ['id'] = new sfWidgetFormFilterInput();
     $this->validatorSchema['id'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => 'Users', 'column' => 'id'));
+
+    $this->widgetSchema   ['default_widget_collection_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('DefaultWidgetCollection'), 'add_empty' => true));
+    $this->validatorSchema['default_widget_collection_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('DefaultWidgetCollection'), 'column' => 'id'));
 
     $this->widgetSchema->setNameFormat('users_filters[%s]');
   }
@@ -87,8 +96,11 @@ abstract class BaseUsersFormFilter extends DarwinModelFormFilter
       'db_user_type' => 'Number',
       'people_id' => 'ForeignKey',
       'selected_lang' => 'Text',
+      'default_widget_collection_ref' => 'ForeignKey',
+      'taxonomic_manager' => 'Boolean',
       'people_id' => 'ForeignKey',
       'id' => 'Number',
+      'default_widget_collection_ref' => 'ForeignKey',
     ));
   }
 }

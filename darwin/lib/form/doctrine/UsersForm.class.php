@@ -13,7 +13,7 @@ class UsersForm extends BaseUsersForm
   {
     if ($this->options['mode'] == 'new') 
     {
-      $this->useFields(array('is_physical','sub_type','title','family_name','given_name','additional_names','gender')) ;
+      $this->useFields(array('is_physical','sub_type','title','family_name','given_name','additional_names','gender', 'db_user_type', 'taxonomic_manager')) ;
       $this->widgetSchema['sub_type'] = new widgetFormSelectComplete(array('model' => 'Users',
                                                                    'table_method' => 'getDistinctSubType',
                                                                    'method' => 'getSubType',
@@ -41,7 +41,7 @@ class UsersForm extends BaseUsersForm
     }
     elseif($this->options['is_physical'])
     {
-      $this->useFields(array('title','family_name','given_name','additional_names','gender','people_id')) ;      
+      $this->useFields(array('title','family_name','given_name','additional_names','gender','people_id', 'db_user_type', 'taxonomic_manager')) ;      
       $this->widgetSchema['people_id'] = new widgetFormButtonRef(array('model' => 'People',
                                                                 'method' => 'getFormatedName',
                                                                 'link_url' => 'people/choose?with_js=1',
@@ -60,11 +60,13 @@ class UsersForm extends BaseUsersForm
                                                                    );       
       $this->widgetSchema['title']->setAttributes(array('class'=>'small_size')) ;     
       $this->validatorSchema['title'] =  new sfValidatorString(array('required' => false)); 
-      $this->validatorSchema['people_id'] = new sfValidatorInteger(array('required' => false)) ;                                                                      
+      $this->validatorSchema['people_id'] = new sfValidatorInteger(array('required' => false)) ;
+
+	  
     }
     else
     {
-      $this->useFields(array('sub_type','family_name','given_name','additional_names','people_id')) ;
+      $this->useFields(array('sub_type','family_name','given_name','additional_names','people_id', 'db_user_type', 'taxonomic_manager')) ;
       $this->widgetSchema['sub_type'] = new widgetFormSelectComplete(array('model' => 'Users',
                                                                    'table_method' => 'getDistinctSubType',
                                                                    'method' => 'getSubType',
@@ -84,6 +86,12 @@ class UsersForm extends BaseUsersForm
       $this->validatorSchema['sub_type'] =  new sfValidatorString(array('required' => false));
       $this->validatorSchema['people_id'] = new sfValidatorInteger(array('required' => false)) ;     
     }
+    $this->user=null;
+
+	if(isset($this->options['technical_user']))
+	{
+		$this->user=$this->options['technical_user'];
+	}
     $this->widgetSchema->setHelp('people_id','With this field, you can associate this user to a people recorded in the database (because user and people are not the same in DaRWIN2), the real interest is it will improve the synchronisation between the two record associated');                                             
     
     $langs = array('en'=>'English','nl'=>'Nederlands','fr'=>'Français');
@@ -117,6 +125,18 @@ class UsersForm extends BaseUsersForm
       array('class' => 'from_date')                
     );
 
+    $this->widgetSchema   ['default_widget_collection_ref'] = new widgetFormCompleteButtonRef(array(
+      'model' => 'Collections',
+      'link_url' => 'collection/choose',
+      'method' => 'getName',
+      'box_title' => $this->getI18N()->__('Choose Collection'),
+      'button_class'=>'',
+      'complete_url' => 'catalogue/completeName?table=collections',
+	  'nullable'=>true
+    ));
+
+    $this->validatorSchema['default_widget_collection_ref'] = new sfValidatorInteger(array('required'=>false));
+
     $this->validatorSchema['birth_date'] = new fuzzyDateValidator(
       array(
         'required' => false,                       
@@ -127,5 +147,23 @@ class UsersForm extends BaseUsersForm
       ),
       array('invalid' => 'Date provided is not valid')
     );
+	
+	$params=array('screen' => 2,'db_user_type' => Users::ADMIN);
+	
+	if(isset($this->options['is_admin']))
+	{
+			
+		if($this->options['is_admin']===true)
+		{
+			
+			$params["include_admin"]=true;
+		}
+	}
+	$this->widgetSchema['db_user_type'] = new sfWidgetFormChoice(array(
+      'choices' =>  Users::getTypes($params),
+    ));     
+    $this->widgetSchema->setDefault('db_user_type',Users::REGISTERED_USER) ;
   }
+
+
 }

@@ -2,7 +2,7 @@
 
 class DarwinController extends sfFrontWebController
 {
-	public function genUrl($parameters = array(), $absolute = false)
+	/*public function genUrl($parameters = array(), $absolute = false)
   {
     $url=parent::genUrl($parameters ,$absolute);
 	$base=sfConfig::get('dw_root_url_darwin');
@@ -19,5 +19,5 @@ class DarwinController extends sfFrontWebController
 	}
 
     return $url;
-  }
+  }*/
 }

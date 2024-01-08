@@ -99,4 +99,49 @@ class cataloguewidgetViewComponents extends sfComponents
   {
 	  $this->sub_types = Doctrine_Core::getTable('PeopleSubTypes')->findByPeopleRef($this->eid); 
   }
+  
+  public function executeCollections()
+  {
+	
+	if(strtolower($this->table)=="igs")
+	{
+		$this->collections =  Doctrine_Core::getTable('Igs')->countCollectionsInIg($this->eid); 
+  
+	}
+	elseif(strtolower($this->table)=="expeditions")
+	{
+		$this->collections =   Doctrine_Core::getTable('Expeditions')->countCollectionsInExpedition($this->eid); 
+	}
+	else
+	{
+		$this->collections = [];
+	}
+  }
+  
+   public function executeExpeditions()
+  {
+	if(strtolower($this->table)=="igs")
+	{
+		$this->expeditions =  Doctrine_Core::getTable('Igs')->countExpeditionsInIg($this->eid); 
+	}
+	else
+	{
+		$this->expeditions =[];
+	}
+  }
+  
+     public function executeIgs()
+  {
+	if(strtolower($this->table)=="expeditions")
+	{
+			$this->igs =  Doctrine_Core::getTable('Expeditions')->countIgsInExpedition($this->eid);  
+	}
+	else
+	{
+		$this->igs =  []; 
+	}
+  }
+  
+  
+
 }

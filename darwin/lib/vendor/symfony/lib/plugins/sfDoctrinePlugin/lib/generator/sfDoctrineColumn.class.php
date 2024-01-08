@@ -348,23 +348,27 @@ class sfDoctrineColumn implements ArrayAccess
   {
     return $this->table;
   }
-
-  public function offsetExists($offset)
+  
+   //php 8 ftheeten give return type
+  public function offsetExists($offset):bool
   {
     return isset($this->definition[$offset]);
   }
 
-  public function offsetSet($offset, $value)
+ //php 8 ftheeten give return type
+  public function offsetSet($offset, $value):void
   {
     $this->definition[$offset] = $value;
   }
 
-  public function offsetGet($offset)
+  //php 8 ftheeten give return type
+  public function offsetGet($offset): mixed
   {
     return $this->definition[$offset];
   }
 
-  public function offsetUnset($offset)
+  //php 8 ftheeten give return type
+  public function offsetUnset($offset):void
   {
     unset($this->definition[$offset]);
   }

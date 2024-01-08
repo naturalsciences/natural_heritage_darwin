@@ -21,7 +21,8 @@ class PublicSearchFormFilter extends BaseSpecimensFormFilter
         $disable=true;
         foreach($this->tmpRequest as $key=>$value)
         {
-            if($key!="specimen_search_filters"&&$key!="include_sub_collections")
+			//ftheeten 2023 submit seem to count as field
+            if($key!="specimen_search_filters"&&$key!="include_sub_collections"&&$key!="submit")
             {
                 $disable=false;
                 break;
@@ -395,6 +396,7 @@ class PublicSearchFormFilter extends BaseSpecimensFormFilter
 	
 	$this->addInstitutionIdentifierQuery($query,   $values["institution_protocol"], $values["institution_identifier"]);
 	$this->addPeopleIdentifierQuery($query, $values["people_protocol"], $values["people_identifier"],$values["people_identifier_role"]);
+	$query->andWhere(" COALESCE(restricted_access, FALSE)=FALSE");
     return $query;
   }
 

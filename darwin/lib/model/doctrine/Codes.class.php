@@ -17,7 +17,7 @@ class Codes extends BaseCodes
 				 'dna_rack_id'=> 'Rack id (DNA)',
                 );
 
-  public static function getCategories()
+ /* public static function getCategories()
   {
     try{
         $i18n_object = sfContext::getInstance()->getI18n();
@@ -27,7 +27,28 @@ class Codes extends BaseCodes
         return self::$category;
     }
     return array_map(array($i18n_object, '__'), self::$category);
-  }  
+  }*/
+
+ //ftheeten 2018 06 14 (add all)
+  public static function getCategories($add_all=false)
+  {
+    try{
+        $i18n_object = sfContext::getInstance()->getI18n();
+    }
+    catch( Exception $e )
+    {
+        return self::$category;
+    }
+	if(!$add_all)
+	{
+		return array_map(array($i18n_object, '__'), self::$category);
+	}
+	else
+	{
+		return array_map(array($i18n_object, '__'), array_merge(  array("all"=>"All"), self::$category));
+		
+	}	
+  }    
   
   public function getCodeFormated()
   {

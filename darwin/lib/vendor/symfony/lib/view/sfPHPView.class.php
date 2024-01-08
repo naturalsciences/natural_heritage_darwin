@@ -32,6 +32,7 @@ class sfPHPView extends sfView
    */
   protected function loadCoreAndStandardHelpers()
   {
+
     static $coreHelpersLoaded = 0;
 
     if ($coreHelpersLoaded)
@@ -42,6 +43,8 @@ class sfPHPView extends sfView
     $coreHelpersLoaded = 1;
 
     $helpers = array_unique(array_merge(array('Helper', 'Url', 'Asset', 'Tag', 'Escaping'), sfConfig::get('sf_standard_helpers')));
+
+
 
     $this->context->getConfiguration()->loadHelpers($helpers);
   }
@@ -75,12 +78,11 @@ class sfPHPView extends sfView
       require($_sfFile);
     }
     catch (Exception $e)
-    {
+    {	  	
       // need to end output buffering before throwing the exception #7596
       ob_end_clean();
       throw $e;
     }
-
     return ob_get_clean();
   }
 
@@ -157,9 +159,11 @@ class sfPHPView extends sfView
    */
   public function render()
   {
+
     $content = null;
     if (sfConfig::get('sf_cache'))
     {
+
       $viewCache = $this->context->getViewCacheManager();
       $uri = $viewCache->getCurrentCacheKey();
 
@@ -172,6 +176,7 @@ class sfPHPView extends sfView
         }
       }
     }
+	
 
     // render template if no cache
     if (null === $content)

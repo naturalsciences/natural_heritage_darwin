@@ -40,6 +40,12 @@ abstract class BaseClassificationSynonymiesForm extends DarwinModelForm
     $this->widgetSchema   ['original_synonym'] = new sfWidgetFormInputCheckbox();
     $this->validatorSchema['original_synonym'] = new sfValidatorBoolean(array('required' => false));
 
+    $this->widgetSchema   ['syn_date_mask'] = new sfWidgetFormInputText();
+    $this->validatorSchema['syn_date_mask'] = new sfValidatorInteger(array('required' => false));
+
+    $this->widgetSchema   ['syn_date'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['syn_date'] = new sfValidatorString(array('required' => false));
+
     $this->widgetSchema->setNameFormat('classification_synonymies[%s]');
   }
 

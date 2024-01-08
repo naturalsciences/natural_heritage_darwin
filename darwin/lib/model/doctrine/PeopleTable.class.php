@@ -11,25 +11,34 @@ class PeopleTable extends DarwinTable
   * @param $exact bool are we searching the exact term or more or less fuzzy
   * @return Array of results
   */
-  public function completeAsArray($user, $needle, $exact, $limit = 30, $level)
+  //ftheeten PHP level has to have a default value
+   public function completeAsArray($user, $needle, $exact, $limit = 30, $level='', $agg=false)
   {
+  
     $conn_MGR = Doctrine_Manager::connection();
     $q = Doctrine_Query::create()
-      ->from('Institutions')
+      ->from('People')
       ->andWhere('is_physical = ?', true)
       ->orderBy('formated_name ASC')
       ->limit($limit);
     if($exact)
-      $q->andWhere("formated_name = ?",$needle);
-    else
-      $q->andWhere("formated_name_indexed like concat('%',fulltoindex(".$conn_MGR->quote($needle, 'string')."),'%') ");
-    $q_results = $q->execute();
+	{
+		;
+		$q->andWhere("formated_name = ?",$needle);
+    }
+	else
+	{
+	
+      $q->andWhere("fulltoindex(formated_name,FALSE) like concat('%',fulltoindex(".$conn_MGR->quote($needle, 'string')."),'%') ");
+    }
+	$q_results = $q->execute();
     $result = array();
     foreach($q_results as $item) {
       $result[] = array('label' => $item->getFormatedName(), 'value'=> $item->getId() );
     }
     return $result;
   }
+
 
   /**
   * Find all distinct tyoe of institutions

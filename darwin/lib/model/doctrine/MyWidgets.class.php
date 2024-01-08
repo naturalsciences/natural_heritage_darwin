@@ -94,4 +94,10 @@ class MyWidgets extends BaseMyWidgets
     }
     return $i18n_object->__($array[$groupname]);    
   }
+  
+  
+  public function getGroupNameStr()
+  {
+	  return $this->getGroupName();
+  }
 }

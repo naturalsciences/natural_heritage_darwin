@@ -21,6 +21,11 @@ class myUser extends sfBasicSecurityUser
     else
       parent::setCulture('en');
   }
+  
+  public function getTaxonomicManager()
+  {
+	  return Doctrine_Core::getTable('Users')->findOneById($this->getId())->getTaxonomicManager();
+  }
 
   /**
    * Save the visible columns in the search

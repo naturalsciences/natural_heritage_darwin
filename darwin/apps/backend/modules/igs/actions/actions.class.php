@@ -71,7 +71,18 @@ class igsActions extends DarwinActions
     $this->no_right_col = Doctrine_Core::getTable('Igs')->testNoRightsCollections('ig_ref',$request->getParameter('id'), $this->getUser()->getId());
     $this->form = new igsForm($igs);
     $this->loadWidgets();
-  }
+	//remove read-only widgets
+	
+		foreach($this->widgets as $key=>$tmp)
+		{
+			if($tmp->getGroupName()=="expeditions"||$tmp->getGroupName()=="collections")
+			{
+				unset($this->widgets[$key]);
+			}
+		}	
+		
+	}
+	
 
   public function executeUpdate(sfWebRequest $request)
   {
@@ -84,6 +95,17 @@ class igsActions extends DarwinActions
 
     $this->processForm($request, $this->form);
     $this->loadWidgets();
+	
+	//remove read-only widgets
+	
+		foreach($this->widgets as $key=>$tmp)
+		{
+			if($tmp->getGroupName()=="expeditions"||$tmp->getGroupName()=="collections")
+			{
+				unset($this->widgets[$key]);
+			}
+		}	
+		
     $this->setTemplate('edit');
   }
 
@@ -114,6 +136,10 @@ class igsActions extends DarwinActions
     $this->setCommonValues('igs', 'ig_num', $request);
     // Instantiate a new expedition form
     $this->form = new IgsFormFilter();
+	if(strtolower($request->getParameter('increment', 'off'))=="on")
+	{
+		$this->increment="on";
+	}
     // Triggers the search result function
     $this->searchResults($this->form,$request);
   }
@@ -174,7 +200,6 @@ class igsActions extends DarwinActions
       if ($form->isValid())
       {
         $query = $form->getQuery()->orderby($this->orderBy . ' ' . $this->orderDir);
-	
         // Define in one line a pager Layout based on a PagerLayoutWithArrows object
         // This pager layout is based on a Doctrine_Pager, itself based on a customed Doctrine_Query object (call to the getIgLike method of IgTable class)
         $this->pagerLayout = new PagerLayoutWithArrows(new DarwinPager($query,
@@ -246,6 +271,7 @@ class igsActions extends DarwinActions
   {
     $this->igs = Doctrine_Core::getTable('igs')->find($request->getParameter('id'));
     $this->forward404Unless($this->igs,'IG not Found');
+	$this->no_right_col = Doctrine_Core::getTable('Igs')->testNoRightsCollections('ig_ref',$request->getParameter('id'), $this->getUser()->getId());
     $this->form = new igsForm($this->igs);
     $this->loadWidgets();
   }
@@ -271,6 +297,7 @@ class igsActions extends DarwinActions
     }
   }
   
+  
   public function executeDownloadTab(sfWebRequest $request)
   {
 	   if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
@@ -285,17 +312,20 @@ class igsActions extends DarwinActions
 		$this->getResponse()->sendContent();   
 	    //$q=$query->execute();
 		//$items=$q->fetchAll(PDO::FETCH_ASSOC);
-		
+		  $this->setCommonValues('igs', 'ig_num', $request);
+		  
 		 $form = new IgsFormFilter();
 		if($request->getParameter('searchIg','') !== '')
 		{
 		  // Bind form with data contained in searchIg array
+		  print_r($request->getParameter('searchIg'));
 		  $form->bind($request->getParameter('searchIg'));
 		  // Test that the form binded is still valid (no errors)
 		  if ($form->isValid())
 		  {
 			$query = $form->getQuery();			
 			 $igss = $query->execute();
+			 print(count($igss));
 			 $comment_ids = array();
 			 $comments=Array();
 			 foreach($igss as $i)
@@ -337,5 +367,11 @@ class igsActions extends DarwinActions
 		
 		return sfView::NONE;           
 	  
+  }
+  
+  public function executeIgSearchModal(sfWebRequest $request)
+  {
+	  
+	   $this->searchform = new IgsFormFilter();    
   }
 }

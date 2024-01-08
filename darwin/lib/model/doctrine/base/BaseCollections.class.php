@@ -34,10 +34,12 @@
  * @property Users $Manager
  * @property Users $Staff
  * @property Collections $Parent
+ * @property Doctrine_Collection $Users
  * @property Doctrine_Collection $Collections
  * @property Doctrine_Collection $CollectionsRights
  * @property Doctrine_Collection $Specimens
  * @property Doctrine_Collection $Imports
+ * @property Doctrine_Collection $Loans
  * @property Doctrine_Collection $SpecimensMaincodes
  * 
  * @method integer             getId()                                  Returns the current record's "id" value
@@ -69,10 +71,12 @@
  * @method Users               getManager()                             Returns the current record's "Manager" value
  * @method Users               getStaff()                               Returns the current record's "Staff" value
  * @method Collections         getParent()                              Returns the current record's "Parent" value
+ * @method Doctrine_Collection getUsers()                               Returns the current record's "Users" collection
  * @method Doctrine_Collection getCollections()                         Returns the current record's "Collections" collection
  * @method Doctrine_Collection getCollectionsRights()                   Returns the current record's "CollectionsRights" collection
  * @method Doctrine_Collection getSpecimens()                           Returns the current record's "Specimens" collection
  * @method Doctrine_Collection getImports()                             Returns the current record's "Imports" collection
+ * @method Doctrine_Collection getLoans()                               Returns the current record's "Loans" collection
  * @method Doctrine_Collection getSpecimensMaincodes()                  Returns the current record's "SpecimensMaincodes" collection
  * @method Collections         setId()                                  Sets the current record's "id" value
  * @method Collections         setCollectionType()                      Sets the current record's "collection_type" value
@@ -103,10 +107,12 @@
  * @method Collections         setManager()                             Sets the current record's "Manager" value
  * @method Collections         setStaff()                               Sets the current record's "Staff" value
  * @method Collections         setParent()                              Sets the current record's "Parent" value
+ * @method Collections         setUsers()                               Sets the current record's "Users" collection
  * @method Collections         setCollections()                         Sets the current record's "Collections" collection
  * @method Collections         setCollectionsRights()                   Sets the current record's "CollectionsRights" collection
  * @method Collections         setSpecimens()                           Sets the current record's "Specimens" collection
  * @method Collections         setImports()                             Sets the current record's "Imports" collection
+ * @method Collections         setLoans()                               Sets the current record's "Loans" collection
  * @method Collections         setSpecimensMaincodes()                  Sets the current record's "SpecimensMaincodes" collection
  * 
  * @package    darwin
@@ -247,6 +253,10 @@ abstract class BaseCollections extends DarwinModel
              'local' => 'parent_ref',
              'foreign' => 'id'));
 
+        $this->hasMany('Users', array(
+             'local' => 'id',
+             'foreign' => 'default_widget_collection_ref'));
+
         $this->hasMany('Collections', array(
              'local' => 'id',
              'foreign' => 'parent_ref'));
@@ -260,6 +270,10 @@ abstract class BaseCollections extends DarwinModel
              'foreign' => 'collection_ref'));
 
         $this->hasMany('Imports', array(
+             'local' => 'id',
+             'foreign' => 'collection_ref'));
+
+        $this->hasMany('Loans', array(
              'local' => 'id',
              'foreign' => 'collection_ref'));
 

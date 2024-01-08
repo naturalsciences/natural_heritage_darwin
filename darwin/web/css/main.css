@@ -1311,6 +1311,7 @@ table.edit_synon td
 
 .edition input[type="submit"], .renamed input[type="submit"]
 {
+ border:3px solid #b30000;
   margin-left:0.4em;
 }
 
@@ -3290,3 +3291,4 @@ input[readonly]
   border-style: groove;
    border-width: 2px;
 }
+

@@ -36,7 +36,10 @@ class Imports extends BaseImports
     'error' => 'Errors appeared during import, check these errors with the error icon, you can continue the import process or delete the entry and repair your file',
   );
 
-  public static $formatArray = array('abcd' => 'ABCD') ;
+  public static $formatArray = array(
+	'abcd' => 'ABCD', 
+	'taxon'=>'Taxonomy'
+	) ;
   
   public function setCurrentLineNum($nbr)
   {

@@ -31,7 +31,7 @@
  * @since       1.0
  * @version     $Revision: 7673 $
  */
-abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Countable, IteratorAggregate, Serializable
+abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Countable, IteratorAggregate #, Serializable
 {
     /**
      * STATE CONSTANTS
@@ -185,7 +185,9 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      *
      * @var array
      */
-    protected $_invokedSaveHooks = false;
+	//ftheeten PHP 8 should be declared as Array
+    //protected $_invokedSaveHooks = false;
+	protected $_invokedSaveHooks = [];
 
     /**
      * @var integer $index                  this index is used for creating object identifiers
@@ -1866,6 +1868,8 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      *
      * @return integer          the number of columns in this record
      */
+	#ftheeten 2023 04 07
+    #[\ReturnTypeWillChange] 
     public function count()
     {
         return count($this->_data);
@@ -2163,6 +2167,8 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      * implements IteratorAggregate interface
      * @return Doctrine_Record_Iterator     iterator through data
      */
+	 #ftheeten 2023 04 07
+	#[\ReturnTypeWillChange] 
     public function getIterator()
     {
         return new Doctrine_Record_Iterator($this);

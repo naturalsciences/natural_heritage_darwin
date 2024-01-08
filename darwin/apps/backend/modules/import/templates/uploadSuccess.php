@@ -26,6 +26,11 @@
 		echo __('Links') ;
 		
 	}
+	elseif($type=='synonymies')
+	{
+		echo __('Synonymies') ;
+		
+	}
 	elseif($type=='taxon')
 	{	
 		echo __('Taxonomy') ;

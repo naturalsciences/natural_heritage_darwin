@@ -51,7 +51,7 @@
 	      <?php if($orderBy=='activity_date_from') echo $orderSign ?>
 	    </a>
           </th>
-          <th></th>
+          <th colspan="4"></th>
         <tr>
       </thead>
       <tbody>
@@ -72,6 +72,11 @@
 	      <?php echo $item->getActivityDateFromObject()->getDateMasked('em','Y',ESC_RAW);?> -
 	      <?php echo $item->getActivityDateToObject()->getDateMasked('em','Y',ESC_RAW) ?>
             </td>
+			<?php if(! $is_choose):?>
+			<td><?php echo form_tag('specimensearch/search'.( isset($is_choose) ? '?is_choose='.$is_choose : '') , array('target'=>'_blank', 'class'=>'specimensearch_form_collector','id'=>'specimen_filter_collector'));?><input type="hidden" id="specimen_search_filters_collector" name="specimen_search_filters[Peoples][1][people_ref]" value="<?php echo($item->getId());?>"/><input type="hidden" id="specimen_search_filters_people_role" name="specimen_search_filters[Peoples][1][role_ref][0]" value="spec_coll_ids"/><input type="submit" value="<?php echo __("Collected")?>"></form></td>
+			<td><?php echo form_tag('specimensearch/search'.( isset($is_choose) ? '?is_choose='.$is_choose : '') , array('target'=>'_blank', 'class'=>'specimensearch_form_ident','id'=>'specimen_filter_ident'));?><input type="hidden" id="specimen_search_filters_collector" name="specimen_search_filters[Peoples][1][people_ref]" value="<?php echo($item->getId());?>"/><input type="hidden" id="specimen_search_filters_people_role" name="specimen_search_filters[Peoples][1][role_ref][0]" value="ident_ids"/><input type="submit" value="<?php echo __("Identified")?>"></form></a></td>
+			<td><a href="" target="_blank"><?php echo form_tag('specimensearch/search'.( isset($is_choose) ? '?is_choose='.$is_choose : '') , array('target'=>'_blank', 'class'=>'specimensearch_form_donator','id'=>'specimen_filter_donator'));?><input type="hidden" id="specimen_search_filters_collector" name="specimen_search_filters[Peoples][1][people_ref]" value="<?php echo($item->getId());?>"/><input type="hidden" id="specimen_search_filters_people_role" name="specimen_search_filters[Peoples][1][role_ref][0]" value="spec_don_sel_ids"/><input type="submit" value="<?php echo __("Donated")?>"></form></td>
+            <?php endif; ?>
             <td class="<?php echo (! $is_choose)?'edit':'choose';?>">
               <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),'people/view?id='.$item->getId(),array('target'=>"_blank"));?>
                 <?php if(! $is_choose):?>                  

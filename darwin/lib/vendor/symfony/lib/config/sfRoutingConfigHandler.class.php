@@ -42,7 +42,11 @@ class sfRoutingConfigHandler extends sfYamlConfigHandler
       foreach (sfPatternRouting::flattenRoutes($routes) as $name => $route)
       {
         $route->setDefaultOptions($options);
-        $data[] = sprintf('$this->routes[\'%s\'] = %s;', $name, var_export(serialize($route), true));
+				
+        //data[] = sprintf('$this->routes[\'%s\'] = %s;', $name, var_export(serialize($route), true));
+		//ftheeten 2023 04 07 to avoid serialized applied twice
+		$tmp=serialize($route);
+		$data[] = sprintf('$this->routes[\'%s\'] = %s;', $name, var_export($tmp, true));
       }
     }
 

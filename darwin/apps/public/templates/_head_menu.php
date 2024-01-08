@@ -57,21 +57,27 @@
             $flagMenu="off";
         }
     }
-    elseif(array_key_exists("menu", $_SESSION[$_SERVER['HTTP_REFERER']]))
-    {       
-        if($_SESSION[$_SERVER['menu']]=="off")
-        {
-            $flagMenu="off";
-        }
-        
-    }
-    $_SESSION[$_SERVER['HTTP_REFERER']]['menu']= $flagMenu;  
+    elseif(array_key_exists($_SERVER['HTTP_REFERER'], $_SESSION))
+	{
+		if(array_key_exists("menu", $_SESSION[$_SERVER['HTTP_REFERER']]))
+		{       
+			if($_SESSION[$_SERVER['menu']]=="off")
+			{
+				$flagMenu="off";
+			}
+			
+		}
+		$_SESSION[$_SERVER['HTTP_REFERER']]['menu']= $flagMenu;  
+	}
 ?>
 <?php if($flagMenu!="off" ):?>
 <?php 
-if(array_key_exists("menu", $_SESSION[$_SERVER['HTTP_REFERER']]))
+if(array_key_exists($_SERVER['HTTP_REFERER'], $_SESSION))
 {
-    unset($_SESSION[$_SERVER['HTTP_REFERER']]['menu']);
+	if(array_key_exists("menu", $_SESSION[$_SERVER['HTTP_REFERER']]))
+	{
+		unset($_SESSION[$_SERVER['HTTP_REFERER']]['menu']);
+	}
 }
 ?>
 

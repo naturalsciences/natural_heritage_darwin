@@ -23,8 +23,10 @@ class MultimediaForm extends BaseMultimediaForm
       $this->widgetSchema['uri'] = new sfWidgetFormInputHidden();
       $this->validatorSchema['uri'] = new sfValidatorString(array('required' => false));
     }
-    else unset($this['uri']) ;
-
+    else 
+	{
+		unset($this['uri']) ;
+	}
     $this->widgetSchema['description'] = new sfWidgetFormInput();    
     $this->widgetSchema['description']->setAttributes(array('class'=>'medium_small_size'));
     $this->validatorSchema['description'] = new sfValidatorString(array('required' => false)); 
@@ -56,7 +58,11 @@ class MultimediaForm extends BaseMultimediaForm
                                         )
                                   );
 
+								  
+		//ftheeten 2023 04 11 PHP8
+	 $this->validatorSchema->addOption('allow_extra_fields', true);
     $this->mergePostValidator(new MultimediaFileValidatorSchema());    
+	
   }
 
   public function setRecordRef($relation, $rid)

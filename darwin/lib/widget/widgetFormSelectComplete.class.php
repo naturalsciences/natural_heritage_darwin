@@ -1,9 +1,10 @@
 <?php
 
-class widgetFormSelectComplete extends sfWidgetFormDarwinDoctrineChoice
+class widgetFormSelectComplete  extends sfWidgetFormDarwinDoctrineChoice
 {
   protected function configure($options = array(), $attributes = array())
   {
+	  //print("!!!!!!!!!!!!!!!!==DEBUG_SELECT");
     $this->addRequiredOption('change_label');
     $this->addRequiredOption('add_label');
     $this->addOption('forced_choices', false);
@@ -15,10 +16,16 @@ class widgetFormSelectComplete extends sfWidgetFormDarwinDoctrineChoice
     if(! isset($this->choices))
     {
       if($this->getOption('forced_choices') !== false )
+	  {
+		  //print("FORCED");
         $this->choices = $this->getOption('forced_choices');
-      else
+      }
+	  else
+	  {
+		   //print("PARENT");
         $this->choices = parent::getChoices();
-    }
+      }
+	}
     return $this->choices;
   }
 

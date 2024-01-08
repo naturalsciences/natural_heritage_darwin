@@ -11,29 +11,48 @@
 class userActions extends DarwinActions
 {
   protected $widgetCategory = 'users_widget';
+  protected $is_admin=false;
 
   public function executeNew(sfWebRequest $request)
   {
     if($this->getUser()->getDbUserType() < Users::MANAGER) $this->forwardToSecureAction();
     $this->mode = 'new' ;
-    $this->form = new UsersForm(null, array('mode' => $this->mode));
+	$this->is_admin=false;
+    $params=array('mode' => $this->mode);
+	
+	if($this->getUser()->getDbUserType() == Users::ADMIN)
+    {
+		$params["is_admin"]=true;
+		$this->is_admin=true;
+	}	
+    $this->form = new UsersForm(null,$params);
   }
   
   public function executeEdit(sfWebRequest $request)
   {
+  
+   
     $this->user = Doctrine_Core::getTable('Users')->find( $request->getparameter('id') );
+	$this->is_admin=false;
     $this->forward404Unless($this->user, sprintf('User does not exist (%s).', $request->getParameter('id')));
-    if($this->getUser()->getId() == $this->user->getId() && !$request->isMethod('post')) 
+   if($this->getUser()->getId() == $this->user->getId() && !$request->isMethod('post')) 
       $this->redirect('user/profile'); 
     if($request->isMethod('get'))
     {
       if($this->getUser()->getDbUserType() < Users::MANAGER) 
         $this->forwardToSecureAction();
       elseif($this->getUser()->getDbUserType() == Users::MANAGER && $this->getUser()->getDbUserType() == $this->user->getDbUserType()) 
-        $this->forwardToSecureAction();
+       $this->forwardToSecureAction();
     }
     $this->mode = 'edit' ;
-    $this->form = new UsersForm($this->user, array('mode' => $this->mode,'is_physical'=>$this->user->getIsPhysical()));
+	$params=array('mode' => $this->mode,'is_physical'=>$this->user->getIsPhysical());
+	if($this->getUser()->getDbUserType() == Users::ADMIN)
+    {		
+		$params["is_admin"]=true;
+		$this->is_admin=true;
+	}
+    $this->form = new UsersForm($this->user,$params );
+   
     $users = $request->getParameter('users');
 
     if($request->isMethod('post'))
@@ -46,18 +65,50 @@ class userActions extends DarwinActions
         {
           $this->getUser()->setCulture($this->form->getValue('selected_lang'));
         }
+		$default_widget_collection_http=$this->form->getValue('default_widget_collection_ref');
+		
+			$tmp_user= Doctrine_Core::getTable('Users')->find($this->getUser()->getId());
+			$template_ref=Doctrine_Core::getTable('Users')->getWidgetTemplate($tmp_user, $default_widget_collection_http);
+			$template_flag=false;
+			if($template_ref!==null)
+			{
+				if($template_ref!==false)
+				{
+					$template_flag=true;
+				}
+			}			
+			if($template_flag)
+			{
+				$this->getUser()->setAttribute("default_widget_template", strval($template_ref->getId()));
+			}
+			else
+			{
+				$this->getUser()->setAttribute("default_widget_template", "-1");
+			}
+		
         return $this->redirect('user/edit?id='.$this->user->getId());
       }
     }
-    $this->loadWidgets();
+   
+         $this->loadWidgets();
   }
   
   public function executeProfile(sfWebRequest $request)
   { 
+
     $this->user =  Doctrine_Core::getTable('Users')->find( $this->getUser()->getId() );
+	$this->is_admin=false;
+	$params=array("db_user_type" => $this->getUser()->getDbUserType(),'mode' => $this->mode,'is_physical'=>$this->user->getIsPhysical(), "technical_user"=> $this->getUser());
+	if($this->getUser()->getDbUserType() == Users::ADMIN)
+    {	
+		$this->is_admin=true;
+		$params["is_admin"]=true;
+		
+	}
     $this->forward404Unless($this->user);
     $this->mode = 'profile' ;
-    $this->form = new UsersForm($this->user,array("db_user_type" => $this->getUser()->getDbUserType(),'mode' => $this->mode,'is_physical'=>$this->user->getIsPhysical()));
+	  //ftheeten 2022 04 05
+	  $this->form = new UsersForm($this->user,$params);
     $this->loadWidgets();
   }
 
@@ -134,7 +185,7 @@ class userActions extends DarwinActions
     {
       $e = new DarwinPgErrorParser($ne);
       $error = new sfValidatorError(new savedValidator(),$e->getMessage());
-      $this->form = new UsersForm($user,array("db_user_type" => $this->getUser()->getDbUserType(), "is_physical" => $this->user->getIsPhysical()));
+      $this->form = new UsersForm($user,array("db_user_type" => $this->getUser()->getDbUserType(), "is_physical" => $this->user->getIsPhysical(), "technical_user"=>$this->getUser()));
       $this->form->getErrorSchema()->addError($error); 
       $this->loadWidgets();
       $this->setTemplate('edit');

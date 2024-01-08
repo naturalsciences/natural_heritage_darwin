@@ -37,6 +37,76 @@ class TaxonomyFormFilter extends BaseTaxonomyFormFilter
     $this->widgetSchema->setHelp('relation','This line allow you to look for synonym or child of the selected item (ex : look for all item X children)');
     
     $this->widgetSchema['item_ref'] = new sfWidgetFormInputHidden();
+	
+	$this->widgetSchema['item_ref'] = new sfWidgetFormInputHidden();
+	
+	$minDate = new FuzzyDateTime(strval(min(range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')))).'/01/01'));
+    $maxDate = new FuzzyDateTime(strval(max(range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')))).'/12/31'));
+    $maxDate->setStart(false);
+    $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
+    $dateUpperBound = new FuzzyDateTime(sfConfig::get('dw_dateUpperBound')); 
+	
+	
+    $this->widgetSchema["workflow_people_ref"]= new sfWidgetFormDoctrineChoice(array(
+      'model' =>'Users',
+      'add_empty' => true,
+      'table_method' => 'getTrackingUsers',
+    ));
+	$this->widgetSchema['workflow_people_ref']->setLabel("Agent (problem/suggestion)");
+	 
+	 $this->widgetSchema['workflow_from_date'] = new widgetFormJQueryFuzzyDate(
+      $this->getDateItemOptions(),
+      array('class' => 'from_date')
+    );
+
+    $this->widgetSchema['workflow_to_date'] = new widgetFormJQueryFuzzyDate(
+      $this->getDateItemOptions(),
+      array('class' => 'to_date')
+    );
+
+    
+	
+	
+	$workflow_statuses =  informativeWorkflow::getAvailableStatus(8); 		
+	$workflow_statuses=array_merge([''=>''],$workflow_statuses);
+    $this->widgetSchema['workflow_statuses'] = new sfWidgetFormChoice(array(
+        'choices'  => $workflow_statuses,
+    ));
+	
+	
+	 $this->validatorSchema['workflow_people_ref'] = new sfValidatorString(array('required' => false));
+
+	 
+	 
+	
+	$this->widgetSchema['workflow_from_date'] = new widgetFormJQueryFuzzyDate(
+      $this->getDateItemOptions(),
+      array('class' => 'from_date')
+    );
+
+   
+	 
+    $this->validatorSchema['workflow_from_date'] = new fuzzyDateValidator(array(
+      'required' => false,
+      'from_date' => true,
+      'min' => $minDate,
+      'max' => $maxDate,
+      'empty_value' => $dateLowerBound,
+      ),
+      array('invalid' => 'Date provided is not valid',)
+    );
+
+    $this->validatorSchema['workflow_to_date'] = new fuzzyDateValidator(array(
+      'required' => false,
+      'min' => $minDate,
+      'from_date' => false,
+      'max' => $maxDate,
+      'empty_value' => $dateUpperBound,
+      ),
+      array('invalid' => 'Date provided is not valid',)
+    );
+	
+  $this->validatorSchema['workflow_statuses'] = new sfValidatorPass();
 
     $this->validatorSchema['relation'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($rel)));
     $this->validatorSchema['item_ref'] = new sfValidatorInteger(array('required'=>false));
@@ -140,7 +210,7 @@ class TaxonomyFormFilter extends BaseTaxonomyFormFilter
     {
 		 if(is_int($values['collection_ref'] ))
 		 {
-			if((int)$values['collection_ref']!=-1)
+			if((int)$values['collection_ref']>0)
             {				
 			 $query->andWhere("  EXISTS( select * from fct_rmca_retrieve_taxa_in_collection_fastly(?) x WHERE t.id=x.id)", $values['collection_ref']);
 			}
@@ -151,7 +221,7 @@ class TaxonomyFormFilter extends BaseTaxonomyFormFilter
     {
 		 if(is_int($values['collection_ref_for_modal'] ))
 		 {
-			if((int)$values['collection_ref_for_modal']!=-1)
+			if((int)$values['collection_ref_for_modal']>0)
             {				
 			 $query->andWhere("  EXISTS( select * from fct_rmca_retrieve_taxa_in_collection_fastly(?) x WHERE t.id=x.id)", $values['collection_ref_for_modal']);
 			}
@@ -198,7 +268,41 @@ class TaxonomyFormFilter extends BaseTaxonomyFormFilter
     
       $query->andWhere('id IN (SELECT s.taxon_ref FROM specimens s WHERE ig_num= ?)', $values['ig_number']);
     }
-    
+    if($values["workflow_people_ref"]!="" || $values["workflow_statuses"]!="")
+	{
+		$sql_member1=Array();
+		$sql_params1=Array();
+		if($values["workflow_from_date"]!="" && $values["workflow_to_date"]!="" )
+		{
+			$sql_member1[]='modification_date_time BETWEEN ? AND ? ';
+			$sql_params1[]=$values["workflow_from_date"];
+			$sql_params1[]=$values["workflow_to_date"];
+		}
+		if($values["workflow_from_date"]!="" )
+		{
+			$sql_member1[]='modification_date_time >= ? ';
+			$sql_params1[]=$values["workflow_from_date"];
+		}
+		if( $values["workflow_to_date"]!="" )
+		{
+			$sql_member1[]='modification_date_time <= ? ';
+			$sql_params1[]=$values["workflow_to_date"];
+		}
+		if( $values['workflow_statuses'] !="")
+		{
+			$sql_member1[]='status <= ? ';
+			$sql_params1[]=$values["workflow_statuses"];
+		}
+		if( $values['workflow_people_ref'] !="")
+		{
+			$sql_member1[]='status = ? ';
+			$sql_params1[]=$values["workflow_statuses"];
+		}
+		if(count($sql_params1)>0)
+		{
+			$query->andWhere("(EXISTS(SELECT 1 FROM informative_workflow   WHERE record_id=t.id AND referenced_relation='taxonomy' AND ".implode(" AND ", $sql_member1)."))", $sql_params1);
+		}
+	}
      $this->addRelationItemColumnQuery($query, $values);
 	 $query->groupBy("t.id, m.id");
     $query->limit($this->getCatalogueRecLimits());

@@ -35,6 +35,11 @@ class sfDoctrineFormGenerator extends sfGenerator
    * @var array
    */
   public $pluginModels = array();
+  
+  //ftheeten PHP8
+  public $modelName=null;
+  public $table=null;
+  public $params=null;
 
   /**
    * Initializes the current sfGenerator instance.

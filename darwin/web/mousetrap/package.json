@@ -23,7 +23,7 @@
   "gitHead": "c202a0bd4967d5a3064f9cb376db51dec9345336",
   "readmeFilename": "README.md",
   "devDependencies": {
-    "grunt": "1.5.3",
+    "grunt": "~0.4.1",
     "grunt-complexity": "~0.1.2",
     "grunt-mocha": "~0.3.1"
   }

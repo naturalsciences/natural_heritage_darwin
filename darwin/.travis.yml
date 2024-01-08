@@ -1,0 +1,30 @@
+language: php
+php:
+  - 5.4
+#  - 5.6
+addons:
+  postgresql: "9.1"
+before_script:
+  - echo "custom_variable_classes = 'darwin'" | sudo tee -a /etc/postgresql/9.1/main/postgresql.conf
+  - echo "datestyle = 'iso, dmy'"  | sudo tee -a /etc/postgresql/9.1/main/postgresql.conf
+  - sudo /etc/init.d/postgresql stop
+  - sudo /etc/init.d/postgresql start 9.1
+  - sudo apt-get update
+  - sudo apt-get install pgtap=0.90.0-1 libtap-parser-sourcehandler-pgtap-perl
+  - cd data/db
+  - ./install.sh -O darwin2 install-all
+  - ./install.sh -O darwin2 install-test
+  - echo "extension = apc.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+# ${TRAVIS_BUILD_DIR}
+script:
+  - ./install.sh -O darwin2 test | tee /tmp/pgprove.log
+  - cat /tmp/pgprove.log
+  - "grep -q '^Result: PASS' /tmp/pgprove.log"
+  # Go To Web Directory
+  - cd ../../
+  - cp test/database_config.yml config/databases.yml
+  - cp config/darwin.yml.init config/darwin.yml
+  - find test/ -name "*Test.php" -exec sh -c "php {} > /tmp/web-\`basename {}\`.tap" \;
+  - prove /tmp/web-*.tap | tee /tmp/webprove.log
+  - cat /tmp/webprove.log
+  - "grep -q '^Result: PASS' /tmp/webprove.log"

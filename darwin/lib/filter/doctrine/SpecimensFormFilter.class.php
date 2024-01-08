@@ -18,7 +18,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
         'mineral_level_name','ig_num','acquisition_category','acquisition_date',
         'import_ref','ig_ref',
 		//JMherpers 2019 04 25
-		'nagoya'));
+		'nagoya', 'restricted_access'));
 
     $this->addPagerItems();
 
@@ -640,7 +640,8 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->widgetSchema['part'] = new sfWidgetFormChoice(array(
        "choices"=> $part_tmp,
        'multiple' => true,
-    ), array("size"=>10));
+	   
+    ), array("size"=>10, "class"=>"choice_hoover", "style"=>"width:100%"));
 
     $this->validatorSchema['part'] =  new sfValidatorChoice(
          array("choices"=> $part_tmp,
@@ -864,7 +865,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     
    
     
-	 //2018 09 19chnage sort order on name
+	 //2018 09 19 change sort order on name
      
 	$this->widgetSchema['taxonomy_metadata_ref'] = new sfWidgetFormChoice(array(
       'choices' => TaxonomyMetadataTable::getAllTaxonomicMetadata( 'id ASC',true)  //array_merge( array(''=>'All'),TaxonomyMetadataTable::getAllTaxonomicMetadata("id ASC"))
@@ -939,6 +940,13 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->widgetSchema['action']->setDefault("insert");
 	$this->validatorSchema['action'] = new sfValidatorPass();
      
+	$this->widgetSchema['restricted_access']=new sfWidgetFormChoice(array(
+        'expanded' => true,
+        'choices'  => array('yes' => 'yes', 'no' => 'no', ''=>'all'),
+        ), array( 'style' => "display: inline-block;text-align:center"));
+    $this->validatorSchema['restricted_access'] = new sfValidatorString(array('required' => false)); 
+    $this->widgetSchema['restricted_access']->setLabel("Restricted access");
+	 
     //2018 11 22
 	$this->widgetSchema['tag_boolean'] = new sfWidgetFormChoice(array('choices' => array('OR' => 'OR', 'AND' => 'AND')));
 	$this->validatorSchema['tag_boolean'] = new sfValidatorPass();
@@ -1029,6 +1037,86 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
          "required"=>false
          )
     );
+	
+	
+    $this->widgetSchema['disaster_recovery_score'] = new sfWidgetFormChoice(array(
+      'choices' => array(null=>"No set",1=>"1", 2=>"2", 3=>"3", 4=>"4")),
+    );	
+	 $this->validatorSchema['disaster_recovery_score'] = new sfValidatorInteger(array('required'=>false));
+	 
+	$this->widgetSchema["maintenance_or_workflow_people_ref"]= new sfWidgetFormDoctrineChoice(array(
+      'model' =>'Users',
+      'add_empty' => true,
+      'table_method' => 'getTrackingUsers',
+    ));
+	 $this->widgetSchema['maintenance_or_workflow_people_ref']->setLabel("Agent (problem/suggestion)");
+	 
+	 $this->validatorSchema['maintenance_or_workflow_people_ref'] = new sfValidatorString(array('required' => false));
+	 
+	  $this->widgetSchema['maintenance_or_workflow_maintenance_people_ref'] = new widgetFormCompleteButtonRef(array(
+      'model' => 'People',
+      'method' => 'getFormatedName',
+      'link_url' => 'people/choose',
+      'nullable' => true,
+      'box_title' => $this->getI18N()->__('Choose Yourself'),
+      'complete_url' => 'catalogue/completeName?table=people',
+    ));
+	
+	$this->widgetSchema['maintenance_or_workflow_maintenance_people_ref']->setLabel("Agent (maintenance)");
+	 
+	$this->validatorSchema['maintenance_or_workflow_maintenance_people_ref'] = new sfValidatorString(array('required' => false));
+	
+	 
+	 $this->widgetSchema['maintenance_or_workflow_from_date'] = new widgetFormJQueryFuzzyDate(
+      $this->getDateItemOptions(),
+      array('class' => 'from_date')
+    );
+
+    $this->widgetSchema['maintenance_or_workflow_to_date'] = new widgetFormJQueryFuzzyDate(
+      $this->getDateItemOptions(),
+      array('class' => 'to_date')
+    );
+
+    $this->validatorSchema['maintenance_or_workflow_from_date'] = new fuzzyDateValidator(array(
+      'required' => false,
+      'from_date' => true,
+      'min' => $minDate,
+      'max' => $maxDate,
+      'empty_value' => $dateLowerBound,
+      ),
+      array('invalid' => 'Date provided is not valid',)
+    );
+
+    $this->validatorSchema['maintenance_or_workflow_to_date'] = new fuzzyDateValidator(array(
+      'required' => false,
+      'min' => $minDate,
+      'from_date' => false,
+      'max' => $maxDate,
+      'empty_value' => $dateUpperBound,
+      ),
+      array('invalid' => 'Date provided is not valid',)
+    );
+	
+	
+	$workflow_statuses =  informativeWorkflow::getAvailableStatus(8); 		
+	$workflow_statuses=array_merge([''=>''],$workflow_statuses);
+    $this->widgetSchema['workflow_statuses'] = new sfWidgetFormChoice(array(
+        'choices'  => $workflow_statuses,
+    ));
+	$this->validatorSchema['workflow_statuses'] = new sfValidatorPass();
+	
+	$this->widgetSchema['maintenance_action_observation'] = new widgetFormSelectComplete(array(
+      'model' => 'CollectionMaintenance',
+      'table_method' => 'getDistinctActions',
+      'method' => 'getAction',
+      'key_method' => 'getAction',
+      'add_empty' => false,
+      'change_label' => 'Pick an action in the list',
+      'add_label' => 'Add another action',
+    ));
+	$this->validatorSchema['maintenance_action_observation'] = new sfValidatorPass();
+	 
+
   }
 
   public function addGtuTagValue($num)
@@ -1053,6 +1141,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       $this->embeddedForms['Codes']->embedForm($num, $form);
       $this->embedForm('Codes', $this->embeddedForms['Codes']);
   }
+  
   public function addCommentsQuery($query, $notion, $comment)
   {
     if($notion != '' || $comment != '') {
@@ -1066,6 +1155,102 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
         $query->andWhere('comment_indexed like concat(\'%\', fulltoindex(?), \'%\' )', $comment);
       $this->with_group = true;
     }
+    return $query ;
+  }
+  
+   public function addMaintenanceOrWorkflowQuery($query, $workflow_statuses, $maintenance_action_observation, $user_workflow_ref, $people_maintenance_ref, $date_from, $date_to)
+  {
+	$sql_member1=Array();
+	$sql_params1=Array();
+	$sql_member2=Array();
+	$sql_params2=Array();
+	if($workflow_statuses!="" || $user_workflow_ref!='')
+	{	
+		//date
+		if($date_from != '' && $date_to != '' )
+		{
+			$sql_member1[]='modification_date_time BETWEEN ? AND ? ';
+			$sql_params1[]=$date_from;
+			$sql_params1[]=$date_to;
+		}			
+		elseif($date_from != '')
+		{
+			$sql_member1[]='modification_date_time >= ?';
+			$sql_params1[]=$date_from;
+		}
+		elseif($date_to != '')
+		{
+			$sql_member1[]='modification_date_time <= ?';
+			$sql_params1[]=$date_to;
+		}
+		
+		if($workflow_statuses!="")
+		{
+			$sql_member1[]='status = ?';
+			$sql_params1[]=$workflow_statuses;
+		}		
+		if($user_workflow_ref !="")
+		{
+			$sql_member1[]='user_ref = ?';
+			$sql_params1[]=$user_workflow_ref;
+		}	
+	}
+	
+	if($maintenance_action_observation!="" || $people_maintenance_ref!="")
+	{
+		
+		//date
+		if($date_from != '' && $date_to != '' )
+		{
+			$sql_member2[]='modification_date_time BETWEEN ? AND ? ';
+			$sql_params2[]=$date_from;
+			$sql_params2[]=$date_to;
+		}			
+		elseif($date_from != '')
+		{
+			$sql_member2[]='modification_date_time >= ?';
+			$sql_params2[]=$date_from;
+		}
+		elseif($date_to != '')
+		{
+			$sql_member2[]='modification_date_time <= ?';
+			$sql_params2[]=$date_to;
+		}
+		
+		if($maintenance_action_observation!="" )
+		{
+			$sql_member2[]='action_observation = ?';
+			$sql_params2[]=$maintenance_action_observation;
+		}
+		if($people_maintenance_ref!="" )
+		{
+			$sql_member2[]='people_ref = ?';
+			$sql_params2[]=$people_maintenance_ref;
+		}
+		
+	}
+	$array_params = Array();
+	$sql="";
+	if(count($sql_member1)>0)
+	{		
+		$sql.="EXISTS(SELECT 1 FROM informative_workflow   WHERE record_id=s.id AND referenced_relation='specimens' AND ".implode(" AND ", $sql_member1).")";
+		
+		$array_params=array_merge($array_params, $sql_params1 );
+	}
+	if(count($sql_member2)>0)
+	{		
+		if(strlen($sql))
+		{
+			$sql.=" OR ";
+		}
+		$sql.="EXISTS(SELECT 1 FROM collection_maintenance   WHERE record_id=s.id AND referenced_relation='specimens' AND ".implode(" AND ", $sql_member2).")";
+		$array_params=array_merge($array_params, $sql_params2 );
+	}
+	if(count($array_params)>0 && strlen($sql)>0)
+	{
+		
+		$query->andWhere("(".$sql.")",$array_params);
+	}	
     return $query ;
   }
 
@@ -1464,11 +1649,18 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
   public function addPartColumnQuery($query, $field, $val)
   { 
     $containers=Array();
-    foreach($val as $tmp)
-    {
-        $containers[]='"'.str_replace("\"","\\\"", str_replace("\\","\\\\", $tmp )).'"';
-    }
-    $query->andWhere("LOWER(s.specimen_part) = ANY ('{".implode(",", $containers)."}')");
+	//$conn_MGR = Doctrine_Manager::connection();
+	
+	$array_query=[];
+	$array_params=[];
+	foreach($val as $tmp)
+	{
+		$array_query[]="LOWER(s.specimen_part)=LOWER(?)";
+		$array_params[]=$tmp;
+	}
+  
+	$query->andWhere(implode(" OR ", $array_query),$array_params );
+   
     return $query ;
   }
   
@@ -2037,6 +2229,34 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 		}
     return $query ;
   }
+  
+	public function addRestrictedAccess_query($query, $val) 
+   {
+		if(isset($val))
+		{
+			if($val=="yes")
+			{
+				$query->andWhere( "COALESCE(s.restricted_access,FALSE)=TRUE");
+			}
+			elseif($val=="no")
+			{
+				$query->andWhere( "COALESCE(s.restricted_access,FALSE)=FALSE");
+			}
+		}
+		return $query ;
+	}
+  
+     public function addDisasterRecoveryScoreQuery($query, $field, $val) 
+   {
+		if(strlen($val)>0)
+		{
+			if((int)$val>-1)
+			{
+			$query->andWhere( "EXISTS (SELECT i.id FROM Insurances i WHERE i.referenced_relation = 'specimens' AND i.record_id=s.id AND  disaster_recovery_score=?) " ,$val);
+			}
+		}
+    return $query ;
+  }
 
 
   
@@ -2234,6 +2454,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     // the line below is used to avoid with_multimedia checkbox to remains checked when we click to back to criteria
     if(!isset($taintedValues['with_multimedia'])) $taintedValues['with_multimedia'] = false ;
 
+
     if(isset($taintedValues['Codes'])&& is_array($taintedValues['Codes'])) {
       foreach($taintedValues['Codes'] as $key=>$newVal) {
         if (!isset($this['Codes'][$key])) {
@@ -2362,13 +2583,15 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
   public function doBuildQuery(array $values)
   {
     $this->encoding_collection = $this->getCollectionWithRights($this->options['user'],true);
+	$this->admin_collections = $this->getCollectionWithAdminRights($this->options['user'], 2);
 
 	$query = DQ::create()
       ->select('s.*,
+(s.collection_ref in ('.implode(',',$this->encoding_collection).')) as has_encoding_rights,
 
         gtu_location[0] as latitude,
-        gtu_location[1] as longitude,
-        (collection_ref in ('.implode(',',$this->encoding_collection).')) as has_encoding_rights
+        gtu_location[1] as longitude
+        
         '
       )
       ->from('Specimens s');
@@ -2502,6 +2725,13 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->addCategoryQuery($query,$values["category"], $values["category"] );
 	
 	$this->addMidsLevelQuery($query,$values["mids_level"], $values["mids_level"] );
+	$this->addDisasterRecoveryScoreQuery($query,$values["disaster_recovery_score"], $values["disaster_recovery_score"] );
+	
+	$this->addMaintenanceOrWorkflowQuery($query,$values['workflow_statuses'], $values['maintenance_action_observation'], $values['maintenance_or_workflow_people_ref'], $values['maintenance_or_workflow_maintenance_people_ref'],   $values['maintenance_or_workflow_from_date'], $values['maintenance_or_workflow_to_date']);
+	
+		$this->addRestrictedAccess_query($query,$values["restricted_access"]);
+	
+	$query->andWhere('( s.collection_ref in ('.implode(',',$this->admin_collections).') or COALESCE(s.restricted_access, FALSE)=false )');
     $query->limit($this->getCatalogueRecLimits());
 
     return $query;
@@ -2741,20 +2971,27 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 
 	$statuses=Array();
 	$i=0;
-    if(count($field)>0)
+	if($field===null)
 	{
-		foreach($field as $tmp)
+		$field=Array();
+	}
+	if(is_countable($field))
+	{
+		if(count($field)>0)
 		{
-			if(strlen(trim($tmp))>0)
+			foreach($field as $tmp)
 			{
-				  $statuses[]='"'.str_replace("'","''", (str_replace("\"","\\\"", str_replace("\\","\\\\", $tmp )))).'"';
-				  $i++;
+				if(strlen(trim($tmp))>0)
+				{
+					  $statuses[]='"'.str_replace("'","''", (str_replace("\"","\\\"", str_replace("\\","\\\\", $tmp )))).'"';
+					  $i++;
+				}
+				
 			}
-			
-		}
-		if($i>0)
-		{
-			$query->andWhere("EXISTS (SELECT f.id FROM Identifications f WHERE f.referenced_relation='specimens' AND f.record_id=s.id AND TRIM(lower(f.determination_status)) = ANY ('{".implode(",", $statuses)."}'))" ) ;
+			if($i>0)
+			{
+				$query->andWhere("EXISTS (SELECT f.id FROM Identifications f WHERE f.referenced_relation='specimens' AND f.record_id=s.id AND TRIM(lower(f.determination_status)) = ANY ('{".implode(",", $statuses)."}'))" ) ;
+			}
 		}
 	}
     return $query ;

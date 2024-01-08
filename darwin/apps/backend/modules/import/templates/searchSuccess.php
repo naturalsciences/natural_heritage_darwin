@@ -104,10 +104,16 @@
                   <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit import'))),'staging/index?import='.$import->getId());?>
 				<?php elseif ($format == 'locality'&& $import->getState() != 'processing'&& $import->getState() != 'aloaded') : ?>
 				<?php echo link_to(image_tag('edit.png',array('title'=>__('Edit import'))),'import/viewUnimportedGtu?id='.$import->getId()); ?>
-                <?php elseif ($format == 'taxon'&& ($import->getState() == 'finished')||$import->isEditableState()) : ?>
+                <?php elseif ($format == 'taxon'&& (($import->getState() == 'finished')||$import->isEditableState()) ) : ?>
                    <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit import'))),'import/viewUnimportedTaxa?id='.$import->getId()); ?>
-               <?php elseif ($format == 'lithostratigraphy'&& ($import->getState() == 'finished')||$import->isEditableState()) : ?>
+               <?php elseif ($format == 'lithostratigraphy'&& (($import->getState() == 'finished')||$import->isEditableState())) : ?>
                    <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit import'))),'import/viewUnimportedLitho?id='.$import->getId()); ?>
+				<?php elseif ($format == 'synonymies'&& (($import->getState() == 'finished')||$import->isEditableState())) : ?>
+                   <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit import'))),'import/viewUnimportedSynonymies?id='.$import->getId()); ?>
+				 <?php elseif ($format == 'properties'&& (($import->getState() == 'finished')||$import->isEditableState())) : ?>
+                   <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit import'))),'import/viewUnimportedProperties?id='.$import->getId()); ?>
+				 <?php elseif ($format == 'relationships'&& (($import->getState() == 'finished')||$import->isEditableState())) : ?>
+                   <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit import'))),'import/viewUnimportedRelationships?id='.$import->getId()); ?>
 				<?php else: ?>
 				NOT EDITABLE
                 <?php endif ; ?>
@@ -136,14 +142,54 @@
 			 <td>
                     <?php echo link_to("Load links",'import/loadlinks?id='.$import->getId()); ?>
 			</td>
+			 <?php elseif($import->getState()==="to_be_loaded"&& !$import->getWorking()  &&  $format == 'synonymies') :?>
+			 <td>
+                    <?php echo link_to("Load Synonyms",'import/loadsynonyms?id='.$import->getId()); ?>
+			</td>
+			<?php elseif($import->getState()==="to_be_loaded"&& !$import->getWorking()  &&  $format == 'properties') :?>
+			 <td>
+                    <?php echo link_to("Load Properties",'import/loadproperties?id='.$import->getId()); ?>
+			</td>
+			<?php elseif($import->getState()==="to_be_loaded"&& !$import->getWorking()  &&  $format == 'codes') :?>
+			 <td>
+                    <?php echo link_to("Load codes",'import/loadcodes?id='.$import->getId()); ?>
+			</td>
+			<?php elseif($import->getState()==="to_be_loaded"&& !$import->getWorking()  &&  $format == 'relationships') :?>
+			 <td>
+                    <?php echo link_to("Load relationships",'import/loadrelationships?id='.$import->getId()); ?>
+			</td>
              <?php elseif($import->getState()==="to_be_loaded"&& !$import->getWorking() ) : ?>
                 <td>
                     <?php echo link_to("Load in staging",'import/loadstaging?id='.$import->getId()); ?>
 				</td>
-             <?php elseif($import->getState()==="loaded"&& $format != 'locality'&& $format != 'lithostratigraphy') : ?>
-					<td>
+			 <?php elseif($import->getState()==="loaded"&& $format =='synonymies') : ?>
+				<td>
+						<?php echo link_to("Check import",'import/checksynonyms?id='.$import->getId()); ?>
+				</td>
+			 <?php elseif($import->getState()==="loaded"&& $format =='taxon') : ?>
+				<td>
 						<?php echo link_to("Check import",'import/checkstaging?id='.$import->getId()); ?>
-					</td>   
+				</td>
+			<?php elseif($import->getState()==="loaded"&& $format =='locality') : ?>
+				<td>
+						<?php echo link_to("Check import",'import/checkstaging?id='.$import->getId()); ?>
+				</td>
+			 <?php elseif($import->getState()==="loaded"&& $format =='properties') : ?>
+				<td>
+						<?php echo link_to("Check import",'import/checkproperties?id='.$import->getId()); ?>
+				</td>
+              <?php elseif($import->getState()==="loaded"&& $format =='codes') : ?>
+				<td>
+						<?php echo link_to("Check import",'import/checkcodes?id='.$import->getId()); ?>
+				</td>
+			<?php elseif($import->getState()==="loaded"&& $format =='relationships') : ?>
+				<td>
+						<?php echo link_to("Check import",'import/checkrelationships?id='.$import->getId()); ?>
+				</td>
+			<?php elseif($import->getState()==="loaded"&& $format =='abcd') : ?>
+				<td>
+						<?php echo link_to("Check import",'import/checkstaging?id='.$import->getId()); ?>
+				</td>
              <?php endif ; ?>
             </tr>
           <?php endforeach;?>

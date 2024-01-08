@@ -17,7 +17,7 @@ class SpecimensSelfFormFilter extends BaseSpecimensFormFilter
     $this->addPagerItems();
     $this->widgetSchema->setNameFormat('searchSpecimen[%s]');
     $this->widgetSchema['caller_id'] = new sfWidgetFormInputHidden();
-    $this->widgetSchema['code'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
+    $this->widgetSchema['code'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size select2_code_values'));
 	$this->widgetSchema['uuid'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
     $this->widgetSchema['taxon_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
     $this->widgetSchema->setLabels(array('code' => 'Exact Specimen code',
@@ -115,4 +115,6 @@ class SpecimensSelfFormFilter extends BaseSpecimensFormFilter
     $query->limit($this->getCatalogueRecLimits());
     return $query;
   } 
+  
+  
 }

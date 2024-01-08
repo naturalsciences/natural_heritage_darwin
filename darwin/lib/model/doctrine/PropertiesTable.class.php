@@ -81,4 +81,9 @@ class PropertiesTable extends DarwinTable
 
     return array_merge(array(''=>''),$res_unit);
   }
+  
+     public function getYesNo()
+   {                                             
+        return Array("yes"=> "yes", "no"=> "no");
+   }
 }

@@ -151,6 +151,10 @@ $(document).ready(function () {
                        
                         if(params.data.term.length>=3)
                         {
+							if(typeof autocomplete_rmca_array == "undefined")
+							{
+								autocomplete_rmca_array=Array();
+							}
                             var $request= $.ajax(
                                  {
                                   dataType: "json",
@@ -169,7 +173,12 @@ $(document).ready(function () {
                              var $request= $.ajax(
                                  {
                                   dataType: "json",
-                                  url:  getTaxaUrl()+'&table=taxonomy',                                  
+                                  url:  getTaxaUrl(), 
+									data: {
+                                        term : params.data.term,
+                                        table: 'taxonomy',
+                                        
+                                  }								  
                                 }
                             );
                         }

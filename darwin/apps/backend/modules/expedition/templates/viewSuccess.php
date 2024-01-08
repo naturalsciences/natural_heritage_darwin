@@ -2,6 +2,10 @@
 <?php slot('title', __('View Expeditions'));  ?>
 <div class="page">
     <h1><?php echo __('View Expeditions');?></h1>
+	
+	<div style="margin-bottom:5px; ">
+			<a target='_blank' href="<?php print(url_for('specimensearch/search')."?specimen_search_filters[expedition_name]=".$expedition->getName());?>"><?php print(__("Search specimens"));?></a>
+	</div>
   <div class="table_view">
   <table>
     <tbody>

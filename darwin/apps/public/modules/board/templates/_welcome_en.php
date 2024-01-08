@@ -37,6 +37,6 @@ The corner stone of the darwin database is the specimen and the information abou
 
 <p>
   <a href="<?php echo __('http://www.naturalsciences.be');?>">
-            <?php echo image_tag('public/rbins_logo.png', 'class=logo_center_align');?><br />
+            <?php echo image_tag('public/rbins_logo_new.png', 'class=logo_center_align');?><br />
           </a>
 </p>

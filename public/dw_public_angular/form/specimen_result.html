@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html id="darwin-app" ng-controller='darwin-controller'>
+<head>
+    <title>{{'TITLE_SEARCH_PAGE' | translate}}</title>
+	<meta name="MobileOptimized" content="width">
+	<meta name="HandheldFriendly" content="true">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+    <meta charset="UTF-8">
+	<meta name="google-site-verification" content="googlea676d101458b4793.html" />
+	<link rel="stylesheet" href="./css/common/bootstrap.min.css">
+	<link rel="stylesheet" href="./css/common/darwin.css">
+	<link rel="stylesheet" href="./js/code/common/openlayers/v6.5.0-dist/ol.css">
+	<link rel="stylesheet" href="./js/code/common/select.min.css">
+	<link rel="stylesheet" href="css/normalize.css">
+	<link rel="stylesheet" href="css/fonts.css">
+	<link rel="stylesheet" href="css/darwinweb.css">
+	<link rel="stylesheet" href="css/ol_darwinweb.css">		
+
+	<script type="text/javascript" src="./js/libs/jquery/jquery.js"></script>
+
+	<script type="text/javascript" src="./js/libs/angular-1.3.9/angular.js?v=1.3.4"></script>
+	<script type="text/javascript" src="./js/libs/angular-1.3.9/angular-cookies.js?v=1.3.9"></script>
+	<script type="text/javascript" src="./js/libs/angular-1.3.9/angular-loader.js?v=1.3.9"></script>
+
+	<script type="text/javascript" src="./js/libs/angular-1.3.9/angular-resource.js?v=1.3.9"></script>
+	<script type="text/javascript" src="./js/libs/angular-1.3.9/angular-route.js?v=1.3.9"></script>
+	<script type="text/javascript" src="./js/libs/angular-1.3.9/angular-sanitize.js?v=1.3.9"></script>
+
+	<script type="text/javascript" src="./js/code/common/classList.js"></script>
+	<script type="text/javascript" src="./js/libs/angular-1.3.9/angular-mocks.js"></script>
+	<script type="text/javascript" src="./js/code/common/underscore-min.js"></script>
+	<script type="text/javascript" src="./js/code/common/ui-bootstrap-tpls-0.14.3.min.js"></script>
+	<script type="text/javascript" src="./js/code/common/angular-translate.min.js"></script>
+	<script type="text/javascript" src="./js/code/common/moment.js"></script>
+	<script type="text/javascript" src="./js/code/common/angular-moment.js"></script>
+	<script type="text/javascript" src="./js/code/common/select.min.js"></script>
+
+	<script type="text/javascript" src="./js/code/common/messages.js"></script>
+	<script type="text/javascript" src="./js/code/filters/filter.js"></script>
+	<script type="text/javascript" src="./js/code/services/app_no_frame.js"></script>
+	<script type="text/javascript" src="./js/code/services/app_content.js"></script>
+	<script type="text/javascript" src="./js/code/controllers/darwinController.js"></script>
+	<script type="text/javascript" src="./js/code/controllers/darwinControllerDetail.js"></script>
+	<script type="text/javascript" src="./js/code/common/clickoutside.directive.js"></script>
+	<script type="text/javascript" src="./js/code/common/spin.min.js"></script>
+	<script type="text/javascript" src="./js/code/common/angular-spinner.min.js"></script>
+	<script type="text/javascript" src="./js/code/common/angular-loading-spinner.js"></script>
+	<script type="text/javascript" src="./js/code/common/tmhDynamicLocale.min.js"></script>
+	<script type="text/javascript" src="./js/code/common/openlayers/v6.5.0-dist/ol.js"></script>
+	<!--changed for intermediate page-->
+	<base href="/dw_public/form/">	
+
+</head>
+
+<body>
+
+<!---------------------------    HEADER   --------------------------->
+ <div ng-view class="view-animate"></div>
+<header id="site-header">
+
+	<div class="maxwidthwrapper clearfix">
+	
+		<!--<div class="header__logo">
+		
+			<a href="https://naturalsciences.be" target="_self"  class="site-logo">
+				<img src="/dw_public/form/images/logo_irsnb.png" alt="Home" />
+			</a>
+		
+		</div>-->
+		
+		<div class="header__secondary">
+		
+			<div id="block-languageswitcher">
+				 <ul>
+					<li><a ng-click="ctrl.setLanguage('nl')" class="language-link">NL</a></li>
+					<li><a ng-click="ctrl.setLanguage('fr')" class="language-link">FR</a></li>
+					<li><a ng-click="ctrl.setLanguage('en')" class="language-link">EN</a></li>
+				</ul>
+			</div>
+			
+		</div>
+	
+	</div>
+	
+</header>
+
+<!---------------------------    END HEADER    --------------------------->
+
+<!---------------------------    SUBMENU    --------------------------->
+
+<!--<form action="./specimen_data.html"  method="get">-->
+
+<div class="submenu">
+
+	<div class="maxwidthwrapper clearfix">
+		<ul>
+			<li>
+				<a href="specimen_result.html" target="_self">{{'SEARCH' | translate}}</a>
+			</li>
+			<li>
+				<a href="https://www.naturalheritage.be/darwin/rmca/dashboard_login" target="_blank" >{{ 'ADVANCED_BACKEND_INTERFACE' | translate }}</a>
+			</li>
+		</ul>
+	</div>
+
+</div>
+
+<!---------------------------    END SUBMENU    --------------------------->
+
+<!---------------------------    MAIN CONTENT    --------------------------->
+
+<div id="main-content" class="page-area page-detail page-search" style="overflow: visible">
+
+	<div class="maxwidthwrapper clearfix">
+
+		
+
+		<div class="message-search clearfix">
+			<span ng-bind="message"></span>
+		</div>
+		
+		<div class="select-collection-container clearfix">		
+			<span class="label label-collection">{{'COLLECTION' | translate}}:</span>
+			<select  name="collectionselect" id="class" class="select-collection" ng-model="current_collection" allow-clear="true" ng-options="collection as collection.name for collection in collections" ng-change="changeCollection()" >
+			</select>
+			<br/>
+			<div >
+				<b>{{ current_collection.name }}</b>
+			</div>
+		</div>
+		
+		<!---------------------------   3 COLUMNS    --------------------------->
+
+		<div class="grid--threedown search-criteria clearfix">
+		
+			<!---------------------------   COLUMN 1    --------------------------->
+
+			<div class="row">
+			
+				<span class="label">{{'CLASS' | translate}}:</span>
+				<ui-select multiple ng-model="ctrl.class.selected"  append-to-body="true" theme="bootstrap" ng-change="resyncRank('class')">
+					<ui-select-match  allow-clear="true" placeholder="Enter a class...">{{$item.name}}</ui-select-match>
+					<ui-select-choices repeat="item.id as item in classes track by $index"
+							 refresh="refreshClasses($select.search)"
+							 refresh-delay="500"
+							 ng-hide="!$select.open"
+							>
+					<div ng-bind-html="item.name | highlight: $select.search"></div>
+					</ui-select-choices>
+				</ui-select>
+
+				<span class="label">{{'ORDER' | translate}}:</span>
+				<ui-select multiple ng-model="ctrl.order.selected"  append-to-body="true" theme="bootstrap" ng-change="resyncRank('order')">
+					<ui-select-match  allow-clear="true" placeholder="Enter an order...">{{$item.name}}</ui-select-match>
+					<ui-select-choices repeat="item.id as item in orders track by $index"
+							 refresh="refreshOrder($select.search)"
+							 refresh-delay="500"
+							 ng-hide="!$select.open"
+							>
+						<div ng-bind-html="item.name | highlight: $select.search"></div>
+					</ui-select-choices>
+				</ui-select>
+
+
+				<span class="label">{{'FAMILY' | translate}}:</span>
+				<ui-select multiple ng-model="ctrl.family.selected"  append-to-body="true" theme="bootstrap" ng-change="resyncRank('family')">
+					<ui-select-match  allow-clear="true" placeholder="Enter a family...">{{$item.name}}</ui-select-match>
+					<ui-select-choices repeat="item.id as item in families track by $index"
+							 refresh="refreshFamilies($select.search)"
+							 refresh-delay="500"
+							 ng-hide="!$select.open"
+							>
+						<div ng-bind-html="item.name | highlight: $select.search"></div>
+					</ui-select-choices>
+				</ui-select>
+
+				<span class="label">{{'GENUS' | translate}}:</span>
+				<ui-select  multiple ng-model="ctrl.genus.selected"  append-to-body="true" theme="bootstrap" ng-change="resyncRank('genus')">
+					<ui-select-match allow-clear="true" placeholder="Enter a genus...">{{$item.name}}</ui-select-match>
+					<ui-select-choices repeat="item.id as item in genus track by $index"
+						refresh="refreshGenera($select.search)"
+						refresh-delay="500"
+						ng-hide="!$select.open">
+						<div ng-bind-html="item.name | highlight: $select.search"></div>
+					</ui-select-choices>
+				</ui-select>
+		
+			</div>
+			
+			<!---------------------------  END COLUMN 1    --------------------------->
+
+			<!---------------------------   COLUMN 2    --------------------------->
+
+			<div class="row">
+			
+				<span class="label">{{'SPECIES_AND_BELOW' | translate}}:</span>
+				<ui-select multiple ng-model="ctrl.species.selected"  append-to-body="true" theme="bootstrap" ng-change="resyncRank('species')">
+					<ui-select-match allow-clear="true" placeholder="Enter a species...">{{$item.name}}</ui-select-match>
+					<ui-select-choices repeat="item.id as item in species track by $index"
+							 refresh="refreshSpecies($select.search)"
+							 refresh-delay="500"
+							 ng-hide="!$select.open">
+						<div ng-bind-html="item.name | highlight: $select.search"></div>
+					</ui-select-choices>
+				</ui-select>
+
+			<span class="label">{{'IG_NUMBER' | translate}}:</span>
+				<ui-select multiple  ng-model="ctrl.ig_num.selected"  append-to-body="true" theme="bootstrap" >
+					<ui-select-match  allow-clear="true" placeholder="Enter an ig number...">{{$item.value}}</ui-select-match>
+						<ui-select-choices repeat="item.value as item in ig_num track by $index"
+							 refresh="refreshIgNumbers($select.search)"
+							 refresh-delay="1500"
+							 ng-hide="!$select.open">
+						<div ng-bind-html="item.value | highlight: $select.search"></div>
+					</ui-select-choices>
+				</ui-select>				
+
+				<span class="label">{{'SPECIMEN_NUMBER' | translate}}:</span>
+				<ui-select multiple  ng-model="ctrl.sp_num.selected"  append-to-body="true" theme="bootstrap" ng-change="resyncRank('specimen_number')">
+					<ui-select-match  allow-clear="true" placeholder="Enter a specimen number...">{{$item.value}}</ui-select-match>
+						<ui-select-choices repeat="item.value as item in sp_num track by $index"
+							 refresh="refreshSpecimenNumbers($select.search)"
+							 refresh-delay="1500"
+							 ng-hide="!$select.open">
+						<div ng-bind-html="item.value | highlight: $select.search"></div>
+					</ui-select-choices>
+				</ui-select>
+
+				<span class="label">{{'COUNTRIES' | translate}}:</span>
+				<ui-select multiple ng-model="ctrl.country.selected"  append-to-body="true" theme="bootstrap" ng-change="resyncRank('country')" >
+					<ui-select-match  allow-clear="true" placeholder="Enter a Country...">{{$item.value}}</ui-select-match>
+					<ui-select-choices repeat="item.value+'|' as item in countries track by $index"
+							 refresh="refreshCountries($select.search)"
+							 refresh-delay="500"
+							 ng-hide="!$select.open"
+							 group-by="groupCountrie">
+							 <ui-select-no-choice>{{$select.search}}</ui-select-no-choice>
+						<div ng-bind-html="item.value | highlight: $select.search"></div>
+					</ui-select-choices>
+				</ui-select>
+
+				<!--<span class="label">{{'LOCALITIES' | translate}}:</span>
+				<ui-select multiple ng-model="ctrl.locality.selected"  append-to-body="true" theme="bootstrap" ng-change="resyncRank('localities')">
+					<ui-select-match  allow-clear="true" placeholder="Enter a locality...">{{$item.value}}</ui-select-match>
+					<ui-select-choices repeat="item.value+'|' as item in localities track by $index"
+							 refresh="refreshLocalities($select.search)"
+							 refresh-delay="500"
+							 ng-hide="!$select.open">
+						<div ng-bind-html="item.value | highlight: $select.search"></div>
+					</ui-select-choices>
+				</ui-select>-->
+				<span class="label">{{'COLLECTORS' | translate}}:</span>
+				<ui-select multiple ng-model="ctrl.collector.selected"  append-to-body="true" theme="bootstrap" ng-change="resyncRank('collectors')">
+					<ui-select-match  allow-clear="true" placeholder="Enter a collector...">{{$item.name}}</ui-select-match>
+					<ui-select-choices repeat="item.name+'|' as item in collectors track by $index"
+							 refresh="refreshCollectors($select.search)"
+							 refresh-delay="500"
+							 ng-hide="!$select.open">
+						<div ng-bind-html="item.name | highlight: $select.search"></div>
+					</ui-select-choices>
+				</ui-select>
+				
+			</div>
+			
+			<!---------------------------   END COLUMN 2    --------------------------->
+
+			<!---------------------------   COLUMN 3    --------------------------->	
+			
+			<div class="row">
+			
+				<!--pvignaux-->
+				<!--<span class="label">{{'COLLECTORS' | translate}}:</span>
+				<ui-select multiple ng-model="ctrl.collector.selected"  append-to-body="true" theme="bootstrap" ng-change="resyncRank('collectors')">
+					<ui-select-match  allow-clear="true" placeholder="Enter a collector...">{{$item.name}}</ui-select-match>
+					<ui-select-choices repeat="item.name+'|' as item in collectors track by $index"
+							 refresh="refreshCollectors($select.search)"
+							 refresh-delay="500"
+							 ng-hide="!$select.open">
+						<div ng-bind-html="item.name | highlight: $select.search"></div>
+					</ui-select-choices>
+				</ui-select>-->			
+
+				<div class="select-collecting">
+					<span class="label">{{'START_COLLECTING_DATE' | translate}}:</span>
+					<br/>
+
+					<select name="beginDay" id="beginDay" ng-model="ctrl.beginDay">
+						<option value=""></option>
+						<option ng-repeat="n in [] | range_root:1:31" value="{{n}}">{{n}}</option>
+					</select>
+					/
+					<select name="beginMonth" id="beginMonth" ng-model="ctrl.beginMonth">
+						<option value=""></option>
+						<option ng-repeat="n in [] | range_root:1:12" value="{{n}}">{{n}}</option>
+					</select>
+					/
+					<select name="beginYear" id="beginYear" ng-model="ctrl.beginYear">
+					<option value=""></option>
+					<option ng-repeat="n in [] | range_year | reverse" value="{{n}}">{{n}}</option>
+					</select>
+					<br/>   
+					<span class="label">{{'END_COLLECTING_DATE' | translate}}:</span>
+						<br/>
+					<select name="endDay" id="endDay" ng-model="ctrl.endDay">
+						<option ng-repeat="n in [] | range_root:1:31" value="{{n}}">{{n}}</option>
+					</select>
+					/
+					<select name="endMonth" id="endMonth" ng-model="ctrl.endMonth">
+						<option ng-repeat="n in [] | range_root:1:12" value="{{n}}">{{n}}</option>
+					</select>
+					/
+					<select name="endYear" id="endYear" ng-model="ctrl.endYear">
+						<option ng-repeat="n in [] | range_year | reverse" value="{{n}}">{{n}}</option>
+					</select>
+				</div>
+				
+				<div class="select-types">
+					<span class="label">{{'TYPES' | translate}}:</span>
+					<div ng-repeat="type in types" >
+					   <input type="checkbox" class="checkbox_darwin" checklist-value={{type.name}}  ng-click="toggleTypeSelection(type.name)" ng-checked="selectedTypes.indexOf(type.name) > -1"> {{type.name}}</input><br>
+					</div>
+				</div>
+
+				<div class="select-images">
+					<span class="label" style="padding-right: 0">{{'HAS_IMAGES' | translate}}:</span>
+					<input type="checkbox" class="checkbox_darwin" ng-model="checkboxModel.has_image">
+				</div>
+
+				<div class="select-3d">
+					<span class="label" style="padding-right: 0">{{'HAS_3D' | translate}}:</span>
+					<input type="checkbox" class="checkbox_darwin" ng-model="checkboxModel.has_3d">
+				</div>
+				
+				<div class="select-coords">
+					<span class="label" style="padding-right: 0">{{'GEOREF_ONLY' | translate}}:</span>
+					<input type="checkbox" class="checkbox_darwin" ng-model="checkboxModel.georef_only">
+				</div>
+				
+			</div>
+			
+			<!---------------------------   END COLUMN 3    --------------------------->			
+
+		</div>
+		
+		<!---------------------------   END 3 COLUMNS    --------------------------->	
+		
+		<!---------------------------   MAP    --------------------------->
+
+		<div class="show-hide-map-container">
+		
+			<span class="label">{{'FILTER_SEARCH_GEO' | translate}}:</span>
+		 
+			<div class="expand-one"><a href="#" ng-click="collapseMapSwitch()">{{'SHOW_HIDE_MAP' | translate}}</a></div>
+	
+			<div ng-hide="collapseMap">
+			
+				<!---------------------------   2 COLUMNS 2-1    --------------------------->
+
+				<div class="grid--twodown grid--onetwodown clearfix">
+				
+					<!---------------------------   COLUMN 1    --------------------------->
+
+					<div class="row coordinates-map-search clearfix">
+					
+						<!--DO NOT REMOVE NEEDED FOR MAP SEARCH !!!-->
+						
+						<div style="display:none">	
+							<input type="text" id="wkt" name="wkt" class="wkt" ng-model="wkt"/>
+						</div>
+						
+						<!--
+					
+						<div>
+							{{'WKT' | translate}}:
+							<input type="text" id="wkt" name="wkt" class="wkt" ng-model="wkt"/>
+						</div>
+						<div>
+							<input type="radio" ng-model="ctrl.geostep" value="1"/> {{'STEP 1°' | translate}}
+							<input type="radio" ng-model="ctrl.geostep" value="0.016667"/> {{'STEP 1\'' | translate}}
+							<input type="radio" ng-model="ctrl.geostep" value="0.000278"/> {{'STEP 1"' | translate}}
+						</div>
+						
+						-->
+						
+						<table class="tables-coordinates" cellspacing="0" cellpadding="0" border="0">
+						   <tbody>
+								<tr>
+								  <td></td>
+								  <td>N<br><input type="number" min="-90" max="90" ng-min="-90" ng-max="90" name="selN" id="selN" ng-model="selectionN" step=".01"></input></td>
+								  <td></td>
+								</tr>
+								<tr>
+								  <td>W&nbsp;<input type="number" min="-180" max="180" ng-min="-180" ng-max="180"  name="selW" id="selW" ng-model="selectionW" step=".01"></input></td>
+								  <td></td>
+								  <td><input type="number" min="-180" max="180" ng-min="-180" ng-max="180" name="selE" id="selE" ng-model="selectionE" step=".01">&nbsp;E</td>
+								</tr>
+								<tr>
+								  <td></td>
+								  <td><input type="number" min="-90" max="90" ng-min="-90" ng-max="90" name="selS" id="selS" ng-model="selectionS" step=".01"></input><br>S</td>
+								  <td></td>
+								</tr>
+						   </tbody>
+						</table>
+						
+						<table class="tables-coordinates" cellspacing="0" cellpadding="0" border="0">
+						   <tbody>
+								<tr>
+								  <td></td>
+								  <td>N<br>{{ctrl.coordDDToDMS(selectionN)}}</td>
+								  <td></td>
+								</tr>
+								<tr>
+								  <td>W&nbsp;{{ctrl.coordDDToDMS(selectionW)}}</td>
+								  <td></td>
+								  <td>{{ctrl.coordDDToDMS(selectionE)}}&nbsp;E</td>
+								</tr>
+								<tr>
+								  <td></td>
+								  <td>{{ctrl.coordDDToDMS(selectionS)}}<br>S</td>
+								  <td></td>
+								</tr>
+						   </tbody>
+						</table>						
+						
+						<div style="text-align: center; margin-bottom: 12px">
+							<input type="button" id="drawOnMap" name="drawOnMap" value="{{ 'DRAW_ON_MAP' | translate }}"></input>
+						</div>
+						
+					</div>
+					
+					<!---------------------------   END COLUMN 1    --------------------------->
+
+					<!---------------------------   COLUMN 2    --------------------------->				
+					
+					<div class="row coordinates-map-search clearfix">
+						<div class="map-tools">
+							<input type="button" id="modeMap" name="modeMap" value="{{ 'MOVE_MAP' | translate }}"></input> 
+							<input type="button" class="draw-polygon2" id="draw-polygon2" name="draw-polygon2" value="{{ 'DRAW_POLYGON' | translate }}"></input>
+							<input type="button" id="cleanSelect" name="cleanSelect" value="{{ 'CLEAN_SELECTION' | translate }}"></input>
+						</div>
+						<div>
+							<div  id="map" class="map"></div>
+							<div id="mouse-position"></div>
+							
+						</div>
+						<input type="hidden" name="detectLoad" id="detectLoad" ng-model="pager.currentPage" ></input>
+						
+						<input type="hidden" name="interceptMapClick" id="interceptMapClick" ng-model="interceptMapClick" ></input>
+						
+					</div>
+					
+					<!---------------------------   END COLUMN 2    --------------------------->				
+					
+				</div>
+				
+				<!---------------------------   END 2 COLUMNS 2-1    --------------------------->	
+						
+			</div>
+			
+		</div>
+		
+		<!---------------------------   END MAP    --------------------------->
+		
+		<!---------------------------   SEARCH BUTTONS    --------------------------->		
+
+		<div class="search_buttons">
+		
+			<button type="submit" class="go_search search_button" ng-click="get_specimens()" data-dismiss="modal">{{'SEARCH' | translate}}</button> 
+			<button type="submit" id="clean_interface" name="clean_interface" class="clean_interface clean_button" ng-click="clean_interface()" data-dismiss="modal">{{'CLEAN' | translate}}</button>
+				
+		</div>
+
+		<!---------------------------   END SEARCH BUTTONS    --------------------------->	
+				
+		<input type="hidden" id="text_enable_selection" name="text_enable_selection" value="{{ 'ENABLE_SELECTION' | translate }}"/>
+		<input type="hidden" id="text_enable_move" name="text_enable_move" value="{{ 'ENABLE_MOVE' | translate }}"/>
+		
+		<!---------------------------    END TABLE RESULTS    --------------------------->
+			
+	</div>
+		 
+</div>
+ 
+<!---------------------------    END MAIN CONTENT    --------------------------->
+
+<!---------------------------    FOOTER   --------------------------->
+
+<footer id="site-footer">
+
+	<div class="maxwidthwrapper clearfix">
+
+		<!--<div class="footer__sponsors clearfix">
+			
+				<ul>
+					<li>
+						<a href="https://www.naturalsciences.be" target="_blank" title="naturalsciences.be"><img alt="Royal Museum for Central Africa" src="/dw_public/form/images/logo_irsnb.png"></a>
+					</li>
+					<li>
+						<a href="http://www.belspo.be/" target="_blank" title="belspo.be"><img alt="Belspo" src="/dw_public/form/images/logo_belspo.png"></a>
+					</li>
+					<li>
+						<a href="https://diplomatie.belgium.be/en/policy/development_cooperation" target="_blank" title="diplomatie.belgium.be"><img alt="Development cooperation" src="/dw_public/form/images/logo_belgian_development_cooperation_en.png"></a>
+					</li>
+				</ul>
+				
+		</div>-->
+	
+		<div class="footer__bottom clearfix">
+				
+				<div class="footer__legal-notices">
+
+					<div style="font-size: 0.9em">
+						Copyright (c) - {{ 'RMCA' | translate }} - 2023
+					</div>
+					<div>
+						<a href="https://www.africamuseum.be/en/legal" target="_blank" style="font-weight: 800; border-bottom: none">{{ 'LEGAL_NOTICES' | translate }}</a>
+					</div>
+
+				</div>
+		</div>
+		
+	</div>
+
+</footer>
+
+<!---------------------------    END FOOTER    --------------------------->
+
+ <script type="text/javascript">
+  
+ var moveDraw=false;
+ var modeRemovePage=false;
+ var layerLoaded=false;
+ var selectionBox; 
+ var map;      
+ var autoDraw=false;
+ var source_draw = new ol.source.Vector({wrapX: false});
+ var draw_enabled=false;
+ var draw;
+ 
+var ol_ext_inherits = function(child,parent) {
+  child.prototype = Object.create(parent.prototype);
+  child.prototype.constructor = child;
+};
+ 
+$('.expand-one').click(function(){
+    $('.collapse').slideToggle('slow');
+});
+  
+  
+var clean_draw_map=function()
+{
+
+	console.log("REMOVE SELECTION");
+    if(autoDraw==true)
+    {
+		console.log("autoDraw is true");
+		map.removeLayer(selectionBox);
+        autoDraw=false;
+	}   
+                        
+}  
+
+var clean_interface=function()
+{
+		$('.wkt').val('');
+        $( ".checkbox_darwin" ).attr( "checked", false );
+		clean_draw_map();
+}
+					
+
+
+$(".clean_interface").click(
+	function()
+	{
+		clean_interface();
+	}
+);
+
+
+  
+  
+  function addDarwinLayer(feature,origininput)
+        {
+            var tmp_geom =new ol.geom.Polygon(feature.getGeometry().getCoordinates());
+            var  generic_feature = new ol.Feature({geometry: tmp_geom});
+              
+            var tmpSource=new ol.source.Vector();
+            tmpSource.addFeature(generic_feature);
+            //iLayer++;
+            selectionBox = new ol.layer.Vector({
+                        name: 'tmp', //iLayer,
+                        source: tmpSource,
+                        //style: styleWKT	
+						});
+                        
+            
+            map.addLayer(selectionBox);
+            var format = new ol.format.WKT();
+			tmp_geom4326= tmp_geom.clone();
+			tmp_geom4326.transform("EPSG:3857", "EPSG:4326");
+			wktfeaturegeom = format.writeGeometry(tmp_geom4326);
+			$('.wkt').val(wktfeaturegeom);
+			angular.element($('#wkt')).scope().wkt=wktfeaturegeom;
+            layerLoaded=true;		
+        }
+		
+		
+  function removeDarwinLayer(){		
+		if(layerLoaded){
+			map.removeLayer(selectionBox)
+		}		
+	}
+	var mousePositionControl= new ol.control.MousePosition(
+            {
+                coordinateFormat: ol.coordinate.createStringXY(4),
+                projection:'EPSG:4326',
+                className: 'custom-mouse-position',
+                target: document.getElementById('mouse-position'),
+                undefinedHTML: '&nbsp;'
+                
+            }
+        );
+        
+      var sourceSelection = new ol.source.Vector();
+        var interactionMove = new ol.interaction.DragBox({
+        condition: ol.events.condition.noModifierKeys,
+        style: new ol.style.Style({
+            stroke: new ol.style.Stroke({
+                color: [0, 0, 255, 1]
+            })
+        })
+    });
+
+    interactionMove.on('boxend', function(evt){
+        if(moveDraw===true)
+        {
+            var geom = evt.target.getGeometry();
+            //console.log(geom);
+            var feat = new ol.Feature({geometry: geom});
+            //source.clear();
+            sourceSelection.addFeature(feat);
+            getSelectionZone(geom);
+             selectionBox=new ol.layer.Vector({
+            source: sourceSelection
+            });
+           map.addLayer(selectionBox);
+           autoDraw=true;
+       }
+    });
+    
+    
+    var getSelectionZone=function(mapGeom)
+    {
+        var geomTmp=mapGeom.clone();
+        var geomWGS=geomTmp.transform('EPSG:3857', 'EPSG:4326');
+      
+        var topLeft=ol.extent.getTopLeft(geomWGS.getExtent());
+        var bottomRight=ol.extent.getBottomRight(geomWGS.getExtent());
+        var north=topLeft[1];
+        var west=topLeft[0];
+        var south=bottomRight[1];
+        var east=bottomRight[0];
+      
+         var tmpN=angular.element($('#selN')).scope();
+         tmpN.$apply(
+            function(){
+                tmpN.selectionN = north;
+            });
+            
+        var tmpS=angular.element($('#selS')).scope();
+         tmpS.$apply(
+            function(){
+                tmpS.selectionS = south;
+            });
+            
+       var tmpW=angular.element($('#selW')).scope();
+         tmpW.$apply(
+            function(){
+                tmpW.selectionW = west;
+            });
+            
+        var tmpE=angular.element($('#selE')).scope();
+         tmpE.$apply(
+            function(){
+                tmpE.selectionE = east;
+            });
+       
+    };
+  
+  
+		var osmLayer= new ol.layer.Tile(
+            {
+                preload: Infinity,
+                source: new ol.source.OSM()
+            }
+        );
+        
+        
+        
+        var view= new ol.View({
+            center: [-4,15],
+            zoom: 5
+        }); 
+		
+		$("#draw-polygon2").click(
+			function()
+			{
+				 type_draw="polygon";
+                 removeDarwinLayer();
+                  map.removeInteraction(draw);
+				  draw_enabled=true;
+                  draw = new ol.interaction.Draw({
+					source: source_draw,
+					type: 'Polygon'
+                  });
+                  draw.on('drawend', function (event) {
+                            addDarwinLayer(event.feature,"from drawing");
+                            map.removeInteraction(draw);
+							autoDraw=true;
+                        });
+                  map.addInteraction(draw);
+			}
+		);
+        
+          //button draw Polygons
+      DrawPolygonControl = function(opt_options) {
+               
+                var options = opt_options || {};
+                var element = document.createElement('div');
+                element.className = 'draw-polygon ol-unselectable ol-control';
+                element.innerHTML='&#11040;';   
+                $(element).click(
+                    function()
+                    {
+                         type_draw="polygon";
+                        removeDarwinLayer();
+                        map.removeInteraction(draw);
+						draw_enabled=true;
+                        draw = new ol.interaction.Draw({
+                        source: source_draw,
+                        type: 'Polygon'
+                        });
+                        draw.on('drawend', function (event) {
+							//console.log("draw_end");
+                            addDarwinLayer(event.feature,"from drawing");
+                            map.removeInteraction(draw);
+							autoDraw=true;
+                        });
+                        map.addInteraction(draw);
+                    }
+                );
+                 ol.control.Control.call(this, {
+                  element: element,
+                  target: options.target
+                });
+      };
+     ol_ext_inherits(DrawPolygonControl, ol.control.Control);
+       
+        map=new ol.Map({
+            layers:[osmLayer],
+            target: 'map',
+            view: view,
+            controls: ol.control.defaults({
+                attributionOptions: ({collapsible: false})
+            }).extend([mousePositionControl,  new ol.control.ScaleLine(),  new DrawPolygonControl()]),
+            
+        }); 
+        $('#map').css("height", "480px");
+        map.updateSize()      
+	  
+	  	
+      
+      $(document).ready(
+      
+      
+        function()
+        {	
+			 $(".go_search").click(
+		  
+				function()
+				{
+					
+					 $([document.documentElement, document.body]).animate({
+						scrollTop: $("#div_result").offset().top
+					}, 2000);
+				}
+			  );  
+			
+            modeRemovePage=true;
+           
+            
+            $("#modeMap").click(
+                function()
+                {
+                    
+                    moveDraw=!moveDraw;                   
+               
+					if(draw_enabled==true)
+					{
+						 map.removeInteraction(interactionMove);
+						draw_enabled=false;
+					}
+                }
+            );
+                              
+                  $("#drawOnMap").click(
+                        function()
+                        {
+                                var tmpN=angular.element($('#selN')).scope();
+                               //
+                                var WN=[tmpN.selectionW, tmpN.selectionN];
+                                var ES=[tmpN.selectionE, tmpN.selectionS];
+                                var ext = ol.extent.boundingExtent([WN,ES]);
+                                ext = ol.proj.transformExtent(ext, ol.proj.get('EPSG:4326'), ol.proj.get('EPSG:3857'));
+                                 map.getView().fit(ext, map.getSize(),{maxZoom:12});
+                                
+                                var geom = ol.geom.Polygon.fromExtent(ext);
+                                //console.log(geom);
+                                var feat = new ol.Feature({geometry: geom});
+                                var sourceSelection = new ol.source.Vector();
+                                sourceSelection.addFeature(feat);
+                                removeDarwinLayer();
+                                 selectionBox=new ol.layer.Vector({
+                                source: sourceSelection
+                                });
+                                map.addLayer(selectionBox);
+                                autoDraw=true;
+                           
+                        }
+                    );
+                    
+                    $("#cleanSelect").click(
+						function()
+						{
+							clean_draw_map();
+						}
+					);
+                    //some checkboxes cannot be unchecked from Angular controller		
+		
+        }
+      );
+      
+  </script>
+
+</div>
+<!--</form>-->
+</body>
+</html>

@@ -13,9 +13,14 @@ class IdentificationsTable extends DarwinTable
     return $this->createFlatDistinct('identifications', 'determination_status', 'determination_status')->execute();
   }
 
-  public function getIdentificationsRelated($table='specimens', $specId)
+  public function getIdentificationsRelated($table, $specId)
   {
-    $q = Doctrine_Query::create()->
+	//php 8 no default params in first position
+    if($table===null)
+	{
+		$table='specimens';
+	}
+	$q = Doctrine_Query::create()->
          from('Identifications')->
          where('referenced_relation = ?', $table)->
          andWhere('record_id = ?', $specId)->

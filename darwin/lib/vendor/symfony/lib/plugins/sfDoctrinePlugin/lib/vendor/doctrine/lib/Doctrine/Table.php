@@ -998,6 +998,11 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable, Seriali
      */
     public function hasRelation($alias)
     {
+		//ftheeten 
+		if($this->_parser===null)
+		{
+			return false;
+		}
         return $this->_parser->hasRelation($alias);
     }
 
@@ -1009,6 +1014,11 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable, Seriali
      */
     public function getRelation($alias, $recursive = true)
     {
+		//ftheeten 
+		if($this->_parser===null)
+		{
+			return false;
+		}
         return $this->_parser->getRelation($alias, $recursive);
     }
 
@@ -1175,8 +1185,8 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable, Seriali
         if (isset($this->_columnNames[$fieldName])) {
             return $this->_columnNames[$fieldName];
         }
-
-        return strtolower($fieldName);
+		//ftheeten php8
+        return strtolower($fieldName??"");
     }
 
     /**
@@ -1971,7 +1981,8 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable, Seriali
      *
      * @return integer number of records in the table
      */
-    public function count()
+	 //ftheeten php 8 return value
+    public function count():int
     {
         return $this->createQuery()->count();
     }
@@ -2989,6 +3000,44 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable, Seriali
     public function unserialize($data)
     {
         $all = unserialize($data);
+
+        $this->_identifier = $all[0];
+        $this->_identifierType = $all[1];
+        $this->_columns = $all[2];
+        $this->_uniques = $all[3];
+        $this->_fieldNames = $all[4];
+        $this->_columnNames = $all[5];
+        $this->columnCount = $all[6];
+        $this->hasDefaultValues = $all[7];
+        $this->_options = $all[8];
+        $this->_invokedMethods = $all[9];
+        $this->_useIdentityMap = $all[10];
+    }
+
+	// ftheeten php8 serializable interface deprecated
+	 public function __serialize()
+    {
+        $options = $this->_options;
+        unset($options['declaringClass']);
+
+        return (array)serialize(array(
+            $this->_identifier,
+            $this->_identifierType,
+            $this->_columns,
+            $this->_uniques,
+            $this->_fieldNames,
+            $this->_columnNames,
+            $this->columnCount,
+            $this->hasDefaultValues,
+            $options,
+            $this->_invokedMethods,
+            $this->_useIdentityMap,
+        ));
+    }
+
+    public function __unserialize($data)
+    {
+        $all = unserialize((string)$data);
 
         $this->_identifier = $all[0];
         $this->_identifierType = $all[1];

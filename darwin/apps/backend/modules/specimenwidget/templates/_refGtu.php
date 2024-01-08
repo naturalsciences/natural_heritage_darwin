@@ -56,6 +56,10 @@
       <th><label><?php echo __('Longitude');?></label></th>
       <td id="specimen_gtu_ref_lon"></td>
     </tr>
+	 <tr>
+     <th><label><?php echo __('Elevation');?></label></th>
+      <td id="specimen_gtu_ref_elevation"></td>
+    </tr>
     <tr>
       <th><label><?php echo __('Date from');?></label></th>
       <td id="specimen_gtu_date_from" class="datesNum"></td>
@@ -231,10 +235,11 @@
 				if ( $('#specimen_gtu_ref').val() != '' ) {
 				  url = $("a#gtu_goto_link").attr('href')+'/id/'+$('#specimen_gtu_ref').val();
 				}
-				//console.log($("#specimen_gtu_ref_name").html());
+				console.log($("#specimen_gtu_ref_name").html());
 				adaptCollectingDateFrom("from", $("#specimen_gtu_ref_name .date_from_mask").html(),$("#specimen_gtu_ref_name .date_from_year").html(),$("#specimen_gtu_ref_name .date_from_month").html(), $("#specimen_gtu_ref_name .date_from_day").html(), $("#specimen_gtu_ref_name .date_from_hour").html(), $("#specimen_gtu_ref_name .date_from_minute").html(), $("#specimen_gtu_ref_name .date_from_second").html());
 				adaptCollectingDateFrom("to", $("#specimen_gtu_ref_name .date_to_mask").html(),$("#specimen_gtu_ref_name .date_to_year").html(),$("#specimen_gtu_ref_name .date_to_month").html(), $("#specimen_gtu_ref_name .date_to_day").html(), $("#specimen_gtu_ref_name .date_to_hour").html(), $("#specimen_gtu_ref_name .date_to_minute").html(), $("#specimen_gtu_ref_name .date_to_second").html());
 				$("#specimen_gtu_ref_code").html("<a href=\""+url+"\" target=\"_new\">"+$("#specimen_gtu_ref_name .code").html()+"</a>");
+				$("#specimen_gtu_ref_elevation").html($("#specimen_gtu_ref_name .elevation").html());
 				$("#specimen_gtu_ref_map").html($("#specimen_gtu_ref_name .img").html());
 				$("#specimen_gtu_ref_lat").html($("#specimen_gtu_ref_name .lat").html());
 				$("#specimen_gtu_ref_lon").html($("#specimen_gtu_ref_name .lon").html());

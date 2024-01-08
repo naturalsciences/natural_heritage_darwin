@@ -215,3 +215,26 @@ ig2:
    opened: false
    visible: false
    title_perso: Insurances
+   
+
+ig3:
+   col_num: 1
+   category: catalogue_igs_widget
+   group_name: expeditions
+   mandatory: false
+   order_by: 1
+   opened: false
+   visible: false
+   title_perso: Expeditions
+   
+ig4:
+   col_num: 1
+   category: catalogue_igs_widget
+   group_name: collections
+   mandatory: false
+   order_by: 1
+   opened: false
+   visible: false
+   title_perso: Collections
+
+

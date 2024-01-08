@@ -31,7 +31,7 @@
  * @version     $Revision: 7686 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
-class Doctrine_Collection extends Doctrine_Access implements Countable, IteratorAggregate, Serializable
+class Doctrine_Collection extends Doctrine_Access implements Countable, IteratorAggregate #, Serializable
 {
     /**
      * @var array $data                     an array containing the records of this collection
@@ -190,7 +190,51 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
             $this->keyColumn = $keyColumn;
         }
     }
+	
+	//ftheeten 2023 04 07 serializable php 8
+    public function __serialize()
+    {
+        $vars = get_object_vars($this);
 
+        unset($vars['reference']);
+        unset($vars['referenceField']);
+        unset($vars['relation']);
+        unset($vars['expandable']);
+        unset($vars['expanded']);
+        unset($vars['generator']);
+
+        $vars['_table'] = $vars['_table']->getComponentName();
+
+        //return serialize($vars);
+		
+		return (array) serialize($vars);
+    }
+
+    
+    public function __unserialize($serialized)
+    {
+		$serialized=$serialized[0];
+        $manager    = Doctrine_Manager::getInstance();
+        $connection    = $manager->getCurrentConnection();
+
+        $array = unserialize((string)$serialized);
+
+        foreach ($array as $name => $values) {
+            $this->$name = $values;
+        }
+
+        $this->_table = $connection->getTable($this->_table);
+
+        $keyColumn = isset($array['keyColumn']) ? $array['keyColumn'] : null;
+        if ($keyColumn === null) {
+            $keyColumn = $this->_table->getBoundQueryPart('indexBy');
+        }
+
+        if ($keyColumn !== null) {
+            $this->keyColumn = $keyColumn;
+        }
+    }
+	
     /**
      * Sets the key column for this collection
      *
@@ -401,7 +445,8 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
      *
      * @return array                an array containing all primary keys
      */
-    public function getPrimaryKeys()
+	//ftheeten added return type PHP8
+    public function getPrimaryKeys(): array
     {
         $list = array();
         $name = $this->_table->getIdentifier();
@@ -421,7 +466,8 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
      *
      * @return array
      */
-    public function getKeys()
+	//ftheeten added return type PHP8
+    public function getKeys() : array
     {
         return array_keys($this->data);
     }
@@ -432,7 +478,8 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
      *
      * @return integer
      */
-    public function count()
+	//ftheeten added return type PHP8
+    public function count():int
     {
         return count($this->data);
     }
@@ -1036,7 +1083,8 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
      *
      * @return Iterator
      */
-    public function getIterator()
+	//ftheeten added return type PHP8
+    public function getIterator(): Iterator
     {
         $data = $this->data;
         return new ArrayIterator($data);
@@ -1047,7 +1095,8 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
      *
      * @return string $string
      */
-    public function __toString()
+	//ftheeten added return type PHP8
+    public function __toString() :string
     {
         return Doctrine_Lib::getCollectionAsString($this);
     }

@@ -91,6 +91,12 @@ abstract class BaseImportsForm extends DarwinModelForm
     $this->widgetSchema   ['enforce_code_unicity'] = new sfWidgetFormInputCheckbox();
     $this->validatorSchema['enforce_code_unicity'] = new sfValidatorBoolean(array('required' => false));
 
+    $this->widgetSchema   ['update'] = new sfWidgetFormInputCheckbox();
+    $this->validatorSchema['update'] = new sfValidatorBoolean(array('required' => false));
+
+    $this->widgetSchema   ['synonymy_taxonomy_ref'] = new sfWidgetFormInputText();
+    $this->validatorSchema['synonymy_taxonomy_ref'] = new sfValidatorInteger(array('required' => false));
+
     $this->widgetSchema   ['collection_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Collections'), 'add_empty' => false));
     $this->validatorSchema['collection_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Collections'), 'column' => 'id'));
 

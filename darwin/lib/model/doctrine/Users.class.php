@@ -42,7 +42,10 @@ class Users extends BaseUsers
       self::MANAGER => self::getTypeName(self::MANAGER),
       //self::ADMIN => self::getTypeName(self::ADMIN)
     );
-    
+    if (isset($options['include_admin']) && $options['include_admin'] == true)
+    {
+		$db_user_type[self::ADMIN]=self::getTypeName(self::ADMIN);
+    }	
     if (isset($options['screen']) && $options['screen'] == 3)
     {
       array_pop($db_user_type) ;

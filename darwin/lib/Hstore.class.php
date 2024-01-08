@@ -41,4 +41,10 @@ class Hstore extends ArrayObject{
     $str = substr($str,0,strlen($str)-1) ;
     return $str;
   }
+  
+  //ftheeten december 2023 PHP8
+  public function getAsArray()
+  {
+	return (array)$this;
+  }
 }

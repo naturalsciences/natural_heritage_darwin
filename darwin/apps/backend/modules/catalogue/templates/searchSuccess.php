@@ -161,6 +161,7 @@
                   <?php echo link_to(image_tag('duplicate.png', array("title" => __("Duplicate"))),$searchForm->getValue('table').'/new?duplicate_id='.$item->getId(),array('target'=>"_blank"));?>
 				  <?php if($searchForm->getValue('table')=="taxonomy"):?>
 					 <?php echo link_to(image_tag('csv.png', array("title" => __("File export"))),$searchForm->getValue('table').'/downloadTaxon?taxon_ref='.$item->getId(),array('target'=>"_blank"));?>
+					  <?php echo link_to(image_tag('catalogueoflife.png', array("title" => __("CoL report"))),$searchForm->getValue('table').'/checkCatalogueOfLife?taxon_ref='.$item->getId(),array('target'=>"_blank"));?>
 				  <?php endif;?>
                 <?php endif ; ?>
               <?php else:?>
@@ -168,7 +169,11 @@
                   <?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))),$searchForm->getValue('table').'/edit?id='.$item->getId(),array('target'=>"_blank"));?>
                   <?php echo link_to(image_tag('duplicate.png', array("title" => __("Duplicate"))),$searchForm->getValue('table').'/new?duplicate_id='.$item->getId(),array('target'=>"_blank"));?>
                 <?php endif ; ?>
-                <div class="result_choose"><?php echo __('Choose');?></div>
+				<?php if($searchForm->getValue('table')=="taxonomy"):?>
+					<div class="result_choose" data-item-id="<?php echo $item->getId();?>" data-item-name="<?php echo $item->getNameWithFormat(ESC_RAW);?>"><?php echo __('Choose');?></div>
+				<?php else: ?>
+					<div class="result_choose" data-item-id="<?php echo $item->getId();?>"><?php echo __('Choose');?></div>
+				<?php endif;?>
               <?php endif;?>
             </td>
           </tr>

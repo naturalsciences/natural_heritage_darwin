@@ -49,6 +49,12 @@ abstract class BaseCodesForm extends DarwinModelForm
     $this->widgetSchema   ['code_date_mask'] = new sfWidgetFormInputText();
     $this->validatorSchema['code_date_mask'] = new sfValidatorInteger(array('required' => false));
 
+    $this->widgetSchema   ['import_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Imports'), 'add_empty' => true));
+    $this->validatorSchema['import_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Imports'), 'column' => 'id', 'required' => false));
+
+    $this->widgetSchema   ['import_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Imports'), 'add_empty' => true));
+    $this->validatorSchema['import_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Imports'), 'column' => 'id', 'required' => false));
+
     $this->widgetSchema->setNameFormat('codes[%s]');
   }
 

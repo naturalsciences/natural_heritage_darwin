@@ -30,6 +30,8 @@ class sfViewCacheManager
     $controller  = null,
     $routing     = null,
     $request     = null,
+	//ftheeten
+	$options	 = array(), 
     $loaded      = array();
 
   /**

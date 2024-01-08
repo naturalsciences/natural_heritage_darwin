@@ -710,7 +710,7 @@
 				var filter="INTERSECTS(geom, POINT ("+ lonlat[1] +" "+ lonlat[0] +"))";
 				
 				var query_url=wfs_url + current_wms+"/wfs?service=wfs&version=2.0.0&request=GetFeature&typeNames="+ current_layer_name +"&cql_filter="+filter;
-				//console.log(query_url);
+				console.log(query_url);
 				$.get( query_url)
 				  .done(function( data ) {
 	
@@ -720,7 +720,7 @@
 							{
 								//console.log(obj);
 								var name=obj.childNodes[0].nodeValue;
-								//console.log(name);
+								console.log(name);
 								LayerArray.push(name);
 								//var tmp={layer: current_layer_name ,'value':name}
 								//WFSArray.push(tmp);
@@ -731,7 +731,7 @@
 							{
 								//console.log(obj);
 								var gid=obj.childNodes[0].nodeValue;
-								
+								console.log(gid);
 								
 								var tmp={layer: current_layer_name ,'value':gid}
 								WFSArray.push(tmp);

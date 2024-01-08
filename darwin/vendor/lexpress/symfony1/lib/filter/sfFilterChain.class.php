@@ -39,6 +39,8 @@ class sfFilterChain
    */
   public function execute()
   {
+   
+   
     // skip to the next filter
     ++$this->index;
 

@@ -173,6 +173,8 @@ abstract class sfRequest implements ArrayAccess
    *
    * @return Boolean true if the request parameter exists, false otherwise
    */
+  #ftheeten 2023 04 07
+  #[\ReturnTypeWillChange] 
   public function offsetExists($name)
   {
     return $this->hasParameter($name);
@@ -185,6 +187,8 @@ abstract class sfRequest implements ArrayAccess
    *
    * @return mixed The request parameter if exists, null otherwise
    */
+  #ftheeten 2023 04 07
+  #[\ReturnTypeWillChange]  
   public function offsetGet($name)
   {
     return $this->getParameter($name, false);
@@ -196,6 +200,8 @@ abstract class sfRequest implements ArrayAccess
    * @param string $offset The parameter name
    * @param string $value The parameter value
    */
+  #ftheeten 2023 04 07
+  #[\ReturnTypeWillChange] 
   public function offsetSet($offset, $value)
   {
     $this->setParameter($offset, $value);
@@ -206,6 +212,8 @@ abstract class sfRequest implements ArrayAccess
    *
    * @param string $offset The parameter name
    */
+  #ftheeten 2023 04 07
+  #[\ReturnTypeWillChange] 
   public function offsetUnset($offset)
   {
     $this->getParameterHolder()->remove($offset);

@@ -16,36 +16,36 @@ prod:
           param:
             level: notice
             file: %SF_LOG_DIR%/%SF_APP%_%SF_ENVIRONMENT%.log
-  mailer:
-    class: sfMailer
-    param:
-      logging:           %SF_LOGGING_ENABLED%
-      charset:           %SF_CHARSET%
-      delivery_strategy: realtime
-      transport:
-        class: Swift_SmtpTransport
-        param:
-          host:       smtp.naturalsciences.be
-          port:       25
-          encryption: ~
-          username:   ~
-          password:   ~
+  #mailer:
+  #  class: sfMailer
+  #  param:
+  #    logging:           %SF_LOGGING_ENABLED%
+  #    charset:           %SF_CHARSET%
+  #    delivery_strategy: realtime
+  #    transport:
+  #      class: Swift_SmtpTransport
+  #      param:
+  #        host:       smtp.naturalsciences.be
+  #        port:       25
+  #        encryption: ~
+  #        username:   ~
+  #        password:   ~
 
-dev:
-  mailer:
-    class: sfMailer
-    param:
-      logging:           %SF_LOGGING_ENABLED%
-      charset:           %SF_CHARSET%
-      delivery_strategy: realtime
-      transport:
-        class: Swift_SmtpTransport
-        param:
-          host:       bernie
-          port:       25
-          encryption: ~
-          username:   ~
-          password:   ~
+#dev:
+#  mailer:
+#    class: sfMailer
+#    param:
+#      logging:           %SF_LOGGING_ENABLED%
+#      charset:           %SF_CHARSET%
+#      delivery_strategy: realtime
+#      transport:
+#        class: Swift_SmtpTransport
+#        param:
+#          host:       bernie
+#          port:       25
+#          encryption: ~
+#          username:   ~
+#          password:   ~
 
 cli:
   controller:
@@ -81,8 +81,7 @@ all:
     class: myUser
     param:
       timeout:         14400
-  view_cache:
-    class: sfAPCCache
+
     
 all:
   controller:
@@ -91,6 +90,8 @@ all:
     class: DarwinCookie
     param:
       session_name: darwin2
+  view_cache:
+    class: sfMemcacheCache
 #    param:
 #      automaticCleaningFactor: 0
 #      cacheDir:                %SF_TEMPLATE_CACHE_DIR%

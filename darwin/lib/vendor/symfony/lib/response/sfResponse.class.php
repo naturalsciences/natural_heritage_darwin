@@ -17,7 +17,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-abstract class sfResponse implements Serializable
+abstract class sfResponse #implements Serializable
 {
   /** @var array */
   protected $options = array();
@@ -168,6 +168,18 @@ abstract class sfResponse implements Serializable
    *
    */
   public function unserialize($serialized)
+  {
+    $this->content = unserialize($serialized);
+  }
+  
+  //ftheeten php 8.2 Serialize deprecated
+  
+  public function __serialize()
+  {
+    return serialize($this->content);
+  }
+  
+  public function __unserialize($serialized)
   {
     $this->content = unserialize($serialized);
   }

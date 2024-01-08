@@ -76,45 +76,57 @@ class TemporalInformation extends BaseTemporalInformation
     $returned="";
     $previous="";
     $tmp=$this->getFromDate();
-    $i=0;
-    foreach($tmp as $key=> $elem)
-    {
-        if(strlen(trim($elem))==0&& $i==0 && strlen(trim($tmp[1]))==0)
-        {
-            $elem="1";
-        }
-        if(strlen(trim($elem))==0&& $i==2 && (strlen(trim($previous)))>0)
-        {
-            $elem="1";
-        }
-        if(strlen(trim($elem))>0)
-        {
-            if(strlen(trim($elem))==0&& $i==1 && strlen(trim($tmp[2]))==0)
-            {
-                $elem="1";
-            }
-            if($i>0&&$i<3)
-            {
-                 $returned.="/";
-            }
-            elseif($i>=4)
-            {
-                 $returned.=":";
-            }
-            elseif($i==3)
-            {
-                 $returned.=" ";
-            }
-             if($i>0)
-             {
-                $elem=str_pad($elem, 2, '0', STR_PAD_LEFT);
-             }
-             $previous=$elem;            
-            $returned.=$elem;
-        }
-        $i++;
-        
-    }
+	//PHP8
+	$go=false;
+	foreach($tmp as $key=>$elem)
+	{
+		if(strlen(trim($elem))>0)
+		{
+			$go=true;
+		}
+	}
+	if($go)
+	{
+		$i=0;
+		foreach($tmp as $key=> $elem)
+		{
+			if(strlen(trim($elem))==0&& $i==0 && strlen(trim($tmp[1]))==0)
+			{
+				$elem="1";
+			}
+			if(strlen(trim($elem))==0&& $i==2 && (strlen(trim($previous)))>0)
+			{
+				$elem="1";
+			}
+			if(strlen(trim($elem))>0)
+			{
+				if(strlen(trim($elem))==0&& $i==1 && strlen(trim($tmp[2]))==0)
+				{
+					$elem="1";
+				}
+				if($i>0&&$i<3)
+				{
+					 $returned.="/";
+				}
+				elseif($i>=4)
+				{
+					 $returned.=":";
+				}
+				elseif($i==3)
+				{
+					 $returned.=" ";
+				}
+				 if($i>0)
+				 {
+					$elem=str_pad($elem, 2, '0', STR_PAD_LEFT);
+				 }
+				 $previous=$elem;            
+				$returned.=$elem;
+			}
+			$i++;
+			
+		}
+	}
     return $returned;
  } 
  
@@ -122,45 +134,93 @@ class TemporalInformation extends BaseTemporalInformation
  {
     $returned="";
     $previous="";
-   
+    
    
     $tmp=$this->getToDate();
-    $i=0;
-    foreach($tmp as $key=>$elem)
-    {
-        if(strlen(trim($elem))==0&& $i==0 && strlen(trim($tmp[1]))==0)
-        {
-            $elem="12";
-        }
-        if(strlen(trim($elem))==0&& $i==2 && (strlen(trim($previous)))>0)
-        {
-            $elem= cal_days_in_month( CAL_GREGORIAN , $tmp["month"] , $tmp["year"]);
-        }
-        if(strlen(trim($elem))>0)
-        {
-            if($i>0&&$i<3)
-            {
-                 $returned.="/";
-            }
-            elseif($i>=4)
-            {
-                 $returned.=":";
-            }
-            elseif($i==3)
-            {
-                 $returned.=" ";
-            }
-            if($i>0)
-            {
-                 $elem=str_pad($elem, 2, '0', STR_PAD_LEFT);
-            }
-             $previous=$elem;
-            $returned.=$elem;
-        }
-        
-       
-        $i++;
-    }
+	
+	//PHP8
+	$go=false;
+	foreach($tmp as $key=>$elem)
+	{
+		if(strlen(trim($elem))>0)
+		{
+			$go=true;
+		}
+	}
+	if($go)
+	{
+		
+		$i=0;
+	
+		foreach($tmp as $key=>$elem)
+		{
+			
+			if(strlen(trim($elem))==0&& $i==0 && strlen(trim($tmp[1]))==0)
+			{
+				 $elem="12";
+			}
+			if(strlen(trim($elem))==0&& $i==2 && (strlen(trim($previous)))>0)
+			{
+				if(strlen(trim($tmp["month"]))>0&&strlen(trim($tmp["year"]))>0)
+				{
+					$elem= cal_days_in_month( CAL_GREGORIAN , $tmp["month"] , $tmp["year"]);
+				}
+				else
+				{
+					if(strlen(trim($tmp["year"]))>0)
+					{
+						 if(((int)$elem)%2==0)
+						 {
+							if((int)$elem==2)
+							{
+								if((int)$tmp["year"]%4==0)
+								{
+									$elem="29";
+								}
+								else
+								{
+									$elem="28";
+								}
+							}
+							else
+							{
+								$elem="30";
+							}
+						 }
+						 else
+						 {
+							$elem="31";
+						 }
+					}
+				}
+
+			}
+			if(strlen(trim($elem))>0)
+			{
+				if($i>0&&$i<3)
+				{
+					 $returned.="/";
+				}
+				elseif($i>=4)
+				{
+					 $returned.=":";
+				}
+				elseif($i==3)
+				{
+					 $returned.=" ";
+				}
+				if($i>0)
+				{
+					 $elem=str_pad($elem, 2, '0', STR_PAD_LEFT);
+				}
+				 $previous=$elem;
+				$returned.=$elem;
+			}
+			
+		   
+			$i++;
+		}
+	}
     return $returned;
  }
 /*

@@ -236,12 +236,22 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                 // extract query parameters (only the identifier values are of interest)
                 $params = array();
                 $columnNames = array();
-                foreach ($identifierMaps as $idMap) {
+                /*foreach ($identifierMaps as $idMap) {
                     while (list($fieldName, $value) = each($idMap)) {
                         $params[] = $value;
                         $columnNames[] = $table->getColumnName($fieldName);
                     }
-                }
+                }*/
+				//ftheeten replace each
+				foreach ($identifierMaps as $idMap) 
+				{
+					foreach($idMap as $fieldName=> $value)
+					{
+						$params[] = $value;
+                        $columnNames[] = $table->getColumnName($fieldName);
+					}
+				}
+				
                 $columnNames = array_unique($columnNames);
 
                 // delete

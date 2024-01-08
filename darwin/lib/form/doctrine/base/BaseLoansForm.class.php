@@ -34,6 +34,39 @@ abstract class BaseLoansForm extends DarwinModelForm
     $this->widgetSchema   ['extended_to_date'] = new sfWidgetFormTextarea();
     $this->validatorSchema['extended_to_date'] = new sfValidatorString(array('required' => false));
 
+    $this->widgetSchema   ['collection_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Collections'), 'add_empty' => true));
+    $this->validatorSchema['collection_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Collections'), 'column' => 'id', 'required' => false));
+
+    $this->widgetSchema   ['address_receiver'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['address_receiver'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['institution_receiver'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['institution_receiver'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['country_receiver'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['country_receiver'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['city_receiver'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['city_receiver'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['zip_receiver'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['zip_receiver'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['collection_manager'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['collection_manager'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['collection_manager_title'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['collection_manager_title'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['collection_manager_mail'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['collection_manager_mail'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['non_cites'] = new sfWidgetFormInputCheckbox();
+    $this->validatorSchema['non_cites'] = new sfValidatorBoolean(array('required' => false));
+
+    $this->widgetSchema   ['collection_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Collections'), 'add_empty' => true));
+    $this->validatorSchema['collection_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Collections'), 'column' => 'id', 'required' => false));
+
     $this->widgetSchema->setNameFormat('loans[%s]');
   }
 

@@ -47,6 +47,9 @@ abstract class BaseSpecimensRelationshipsFormFilter extends DarwinModelFormFilte
     $this->widgetSchema   ['source_id'] = new sfWidgetFormFilterInput();
     $this->validatorSchema['source_id'] = new sfValidatorPass(array('required' => false));
 
+    $this->widgetSchema   ['import_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Imports'), 'add_empty' => true));
+    $this->validatorSchema['import_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Imports'), 'column' => 'id'));
+
     $this->widgetSchema   ['specimen_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Specimen'), 'add_empty' => true));
     $this->validatorSchema['specimen_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Specimen'), 'column' => 'id'));
 
@@ -61,6 +64,9 @@ abstract class BaseSpecimensRelationshipsFormFilter extends DarwinModelFormFilte
 
     $this->widgetSchema   ['institution_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Institutions'), 'add_empty' => true));
     $this->validatorSchema['institution_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Institutions'), 'column' => 'id'));
+
+    $this->widgetSchema   ['import_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Imports'), 'add_empty' => true));
+    $this->validatorSchema['import_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Imports'), 'column' => 'id'));
 
     $this->widgetSchema->setNameFormat('specimens_relationships_filters[%s]');
   }
@@ -84,11 +90,13 @@ abstract class BaseSpecimensRelationshipsFormFilter extends DarwinModelFormFilte
       'institution_ref' => 'ForeignKey',
       'source_name' => 'Text',
       'source_id' => 'Text',
+      'import_ref' => 'ForeignKey',
       'specimen_ref' => 'ForeignKey',
       'specimen_related_ref' => 'ForeignKey',
       'taxon_ref' => 'ForeignKey',
       'mineral_ref' => 'ForeignKey',
       'institution_ref' => 'ForeignKey',
+      'import_ref' => 'ForeignKey',
     ));
   }
 }

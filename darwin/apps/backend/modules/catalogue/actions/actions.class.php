@@ -396,24 +396,64 @@ class catalogueActions extends DarwinActions
 	{
 		 $conn = Doctrine_Manager::connection();
          
-		 if($request->getParameter('collections'))
+		 $category="main";
+		 if($request->getParameter('category'))
 		 {
-			$sql = "SELECT DISTINCT COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'') as value, full_code_indexed as value_indexed,length(code) as len FROM codes WHERE code_category='main' AND referenced_relation='specimens' AND
-			full_code_indexed LIKE CONCAT('%', fulltoindex(:term), '%') AND 
-			record_id IN (SELECT id FROM specimens WHERE collection_ref IN (".$request->getParameter('collections').") )
-			ORDER by length(code), full_code_indexed LIMIT 30;";
+			$category=$request->getParameter('category');
 		 }
-		 else
-		 {
-			$sql = "SELECT DISTINCT COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'') as value, full_code_indexed as value_indexed,length(code) as len  FROM codes WHERE code_category='main' AND
-			referenced_relation='specimens' AND 
-			full_code_indexed LIKE CONCAT('%',  fulltoindex(:term), '%')   ORDER by length(code), full_code_indexed LIMIT 30;";
-		}
-		$q = $conn->prepare($sql);
-		$q->execute(array(':term' => $request->getParameter('term')));
-		$codes = $q->fetchAll();
-
+		 
+		 //
+			if(strtolower($category)!="all")
+			{
+				
+				if($request->getParameter('collections'))
+				{
+					$sql = "SELECT DISTINCT COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'') as value, full_code_indexed as value_indexed,length(code) as len  FROM codes WHERE code_category=:category AND referenced_relation='specimens' AND
+					full_code_indexed LIKE CONCAT('%', (SELECT * FROM fulltoindex(:term)), '%') AND 
+					record_id IN (SELECT id FROM specimens WHERE collection_ref IN (".$request->getParameter('collections').") )
+					ORDER by length(code), full_code_indexed LIMIT 30;";
+				 }
+				 else
+				 {
+					$sql = "SELECT DISTINCT COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'') as value, full_code_indexed as value_indexed,length(code) as len  FROM codes WHERE code_category=:category AND
+					referenced_relation='specimens' AND 
+					full_code_indexed LIKE CONCAT('%', (SELECT * FROM fulltoindex(:term)), '%')   ORDER by length(code), full_code_indexed LIMIT 30;";
+				}
+				$q = $conn->prepare($sql);
+				
+				$q->execute(array(':term' => $request->getParameter('term'),':category' => $category));
+				$codes = $q->fetchAll();
+			}
+			else
+			{
+				
+				if($request->getParameter('collections'))
+				 {
+					$sql = "SELECT DISTINCT COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'') as value, code as value_indexed,length(COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'')) as len FROM codes WHERE referenced_relation='specimens' AND
+					code LIKE CONCAT('%', (SELECT * FROM fulltoindex(:term)), '%') AND 
+					record_id IN (SELECT id FROM specimens WHERE collection_ref IN (".$request->getParameter('collections').") )
+					ORDER by length(COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'')), code LIMIT 30;";
+				 }
+				 else
+				 {
+					$sql = "SELECT DISTINCT COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'') as value, code as value_indexed,length(COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'')) as len  FROM codes WHERE 
+					referenced_relation='specimens' AND 
+					code LIKE CONCAT('%', (SELECT * FROM fulltoindex(:term)), '%')   ORDER by length(COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'')), code LIMIT 30;";
+				}
+				
+				$q = $conn->prepare($sql);				
+				$q->execute(array(':term' => $request->getParameter('term')));
+				$codes = $q->fetchAll();				
+			}
+			//
+			
+		
 		$i=0;
+		if(count($codes)==0)
+		{
+			
+			$codes=$this->code_autocomplete_serie($request);
+		}
 		foreach($codes as $code)
 		{
 			$results[$i]['value'] = $code[0];
@@ -421,11 +461,73 @@ class catalogueActions extends DarwinActions
 			$i++;
 		}
 	}
-	    
+	
 		$this->getResponse()->setContentType('application/json');
 		return  $this->renderText(json_encode($results));
   }
   
+  
+     public function code_autocomplete_serie(sfWebRequest $request)
+  {
+ 
+		$results=Array();
+		$codes=Array();
+		if($request->getParameter('term'))
+		{
+		
+			 $conn = Doctrine_Manager::connection();
+			 
+			 $category="main";
+			 if($request->getParameter('category'))
+			 {
+				$category=$request->getParameter('category');
+			 }
+			 if(strtolower($category)!="all")
+		{
+			if($request->getParameter('collections'))
+			 {
+				$sql = "SELECT DISTINCT COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'') as value, full_code_indexed as value_indexed,length(code) as len FROM codes WHERE code_category=:category AND referenced_relation='specimens' AND
+				full_code_indexed LIKE CONCAT('%', (SELECT * FROM fulltoindex(:term)), '%') AND 
+				record_id IN (SELECT id FROM specimens WHERE collection_ref IN (".$request->getParameter('collections').") )
+				ORDER by length(code), full_code_indexed LIMIT 30;";
+			 }
+			 else
+			 {
+				$sql = "SELECT DISTINCT COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'') as value, full_code_indexed as value_indexed,length(code) as len  FROM codes WHERE code_category=:category AND
+				referenced_relation='specimens' AND 
+				full_code_indexed LIKE CONCAT('%', (SELECT * FROM fulltoindex(:term)), '%')   ORDER by length(code), full_code_indexed LIMIT 30;";
+			}
+			$q = $conn->prepare($sql);
+			
+			$q->execute(array(':term' => $request->getParameter('term'),':category' => $category));
+			$codes = $q->fetchAll();
+		}
+		else
+		{
+			if($request->getParameter('collections'))
+			 {
+				$sql = "SELECT DISTINCT COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'') as value, full_code_indexed as value_indexed,length(code) as len FROM codes WHERE referenced_relation='specimens' AND
+				full_code_indexed LIKE CONCAT('%', (SELECT * FROM fulltoindex(:term)), '%') AND 
+				record_id IN (SELECT id FROM specimens WHERE collection_ref IN (".$request->getParameter('collections').") )
+				ORDER by length(code), full_code_indexed LIMIT 30;";
+			 }
+			 else
+			 {
+				$sql = "SELECT DISTINCT COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'') as value, full_code_indexed as value_indexed,length(code) as len  FROM codes WHERE 
+				referenced_relation='specimens' AND 
+				full_code_indexed LIKE CONCAT('%', (SELECT * FROM fulltoindex(:term)), '%')   ORDER by length(code), full_code_indexed LIMIT 30;";
+			}
+			$q = $conn->prepare($sql);
+			
+			$q->execute(array(':term' => $request->getParameter('term')));
+			$codes = $q->fetchAll();
+		}
+			 
+			
+		}
+			
+			return  $codes;
+  }
       //ftheeten 2015 06 08 autocomplete for codes
   public function executeExpeditionsAutocomplete(sfWebRequest $request)
   {
@@ -536,5 +638,173 @@ class catalogueActions extends DarwinActions
 	$this->getResponse()->setContentType('application/json');
 	return  $this->renderText(json_encode($results));  
 	  
+  }
+  
+  
+    //ftheeten 2016 11 25 autocomplete for codes
+  public function executeCodesTaxonAutocompleteForLoans(sfWebRequest $request)
+  {
+	$results=Array();
+	if($request->getParameter('term'))
+	{
+		 $conn = Doctrine_Manager::connection();
+		 if($request->getParameter('collections'))
+		 {
+			$sql = "SELECT DISTINCT specimens.id, COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'')||COALESCE(' - '||taxon_name,'') as value
+            , full_code_indexed||COALESCE(taxon_name_indexed,'')  as value_indexed , full_code_indexed as sort, specimens.id as spec_id FROM specimens INNER JOIN
+            codes  
+            ON
+            code_category='main' AND referenced_relation='specimens' 
+            AND
+            specimens.id=codes.record_id
+            WHERE
+			full_code_indexed LIKE CONCAT('%', (SELECT * FROM fulltoindex(:term)), '%') AND 
+			record_id IN (SELECT id FROM specimens WHERE collection_path||'/'||collection_ref::varchar||'/' LIKE '%/".$request->getParameter('collections')."%/' ) 
+			ORDER by full_code_indexed LIMIT 30;";
+		 }
+		 else
+		 {
+			$sql = "SELECT DISTINCT specimens.id, COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'')||COALESCE(' - '||taxon_name,'') as value
+            , full_code_indexed||COALESCE(taxon_name_indexed,'')  as value_indexed, specimens.id as spec_id FROM specimens INNER JOIN
+            codes  
+            ON
+            code_category='main' AND referenced_relation='specimens' 
+            AND
+            specimens.id=codes.record_id
+            WHERE
+			full_code_indexed LIKE CONCAT('%', (SELECT * FROM fulltoindex(:term)), '%') 
+			ORDER by full_code_indexed||COALESCE(taxon_name_indexed,'')  LIMIT 30;";
+		}
+		$q = $conn->prepare($sql);
+		$q->execute(array(':term' => $request->getParameter('term')));
+		$codes = $q->fetchAll();
+
+		$i=0;
+		foreach($codes as $code)
+		{
+            $results[$i]['id'] = $code[0];
+			$results[$i]['value'] = $code[1]." (specimen id :".$code[3] ." )";
+			$results[$i]['value_indexed'] = $code[2];
+			$results[$i]['spec_id'] = $code[3];
+			$i++;
+		}
+	}
+	
+		$this->getResponse()->setContentType('application/json');
+		return  $this->renderText(json_encode($results));
+  }
+  
+  //rmca 2016 06 16 increment number for loans
+  public function executeCodeForLoan(sfWebRequest $request)
+  {
+        $results=Array();
+	if($request->getParameter('coll_nr'))
+	{
+		 $conn = Doctrine_Manager::connection();
+		 $sql="SELECT code, loan_last_value FROM collections WHERE id=:coll;";
+		 $q = $conn->prepare($sql);
+		 $q->execute(array(':coll' => $request->getParameter('coll_nr')));
+		 $collections = $q->fetchAll();
+		
+		 $i=0;
+		 if(count($collections)>0)
+		 {
+			$results[0]['code_coll']= $collections[0][0];
+			$results[0]['code_val']= $collections[0][1];
+		 }
+
+	}
+	$this->getResponse()->setContentType('application/json');
+        return  $this->renderText(json_encode($results));
+
+
+
+  }
+  
+  //rmca 2016 11 23 increment number for loans
+  public function executeNameForLoan(sfWebRequest $request)
+  {
+     
+    $results=Array();
+	if($request->getParameter('coll_nr'))
+	{
+		 $results=Doctrine_Core::getTable('Loans')->getLastCodeForLoan($request->getParameter('coll_nr',0)); 
+
+	}
+	$this->getResponse()->setContentType('application/json');
+    return  $this->renderText(json_encode($results));
+  }
+  
+
+      //ftheeten 2017 01 12 autocomplete for storage
+  public function executeStorageAutocomplete(sfWebRequest $request)
+  {
+	$results=Array();
+	if($request->getParameter('term')&&$request->getParameter('entry'))
+	{
+		 $conn = Doctrine_Manager::connection();
+		 if($request->getParameter('collections'))
+		 {
+			$sql = "SELECT DISTINCT dict_value, fulltoindex(dict_value) FROM flat_dict
+            INNER JOIN storage_parts
+			ON flat_dict.dict_value= storage_parts.".$request->getParameter('entry')."		
+			INNER JOIN
+			specimens 
+			ON
+			storage_parts.specimen_ref = specimens.id	
+            WHERE referenced_relation='storage_parts' AND 
+            dict_field='".$request->getParameter('entry')."' AND
+			fulltoindex(dict_value) LIKE CONCAT('%', (SELECT * FROM fulltoindex(:term)), '%')
+			AND collection_ref IN (".$request->getParameter('collections').")
+            LIMIT 30;";
+		 }
+		 else
+		 {
+			$sql = "SELECT DISTINCT dict_value, fulltoindex(dict_value) FROM flat_dict
+            WHERE referenced_relation='storage_parts' AND 
+            dict_field='".$request->getParameter('entry')."' AND
+			fulltoindex(dict_value) LIKE CONCAT('%', (SELECT * FROM fulltoindex(:term)), '%')
+            ORDER by dict_value LIMIT 30;";
+		}
+		$q = $conn->prepare($sql);
+		$q->execute(array(':term' => $request->getParameter('term')));
+		$codes = $q->fetchAll();
+
+		$i=0;
+		foreach($codes as $code)
+		{
+			$results[$i]['value'] = $code[0];
+			$results[$i]['value_indexed'] = $code[1];
+			$i++;
+		}
+	}
+	
+		$this->getResponse()->setContentType('application/json');
+		return  $this->renderText(json_encode($results));
+  }
+  
+  //JIM 2018 04 06
+  public function executeInstitutionaddressjson(sfWebRequest $request)
+  {
+	$returned=Array();
+	if($request->getParameter('id')){		
+	  $instAddr=Doctrine_Core::getTable('PeopleAddresses')->findOneByPersonUserRef($request->getParameter('id')); 
+		if(is_object( $instAddr))
+		{
+			$this->getResponse()->setContentType('application/json');
+			$result=Array();
+			$result['entry']=$instAddr->getEntry();
+			$result['po_box']=$instAddr->getPoBox();
+			$result['extended_address']=$instAddr->getExtendedAddress();
+			$result['locality']=$instAddr->getLocality();
+			$result['region']=$instAddr->getRegion();
+			$result['zip_code']=$instAddr->getZipCode();
+			$result['country']=$instAddr->getCountry();
+			$result['tag']=$instAddr->getTag();						
+			$returned=$result;
+		}
+	} 
+	$this->getResponse()->setContentType('application/json');
+	return  $this->renderText(json_encode($returned));	
   }
 }

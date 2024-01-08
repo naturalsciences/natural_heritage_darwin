@@ -20,6 +20,7 @@
  * @property Doctrine_Collection $Lithostratigraphy
  * @property Doctrine_Collection $Mineralogy
  * @property Doctrine_Collection $Lithology
+ * @property Doctrine_Collection $StagingSynonymies
  * 
  * @method integer             getId()                    Returns the current record's "id" value
  * @method string              getCreationDate()          Returns the current record's "creation_date" value
@@ -36,6 +37,7 @@
  * @method Doctrine_Collection getLithostratigraphy()     Returns the current record's "Lithostratigraphy" collection
  * @method Doctrine_Collection getMineralogy()            Returns the current record's "Mineralogy" collection
  * @method Doctrine_Collection getLithology()             Returns the current record's "Lithology" collection
+ * @method Doctrine_Collection getStagingSynonymies()     Returns the current record's "StagingSynonymies" collection
  * @method TaxonomyMetadata    setId()                    Sets the current record's "id" value
  * @method TaxonomyMetadata    setCreationDate()          Sets the current record's "creation_date" value
  * @method TaxonomyMetadata    setCreationDateMask()      Sets the current record's "creation_date_mask" value
@@ -51,6 +53,7 @@
  * @method TaxonomyMetadata    setLithostratigraphy()     Sets the current record's "Lithostratigraphy" collection
  * @method TaxonomyMetadata    setMineralogy()            Sets the current record's "Mineralogy" collection
  * @method TaxonomyMetadata    setLithology()             Sets the current record's "Lithology" collection
+ * @method TaxonomyMetadata    setStagingSynonymies()     Sets the current record's "StagingSynonymies" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -123,5 +126,9 @@ abstract class BaseTaxonomyMetadata extends DarwinModel
         $this->hasMany('Lithology', array(
              'local' => 'id',
              'foreign' => 'metadata_ref'));
+
+        $this->hasMany('StagingSynonymies', array(
+             'local' => 'id',
+             'foreign' => 'taxo_valid_name_ref'));
     }
 }

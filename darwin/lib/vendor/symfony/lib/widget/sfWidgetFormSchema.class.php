@@ -18,6 +18,9 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
+ 
+
+
 class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
 {
   const
@@ -659,7 +662,9 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
    *
    * @return bool true if the schema has a field with the given name, false otherwise
    */
-  public function offsetExists($name)
+   
+  //ftheeten return type
+  public function offsetExists($name) : bool
   {
     return isset($this->fields[$name]);
   }
@@ -671,7 +676,8 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
    *
    * @return sfWidget|null The sfWidget instance associated with the given name, null if it does not exist
    */
-  public function offsetGet($name)
+    //ftheeten return type
+  public function offsetGet($name) : mixed
   {
     return isset($this->fields[$name]) ? $this->fields[$name] : null;
   }
@@ -684,7 +690,9 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
    *
    * @throws InvalidArgumentException when the field is not instance of sfWidget
    */
-  public function offsetSet($name, $widget)
+   
+    //ftheeten return type
+  public function offsetSet($name, $widget) : void
   {
     if (!$widget instanceof sfWidget)
     {
@@ -710,7 +718,8 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
    *
    * @param string $name field name
    */
-  public function offsetUnset($name)
+    //ftheeten return type
+  public function offsetUnset($name) : void
   {
     unset($this->fields[$name]);
     if (false !== $position = array_search((string) $name, $this->positions))

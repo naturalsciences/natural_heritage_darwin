@@ -440,6 +440,28 @@ sps33:
   visible: true
   title_perso: Mids level
   all_public: true
+  
+sps34:
+  col_num: 1
+  category: specimensearch_widget
+  group_name: insurances
+  mandatory: false
+  order_by: 23
+  opened: true
+  visible: true
+  title_perso: insurances
+  all_public: true
+  
+sps35:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: maintenanceOrWorkflow
+   mandatory: false
+   order_by: 17
+   opened: false
+   visible: false
+   title_perso: Maintenance / Workflow
+   all_public: true
    
 sw1:
    col_num: 1
@@ -1846,7 +1868,51 @@ ex3:
    visible: true
    title_perso: Related Files
    all_public: true
+   
+ex4:
+   col_num: 1
+   category: catalogue_expeditions_widget
+   group_name: biblio
+   mandatory: false
+   order_by: 3
+   opened: true
+   visible: true
+   title_perso: Bibliography
+   all_public: true
+    
+ex6:
+   col_num: 1
+   category: catalogue_expeditions_widget
+   group_name: biblio
+   mandatory: false
+   order_by: 5
+   opened: true
+   visible: true
+   title_perso: Bibliography
+   all_public: true
 
+ex7:
+   col_num: 1
+   category: catalogue_expeditions_widget
+   group_name: igs
+   mandatory: false
+   order_by: 6
+   opened: true
+   visible: true
+   title_perso: I.G. number
+   all_public: true
+   
+ex8:
+   col_num: 1
+   category: catalogue_expeditions_widget
+   group_name: collections
+   mandatory: false
+   order_by: 7
+   opened: true
+   visible: true
+   title_perso: Collections
+   all_public: true
+   
 gtu1:
    col_num: 1
    category: catalogue_gtu_widget

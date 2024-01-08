@@ -43,6 +43,14 @@
          <?php echo $insurance->getContactRef() == ''?'-':$insurance->Contact->getFormatedName() ; ?>
       </td>       
     </tr>
+	<tr>
+      <th>
+      	<?php echo __('Disaster recovery score');?>
+      </th>         
+      <td colspan="3">
+         <?php echo $insurance->getDisasterRecoveryScore() ; ?>
+      </td>       
+    </tr>
   </tbody>
 </table>
 <?php endforeach;?>

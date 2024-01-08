@@ -10,6 +10,9 @@
  * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: Builder.php 7490 2010-03-29 19:53:27Z jwage $
  */
+  //ftheeten PHP8
+const ESC_RAW='esc_raw';
+
 class DoctrineTemporalInformationGtuGroup extends BaseDoctrineTemporalInformationGtuGroup
 {
 
@@ -278,7 +281,7 @@ class DoctrineTemporalInformationGtuGroup extends BaseDoctrineTemporalInformatio
                 }
           }
           usort($returned, function($a, $b) {
-            return ($a['from_masked'].$a['to_masked']) - ($b['from_masked'].$b['to_masked']);
+            return strcmp($a['from_masked'].$a['to_masked'], $b['from_masked'].$b['to_masked']);
             });
       }
 	  $returned= array_unique($returned, SORT_REGULAR);

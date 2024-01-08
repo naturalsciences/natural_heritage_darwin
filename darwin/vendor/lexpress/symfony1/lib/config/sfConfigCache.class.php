@@ -97,7 +97,7 @@ class sfConfigCache
         }
       }
     }
-
+	print("LEXPRESS dEBUG");
     if (!$handlerInstance)
     {
       // we do not have a registered handler for this file

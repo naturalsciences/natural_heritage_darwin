@@ -64,6 +64,7 @@
     </tr>
   </thead>
   <?php $cpt=0; foreach($spec_related_inverse as $val):?>
+   <?php if($val->getSpecimenRef()!=$id_spec): ?>
   <tr>
 	  <td style='max-width:20px;'><?php echo ++$cpt; ?></td>
 	  <td>UUID</td>
@@ -90,6 +91,7 @@
     <td>
     </td>
   </tr>
+   <?php endif ; ?>
   <?php endforeach;?>
 </table>
  <?php endif;?>

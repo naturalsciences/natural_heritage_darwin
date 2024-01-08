@@ -40,7 +40,10 @@ class SpecimensForm extends BaseSpecimensForm
       'specimen_count_males_min', 'specimen_count_males_max',
       'specimen_count_females_min', 'specimen_count_females_max', 
       'specimen_count_juveniles_min', 'specimen_count_juveniles_max',
-	   'nagoya'
+	   'nagoya',
+	   'restricted_access'
+	   /*jmherpers 2023 01 18
+	   'DNA_box', 'DNA_HPos', 'DNA_VPos', 'DNA_Tag', 'DNA_Tube', 'DNA_Notes'*/
     ));
 
     $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')), intval(sfConfig::get('dw_yearRangeMin')));
@@ -270,7 +273,7 @@ class SpecimensForm extends BaseSpecimensForm
       'add_empty' => false,
       'change_label' => 'Pick parts in the list',
       'add_label' => 'Add another part',
-    ));
+    ), array("style"=>"max-width: 420px", "class"=> "choice_hoover" ));
 
     $this->widgetSchema['institution_ref'] = new widgetFormCompleteButtonRef(array(
       'model' => 'Institutions',
@@ -293,7 +296,7 @@ class SpecimensForm extends BaseSpecimensForm
       'add_empty' => true,
       'change_label' => 'Pick a building in the list',
       'add_label' => 'Add another building',
-    ));
+    ) , array("style"=>"max-width: 420px"));
 
     $this->widgetSchema['floor'] = new widgetFormSelectComplete(array(
       'model' => 'Specimens',
@@ -303,7 +306,7 @@ class SpecimensForm extends BaseSpecimensForm
       'add_empty' => true,
       'change_label' => 'Pick a floor in the list',
       'add_label' => 'Add another floor',
-    ));
+    ), array("style"=>"max-width: 420px"));
 
     $this->widgetSchema['row'] = new widgetFormSelectComplete(array(
       'model' => 'Specimens',
@@ -313,7 +316,7 @@ class SpecimensForm extends BaseSpecimensForm
       'add_empty' => true,
       'change_label' => 'Pick a row in the list',
       'add_label' => 'Add another row',
-    ));
+    ), array("style"=>"max-width: 420px"),);
 
 
     $this->widgetSchema['col'] = new widgetFormSelectComplete(array(
@@ -324,7 +327,7 @@ class SpecimensForm extends BaseSpecimensForm
       'add_empty' => true,
       'change_label' => 'Pick a col in the list',
       'add_label' => 'Add another col',
-    ));
+    ), array("style"=>"max-width: 420px"));
 
     $this->widgetSchema['room'] = new widgetFormSelectComplete(array(
       'model' => 'Specimens',
@@ -334,7 +337,7 @@ class SpecimensForm extends BaseSpecimensForm
       'add_empty' => true,
       'change_label' => 'Pick a room in the list',
       'add_label' => 'Add another room',
-    ));
+    ), array("style"=>"max-width: 420px"));
 
     $this->widgetSchema['shelf'] = new widgetFormSelectComplete(array(
       'model' => 'Specimens',
@@ -344,7 +347,7 @@ class SpecimensForm extends BaseSpecimensForm
       'add_empty' => true,
       'change_label' => 'Pick a shelf in the list',
       'add_label' => 'Add another shelf',
-    ));
+    ), array("style"=>"max-width: 420px"));
 
     $this->widgetSchema['container_type'] = new widgetFormSelectComplete(array(
       'model' => 'Specimens',
@@ -354,7 +357,7 @@ class SpecimensForm extends BaseSpecimensForm
       'add_empty' => true,
       'change_label' => 'Pick a container in the list',
       'add_label' => 'Add another container',
-      ));
+      ), array("style"=>"max-width: 420px"));
 
     $this->widgetSchema['sub_container_type'] = new widgetFormSelectComplete(array(
       'model' => 'Specimens',
@@ -364,7 +367,7 @@ class SpecimensForm extends BaseSpecimensForm
       'add_empty' => true,
       'change_label' => 'Pick a sub container type in the list',
       'add_label' => 'Add another sub container type',
-    ));
+    ), array("style"=>"max-width: 420px"));
 
     $this->widgetSchema['specimen_status'] = new widgetFormSelectComplete(array(
       'model' => 'Specimens',
@@ -374,7 +377,7 @@ class SpecimensForm extends BaseSpecimensForm
       'add_empty' => true,
       'change_label' => 'Pick a status in the list',
       'add_label' => 'Add another status',
-    ));
+    ), array("style"=>"max-width: 420px"));
 
     $this->widgetSchema['container'] = new sfWidgetFormInput();
     $this->widgetSchema['sub_container'] = new sfWidgetFormInput();
@@ -391,6 +394,38 @@ class SpecimensForm extends BaseSpecimensForm
       'change_label' => 'Pick a sub container storage in the list',
       'add_label' => 'Add another sub container storage',
     ));
+	
+	 /*jmherpers 2023 01 18
+    $this->widgetSchema['DNA_box'] = new widgetFormSelectComplete(array(
+      'model' => 'Specimens',
+      'change_label' => 'Pick a DNA box in the list',
+      'add_label' => 'Add another DNA box',
+    ));
+	$this->widgetSchema['DNA_HPos'] = new widgetFormSelectComplete(array(
+      'model' => 'Specimens',
+      'change_label' => 'Pick a horizontal position in the list',
+      'add_label' => 'Add another horizontal position',
+    ));
+	$this->widgetSchema['DNA_VPos'] = new widgetFormSelectComplete(array(
+      'model' => 'Specimens',
+      'change_label' => 'Pick a vertical position in the list',
+      'add_label' => 'Add another vertical position',
+    ));
+	$this->widgetSchema['DNA_Tag'] = new widgetFormSelectComplete(array(
+      'model' => 'Specimens',
+      'change_label' => 'Pick a DNA tag in the list',
+      'add_label' => 'Add another DNA tag',
+    ));
+	$this->widgetSchema['DNA_Tube'] = new widgetFormSelectComplete(array(
+      'model' => 'Specimens',
+      'change_label' => 'Pick a DNA tube in the list',
+      'add_label' => 'Add another DNA tube',
+    ));
+	$this->widgetSchema['DNA_Notes'] = new widgetFormSelectComplete(array(
+      'model' => 'Specimens',
+      'change_label' => 'Pick a note in the list',
+      'add_label' => 'Add another note',
+    ));*/
 
     $this->widgetSchema['accuracy'] = new sfWidgetFormChoice(array(
         'choices'  => array($this->getI18N()->__('exact'), $this->getI18N()->__('imprecise')),
@@ -600,6 +635,23 @@ class SpecimensForm extends BaseSpecimensForm
 
     $this->widgetSchema['Insurances_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
     $this->validatorSchema['Insurances_holder'] = new sfValidatorPass();
+	
+	$this->widgetSchema['Properties_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
+    $this->validatorSchema['Properties_holder'] = new sfValidatorPass();
+	
+	$this->widgetSchema['CollectionMaintenance_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
+    $this->validatorSchema['CollectionMaintenance_holder'] = new sfValidatorPass();
+	
+	$this->widgetSchema['widget_template'] = new sfWidgetFormDarwinDoctrineChoice(array(
+        'model' => 'Users',
+        'table_method' => array('method'=>'getWidgetTemplates', 'parameters'=>array('user_id'=>sfContext::getInstance()->getUser()->getId(),'add_custom'=>true)),
+		'key_method' => 'getId',
+		'method' => 'getName',
+        'add_empty' => true
+      ),
+      array('class'=>'catalogue_level')
+      );
+  $this->validatorSchema['widget_template']= new sfValidatorPass();
     
 
     $this->mergePostValidator(new sfValidatorSchemaCompare('specimen_count_min', '<=', 'specimen_count_max',
@@ -672,6 +724,9 @@ class SpecimensForm extends BaseSpecimensForm
       )
     ));
     /**/
+	
+		//ftheeten 2023 04 11 PHP8
+	 $this->validatorSchema->addOption('allow_extra_fields', true);
   }
 
   public function forceContainerChoices()
@@ -770,6 +825,13 @@ class SpecimensForm extends BaseSpecimensForm
         'sub_container',
         'sub_container_type',
         'sub_container_storage',
+		 /*jmherpers 2023 01 18
+	   'DNA_box', 
+	   'DNA_HPos', 
+	   'DNA_VPos', 
+	   'DNA_Tag', 
+	   'DNA_Tube', 
+	   'DNA_Notes'*/
       ),
       'Count' => array(
         'accuracy',
@@ -864,6 +926,8 @@ class SpecimensForm extends BaseSpecimensForm
 
   public function bind(array $taintedValues = null, array $taintedFiles = null)
   {
+	  //ftheeten PHP8 conflict with type of specimen ass additional field allowed
+	 unset($taintedFiles["type"]);
     /* For each embedded informations or many-to-many data such as collecting tools and methods
      * test if the widget is on screen by testing a flag field present on the concerned widget
      * If widget is not on screen, remove the field from list of fields to be bound, and than potentially saved
@@ -1004,6 +1068,8 @@ class SpecimensForm extends BaseSpecimensForm
         $taintedValues['institution_ref'] = sfConfig::get('dw_defaultInstitutionRef');
       }
     }
+	$this->bindEmbed('Properties', 'attachProperties' , $taintedValues);
+	$this->bindEmbed('CollectionMaintenance', 'attachMaintenance' , $taintedValues);
     parent::bind($taintedValues, $taintedFiles);
   }
 
@@ -1106,6 +1172,23 @@ class SpecimensForm extends BaseSpecimensForm
     $options = array('referenced_relation' => 'specimens', 'record_id' => $this->getObject()->getId());
     $this->attachEmbedRecord('ExtLinks', new ExtLinksForm(DarwinTable::newObjectFromArray('ExtLinks',$options)), $num);
   }
+  
+   public function attachProperties($num, $values, $order_by=0)
+  {
+        $options =  array('referenced_relation' => 'specimens', 'record_id' => $this->getObject()->getId());
+		//has model initializes autocomplete
+		$tmp_form=new PropertiesForm(DarwinTable::newObjectFromArray('Properties',$options),array("hasmodel"=>true));
+		$tmp_form->setOption("hasmodel", true);
+		$this->attachEmbedRecord('Properties', $tmp_form, $num);      
+  }
+
+  public function attachMaintenance($num, $values, $order_by=0)
+  {
+        $options =  array('referenced_relation' => 'specimens', 'record_id' => $this->getObject()->getId());
+		//has model initializes autocomplete
+		$tmp_form=new CollectionMaintenanceForm(DarwinTable::newObjectFromArray('CollectionMaintenance',$options));
+		$this->attachEmbedRecord('CollectionMaintenance', $tmp_form, $num);     
+  }    
 
   public function getEmbedRecords($emFieldName, $record_id = false)
   {
@@ -1130,6 +1213,10 @@ class SpecimensForm extends BaseSpecimensForm
       return Doctrine_Core::getTable('SpecimensRelationships')->findBySpecimenRef($record_id);
     if( $emFieldName =='Insurances' )
       return Doctrine_Core::getTable('Insurances')->findForTable('specimens', $record_id);
+    if( $emFieldName =='Properties' )
+      return Doctrine_Core::getTable('Properties')->findForTable('specimens', $record_id);
+    if( $emFieldName =='CollectionMaintenance' )
+      return Doctrine_Core::getTable('CollectionMaintenance')->getRelatedArray('specimens', $record_id);
   }
 
   public function getEmbedRelationForm($emFieldName, $values)
@@ -1150,6 +1237,10 @@ class SpecimensForm extends BaseSpecimensForm
       return new SpecimensRelationshipsForm($values);
     if( $emFieldName =='Insurances' )
       return new InsurancesSubForm($values);
+  if( $emFieldName =='Properties' )
+      return new PropertiesForm($values);
+	if( $emFieldName =='CollectionMaintenance' )
+      return new CollectionMaintenanceForm($values);
   }
 
   public function duplicate($id)
@@ -1241,7 +1332,9 @@ class SpecimensForm extends BaseSpecimensForm
     $this->saveEmbed('ExtLinks', 'url' ,$forms, array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
     $this->saveEmbed('RelatedFiles', 'mime_type' ,$forms, array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
     $this->saveEmbed('SpecimensRelationships', 'unit_type' ,$forms, array('specimen_ref' => $this->getObject()->getId()));
-    $this->saveEmbed('Insurances', 'insurance_value' ,$forms, array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
+	$this->saveEmbedArrayFields('Insurances', array('insurance_value','disaster_recovery_score') ,$forms, array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
+	$this->saveEmbed('Properties', 'lower_value' ,$forms, array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
+	$this->saveEmbed('CollectionMaintenance', 'action_observation' ,$forms, array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
 
     if (null === $forms && $this->getValue('ident'))
     {
@@ -1304,32 +1397,9 @@ class SpecimensForm extends BaseSpecimensForm
         }
       }
     }
-     //ftheeten 2019 01 18
     $form_vals = $this->getTaintedValues();
     
-    //print("try to save");
-    /*if(array_key_exists('timestamp', $form_vals))
-    {
-        //print("TIMESTAMP !!!!");
-        if(isset($_SESSION["TEMP_DARWIN_PROPERTY_".$form_vals['timestamp']]))
-        {
-             $tmp_array=$_SESSION["TEMP_DARWIN_PROPERTY_".$form_vals['timestamp']];
-             foreach($tmp_array as $elem=> $id_prop)
-             {
-                if(is_integer($id_prop))
-                {
-                    $prop=Doctrine_Core::getTable('Properties')->findOneById($id_prop);
-                    if($prop)
-                    {
-                        $prop->setRecordId($this->getObject()->getId());
-                        $prop->save();
-                    }
-                }
-             }
-        
-            unset($_SESSION["TEMP_DARWIN_PROPERTY_".$form_vals['timestamp']]);
-        }
-    }*/
+    
     
     return parent::saveObjectEmbeddedForms($con, $forms);
   }

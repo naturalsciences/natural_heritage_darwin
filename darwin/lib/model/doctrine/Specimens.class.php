@@ -59,10 +59,16 @@ class Specimens extends BaseSpecimens
   {
     return array(
       'physical' => 'Physical',
+	  'virtual_specimen' => 'Virtual specimen',
       'observation' => 'Observation',
       'figurate' => 'Figurate',
       'figurate-physical' => 'Figurate-Physical',
 	  'composite-storage-unit' => 'Composite storage unit',
+	  'tissue'=> "Tissue",
+	  'environmental_sample'=> "Environmental Sample",
+	  'dna'=> "DNA",
+	  'environmental_dna'=> "Environmental DNA",
+	  
     );
   }
 

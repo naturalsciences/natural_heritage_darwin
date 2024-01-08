@@ -4,7 +4,8 @@
  */
 class CollectionsTable extends DarwinTable
 {
-  public function completeAsArray($user, $needle, $exact, $limit = 30, $level)
+ //note level not used
+  public function completeAsArray($user, $needle, $exact, $limit = 30, $level=-1)
   {
     $conn_MGR = Doctrine_Manager::connection();
     $q = Doctrine_Query::create()

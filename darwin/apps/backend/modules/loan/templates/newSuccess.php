@@ -29,12 +29,11 @@
         </div>
         <p class="clear"></p>
         <?php include_partial('widgets/float_button', array('form' => $form,
-                                                            'module' => 'loan',
-                                                            'search_module'=>'loan/index',
-                                                            'save_button_id' => 'submit_loan',
-                                                            'print_button_id' => 'print_item_'.(($form->getObject()->isNew())?null:$form->getObject()->getId())
-                                                    )
-        ); ?>
+															//ftheeten 2017 11 30
+                                                            'module' => 'loan'
+                                                            )
+                                                    );
+         ?>
         <p class="form_buttons">
           <?php if (!$form->getObject()->isNew()): ?>
             <?php echo link_to(__('New loan'), 'loan/new') ?>
@@ -43,13 +42,16 @@
                                      'loan/delete?id='.$form->getObject()->getId(),
                                      array('method' => 'delete', 'confirm' => __('Are you sure?'))) ?>
             &nbsp;<?php echo link_to(__('Print loan'),
-              'report/getReport?'.http_build_query(array(
+            /*  'report/getReport?'.http_build_query(array(
                                                      'name'=>'loans_form_complete',
                                                      'default_vals'=>array(
                                                        'loan_id'=>$form->getObject()->getId()
                                                      )
-                                                   )),
-              array('class'=>'print_item', 'id' => 'print_item_'.$form->getObject()->getId())
+                                                   ))
+                                                   */
+              "http://172.16.11.138/merge_pdf?loan=".$form->getObject()->getId()
+                                                   ,
+              array("target"=> "_blank")
             );?>
           <?php endif?>        
           &nbsp;<a href="<?php echo url_for('loan/index') ?>"><?php echo __('Cancel');?></a>
@@ -73,6 +75,21 @@
       $(document).ready(function () {
         $('body').catalogue({});
         $('#submit_loan').click(function() 
+        {
+          form = $(this).closest('form') ;
+          form.removeAttr('target') ;
+          form.attr('action', '<?php echo url_for($action) ; ?>') ;
+          form.submit() ;
+        });
+		/*JMHerpers 2018 03 23*/
+		$('#Paste_code_loan').click(function() 
+        {
+          form = $(this).closest('form') ;
+          form.removeAttr('target') ;
+          form.attr('action', '<?php echo url_for($action) ; ?>') ;
+          form.submit() ;
+        });
+		$('#loans_name').focusout(function() 
         {
           form = $(this).closest('form') ;
           form.removeAttr('target') ;

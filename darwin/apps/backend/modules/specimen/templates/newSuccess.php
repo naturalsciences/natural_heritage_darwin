@@ -1,4 +1,4 @@
-<?php slot('title', __( $form->isNew() ? 'Add specimens' : 'Edit Specimen'));  ?>
+<?php slot('title', __( $form->isNew() ? 'Add specimen(s)' : 'Edit Specimen'));  ?>
 
 <script type="text/javascript">
 $(document).ready(function ()
@@ -43,10 +43,11 @@ $(document).ready(function ()
   <div class="page">
 
 <?php if($form->isNew()):?>
-  <h3 class="spec"><span class="title"><?php echo __( 'Add specimens');?></span></h3>
+  <h3 class="spec"><span class="title"><?php echo __( 'Add specimen(s)');?></span></h3>
 <?php else:?>
   <h3 class="spec">
   <span class="title"><?php echo __('Edit Specimen');?></span>
+	
     <span class="specimen_actions">
         <?php if($sf_user->isPinned($form->getObject()->getId(), 'specimen')) {
           $txt = image_tag('blue_pin_on.png', array('class'=>'pin_but pin_on'));
@@ -58,6 +59,9 @@ $(document).ready(function ()
 
         <?php echo link_to($txt, 'savesearch/pin?source=specimen&id='.$form->getObject()->getId(), array('class'=>'pin_link'));?>
         <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))), 'specimen/view?id='.$form->getObject()->getId()); ?>
+		<?php if($form->getObject()->getRestrictedAccess()):?>
+			<i><b> Non public</b></i>
+		<?php endif;?>
     </span>
   </h3>
 <?php endif;?>
@@ -102,7 +106,24 @@ $(document).ready(function ()
 		  <li>(Issue(s) might be caused by a closed widget containing a mandatory field) </li>
         </ul>
       <?php endif;?>
-
+	  <div>
+		<?php if($user_rights_on_spec>=4): ?>
+			<span class="specimen_actions">
+				<?php print(__("Non public")); ?> : <?php print($form["restricted_access"]); ?>
+			</span>
+		<?php endif;?>	  
+		<?php $form->isNew() ? $url_tpl="specimen/new" : $url_tpl=sfContext::getInstance()->getRequest()->getUri(); ?>
+		<?php  $count_templates=Doctrine_Core::getTable('Users')->getWidgetTemplates($sf_user->getId(), true); ?>
+		<?php if(count($count_templates)>1): ?>
+			<div class="dw_anchor_button">
+			<div>
+				<div><?php print($form["widget_template"]) ?></div>
+				<div style="margin-top:5px"><p class="form_buttons"><?php echo link_to(__("change template"),$url_tpl, array("id"=>"link_change_template"));?></p></div>
+			</div>
+			</div>
+		<br/>
+		<?php endif;?>
+	</div>
       <?php include_partial('widgets/screen', array(
         'widgets' => $widgets,
         'category' => 'specimenwidget',
@@ -110,6 +131,7 @@ $(document).ready(function ()
         'options' => array('form' => $form, 'level' => 2),
       )); ?>
     </div>
+	
     <p class="clear"></p>
     <?php include_partial('widgets/float_button', array('form' => $form,
                                                         'module' => 'specimen',
@@ -146,6 +168,12 @@ $(document).ready(function ()
 	<?php endif;?>
   </form>
 <script  type="text/javascript">
+
+
+	var template_url="";
+ 
+
+
  //ftheeten 2018 02 13
 function addErrorToMain(html)
 {
@@ -173,6 +201,9 @@ function removeError()
 }
 
 $(document).ready(function () {
+
+
+
   $('body').duplicatable({duplicate_href: '<?php echo url_for('specimen/confirm');?>', target:'_self'});
   $('body').catalogue({});
 
@@ -261,6 +292,42 @@ if(duplicate_id!==undefined)
         }
 	   
    }
+
+   template_url=$("#link_change_template").attr('href');
+   $("#specimen_widget_template").on('change', function (e) {	
+	   var valueSelected = this.value;
+	   console.log(valueSelected);
+	   if(valueSelected.length>0)
+	   {
+			var template_url_local=template_url;			
+			template_url_local=template_url_local.replace(/\/widget_template\/\-?\d+/g,"");
+			console.log(template_url_local);
+			var href = template_url_local+"/widget_template/"+valueSelected;
+			console.log(href);
+			$("#link_change_template").attr('href', href);
+	   }
+		
+   });
+   
+   <?php if($widget_template!="-1"):?>
+        console.log("TEMPLATE_DEF");
+		console.log("<?php print($debug);?>");
+		$("#specimen_widget_template").val("<?php print($widget_template);?>");
+   <?php endif;?>
+   
+   hoover_option(".choice_hoover");
+  
+   var options = $('.choice_hoover').find('option');
+
+	$.each(options, function(i, opt){
+			if($(opt).text().length>75)
+			{
+				$(opt).text($(opt).text().substr(0,75)+'…');
+			}
+			//var text=$(opt).text()
+			//$(opt).val(text).text(text.substr(0,100)+'…')
+	  
+	});
    
    browseErrors();
 });

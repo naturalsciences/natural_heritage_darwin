@@ -3,6 +3,7 @@
   <div class="import_filter">
     <?php 
 		//ftheeten 2018 07 15
+
 		if($format=="taxon")
 		{
 			$path='import/searchCatalogue';
@@ -33,6 +34,27 @@
 			$path='import/searchLinks';
 			
 		}
+		elseif($format=="synonymies")
+		{
+			$path='import/searchSynonymies';
+			
+		}
+		elseif($format=="codes")
+		{
+			$path='import/searchCodes';
+			
+		}
+		elseif($format=="properties")
+		{
+			$path='import/searchProperties';
+			
+		}
+		elseif($format=="relationships")
+		{
+			$path='import/searchRelationships';
+			
+		}
+	
 		print(form_tag($path, array('class'=>'search_form','id'=>'import_filter')));?>
   <div class="container">
     <table class="search" id="search">
@@ -70,6 +92,14 @@
       <div class="new_link"><a href="<?php echo url_for('import/upload?format=links') ?>"><?php echo __('Import Links');?></a>
 	 <?php elseif($format == 'lithostratigraphy') : ?>    
       <div class="new_link"><a href="<?php echo url_for('import/upload?format=lithostratigraphy') ?>"><?php echo __('Import Lithostratigraphy');?></a>
+	 <?php elseif($format == 'synonymies') : ?>    
+      <div class="new_link"><a href="<?php echo url_for('import/upload?format=synonymies') ?>"><?php echo __('Import Synonyms');?></a>
+	 <?php elseif($format == 'codes') : ?>    
+      <div class="new_link"><a href="<?php echo url_for('import/upload?format=codes') ?>"><?php echo __('Import Codes');?></a>
+	 <?php elseif($format == 'properties') : ?>    
+      <div class="new_link"><a href="<?php echo url_for('import/upload?format=properties') ?>"><?php echo __('Import Properties');?></a>
+	 <?php elseif($format == 'relationships') : ?>    
+      <div class="new_link"><a href="<?php echo url_for('import/upload?format=relationships') ?>"><?php echo __('Import Relationships');?></a>
     <?php else : ?>
       <div class="new_link"><a href="<?php echo url_for('import/upload?format=abcd') ?>"><?php echo __('Import Specimens');?></a></div>
     <?php endif ; ?>

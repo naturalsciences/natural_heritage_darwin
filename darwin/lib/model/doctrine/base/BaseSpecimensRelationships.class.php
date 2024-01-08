@@ -16,11 +16,13 @@
  * @property integer $institution_ref
  * @property string $source_name
  * @property string $source_id
+ * @property integer $import_ref
  * @property Specimens $Specimen
  * @property Specimens $SpecimenRelated
  * @property Taxonomy $Taxonomy
  * @property Mineralogy $Mineralogy
  * @property Institutions $Institutions
+ * @property Imports $Imports
  * 
  * @method integer                getSpecimenRef()          Returns the current record's "specimen_ref" value
  * @method integer                getTaxonRef()             Returns the current record's "taxon_ref" value
@@ -33,11 +35,13 @@
  * @method integer                getInstitutionRef()       Returns the current record's "institution_ref" value
  * @method string                 getSourceName()           Returns the current record's "source_name" value
  * @method string                 getSourceId()             Returns the current record's "source_id" value
+ * @method integer                getImportRef()            Returns the current record's "import_ref" value
  * @method Specimens              getSpecimen()             Returns the current record's "Specimen" value
  * @method Specimens              getSpecimenRelated()      Returns the current record's "SpecimenRelated" value
  * @method Taxonomy               getTaxonomy()             Returns the current record's "Taxonomy" value
  * @method Mineralogy             getMineralogy()           Returns the current record's "Mineralogy" value
  * @method Institutions           getInstitutions()         Returns the current record's "Institutions" value
+ * @method Imports                getImports()              Returns the current record's "Imports" value
  * @method SpecimensRelationships setSpecimenRef()          Sets the current record's "specimen_ref" value
  * @method SpecimensRelationships setTaxonRef()             Sets the current record's "taxon_ref" value
  * @method SpecimensRelationships setMineralRef()           Sets the current record's "mineral_ref" value
@@ -49,11 +53,13 @@
  * @method SpecimensRelationships setInstitutionRef()       Sets the current record's "institution_ref" value
  * @method SpecimensRelationships setSourceName()           Sets the current record's "source_name" value
  * @method SpecimensRelationships setSourceId()             Sets the current record's "source_id" value
+ * @method SpecimensRelationships setImportRef()            Sets the current record's "import_ref" value
  * @method SpecimensRelationships setSpecimen()             Sets the current record's "Specimen" value
  * @method SpecimensRelationships setSpecimenRelated()      Sets the current record's "SpecimenRelated" value
  * @method SpecimensRelationships setTaxonomy()             Sets the current record's "Taxonomy" value
  * @method SpecimensRelationships setMineralogy()           Sets the current record's "Mineralogy" value
  * @method SpecimensRelationships setInstitutions()         Sets the current record's "Institutions" value
+ * @method SpecimensRelationships setImports()              Sets the current record's "Imports" value
  * 
  * @package    darwin
  * @subpackage model
@@ -106,6 +112,9 @@ abstract class BaseSpecimensRelationships extends DarwinModel
         $this->hasColumn('source_id', 'string', null, array(
              'type' => 'string',
              ));
+        $this->hasColumn('import_ref', 'integer', null, array(
+             'type' => 'integer',
+             ));
     }
 
     public function setUp()
@@ -129,6 +138,10 @@ abstract class BaseSpecimensRelationships extends DarwinModel
 
         $this->hasOne('Institutions', array(
              'local' => 'institution_ref',
+             'foreign' => 'id'));
+
+        $this->hasOne('Imports', array(
+             'local' => 'import_ref',
              'foreign' => 'id'));
     }
 }
