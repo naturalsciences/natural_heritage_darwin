@@ -1,0 +1,55 @@
+version: '3.1'
+
+services:
+  darwin_db:
+    restart: always
+    image: darwin_db:1.0
+    container_name: darwin_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres_dw
+      #PGDATA: /tmp # This does the trick
+      ALLOW_IP_RANGE: 0.0.0.0/0
+      POSTGRES_MULTIPLE_EXTENSIONS: postgis,hstore
+    user: postgres:postgres
+    working_dir: /opt/darwin_db
+    volumes: 
+      - darwin_db_rmca:/var/lib/postgresql/data
+      - YOUR_PATH/docker/volumes/dw_data_rmca:/opt/darwin_db      
+    ports:
+      - "5435:5432"
+    networks:
+      - darwin_local
+  darwin_fpm:
+    restart: always
+    image:  darwin_fpm:1.0
+    container_name: darwin_fpm
+    volumes:
+      
+      - dw_logical_web_root:/var/www/html
+      - dw_logical_php_conf:/usr/local/etc/php
+      #- dw_logical_php_conf/php.ini:/usr/local/etc/php/php.ini
+    user: root:root
+    ports:
+      - "9000:9000"
+    networks:
+      - darwin_local
+  darwin_apache:
+    restart: always
+    image:  darwin_httpd:1.0
+    container_name: darwin_apache
+    volumes:
+      - dw_logical_httpd_conf:/usr/local/apache2/conf
+      #- dw_logical_httpd_conf/httpd.conf:/usr/local/apache2/conf/httpd.conf
+      - dw_logical_web_root:/var/www/html
+    ports:
+      - "8099:80"
+    networks:
+      - darwin_local
+networks:
+    darwin_local:
+volumes:
+  dw_logical_httpd_conf:
+  dw_logical_web_root:
+  dw_logical_php_conf:
+  darwin_db_rmca:

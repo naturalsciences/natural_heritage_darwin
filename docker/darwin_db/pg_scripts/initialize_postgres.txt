@@ -1,0 +1,8 @@
+docker exec -it darwin_db apt-get update
+docker exec -it darwin_db apt-get install postgresql-14-postgis-3 postgresql-plpython3-14
+
+docker exec -i -t -u postgres darwin_db  psql -d postgres  -f /opt/darwin_db/pg_scripts_data/0_init_dw.sql
+
+docker exec -i -t -u postgres darwin_db  psql -d darwin2  -f /opt/darwin_db/pg_scripts_data/4_dw2_rbins_data_oct2023.sql
+
+docker exec -i -t -u postgres darwin_db  psql -d darwin2  -f /opt/darwin_db/pg_scripts_data/4_dw2_rbins_data_oct2023_2.sql

@@ -1,0 +1,9 @@
+docker build -t darwin_fpm:1.0 .
+docker run -d -p 9000:9000 --name=darwin_fpm darwin_apache:1.0-fpm
+
+docker build -t darwin_httpd:1.0 .
+#docker run -d -p 8098:80 --name=darwin_apache httpd:2.4.58
+
+shortcut volumes windows
+
+\\wsl.localhost\docker-desktop-data\data\docker\volumes\

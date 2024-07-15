@@ -1,0 +1,15 @@
+sudo docker run -d  -p 5432:5435 -v /opt/docker/to_win/volumes/dw_data:/var/lib/postgresql/data:Z --name darwin_db darwin_db:1.0
+
+
+FROM docker desktop
+
+sudo docker build -t darwin_db:1.0 .
+docker run -d  -p 5432:5435 -v darwin_db:/var/lib/postgresql/data --name darwin_db darwin_db:1.0
+
+docker run -d  -p 5432:5435 -v //e/WSL_UBUNTU/docker/volumes/dw_data:/var/lib/postgresql/data:Z --name darwin_db darwin_db:1.0
+
+docker run -d  -p 5432:5435 --mount type=bind,src=E:/WSL_UBUNTU/docker/volumes/dw_data,target=/var/lib/postgresql/data  --name darwin_db darwin_db:1.0
+
+ docker exec -it darwin_db /bin/sh
+ 
+ docker run --hostname=14fa7d941f16 --user=postgres --mac-address=02:42:ac:11:00:02 --env=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/postgresql/14/bin --env=GOSU_VERSION=1.16 --env=LANG=en_US.utf8 --env=PG_MAJOR=14 --env=PG_VERSION=14.9-1.pgdg120+1 --env=PGDATA=/var/lib/postgresql/data --env=POSTGRES_USER=postgres --env=POSTGRES_PASSWORD=postgres_dw --env=PG_DATA=/var/lib/postgresql/data --volume=darwin_db:/var/lib/postgresql/data --volume=/var/lib/postgresql/data --workdir=/opt/darwin_db -p 5432:5435 --restart=no --runtime=runc -d darwin_db:1.0

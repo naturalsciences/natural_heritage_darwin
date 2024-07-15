@@ -1,0 +1,12 @@
+#sudo docker build -t darwin_apache:1.0 .
+
+
+sudo docker build -t darwin_httpd:1.0 .
+
+sudo docker build -t darwin_db:1.0 .
+
+sudo docker build -t darwin_fpm:1.0 .
+
+shortcut to volumes on windows: 
+
+\\wsl.localhost\docker-desktop-data\data\docker\volumes\
