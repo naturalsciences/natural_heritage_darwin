@@ -103,6 +103,12 @@ abstract class BaseGtuForm extends DarwinModelForm
     $this->widgetSchema   ['expedition_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Expeditions'), 'add_empty' => true));
     $this->validatorSchema['expedition_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Expeditions'), 'column' => 'id', 'required' => false));
 
+    $this->widgetSchema   ['iso3166'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['iso3166'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['iso3166_subdivision'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['iso3166_subdivision'] = new sfValidatorString(array('required' => false));
+
     $this->widgetSchema   ['id'] = new sfWidgetFormInputHidden();
     $this->validatorSchema['id'] = new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false));
 

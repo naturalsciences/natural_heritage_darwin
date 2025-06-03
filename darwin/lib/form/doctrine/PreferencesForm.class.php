@@ -33,7 +33,7 @@ class PreferencesForm extends BaseForm
     $this->widgetSchema->setHelp('search_cols_specimen', 'Define which field will be available by default into the specimen search');
     $this->validatorSchema['search_cols_specimen'] = new sfValidatorChoice(array('choices' => array_keys($choices), 'multiple' => true));
 
-    $choices = array('5' => '5', '10' => '10', '15' => '15', '20' => '20','50'=>'50', '100'=>'100');
+    $choices = array('5' => '5', '10' => '10', '15' => '15', '20' => '20','50'=>'50', '100'=>'100', '800'=>'800');
     $this->widgetSchema['board_search_rec_pp'] = new sfWidgetFormChoice(array('choices' => $choices));
     $this->validatorSchema['board_search_rec_pp'] = new sfValidatorChoice(array('choices' => array_keys($choices) ));
     $this->widgetSchema['board_search_rec_pp']->setLabel('Number of saved searches');

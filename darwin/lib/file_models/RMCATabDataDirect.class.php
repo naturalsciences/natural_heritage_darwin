@@ -36,6 +36,8 @@ class RMCATabDataDirect
 
     protected $parsed_fields=Array(); 
 	protected $headers_properties=Array();		
+	protected $headers_links=Array();
+	protected $prevent_property_copy=Array();
 	
 	public function __construct($p_configuration, $p_import_id, $p_collection_of_import, $p_taxonomy_ref, $p_code_has_auto_increment=false, $p_code_last_value=NULL, $p_code_prefix=NULL, $p_code_prefix_separator=NULL, $p_code_suffix_separator=NULL, $p_code_suffix=NULL)
     {
@@ -205,6 +207,36 @@ class RMCATabDataDirect
         $this->prop_patterns[]="/property_upper_value_\d+/i";
         $this->prop_patterns[]="/property_is_quantitative_\d+/i";
         $this->prop_patterns[]="/property_unit_\d+/i";
+		
+		$this->link_patterns=Array();
+        //$this->prop_patterns[]="/sampling_property_\d+/i";
+        $this->link_patterns[]="/link_url_\d+/i";
+        $this->link_patterns[]="/link_comment_\d+/i";
+        $this->link_patterns[]="/link_type_\d+/i";
+		/*
+		 private static $link_types = array(
+			'orthanc_3d' => 'Orthanc 3D',
+			'ext' => 'Other External',
+			//'vc' => 'Virtual Collection',
+			'html_3d_snippet_general' => '3D (Frame general)',
+			'html_3d_link' => '3D (Link)',
+			'html_3d_snippet' => '3D (Sketchfab)',
+			'dna' => 'DNA',
+			'dna_genbank' => 'DNA (Genbank)',
+			'dna_elixir' => 'DNA (Elixir)',
+			'dna_labbook' => 'DNA Labbook',
+			'iiif' => 'Image (IIIF - manifest )',
+			'iiif_info' => 'Image (IIIF - info.json)',
+			'image' => 'Image (non IIIF)',
+			'pdf' => 'PDF',
+			'ltp' => 'LTP',
+			'nagoya'=> 'Nagoya',
+			'sound' => 'Sound',
+			'video' => 'Video',
+			'other' => 'Others'
+			) ;
+		*/
+        
 		
         //ftheeten 2018 04 12
         for($i=1;$i<=$this->nbProperties;$i++)
@@ -885,8 +917,9 @@ class RMCATabDataDirect
     {
         $coordDMS = str_replace(' ', '', $coordDMS);       
        
-        
-        $hexDeg="\x".dechex(ord("�"));
+        //$hexDeg="\x".dechex(ord("�"));
+		
+        $hexDeg="\x".dechex(ord("°"));
 
 
         $returned=NULL;
@@ -1286,6 +1319,43 @@ class RMCATabDataDirect
 		}
 	}
 	
+	   public function handleLink($url, $type,  $comment=null)
+	  {
+
+		if($this->isset_and_not_null($url) && $this->isset_and_not_null($type))
+		{
+			
+			$link=new ExtLinks();
+			//$link->setReferencedRelation("staging_specimen");
+			if(!strpos(strtolower($type), "file_system"))
+			{
+				$link->setUrl($url);
+			}
+			else
+			{
+				$link->setUrl_no_check($url);
+			}
+			//$link->setRecordId($this->staging->getId());	
+			if($type!==null)
+			{
+				//!assume types are lowercase
+				$link->setType(strtolower($type));
+			}
+			if($comment!==null)
+			{
+				$link->setComment($comment);
+			}
+			else
+			{
+				$link->setComment("");
+			}
+							
+			//$link->save();
+			  $this->staging->addRelated($link);
+		}
+			
+	}
+	
      public function addMeasurementDynamicField(  $p_index_csv, $is_geographical=false)
     {
         if($is_geographical)
@@ -1340,6 +1410,13 @@ class RMCATabDataDirect
         
         if (array_key_exists(strtolower($prefixValue), $this->headers_inverted)&&array_key_exists(strtolower($prefixNotionConcerned), $this->headers_inverted)) 
         {           
+		
+			$this->prevent_property_copy[]=strtolower($prefixValue);
+			$this->prevent_property_copy[]=$prefixNotionConcerned;
+			$this->prevent_property_copy[]=$prefixDate;
+			$this->prevent_property_copy[]=$prefixStatus;
+			$this->prevent_property_copy[]=$prefixIdentifier;
+			
             $this->identification_object = new ParsingIdentifications() ;
             $valTmp=$this->getCSVValue($prefixValue);
             
@@ -1674,11 +1751,16 @@ class RMCATabDataDirect
 	public function addSpecimenCategory()
     {     
 	   /*
-	   'physical' => 'Physical',
+	 'physical' => 'Physical',
+	  'virtual_specimen' => 'Virtual specimen',
       'observation' => 'Observation',
       'figurate' => 'Figurate',
       'figurate-physical' => 'Figurate-Physical',
 	  'composite-storage-unit' => 'Composite storage unit',
+	  'tissue'=> "Tissue",
+	  'environmental_sample'=> "Environmental Sample",
+	  'dna'=> "DNA",
+	  'environmental_dna'=> "Environmental DNA",
 	   */
  
         $valTmp=$this->getCSVValue("specimenCategory");
@@ -1926,6 +2008,7 @@ class RMCATabDataDirect
        
         foreach($this->headers as $key=>$value)
         {
+			//print($value);
 		   if(strlen(trim($value))>0)
 		   {			
 					$this->headers_inverted[strtolower(trim($value))]= $key;           
@@ -1936,6 +2019,18 @@ class RMCATabDataDirect
                {
                     //print("PROPERTY_FOUND_".$value);
                     $this->headers_properties[$value]=$key;
+					$this->prevent_property_copy[]=strtolower($value);
+               }
+           }
+		   
+		   foreach($this->link_patterns as $link_pattern)
+           {
+				
+               if(preg_match($link_pattern,$value))
+               {
+                    print("LINK_FOUND_".$value);
+                    $this->headers_links[$value]=$key;
+					$this->prevent_property_copy[]=strtolower($value);
                }
            }
 		}
@@ -2103,6 +2198,8 @@ class RMCATabDataDirect
 						if(!in_array($field_name, $this->parsed_fields)
 						&&
 						!array_key_exists(strtolower(trim($field_name)), $this->headers_properties)
+						&& // ftheeten 2024 10 16
+						!in_array(strtolower(trim($field_name)), $this->prevent_property_copy)
 						)
                         {
                             $this->addMeasurement_free($field_name, $field_name);
@@ -2126,6 +2223,19 @@ class RMCATabDataDirect
 					$unit=$this->getCSVValue('property_unit_'.$idx);
 					$this->handleFullProperty($prop_type , $lower_val, $upper_value, $is_quantitative, $unit);
 				}
+			}
+		}
+		foreach($this->headers_links as $name_field=>$pos_field)
+		{
+			if (strpos($name_field, 'link_url_') === 0) 
+            {
+				$idx=str_ireplace('link_url_','',$name_field);
+				$url=$this->getCSVValue($name_field);
+				$link_type_name="link_type_".$idx;
+				$type=$this->getCSVValue($link_type_name);
+				$link_comment_name="link_comment_".$idx;
+				$comment=$this->getCSVValue($link_comment_name);
+				$this->handleLink($url, $type,  $comment);
 			}
 		}
         $this->addStorage();
@@ -2210,14 +2320,25 @@ class RMCATabDataDirect
 		}
 		catch(Doctrine_Exception $ne)
 		{
-			//print("failed");
+			print("failed 1");
 			//$e = new DarwinPgErrorParser($ne);
 			$this->errors_reported .= "Unit ".$this->name." object were not saved: ".$ne->getMessage().";";
-			 $e = new DarwinPgErrorParser($this->errors_reported);
-			//print($this->errors_reported);
+			 $ne = new DarwinPgErrorParser($this->errors_reported);
+			print($this->errors_reported);
 			$ok = false ;
-			$this->import->setErrorsInImport("Table error for staging");
+			//$this->import->setErrorsInImport("Table error for staging:");
 			throw $ne;
+		}
+		catch(Exception $e)
+		{
+			print("failed 2");
+			//$e = new DarwinPgErrorParser($ne);
+			$this->errors_reported .= "Unit ".$this->name." object were not saved: ".$e->getMessage().";";
+			 $e = new DarwinPgErrorParser($this->errors_reported);
+			print($this->errors_reported);
+			$ok = false ;
+			//$this->import->setErrorsInImport("Table error for staging");
+			throw $e ;
 		}
 		if ($ok)
 		{

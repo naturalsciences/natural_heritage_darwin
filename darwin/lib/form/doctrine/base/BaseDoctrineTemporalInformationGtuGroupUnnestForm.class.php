@@ -115,6 +115,9 @@ abstract class BaseDoctrineTemporalInformationGtuGroupUnnestForm extends DarwinM
     $this->widgetSchema   ['properties'] = new sfWidgetFormTextarea();
     $this->validatorSchema['properties'] = new sfValidatorString(array('required' => false));
 
+    $this->widgetSchema   ['country_ref'] = new sfWidgetFormInputText();
+    $this->validatorSchema['country_ref'] = new sfValidatorInteger(array('required' => false));
+
     $this->widgetSchema->setNameFormat('doctrine_temporal_information_gtu_group_unnest[%s]');
   }
 

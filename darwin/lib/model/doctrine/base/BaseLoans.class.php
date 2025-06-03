@@ -21,7 +21,10 @@
  * @property string $collection_manager
  * @property string $collection_manager_title
  * @property string $collection_manager_mail
+ * @property string $collection_manager_phone
  * @property boolean $non_cites
+ * @property string $mail_receiver
+ * @property string $phone_receiver
  * @property Doctrine_Collection $CataloguePeople
  * @property Collections $Collections
  * @property Doctrine_Collection $LoanItems
@@ -44,7 +47,10 @@
  * @method string              getCollectionManager()        Returns the current record's "collection_manager" value
  * @method string              getCollectionManagerTitle()   Returns the current record's "collection_manager_title" value
  * @method string              getCollectionManagerMail()    Returns the current record's "collection_manager_mail" value
+ * @method string              getCollectionManagerPhone()   Returns the current record's "collection_manager_phone" value
  * @method boolean             getNonCites()                 Returns the current record's "non_cites" value
+ * @method string              getMailReceiver()             Returns the current record's "mail_receiver" value
+ * @method string              getPhoneReceiver()            Returns the current record's "phone_receiver" value
  * @method Doctrine_Collection getCataloguePeople()          Returns the current record's "CataloguePeople" collection
  * @method Collections         getCollections()              Returns the current record's "Collections" value
  * @method Doctrine_Collection getLoanItems()                Returns the current record's "LoanItems" collection
@@ -66,7 +72,10 @@
  * @method Loans               setCollectionManager()        Sets the current record's "collection_manager" value
  * @method Loans               setCollectionManagerTitle()   Sets the current record's "collection_manager_title" value
  * @method Loans               setCollectionManagerMail()    Sets the current record's "collection_manager_mail" value
+ * @method Loans               setCollectionManagerPhone()   Sets the current record's "collection_manager_phone" value
  * @method Loans               setNonCites()                 Sets the current record's "non_cites" value
+ * @method Loans               setMailReceiver()             Sets the current record's "mail_receiver" value
+ * @method Loans               setPhoneReceiver()            Sets the current record's "phone_receiver" value
  * @method Loans               setCataloguePeople()          Sets the current record's "CataloguePeople" collection
  * @method Loans               setCollections()              Sets the current record's "Collections" value
  * @method Loans               setLoanItems()                Sets the current record's "LoanItems" collection
@@ -137,8 +146,17 @@ abstract class BaseLoans extends DarwinModel
         $this->hasColumn('collection_manager_mail', 'string', null, array(
              'type' => 'string',
              ));
+        $this->hasColumn('collection_manager_phone', 'string', null, array(
+             'type' => 'string',
+             ));
         $this->hasColumn('non_cites', 'boolean', null, array(
              'type' => 'boolean',
+             ));
+        $this->hasColumn('mail_receiver', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('phone_receiver', 'string', null, array(
+             'type' => 'string',
              ));
     }
 

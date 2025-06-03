@@ -47,14 +47,15 @@
           $(parent_table).data("initial_values", initial_code_object);
         }
       }
-      $(parent_el).find('input[type="text"]').val('');
+      /*$(parent_el).find('input[type="text"]').val('');
       $(parent_el).find('select').append("<option value=''></option>").val('');   
       $(parent_el).hide();
       visibles = $(parent_el).closest('table.property_values').find('tbody:visible').size();
       if(!visibles)
       {
         $(this).closest('table.property_values').find('thead').hide();
-      }
+      }*/
+	   $("#code_<?php echo $rownum;?>").html("");
     });
 
     $("tbody#code_<?php echo $rownum;?> input.code_mrac_input_mask").on(

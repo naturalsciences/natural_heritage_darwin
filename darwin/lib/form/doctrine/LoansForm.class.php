@@ -180,6 +180,9 @@ class LoansForm extends BaseLoansForm
     
     $this->widgetSchema['collection_manager_mail'] = new sfWidgetFormInput();
     $this->validatorSchema['collection_manager_mail'] = new sfValidatorString(array('required' => true)) ;
+	
+	$this->widgetSchema['collection_manager_phone'] = new sfWidgetFormInput();
+    $this->validatorSchema['collection_manager_phone'] = new sfValidatorString(array('required' => true)) ;
     
     
     $this->widgetSchema['non_cites'] = new sfWidgetFormInputCheckBox();

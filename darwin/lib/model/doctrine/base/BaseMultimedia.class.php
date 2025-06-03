@@ -26,6 +26,7 @@
  * @property string $external_uri
  * @property string $internet_protocol
  * @property string $field_observations
+ * @property integer $access_rights
  * 
  * @method integer    getId()                   Returns the current record's "id" value
  * @method string     getReferencedRelation()   Returns the current record's "referenced_relation" value
@@ -47,6 +48,7 @@
  * @method string     getExternalUri()          Returns the current record's "external_uri" value
  * @method string     getInternetProtocol()     Returns the current record's "internet_protocol" value
  * @method string     getFieldObservations()    Returns the current record's "field_observations" value
+ * @method integer    getAccessRights()         Returns the current record's "access_rights" value
  * @method Multimedia setId()                   Sets the current record's "id" value
  * @method Multimedia setReferencedRelation()   Sets the current record's "referenced_relation" value
  * @method Multimedia setRecordId()             Sets the current record's "record_id" value
@@ -67,6 +69,7 @@
  * @method Multimedia setExternalUri()          Sets the current record's "external_uri" value
  * @method Multimedia setInternetProtocol()     Sets the current record's "internet_protocol" value
  * @method Multimedia setFieldObservations()    Sets the current record's "field_observations" value
+ * @method Multimedia setAccessRights()         Sets the current record's "access_rights" value
  * 
  * @package    darwin
  * @subpackage model
@@ -158,6 +161,9 @@ abstract class BaseMultimedia extends DarwinModel
              ));
         $this->hasColumn('field_observations', 'string', null, array(
              'type' => 'string',
+             ));
+        $this->hasColumn('access_rights', 'integer', null, array(
+             'type' => 'integer',
              ));
     }
 

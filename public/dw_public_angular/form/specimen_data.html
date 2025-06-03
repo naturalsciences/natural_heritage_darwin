@@ -3,6 +3,7 @@
 <html id="darwin-app" ng-controller='darwin-controller-data'>
 
 <head >
+	<title>RBINS - Darwin collection database</title>
     <meta name="MobileOptimized" content="width">
 	<meta name="HandheldFriendly" content="true">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +12,7 @@
 	<meta http-equiv="Expires" content="0" />
 	<meta name="google-site-verification" content="googlea676d101458b4793.html" />
     <meta charset="UTF-8">
-
+	<link rel="icon" type="image/x-icon" href="./images/favicon.png" />
 	<link rel="stylesheet" href="./css/common/bootstrap.min.css">
 	<link rel="stylesheet" href="./css/common/darwin.css">
 	<link rel="stylesheet" href="./js/code/common/openlayers/v6.5.0-dist/ol.css">
@@ -42,35 +43,29 @@
 
 	<script type="text/javascript" src="./js/code/common/messages.js"></script>
 	<script type="text/javascript" src="./js/code/filters/filter.js"></script>
-	<script type="text/javascript" src="./js/code/services/app_no_frame.js"></script>
-	<script type="text/javascript" src="./js/code/services/app_content.js"></script>
-	<script type="text/javascript" src="./js/code/controllers/darwinControllerData.js"></script>
-	<script type="text/javascript" src="./js/code/controllers/darwinControllerDetail.js"></script>
+	<script type="text/javascript" src="./js/code/services/app_no_frame.js?v=20250106c"></script>
+	<script type="text/javascript" src="./js/code/services/app_content.js?v=20250106c"></script>
+	<script type="text/javascript" src="./js/code/controllers/darwinControllerData.js?v=20250106c"></script>
+	<script type="text/javascript" src="./js/code/controllers/darwinControllerDetail.js?v=20250106c"></script>
 	<script type="text/javascript" src="./js/code/common/clickoutside.directive.js"></script>
 	<script type="text/javascript" src="./js/code/common/spin.min.js"></script>
 	<script type="text/javascript" src="./js/code/common/angular-spinner.min.js"></script>
 	<script type="text/javascript" src="./js/code/common/angular-loading-spinner.js"></script>
 	<script type="text/javascript" src="./js/code/common/tmhDynamicLocale.min.js"></script>
 	<script type="text/javascript" src="./js/code/common/openlayers/v6.5.0-dist/ol.js"></script>
-	<!--changed for intermediate page-->
+	
 	<base href="/dw_public/form/">	
 </head>
 
 <body>
 
-<!---------------------------    HEADER   --------------------------->
+
 
 <header id="site-header">
 
 	<div class="maxwidthwrapper clearfix">
 	
-		<!--<div class="header__logo">
 		
-			<a href="https://naturalsciences.be" target="_self"  class="site-logo">
-				<img src="/dw_public/form/images/logo_irsnb.png" alt="Home" />
-			</a>
-		
-		</div>-->
 		
 		<div class="header__secondary">
 		
@@ -88,9 +83,6 @@
 	
 </header>
 
-<!---------------------------    END HEADER    --------------------------->
-
-<!---------------------------    SUBMENU    --------------------------->
 
 <div class="submenu">
 
@@ -107,21 +99,17 @@
 
 </div>
 
-<!---------------------------    END SUBMENU    --------------------------->
 
-<!--<form action="./specimen_data.html"  method="get">-->
-
-<!--id needed to bind to AngularJS-->
 
 <div class="page-specimen-data">
 
 	<div ng-init="ctrl.sort_direction='ascending'">	
 	
-	<!--SPINNER-->
+	
 		<span us-spinner style="position:fixed; top:50%; left:50%;  z-index: 10;"></span>
 
 	
-	<!--DIV_MAP-->	 
+	
 	   
 			<div  id="map" class="map" style="height:500px; display:none;"></div>
 			<div id="mouse-position"></div>
@@ -129,16 +117,17 @@
 				<a href="#" id="popup-closer" class="ol-popup-closer"></a>
 				<div id="popup-content"></div>
 			</div>
-			<!--do not remove used by map (results)-->
+			
 			<input type="hidden" name="localJSON" id="localJSON" ng-model="geoJSON" ></input>
 		
 	
 			
-		<!--BEGIN_RESULT-->
+		
 		<div class="container">
 			<div class="row">
 				<div class="col-md-12">
 					<div id="div_result" style="text-align: center" >
+						<div><input type="hidden" id="backlink" value="{{backlink}}"/><input id="copy_results" class="pagination-buttons" type="button" value="{{ 'KEEP_RESULTS' | translate}}"></input></div>
 						<span style="font-size: 1.4em; font-weight: bold">{{pager.totalItems}} {{'SPECIMEN_FOUND' | translate}}</span>
 						<br />
 						{{'Page' | translate}}  {{pager.currentPage}}  / {{displayNbPages()}}
@@ -149,7 +138,7 @@
 						<br/>
 						{{ getGeoRefInDataset() }}  {{'GEOREFERENCED_IN_DATASET' | translate}} 
 						<div ng-if="pager.totalItems>pager.pageSize">       
-							<!-- pager -->
+							
 							<ul ng-if="pager.pages.length" class="pagination">
 								<li ng-class="{disabled:pager.currentPage === 1}">
 									<a ng-click="getPage(1)">{{'FIRST' | translate}}</a>
@@ -212,37 +201,33 @@
 	
 	
 					</br/>
-					<div  ng-if="items.length||0 > 0" class="row row_header">
+					<div id="head_result" ng-if="items.length||0 > 0" class="row row_header">
 						<div class="col-md-2">{{'SPECIMEN_NUMBER' | translate}}</div>
 						<div class="col-md-2" >{{'TAXON_NAME' | translate}}</div>
-						<!-- <div class="col-md-1">{{'COLLECTING_DATE_FROM' | translate}}</div> -->
+						
 						<div class="col-md-1">{{'TYPES' | translate}}</div>
 						<div class="col-md-1">{{'COUNTRY' | translate}}</div>
 						<div class="col-md-2" >{{'LOCALITY' | translate}}</div>
-						<!-- <div class="col-md-1">{{'SEX' | translate}}</div> -->
+						
 						<div class="col-md-3">{{'SPECIMEN_COUNT' | translate}}</div>
 					</div>
 					<div  ng-repeat="obj in items" class="row row_result" name="row_{{obj.id}}" id="row_{{obj.id}}">
 						<div name="code_{{obj.id}}" class="row_code col-md-2" id="code_{{obj.id}}"><a target="_self" ng-href="{{pages_specimen[obj.id]}}">{{ obj.code_display }}</a></div>
 						<div class="col-md-2" name="taxon_{{obj.id}}" id="taxon_{{obj.id}}">{{obj.taxon_name}}</div>
-						<!-- <div class="col-md-1">{{obj.date_from_display}}</div> -->                   
+						  
 						<div class="col-md-1">{{obj.coll_type}}</div>
 						<div class="col-md-1">{{obj.gtu_country_tag_value}}</div>
 						<div class="col-md-2">{{obj.gtu_others_tag_value}}</div>
-						<!-- <div class="col-md-1">{{obj.sex}}</div> -->
+						
 						<div class="col-md-3">{{obj.specimen_count_min}}</div>
 					</div>
 				   
-					<!--<ul>
-							<li  ng-repeat="obj in items">
-								{{obj.code_display}}  {{obj.taxon_name}} {{obj.gtu_country_tag_value}} {{obj.gtu_others_tag_value}} {{obj.coll_type}} {{obj.latitude}} {{obj.longitude}}
-							</li>        
-					</ul>-->
+					
 					
 					<div id="div_result" style="text-align: center" >
 					
 						<div ng-if="pager.totalItems>pager.pageSize">       
-							<!-- pager -->
+							
 							<ul ng-if="pager.pages.length" class="pagination">
 								<li ng-class="{disabled:pager.currentPage === 1}">
 									<a ng-click="getPage(1)">{{'FIRST' | translate}}</a>
@@ -292,30 +277,16 @@
 			</div>
 
 		</div>
-		<!--END_RESULT-->
+		
 </div>
 
-<!---------------------------    FOOTER   --------------------------->
+
 
 <footer id="site-footer">
 
 	<div class="maxwidthwrapper clearfix">
 
-		<!--<div class="footer__sponsors clearfix">
-			
-				<ul>
-					<li>
-						<a href="https://www.naturalsciences.be" target="_blank" title="naturalsciences.be"><img alt="Royal Museum for Central Africa" src="/dw_public/form/images/logo_irsnb.png"></a>
-					</li>
-					<li>
-						<a href="http://www.belspo.be/" target="_blank" title="belspo.be"><img alt="Belspo" src="/dw_public/form/images/logo_belspo.png"></a>
-					</li>
-					<li>
-						<a href="https://diplomatie.belgium.be/en/policy/development_cooperation" target="_blank" title="diplomatie.belgium.be"><img alt="Development cooperation" src="/dw_public/form/images/logo_belgian_development_cooperation_en.png"></a>
-					</li>
-				</ul>
-				
-		</div>-->
+		
 	
 		<div class="footer__bottom clearfix">
 				
@@ -335,7 +306,7 @@
 
 </footer>
 
-<!---------------------------    END FOOTER    --------------------------->
+
 
  <script type="text/javascript">
 		var clusters;
@@ -611,6 +582,15 @@
 						}
 					}
 				});
+				
+				$("#copy_results").click(
+					function()
+					{
+						
+						var callback_url= $("#backlink").val();						
+						navigator.clipboard.writeText(callback_url);
+					}
+					);
 			
 			}
 		);

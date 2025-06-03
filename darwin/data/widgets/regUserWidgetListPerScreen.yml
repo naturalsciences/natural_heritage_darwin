@@ -463,6 +463,18 @@ sps35:
    title_perso: Maintenance / Workflow
    all_public: true
    
+   
+sps36:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: relationships
+   mandatory: false
+   order_by: 24
+   opened: true
+   visible: true
+   title_perso: Relationships
+   all_public: true
+   
 sw1:
    col_num: 1
    category: specimen_widget

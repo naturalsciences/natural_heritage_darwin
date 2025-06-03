@@ -7629,6 +7629,10 @@ Indien ja, dan kunt u zien wanneer het werd uitgeleend en wanneer het teruggebra
         <source>Darwin Part Main Code(s)</source>
         
       </trans-unit>
+	   <trans-unit id="1876">
+        <source>Death date</source>
+        <target>Datum van overlijden</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

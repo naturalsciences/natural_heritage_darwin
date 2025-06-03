@@ -342,6 +342,7 @@ var openSpecimen=function(id)
 				  center: ol.proj.fromLonLat([0,0]),
 				  zoom: 2
 				}),
+				interactions: ol.interaction.defaults({mouseWheelZoom:false}),
 				controls: ol.control.defaults({
 						attributionOptions: ({collapsible: false})
 				}).extend([mousePositionControl, scaleLineControl,  fullScreenControl])

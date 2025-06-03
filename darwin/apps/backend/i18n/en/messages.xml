@@ -6114,6 +6114,10 @@ DaRWIN</target>
         <source>Darwin Part Main Code(s)</source>
         <target>Darwin Part Main Code(s)</target>
       </trans-unit>
+	  <trans-unit id="1876">
+        <source>Death date</source>
+        <target>Date of death</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

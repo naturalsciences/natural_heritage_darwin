@@ -29,14 +29,22 @@
 <script type="text/javascript">
 	//2019 05 08
         var url_nagoya=location + "/../getNagoyaCollection";
-	
-    	GetNagoyaDateAcquisition();
+		
+	$(document).ready(
+		function()
+		{
+			console.log("check nago acqu0");
+			GetNagoyaDateAcquisition();
+		}
+		);
 	
 	$(".group_date_specimen_acquisition_date").change(function(){
+		console.log("check nago acqu1");
         GetNagoyaCollection(url_nagoya);
+		console.log("check nago acqu2");
 		GetNagoyaDateAcquisition();
 		setTimeout(function (){ 
-        
+			console.log("check nago acqu3");
 			fillcheckandlabels(1);}		//in _nagoya.php
 		,500); 
 	});

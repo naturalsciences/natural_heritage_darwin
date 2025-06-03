@@ -387,8 +387,8 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     );
 
 
-	$this->validatorSchema['related_ref'] = new sfValidatorInteger(array('required'=>false));
-	 $this->validatorSchema['related_ref'] = new sfValidatorNumber(array('required'=>false,'min' => '0'));
+	//$this->validatorSchema['related_ref'] = new sfValidatorInteger(array('required'=>false));
+	// $this->validatorSchema['related_ref'] = new sfValidatorNumber(array('required'=>false,'min' => '0'));
     $subForm = new sfForm();
     $this->embedForm('Tags',$subForm);
 
@@ -1117,6 +1117,21 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 	$this->validatorSchema['maintenance_action_observation'] = new sfValidatorPass();
 	 
 
+	$this->widgetSchema['related_ref'] = new sfWidgetFormInputHidden();
+	
+	$this->validatorSchema['related_ref'] = new sfValidatorString(array(
+      'required' => false,
+      'trim' => true
+    ));
+	
+	$this->widgetSchema['with_related'] =  new sfWidgetFormDarwinDoctrineChoice(array(
+      'model' => 'SpecimensRelationships',
+      'table_method' => "getDistinctType",
+	  'method' => 'getRelationshipType',
+      'key_method' => 'getRelationshipType',
+      'add_empty' => $this->getI18N()->__('All')
+    ));
+    $this->validatorSchema['with_related'] = new sfValidatorPass();
   }
 
   public function addGtuTagValue($num)
@@ -1671,7 +1686,8 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $tagList = '';
     $whereArray=array();
     $goWhere=false;
-     $tmpStr=Array();
+    $tmpStr=Array();
+	$countries=Array();
     foreach($val as $line)
     {
       $line_val = $line['tag'];
@@ -1711,12 +1727,27 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
         } 
           
       }
+	  $line_country = $line['country_ref'];
+	  
+	  if(strlen( $line_country)>0)
+	  {
+		if(is_numeric($line_country))
+		{
+			$countries[]="x.country_ref=".$line_country ;//"EXISTS(select gtu_Ref FROM gtu_to_country x WHERE country_ref=".$line_country." AND s.gtu_ref=x.gtu_ref )";
+		}
+	  }
     }
     if(count($tmpStr)>0)
     {
         $query->andWhere("(".implode(" ".$this->tag_boolean." ",$tmpStr).") AND (s.station_visible = true 
 												   OR (s.station_visible = false AND s.collection_ref in (".implode(',',$this->encoding_collection).")))");      
     }
+	if(count($countries)>0)
+	{
+		
+	  $sql_country="EXISTS(select gtu_Ref FROM gtu_to_country x WHERE (".implode(" ".$this->tag_boolean." ",$countries).") AND s.gtu_ref=x.gtu_ref )";
+	  $query->andWhere($sql_country);      
+	}
     
     return $query ;
   }
@@ -1877,7 +1908,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
                 }*/
                 //else
                 //{
-                    $sql ="EXISTS(select 1 from codes where  referenced_relation='specimens' and record_id = s.id AND full_code_indexed like  fulltoindex(?)";
+                    $sql ="EXISTS(select 1 from codes where  referenced_relation='specimens' and record_id = s.id AND full_code_indexed like  REPLACE(FULLTOINDEX(REPLACE(?,'.',''), FALSE, TRUE),'*','%')";
                 //}
                 $sqlParams[]=$code['code_part'];
                 if($code['category']  != '' && strtolower($code['category'])  != 'all') 
@@ -1894,15 +1925,18 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
             }
         }
     }
+	
 	if(count($sqlElems)>0)
 	{
 		if($this->code_boolean=='OR')
 		{
 			$query->andWhere("(".implode(" OR ", $sqlElems).")",$sqlParams);
+			
 		}
 		else
 		{			
 			$query->andWhere("(".implode(" AND ", $sqlElems).")",$sqlParams);
+			
 		}
 		
 	}
@@ -2733,7 +2767,47 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 	
 	$query->andWhere('( s.collection_ref in ('.implode(',',$this->admin_collections).') or COALESCE(s.restricted_access, FALSE)=false )');
     $query->limit($this->getCatalogueRecLimits());
-
+	
+	//at the end 
+	if($values['with_related'])
+	{
+		if(strlen($values['with_related'])>0)
+		{
+			
+			
+			
+			$stringTmp=$query->getSqlQuery();
+		
+			$stringTmp=substr($stringTmp,  strpos($stringTmp,' FROM ' ));
+			$stringTmp=substr($stringTmp, 0, strpos($stringTmp,' LIMIT ' ));
+			$queryWhere=$stringTmp;
+			$type_link=$values['with_related'];
+			$queryParams="";
+			$arrayTmp=$query->getParams();
+			if(isset($arrayTmp['where']))
+			{
+					foreach($arrayTmp['where'] as $key=>$value)
+					{
+                       $queryParams.=";|".$value."|";
+            
+					}
+			}
+			//print("-----------------------------------");
+			//print( $queryWhere);
+			//print("-----------------------------------");
+	
+			
+			$query = DQ::create()
+				  ->select('s.*,
+			(s.collection_ref in ('.implode(',',$this->encoding_collection).')) as has_encoding_rights,
+					gtu_location[0] as latitude,
+					gtu_location[1] as longitude')
+				  ->from('Specimens s');
+			$query->addWhere("EXISTS(SELECT e FROM fct_rmca_get_related(?,?,?) e WHERE s.id=e)", array($queryWhere, $queryParams, $type_link));
+		  return $query;
+			
+		}
+	}
     return $query;
   }
   

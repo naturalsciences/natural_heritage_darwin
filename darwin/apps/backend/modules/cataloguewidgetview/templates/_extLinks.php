@@ -33,7 +33,7 @@
 					{
 						$tmp='<a href="'.$link->getUrl().'" target="_blank" class="complete_widget">'.$logo_array[$sub_key].'</a>'; 
 					}
-					$returned[]="<tr><td>".$tmp."</td><td>".ExtLinks::getLinkTypes()[$link->getType()]."</td><td><a target='_blank' href='".$link->getUrl()."'>".truncate_text($link->getUrl(), 50)."...</a></td><td><div title=".$link->getComment()."/>".truncate_text($link->getComment(), 50)."</div></td><tr>";
+					$returned[]="<tr><td>".$tmp."</td><td>".ExtLinks::getLinkTypes()[$link->getType()]."</td><td><a target='_blank' href='".$link->getUrl()."'>".truncate_text($link->getUrl(), 50)."...</a></td><td><div title=".$link->getComment()."/>".truncate_text($link->getComment(), 50)."</div></td><td>".$link->getAccessRights()."</td><tr>";
 					
 				}
 			}
@@ -44,9 +44,56 @@
   <?php foreach($links as $link):?>
   <?php
 	switch ($link->getType()) {
+	/*
+	'ext' => 'Other External',
+    //'vc' => 'Virtual Collection',
+	'html_3d_snippet_general' => '3D (Frame general)',
+	'html_3d_link' => '3D (Link)',
+	'html_3d_snippet' => '3D (Sketchfab)',
+	'dna' => 'DNA',
+	'dna_genbank' => 'DNA (Genbank)',
+	'dna_elixir' => 'DNA (Elixir)',
+	'dna_labbook' => 'DNA Labbook',
+	'dna_molecdata' => 'DNA(Molecular data)',
+	'dna_molecdata_assocsp'=>'DNA(MolecData AssocSp)',
+    'dna_permit' => 'DNA(Permit)',
+	'iiif' => 'Image (IIIF)',
+	'image' => 'Image (non IIIF)',
+	'pdf' => 'PDF',
+	'publication'=> 'Publication',
+	'ltp' => 'LTP',
+	'nagoya'=> 'Nagoya',
+	'sound' => 'Sound',
+	'video' => 'Video',
+	'other' => 'Others'
+	*/
     case "ext":
         $map_array["others"][$i]=$link;
 		$logo_array[$i]=image_tag('extlink',array('title' =>'External URL'));
+        break;
+	case "2d_stackoptica":
+        $map_array["multimedia"][$i]=$link;
+		$logo_array[$i]=image_tag('2d_stackoptica',array('title' =>'2d_stackoptica'));
+        break;
+	case "2d_sphaeroptica":
+        $map_array["multimedia"][$i]=$link;
+		$logo_array[$i]=image_tag('2d_sphaeroptica',array('title' =>'2d_sphaeroptica'));
+        break;
+	case "2d_spectraloptica":
+        $map_array["multimedia"][$i]=$link;
+		$logo_array[$i]=image_tag('2d_spectraloptica',array('title' =>'2d_spectraloptica'));
+        break;
+	case "2d_polaroptica":
+        $map_array["multimedia"][$i]=$link;
+		$logo_array[$i]=image_tag('2d_polaroptica',array('title' =>'2d_polaroptica'));
+        break;
+	case "2d_inside":
+        $map_array["multimedia"][$i]=$link;
+		$logo_array[$i]=image_tag('2d_inside',array('title' =>'2d_inside'));
+        break;
+	case "3d_inside":
+        $map_array["multimedia"][$i]=$link;
+		$logo_array[$i]=image_tag('3d_inside',array('title' =>'3d_inside'));
         break;
     case "html_3d_snippet_general":
         $map_array["multimedia"][$i]=$link;
@@ -76,9 +123,25 @@
          $map_array["dna"][$i]=$link;
 		 $logo_array[$i]=image_tag('genbank',array('title' =>'DNA Labbook link'));
         break;
+	case "dna_molecdata":
+         $map_array["dna"][$i]=$link;
+		 $logo_array[$i]=image_tag('dna_icon',array('title' =>'DNA Molecular data link'));
+        break;
+	case "dna_molecdata_assocsp":
+         $map_array["dna"][$i]=$link;
+		 $logo_array[$i]=image_tag('dna_icon',array('title' =>'DNA Molecular data associated specimen link'));
+        break;
+	case "dna_permit":
+         $map_array["dna"][$i]=$link;
+		 $logo_array[$i]=image_tag('dna_icon',array('title' =>'DNA permit'));
+        break;
 	case "iiif":
         $map_array["multimedia"][$i]=$link;
 		$logo_array[$i]=image_tag('image_icon',array('title' =>'Image IIIF link'));
+        break;
+	case "iiif_info":
+        $map_array["multimedia"][$i]=$link;
+		$logo_array[$i]=image_tag('image_icon',array('title' =>'iiif_info'));
         break;
 	case "image":
         $map_array["multimedia"][$i]=$link;
@@ -108,6 +171,18 @@
         $map_array["others"][$i]=$link;
 		$logo_array[$i]=image_tag('extlink',array('title' =>'External URL'));
         break;
+	case "internal_database":
+        $map_array["others"][$i]=$link;
+		$logo_array[$i]=image_tag('rbins-icon',array('title' =>'Link to RBINS database system'));
+        break;
+	case "windows_file_system":
+        $map_array["others"][$i]=$link;
+		$logo_array[$i]=image_tag('rbins-icon',array('title' =>'Link to file system or NAS'));
+        break;
+	case "linux_file_system":
+        $map_array["others"][$i]=$link;
+		$logo_array[$i]=image_tag('rbins-icon',array('title' =>'Link to file system or NAS'));
+        break;
 	default:
 	}	
 	$i++;
@@ -122,6 +197,7 @@
 		  <th><?php echo __('Type');?></th>
 		  <th><?php echo __('Url');?></th>
 		  <th><?php echo __('Comment');?></th>
+		  <th><?php echo __('Access rights');?></th>
 		  
 		</tr>
 	  </thead>
@@ -147,15 +223,7 @@
 		  <tr class="spacer"><td class="spacer"></td></tr>
 		<?php  $items=parse_links($map_array, "multimedia", $logo_array); ?>
 		<?php print(implode('',$items));?>
-		</table>
-  <?php endif; ?>
-  <?php  if(count($map_array["multimedia"])>0):?>
-		<tr class="spacer"><td class="spacer"></td></tr>
-		<tr><td colspan="4"><b><i>Multimedia</i></b></td></tr>
-		  <tr class="spacer"><td class="spacer"></td></tr>
-		<?php  $items=parse_links($map_array, "multimedia", $logo_array); ?>
-		<?php print(implode('',$items));?>
-		</table>
+		
   <?php endif; ?>
   <?php  if(count($map_array["others"])>0):?>
 	<tr class="spacer"><td class="spacer"></td></tr>

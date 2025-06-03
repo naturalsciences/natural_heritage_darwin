@@ -22,12 +22,21 @@ class gtuActions extends DarwinActions
       }
     }
   }
+  
+  
 
   public function executeChoose(sfWebRequest $request)
   {
     $this->form = new GtuFormFilter();
     $this->form->addValue(0);
   }
+
+  public function executeChoosePinned(sfWebRequest $request)
+  {
+    $items_ids = $this->getUser()->getAllPinned('gtu');
+	$this->items=Doctrine_Core::getTable('DoctrineTemporalInformationGtuGroupTags')->getByMultipleIds($items_ids);
+  }
+  
 
   public function executeIndex(sfWebRequest $request)
   {
@@ -99,21 +108,45 @@ class gtuActions extends DarwinActions
             $this->items = $this->pagerLayout->execute();
         }
         $gtu_ids = array();
+		$features=[];
         foreach($this->items as $i)
+		{
           $gtu_ids[] = $i->getId();
-        $tag_groups  = Doctrine_Core::getTable('TagGroups')->fetchByGtuRefs($gtu_ids);
+			
+		
+		}
+		$tag_groups  = Doctrine_Core::getTable('TagGroups')->fetchByGtuRefs($gtu_ids);
+		
         foreach($this->items as $i)
         {
           $i->TagGroups = new Doctrine_Collection('TagGroups');
-          foreach($tag_groups as $t)
+          $tagText=[];
+		  foreach($tag_groups as $t)
           {
 
             if( $t->getGtuRef() == $i->getId())
             {
               $i->TagGroups[]= $t;
+			  $tagText[]=htmlspecialchars($t->getSubGroupName()).": ".htmlspecialchars($t->getTagValue());
             }
           }
+		  
+		  
+			if($i->getLatitude()!==null && $i->getLongitude()!==null)
+			{
+				$lat=$i->getLatitude();
+				$long=$i->getLongitude();
+				if(is_numeric($lat) && is_numeric($long))
+				{
+					$features[]=[ "type"=> "Feature", "geometry"=>["type"=> "Point", "coordinates"=> [floatval($long), floatval($lat)]], "properties"=> [ "dw_id"=> $i->getId(), "dw_code"=> $i->getCode(), "dw_text"=> implode("; ", $tagText )
+					//,
+					//"dw_name"=>$i->getName(ESC_RAW)
+					]];
+				}
+			}
         }
+		$this->geo_obj=["type"=> "FeatureCollection", "crs"=> ["type"=> "name", "properties"=> ["name"=> ["ESPG:4326"]]], "features"=> $features];
+		$this->geo_obj_json=json_encode($this->geo_obj);
       }
     }
   }
@@ -143,6 +176,7 @@ class gtuActions extends DarwinActions
 
         }
       }
+		$this->form->duplicate($duplic);
     }
   }
 
@@ -175,6 +209,7 @@ class gtuActions extends DarwinActions
     $this->loadWidgets();
     //ftheeten 2018 11 29
      //$this->form->loadEmbedTemporalInformation();//loadEmbed('TemporalInformation');
+	//$this->form->loadEmbed("GtuToCountry");
   }
 
 
@@ -239,15 +274,15 @@ class gtuActions extends DarwinActions
     {
       try
       {
-       print("valid");
+  
         $item = $form->save();
-        print("redirect");
+
         $this->redirect('gtu/edit?id='.$item->getId());
         
       }
       catch(Doctrine_Exception $ne)
       {
-      print("error");
+     
         if($action == 'create') {
           //If Problem in saving embed forms set dirty state
           $form->getObject()->state('TDIRTY');
@@ -280,6 +315,16 @@ class gtuActions extends DarwinActions
     $form->addValue($number, $request->getParameter('group'));
     return $this->renderPartial('taggroups',array('form' => $form['newVal'][$number]));
   }
+  
+    public function executeAddGtuToCountry(sfWebRequest $request)
+  {
+    $number = intval($request->getParameter('num'));
+    $gtu_ref = intval($request->getParameter('gtu_ref'));
+    $this->form = new GtuForm();
+    $this->form->addGtuToCountry($number,array('gtu_ref'=>$gtu_ref),$request->getParameter('iorder_by',0));
+    return $this->renderPartial('country_row',array('form' =>  $this->form['newGtuToCountry'][$number], 'row_num'=>$number));
+  }
+
 
   public function executeAndSearch(sfWebRequest $request)
   {
@@ -287,7 +332,7 @@ class gtuActions extends DarwinActions
 
     $form = new GtuFormFilter();
     $form->addValue($number);
-    return $this->renderPartial('andSearch',array('form' => $form['Tags'][$number], 'row_line' => $number));
+    return $this->renderPartial('andSearch',array('form' => $form['Tags'][$number],  'row_line' => $number));
   }
 
   /**
@@ -409,5 +454,55 @@ class gtuActions extends DarwinActions
         $this->layer=$request->getParameter('layer');
 		$this->ids=$request->getParameter('ids');	   
     }  
+  }
+  
+   public function executeGet_iso_3166_code(sfWebRequest $request)
+  {
+	$results=Array();
+	if($request->hasParameter('q') )
+    {
+        $tag=$request->getParameter('q');
+        $results=Doctrine_Core::getTable('GtuIso3166')->findISO3166Code($tag);
+    }
+    $this->getResponse()->setContentType('application/json');
+    return  $this->renderText(json_encode($results));
+  }
+  
+  
+     public function executeGet_iso_3166_country_code(sfWebRequest $request)
+  {
+	$results=Array();
+	if($request->hasParameter('q') )
+    {
+        $tag=$request->getParameter('q');
+        $results=Doctrine_Core::getTable('GtuCountry')->findCountries($tag);
+    }
+    $this->getResponse()->setContentType('application/json');
+    return  $this->renderText(json_encode($results));
+  }
+  
+     public function executeGet_text_from_iso_3166_country_code(sfWebRequest $request)
+  {
+	$results=Array();
+	if($request->hasParameter('q') )
+    {
+        $tag=$request->getParameter('q');
+        $results=Doctrine_Core::getTable('GtuCountry')->findText_by_iso($tag);
+    }
+    $this->getResponse()->setContentType('application/json');
+    return  $this->renderText(json_encode($results));
+  }
+  
+  
+   public function executeGet_iso_3166_level_2_code(sfWebRequest $request)
+  {
+	$results=Array();
+	if($request->hasParameter('q') )
+    {
+        $tag=$request->getParameter('q');
+        $results=Doctrine_Core::getTable('GtuIso3166')->findISO3166Level2Code($tag);
+    }
+    $this->getResponse()->setContentType('application/json');
+    return  $this->renderText(json_encode($results));
   }
 }

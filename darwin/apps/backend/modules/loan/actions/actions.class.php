@@ -201,11 +201,16 @@ class loanActions extends DarwinActions
 
   protected function processForm(sfWebRequest $request, sfForm $form)
   {
+	
     $form->bind($request->getParameter($form->getName()),$request->getFiles($form->getName()));
     if ($form->isValid())
     {
       try {
         $item = $form->save();
+		// ftheeten dirty trick for PHP8 as 'name' becomes an array whene a file is uploaded (see sfValidatorFilePHP8)
+		$item->setName($request->getParameter('loans')['name']);
+		$item->save();
+
         $this->redirect('loan/edit?id='.$item->getId());
       }
       catch(Doctrine_Exception $ne) {

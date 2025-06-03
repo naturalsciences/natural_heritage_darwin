@@ -16,4 +16,19 @@ class DoctrineTemporalInformationGtuGroupTable extends Doctrine_Table
     {
         return Doctrine_Core::getTable('DoctrineTemporalInformationGtuGroup');
     }
+	
+	   public function getByMultipleIds(array $ids)
+  {
+    if( empty($ids))
+      return $ids;
+
+    $q = DQ::create()
+      ->from('DoctrineTemporalInformationGtuGroup g')
+      ->wherein('g.id', $ids)
+      ->orderBy('g.id');
+
+    
+    return $q->execute();
+  }
+
 }

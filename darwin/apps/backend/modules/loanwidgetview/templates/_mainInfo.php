@@ -42,5 +42,29 @@
         <?php echo $loan->getDescription();?>
       </td>
     </tr>
+	<tr>
+      <th><?php echo __('Collection manager ');?> :</th>
+      <td >
+        <?php echo $loan->getCollectionManager();?>
+      </td>
+    </tr>
+	<tr>
+      <th><?php echo __('Collection manager ');?> :</th>
+      <td >
+        <?php echo $loan->getCollectionManagerTitle();?> <?php echo $loan->getCollectionManager();?>
+      </td>
+    </tr>
+	<tr>
+      <th><?php echo __('Collection manager mail ');?> :</th>
+      <td >
+        <?php echo $loan->getCollectionManagerMail();?>
+      </td>
+    </tr>
+	<tr>
+      <th><?php echo __('Collection manager phone ');?> :</th>
+      <td >
+        <?php echo $loan->getCollectionManagerPhone();?>
+      </td>
+    </tr>
   </tbody>
 </table>

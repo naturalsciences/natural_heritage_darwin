@@ -21,7 +21,7 @@
           });        
         </script>
     </td>
-	<!--JMHerpers 2018 03 26
+	<!--JMHerpers 2018 03 26-->
     <!--<td>
 		<?php if($form['people_ref']->getValue()) : ?>
 			<?php echo image_tag(Doctrine_Core::getTable('People')->find($form['people_ref']->getValue())->getCorrespondingImage()) ; ?>

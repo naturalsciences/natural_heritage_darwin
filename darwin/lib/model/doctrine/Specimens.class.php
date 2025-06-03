@@ -57,6 +57,7 @@ class Specimens extends BaseSpecimens
 
   public static function getCategories()
   {
+	  //seel also fct_imp_checker_category
     return array(
       'physical' => 'Physical',
 	  'virtual_specimen' => 'Virtual specimen',
@@ -68,6 +69,7 @@ class Specimens extends BaseSpecimens
 	  'environmental_sample'=> "Environmental Sample",
 	  'dna'=> "DNA",
 	  'environmental_dna'=> "Environmental DNA",
+	  'container'=> "Container",
 	  
     );
   }

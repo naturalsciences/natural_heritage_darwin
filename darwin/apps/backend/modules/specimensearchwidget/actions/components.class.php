@@ -204,5 +204,11 @@ class specimensearchwidgetComponents extends sfComponents
     $this->defineForm();
   }
   
+  public function executeRelationships()
+  {
+    $this->defineForm();
+  }
+  
+  
   
 }

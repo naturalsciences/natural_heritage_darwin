@@ -39,6 +39,7 @@
  * @property string $array_to_date
  * @property string $comments
  * @property string $properties
+ * @property integer $country_ref
  * @property Tags $Tags
  * @property Doctrine_Collection $TagGroups
  * 
@@ -76,6 +77,7 @@
  * @method string                              getArrayToDate()             Returns the current record's "array_to_date" value
  * @method string                              getComments()                Returns the current record's "comments" value
  * @method string                              getProperties()              Returns the current record's "properties" value
+ * @method integer                             getCountryRef()              Returns the current record's "country_ref" value
  * @method Tags                                getTags()                    Returns the current record's "Tags" value
  * @method Doctrine_Collection                 getTagGroups()               Returns the current record's "TagGroups" collection
  * @method DoctrineTemporalInformationGtuGroup setId()                      Sets the current record's "id" value
@@ -112,6 +114,7 @@
  * @method DoctrineTemporalInformationGtuGroup setArrayToDate()             Sets the current record's "array_to_date" value
  * @method DoctrineTemporalInformationGtuGroup setComments()                Sets the current record's "comments" value
  * @method DoctrineTemporalInformationGtuGroup setProperties()              Sets the current record's "properties" value
+ * @method DoctrineTemporalInformationGtuGroup setCountryRef()              Sets the current record's "country_ref" value
  * @method DoctrineTemporalInformationGtuGroup setTags()                    Sets the current record's "Tags" value
  * @method DoctrineTemporalInformationGtuGroup setTagGroups()               Sets the current record's "TagGroups" collection
  * 
@@ -237,6 +240,9 @@ abstract class BaseDoctrineTemporalInformationGtuGroup extends DarwinModel
              ));
         $this->hasColumn('properties', 'string', null, array(
              'type' => 'string',
+             ));
+        $this->hasColumn('country_ref', 'integer', null, array(
+             'type' => 'integer',
              ));
     }
 

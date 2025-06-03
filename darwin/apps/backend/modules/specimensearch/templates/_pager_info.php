@@ -36,9 +36,9 @@
 	{
 		$.getJSON( "<?php print($abs_url); ?>", function( data ) {
 				
-				var text_count="Your query retrieved : <br/>  &#8226; "+data.count+" records<br/>   &#8226; "+data.count_ig+" distinct records based on I.G. and main collection tag<br/>   &#8226; "+data.count_min+" physical records (minimal estimate) <br/>  &#8226; "+data.count_max+" physical records (maximal estimate)";
+				var text_count="Your query retrieved : <br/>  &#8226; "+data.count+" records<br/>   &#8226; "+data.count_ig+" distinct records based on I.G. and main collection tag<br/>   &#8226; "+data.count_min+" physical specimens (minimal estimate) <br/>  &#8226; "+data.count_max+" physical specimens (maximal estimate)";
 				$("#result_stat").html(text_count);
-				var mids_count=" <br/>  &#8226; MIDS 0 : "+data.count_mids0+" records, "+data.spec_min_mids0+" physical records (minimal estimate), "+data.spec_max_mids0+" physical records (maximal estimate) <br/>  &#8226; MIDS 1 : "+data.count_mids1+" records, "+data.spec_min_mids1+" physical records (minimal estimate), "+data.spec_max_mids1+" physical records (maximal estimate)  <br/>  &#8226; MIDS 2 : "+data.count_mids2+" records, "+data.spec_min_mids2+" physical records (minimal estimate), "+data.spec_max_mids2+" physical records (maximal estimate)  <br/>  &#8226; MIDS 3 : "+data.count_mids3+" records, "+data.spec_min_mids3+" physical records (minimal estimate), "+data.spec_max_mids3+" physical records (maximal estimate) ";
+				var mids_count=" <br/>  &#8226; MIDS 0 : "+data.count_mids0+" records, "+data.spec_min_mids0+" physical specimens (minimal estimate), "+data.spec_max_mids0+" physical specimens (maximal estimate) <br/>  &#8226; MIDS 1 : "+data.count_mids1+" records, "+data.spec_min_mids1+" physical specimens (minimal estimate), "+data.spec_max_mids1+" physical specimens (maximal estimate)  <br/>  &#8226; MIDS 2 : "+data.count_mids2+" records, "+data.spec_min_mids2+" physical specimens (minimal estimate), "+data.spec_max_mids2+" physical specimens (maximal estimate)  <br/>  &#8226; MIDS 3 : "+data.count_mids3+" records, "+data.spec_min_mids3+" physical specimens (minimal estimate), "+data.spec_max_mids3+" physical specimens (maximal estimate) ";
 				$("#result_mids").html(mids_count);
 			});
 	}

@@ -63,16 +63,21 @@ abstract class BaseFormDoctrine extends sfFormDoctrine
   */
   protected function saveEmbed($emFieldName, $emptyField ,$forms, $enforce_value)
   {
+	  print("save embed there");
     if (null === $forms && $this->getValue($emFieldName.'_holder'))
     {
       $value = $this->getValue('new'.$emFieldName);
       foreach($this->embeddedForms['new'.$emFieldName]->getEmbeddedForms() as $name => $form)
       {
         if(!isset($value[$name][$emptyField]))
+		{
           unset($this->embeddedForms['new'.$emFieldName][$name]);
-        else
+        }
+		else
+		{
           $form->getObject()->fromArray($enforce_value);
-      }
+		}
+	  }
       $value = $this->getValue($emFieldName);
       foreach($this->embeddedForms[$emFieldName]->getEmbeddedForms() as $name => $form)
       {

@@ -35,6 +35,8 @@
  * @property varchar $utm_zone
  * @property string $nagoya
  * @property ref $expedition_ref
+ * @property string $iso3166
+ * @property string $iso3166_subdivision
  * @property Tags $Tags
  * @property TemporalInformation $TemporalInformation
  * @property DoctrineGtuComments $DoctrineGtuComments
@@ -42,6 +44,8 @@
  * @property Doctrine_Collection $TagGroups
  * @property Doctrine_Collection $Specimens
  * @property Doctrine_Collection $SpecimensMaincodes
+ * @property Doctrine_Collection $GtuToGeoref
+ * @property Doctrine_Collection $GtuToCountry
  * 
  * @method integer             getId()                      Returns the current record's "id" value
  * @method string              getCode()                    Returns the current record's "code" value
@@ -73,6 +77,8 @@
  * @method varchar             getUtmZone()                 Returns the current record's "utm_zone" value
  * @method string              getNagoya()                  Returns the current record's "nagoya" value
  * @method ref                 getExpeditionRef()           Returns the current record's "expedition_ref" value
+ * @method string              getIso3166()                 Returns the current record's "iso3166" value
+ * @method string              getIso3166Subdivision()      Returns the current record's "iso3166_subdivision" value
  * @method Tags                getTags()                    Returns the current record's "Tags" value
  * @method TemporalInformation getTemporalInformation()     Returns the current record's "TemporalInformation" value
  * @method DoctrineGtuComments getDoctrineGtuComments()     Returns the current record's "DoctrineGtuComments" value
@@ -80,6 +86,8 @@
  * @method Doctrine_Collection getTagGroups()               Returns the current record's "TagGroups" collection
  * @method Doctrine_Collection getSpecimens()               Returns the current record's "Specimens" collection
  * @method Doctrine_Collection getSpecimensMaincodes()      Returns the current record's "SpecimensMaincodes" collection
+ * @method Doctrine_Collection getGtuToGeoref()             Returns the current record's "GtuToGeoref" collection
+ * @method Doctrine_Collection getGtuToCountry()            Returns the current record's "GtuToCountry" collection
  * @method Gtu                 setId()                      Sets the current record's "id" value
  * @method Gtu                 setCode()                    Sets the current record's "code" value
  * @method Gtu                 setGtuFromDateMask()         Sets the current record's "gtu_from_date_mask" value
@@ -110,6 +118,8 @@
  * @method Gtu                 setUtmZone()                 Sets the current record's "utm_zone" value
  * @method Gtu                 setNagoya()                  Sets the current record's "nagoya" value
  * @method Gtu                 setExpeditionRef()           Sets the current record's "expedition_ref" value
+ * @method Gtu                 setIso3166()                 Sets the current record's "iso3166" value
+ * @method Gtu                 setIso3166Subdivision()      Sets the current record's "iso3166_subdivision" value
  * @method Gtu                 setTags()                    Sets the current record's "Tags" value
  * @method Gtu                 setTemporalInformation()     Sets the current record's "TemporalInformation" value
  * @method Gtu                 setDoctrineGtuComments()     Sets the current record's "DoctrineGtuComments" value
@@ -117,6 +127,8 @@
  * @method Gtu                 setTagGroups()               Sets the current record's "TagGroups" collection
  * @method Gtu                 setSpecimens()               Sets the current record's "Specimens" collection
  * @method Gtu                 setSpecimensMaincodes()      Sets the current record's "SpecimensMaincodes" collection
+ * @method Gtu                 setGtuToGeoref()             Sets the current record's "GtuToGeoref" collection
+ * @method Gtu                 setGtuToCountry()            Sets the current record's "GtuToCountry" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -231,6 +243,12 @@ abstract class BaseGtu extends DarwinModel
         $this->hasColumn('expedition_ref', 'ref', null, array(
              'type' => 'ref',
              ));
+        $this->hasColumn('iso3166', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('iso3166_subdivision', 'string', null, array(
+             'type' => 'string',
+             ));
     }
 
     public function setUp()
@@ -261,6 +279,14 @@ abstract class BaseGtu extends DarwinModel
              'foreign' => 'gtu_ref'));
 
         $this->hasMany('SpecimensMaincodes', array(
+             'local' => 'id',
+             'foreign' => 'gtu_ref'));
+
+        $this->hasMany('GtuToGeoref', array(
+             'local' => 'id',
+             'foreign' => 'gtu_ref'));
+
+        $this->hasMany('GtuToCountry', array(
              'local' => 'id',
              'foreign' => 'gtu_ref'));
     }

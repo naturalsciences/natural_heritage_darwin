@@ -342,5 +342,19 @@ class Gtu extends BaseGtu
     }
   }
   
+  public function getIso3166Country()
+  {
+	$returned=Array();
+	$q = Doctrine_Query::create()->select('c.*')
+         ->from('GtuCountry c')
+         ->where('EXISTS (SELECT id FROM GtuToCountry x WHERE x.gtu_ref=? AND c.id=x.country_ref) ', $this->getId());
+    $vals=$q->execute();
+	foreach($vals as $val)
+    {
+                 $returned[]= $val;
+    }
+	return $returned;
+  }
+  
 
 }

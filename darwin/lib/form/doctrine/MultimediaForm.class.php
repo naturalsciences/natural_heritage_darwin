@@ -58,6 +58,11 @@ class MultimediaForm extends BaseMultimediaForm
                                         )
                                   );
 
+
+	$this->widgetSchema['access_rights'] = new sfWidgetFormChoice(array(
+      'choices' => Multimedia::getAccessRights(),
+    ));	
+    $this->validatorSchema['access_rights'] =  new sfValidatorPass();
 								  
 		//ftheeten 2023 04 11 PHP8
 	 $this->validatorSchema->addOption('allow_extra_fields', true);

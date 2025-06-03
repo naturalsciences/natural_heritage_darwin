@@ -613,7 +613,7 @@ input:hover, select:hover, button:hover  {
 	margin-bottom: 10px;
 }
 
-.coordinates-map-search input#drawOnMap, .coordinates-map-search input#modeMap, .coordinates-map-search input#draw-polygon2, .coordinates-map-search input#cleanSelect {
+.coordinates-map-search input#drawOnMap, .coordinates-map-search input#modeMap, .coordinates-map-search input#draw-polygon2,  .coordinates-map-search input#draw-box, .coordinates-map-search input#cleanSelect {
 	border-radius: 4px;
 	border: 1px solid #ccc;
 	padding: 6px 14px;

@@ -192,6 +192,8 @@ class userActions extends DarwinActions
     }
   }
   
+
+  
   public function executeWidget(sfWebRequest $request)
   {
     $id = $request->getparameter('id') ;
@@ -209,7 +211,8 @@ class userActions extends DarwinActions
       if($user->getDbUserType() == Users::REGISTERED_USER) $is_reg_user = true ;
     }
     $widget = Doctrine_Core::getTable('MyWidgets')->setUserRef($id)->getWidgetsList($this->getUser()->getDbUserType(), $is_reg_user) ;
-    $this->form = new UserWidgetForm(null,array('collection' => $widget, 'level' =>$this->getUser()->getDbUserType()));
+    $this->user_ref=$id;
+	$this->form = new UserWidgetForm(null,array('collection' => $widget, 'level' =>$this->getUser()->getDbUserType()));
     $this->level = $this->getUser()->getAttribute('db_user_type') ; 
 
     if($request->isMethod('post'))

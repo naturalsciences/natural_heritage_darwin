@@ -15,7 +15,7 @@ class GtuForm extends BaseGtuForm
   	static $nagoyaanswers = array(
 		"yes" 		=> "Yes",
 		"no" 		=> "No",
-		"not defined"     	=> "Not defined"
+		"not_defined"     	=> "Not defined"
 	);
     $this->useFields(array('code', 'gtu_from_date', 'gtu_to_date', 'latitude', 'longitude',
       'lat_long_accuracy', 'elevation', 'elevation_accuracy',
@@ -23,9 +23,21 @@ class GtuForm extends BaseGtuForm
       'coordinates_source',
 	  'latitude_dms_degree', 'latitude_dms_minutes', 'latitude_dms_seconds','longitude_dms_degree', 'longitude_dms_minutes', 
 	  'longitude_dms_seconds', 'latitude_utm', 'longitude_utm', 'utm_zone', 'latitude_dms_direction', 'longitude_dms_direction',
-	  'nagoya' ));
+	  'nagoya' , 'iso3166', 'iso3166_subdivision'));
 
     $this->widgetSchema['code'] = new sfWidgetFormInput();
+	//ftheeten 2018 04/05
+    $this->widgetSchema['iso3166'] = new sfWidgetFormInputText();
+    $this->widgetSchema['iso3166']->setAttributes(array('class'=>'iso3166_value vsmall_size', 'readonly'=>'readonly', 'style'=>'background-color:grey'));
+    $this->widgetSchema['iso3166_subdivision'] = new sfWidgetFormInputText();;
+    $this->widgetSchema['iso3166_subdivision']->setAttributes(array('class'=>'iso3166_subdivision_value vsmall_size', 'readonly'=>'readonly', 'style'=>'background-color:grey'));
+    $this->widgetSchema['iso3166_text'] = new sfWidgetFormInputText();
+    $this->widgetSchema['iso3166_text']->setLabel(' Country code (ISO 3166)');
+    $this->widgetSchema['iso3166_text']->setAttributes(array('class'=>'iso3166'));
+    $this->validatorSchema['iso3166_text'] = new sfValidatorPass();
+    $this->widgetSchema['iso3166_subdivision_text'] = new sfWidgetFormInputText();
+    $this->widgetSchema['iso3166_subdivision_text']->setAttributes(array('class'=>'iso3166_subdivision'));
+    $this->validatorSchema['iso3166_subdivision_text'] = new sfValidatorPass();
     $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')), intval(sfConfig::get('dw_yearRangeMin')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
     $dateText = array('year'=>'yyyy', 'month'=>'mm', 'day'=>'dd');
@@ -339,7 +351,7 @@ class GtuForm extends BaseGtuForm
     $this->widgetSchema['nagoya'] = new sfWidgetFormChoice(array(
       'choices' =>  $nagoyaanswers,
     ));
-	$this->setDefault('nagoya', "not defined");
+	$this->setDefault('nagoya', "not_defined");
 	$this->validatorSchema['nagoya'] = new sfValidatorChoice(array('choices' => array_keys($nagoyaanswers), 'required' => true));
 	
     $this->widgetSchema['delete_mode'] = new sfWidgetFormInputCheckbox();
@@ -350,8 +362,12 @@ class GtuForm extends BaseGtuForm
     $subForm = new sfForm();
     $this->embedForm('newVal',$subForm);
     $this->embedRelation('TagGroups');
+	
+	$this->widgetSchema['GtuToCountry_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
+	$this->validatorSchema['GtuToCountry_holder'] = new sfValidatorPass();
+
     
-   
+    $this->loadEmbed('GtuToCountry');//force load of member
 
          
   }
@@ -389,12 +405,17 @@ class GtuForm extends BaseGtuForm
   public function addValue($num, $group="", $TagGroup = null)
   {
       if(!$TagGroup)
+	  {
         $val = new TagGroups();
-      else
+      }
+	  else
+	  {
         $val = $TagGroup;
-      if($group != '')
+      }
+	  if($group != '')
+	  {
       	$val->setGroupName($group);
-
+	  }
       $val->Gtu = $this->getObject();
       $form = new TagGroupsForm($val);
 
@@ -411,28 +432,44 @@ class GtuForm extends BaseGtuForm
       {
         foreach($taintedValues['newVal'] as $key=>$newVal)
         {
+
           if (!isset($this['newVal'][$key]))
           {
+	
             $this->addValue($key);
           }
         }
       }
-	  
+
 
        //ftheeten 2019 03 08
       //$this->saveDate($taintedValues, $taintedFiles);
         $this->deleteDate($taintedValues, $taintedFiles);
       //ftheeten 2018 11 29
 
-
+		$this->bindEmbed('GtuToCountry', 'addGtuToCountry' , $taintedValues);
+	
       parent::bind($taintedValues, $taintedFiles);
      
       
     }
+	
+	  public function addGtuToCountry($num, $values, $order_by=0)
+  {
+    $options = array( 'gtu_ref' => $this->getObject()->getId());
+	//print_r( $options);
+	//print_r( $values);
+    $options = array_merge($options, $values);
+	
+
+	$this->attachEmbedRecord('GtuToCountry', new GtuToCountryForm(DarwinTable::newObjectFromArray('GtuToCountry',$options)), $num);
+  
+  }
+
 
     public function saveObjectEmbeddedForms($con = null, $forms = null)
     {
-
+	
       $_SESSION["gtu_id"]= $this->getObject()->getId();
       if (null === $forms)
       {
@@ -458,6 +495,19 @@ class GtuForm extends BaseGtuForm
 		
       }
      
+	  	  
+	  foreach($this->embeddedForms['GtuToCountry']->getEmbeddedForms() as $name => $form)
+      {
+		
+		if (!isset($form['country_ref']) || $form['country_ref']->getValue() == '' )
+          {
+	            $form->getObject()->delete();
+            unset($form['country_ref']);
+			unset($form['gtu_ref']);
+          }
+          
+      }
+	  $this->saveEmbed('GtuToCountry', 'country_ref' ,$forms, array('gtu_ref' => $this->getObject()->getId()), true);
       return parent::saveObjectEmbeddedForms($con, $forms);
     }
     
@@ -471,7 +521,8 @@ class GtuForm extends BaseGtuForm
      {
         $record_id = $this->getObject()->getId();
      }
-	 
+	 if( $emFieldName =='GtuToCountry' )
+      return Doctrine_Core::getTable('GtuToCountry')->getCountriesRelated($record_id);
 
   }
   
@@ -479,7 +530,10 @@ class GtuForm extends BaseGtuForm
   
   public function getEmbedRelationForm($emFieldName, $values)
   {   
-    
+    if( $emFieldName =='GtuToCountry' )
+	{
+      return new GtuToCountryForm($values);
+	}
   }
   
 
@@ -522,6 +576,20 @@ class GtuForm extends BaseGtuForm
      return $taintedValues;;
   }
   
+  
+  public function duplicate($id)
+  {
+	  $GtuToCountries= Doctrine_Core::getTable('GtuToCountry')->findByGtuRef($id) ;
+	  foreach ($GtuToCountries as $key=>$val)
+		{
+		  $tmp = new GtuToCountry() ;
+		  $tmp->fromArray($val->toArray());
+		  $form = new GtuToCountryForm($tmp);
+		  $this->attachEmbedRecord('GtuToCountry', $form, $key);
+		}
+  }
+  
+
   public function getJavaScripts()
   {
     $javascripts=parent::getJavascripts();

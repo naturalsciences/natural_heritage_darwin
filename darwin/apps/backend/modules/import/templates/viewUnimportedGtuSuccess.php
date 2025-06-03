@@ -152,8 +152,11 @@ All data:<br/>
             <?php endif; ?>
         </td>
         <td>          
-            <?php if(strpos($item['import_exception'],"duplicate_code")!==FALSE || strpos($item['import_exception'],"code_already_in_file_with_other_data")!==FALSE):?>
-                           
+            <?php if(strpos($item['import_exception'],"duplicate_code")!==FALSE || strpos($item['import_exception'],"code_already_in_file_with_other_data")!==FALSE||strpos($item['import_exception'],"ERROR : ISO 3166 code not found")!==FALSE ):?>
+                    <?php print(form_tag('gtu/delete', array("method"=>"GET") ));?>
+                    <input type="hidden" id="input_delete_gtu_id_<?php print($item['gtu_ref']);?>" name="id" value="<?php print($item['gtu_ref']);?>" />                  
+					<input type="submit"  value="DELETE CREATED GTU" />    
+                    </form>           
             <?php endif;?>       
         </td>
         <td><?php print($item['station_type']);?></td>
@@ -184,7 +187,17 @@ All data:<br/>
         <td><?php print($item['collection_refs']);?></td>
         <td><?php print($item['collector_refs']);?></td>
         <td><?php print($item['expedition_refs']);?></td>
-        <td><?php print($item['iso3166']);?></td>
+        <td>
+			 <?php if(strpos($item['import_exception'],"ERROR : ISO 3166 code not found")!==FALSE ):?>
+					<?php print(form_tag('import/loadSingleGtuInDB', array("method"=>"GET") ));?>
+                    <input type="hidden" id="input_gtu_id_<?php print($item['id']);?>" name="staging_gtu_id" value="<?php print($item['id']);?>" />                    
+                    <div>Error : ISO 3166 code not found (<?php print($item['iso3166']);?>) - <?php echo link_to(__('To add'),'gtucountry/index');?> </div>
+					<input type="submit"  value="Retry" />    
+                    </form>    
+			<?php else: ?>
+				<?php print($item['iso3166']);?>
+			<?php endif;?>
+		</td>
         <td><?php print($item['iso3166_subdivision']);?></td>
         <td><?php print($item['countries']);?></td>
         <td><?php print($item['tags']);?></td>

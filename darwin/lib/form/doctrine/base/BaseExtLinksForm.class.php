@@ -34,6 +34,9 @@ abstract class BaseExtLinksForm extends DarwinModelForm
     $this->widgetSchema   ['comment_indexed'] = new sfWidgetFormTextarea();
     $this->validatorSchema['comment_indexed'] = new sfValidatorString(array('required' => false));
 
+    $this->widgetSchema   ['access_rights'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['access_rights'] = new sfValidatorString(array('required' => false));
+
     $this->widgetSchema->setNameFormat('ext_links[%s]');
   }
 

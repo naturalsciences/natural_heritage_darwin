@@ -23,7 +23,7 @@ class MySavedSearchesTable extends DarwinTable
     {
         $q = Doctrine_Query::create()
             ->from('MySavedSearches s')->andWhere("is_public=true and is_public IS NOT NULL");
-		if(ordered_desc)
+		if($ordered_desc)
 		{
 			$q->orderBy('modification_date_time DESC');
 		}
@@ -250,7 +250,8 @@ public function getSavedSearchData($user_id, $query_id, $p_is_admin=false)
 
                              CASE WHEN coll_user_type>= 4 OR is_adm is true THEN
                          row else 'NOT_APPLICABLE' END as row,
-
+						CASE WHEN coll_user_type>= 4 OR is_adm is true THEN
+                         col else 'NOT_APPLICABLE' END as col,
                              CASE WHEN coll_user_type>= 4 OR is_adm is true THEN
                          shelf else 'NOT_APPLICABLE' END as shelf,
 
@@ -391,6 +392,7 @@ longitude_text,
                              floor,
                              room,
                              row, 
+							 col, 
                              shelf,
                              container,
                              sub_container,
@@ -479,6 +481,7 @@ longitude_text,
                              floor,
                              room,
                              row, 
+							 col,
                              shelf,
                              container,
                              sub_container, cr.db_user_type , uuid
@@ -535,6 +538,7 @@ longitude_text,
                              floor,
                              room,
                              row, 
+							 col,
                              shelf,
                              container,
                              sub_container,

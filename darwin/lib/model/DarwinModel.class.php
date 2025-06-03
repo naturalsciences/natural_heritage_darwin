@@ -14,9 +14,14 @@ class DarwinModel extends sfDoctrineRecord
     parent::save($conn);
     foreach($this->array_object as $object)
     {
+	  print("CALL_SAVE_RELATED");
+	 // print_r((array)$object);
       $object->setReferencedRelation($this->getTable()->getTableName()) ;
+	  print($this->getTable()->getTableName());
+	  print($this->id);
       $object->setRecordId($this->id) ;
       try {
+		print("SAVE_RELATED!!!!!!!!!!!!!!");
         $object->save() ;
       }
       catch(Doctrine_Exception $ne)

@@ -42,6 +42,7 @@
  * @property string $properties
  * @property string $tag
  * @property string $tag_indexed
+ * @property integer $country_ref
  * @property Doctrine_Collection $TagGroups
  * @property Doctrine_Collection $Tags
  * 
@@ -82,6 +83,7 @@
  * @method string                                  getProperties()              Returns the current record's "properties" value
  * @method string                                  getTag()                     Returns the current record's "tag" value
  * @method string                                  getTagIndexed()              Returns the current record's "tag_indexed" value
+ * @method integer                                 getCountryRef()              Returns the current record's "country_ref" value
  * @method Doctrine_Collection                     getTagGroups()               Returns the current record's "TagGroups" collection
  * @method Doctrine_Collection                     getTags()                    Returns the current record's "Tags" collection
  * @method DoctrineTemporalInformationGtuGroupTags setId()                      Sets the current record's "id" value
@@ -121,6 +123,7 @@
  * @method DoctrineTemporalInformationGtuGroupTags setProperties()              Sets the current record's "properties" value
  * @method DoctrineTemporalInformationGtuGroupTags setTag()                     Sets the current record's "tag" value
  * @method DoctrineTemporalInformationGtuGroupTags setTagIndexed()              Sets the current record's "tag_indexed" value
+ * @method DoctrineTemporalInformationGtuGroupTags setCountryRef()              Sets the current record's "country_ref" value
  * @method DoctrineTemporalInformationGtuGroupTags setTagGroups()               Sets the current record's "TagGroups" collection
  * @method DoctrineTemporalInformationGtuGroupTags setTags()                    Sets the current record's "Tags" collection
  * 
@@ -255,6 +258,9 @@ abstract class BaseDoctrineTemporalInformationGtuGroupTags extends DarwinModel
              ));
         $this->hasColumn('tag_indexed', 'string', null, array(
              'type' => 'string',
+             ));
+        $this->hasColumn('country_ref', 'integer', null, array(
+             'type' => 'integer',
              ));
     }
 

@@ -11,6 +11,9 @@
           <?php echo $gtu->getCode(); ?>
         </td>
       </tr>
+	  <?php foreach($gtu->getIso3166Country() as $ctry): ?>
+		<tr><th><?php print(__("Country"));?></th><td><?php print($ctry->getIso3166()); ?> - <?php print($ctry->getNameEn()); ?></td></tr>
+	  <?php endforeach; ?>
 	  <?php if($collection):?>
 	  <tr>
         <th><?php echo __("Collection").":"; ?></th>
@@ -43,6 +46,10 @@
       <tr>
         <th><?php echo $form['longitude']->renderLabel().":"; ?></th>
         <td><?php echo $gtu->getLongitude(); ?></td>
+      </tr>
+	  <tr>
+        <th><?php echo $form['lat_long_accuracy']->renderLabel()." (m):"; ?> </th>
+        <td><?php echo $gtu->getLatLongAccuracy(); ?></td>
       </tr>
         <?php if($gtu->getCoordinatesSource()=="DMS"): ?>
         <tr>
@@ -95,7 +102,7 @@
 							  
 					</div>
 					<div id="mouse-position"></div>    
-				</div>  
+			</div>  
 				<select id="layer-select" >
                        <option value="Aerial">Aerial</option>
                        <option value="AerialWithLabels" selected>Aerial with labels</option>
@@ -258,6 +265,18 @@
        
 	   map.addLayer(OSM_layer);
        map.addLayer(layer_point);
+	   <?php if($gtu->getLatLongAccuracy() !==null):  ?>
+		<?php if(is_numeric($gtu->getLatLongAccuracy())): ?>
+			
+			var layer_radius = new ol.layer.Vector({
+					source: new ol.source.Vector()
+				  });
+			var circle4326 =  ol.geom.Polygon.circular([<?php print($gtu->getLongitude());?>,<?php print($gtu->getLatitude());?>], <?php print($gtu->getLatLongAccuracy());?>, 64);
+			 var circle3857 = circle4326.clone().transform('EPSG:4326', 'EPSG:3857');
+			layer_radius.getSource().addFeature(new ol.Feature(circle3857));
+			 map.addLayer(layer_radius);
+	   <?php endif;?>
+	   <?php  endif;?>
 	  
                 
         //select background

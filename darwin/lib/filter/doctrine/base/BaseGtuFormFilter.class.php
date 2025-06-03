@@ -101,6 +101,12 @@ abstract class BaseGtuFormFilter extends DarwinModelFormFilter
     $this->widgetSchema   ['expedition_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Expeditions'), 'add_empty' => true));
     $this->validatorSchema['expedition_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Expeditions'), 'column' => 'id'));
 
+    $this->widgetSchema   ['iso3166'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['iso3166'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['iso3166_subdivision'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['iso3166_subdivision'] = new sfValidatorPass(array('required' => false));
+
     $this->widgetSchema   ['id'] = new sfWidgetFormFilterInput();
     $this->validatorSchema['id'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => 'Gtu', 'column' => 'id'));
 
@@ -147,6 +153,8 @@ abstract class BaseGtuFormFilter extends DarwinModelFormFilter
       'utm_zone' => 'Text',
       'nagoya' => 'Text',
       'expedition_ref' => 'ForeignKey',
+      'iso3166' => 'Text',
+      'iso3166_subdivision' => 'Text',
       'id' => 'Number',
       'expedition_ref' => 'ForeignKey',
     ));

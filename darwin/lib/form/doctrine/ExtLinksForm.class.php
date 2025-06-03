@@ -10,9 +10,11 @@
  */
 class ExtLinksForm extends BaseExtLinksForm
 {
+	
+
   public function configure()
   {
-	$this->useFields(array('id','type','url','comment'));
+	$this->useFields(array('id','type','url','comment', 'access_rights'));
     $this->widgetSchema['url'] = new sfWidgetFormInputText();
     $this->widgetSchema['url']->setAttributes(array('class'=>'small_medium_size'));
 
@@ -28,10 +30,24 @@ class ExtLinksForm extends BaseExtLinksForm
       'choices' => ExtLinks::getLinkTypes(),
     ));
 
+
     $this->validatorSchema['type'] = new sfValidatorChoice(array("required"=> true,'choices'=>array_keys(ExtLinks::getLinkTypes())), array('required'=> 'Type of link is missing') );
     $this->widgetSchema['type']->setAttributes(array('class'=>'link_type_selector')); 
 
+
+	$access_rights_array= array_merge(array("unspecified"=>"unspecified"),ExtLinks::getAccessRightsDefinition());
+	$this->widgetSchema['access_rights'] = new sfWidgetFormChoice(array(
+      'choices' =>$access_rights_array,
+    ));	
+    $this->validatorSchema['access_rights'] = new sfValidatorChoice(array("required"=> true,'choices'=>array_keys($access_rights_array)), array('required'=> 'Type of link is missing') );
+	
+
+	//$this->validatorSchema['access_rights']= new sfValidatorPass();
+
   }
+  
+  
+  
   public function setRecordRef($relation, $rid)
   {
     $this->ref_relation =$relation;

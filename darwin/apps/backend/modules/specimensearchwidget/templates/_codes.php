@@ -37,6 +37,7 @@
       <!---->
   </tbody>
 </table>
+<?php echo $form['related_ref'];?>
 </div>
  
 <script  type="text/javascript">

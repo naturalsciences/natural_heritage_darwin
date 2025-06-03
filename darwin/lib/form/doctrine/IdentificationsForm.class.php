@@ -21,9 +21,7 @@ class IdentificationsForm extends BaseIdentificationsForm
     $maxDate = new FuzzyDateTime(strval(max($yearsKeyVal).'/12/31'));
     $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
     $maxDate->setStart(false);
-    $choices = array('all'=>'All', 'taxonomy'=> 'Taxon.', 'mineralogy' => 'Miner.', 'chronostratigraphy' => 'Chron.',
-      'lithostratigraphy' => 'Litho.', 'lithology' => 'Lithology', 'type'=> 'Type', 
-      'sex' => 'Sex', 'stage' => 'Stage', 'social_status' => 'Social', 'rock_form' => 'Rock') ;
+    $choices = Identifications::$categories ;
 
     $this->widgetSchema['referenced_relation'] = new sfWidgetFormInputHidden();
     $this->validatorSchema['referenced_relation'] = new sfValidatorString();

@@ -11,6 +11,7 @@ console.log("INIT_CONTROLLER");
  $scope.collapseMap=true;
  $scope.Math = window.Math;
  $scope.message="";
+  $scope.current_collection2=null;
  $scope.current_collection={};
  $scope.show_collection_list=true;
  $scope.current_collection.id=-1;
@@ -384,11 +385,11 @@ $scope.go_to_anchor=function(anchor) {
    
 
 
-    //console.log("LOAD_COLL");
+    console.log("LOAD_COLL");
     DarwinFactory.getCollections().success(
         function(response)
         {
-		    //console.log(response);
+			
 			response.unshift({"id":-1, "name":"ALL"});
             $scope.collections=response;
           
@@ -438,9 +439,10 @@ $scope.go_to_anchor=function(anchor) {
     };
 
     
-    $scope.changeCollection= function()
-    {
-         $scope.ctrl.reinit();
+    $scope.changeCollection= function(x)
+    {		
+		$scope.current_collection=x;
+		 $scope.ctrl.reinit();
     }
     
     
@@ -843,7 +845,8 @@ $scope.go_to_anchor=function(anchor) {
 	   
 	   //to next page there
 	    // $scope.keep_url_georef(urlTmpGeoRef);
-		 $scope.keep_url(urlTmp);
+		
+		$scope.keep_url(urlTmp);
 		 
          //$scope.setPage(1,urlTmp);
         
@@ -871,13 +874,17 @@ $scope.go_to_anchor=function(anchor) {
    };
    
    //MAIN_SEARCH
-     $scope.get_specimens = function() {
+   $scope.get_specimens = function() 
+   {
+
+   
+   
     //////console.log("search");
 
 	//collection
-    
+
     var colls=$scope.current_collection.id;
-		//taxon (un seul pour tous les rangs)=> appel à une fonction et non appel ctrl direct
+		//taxon (un seul pour tous les rangs)=> appel Ã  une fonction et non appel ctrl direct
 	   
 		var taxas=$scope.ctrl.getLowestTaxa();
 		//specimen number
@@ -904,20 +911,20 @@ $scope.go_to_anchor=function(anchor) {
 	   }
 	   
 	   
-	   /*
-		if(numbersTmp===undefined)
-		{
-			numbers='-1';
-		}
+	   //
+		 //if(numbersTmp===undefined)
+		 //{
+		 //	numbers='-1';
+		 //}
 
-		if( numbersTmp.value===undefined)
-		{
-			numbers='-1';
-		}
-		else
-		{
-			numbers=numbersTmp.value;
-		}*/
+		 //if( numbersTmp.value===undefined)
+		 //{
+		 //	numbers='-1';
+		 //}
+		 //else
+		 //{
+		 //	numbers=numbersTmp.value;
+		 //}
 		
 	  //  alert(numbers);
 		//countries
@@ -1016,6 +1023,8 @@ $scope.go_to_anchor=function(anchor) {
 	   var east=$scope.selectionE;
 
 	   var wkt=$scope.wkt;
+	   
+	   
 		$scope.getData(colls, taxas, numbers,ig_nums, countries, localities, collectors, startDateVar, endDateVar, types, has_image, has_3d, north, south, west, east, wkt, georef_only, citizen_sciences);
 	
 
@@ -1048,7 +1057,7 @@ $scope.go_to_anchor=function(anchor) {
 			console.log(response.data);
             if((response.data.length)>0)
             {
-                $scope.current_collection.id=response.data[0].id;
+                //$scope.current_collection.id=response.data[0].id;
 				
 				//console.log("Hide_collection");
 				$scope.show_collection_list=false;
@@ -1070,7 +1079,7 @@ $scope.go_to_anchor=function(anchor) {
 								console.log("init start coll");
 								name=$scope.collections[i].name;
 								console.log($scope.collections[i]);
-								$scope.current_collection=$scope.collections[i];
+								//$scope.current_collection=$scope.collections[i];
 							}
 						} 
 					}

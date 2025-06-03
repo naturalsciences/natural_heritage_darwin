@@ -16,4 +16,18 @@ class DoctrineTemporalInformationGtuGroupTagsTable extends Doctrine_Table
     {
         return Doctrine_Core::getTable('DoctrineTemporalInformationGtuGroupTags');
     }
+	
+public function getByMultipleIds(array $ids)
+  {
+    if( empty($ids))
+      return $ids;
+
+    $q = DQ::create()
+      ->from('DoctrineTemporalInformationGtuGroupTags g')
+      ->wherein('g.id', $ids)
+      ->orderBy('g.id');
+
+    
+    return $q->execute();
+  }
 }

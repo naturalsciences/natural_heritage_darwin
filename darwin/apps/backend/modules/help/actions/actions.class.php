@@ -35,4 +35,8 @@ class helpActions extends DarwinActions
   public function executeContrib(sfWebRequest $request)
   {
   }
+  
+  public function executeImportTemplate(sfWebRequest $request)
+  {
+  }
 }

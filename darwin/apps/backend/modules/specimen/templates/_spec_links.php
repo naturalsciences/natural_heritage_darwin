@@ -21,6 +21,13 @@
       </td>
    </tr>
    <tr>
+      <td>
+        <strong><?php echo $form['access_rights']->renderLabel(); ?></strong>
+        <?php echo $form['access_rights']->renderError(); ?>
+        <?php echo $form['access_rights'];?>      
+      </td>
+   </tr>
+   <tr>
      <td colspan="3"><hr /></td>
    </tr>
   </tbody>  

@@ -15,7 +15,7 @@ class GtuFormFilter extends BaseGtuFormFilter
   {
 
     $this->hasTags=False;
-    $this->useFields(array('code', 'gtu_from_date', 'gtu_to_date'));
+    $this->useFields(array('code', 'gtu_from_date', 'gtu_to_date','nagoya'));
     $this->addPagerItems();
     $minDate = new FuzzyDateTime(strval(min(range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')))).'/01/01'));
     $maxDate = new FuzzyDateTime(strval(max(range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')))).'/12/31'));
@@ -28,6 +28,7 @@ class GtuFormFilter extends BaseGtuFormFilter
 	//ftheeten 2018 03 14 added "taxonomy name callback"
     $this->widgetSchema['code']->setAttributes(array('class'=>'gtu_code_callback'));
     $this->widgetSchema['tags'] = new sfWidgetFormInputText();
+	//$this->widgetSchema['tags']->setAttributes(array('class'=>'medium_small_size'));
     $this->widgetSchema['gtu_from_date'] = new widgetFormJQueryFuzzyDate(
       $this->getDateItemOptions(),
       array('class' => 'from_date')
@@ -115,6 +116,8 @@ class GtuFormFilter extends BaseGtuFormFilter
 	$this->widgetSchema['tag_boolean']->setDefault(array("or"));
 	$this->validatorSchema['tag_boolean'] = new sfValidatorPass();
     
+
+	
     $subForm = new sfForm();
     $this->embedForm('Tags',$subForm);
 	
@@ -142,6 +145,10 @@ class GtuFormFilter extends BaseGtuFormFilter
 	$this->widgetSchema['people_fuzzy']->setAttributes(array("class"=> 'class_fuzzy_people'));
 	$this->validatorSchema['people_fuzzy'] = new sfValidatorString(array('required' => false)) ;
 	$this->validatorSchema['people_fuzzy'] = new sfValidatorPass() ;
+	
+	$this->widgetSchema['wkt_search'] = new sfWidgetFormInputText();
+    $this->widgetSchema['wkt_search']->setAttributes(array('class'=>'wkt_search'));
+    $this->validatorSchema['wkt_search'] = new sfValidatorString(array('required' => false, 'trim' => true));
   }
 
   public function addCodeColumnQuery($query, $field, $val)
@@ -164,9 +171,12 @@ class GtuFormFilter extends BaseGtuFormFilter
     $conn_MGR = Doctrine_Manager::connection();
     $tagList = '';
     $whereList=Array();
+	 $countries=[];
     foreach($val as $line)
     {
+		//print_r($line);
       $line_val = $line['tag'];
+	 
       
       if( $line_val != '')
       {
@@ -219,7 +229,20 @@ class GtuFormFilter extends BaseGtuFormFilter
         //$query->andWhere(implode(" OR ",$sqlClause ));
         //$query->andWhere("tag_values_indexed && getTagsIndexedAsArray($tagList)");
         $whereList[]=implode(" OR ",$sqlClause );
+		
+		
+		
       }
+	  $country=$line["country_ref"];
+		if(strlen($country)>0)
+		{
+			if(is_numeric($country))
+			{
+				$sql_string="country_ref=".$country;
+				//$sql_string=$country ."=ANY(country_refs)";
+				$countries[]=$sql_string;
+			}
+		}
 	  
     }
     if(count($whereList)>0)
@@ -227,6 +250,16 @@ class GtuFormFilter extends BaseGtuFormFilter
         $this->hasTags=True;
         $query->andWhere("(". implode(" ".$this->tag_boolean." ",$whereList ).")");
     }
+	
+	if(count($countries)>0)
+	{
+	
+		// $this->hasTags=True;
+		$str_country=implode(" OR ",$countries );
+		//print($str_country);
+		$query->andWhere($str_country);
+	}
+	
     if($this->hasTags)
       {
 		    $query->select('d.*')->from('DoctrineTemporalInformationGtuGroupTags d');
@@ -248,6 +281,19 @@ class GtuFormFilter extends BaseGtuFormFilter
 			$query->andWhere("public.ST_INTERSECTS($postgis_polygon, public.ST_SetSRID(public.ST_Point(longitude, latitude),4326))");		
 		}
    }
+   
+    //2018 10 05
+    if( isset($values['wkt_search']))
+    {
+        if(strlen(trim($values['wkt_search'])))
+        {
+            $tmp=" ST_DWithin(ST_GEOMFROMTEXT('".$values['wkt_search']."',4326)::geography,ST_SETSRID(ST_POINT(longitude, latitude), 4326)::geography, COALESCE(lat_long_accuracy, 1)) ";
+            
+              
+            
+            $query->andWhere($tmp);
+        }
+    }
     return $query;
   }
   
@@ -404,7 +450,7 @@ class GtuFormFilter extends BaseGtuFormFilter
 	  }
 	  $params=Array();
 	  $elems=Array();
-	  print_r($people_ref);
+	  //print_r($people_ref);
 	  if($people_ref===null)
 	  {
 		  $people_ref=Array();

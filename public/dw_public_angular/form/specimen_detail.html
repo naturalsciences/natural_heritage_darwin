@@ -2,7 +2,7 @@
 <html id="darwin-app" ng-controller='darwin-detail-controller'>
 <head>
 
-    <title>{{specimen.taxon_name}} | {{specimen.collection_name_full_path}} | Darwin | RMCA</title>
+    <title>RBINS - Darwin collection database</title>
 	<meta name="MobileOptimized" content="width">
 	<meta name="HandheldFriendly" content="true">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +11,8 @@
 	<meta http-equiv="Expires" content="0" />
 	<meta charset="UTF-8">
 	<meta name="google-site-verification" content="googlea676d101458b4793.html" />
+	<link rel="icon" type="image/x-icon" href="./images/favicon.png" />
+	<link rel="stylesheet" href="https://darwin.naturalsciences.be/dw_public/form/js/libs/bootstrap-5.3.3-dist/css/bootstrap.css">
 	<link rel="stylesheet" href="https://darwin.naturalsciences.be/dw_public/form//css/common/darwin.css">
 	<link rel="stylesheet" href="https://darwin.naturalsciences.be/dw_public/form/js/code/common/openlayers/v6.5.0-dist/ol.css">
 	<link rel="stylesheet" href="https://darwin.naturalsciences.be/dw_public/form/js/code/common/select.min.css">
@@ -51,7 +53,7 @@
 	<script type="text/javascript" src="https://darwin.naturalsciences.be/dw_public/form/js/code/common/angular-loading-spinner.js"></script>
 	<script type="text/javascript" src="https://darwin.naturalsciences.be/dw_public/form/js/code/common/tmhDynamicLocale.min.js"></script>
 	<script type="text/javascript" src="https://darwin.naturalsciences.be/dw_public/form/js/code/common/openlayers/v6.5.0-dist/ol.js"></script>
-
+    <script type="text/javascript" src="https://darwin.naturalsciences.be/dw_public/form/js/libs/bootstrap-5.3.3-dist/js/bootstrap.bundle.js"></script>
 	<base href="/">	
 		
 </head>
@@ -100,7 +102,7 @@
 				<a href="https://darwin.naturalsciences.be/dw_public/form/specimen_result.html" target="_self">{{'SEARCH' | translate}}</a>
 			</li>
 			<li>
-				<a href="https://darwin.naturalsciences.be" target="_blank" >{{ 'ADVANCED_SEARCH_INTERFACE' | translate }}</a>
+				<a href="https://darwin.naturalsciences.be/backend.php" target="_blank" >{{ 'ADVANCED_SEARCH_INTERFACE' | translate }}</a>
 			</li>
 		</ul>
 	</div>
@@ -118,11 +120,11 @@
 		<div class="title_result">
 						
 			<h1>{{specimen.taxon_name}}</h1>
-			<h2>{{specimen.id_spec}}</h3>
+			<h2>{{specimen.id_spec}}&nbsp;<input type="hidden" value="{{specimen.id_spec}}" id="value_id_spec"/> <input type="button" id="copy_id_spec" value="{{'COPY'| translate}}" style="font-size:x-small; vertical-align:middle;border:0px;"> </input></h2>
 		
 		</div>
 					
-		<div>&gt;&nbsp;<a ng-href="{{getStableIdentifierUrl()}}" target="_blank">{{'STABLE_CETAF_IDENTIFIER'| translate}}</a></div>
+		<div>&gt;&nbsp;<a ng-href="{{getStableIdentifierUrl()}}" target="_blank">{{'STABLE_CETAF_IDENTIFIER'| translate}}</a>&nbsp;<p><strong style="font-size:xx-small">Permanent identifier: {{uuid}} <input type="hidden" value="{{uuid}}" id="value_uuid"/>&nbsp;<input type="button" id="copy_uuid" value="{{'COPY'| translate}}" style="vertical-align:middle;border:0px;"> </input></p></strong></p></div>
 		<div ng-show="show_image">&gt;&nbsp;<a ng-href="{{getImageUrl()}}" target="_blank">{{'IMAGE_LINK'| translate}}</a></div>
 		<br/>
 						
@@ -213,7 +215,7 @@
 							
 				<div class="row-label-field" ng-if="specimen.gtu_country_tag_value">
 					<span class="label">{{'COUNTRY'| translate}}:</span>
-					<span class="field">{{specimen.gtu_country_tag_value}}</span>
+					 <span class="field">{{specimen.gtu_country_tag_value}}</span> 
 				</div>
 				<!--<div class="row-label-field">
 					<span class="label">{{'LOCALITY'| translate}}:</span>
@@ -252,7 +254,28 @@
 							
 		</div>
 		<!---------------------------    END 2 COLUMNS    --------------------------->
-					
+		 <!---------------------------    BEGIN RELATED SPECIMENS    --------------------------->
+	  
+	   <div ng-if="related_specimens_all.length>0" id="div_related_specimens" class="grid--onedown clearfix detail-label-field" >
+			<p>{{'RELATED'| translate}}	:</p>
+				
+				<ul>				
+					<li ng-repeat="(keyRel, valueRel) in related_specimens_all" class="row" >					
+					<p ng-if="valueRel.direction=='reverse'">
+						 <a ng-if="valueRel.specimen_source_code_display==specimen.id_spec" href="{{url_related}}uuid={{valueRel.specimen_related_ref_uuid}}" target="_blank">{{ valueRel.code_display}} {{'RELATED_REVERSE_TEXT_1'| translate}} {{ valueRel.relationship_type}}  {{'RELATED_REVERSE_TEXT_2'| translate}} {{'RELATED_REVERSE_TEXT_3'| translate}}</a> 
+						<a ng-if="valueRel.specimen_source_code_display!=specimen.id_spec" href="{{url_related}}uuid={{valueRel.specimen_related_ref_uuid}}" target="_blank">{{ valueRel.code_display}} {{'RELATED_REVERSE_TEXT_1'| translate}} {{ valueRel.relationship_type}}  {{'RELATED_REVERSE_TEXT_2'| translate}} {{valueRel.specimen_source_code_display}}</a> 
+					<i>{{valueRel.taxon_name}}</i></p>
+					</p>
+					<p ng-if="valueRel.direction=='forward'">
+						 <a ng-if="valueRel.specimen_source_code_display==specimen.id_spec" href="{{url_related}}uuid={{valueRel.specimen_related_ref_uuid}}" target="_blank">{{'RELATED_REVERSE_TEXT_3'| translate}} {{'RELATED_REVERSE_TEXT_1'| translate}} {{ valueRel.relationship_type}}  {{'RELATED_REVERSE_TEXT_2'| translate}} {{valueRel.code_display }}</a> 
+						<a ng-if="valueRel.specimen_source_code_display!=specimen.id_spec" href="{{url_related}}uuid={{valueRel.specimen_related_ref_uuid}}" target="_blank">{{ valueRel.specimen_source_code_display}} {{'RELATED_REVERSE_TEXT_1'| translate}} {{ valueRel.relationship_type}}  {{'RELATED_REVERSE_TEXT_2'| translate}} {{valueRel.code_display }}</a> 
+					<i>{{valueRel.taxon_name}}</i></p>
+					</li>
+				</ul>
+				
+				
+				
+	   </div>			
 		<div class="images_list">
 					
 			<div class="grid--threedown clearfix">
@@ -306,9 +329,80 @@
 			<div id="iiif_map" class="iiif_map" style="width:100%; height: 360px; display:inline-block"></div>
 			<select id="iiif_chooser" name="iiif_chooser"></select><br/>
 		</div>
-		
+		<div class="container">
+			<div ng-show="url_iiif_info_list.length>0"  class="image_iiif_detail_info">
+				<div class="row">
+				 <div ng-repeat="url_iiif_info in url_iiif_info_list" class="col-sm-12 d-flex align-items-center justify-content-center">
+					<img src="{{url_iiif_info.thum}}"></img>
+				 </div>
+				 <div ng-repeat="url_iiif_info in url_iiif_info_list" class="col-sm-12 d-flex align-items-center justify-content-center">	
+					<button style="margin-top:5px" type="button" style="vertical-align:bottom;" id="to_image"  class="btn btn-light" data-bs-toggle="modal" data-bs-target="#modal_iiif_info" ng-click="add_iiif_info(url_iiif_info.url)" >Detail (IIIF)</button >
+				 </div>	
+				</div>
+			</div>
+			
+			<div ng-show="specimen.urls_2d_inside.length>0"  class="div_frame_detail_info">
+				<div class="row">
+					<div ng-repeat="urls_2d_inside in specimen.urls_2d_inside" class="col-sm-12 d-flex align-items-center justify-content-center">
+							<button  style="margin-top:5px" type="button" style="vertical-align:bottom;" id="to_frame"  class="btn btn-light" data-bs-toggle="modal" data-bs-target="#modal_frame" ng-click="add_frame_info(urls_2d_inside)" >Detail (Volview)</button >
+					 </div>	
+				</div>	
+			</div>
+			
+			<div ng-show="specimen.urls_3d_snippet_general.length>0"  class="div_frame_detail_info">
+				<div class="row">
+					<div ng-repeat="urls_3d_snippet_general in specimen.urls_3d_snippet_general" class="col-sm-12 d-flex align-items-center justify-content-center">
+							<button  style="margin-top:5px" type="button" style="vertical-align:bottom;" id="to_frame"  class="btn btn-light" data-bs-toggle="modal" data-bs-target="#modal_frame" ng-click="add_frame_info(urls_3d_snippet_general)" >Detail (3D Hop)</button >
+					 </div>	
+				</div>	
+			</div>
+			
+			
 	</div>
+  </div>
 
+	<div ng-show="specimen.iiif_info_current.length>0" class="modal fade bd-example-modal-lg" id="modal_iiif_info" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+			  <div class="modal-dialog modal-lg" style="height:95%; --bs-modal-width:95%">
+				<div class="modal-content" style="height:100%;height:100%;">
+				
+				
+				<div class="modal-body" style="padding-top:2px; text-align:center" >
+				  <div id="map_iiif_info" class="map_iiif_info" style="width:90%; height:90%" ></div>
+			    <button  type="button" id="close_modal" class="btn-close aria-label='Close'" style="position:absolute; top:10px; right: 10px; z-index:5000"></button>
+				<input type="button" id="get_iiif_info" name="get_iiif_info" value="Get IIIF info file" style="margin-top:5px;"/>
+				</div>
+				</div>
+				
+				</div>
+			  
+		</div>
+		
+		<div ng-show="url_frame_current.length>0" class="modal fade bd-example-modal-lg" id="modal_frame" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+			  <div class="modal-dialog modal-lg" style="height:95%; --bs-modal-width:95%">
+				<div class="modal-content" style="height:100%;height:100%;">
+				
+				
+				<div class="modal-body" style="padding-top:2px; text-align:center" >
+				   <iframe id="frame_2d_3d" style="height:95%;width:95%" src=""></iframe>
+			    <button  type="button" id="close_modal_frame" class="btn-close aria-label='Close'" style="position:absolute; top:10px; right: 10px; z-index:5000"></button>
+				<input type="button" id="get_frame_info" name="get_frame_info" value="Get direct link to viewer" style="margin-top:5px;"/>
+				</div>
+				</div>
+				
+				</div>
+			  
+		</div>
+		<div ng-show="specimen.urls_extra_links.length>0"  class="row div_frame_detail_info" style="margin-top:30px">
+			<div class="col-sm-3"></div>	
+			<div class="col-sm-8">					
+				<b>{{'OTHER_LINKS'|translate}}</b>
+				<ul style="list-style: inside;">
+					<li ng-repeat="url_link in specimen.urls_extra_links" class="col-sm-12">
+							<a href="{{url_link}}" target="_blank">{{url_link}}</a>
+					</li>	
+				</ul>	
+			</div>
+		</div>
 </div>
 
 <!---------------------------    END MAIN CONTENT    --------------------------->
@@ -364,6 +458,7 @@
         var selectionBox;
         var overlay;
         var map;
+		
         var container = document.getElementById('popup');
         var content = document.getElementById('popup-content');
         var closer = document.getElementById('popup-closer');
@@ -373,6 +468,12 @@
 	//var maps=Array();
 	var map_iiif;
 	var layer_iiif;
+	
+	var map_iiif_info;
+	var init_iiif_info=false;
+	var layer_iiif_info;
+	var layer_iiif_info_src;
+	var modal_iiif_info;
 
         
 jQuery('.expand-one').click(function(){
@@ -409,21 +510,7 @@ jQuery('.expand-one').click(function(){
         })
     });
 
-    interactionMove.on('boxend', function(evt){
-        if(moveDraw===true)
-        {
-            var geom = evt.target.getGeometry();
-            ////console.log(geom);
-            var feat = new ol.Feature({geometry: geom});
-            //source.clear();
-            sourceSelection.addFeature(feat);
-            getSelectionZone(geom);
-             selectionBox=new ol.layer.Vector({
-            source: sourceSelection
-            });
-           map.addLayer(selectionBox);
-       }
-    });
+
     
     
       var bingBackground= new ol.layer.Tile(
@@ -453,7 +540,7 @@ jQuery('.expand-one').click(function(){
             // overlays: [overlay],
         }); 
         jQuery('#map').css("height", "500px");
-        map.updateSize()
+        map.updateSize();
         
         
       //main search function
@@ -585,7 +672,7 @@ jQuery('.expand-one').click(function(){
                     return false;
                   };
                   
-                  map.addOverlay(overlay);
+                  //map.addOverlay(overlay);
 				  
 				  
 				  ///IIIF
@@ -678,9 +765,45 @@ jQuery('.expand-one').click(function(){
 							refreshMap($('#iiif_chooser').val());
 						}
 					);
+					
+					$("#copy_uuid").click(
+						function()
+						{
+							navigator.clipboard.writeText($("#value_uuid").val());
+						}
+					);
+					
+					$("#copy_id_spec").click(
+						function()
+						{
+							navigator.clipboard.writeText($("#value_id_spec").val());
+						}
+					);
+					
+					$("#get_iiif_info").click(
+						function()
+						{
+							var scope =  angular.element(jQuery('#darwin-app')).scope();
+							var url_info=scope.url_iiif_info_current;
+							navigator.clipboard.writeText(url_info);
+						}
+					);
+					
+					$("#get_frame_info").click(
+						function()
+						{
+							var scope =  angular.element(jQuery('#darwin-app')).scope();
+							var url_info=scope.url_frame_current;
+							navigator.clipboard.writeText(url_info);
+						}
+					);
+					
+					
 		
 				  
-				  tmpListenerCoord.$watch('url_virtual_col_iiif_complete', function(newVal, oldVal){
+		tmpListenerCoord.$watch('url_virtual_col_iiif_complete', 
+			function(newVal, oldVal)
+			{
        
                 if(undefined !=newVal)
                 {   
@@ -699,18 +822,112 @@ jQuery('.expand-one').click(function(){
 									seqs(value);
 								});
 							}
-							create_ol_iiif();
+							//create_ol_iiif();
 						}
 						);
                       
                     }
                 }
             });
-
-            
+			
+			//important to sync bootstrap after Angular JS
+			$( "#modal_iiif_info" ).on('shown.bs.modal', function(){
+				fct_init_iiif_info();
+			});
+			
+			$( "#modal_frame" ).on('shown.bs.modal', function(){
+				fct_init_frame();
+			});
+								
         }
       );
       
+	 
+	  
+	  $("#close_modal").click(
+			function()
+			{
+				$('#modal_iiif_info').modal('hide');
+			}
+		)
+		
+	   $("#close_modal_frame").click(
+			function()
+			{
+				$('#modal_frame').modal('hide');
+			}
+		)			
+	  
+	  
+	  var refreshMapIIIFInfo=function(imageInfoUrl) {
+			console.log("fetch");
+			console.log(imageInfoUrl);
+			
+			$.get(imageInfoUrl, function( data ) {
+			  console.log(data);
+			   const options = new ol.format.IIIFInfo(data).getTileSourceOptions();
+			   console.log("option1");
+			   console.log(options);
+			   if (options === undefined || options.version === undefined) {
+					//notifyDiv.textContent =
+					 // 'Data seems to be no valid IIIF image information.';
+					 console.log('Data seems to be no valid IIIF image information.');
+					return;
+				  }
+				  options.zDirection = -1;
+				 layer_iiif_info_src = new ol.source.IIIF(options);
+				  
+				  
+				  layer_iiif_info.setSource(layer_iiif_info_src);
+				  
+				 map_iiif_info.setView(
+					new ol.View({
+					  resolutions: layer_iiif_info_src.getTileGrid().getResolutions(),
+					  extent: layer_iiif_info_src.getTileGrid().getExtent(),
+					  constrainOnlyCenter: true,
+					})
+				  );
+				  map_iiif_info.getView().fit(layer_iiif_info_src.getTileGrid().getExtent());
+				  //notifyDiv.textContent = '';
+				  //map.getView().setZoom(12);
+				  //map_iiif_info.getView().setZoom(12);
+				   
+					console.log("exit iiif info");
+					layer_iiif_info_src.refresh();
+				});
+
+		 
+		}
+		
+		
+	  
+	  
+	  
+			function fct_init_iiif_info()
+			{
+				$("#map_iiif_info").html("");
+				layer_iiif_info = new ol.layer.Tile();
+				map_iiif_info= new ol.Map({
+								layers: [layer_iiif_info],
+								target: 'map_iiif_info'
+							  });
+				var scope =  angular.element(jQuery('#darwin-app')).scope();
+				var url_info=scope.url_iiif_info_current;
+				
+				//console.log("init_info");
+				refreshMapIIIFInfo(url_info);
+			} 
+			
+			function fct_init_frame()
+			{
+				console.log("init_fame");
+				var scope =  angular.element(jQuery('#darwin-app')).scope();
+				var url_frame=scope.url_frame_current;
+				console.log(url_frame);
+				$("#frame_2d_3d").attr("src",url_frame );
+			}
+			
+	 
   </script>
 
 </body>

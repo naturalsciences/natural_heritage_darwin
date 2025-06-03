@@ -5,6 +5,21 @@
  */
 class Identifications extends BaseIdentifications
 {
+
+ public static $categories =  array('all'=>'All',
+									'taxonomy'=> 'Taxon.', 
+									'mineralogy' => 'Miner.', 
+									'chronostratigraphy' => 'Chron.',
+									'lithostratigraphy' => 'Litho.',
+									'lithology' => 'Lithology',
+									'type'=> 'Type', 
+									'sex' => 'Sex', 
+									'stage' => 'Stage', 
+									'social_status' => 'Social', 
+									'rock_form' => 'Rock',
+									'History - taxonomy'=> 'Taxon. (history)');
+									
+									
   public function getNotionDateMasked ()
   {
     $dateTime = new FuzzyDateTime($this->_get('notion_date'), $this->_get('notion_date_mask'));

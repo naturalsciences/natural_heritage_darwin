@@ -5,16 +5,15 @@
   <tbody>
     <?php echo $form->renderGlobalErrors() ?>
     <tr>
-		<!--pvignaux 2016 06 14
+
 		<th><?php echo $form['collection_ref']->renderLabel() ?></th>-->
-		<!--jmHerpers 2018 03 20-->
 		<th><?php echo "Collection" ?></th>
 		<td colspan="3"><?php echo $form['collection_ref']->renderError() ?><?php echo $form['collection_ref'] ?></td>
 		<th></th>
 		<td colspan="5"></td>
     </tr>
     <tr>
-		<!--jmHerpers 2018 03 20
+
 		<th><?php echo $form['name']->renderLabel() ?></th>-->
 		<th><?php echo "Code" ?></th>
 		<td>
@@ -73,6 +72,13 @@
       <td>
         <?php echo $form['collection_manager_mail']->renderError() ?>
         <?php echo $form['collection_manager_mail'] ?>
+      </td>
+    </tr>
+	<tr>
+      <th><?php echo $form['collection_manager_phone']->renderLabel() ?></th>     
+      <td>
+        <?php echo $form['collection_manager_phone']->renderError() ?>
+        <?php echo $form['collection_manager_phone'] ?>
       </td>
     </tr>
     <tr>

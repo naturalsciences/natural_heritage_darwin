@@ -8,9 +8,12 @@
   ?>
   <?php include_partial('global/pager', array('pagerLayout' => $pagerLayout)); ?>
   <?php include_partial('global/pager_info', array('form' => $form, 'pagerLayout' => $pagerLayout)); ?>
-  <div class="results_container">
+  <div class="results_container gtu_results">
     <table class="results <?php if($is_choose) echo 'is_choose';?>">
       <thead>
+		  <th><!-- Pin -->
+              <label class="top_gtu_pin top_pin"><?php print(__("Select all")); ?><input type="checkbox" /></label>
+            </th>
           <th>
             <a class="sort" href="<?php echo url_for($s_url.'&orderby=code'.( ($orderBy=='code' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
               <?php echo __('Code');?>
@@ -32,7 +35,11 @@
       </thead>
       <tbody>
         <?php foreach($items as $item):?>
+		  
           <tr class="rid_<?php echo $item->getId();?>">
+		   <td>
+                <label class="pin"><input type="checkbox" value="<?php echo $item->getId();?>" <?php if($sf_user->isPinned($item->getId(), 'gtu')):?>checked="checked"<?php endif;?> /></label>
+            </td>
             <td class="top_aligned gtu_code"><?php echo $item->getCode();?>
 			 
             <td class=""><?php echo $item->getName(ESC_RAW);?>
@@ -120,13 +127,13 @@
                                  <br/><div  name="date_choose" class="result_choose"><?php echo __('Choose place and date');?></div>                                   
                              <?php endif;?>                            
                               <?php if($is_choose && !strpos($referer,"/staging/edit/id")):?>                              
-                               <br/><div name="gtu_choose" class="result_choose"><?php echo __('Choose place without date');?></div>               
+                               <br/><div name="gtu_choose" id="gtu_choose_<?php print($item->getId());?>" class="result_choose"><?php echo __('Choose place without date');?></div>               
                               <?php endif;?>
                             
                             
                             </li>                   
                    <?php elseif($is_choose && !strpos($referer,"/staging/edit/id")):?>
-                    <br/><div name="gtu_choose" class="result_choose"><?php echo __('Choose place without date');?></div>  
+                    <br/><div name="gtu_choose" id="gtu_choose_<?php print($item->getId());?>" class="result_choose"><?php echo __('Choose place without date');?></div>  
                    <?php endif;?>
                    <?php if(strpos($referer,"/staging/edit/id")):?>
                     <br/><div name="gtu_choose" class="result_choose update_staging"><?php echo __('Choose place id');?></div>  
@@ -170,3 +177,80 @@
     <?php echo $form['gtu_to_date']->renderError() ?>
 </div>
 <?php endif;?>
+<script type="text/javascript">
+
+var geosjon='<?php print(htmlspecialchars_decode($geo_obj_json)); ?>';
+
+function pin_gtu(ids, status) {
+  var id_part = "";
+  if( Object.prototype.toString.call( ids ) === '[object Array]' ) {
+    id_part = '/mid/' + ids.join(",");
+  } else {
+    id_part = '/id/' + ids;
+  }
+  $.getJSON('<?php echo url_for('savesearch/pin?source=gtu');?>'+ id_part + '/status/' + ( status ? '1':'0'),function (data){
+    if(data.pinned) {
+      $('.pinned_specimens i').text('(' + Object.keys(data.pinned).length + ')');
+    }
+  });
+}
+
+$(document).ready(function () {
+ /* //Init screen size
+  check_screen_size();
+
+  //Init resize of screen
+  $(window).resize(check_screen_size);
+
+  //Init columns visibilty
+  $('ul.column_menu .col_switcher :not(:checked)').each(function(){
+    $('.col_' + $(this).val()).hide();
+  });*/
+
+  //Init custom checkbox
+  $('input[type=checkbox], input[type=radio]').not('label.custom-label input').customRadioCheck();
+  
+  // Init Top pin state
+  if($('.pin :checked').length == $('.pin :checkbox').length) {
+    $('.top_gtu_pin :checkbox').attr('checked','checked').trigger('update');
+  }
+  else {
+    $('.top_gtu_pin :checkbox').attr('checked',false).trigger('update');
+  }
+
+  
+  //Pin a specimen
+  $('.gtu_results .pin :checkbox').change(function(){
+     pin_gtu($(this).val(), $(this).is(':checked'));
+  });
+
+  // Check all pin's on the page
+  $('.gtu_results .top_gtu_pin :checkbox').click(function(){
+    $('.gtu_results .pin :checkbox').attr('checked', $(this).is(':checked')).trigger('update');
+    pins = [];
+    $('.gtu_results .pin :checkbox').each(function(){
+      pins.push($(this).val());
+    });
+    pin_gtu(pins, $(this).is(':checked'));
+  }); 
+
+  console.log(geosjon);
+  
+  getFeaturesRow(geosjon);
+  
+  <?php if($item !==null): ?>
+  $("body").on("click",".choose_gtu_in_map",
+				function(e)
+				{
+					console.log("click");
+					var id_gtu=$(this).attr("dw_id");
+					$("#gtu_choose_<?php print($item->getId());?>").click();
+					
+				}
+			);
+			
+  <?php endif; ?>
+ 
+  
+});
+</script>

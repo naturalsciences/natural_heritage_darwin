@@ -195,8 +195,9 @@ class SpecimensForm extends BaseSpecimensForm
      //jm herpers 2019 10 02
     $this->widgetSchema['nagoya'] = new sfWidgetFormChoice(array(
       'choices' =>  $nagoyaanswers,
+	     'expanded' => true,
     ));
-	$this->setDefault('nagoya', "not defined");
+	//$this->setDefault('nagoya', "not defined");
     
 	 //JM Herpers 2019 04 24
     $this->widgetSchema['nagoya']->setAttributes(array('class'=>'nagoya')); 

@@ -182,7 +182,7 @@ $(document).ready(function () {
   });
 
   //Init custom checkbox
-  $('input[type=checkbox], input[type=radio]').not('label.custom-label input').customRadioCheck();
+  //$('input[type=checkbox], input[type=radio]').not('label.custom-label input').customRadioCheck();
   
   // Init Top pin state
   if($('.pin :checked').length == $('.pin :checkbox').length) {

@@ -126,4 +126,19 @@ class GtuTable extends DarwinTable
 	  return $rows;
   }
   
+    public function getByMultipleIds(array $ids)
+  {
+    if( empty($ids))
+      return $ids;
+
+    $q = DQ::create()
+      ->from('Gtu g')
+      ->wherein('g.id', $ids)
+      ->orderBy('g.id');
+
+    
+    return $q->execute();
+  }
+
+  
 }

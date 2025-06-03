@@ -20,10 +20,10 @@ class RMCATabImportCodes
 		
 		$fields[] = "unitid";
 		$fields[] = "uuid";	
-		$fields[] = "code_category";	
+		$fields[] = "code_category"; /* ('main', 'secondary' , 'temporary','inventory', 'Barcode', 'additional id' , 'code' => 'Storage','genbank number' ,'rack_id', 'dna_rack_id', 'project_code', 'field_code');*/	
 		$fields[] = "code_prefix";
 		$fields[] = "code_prefix_separator";
-		$fields[] = "code";
+		$fields[] = "code"; 
 		$fields[] = "code_suffix_separator";
 		$fields[] = "code_suffix";
 		return $fields;		

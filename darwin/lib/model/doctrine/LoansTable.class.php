@@ -169,6 +169,12 @@ class LoansTable extends DarwinTable
 	echo $q->getSQL(); 
     return $response;
   }
+  
+   public function getAllPrintableLoans($paged_loan_list) {
+    
+      return $paged_loan_list;
+    
+  }
 
   /**
    * Get the list of related loans for given specimen(s) id(s)

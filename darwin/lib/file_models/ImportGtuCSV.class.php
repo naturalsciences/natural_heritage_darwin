@@ -322,7 +322,7 @@ class ImportGtuCSV
 		else
 		{
 			
-            $errors_reported = "Line misses sampling_code value";
+            $errors_reported = "Line misses sampling_code value  (if you use UTF8, check that you encoded the file without BOM)";
             if($this->conn->getDbh()->inTransaction())
             {
                  $this->conn->rollback();

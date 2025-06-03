@@ -7,6 +7,7 @@ darwinApp.controller('darwin-controller-data', function($scope, DarwinFactory, P
    $scope.ctrl={};
 	$scope.url="";
 	$scope.currentSearchURL="";
+	$scope.url_prefix="../ws/ws.php?";
 	$scope.pageSize=25;
 	$scope.nb_pages="0";
 
@@ -36,7 +37,9 @@ darwinApp.controller('darwin-controller-data', function($scope, DarwinFactory, P
         //synchronized with the name of tiles in the i18n javascript folder in "common"
   tmhDynamicLocale.set($scope.ctrl.language);
   $scope.ctrl.show_map=true;
-  $scope.ctrl.sort_direction="ascending";     
+  $scope.ctrl.sort_direction="ascending";   
+
+   $scope.backlink="";    
  };
     
   $scope.ctrl.setLanguage = function(code) {
@@ -88,8 +91,9 @@ darwinApp.controller('darwin-controller-data', function($scope, DarwinFactory, P
 				
 				$scope.geo_ref_in_dataset=items[i].georef_count;
 			}
-            var latitude=items[i].longitude;
-            var longitude=items[i].latitude;
+			console.log("fix coords");
+            var latitude=items[i].latitude;
+            var longitude=items[i].longitude;
            
                            
             if(latitude !==null&& !angular.isUndefined(latitude)&&longitude!==null&& !angular.isUndefined(longitude))
@@ -102,13 +106,19 @@ darwinApp.controller('darwin-controller-data', function($scope, DarwinFactory, P
 				
 				if(label !== undefined)
 				{
-					label=label.replace(/\n/g, ' ');
-					label=label.replace(/\r/g, ' ');
+					if(!!label)
+					{
+						label=label.replace(/\n/g, ' ');
+						label=label.replace(/\r/g, ' ');
+					}
 				}
 				if(taxon !== undefined)
 				{
-					taxon=taxon.replace(/\n/g, ' ');
-					taxon=taxon.replace(/\r/g, ' ');
+					if(!!taxon)
+					{
+						taxon=taxon.replace(/\n/g, ' ');
+						taxon=taxon.replace(/\r/g, ' ');
+					}
 				}
 				
 				var uuid=items[i].uuid;
@@ -183,13 +193,25 @@ darwinApp.controller('darwin-controller-data', function($scope, DarwinFactory, P
       }
 	  
 	  
- 	  
-   $scope.getPage =function(page)
-  {
-    return $scope.setPage(page,$scope.currentSearchURL );
-  }
+		  
+	 $scope.getPage =function(page)
+	  {
+		return $scope.setPage(page,$scope.currentSearchURL );
+	  }
 	
-	 $scope.setPage= function (page, urlQuery) {
+	 $scope.setPage= function (page, urlQuery) 
+	 {
+	 
+	  var existing_query="";
+		if(urlQuery.indexOf("?")>-1)
+			{
+				var tmp1=urlQuery.split("?");
+				if(tmp1.length>0)
+				{
+					var existing_query="&"+tmp1[tmp1.length-1]+"&callback=true";
+					
+				}
+			}
 		 ////console.log(urlQuery);
         $scope.currentSearchURL=urlQuery;
        /*if (page < 1 || page > $scope.pager.totalPages) {
@@ -212,11 +234,13 @@ darwinApp.controller('darwin-controller-data', function($scope, DarwinFactory, P
 		 {
 			urlQuery=urlQuery+"&sort_direction=ascending";
 		 }
+		 $scope.backlink=window.location+existing_query;
 		 ////console.log(urlQuery);
         // get pager object from service
 		//////console.log();
         var pagePromise = PagerService.GetPager(urlQuery, page, $scope.pageSize, $scope.sortOrder="-1");
-		pagePromise.then(function(result) {
+		pagePromise.then(function(result) 
+		{
 		   //////console.log("received");
 			$scope.pager=result;
 		   if(typeof $scope.pager.totalPages !=='undefined')
@@ -245,11 +269,37 @@ darwinApp.controller('darwin-controller-data', function($scope, DarwinFactory, P
         createGeoJSON($scope.items);
 		////console.log( $scope.items);
 		
-    });
+		});
          
           
       };
-
+	var params=DarwinFactory.getAllHTTPParams(window.location.href);
+		
+	var callback=false;
+	if("callback" in params)
+	{
+		if(params["callback"]=="true")
+		{
+			callback=true;
+		}
+	}
+	
+	if(callback)
+	{
+		if(window.location.href.indexOf("?")>-1)
+			{
+				var tmp1=window.location.href.split("?");
+				if(tmp1.length>0)
+				{
+					var tmp_query=$scope.url_prefix+tmp1[tmp1.length-1];
+					console.log(tmp_query);
+					storageFactory.save("search_url", tmp_query);
+					storageFactory.save("search_url_georef", tmp_query.replace("operation=search_specimen","operation=count_georef_specimen"));
+					
+				}
+			}
+		 
+	}
 	$scope.url="";
 	$scope.init = function () {
 	

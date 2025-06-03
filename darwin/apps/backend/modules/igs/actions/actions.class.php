@@ -318,14 +318,14 @@ class igsActions extends DarwinActions
 		if($request->getParameter('searchIg','') !== '')
 		{
 		  // Bind form with data contained in searchIg array
-		  print_r($request->getParameter('searchIg'));
+		  //print_r($request->getParameter('searchIg'));
 		  $form->bind($request->getParameter('searchIg'));
 		  // Test that the form binded is still valid (no errors)
 		  if ($form->isValid())
 		  {
 			$query = $form->getQuery();			
 			 $igss = $query->execute();
-			 print(count($igss));
+			 
 			 $comment_ids = array();
 			 $comments=Array();
 			 foreach($igss as $i)
@@ -345,6 +345,7 @@ class igsActions extends DarwinActions
 			{
 					$line=Array();
 					$line[]=$igs->getId();
+					$line[]=$igs->getIgType();
 					$line[]=$igs->getIgNum();
 					$line[]=$igs->getIgDateMasked();
 					if(isset($comments[$igs->getId()]))
@@ -359,7 +360,7 @@ class igsActions extends DarwinActions
 					$line[]=$igs->countSpecimensByCollectionsString();
 					$result[]=implode("\t", $line);
 			}
-			print(implode("\t", array("id","I.G. Num.", "date_html_mask", "Comments", "NB. specimens", "Specimens By collections"))."\r\n");
+			print(implode("\t", array("id", "type","I.G. Num.", "date_html_mask", "Comments", "NB. specimens", "Specimens By collections"))."\r\n");
 			print(implode("\r\n", $result));
 			
 		  }

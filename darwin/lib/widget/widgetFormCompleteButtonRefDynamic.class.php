@@ -123,6 +123,20 @@ class widgetFormCompleteButtonRefDynamic extends widgetFormButtonRef
 				}';
 	  $input .='});
       $("#'.$this->generateId($name).'_button a.but_more").click(button_ref_modal);';
+	  
+	  
+	 //ftheeten 2025 01 14
+	  $input .= '$("#'.$this->generateId($name).'_name").on("change", function(){
+			
+			var tmp=$(this).val();
+			
+			tmp=tmp??"";
+			if(tmp.length==0)
+			{
+				
+				$("#'.$this->generateId($name).'").attr(\'value\',\'\') ;
+			}
+	  });';
 
       if($this->getOption('deletable'))
         $input .= '$("#'.$this->generateId($name).'_clear").click(function(){

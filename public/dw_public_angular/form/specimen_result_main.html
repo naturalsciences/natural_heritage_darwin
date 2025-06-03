@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html id="darwin-app" ng-controller='darwin-controller'>
 <head>
-    <title>{{'TITLE_SEARCH_PAGE' | translate}}</title>
+    <title>RBINS - Darwin collection database</title>
 	<meta name="MobileOptimized" content="width">
 	<meta name="HandheldFriendly" content="true">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +10,7 @@
 	<meta http-equiv="Expires" content="0" />
     <meta charset="UTF-8">
 	<meta name="google-site-verification" content="googlea676d101458b4793.html" />
+	<link rel="icon" type="image/x-icon" href="./images/favicon.png" />
 	<link rel="stylesheet" href="./css/common/bootstrap.min.css">
 	<link rel="stylesheet" href="./css/common/darwin.css">
 	<link rel="stylesheet" href="./js/code/common/openlayers/v6.5.0-dist/ol.css">
@@ -42,8 +43,8 @@
 	<script type="text/javascript" src="./js/code/filters/filter.js"></script>
 	<script type="text/javascript" src="./js/code/services/app_no_frame.js"></script>
 	<script type="text/javascript" src="./js/code/services/app_content.js"></script>
-	<script type="text/javascript" src="./js/code/controllers/darwinController.js?v=20231212b"></script>
-	<script type="text/javascript" src="./js/code/controllers/darwinControllerDetail.js"></script>
+	<script type="text/javascript" src="./js/code/controllers/darwinController.js?v=20240212"></script>
+	<script type="text/javascript" src="./js/code/controllers/darwinControllerDetail.js?v=20240212"></script>
 	<script type="text/javascript" src="./js/code/common/clickoutside.directive.js"></script>
 	<script type="text/javascript" src="./js/code/common/spin.min.js"></script>
 	<script type="text/javascript" src="./js/code/common/angular-spinner.min.js"></script>
@@ -124,7 +125,7 @@
 		
 		<div ng-if="show_collection_list" class="select-collection-container clearfix">		
 			<span class="label label-collection">{{'COLLECTION' | translate}}:</span>
-			<select  name="collectionselect" id="class" class="select-collection" ng-model="current_collection" allow-clear="true" ng-options="collection as collection.name for collection in collections" ng-change="changeCollection()" >
+			<select  name="collectionselect" id="collectionselect" class="select-collection" ng-model="param" allow-clear="true" ng-options="coll as coll.name for coll in collections" ng-change="changeCollection(param)" >
 			</select>
 			<br/>
 			<div >
@@ -207,7 +208,7 @@
 					<ui-select-match allow-clear="true" placeholder="Enter a species...">{{$item.name}}</ui-select-match>
 					<ui-select-choices repeat="item.id as item in species track by $index"
 							 refresh="refreshSpecies($select.search)"
-							 refresh-delay="500"
+							 refresh-delay="750"
 							 ng-hide="!$select.open">
 						<div ng-bind-html="item.name | highlight: $select.search"></div>
 					</ui-select-choices>
@@ -218,7 +219,7 @@
 					<ui-select-match  allow-clear="true" placeholder="Enter an ig number...">{{$item.value}}</ui-select-match>
 						<ui-select-choices repeat="item.value as item in ig_num track by $index"
 							 refresh="refreshIgNumbers($select.search)"
-							 refresh-delay="1500"
+							 refresh-delay="750"
 							 ng-hide="!$select.open">
 						<div ng-bind-html="item.value | highlight: $select.search"></div>
 					</ui-select-choices>
@@ -229,7 +230,7 @@
 					<ui-select-match  allow-clear="true" placeholder="Enter a specimen number...">{{$item.value}}</ui-select-match>
 						<ui-select-choices repeat="item.value as item in sp_num track by $index"
 							 refresh="refreshSpecimenNumbers($select.search)"
-							 refresh-delay="1500"
+							 refresh-delay="750"
 							 ng-hide="!$select.open">
 						<div ng-bind-html="item.value | highlight: $select.search"></div>
 					</ui-select-choices>
@@ -240,6 +241,7 @@
 					<ui-select-match  allow-clear="true" placeholder="Enter a Country...">{{$item.value}}</ui-select-match>
 					<ui-select-choices repeat="item.value+'|' as item in countries track by $index"
 							 refresh="refreshCountries($select.search)"
+							 minimum-input-length="3"
 							 refresh-delay="500"
 							 ng-hide="!$select.open"
 							 group-by="groupCountrie">
@@ -789,7 +791,7 @@ $(".clean_interface").click(
       
         function()
         {	
-			 $(".go_search").click(
+			/* $(".go_search").click(
 		  
 				function()
 				{
@@ -798,7 +800,7 @@ $(".clean_interface").click(
 						scrollTop: $("#div_result").offset().top
 					}, 2000);
 				}
-			  );  
+			  ); */ 
 			
             modeRemovePage=true;
            

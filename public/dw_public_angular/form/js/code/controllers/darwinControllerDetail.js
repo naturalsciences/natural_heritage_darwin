@@ -101,7 +101,7 @@ darwinApp.controller('ModalInstanceCtrl', function ($scope, $modalInstance, item
 
 darwinApp.controller('darwin-detail-controller', function($scope,  DarwinFactory, $location, $http, $translate, $timeout, tmhDynamicLocale)
 {
-
+	console.log("init");
     $scope.ctrl={};
     $scope.collapseMap=true;
     $scope.specimen={};
@@ -114,8 +114,21 @@ darwinApp.controller('darwin-detail-controller', function($scope,  DarwinFactory
 	$scope.url_virtual_col_complete="";
 	$scope.url_virtual_col_iiif="https://virtualcol.africamuseum.be/proxy_iiif/collective_access_iiif.php?uuid=";
 	$scope.url_virtual_col_iiif_complete="";
+	$scope.url_iiif_info_url="";
+	$scope.url_iiif_info_current="";
+	$scope.url_frame_current="";
+	$scope.url_iiif_info_list=Array();
+	//$scope.url_iiif_info_list_thumbnails=Array();
+	
+	$scope.iiif_thumbnail_size=300;
 	$scope.show_image=false;
 	$scope.frame=false;
+	$scope.uuid="";
+	
+	 $scope.related_specimens_all=Array();
+	$scope.related_specimens_forward=new Array();
+	$scope.related_specimens_reverse=new Array();
+	$scope.url_related="./specimen_detail.html?";
 	
        var path=$location.path();
        path=path.match(/[^\/]+/g);
@@ -127,6 +140,36 @@ darwinApp.controller('darwin-detail-controller', function($scope,  DarwinFactory
             tmhDynamicLocale.set($scope.ctrl.language);
         
         };
+		
+	  $scope.getUuid_simple=function(num)
+		{
+			 DarwinFactory.getUuid(num).then(
+				function(response)
+                {
+					//console.log(response);
+					var tmp=response;
+					$scope.ctrl.id_spec_tmp=tmp.uuid;
+					$scope.uuid=tmp.uuid;
+					
+				}
+			);
+		
+		}		
+		
+	  $scope.getUuid=function(num)
+		{
+			 DarwinFactory.getUuid(num).then(
+				function(response)
+                {
+					//console.log(response);
+					var tmp=response;
+					$scope.ctrl.id_spec_tmp=tmp.uuid;
+					$scope.uuid=tmp.uuid;
+					$scope.getSpecimen(tmp.uuid);
+				}
+			);
+		
+		}	
         
        $scope.getSpecimen=function(num, mode)
        {
@@ -137,7 +180,9 @@ darwinApp.controller('darwin-detail-controller', function($scope,  DarwinFactory
                 {
 			
                     $scope.specimen=response;
-
+					console.log($scope.specimen);
+					$scope.uuid=$scope.specimen.uuid;
+					console.log($scope.uuid);
 					if(!angular.isUndefined($scope.specimen.latitude)&& !angular.isUndefined($scope.specimen.longitude))
 					{
 						if($scope.specimen.latitude !==null&& $scope.specimen.longitude!==null )
@@ -146,6 +191,11 @@ darwinApp.controller('darwin-detail-controller', function($scope,  DarwinFactory
 							 $scope.goMap=true;
 							 
 						}
+						
+					}
+					if($scope.specimen.taxon_name.toLowerCase()=="null")
+					{
+						$scope.specimen.taxon_name="";
 					}
 					$scope.setImageUrl();
                    
@@ -249,7 +299,41 @@ darwinApp.controller('darwin-detail-controller', function($scope,  DarwinFactory
 		}
     }
   
-    $scope.setImageUrl= function()
+   $scope.get_related_specimens=function()
+  {
+	  console.log("call_detail");
+	  var urlTmp= $scope.url_prefix+"operation=get_related_specimens&uuid="+ $scope.uuid;
+	  return $http.get(urlTmp)
+                   	 .then(function(response) {
+
+                   	 var related_specimens = response.data;
+					 var previous_level=0;
+					 for(var i=0;i< related_specimens.length;i++)
+					 {
+						 related_specimens[i].previous_level=previous_level;
+						 if(related_specimens[i].previous_level<related_specimens[i].level)
+						 {							 
+							 related_specimens[i].layout="increase";
+						 }
+						 else if(related_specimens[i].previous_level==related_specimens[i].level)
+						 {							 
+							 related_specimens[i].layout="keep";
+						 }
+						 else if(related_specimens[i].previous_level>related_specimens[i].level)
+						 {							 
+							 related_specimens[i].layout="decrease";
+						 }
+						 $scope.related_specimens_all.push(related_specimens[i]);
+						 previous_level=related_specimens[i].level;
+						 
+					 }	 
+					 
+					 
+                   });
+	  
+  }
+  
+  $scope.setImageUrl= function()
   {
     
     if ($scope.getCallingDomain()=="darwin.naturalsciences.be")
@@ -257,7 +341,18 @@ darwinApp.controller('darwin-detail-controller', function($scope,  DarwinFactory
         
 		var uuid=$scope.ctrl.id_spec_tmp;
 		var base_url=$scope.url_test_virtual_col;
-		
+		console.log($scope.specimen.urls_iiif_info);
+		if($scope.specimen.urls_iiif_info.length>0)
+		{
+			var list_tmp=$scope.specimen.urls_iiif_info.split("|");
+			console.log(list_tmp);
+			for(var i=0; i<list_tmp.length; i++)
+			{
+				var tmp=list_tmp[i].replace("/info.json","/full/!"+$scope.iiif_thumbnail_size.toString()+","+$scope.iiif_thumbnail_size.toString()+"/0/default.jpg");
+				$scope.url_iiif_info_list.push({'url':list_tmp[i], "thum":tmp});
+			}
+			console.log($scope.url_iiif_info_list);
+		}
 		
 		
 		$.ajax({
@@ -294,12 +389,28 @@ darwinApp.controller('darwin-detail-controller', function($scope,  DarwinFactory
     }
     
   };
-	console.log("detail");
-	console.log(window.location.href);
+  
+  $scope.add_iiif_info=function(p_url)
+	{
+		
+		$scope.url_iiif_info_current=p_url;
+		
+	}
+	
+	 $scope.add_frame_info=function(p_url)
+	{
+		
+		$scope.url_frame_current=p_url;
+		
+	}
+
    var lang=DarwinFactory.getHTTPParam("lang");
    var uuid=DarwinFactory.getHTTPParam("uuid");
+   var code_display=DarwinFactory.getHTTPParam("code_display");
    var id=-1;
    var go_id=false;
+   console.log("uuid");
+   console.log(uuid);
    if(uuid===null)
    {
 	uuid="";
@@ -309,12 +420,15 @@ darwinApp.controller('darwin-detail-controller', function($scope,  DarwinFactory
 	id=DarwinFactory.getHTTPParam("id");
 	if(id.length>0)
 	{
-		console.log("id=");
-		console.log(id);
+
 		go_id=true;
 	}
+	else if(code_display!="")
+	{
+		 $scope.getUuid(code_display);
+	}
    }
-   console.log(uuid);
+
    if(go_id)
    {
 		$scope.ctrl.id=id;
@@ -323,6 +437,7 @@ darwinApp.controller('darwin-detail-controller', function($scope,  DarwinFactory
    else if(uuid!="")
    {
 		$scope.ctrl.id_spec_tmp=uuid;
+		$scope.uuid=uuid;
          $scope.getSpecimen($scope.ctrl.id_spec_tmp, "uuid");
 		 
    }
@@ -342,6 +457,7 @@ darwinApp.controller('darwin-detail-controller', function($scope,  DarwinFactory
 			 if(check_uuid)
 			   {
 					$scope.ctrl.id_spec_tmp=uuid;
+					$scope.uuid=uuid;
 				   $scope.getSpecimen($scope.ctrl.id_spec_tmp, "uuid");
 			   }
 			
@@ -357,6 +473,7 @@ darwinApp.controller('darwin-detail-controller', function($scope,  DarwinFactory
 				 if(check_uuid)
 			    {
 					$scope.ctrl.id=id;
+					
 				   $scope.getSpecimen($scope.ctrl.id, "id");
 			    }
 				
@@ -390,6 +507,8 @@ darwinApp.controller('darwin-detail-controller', function($scope,  DarwinFactory
    $scope.ctrl.language = lang;
    $scope.ctrl.languages = ['en', 'nl', 'fr'];
    $scope.ctrl.setLanguage($scope.ctrl.language);
+   
+    $scope.get_related_specimens();
    
         
   

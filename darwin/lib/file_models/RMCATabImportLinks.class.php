@@ -32,6 +32,30 @@ class RMCATabImportLinks
 		$fields[] = "url";
         $fields[] = "comment";
 		$fields[] = "type";
+		$fields[] = "access_rights"; /* unspecified, public, collection, internal, visitors*/
+		/*
+		 private static $link_types = array(
+		 'orthanc_3d' => 'Orthanc 3D',
+			'ext' => 'Other External',
+			//'vc' => 'Virtual Collection',
+			'html_3d_snippet_general' => '3D (Frame general)',
+			'html_3d_link' => '3D (Link)',
+			'html_3d_snippet' => '3D (Sketchfab)',
+			'dna' => 'DNA',
+			'dna_genbank' => 'DNA (Genbank)',
+			'dna_elixir' => 'DNA (Elixir)',
+			'dna_labbook' => 'DNA Labbook',
+			'iiif' => 'Image (IIIF manifest)',
+			'iiif_info' => 'Image (IIIF info)',
+			'image' => 'Image (non IIIF)',
+			'pdf' => 'PDF',
+			'ltp' => 'LTP',
+			'nagoya'=> 'Nagoya',
+			'sound' => 'Sound',
+			'video' => 'Video',
+			'other' => 'Others'
+			) ;
+		*/
 		$fields[] = "uuid";
 		
         return $fields;
@@ -158,13 +182,20 @@ class RMCATabImportLinks
 		$import_obj->save();
 		throw $ex;
 	}
-	public function create_link($p_url, $p_record_id, $p_type=NULL, $p_comment=NULL)
+	public function create_link($p_url, $p_record_id, $p_type=NULL, $p_comment=NULL, $p_access_rights="unspecified")
 	{
 		try
 		{				
 							$link=new ExtLinks();
 							$link->setReferencedRelation("specimens");
-							$link->setUrl($p_url);
+							if(!strpos(strtolower($p_type), "file_system"))
+							{
+								$link->setUrl($p_url);
+							}
+							else
+							{
+								$link->setUrl_no_check($p_url);
+							}
 							$link->setRecordId($p_record_id);	
 							if($p_type!==null)
 							{
@@ -174,6 +205,11 @@ class RMCATabImportLinks
 							if($p_comment!==null)
 							{
 								$link->setComment($p_comment);
+							}
+							
+							if($p_access_rights!==null)
+							{
+								$link->setAccessRights($p_access_rights);
 							}
 							
 							$link->save();
@@ -267,11 +303,18 @@ class RMCATabImportLinks
 				{
 					$comment=$comment_tmp;
 				}
+				
+				$access_rights="";
+				$access_rights_tmp=$this->getCSVValue("access_rights");
+				if($this->isset_and_not_null($access_rights_tmp ))
+				{
+					$access_rights=$access_rights_tmp;
+				}
 					
 				
 				foreach($ids as $id)
 				{
-					$this->create_link($url, $id, $type, $comment);
+					$this->create_link($url, $id, $type, $comment, $access_rights);
 				}
 				
 			

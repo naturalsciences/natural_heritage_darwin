@@ -66,5 +66,16 @@ class gtuwidgetComponents extends sfComponents
     }
 	
   }
+  
+   /*public function executeGtuToCountry()
+  {  
+
+    $this->defineForm();
+    if(!isset($this->form['newGtuToCountry']))
+    {
+      $this->form->loadEmbed('GtuToCountry');
+    }
+	
+  }*/
  }
  ?>

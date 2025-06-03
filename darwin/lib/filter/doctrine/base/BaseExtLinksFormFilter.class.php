@@ -32,6 +32,9 @@ abstract class BaseExtLinksFormFilter extends DarwinModelFormFilter
     $this->widgetSchema   ['comment_indexed'] = new sfWidgetFormFilterInput();
     $this->validatorSchema['comment_indexed'] = new sfValidatorPass(array('required' => false));
 
+    $this->widgetSchema   ['access_rights'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['access_rights'] = new sfValidatorPass(array('required' => false));
+
     $this->widgetSchema->setNameFormat('ext_links_filters[%s]');
   }
 
@@ -49,6 +52,7 @@ abstract class BaseExtLinksFormFilter extends DarwinModelFormFilter
       'type' => 'Text',
       'comment' => 'Text',
       'comment_indexed' => 'Text',
+      'access_rights' => 'Text',
     ));
   }
 }

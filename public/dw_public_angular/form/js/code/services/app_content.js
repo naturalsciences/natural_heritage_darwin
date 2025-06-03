@@ -110,6 +110,7 @@ darwinApp.config(function($translateProvider) {
 	GEOREF_ONLY: 'Only with geographical coordinates',
 	FILTER_SEARCH_GEO: 'Geographic search',
 	R25_SPECIMENS_IN_PAGE: '25 specimens in page',
+	SPECIMENS_IN_PAGE: 'specimens in page',
 	GEOREFERENCED_IN_PAGE: 'specimens with coordinates (page)',
 	GEOREFERENCED_IN_DATASET: 'specimens with coordinates (total)',
 	SORT_RESULT: 'Sort',
@@ -121,7 +122,18 @@ darwinApp.config(function($translateProvider) {
 	NEXT : 'Next',
 	IG_NUMBER: 'I.G. Number',
 	CITIZEN_SCIENCES : 'Citizen Science',
-	PROPERTIES: 'Properties'
+	PROPERTIES: 'Properties',
+	COPY : 'Copy',
+	KEEP_RESULTS: "Keep link to results",
+	OTHER_LINKS: "Other links",
+	DRAW_BOX: "Draw box",
+	LOCALITY_FROM_GEOSERVER: "Click on map or use autocoplete to get map server data",
+	PAGE_SIZES: "Page size",
+	RELATED: "Related specimens",
+	RELATED_REVERSE: "Related specimens (linking this specimen)",
+	RELATED_REVERSE_TEXT_1:"is",
+	RELATED_REVERSE_TEXT_2:"of",
+	RELATED_REVERSE_TEXT_3:"this specimen",
 
   })
   .translations('fr', {
@@ -199,6 +211,7 @@ darwinApp.config(function($translateProvider) {
 	GEOREF_ONLY: 'Seulement avec coordonnées géographiques',
 	FILTER_SEARCH_GEO: 'Recherche géographique',
 	R25_SPECIMENS_IN_PAGE: '25 spécimens par page',
+	SPECIMENS_IN_PAGE: 'spécimens par page',
 	GEOREFERENCED_IN_PAGE: 'spécimen avec des coordonnées (page)',
 	GEOREFERENCED_IN_DATASET: 'specimens avec des coordonnées (total)',
 	SORT_RESULT: 'Trier',
@@ -210,8 +223,18 @@ darwinApp.config(function($translateProvider) {
 	NEXT : 'Suivant',
 	IG_NUMBER : 'Numéro I.G.',
 	CITIZEN_SCIENCES : 'Citizen Science',
-	PROPERTIES: 'Propriétés'
-    
+	PROPERTIES: 'Propriétés',
+	COPY : 'Copier',
+	KEEP_RESULTS: "Conserver un lien vers les résultats",
+    OTHER_LINKS: "Liens",
+	DRAW_BOX: "Tracer un rectangle",
+	LOCALITY_FROM_GEOSERVER: "Cliquez sur la carte ou utilisez le champ ci-dessous pour chercher dans les localités du serveur de carte",
+	PAGE_SIZES: "Taille de la page",
+	RELATED: "Spécimens liés",
+	RELATED_REVERSE: "Spécimens liés (lien vers ce spécimen)",
+	RELATED_REVERSE_TEXT_1:"est",
+	RELATED_REVERSE_TEXT_2:"de",
+	RELATED_REVERSE_TEXT_3:"ce spécimen",
   })
   .translations('nl', {
 	TITLE_SEARCH_PAGE: 'Darwin public zoekinterface | KBIN',
@@ -290,6 +313,7 @@ darwinApp.config(function($translateProvider) {
     GEOREF_ONLY: 'Alleen met geografische coördinaten',
     FILTER_SEARCH_GEO: 'Geografische criteria',
 	R25_SPECIMENS_IN_PAGE: '25 stalen per pagina',
+	SPECIMENS_IN_PAGE: 'stalen per pagina',
 	GEOREFERENCED_IN_PAGE: 'stalen met geografische coördinaten (pagina)',
 	GEOREFERENCED_IN_DATASET: 'stalen met geografische coördinaten (algemeen)',
 	SORT_RESULT: 'Sorteren',
@@ -301,8 +325,18 @@ darwinApp.config(function($translateProvider) {
 	NEXT : 'Volgende',
 	IG_NUMBER : 'I.G. nummer',
 	CITIZEN_SCIENCES : 'Citizen Science',
-	PROPERTIES: 'Eigenschappen / Kenmerken'
-     
+	PROPERTIES: 'Eigenschappen / Kenmerken',
+	COPY : 'Kopiëren',
+	KEEP_RESULTS: "Link naar gegevens bewaren",
+    OTHER_LINKS: "Andere data",
+	DRAW_BOX: "Rechthoek tekenen",
+    LOCALITY_FROM_GEOSERVER: "Klik op de kaart of gebruik het onderstaande veld om de locaties van de kaartservers te doorzoeken",
+	PAGE_SIZES: "Gegevens per pagina",
+	 RELATED: "Verbonden stalen",
+	RELATED_REVERSE: "Verbonden stalen (verbinding naar dit staal)",
+	RELATED_REVERSE_TEXT_1:"is",
+	RELATED_REVERSE_TEXT_2:"van",
+	RELATED_REVERSE_TEXT_3:"dit staal",
   });
 
   $translateProvider.preferredLanguage('en');
@@ -372,6 +406,24 @@ darwinApp.factory("DarwinFactory", ['$http', function($http){
            objTmp[keyPath[lastKeyIndex]] = value;
            return objTmp;
         }
+		
+	    
+    obj.getUuid=function(num)
+	{
+	
+            var urlTmp='./dw_public/ws/ws.php?operation=get_identifier&code_display='+num;
+			//console.log(urlTmp);
+             return $http.get(urlTmp)
+                .then(function(response) {
+					if((response.data.length)>0)
+                    {
+						var line=response.data[0];
+						return {
+							uuid:line.uuid
+						};
+					}
+				});
+	}
        
     
      obj.getSpecimen=function(num, mode)
@@ -394,6 +446,7 @@ darwinApp.factory("DarwinFactory", ['$http', function($http){
                     {
                         
                             var line=response.data[0];
+							
                           var ids=line.ids;  
                           var id_spec=line.code_display;
 						  var ig_num=line.ig_num;
@@ -567,7 +620,9 @@ darwinApp.factory("DarwinFactory", ['$http', function($http){
                                has_3d=true;
                           }
                             
-                         
+                          //var urls_iiif_info=line.urls_iiif_info;
+						  //var  urls_iiif_manifest=line.urls_iiif_manifest;
+						
                           return {
                                 status: 'ok',
                                 ids:ids,
@@ -591,6 +646,21 @@ darwinApp.factory("DarwinFactory", ['$http', function($http){
                                 image_obj: image_obj,
                                 has_3d:has_3d,
                                 d3d_obj:d3d_obj, 
+								urls_iiif_info:line.urls_iiif_info,
+								urls_iiif_manifest:line.urls_iiif_manifest,
+								
+								urls_2d_stackoptica:(line.urls_2d_stackoptica??"").split("|").filter(item => (item.length>0)),
+								urls_2d_sphaeroptica:(line.urls_2d_sphaeroptica??"").split("|").filter(item => (item.length>0)),
+								
+								urls_2d_spectraloptica:(line.urls_2d_spectraloptica??"").split("|").filter(item => (item.length>0)),
+								urls_2d_polaroptica:(line.urls_2d_polaroptica??"").split("|").filter(item => (item.length>0)),
+								
+								urls_2d_inside:(line.urls_2d_inside??"").split("|").filter(item => (item.length>0)),
+								urls_3d_inside:(line.urls_3d_inside??"").split("|").filter(item => (item.length>0)),
+							    urls_3d_snippet_general:(line.urls_3d_snippet_general??"").split("|").filter(item => (item.length>0)),
+								urls_extra_links:(line.urls_internal_database??"").split("|").filter(item => (item.length>0)),
+								
+								
 							    family: line.family,
 								order: line.t_order,
 								class: line.class,
@@ -635,7 +705,7 @@ darwinApp.factory("DarwinFactory", ['$http', function($http){
 				for(i=0;i<results.length;i++)
 				{
 					var tmp=results[i];                
-					var regexS2="([^=]+)=([^=]+)";
+					var regexS2="([^=]+)=([^=]*)";
 					var regex2 = new RegExp( regexS2 );
 					var results2 = regex2.exec(tmp );                
 					returned[results2[1]]=results2[2];
@@ -668,7 +738,8 @@ darwinApp.factory("PagerService", [ '$http', function($http){
     var obj = {};
     
     var GetPager = function GetPager(rootURL, currentPage, pageSize, sortOrder) {
-		//console.log("pager_Called");
+		console.log("pager_Called");
+		console.log(rootURL);
         var urlTmp=rootURL+'&size='+pageSize+'&page='+currentPage+'&sort='+sortOrder;
 
         var dataSet={};

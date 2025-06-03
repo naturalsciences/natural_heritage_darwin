@@ -1,4 +1,6 @@
 <?php
+require_once("DarwinEncoding.php");
+use \ForceUTF8\DarwinEncoding;
 
 /**
  * Multimedia
@@ -77,6 +79,26 @@ class Multimedia extends BaseMultimedia
     'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
         );
 
+
+  const PUBLIC = 0;
+  const COLLECTION = 1;
+  const INTERNAL = 2;
+  const VISITORS = 4; 
+   
+   public static $access_rights = array(
+		0 => "public / Internet",
+		1=> "same as collection",
+		2=> "Internal (institution only)",
+		4=> "Internal and visitors",
+   );
+   
+   public static function getAccessRights()
+   {
+		return $access_rights;
+	   
+   }  
+   
+   
   public function getCreationDateMasked()
   {
     $dateTime = new FuzzyDateTime($this->_get('creation_date'), $this->_get('creation_date_mask'),false,false);
@@ -206,6 +228,7 @@ class Multimedia extends BaseMultimedia
         try {
           $pdf->decodePDF();
           $content = $pdf->output();
+		  $content=  DarwinEncoding::toUTF8($content);
           if ( $content == '' ) {
             // try with different multibyte setting
             $pdf->setUnicode(true);

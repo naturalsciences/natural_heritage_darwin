@@ -310,7 +310,7 @@ WHERE taxonomy_level_ref= min_taxonomy_level_ref ORDER BY level_ref";
                
 
                 $sql = "WITH find_taxa AS
-(SELECT  string_agg(taxonomy.id::varchar, ';') as value, CASE WHEN status <> 'valid' THEN name||' ('||status||')' ELSE name END as label
+(SELECT  string_agg(taxonomy.id::varchar, ';') as value, CASE WHEN status <> 'valid' THEN name||' ('||status||')' ELSE name END as label, level_ref
                       FROM taxonomy 
                        WHERE name=:term AND metadata_ref= :taxon_ref GROUP BY level_ref,name, status ORDER BY level_ref, name LIMIT :limit
                     )
@@ -323,19 +323,19 @@ JOIN (SELECT unnest((string_to_array(find_taxa.value, ';')))::int as tmp_taxa fr
 ON record_id=tmp_taxa and referenced_relation='taxonomy'
 )
 
-SELECT * FROM (
-SELECT * FROM find_taxa
+SELECT DISTINCT value, label FROM (
+SELECT value, label, level_ref FROM find_taxa
 UNION
-SELECT taxonomy.id::text, name||' ('||status||')' FROM classification_synonymies
+SELECT taxonomy.id::text, name||' ('||status||')', level_ref FROM classification_synonymies
 INNER JOIN  find_taxa_2 ON group_id =group_id_tmp AND record_id NOT in (SELECT unnest((string_to_array(find_taxa.value, ';')))::int as tmp_taxa from find_taxa)
-INNER JOIN taxonomy ON taxonomy.id=record_id) a ORDER BY LEVENSHTEIN(SUBSTR(label,1, ".strlen($needle)."), :term), label";
+INNER JOIN taxonomy ON taxonomy.id=record_id) a ORDER BY level_ref, LEVENSHTEIN(SUBSTR(label,1, ".strlen($needle)."), :term), label";
             
             }
             else
             {
                 $sql = "WITH find_taxa AS
 (SELECT  string_agg(taxonomy.id::varchar, ';') as value, CASE WHEN status <> 'valid' THEN name||' ('||status||')' ELSE name END as label
-                      FROM taxonomy 
+                     ,level_ref FROM taxonomy 
                        WHERE name_indexed like concat(fulltoindex(:term),'%') AND metadata_ref= :taxon_ref GROUP BY level_ref,name, status ORDER BY level_ref, name LIMIT :limit
                     )
 
@@ -347,12 +347,12 @@ JOIN (SELECT unnest((string_to_array(find_taxa.value, ';')))::int as tmp_taxa fr
 ON record_id=tmp_taxa and referenced_relation='taxonomy'
 )
 
-SELECT * FROM (
-SELECT * FROM find_taxa
+SELECT  value, label FROM (
+SELECT value, label, level_ref FROM find_taxa
 UNION
-SELECT taxonomy.id::text, name||' ('||status||')' FROM classification_synonymies
+SELECT taxonomy.id::text, name||' ('||status||')', level_ref FROM classification_synonymies
 INNER JOIN  find_taxa_2 ON group_id =group_id_tmp AND record_id NOT in (SELECT unnest((string_to_array(find_taxa.value, ';')))::int as tmp_taxa from find_taxa)
-INNER JOIN taxonomy ON taxonomy.id=record_id) a ORDER BY LEVENSHTEIN(SUBSTR(label,1, ".strlen($needle)."), :term), label";
+INNER JOIN taxonomy ON taxonomy.id=record_id) a ORDER BY level_ref, LEVENSHTEIN(SUBSTR(label,1, ".strlen($needle)."), :term), label";
             }       
             $q = $conn->prepare($sql);
             $q->execute(array(':term' => $needle, ':taxon_ref' => $taxon_ref, ':limit'=> $limit));
@@ -365,7 +365,7 @@ INNER JOIN taxonomy ON taxonomy.id=record_id) a ORDER BY LEVENSHTEIN(SUBSTR(labe
 
                 $sql = "WITH find_taxa AS
 (SELECT  string_agg(taxonomy.id::varchar, ';') as value, CASE WHEN status <> 'valid' THEN name||' ('||status||')' ELSE name END as label
-                       ,count(id) as cpt FROM taxonomy 
+                       ,count(id) as cpt, level_ref FROM taxonomy 
                        WHERE name=:term  GROUP BY level_ref,name, status ORDER BY level_ref, name, status LIMIT :limit
                     )
 
@@ -377,22 +377,22 @@ JOIN (SELECT unnest((string_to_array(find_taxa.value, ';')))::int as tmp_taxa fr
 ON record_id=tmp_taxa and referenced_relation='taxonomy'
 )
 
-SELECT * FROM (
-SELECT value,label  FROM find_taxa WHERE cpt=1
+SELECT DISTINCT value,label FROM (
+SELECT value,label, level_ref  FROM find_taxa WHERE cpt=1
 UNION
-SELECT id::text, name||' (Family : '||fct_rmca_sort_taxon_get_parent_level_text(id,34)||' Order : '||fct_rmca_sort_taxon_get_parent_level_text(id,28)||')' FROM taxonomy INNER JOIN (SELECT unnest(string_to_array(value,';')) as id_unnest FROM find_taxa WHERE cpt>1) a
+SELECT id::text, name||' (Family : '||fct_rmca_sort_taxon_get_parent_level_text(id,34)||' Order : '||fct_rmca_sort_taxon_get_parent_level_text(id,28)||')' , level_ref  FROM taxonomy INNER JOIN (SELECT unnest(string_to_array(value,';')) as id_unnest FROM find_taxa WHERE cpt>1) a
 ON id=id_unnest::int
 UNION
-SELECT taxonomy.id::text, name||' ('||status||')' FROM classification_synonymies
+SELECT taxonomy.id::text, name||' ('||status||')', level_ref  FROM classification_synonymies
 INNER JOIN  find_taxa_2 ON group_id =group_id_tmp AND record_id NOT in (SELECT unnest((string_to_array(find_taxa.value, ';')))::int as tmp_taxa from find_taxa)
-INNER JOIN taxonomy ON taxonomy.id=record_id) a ORDER BY LEVENSHTEIN(SUBSTR(label,1, ".strlen($needle)."), :term), label";
+INNER JOIN taxonomy ON taxonomy.id=record_id) a ORDER BY level_ref, LEVENSHTEIN(SUBSTR(label,1, ".strlen($needle)."), :term), label";
             
             }
             else
             {
                 $sql = "WITH find_taxa AS
 (SELECT  string_agg(taxonomy.id::varchar, ';') as value, CASE WHEN status <> 'valid' THEN name||' ('||status||')' ELSE name END as label
-                    ,count(id) as cpt   FROM taxonomy 
+                    ,count(id) as cpt  , level_ref FROM taxonomy 
                        WHERE name_indexed like concat(fulltoindex(:term),'%')  GROUP BY level_ref,name, status ORDER BY level_ref, name LIMIT :limit
                     )
 
@@ -404,15 +404,15 @@ JOIN (SELECT unnest((string_to_array(find_taxa.value, ';')))::int as tmp_taxa fr
 ON record_id=tmp_taxa and referenced_relation='taxonomy'
 )
 
-SELECT * FROM (
-SELECT value,label  FROM find_taxa WHERE cpt=1
+SELECT value,label FROM (
+SELECT value,label, level_ref  FROM find_taxa WHERE cpt=1
 UNION
-SELECT id::text, TRIM(name||COALESCE(' (Family : '||fct_rmca_sort_taxon_get_parent_level_text(id,34)||' Order : '||fct_rmca_sort_taxon_get_parent_level_text(id,28)||')','')) FROM taxonomy INNER JOIN (SELECT unnest(string_to_array(value,';')) as id_unnest FROM find_taxa WHERE cpt>1) a
+SELECT id::text, TRIM(name||COALESCE(' (Family : '||fct_rmca_sort_taxon_get_parent_level_text(id,34)||' Order : '||fct_rmca_sort_taxon_get_parent_level_text(id,28)||')','')), level_ref  FROM taxonomy INNER JOIN (SELECT unnest(string_to_array(value,';')) as id_unnest FROM find_taxa WHERE cpt>1) a
 ON id=id_unnest::int
 UNION
-SELECT taxonomy.id::text, name||' ('||status||')' FROM classification_synonymies
+SELECT taxonomy.id::text, name||' ('||status||')', level_ref  FROM classification_synonymies
 INNER JOIN  find_taxa_2 ON group_id =group_id_tmp AND record_id NOT in (SELECT unnest((string_to_array(find_taxa.value, ';')))::int as tmp_taxa from find_taxa)
-INNER JOIN taxonomy ON taxonomy.id=record_id) a ORDER BY LEVENSHTEIN(SUBSTR(label,1, ".strlen($needle)."), :term), label";
+INNER JOIN taxonomy ON taxonomy.id=record_id) a ORDER BY level_ref, LEVENSHTEIN(SUBSTR(label,1, ".strlen($needle)."), :term), label";
             }       
             $q = $conn->prepare($sql);
             $q->execute(array(':term' => $needle, ':limit'=> $limit));

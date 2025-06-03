@@ -13,7 +13,16 @@
 class ExtLinks extends BaseExtLinks
 {
   private static $link_types = array(
-    'ext' => 'Other External',
+ 
+	'iiif' => 'Image (IIIF manifest)',
+	'iiif_info' => 'Image (IIIF info)',	
+	'image' => 'Image (non IIIF)',
+	'2d_stackoptica' => '2D Stackoptica',
+	'2d_sphaeroptica' => '2D Sphaeroptica',
+	'2d_spectraloptica' => '2D Spectraloptica',
+	'2d_polaroptica' => '2D Polaroptica',
+	'2d_inside' => '2D Inside (Orthanc Stoneweb)',
+	'3d_inside' => '3D Inside (Orthanc Volview)',
     //'vc' => 'Virtual Collection',
 	'html_3d_snippet_general' => '3D (Frame general)',
 	'html_3d_link' => '3D (Link)',
@@ -22,14 +31,20 @@ class ExtLinks extends BaseExtLinks
 	'dna_genbank' => 'DNA (Genbank)',
 	'dna_elixir' => 'DNA (Elixir)',
 	'dna_labbook' => 'DNA Labbook',
-	'iiif' => 'Image (IIIF)',
-	'image' => 'Image (non IIIF)',
+	'dna_molecdata' => 'DNA(Molecular data)',
+	'dna_molecdata_assocsp'=>'DNA(MolecData AssocSp)',
+    'dna_permit' => 'DNA(Permit)',
+	
 	'pdf' => 'PDF',
+	'publication'=> 'Publication',
 	'ltp' => 'LTP',
 	'nagoya'=> 'Nagoya',
 	'sound' => 'Sound',
 	'video' => 'Video',
-	'other' => 'Others'
+	'other' => 'Others',
+	'internal_database' => 'Internal database',
+	'CC Licence' => 'CC Licence',
+	'ext' => 'Other External',
     ) ;
 
   static public function getLinkTypes()
@@ -43,5 +58,29 @@ class ExtLinks extends BaseExtLinks
       $url = 'http://'.$url ;
     $this->_set('url',$url) ;
   }
+  
+  public function setUrl_no_check($url) 
+  {    
+    $this->_set('url',$url) ;
+  }
 
+
+
+  const PUBLIC = 0;
+  const COLLECTION = 1;
+  const INTERNAL = 2;
+  const VISITORS = 4; 
+   
+   public static $access_rights_definition = array(
+		"public" => "public / Internet",
+		"collection"=> "same as collection",
+		"internal"=> "Internal (institution only)",
+		"vistors"=> "Internal and visitors",
+   );
+   
+   public static function getAccessRightsDefinition()
+   {
+		return ExtLinks::$access_rights_definition;
+	   
+   }  
 }

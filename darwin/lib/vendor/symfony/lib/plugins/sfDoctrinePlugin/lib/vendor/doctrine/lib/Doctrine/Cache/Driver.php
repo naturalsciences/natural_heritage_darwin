@@ -169,12 +169,15 @@ abstract class Doctrine_Cache_Driver implements Doctrine_Cache_Interface
         $count = 0;
         $keys = $this->_getCacheKeys();
         if (is_array($keys)) {
-            foreach ($keys as $key) {
-                if (strpos($key, $prefix) === 0) {
-                    $count++;
-                    $this->delete($key);
-                }
-            }
+			//ftheeten intermediate array for memcache ?
+			foreach ($keys as $keytmp) {
+				foreach ($keytmp as $key) {
+					if (strpos($key, $prefix) === 0) {
+						$count++;
+						$this->delete($key);
+					}
+				}
+			}
         }
         return $count;
     }

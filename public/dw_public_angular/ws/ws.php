@@ -67,6 +67,14 @@ function main_op()
 					json_darwin_get_countries_by_specimen($_REQUEST["q"], $_REQUEST["col"], $_REQUEST['taxon']);
 				}
 			}
+			elseif($_REQUEST["operation"]=="get_countries_debug")
+			{
+			
+				if(array_key_exists("q", $_REQUEST)&&array_key_exists("col", $_REQUEST)&&array_key_exists("taxon", $_REQUEST))
+				{	
+					json_darwin_get_countries_by_specimen($_REQUEST["q"], $_REQUEST["col"], $_REQUEST['taxon'], true);
+				}
+			}
 			elseif($_REQUEST["operation"]=="get_localities")
 			{
 
@@ -110,6 +118,7 @@ function main_op()
 			}
 			elseif($_REQUEST["operation"]=="search_specimen")
 			{
+				
 				 json_darwin_search_specimens();
 			}
 			elseif($_REQUEST["operation"]=="search_specimen_debug")
@@ -124,9 +133,15 @@ function main_op()
 			{
 				json_darwin_get_specimen($_REQUEST["uuid"]);
 			}
+			
 			elseif($_REQUEST["operation"]=="get_specimen"&& array_key_exists("id", $_REQUEST))
 			{
 				json_darwin_get_specimen_id($_REQUEST["id"]);
+			}
+			elseif($_REQUEST["operation"]=="get_identifier"&& array_key_exists("code_display", $_REQUEST))
+			{
+				
+				json_darwin_get_uuid($_REQUEST["code_display"]);
 			}
 			elseif($_REQUEST["operation"]=="get_collection_id"&& array_key_exists("code", $_REQUEST))
 			{
@@ -169,6 +184,25 @@ function main_op()
 				}
 				
 			}
+			elseif($_REQUEST["operation"]=="get_links" && array_key_exists("id", $_REQUEST) )
+			{
+				json_darwin_get_links($_REQUEST["id"]);
+			}
+			elseif($_REQUEST["operation"]=="get_related_specimens"&& array_key_exists("id", $_REQUEST))
+			{
+				if(is_numeric($_REQUEST["id"]))
+				{
+					json_darwin_get_related_specimens($_REQUEST["id"]);
+				}
+			}
+			elseif($_REQUEST["operation"]=="get_related_specimens"&& array_key_exists("uuid", $_REQUEST))
+			{
+				json_darwin_get_related_specimens_uuid($_REQUEST["uuid"]);
+			}
+			elseif($_REQUEST["operation"]=="get_relationship_types")
+			{
+				json_darwin_get_relation_types();
+			}			
 			else
 			{
 				print("unrecognized query");

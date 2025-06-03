@@ -49,4 +49,35 @@ class VIgsSpecStats extends BaseVIgsSpecStats
     $row= $q->fetchOne();
     return $row["count"];
   }
+  
+    public function countSpecimensByCollections()
+  {
+    $returned=Array();
+    $conn = Doctrine_Manager::connection();
+    $tmpId=$this->getId() ;
+	$sql = "select collection_name, COUNT(id) as count FROM specimens WHERE ig_ref=$tmpId GROUP BY collection_name ORDEr BY collection_name;";
+	//$q = $conn->prepare($sql);
+	$rows=$conn->execute($sql)->fetchAll();    
+    return $rows;
+  }
+  
+  //ftheeten 2018 04 10
+  public function countSpecimensByCollectionsString()
+  {
+    $returned=Array();
+    $array=$this->countSpecimensByCollections();
+    if(count($array)>0)
+    {
+        foreach($array as $row)
+        {
+            $returned[]=$row["collection_name"].": ".$row["count"];
+        }
+        return implode("; ",$returned);
+    }
+    else
+    {
+        return "";
+    }
+    
+  }
 }

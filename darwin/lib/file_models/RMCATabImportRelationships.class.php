@@ -19,7 +19,7 @@ class RMCATabImportRelationships
         $fields = Array();   
 		
 		$fields[] = "unitid";
-		$fields[] = "relationship_type";	
+		$fields[] = "relationship_type";	/* free list */
 		$fields[] = "specimen_submitted_ref";	
 		$fields[] = "specimen_uuid";
 		$fields[] = "specimen_main_code";

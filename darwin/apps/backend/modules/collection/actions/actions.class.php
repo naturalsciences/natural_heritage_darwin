@@ -346,6 +346,13 @@ class collectionActions extends DarwinActions
         return   $this->renderText(json_encode($this->execute_statistics_generic($request, "taxa", true)));
   }
   
+    public function executeDisplay_statistics_countries(sfWebRequest $request)
+  {
+        $this->getResponse()->setHttpHeader('Content-type','application/json');
+        $this->setLayout('json');
+        return   $this->renderText(json_encode($this->execute_statistics_generic($request, "countries", true)));
+  }
+  
   public function executeDisplay_statistics_all_taxa(sfWebRequest $request)
   {
         $this->getResponse()->setHttpHeader('Content-type','application/json');
@@ -390,6 +397,15 @@ class collectionActions extends DarwinActions
 	$returned[]="";
     $returned[]="Mids in collection";
     $tmp=$this->execute_statistics_generic($request, "mids", true);
+    foreach($tmp as $row)
+    {
+        $returned[]=implode("\t", $row);
+    }
+    $returned[]="";
+	
+	$returned[]="";
+    $returned[]="Countries in collection";
+    $tmp=$this->execute_statistics_generic($request, "countries", true);
     foreach($tmp as $row)
     {
         $returned[]=implode("\t", $row);

@@ -130,9 +130,9 @@ EOF;
 				    $tablePager->setCurrentPage(1);
 					$tablePager->save();
 					  $conn->commit();
-                      
+                      print("GO_LABEL");
 					$dataset=Doctrine_Core::getTable('MySavedSearches')->getSavedSearchData($options['user_id'], $options['query_id'], $admin);  
-                    
+                     print("LABEL_DONE");
 				
 						fwrite($handle, implode("\t",array_keys($dataset[0])));
 					

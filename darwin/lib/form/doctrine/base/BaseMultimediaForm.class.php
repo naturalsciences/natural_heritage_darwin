@@ -76,6 +76,9 @@ abstract class BaseMultimediaForm extends DarwinModelForm
     $this->widgetSchema   ['field_observations'] = new sfWidgetFormTextarea();
     $this->validatorSchema['field_observations'] = new sfValidatorString(array('required' => false));
 
+    $this->widgetSchema   ['access_rights'] = new sfWidgetFormInputText();
+    $this->validatorSchema['access_rights'] = new sfValidatorInteger(array('required' => false));
+
     $this->widgetSchema->setNameFormat('multimedia[%s]');
   }
 

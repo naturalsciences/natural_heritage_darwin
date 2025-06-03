@@ -1,7 +1,7 @@
 <?php slot('title',__("Darwin Help"));?>
 <div class="page">
   <h1><?php echo __('Darwin Guide :');?></h1>
-
+	<p><?php echo link_to('Importation template (2024)','help/importTemplate');?></p><br />
   <p><a href="/help/DaRWIN_FR_2014.pdf">Manuel d'utilisation</a></p><br />
       
   <h1><?php echo __('ABCD Templates* :');?></h1>

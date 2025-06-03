@@ -5,7 +5,8 @@ class ParsingTag extends ImportABCDXml
   public $GTUdate = array('from'=>null,'to'=>null,'time'=>null),  $staging_info=null, $tag_group_name, $tag_value,
       $people_order_by=null, $accession, $accession_num, $accession_date ;
   private $array_object = array() ;
-
+  public $relation=null;
+  
   public function __construct($tagtype=null)
   {
     switch($tagtype)

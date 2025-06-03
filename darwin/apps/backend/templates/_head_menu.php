@@ -17,15 +17,18 @@
                     function(data) 
                     {
                       
-                      var tmp_url=data["DW_REFERER"];                     
-                      if(tmp_url.length>0)
-                      {
-                          if(tmp_url.indexOf('<?php print(sfConfig::get('dw_domain_disable_menu'));?>') !==-1)
-                          {
-                            in_frame=true;
-                           
-                           }
-                      }
+                      var tmp_url=data["DW_REFERER"]; 
+					  if(tmp_url !==undefined)
+					  {
+						  if(tmp_url.length>0)
+						  {
+							  if(tmp_url.indexOf('<?php print(sfConfig::get('dw_domain_disable_menu'));?>') !==-1)
+							  {
+								in_frame=true;
+							   
+							   }
+						  }
+						}
                        if(in_frame)
                        {
                           
@@ -128,6 +131,7 @@
                         <li><?php echo link_to(__('People'),'people/index');?></li>
                         <?php if($sf_user->getDbUserType() >= Users::ENCODER) : ?>
                           <li><?php echo link_to(__('Sampling location'),'gtu/index');?></li>
+              			  <li><?php echo link_to(__('Countries'),'gtucountry/index');?></li>
                         <?php endif ; ?>
                         <li><?php echo link_to(__('Collecting Methods'),'methods_and_tools/methodsIndex');?></li>
                         <li><?php echo link_to(__('Collecting Tools'),'methods_and_tools/toolsIndex');?></li>                        
@@ -163,6 +167,9 @@
                         <li><?php echo link_to(__('Institutions'),'institution/new');?></li>
                         <li><?php echo link_to(__('People'),'people/new');?></li>
                         <li><?php echo link_to(__('Sampling location'),'gtu/new');?></li>
+						 <?php if($sf_user->getDbUserType() >= Users::MANAGER) : ?>
+							   <li><?php echo link_to(__('Countries'),'gtucountry/new');?></li>
+						 <?php endif;?>
                         <li><?php echo link_to(__('Collecting Methods'),'methods_and_tools/new?notion=method');?></li>
                         <li><?php echo link_to(__('Collecting Tools'),'methods_and_tools/new?notion=tool');?></li>
                         <li><?php echo link_to(__('Bibliography'),'bibliography/new');?></li>

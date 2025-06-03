@@ -58,7 +58,7 @@ $(document).ready(function () {
         </td>
       </tr>
       <tr>
-        <th><?php echo $form['end_date']->renderLabel() ?></th>
+        <th><?php echo __("Death date"); ?></th>
         <td>
           <?php echo $form['end_date']->renderError() ?>
           <?php echo $form['end_date'] ?>

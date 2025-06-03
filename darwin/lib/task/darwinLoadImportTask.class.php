@@ -12,7 +12,7 @@ class darwinLoadImportTask extends sfBaseTask
       ));
     $this->namespace        = 'darwin';
     $this->name             = 'load-import';
-    $this->briefDescription = 'Import uploaded file to potgresql staging table';
+    $this->briefDescription = 'Import uploaded file to postgresql staging table';
     $this->detailedDescription ="";
   }
 

@@ -7632,6 +7632,10 @@
         <target>Codes principaux</target>
         
       </trans-unit>
+	   <trans-unit id="1876">
+        <source>Death date</source>
+        <target>Date de décès</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

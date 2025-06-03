@@ -1,4 +1,7 @@
 <?php
+//ini_set('display_errors', 1);
+//ini_set('display_startup_errors', 1);
+//error_reporting(E_ALL);
 
 function returnAuthorizedColumns()
 {
@@ -101,7 +104,8 @@ function json_darwin_get_collections()
 {
     $conn=connect_to_darwin();
     $rows=array();
-    $query="SELECT DISTINCT id, name_full_path as name FROM darwin2.v_collections_full_path_recursive_spec_count WHERE count_record>0 AND is_public ORDER BY name_full_path";
+   // $query="SELECT DISTINCT id, name_full_path as name FROM darwin2.v_collections_full_path_recursive_spec_count WHERE count_record>0 AND is_public ORDER BY name_full_path";
+   $query="SELECT DISTINCT id, name_full_path as name FROM darwin2.v_collections_full_path_recursive_spec_count WHERE count_record>0 AND is_public ORDER BY name_full_path";
     $stmt=$conn->prepare($query);
     $stmt->execute();
     $rs=$stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -166,10 +170,10 @@ function json_darwin_get_code($pattern, $collection=-1)
     $rows=array();
     if((string)$collection !="-1")
     {
-        $query="SELECT DISTINCT COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'') as value FROM codes WHERE code_category='main' AND referenced_relation='specimens' AND
+        $query="SELECT value FROM (SELECT DISTINCT COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'') as value FROM codes WHERE code_category='main' AND referenced_relation='specimens' AND
 			full_code_indexed LIKE CONCAT('%', (SELECT * FROM fulltoindex(:pattern)), '%') AND 
 			record_id IN (SELECT id FROM specimens WHERE collection_path||'/'||collection_ref::varchar||'/' LIKE '%/'||:collection||'/%')  
-			ORDER by value LIMIT 30;
+			ORDER by value LIMIT 30) a ORDER BY LENGTH(value);
             ";
 			$stmt=$conn->prepare($query);
 		$stmt->bindValue(":pattern", $pattern);
@@ -177,9 +181,9 @@ function json_darwin_get_code($pattern, $collection=-1)
     }
     else
     {
-        $query="SELECT DISTINCT COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'') as value FROM codes WHERE code_category='main' AND referenced_relation='specimens' AND
+        $query="SELECT value FROM (SELECT DISTINCT COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'') as value FROM codes WHERE code_category='main' AND referenced_relation='specimens' AND
 			full_code_indexed LIKE CONCAT('%', (SELECT * FROM fulltoindex(:pattern)), '%') 
-			ORDER by value LIMIT 30;
+			ORDER by value LIMIT 30) a ORDER BY LENGTH(value);
             ";
 			$stmt=$conn->prepare($query);
 		$stmt->bindValue(":pattern", $pattern);
@@ -187,8 +191,17 @@ function json_darwin_get_code($pattern, $collection=-1)
 
     
     $stmt->execute();
-    $rs=$stmt->fetchAll(PDO::FETCH_ASSOC);
-   
+	$tmp=PDO::FETCH_ASSOC;
+    $rs=$stmt->fetchAll($tmp);
+	$flat=Array();
+	array_walk_recursive($rs, function($a) use (&$flat) { $flat[] = $a; });
+	
+    if(!in_array($pattern, $flat)||count($rs)==0)
+	{
+		$tmp=[];
+		$tmp["value"]=$pattern;
+		array_unshift($rs,$tmp);
+	}
      header('Content-Type: application/json; charset=utf-8');
     print(json_encode($rs));
     $conn=null;
@@ -196,41 +209,53 @@ function json_darwin_get_code($pattern, $collection=-1)
 
 function json_darwin_get_code_by_taxon($pattern, $collection, $taxon_id )
 {
+
     $conn=connect_to_darwin();
     $rows=array();
     if($collection !="-1")
     {
-        $query="SELECT DISTINCT COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'') as value FROM codes WHERE code_category='main' AND referenced_relation='specimens' AND
+        $query="SELECT value FROM (SELECT DISTINCT COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'') as value FROM codes WHERE code_category='main' AND referenced_relation='specimens' AND
 			full_code_indexed LIKE CONCAT('%', (SELECT * FROM fulltoindex(:pattern)), '%') AND 
-			record_id IN (SELECT id FROM specimens WHERE collection_ref IN (:collection) and taxon_path ~ '/:taxon_id/') and full_code_indexed like '%rmca%'
-			ORDER by value LIMIT 30;
+			record_id IN (SELECT id FROM specimens WHERE collection_ref IN (:collection) and taxon_path ~ :taxon_id) 
+			ORDER by value LIMIT 30) a ORDER BY length(value), value;
             ";
      }
      else
      {
-        $query="SELECT DISTINCT COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'') as value FROM codes WHERE code_category='main' AND referenced_relation='specimens' AND
+        $query="SELECT value FROM (SELECT DISTINCT COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'') as value FROM codes WHERE code_category='main' AND referenced_relation='specimens' AND
 			full_code_indexed LIKE CONCAT('%', (SELECT * FROM fulltoindex(:pattern)), '%') AND 
 			:collection =-1
-             and full_code_indexed like '%rmca%'
-			ORDER by value LIMIT 30;
+            AND 
+			record_id IN (SELECT id FROM specimens WHERE  taxon_path ~ :taxon_id) 
+			ORDER by value LIMIT 30) a ORDER BY length(value), value;
             ";
      }     
-       
+   
     $stmt=$conn->prepare($query);
      $stmt->bindValue(":pattern", $pattern);
     $stmt->bindValue(":collection", $collection);
-    $taxon_id=create_regex_taxon_list($taxon_id);
+    $taxon_id='/'.create_regex_taxon_list($taxon_id).'/';
+
     $stmt->bindValue(":taxon_id", $taxon_id);
     $stmt->execute();
     $rs=$stmt->fetchAll(PDO::FETCH_ASSOC);
    
      header('Content-Type: application/json; charset=utf-8');
-    header(json_encode($rs));
+	 $flat=Array();
+	array_walk_recursive($rs, function($a) use (&$flat) { $flat[] = $a; });
+	
+    if(!in_array($pattern, $flat)||count($rs)==0)
+	{
+		$tmp=[];
+		$tmp["value"]=$pattern;
+		array_unshift($rs,$tmp);
+	}
+    print(json_encode($rs));
     $conn=null;
 }
 
 
-function json_darwin_get_countries_by_specimen($pattern, $collection_id, $taxon_id)
+function json_darwin_get_countries_by_specimen($pattern, $collection_id, $taxon_id, $p_debug=false)
 {
     $conn=connect_to_darwin();
     $rows=array();
@@ -238,7 +263,8 @@ function json_darwin_get_countries_by_specimen($pattern, $collection_id, $taxon_
     $flag_collection_id=FALSE;
     $flag_taxon_id=FALSE;   
 
-    $query="SELECt DISTINCT '$pattern' as value, 0 as sortval UNION SELECt DISTINCT gtu_country_tag_value as value,  strpos(replace(gtu_country_tag_indexed[1], ' ',''), (SELECT * FROM fulltoindex(:pattern))) as sortval FROM specimens WHERE gtu_country_tag_indexed::varchar LIKE  CONCAT('%', (SELECT * FROM fulltoindex(:pattern)), '%') ";
+    $query="SELECT * FROM (SELECt DISTINCT '$pattern' as value, 0 as sortval UNION 
+	SELECt DISTINCT gtu_country_tag_value as value,  strpos(replace(gtu_country_tag_indexed[1], ' ',''), (SELECT * FROM fulltoindex(:pattern))) as sortval FROM mv_public_gtu_country_tag_indexed WHERE gtu_country_tag_indexed::varchar LIKE  CONCAT('%', (SELECT * FROM fulltoindex(:pattern)), '%') ";
     
     if($collection_id>-1)
     {
@@ -251,8 +277,11 @@ function json_darwin_get_countries_by_specimen($pattern, $collection_id, $taxon_
         $query.= " AND  taxon_path||'/'||taxon_ref ~ :taxon_id";
         $flag_taxon_id=TRUE;   
     }
-    $query.= " ORDER BY sortval, value ;";
-
+    $query.= ") a ORDER BY LENGTH(value), value ;";
+	if( $p_debug)
+	{
+		print($query);
+	}
     $stmt=$conn->prepare($query);
     $stmt->bindValue(":pattern", $pattern);
     if($flag_collection_id===TRUE)
@@ -511,7 +540,7 @@ function json_darwin_get_collectors_collection_taxa_country_locality($pattern, $
 //function json_darwin_search_specimens($collections=-1, $taxas=-1, $number=-1, $countries=-1, $localities=-1, $collectors=-1, $gathering_date_begin=-1, $gathering_date_end=-1, $types=-1, $bool_images=-1, $bool_3d=-1, $north, $south, $west, $east, $page_size, $page, $sort)
 function json_darwin_search_specimens($p_debug=false)
 {
-    
+   
 	try
 	{
 		$collections = -1; 
@@ -538,6 +567,8 @@ function json_darwin_search_specimens($p_debug=false)
 		$wkt="";
 		$sort_order="";
 		$sort_direction="ASC";
+		$wfs_params=Array();
+		$rel_type="";
 		
 		
 		if(isset($_REQUEST["collections"]))
@@ -610,10 +641,34 @@ function json_darwin_search_specimens($p_debug=false)
 				$sort_direction ="DESC";
 			}
 		}
+		
+		if(isset($_REQUEST["wfs_params"]))  
+		{
+			//print($_REQUEST["wfs_params"]);
+			$wfs_params_tmp = json_decode($_REQUEST["wfs_params"], true);
+			if(count($wfs_params_tmp)>0)
+			{
+				$wfs_params=$wfs_params_tmp;
+			}
+			
+		}
+		
+		if(isset($_REQUEST["rel_type"]))  
+		{
+			if(strlen(trim($_REQUEST["rel_type"]))>0)
+			{
+				$rel_type = $_REQUEST["rel_type"];
+			}
+		}
+		
+		
+		
+
 		$arraySpNum=array();
 		$arrayCountries=array();
 		$arrayLocalities=array();
 		$arrayCollectors=array();
+		$arrayWFSParams=array();
 		$countries=pg_escape_string($countries);
 		$localities=pg_escape_string($localities);
 		$collectors=pg_escape_string($collectors);
@@ -685,6 +740,10 @@ function json_darwin_search_specimens($p_debug=false)
 						$i=0;
 						foreach($array_group_sp_num as $tmp)
 						{
+										if($p_debug)
+										{
+											print($tmp);
+										}
 							
 										if($i>0)
 										{
@@ -692,8 +751,9 @@ function json_darwin_search_specimens($p_debug=false)
 										}
 										$tmpWhere.= " ( "; 
 										$nameVar=":tmpspnum".(string)$varSpNumIdx;
-										$tmpWhere.=" full_code_indexed=(SELECT * FROM fulltoindex($nameVar))";
-										$arraySpNum[$nameVar]=$tmp;       
+										$tmpWhere.=" full_code_indexed ~ ('(^|[^0-9])'||fulltoindex(:tmpspnum".(string)$varSpNumIdx.")||'($|[^0-9])')";
+										$arraySpNum[$nameVar]=$tmp; 
+										
 										 $tmpWhere.= " ) "; 
 										$i++;
 										$varSpNumIdx++;
@@ -750,7 +810,7 @@ function json_darwin_search_specimens($p_debug=false)
 					   
 						foreach($array_group_country as $group_tmp)
 						{
-							$array_country=explode(';', $group_tmp);
+							$array_country=preg_split('(;|,)', $group_tmp);
 							if(strlen(trim($group_tmp))>0)
 							{
 								$i=0;
@@ -765,12 +825,12 @@ function json_darwin_search_specimens($p_debug=false)
 									{
 										if($i>0)
 										{
-											$tmpWhere.= " AND "; 
+											$tmpWhere.= " OR "; 
 										}
 										$tmpWhere.= " EXISTS ( "; 
 										$nameVar=":tmpcountry".(string)$varCountryIdx;
 										
-										$tmpWhere.= "SELECT * from unnest(gtu_country_tag_indexed) as x where x  LIKE  (SELECT * FROM concat(fulltoindex($nameVar)))";
+										$tmpWhere.= "SELECT * from unnest(gtu_country_tag_indexed) as x where x  ~  (SELECT * FROM concat(fulltoindex($nameVar)))";
 										
 										$arrayCountries[$nameVar]=$tmp;       
 										 $tmpWhere.= " ) "; 
@@ -925,7 +985,61 @@ function json_darwin_search_specimens($p_debug=false)
 			   }
 			   if(strtoupper($bool_citizen_sciences)=="TRUE")
 			   {
-					$query.= " AND EXISTS (SELECT p.id FROM properties p WHERE  p.record_id=mv_search_public_specimen.id AND p.referenced_relation='specimens' AND LOWER( p.property_type)='contributor' AND LOWER(p.lower_value)='citizen science - doedat community project cresco') ";
+					$query.= " AND EXISTS (SELECT p.id FROM properties p WHERE  p.record_id=mv_search_public_specimen.id AND p.referenced_relation='specimens' AND LOWER( p.property_type)='contributor' AND (LOWER(p.lower_value)='citizen_sciences' OR LOWER(p.lower_value)='citizen science - doedat community project cresco')) 
+					";
+			   }
+			   
+			   if(count($wfs_params)>0)
+			   {
+			   
+					//print("--------------->");
+					$sql_block=Array();
+		   
+				   $secondArray=Array();
+				   foreach($wfs_params as $key=>$val)
+				   {
+					$searched=$val["value"];
+					$layer=$val["layer"];
+					if(!array_key_exists($layer,$secondArray))
+					{
+						 $secondArray[$layer]=Array();
+					}
+					$secondArray[$layer][]=$searched;
+				   }
+				   $i=0;
+				   foreach($secondArray as $key=>$val)
+				   {
+						foreach($val as $val1)
+						{
+							if(is_numeric( $val1)==false)
+							{
+								 print('Forbidden operation');
+								 return;
+							}
+						}
+						$nameVar1=":tmpwfs_field".(string)$i;
+						$val_tmp="'{".implode(",", $val)."}'::integer[]";
+							
+							
+							/*$val_tmp="'{".implode(",", $val1)."}'::integer[]";
+							$nameVar1=":tmpwfs_field".(string)$i;
+							//$nameVar2=":tmpwfs_value".(string)$i; */
+							
+							
+						$sql_block[]="EXISTS(	
+						select g.* FROM rmca_get_wfs_geom_subdivide_gtu(".$nameVar1.", $val_tmp) g
+							   where mv_search_public_specimen.gtu_ref =g )"; 
+						$arrayWFSParams[$nameVar1]='wfs.'.$key;
+							//$arrayWFSParams[$nameVar2]=$val;
+							  
+						$i++;
+									
+						
+						
+				   }
+				   
+				   $wfs_sql = implode(" OR ", $sql_block );
+				   $query.= " AND ". $wfs_sql;
 			   }
 			   
 			if((int)$north!=90 && (int)$south!=-90 && (int)$west!=-180 && (string)$east!=180)
@@ -959,7 +1073,7 @@ function json_darwin_search_specimens($p_debug=false)
 			{
 				$sort="id";
 			}*/
-			$sort="id";
+			$sort="LENGTH(full_code_indexed), full_code_indexed";
 			if(strlen(trim($sort_order))>0)
 			{
 				if(trim($sort_order)=="specimen_number")
@@ -992,6 +1106,130 @@ function json_darwin_search_specimens($p_debug=false)
 				}
 			}
 			
+			if(strlen(trim($rel_type))>0)
+			{
+				$query="WITH rel_tmp AS (".$query."), 
+								lateral_tmp0 as 
+				 (
+				SELECT
+				ARRAY[specimen_ref]::int[] as rel_path, 
+					ARRAY[direction]::text[]   as direction_path,
+				 ARRAY[relationship_type]::varchar[]   as type_path,
+				 1 as level,
+				 specimen_ref src_specimen_ref,
+				rel_tmp.id, b.direction, 
+				specimen_Ref,
+				b.specimen_related_ref , 
+				b.relationship_type   from rel_tmp
+				left  join 
+
+				v_specimens_relationships_bi_directional b on rel_tmp.id=b.specimen_ref
+				AND  LOWER(b.relationship_type::varchar) NOT LIKE 'duplicate%from' AND direction='reverse')
+				,
+				lateral_tmp1 AS (
+				SELECT 
+				DISTINCT 
+					COALESCE(c_lateral_tmp0.rel_path , lateral_tmp0.rel_path) rel_path ,
+					COALESCE(c_lateral_tmp0.direction_path , lateral_tmp0.direction_path) direction_path ,
+					COALESCE(c_lateral_tmp0.type_path , lateral_tmp0.type_path) type_path ,
+					COALESCE(c_lateral_tmp0.level, lateral_tmp0.level) as level ,
+					src_specimen_ref,
+					lateral_tmp0.specimen_ref b_specimen_ref, 
+					lateral_tmp0.specimen_related_ref  b_specimen_related_ref,
+					lateral_tmp0.relationship_type b_relationship_type,
+					lateral_tmp0.specimen_ref, 
+					COALESCE(c_lateral_tmp0.specimen_related_ref, lateral_tmp0.specimen_related_ref) specimen_related_ref ,
+					COALESCE(c_lateral_tmp0.relationship_type, lateral_tmp0.relationship_type) relationship_type
+				FROM lateral_tmp0
+				LEFT JOIN LATERAL(
+					/*SELECT 'forward' as direction, lateral_tmp0.rel_path||lat_1.specimen_ref as rel_path ,
+					lateral_tmp0.direction_path||('forward')::text as direction_path,
+					lateral_tmp0.type_path||lat_1.relationship_type as type_path,
+					lateral_tmp0.level+1 as level,
+					specimen_ref, 
+					specimen_related_ref,
+					relationship_type
+					FROM specimens_relationships lat_1
+					WHERE lateral_tmp0.specimen_related_ref =lat_1.specimen_ref
+					AND  LOWER(lat_1.relationship_type::varchar) NOT LIKE 'duplicate%from'
+					AND NOT lat_1.specimen_ref = ANY (rel_path)
+					UNION*/
+					SELECT 
+					 'reverse' as direction, 
+					lateral_tmp0.rel_path||lat_2.specimen_related_ref as rel_path ,
+					lateral_tmp0.direction_path||('reverse')::text as direction_path,
+					lateral_tmp0.type_path||lat_2.relationship_type as type_path,
+					lateral_tmp0.level+1 as level,
+					specimen_related_ref AS specimen_ref, 
+					specimen_ref AS specimen_related_ref,
+					relationship_type 
+					FROM specimens_relationships lat_2
+					WHERE lateral_tmp0.specimen_related_ref=lat_2.specimen_related_ref 
+					AND  LOWER(lat_2.relationship_type::varchar) NOT LIKE 'duplicate%from'
+					AND NOT lat_2.specimen_ref = ANY (rel_path)
+					) c_lateral_tmp0 on true
+
+				)
+				, 
+					lateral_tmp2 as (
+					select 
+					rel_path,
+					direction_path,
+					type_path,
+					level,
+					src_specimen_ref,
+					specimen_ref, 
+					specimen_related_ref ,
+					relationship_type from lateral_tmp1
+					union 
+					select rel_path,
+					direction_path,
+					type_path,
+					level,
+					src_specimen_ref,
+					b_specimen_ref, 
+					b_specimen_related_ref ,
+					b_relationship_type from lateral_tmp1
+					union
+					select 
+					rel_path,
+					direction_path,
+					type_path,
+					level,
+					src_specimen_ref,
+					lateral_tmp0.specimen_ref, 
+					lateral_tmp0.specimen_related_ref ,
+					lateral_tmp0.relationship_type from lateral_tmp0
+					
+					)
+					,
+					lateral_tmp as
+					(
+					select distinct 
+					rel_path,
+					direction_path,
+					type_path,
+					level,
+					src_specimen_ref,
+					specimen_Ref,
+					specimen_related_ref , 
+					relationship_type,
+					taxon_ref spec_taxon_ref,
+					taxon_name,
+					uuid related_specimen_uuid
+					from lateral_tmp2
+					LEFT JOIN specimens
+					ON 
+					specimen_related_ref=specimens.id
+					WHERE relationship_type=:rel_type
+					AND LOWER(type_path::varchar) NOT LIKE 'duplicate%from'
+					),
+					 rel_tmp3 AS (SELECT DISTINCT mv_search_public_specimen.* 
+					 FROM mv_search_public_specimen INNER JOIN lateral_tmp
+					 ON mv_search_public_specimen.id=specimen_related_Ref) 
+					 SELECT *,count(*) OVER() AS full_count FROM rel_tmp3";
+			}
+			
 			//if(testIsAuthorizedColumn($sort)&&is_numeric($page_size)&&is_numeric($offset))
 			$null_str="NULLS LAST";
 			if($sort_direction=="DESC")
@@ -1004,6 +1242,7 @@ function json_darwin_search_specimens($p_debug=false)
 				$query=$query." ORDER BY $sort $sort_direction $null_str";
 				$query="with a as (".$query."), b as (select count(*)  as georef_count from a where latitude is not null and  longitude is not null) select *, georef_count  from a, b";
 				$query=$query." LIMIT $page_size OFFSET $offset;";
+				
 				 
 			   
 			}
@@ -1048,6 +1287,10 @@ function json_darwin_search_specimens($p_debug=false)
 					foreach($arrayCountries as $placeHolder=>$value)
 					{
 						$stmt->bindValue($placeHolder, $value);
+						if($p_debug)
+						{
+							print($value);
+						}
 					}
 				}        
 				if($flag_localities===TRUE)
@@ -1092,12 +1335,23 @@ function json_darwin_search_specimens($p_debug=false)
 				{
 					$stmt->bindValue(":east", $east);
 				}   
+				
+				foreach($arrayWFSParams as $name_var=> $val_var)
+				{
+					$stmt->bindValue($name_var, $val_var);
+				}
+				
+				if(strlen(trim($rel_type))>0)
+				{				
+					$stmt->bindValue(":rel_type", $rel_type);
+				}
 
 				$stmt->execute();
 				$rs=$stmt->fetchAll(PDO::FETCH_ASSOC);
 			   header('Content-Type: application/json; charset=utf-8');
 
 				print(json_encode($rs));
+				
 				$conn=null;
 				
 			} 
@@ -1156,6 +1410,8 @@ function json_darwin_count_geo_ref()
 		$wkt="";
 		$sort_order="";
 		
+		//$sort_order="";
+		
 		if(isset($_REQUEST["collections"]))    
 			$collections = $_REQUEST["collections"];
 		if(isset($_REQUEST["taxas"]))          
@@ -1196,6 +1452,8 @@ function json_darwin_count_geo_ref()
 			$wkt = $_REQUEST["wkt"];
 		if(isset($_REQUEST["sort_order"]))  
 			$sort_order = $_REQUEST["sort_order"];
+			
+		
 		
 		$arraySpNum=array();
 		$arrayCountries=array();
@@ -1640,6 +1898,36 @@ select * from a, e;";
 return $query;
 }
 
+function json_darwin_get_uuid( $code_display)
+{
+	if((string)$code_display!="-1")
+      {
+			$conn=connect_to_darwin();
+			$query="SELECT uuid , count(*) OVER() AS full_count FROM darwin2.mv_specimen_public WHERE code_display=:code_display";  
+			$stmt=$conn->prepare($query);
+			$stmt->bindValue(":code_display", $code_display);
+			$stmt->execute();
+			$rs=$stmt->fetchAll(PDO::FETCH_ASSOC);
+
+			 header('Content-Type: application/json; charset=utf-8');
+			if($rs[0]["full_count"]>0)
+			{
+     
+				
+				print(json_encode($rs));
+				return;
+			}
+			else
+			{
+				print(json_encode(Array()));
+				return;
+			}
+	  }
+	   header('Content-Type: application/json; charset=utf-8');
+	   print(json_encode(Array()));
+	   return;
+}
+
 function json_darwin_get_specimen( $uuid)
 {
 
@@ -1649,7 +1937,9 @@ function json_darwin_get_specimen( $uuid)
             $rows=array();
             
             $query="
-	SELECT v_specimen_public_display.* , count(*) OVER() AS full_count FROM darwin2.v_specimen_public_display WHERE uuid=:uuid
+	SELECT v_specimen_public_display.* ,  count(*) OVER() AS full_count FROM darwin2.v_specimen_public_display 
+	
+	WHERE v_specimen_public_display.uuid=:uuid
         ";          
             
  
@@ -1662,12 +1952,28 @@ function json_darwin_get_specimen( $uuid)
         $stmt->bindValue(":uuid", $uuid);
         $stmt->execute();
         $rs=$stmt->fetchAll(PDO::FETCH_ASSOC);
+		$returned=Array();
+		foreach($rs as $row)
+		{
+			$idstr=$row["ids"];
+			$fk=-1;
+			$idstr=str_replace("}", "",str_replace("{","", $idstr));
+			$tmp_id=explode(",", $idstr);
+			if(count($tmp_id)>0)
+			{
+				$fk=$tmp_id[0];
+				$rs_image=json_darwin_get_links_logic($fk);
+				
+				$row=array_merge($row,$rs_image );
+				$returned[]=$row;
+			}
+		}
 
        header('Content-Type: application/json; charset=utf-8');
-        if($rs[0]["full_count"]>0)
+        if($returned[0]["full_count"]>0)
         {
      
-            print(json_encode($rs));
+            print(json_encode($returned));
            
         }
         $conn=null;
@@ -1683,13 +1989,13 @@ function json_darwin_get_specimen( $uuid)
 function json_darwin_get_specimen_id( $id)
 {
 
-      if((string)$id!="-1")
+     /* if((string)$id!="-1")
       {
             $conn=connect_to_darwin();
             $rows=array();
             
-            $query="SELECT uuid
-, ids, ig_num, string_agg(code_display,',') as code_display, taxon_paths, taxon_ref, taxon_name, sex, history_identification
+            $query="WITH a3 AS (SELECT uuid
+, ids, ig_num, string_agg(code_display,',') as code_display, taxon_paths, taxon_ref, taxon_name, sex, history_identification,
 gtu_country_tag_value, gtu_others_tag_value, gtu_from_date, gtu_from_date_mask, gtu_to_date, gtu_to_date_mask,
 fct_mask_date, date_from_display, date_to_display, coll_type, urls_thumbnails, image_category_thumbnails, 
 contributor_thumbnails, disclaimer_thumbnails, license_thumbnails, display_order_thumbnails, urls_image_links,
@@ -1704,22 +2010,82 @@ image_category_image_links, contributor_image_links, disclaimer_image_links, lic
 urls_3d_snippets, image_category_3d_snippets, contributor_3d_snippets, disclaimer_3d_snippets, license_3d_snippets, 
 display_order_3d_snippets, longitude, latitude, collector_ids, collectors, donator_ids, donators, localities, family, t_order,
 class, specimen_count_min, specimen_count_males_min, specimen_count_females_min, collection_code_full_path, collection_name_full_path
-	LIMIT 1";          
+	LIMIT 1)
+	SELECT a3.* ";        
             
  
          
-    
+ 
 		$query=stuff_for_properties($query);
         $stmt=$conn->prepare($query);
         $stmt->bindValue(":id", $id);
         $stmt->execute();
         $rs=$stmt->fetchAll(PDO::FETCH_ASSOC);
+		$returned=Array();
+		foreach($rs as $row)
+		{
+			$id=$row["ids"];
+			print($id);
+			
+		}
 
        header('Content-Type: application/json; charset=utf-8');
         if($rs[0]["full_count"]>0)
         {
      
             print(json_encode($rs));
+           
+        }
+        $conn=null;
+    }
+    else
+    {
+                header('Content-Type: application/json; charset=utf-8');
+    }*/
+	
+	if((string)$id!="-1")
+      {
+            $conn=connect_to_darwin();
+            $rows=array();
+            
+            $query="
+	SELECT v_specimen_public_display.* ,  count(*) OVER() AS full_count FROM darwin2.v_specimen_public_display 
+	
+	WHERE :id=any(ids)
+        ";          
+            
+ 
+         
+         $query=$query."  LIMIT 20";
+
+		$query=stuff_for_properties($query);
+		
+        $stmt=$conn->prepare($query);
+        $stmt->bindValue(":id", $id);
+        $stmt->execute();
+        $rs=$stmt->fetchAll(PDO::FETCH_ASSOC);
+		$returned=Array();
+		foreach($rs as $row)
+		{
+			$idstr=$row["ids"];
+			$fk=-1;
+			$idstr=str_replace("}", "",str_replace("{","", $idstr));
+			$tmp_id=explode(",", $idstr);
+			if(count($tmp_id)>0)
+			{
+				$fk=$tmp_id[0];
+				$rs_image=json_darwin_get_links_logic($fk);
+				
+				$row=array_merge($row,$rs_image );
+				$returned[]=$row;
+			}
+		}
+
+       header('Content-Type: application/json; charset=utf-8');
+        if($returned[0]["full_count"]>0)
+        {
+     
+            print(json_encode($returned));
            
         }
         $conn=null;
@@ -1763,18 +2129,18 @@ function json_darwin_get_taxon_generic($prefix, $rank_id, $includeLower=FALSE)
     $rows=array();
     if($includeLower===FALSE)
     {
-        $query="SELECT DISTINCT id, name FROM taxonomy 
+        $query="SELECT DISTINCT id, name, metadata_ref FROM taxonomy 
             WHERE level_ref=:rank_id 
             AND name_indexed LIKE CONCAT('%', (SELECT * FROM fulltoindex(:prefix)),'%') 
-            ORDER BY name LIMIT 50;
+            ORDER BY metadata_ref, name LIMIT 50;
             ";
     }
     else
     {
-        $query="SELECT DISTINCT id, name FROM taxonomy 
+        $query="SELECT DISTINCT id, name, metadata_ref FROM taxonomy 
             WHERE level_ref>=:rank_id 
             AND name_indexed LIKE CONCAT('%', (SELECT * FROM fulltoindex(:prefix)),'%') 
-            ORDER BY name LIMIT 50;
+            ORDER BY metadata_ref, name LIMIT 50;
             ";
     }
     $stmt=$conn->prepare($query);
@@ -1923,6 +2289,322 @@ function json_darwin_get_taxon_by_collection_and_parent($prefix, $rank_id, $coll
      header('Content-Type: application/json; charset=utf-8');
     print(json_encode($rs));
     $conn=null;
+}
+
+function init_array_link($suffix, $returned=Array())
+{	
+	if(!array_key_exists("urls_".$suffix, $returned))
+	{
+		$returned["urls_".$suffix]=[];
+	}
+	if(!array_key_exists("image_category_".$suffix, $returned))
+	{
+		$returned["image_category_".$suffix]=[];
+	}
+	if(!array_key_exists("contributor_".$suffix, $returned))
+	{
+		$returned["contributor_".$suffix]=[];
+	}
+	if(!array_key_exists("disclaimer_".$suffix, $returned))
+	{
+		$returned["disclaimer_".$suffix]=[];
+	}
+	if(!array_key_exists("license_".$suffix, $returned))
+	{
+		$returned["license_".$suffix]=[];
+	}
+	if(!array_key_exists("display_order".$suffix, $returned))
+	{
+		$returned["display_order_".$suffix]=[];
+	}
+	return $returned;
+}
+
+function create_array_link($suffix, $row, $returned=Array())
+{	
+	if(!array_key_exists("urls_".$suffix, $returned))
+	{
+		$returned["urls_".$suffix]=[];
+	}
+	if(!array_key_exists("image_category_".$suffix, $returned))
+	{
+		$returned["image_category_".$suffix]=[];
+	}
+	if(!array_key_exists("contributor_".$suffix, $returned))
+	{
+		$returned["contributor_".$suffix]=[];
+	}
+	if(!array_key_exists("disclaimer_".$suffix, $returned))
+	{
+		$returned["disclaimer_".$suffix]=[];
+	}
+	if(!array_key_exists("license_".$suffix, $returned))
+	{
+		$returned["license_".$suffix]=[];
+	}
+	if(!array_key_exists("display_order".$suffix, $returned))
+	{
+		$returned["display_order_".$suffix]=[];
+	}
+	
+	
+	$returned["urls_".$suffix][]=$row["url"];
+	$returned["image_category_".$suffix][]=$row["type"];
+	$returned["contributor_".$suffix][]=null;
+	$returned["disclaimer_".$suffix][]=null;
+	$returned["license_".$suffix][]=null;
+	$returned["display_order_".$suffix][]=null;
+	
+	return $returned;
+}
+
+function prepare_array_link($suffix, $returned=Array())
+{
+	
+	if(array_key_exists("urls_".$suffix, $returned))
+	{
+		$returned["urls_".$suffix]=implode("|",$returned["urls_".$suffix]);
+	}
+	if(array_key_exists("image_category_".$suffix, $returned))
+	{
+		$returned["image_category_".$suffix]=implode("|",$returned["image_category_".$suffix]);
+	}
+	if(array_key_exists("contributor_".$suffix, $returned))
+	{
+		$returned["contributor_".$suffix]=implode("|",$returned["contributor_".$suffix]);
+	}
+	if(array_key_exists("disclaimer_".$suffix, $returned))
+	{
+		$returned["disclaimer_".$suffix]=implode("|",$returned["disclaimer_".$suffix]);
+	}
+	if(array_key_exists("license_".$suffix, $returned))
+	{
+		$returned["license_".$suffix]=implode("|",$returned["license_".$suffix]);
+	}
+	if(array_key_exists("display_order_".$suffix, $returned))
+	{
+		$returned["display_order_".$suffix]=implode("|",$returned["display_order_".$suffix]);
+	}
+	
+	return $returned;
+}
+
+
+function json_darwin_get_links_logic($id)
+{
+	$rs2=Array();
+	$conn=connect_to_darwin();
+	 $query="SELECT DISTINCT * FROM  ext_links WHERE referenced_relation = 'specimens' AND record_id=:id ORDER BY id;";
+	 $stmt=$conn->prepare($query);
+	 $stmt->bindValue(":id", $id);
+	 $stmt->execute();
+	 $rs=$stmt->fetchAll(PDO::FETCH_ASSOC);	
+	 
+	 $urls_iiif_manifest=Array();
+	 $image_category_iiif_manifest=Array();
+	 $contributor_iiif_manifest=Array();
+	 $disclaimer_iiif_manifest=Array();
+	 $license_iiif_manifest=Array();
+	 $display_order_iiif_manifest=Array();
+	 
+	 $urls_iiif_info=Array();
+	 $image_category_iiif_info=Array();
+	 $contributor_iiif_info=Array();
+	 $disclaimer_iiif_info=Array();
+	 $license_iiif_info=Array();
+	 $display_order_iiif_info=Array();
+	 
+	 $urls_iiif_info=Array();
+	 $image_category_iiif_info=Array();
+	 $contributor_iiif_info=Array();
+	 $disclaimer_iiif_info=Array();
+	 $license_iiif_info=Array();
+	 $display_order_iiif_info=Array();
+	 
+	 $data=Array();
+	 $data=init_array_link("image_links", $data);
+	 $data=init_array_link("thumbnails", $data);
+	 $data=init_array_link("iiif_manifest", $data);
+	 $data=init_array_link("iiif_info", $data);
+	 $data=init_array_link("2d_stackoptica", $data);
+	 $data=init_array_link("2d_sphaeroptica", $data);
+	 $data=init_array_link("2d_spectraloptica", $data);
+	 $data=init_array_link("2d_polaroptica", $data);
+	 $data=init_array_link("2d_inside", $data);
+	 $data=init_array_link("3d_inside", $data);
+	 $data=init_array_link("3d_snippets", $data);
+	 $data=init_array_link("3d_links", $data);
+	 $data=init_array_link("internal_database", $data);
+	 foreach($rs as $r)
+	 {
+		
+		switch($r["type"])
+		{
+			case "image_link":
+				$data=create_array_link("image_links", $r, $data);
+				break;
+			case "thumbnail":
+				$data=create_array_link("thumbnails", $r, $data);
+				break;
+			case "iiif":
+				$data=create_array_link("iiif_manifest", $r, $data);
+				break;
+			case "iiif_info":
+				$data=create_array_link("iiif_info", $r, $data);
+				break;
+			case "2d_stackoptica":
+				$data=create_array_link("2d_stackoptica", $r, $data);
+				break;
+			case "2d_sphaeroptica":
+				$data=create_array_link("2d_sphaeroptica", $r, $data);
+				break;
+			case "2d_spectraloptica":
+				$data=create_array_link("2d_spectraloptica", $r, $data);
+				break;
+			case "2d_polaroptica":
+				$data=create_array_link("2d_polaroptica", $r, $data);
+				break;
+			case "2d_inside":
+				$data=create_array_link("2d_inside", $r, $data);
+				break;
+			case "3d_inside":
+				$data=create_array_link("3d_inside", $r, $data);
+				break;
+			case "html_3d_snippet":
+				$data=create_array_link("3d_snippets", $r, $data);
+				break;
+			case "html_3d_link":
+				$data=create_array_link("internal_database", $r, $data);
+				break;
+			
+			case "internal_database":
+				$data=create_array_link("internal_database", $r, $data);
+				break;
+		}
+	 }
+	
+	$data=prepare_array_link("image_links", $data);
+	$data=prepare_array_link("thumbnails", $data);
+	$data=prepare_array_link("iiif_manifest", $data);
+	$data=prepare_array_link("iiif_info", $data);
+	$data=prepare_array_link("2d_stackoptica", $data);
+	$data=prepare_array_link("2d_sphaeroptica", $data);
+	$data=prepare_array_link("2d_spectraloptica", $data);
+	$data=prepare_array_link("2d_polaroptica", $data);
+	$data=prepare_array_link("2d_inside", $data);
+	$data=prepare_array_link("3d_inside", $data);
+	$data=prepare_array_link("3d_snippets", $data);
+	$data=prepare_array_link("3d_links", $data);
+	$data=prepare_array_link("internal_database", $data);
+	 $conn=null;
+	return $data;
+	
+}
+
+function json_darwin_get_links($id)
+{
+	
+	 header('Content-Type: application/json; charset=utf-8');	
+	print(json_encode( json_darwin_get_links_logic($id)));
+}
+
+function json_darwin_get_relation_types()
+{
+	$rs=Array();
+	$conn=connect_to_darwin();
+	$query="SELECT DISTINCT relationship_type FROM darwin2.v_specimens_relationships_bi_directional
+	WHERE (unit_type='specimens' OR unit_type='external') AND (LOWER(relationship_type) !='duplicated_from' AND LOWER(relationship_type) !='duplicate from') AND relationship_type IS NOT NULL
+ORDER BY relationship_type;
+";
+	$stmt=$conn->prepare($query);
+
+	$stmt->execute();
+	$rs=$stmt->fetchAll(PDO::FETCH_ASSOC);
+	header('Content-Type: application/json; charset=utf-8');
+    print(json_encode($rs));
+	$conn=null;
+}
+
+
+function json_darwin_get_related_specimens($id)
+{
+	
+	$rs=Array();
+	$conn=connect_to_darwin();
+    
+	if(is_numeric($id))
+	{		
+		
+		
+		$query="WITH b AS (SELECT specimen_ref
+direction,  specimen_related_ref, related_specimen_uuid specimen_related_ref_uuid, 
+relationship_type, code_display,
+a.taxon_ref, a.taxon_name, rel_path, direction_path, type_path, level FROM 
+fct_rmca_specimens_relationships_recursive(:id) a LEFT JOIN mv_specimen_public
+ON a.related_specimen_uuid=mv_specimen_public.uuid 
+WHERE (LOWER(relationship_type) !='duplicated_from' AND LOWER(relationship_type) !='duplicate from')
+AND LOWER(type_path::varchar) NOT LIKE 'duplicate%from' 
+ORDER by src_specimen_ref, rel_path),
+c AS(
+SELECT specimens.uuid specimen_source_ref_uuid, b.* FROM b LEFT JOIN specimens
+ON b.specimen_ref=specimens.id )
+SELECT mv_specimen_public.code_display as specimen_source_code_display, c.* FROM c LEFT JOIN mv_specimen_public ON c.specimen_source_ref_uuid=mv_specimen_public.uuid ORDER BY level, direction
+;";
+		$stmt=$conn->prepare($query);
+		$stmt->bindValue(":id", $id);
+		 $stmt->execute();
+		 $rs=$stmt->fetchAll(PDO::FETCH_ASSOC);
+		
+	}
+	
+	header('Content-Type: application/json; charset=utf-8');
+    print(json_encode($rs));
+	$conn=null;
+}
+
+
+function json_darwin_get_related_specimens_uuid($uuid)
+{
+	if (!is_string($uuid) || (preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/', $uuid) !== 1)) {
+		header('Content-Type: application/json; charset=utf-8');
+		print(json_encode(Array()));
+		return;
+	}
+	else
+	{
+	$rs=Array();
+	$conn=connect_to_darwin();
+    
+	
+		
+		
+		
+		$query="WITH a0 as (SELECT id FROM specimens WHERE uuid=:uuid),
+		b as (SELECT specimen_ref,
+direction,   related_specimen_uuid specimen_related_ref_uuid, 
+relationship_type, code_display,
+a.taxon_name, rel_path, direction_path, type_path, level FROM a0 ,
+fct_rmca_specimens_relationships_recursive(a0.id) a LEFT JOIN mv_specimen_public
+ON a.related_specimen_uuid=mv_specimen_public.uuid 
+WHERE (LOWER(relationship_type) !='duplicated_from' AND LOWER(relationship_type) !='duplicate from')
+AND LOWER(type_path::varchar) NOT LIKE 'duplicate%from' 
+ORDER by src_specimen_ref, rel_path), 
+c AS(
+SELECT specimens.uuid specimen_source_ref_uuid, b.* FROM b LEFT JOIN specimens
+ON b.specimen_ref=specimens.id )
+SELECT mv_specimen_public.code_display as specimen_source_code_display, c.* FROM c LEFT JOIN mv_specimen_public ON c.specimen_source_ref_uuid=mv_specimen_public.uuid WHERE specimen_related_ref_uuid IS NOT NULL ORDER BY level, direction
+";
+		$stmt=$conn->prepare($query);
+		$stmt->bindValue(":uuid", $uuid);
+		 $stmt->execute();
+		 $rs=$stmt->fetchAll(PDO::FETCH_ASSOC);
+		
+
+	
+	header('Content-Type: application/json; charset=utf-8');
+    print(json_encode($rs));
+	$conn=null;
+	}
 }
 
 

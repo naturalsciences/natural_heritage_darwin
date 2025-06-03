@@ -25,7 +25,7 @@
   <?php foreach($form_pref as $category=>$record) :?>
   	<thead alt="<?php echo $category ?>" class='head_widget'>
   		<tr>
-  			<td colspan="2" class='head_widget'>&nbsp;</td>
+  			<td class='head_widget'><b><?php echo $category ?></b></td>
   			<?php if ($level > 2) : ?>
 			<th class='head_widget'><?php echo __("Deactivated");?><br /><input type="radio" name="<?php echo('All_'.$category) ; ?>" value="unused"></th>
   			<?php endif ; ?>

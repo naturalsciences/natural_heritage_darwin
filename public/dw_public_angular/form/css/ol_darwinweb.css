@@ -62,3 +62,20 @@ p.collapse{
 .draw-polygon.ol-unselectable.ol-control:hover {
 	cursor: pointer;
 }
+
+.draw-box.ol-unselectable.ol-control {
+	top: 130px;
+	left: 8px;
+	width: 1.375em;
+	height: 1.375em;
+	text-align: center;
+	color: rgba(255,255,255,0);
+	border: 2px solid #fff;	
+	font-size: 16px;
+	background-color: #09f;
+	line-height: 1.1;	
+}
+
+.draw-box.ol-unselectable.ol-control:hover {
+	cursor: pointer;
+}

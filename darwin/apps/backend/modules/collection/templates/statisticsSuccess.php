@@ -50,6 +50,10 @@
  <td><?php echo __("Display subcollections");?></td>
  <td><input type="checkbox" name="display_subcollections" id="display_subcollections" checked/></td>
  </tr>
+  <tr>
+ <td><?php echo __("Display parent collection only");?></td>
+ <td><input type="checkbox" name="display_parent_only" id="display_parent_only"/></td>
+ </tr>
  <tr>
  <td><?php echo __("View specimens");?></td>
  <td><a id="to_specimens" href="<?php print(url_for("specimensearch/search/1"))."?specimen_search_filters[rec_per_page]=50";?>" target="_blank"><img src="<?php echo(public_path("images/blue_eyel.png"));?>"></img></a> </td>
@@ -94,6 +98,12 @@ Mids in collection  :
     <table name="results5" id="results5" class="results" >
     </table>
 </div>
+
+Countries in collection:
+<div  class="results_container">
+    <table name="results6" id="results6" class="results" >
+    </table>
+</div>
 <br/>
 </div>
 <script language="JavaScript">
@@ -104,10 +114,11 @@ var finishedAjax2=false;
 var finishedAjax3=false;
 var finishedAjax4=false;
 var finishedAjax5=false;
+var finishedAjax6=false;
 
 var hideLoader=function()
 {
-    if(finishedAjax1&&finishedAjax2&&finishedAjax3&&finishedAjax4&&finishedAjax5)
+    if(finishedAjax1&&finishedAjax2&&finishedAjax3&&finishedAjax4&&finishedAjax5&&finishedAjax6)
     {
         $("#div_loader").css("display", 'none');
     }
@@ -172,12 +183,16 @@ var LastDayOfMonth=function(Year, Month) {
 	return dateTmp.getDate();
 }
 
-var getStatistics = function(collection_ids, ig_num, from_date, to_date, includesub, displaysub, selector)
+var getStatistics = function(collection_ids, ig_num, from_date, to_date, includesub, displaysub, display_parent, selector)
 	{
 		$("#to_specimens").attr("href", "<?php print(url_for("specimensearch/search/1"))."?specimen_search_filters[rec_per_page]=50";?>" ); 
 		console.log("_STAT");
 		var dataTmp={};
-		if(collection_ids.length>0)
+		if($("#all_collections").is(":checked"))
+		{
+			dataTmp["collectionids"]="/";
+		}
+		else if(collection_ids.length>0)
 		{
 			for(var i=0; i<collection_ids.length;i++)
 			{
@@ -228,6 +243,11 @@ var getStatistics = function(collection_ids, ig_num, from_date, to_date, include
 		{
 			dataTmp["withdetails"]="true";
 		}
+		
+		if(display_parent)
+		{
+			dataTmp["parentonly"]="true";
+		}
         
         if($(selector).attr('id')=="search")
         {
@@ -236,6 +256,7 @@ var getStatistics = function(collection_ids, ig_num, from_date, to_date, include
             $("#results3 tr").remove();
 			$("#results4 tr").remove();
 			$("#results5 tr").remove();
+			$("#results6 tr").remove();
             var request1 = $.ajax({
               url: detect_https("<?php echo url_for("collection/display_statistics_specimens");?>"),
               method: "GET",
@@ -306,6 +327,20 @@ var getStatistics = function(collection_ids, ig_num, from_date, to_date, include
                     hideLoader();
                 }
             );
+			
+			 var request6 = $.ajax({
+              url: detect_https("<?php echo url_for("collection/display_statistics_countries");?>"),
+              method: "GET",
+              data: dataTmp,
+              dataType: "json"
+            }).done(
+                function(result)
+                {
+                    finishedAjax6 = true;                   
+                    buildHtmlTable(result, "#results6");
+                    hideLoader();
+                }
+            );
         }
         else if($(selector).attr('id')=="search_csv")
         {
@@ -343,6 +378,9 @@ $(document).ready(
                 finishedAjax1=false;
                 finishedAjax2=false;
                 finishedAjax3=false;
+				finishedAjax4=false;
+				finishedAjax5=false;
+				finishedAjax6=false;
 
                $("#div_loader").css("display", 'block');
                var date_from="";
@@ -397,7 +435,12 @@ $(document).ready(
 					
 				   selected_collections.push($(this).val());
 				 });
-				getStatistics(selected_collections, $(".ig_num").val(), date_from, date_to,$("#count_subcollections").is(":checked"), $("#display_subcollections").is(":checked"), this )				
+				 
+				 if($("#all_collections").is(":checked") && $("#display_subcollections").is(":checked") )
+				{
+					$("#display_parent_only").prop("checked", true );
+				}
+				getStatistics(selected_collections, $(".ig_num").val(), date_from, date_to,$("#count_subcollections").is(":checked"), $("#display_subcollections").is(":checked"), $("#display_parent_only").is(":checked"), this )				
            }
        );
 	   
@@ -517,6 +560,16 @@ $(document).ready(
         $(this).siblings('.collapsed').removeClass('hidden');
         $(this).parent().siblings('ul').hide();
     });
+	
+	$("#all_collections").change(
+		function()
+		{
+			if($("#all_collections").is(":checked"))
+			{
+				$("#display_parent_only").prop("checked", true );
+			}
+		}
+	);
 
     $('#check_editable').click(function(){
       $('.treelist input:checked').removeAttr('checked').change();
@@ -537,6 +590,8 @@ $(document).ready(
 			}
 		);
     }
+	
+	
 	
 	
 );

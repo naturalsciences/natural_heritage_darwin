@@ -15,6 +15,8 @@ class Codes extends BaseCodes
                  'genbank number' => 'GenBank Nb.',
 				 'rack_id'=> 'Rack Id (specimen)',
 				 'dna_rack_id'=> 'Rack id (DNA)',
+				 'project_code'=> 'Project code',
+				 'field_code'=> 'Field code',
                 );
 
  /* public static function getCategories()

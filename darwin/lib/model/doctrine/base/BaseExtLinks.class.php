@@ -12,6 +12,7 @@
  * @property string $type
  * @property string $comment
  * @property string $comment_indexed
+ * @property string $access_rights
  * 
  * @method integer  getId()                  Returns the current record's "id" value
  * @method string   getReferencedRelation()  Returns the current record's "referenced_relation" value
@@ -20,6 +21,7 @@
  * @method string   getType()                Returns the current record's "type" value
  * @method string   getComment()             Returns the current record's "comment" value
  * @method string   getCommentIndexed()      Returns the current record's "comment_indexed" value
+ * @method string   getAccessRights()        Returns the current record's "access_rights" value
  * @method ExtLinks setId()                  Sets the current record's "id" value
  * @method ExtLinks setReferencedRelation()  Sets the current record's "referenced_relation" value
  * @method ExtLinks setRecordId()            Sets the current record's "record_id" value
@@ -27,6 +29,7 @@
  * @method ExtLinks setType()                Sets the current record's "type" value
  * @method ExtLinks setComment()             Sets the current record's "comment" value
  * @method ExtLinks setCommentIndexed()      Sets the current record's "comment_indexed" value
+ * @method ExtLinks setAccessRights()        Sets the current record's "access_rights" value
  * 
  * @package    darwin
  * @subpackage model
@@ -65,6 +68,9 @@ abstract class BaseExtLinks extends DarwinModel
              'notnull' => true,
              ));
         $this->hasColumn('comment_indexed', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('access_rights', 'string', null, array(
              'type' => 'string',
              ));
     }

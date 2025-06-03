@@ -74,6 +74,9 @@ abstract class BaseMultimediaFormFilter extends DarwinModelFormFilter
     $this->widgetSchema   ['field_observations'] = new sfWidgetFormFilterInput();
     $this->validatorSchema['field_observations'] = new sfValidatorPass(array('required' => false));
 
+    $this->widgetSchema   ['access_rights'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['access_rights'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
+
     $this->widgetSchema->setNameFormat('multimedia_filters[%s]');
   }
 
@@ -105,6 +108,7 @@ abstract class BaseMultimediaFormFilter extends DarwinModelFormFilter
       'external_uri' => 'Text',
       'internet_protocol' => 'Text',
       'field_observations' => 'Text',
+      'access_rights' => 'Number',
     ));
   }
 }

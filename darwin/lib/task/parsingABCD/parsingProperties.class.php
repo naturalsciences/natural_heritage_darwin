@@ -3,7 +3,8 @@
 class ParsingProperties extends importABCDXml
 {
   public $people_type="donator",$date_from, $accuracy=null ;
-
+  public $property=null;
+  
   public function __construct($tag="length",$applies_to="")
   {
     $this->property = new Properties() ;
@@ -11,9 +12,9 @@ class ParsingProperties extends importABCDXml
     $this->property->setAppliesTo($applies_to) ;
   }
 
-  public function handleRelation($people,$staging)
+  public function handleRelation($prop,$staging)
   {
-    $staging->addRelated($people) ;
+    $staging->addRelated($prop) ;
   }
 
   public function getDateFrom($date, $tag,$staging)

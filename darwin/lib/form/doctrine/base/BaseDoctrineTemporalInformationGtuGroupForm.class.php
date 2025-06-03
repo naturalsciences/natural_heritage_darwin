@@ -115,6 +115,9 @@ abstract class BaseDoctrineTemporalInformationGtuGroupForm extends DarwinModelFo
     $this->widgetSchema   ['properties'] = new sfWidgetFormTextarea();
     $this->validatorSchema['properties'] = new sfValidatorString(array('required' => false));
 
+    $this->widgetSchema   ['country_ref'] = new sfWidgetFormInputText();
+    $this->validatorSchema['country_ref'] = new sfValidatorInteger(array('required' => false));
+
     $this->widgetSchema   ['id'] = new sfWidgetFormInputHidden();
     $this->validatorSchema['id'] = new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false));
 

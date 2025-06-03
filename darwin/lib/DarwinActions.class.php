@@ -306,6 +306,7 @@ class DarwinActions extends sfActions
     $ig_num="";
     $includeSubcollection=false;
     $detailSubCollections=false;
+	$parent_only=false;
     if($request->hasParameter("collectionids"))
     {
         $idCollections=$request->getParameter("collectionids");
@@ -339,6 +340,8 @@ class DarwinActions extends sfActions
             $detailSubCollections=true;
         }
     }
+	
+	
     
     if($request->hasParameter("withsubcollections"))
     {
@@ -347,8 +350,16 @@ class DarwinActions extends sfActions
             $includeSubcollection=true;
         }
     }
+	
+	if($request->hasParameter("parentonly"))
+    {
+        if(strtolower($request->getParameter("parentonly")=="on")||strtolower($request->getParameter("parentonly")=="true"))
+        {
+            $parent_only=true;
+        }
+    }
     
-    $items=Doctrine_Core::getTable('Collections')->countSpecimens($idCollections, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections, $hide_private, $this->getUser()) ;
+    $items=Doctrine_Core::getTable('Collections')->countSpecimens($idCollections, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections , $parent_only, $hide_private, $this->getUser()) ;
      
     if(count($items)>1)
     {
@@ -399,6 +410,7 @@ class DarwinActions extends sfActions
     $ig_num="";
     $includeSubcollection=false;
     $detailSubCollections=false;
+	$parent_only=false;
     if($request->hasParameter("collectionids"))
     {
         $idCollections=$request->getParameter("collectionids");
@@ -440,21 +452,36 @@ class DarwinActions extends sfActions
             $includeSubcollection=true;
         }
     }
+	
+	
+	if($request->hasParameter("parentonly"))
+    {
+        if(strtolower($request->getParameter("parentonly")=="on")||strtolower($request->getParameter("parentonly")=="true"))
+        {
+            $parent_only=true;
+        }
+    }
+	
     if($table_name=="types")
     {
-        $items=Doctrine_Core::getTable('Collections')->countTypeSpecimens($idCollections, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections, $hide_private, $this->getUser()) ;
+        $items=Doctrine_Core::getTable('Collections')->countTypeSpecimens($idCollections, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections,  $parent_only,$hide_private, $this->getUser()) ;
     }
     elseif($table_name=="taxa")
     {
-        $items=Doctrine_Core::getTable('Collections')->countTaxaInSpecimen($idCollections, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections, $hide_private,$this->getUser(), $false) ;
+        $items=Doctrine_Core::getTable('Collections')->countTaxaInSpecimen($idCollections, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections, $parent_only,$hide_private,$this->getUser(), $false) ;
     }
 	elseif($table_name=="all_taxa")
     {
-        $items=Doctrine_Core::getTable('Collections')->countTaxaInSpecimen($idCollections, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections, $hide_private,$this->getUser(), $true) ;
+        $items=Doctrine_Core::getTable('Collections')->countTaxaInSpecimen($idCollections, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections, $parent_only,$hide_private,$this->getUser(), $true) ;
     }
 	elseif($table_name=="mids")
     {
         $items=Doctrine_Core::getTable('Collections')->countMidsSpecimens($idCollections, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections, $hide_private, $this->getUser()) ;
+    }
+	
+	elseif($table_name=="countries")
+    {
+        $items=Doctrine_Core::getTable('Collections')->countCountriesInSpecimens($idCollections, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections, $hide_private, $this->getUser()) ;
     }
     if(count($items)>1)
     {
@@ -478,7 +505,7 @@ class DarwinActions extends sfActions
                 }
             }
             $sum_records+=$item["nb_database_records"];
-            if($table_name=="types")
+            if($table_name=="types" ||$table_name=="countries"||$table_name=="mids")
             {
                 $sum_batch_low+=$item["nb_physical_specimens_low"];
                 $sum_batch_high+=$item["nb_physical_specimens_high"];
@@ -486,7 +513,7 @@ class DarwinActions extends sfActions
         }
         $sum[$keyField]="TOTAL";
         $sum["nb_database_records"]=$sum_records;
-        if($table_name=="types")
+        if($table_name=="types" ||$table_name=="countries" ||$table_name=="mids")
         {
             $sum["nb_physical_specimens_low"]=$sum_batch_low;
             $sum["nb_physical_specimens_high"]=$sum_batch_high;

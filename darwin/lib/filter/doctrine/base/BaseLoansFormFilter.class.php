@@ -59,8 +59,17 @@ abstract class BaseLoansFormFilter extends DarwinModelFormFilter
     $this->widgetSchema   ['collection_manager_mail'] = new sfWidgetFormFilterInput();
     $this->validatorSchema['collection_manager_mail'] = new sfValidatorPass(array('required' => false));
 
+    $this->widgetSchema   ['collection_manager_phone'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['collection_manager_phone'] = new sfValidatorPass(array('required' => false));
+
     $this->widgetSchema   ['non_cites'] = new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no')));
     $this->validatorSchema['non_cites'] = new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0)));
+
+    $this->widgetSchema   ['mail_receiver'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['mail_receiver'] = new sfValidatorPass(array('required' => false));
+
+    $this->widgetSchema   ['phone_receiver'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['phone_receiver'] = new sfValidatorPass(array('required' => false));
 
     $this->widgetSchema   ['collection_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Collections'), 'add_empty' => true));
     $this->validatorSchema['collection_ref'] = new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Collections'), 'column' => 'id'));
@@ -91,7 +100,10 @@ abstract class BaseLoansFormFilter extends DarwinModelFormFilter
       'collection_manager' => 'Text',
       'collection_manager_title' => 'Text',
       'collection_manager_mail' => 'Text',
+      'collection_manager_phone' => 'Text',
       'non_cites' => 'Boolean',
+      'mail_receiver' => 'Text',
+      'phone_receiver' => 'Text',
       'collection_ref' => 'ForeignKey',
     ));
   }

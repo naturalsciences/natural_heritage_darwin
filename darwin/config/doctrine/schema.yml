@@ -121,6 +121,7 @@ ExtLinks:
         type: { type: string, notnull: true, default:'ext'}
         comment: { type: string, notnull: true}
         comment_indexed: { type: string}
+        access_rights: { type: string}
 
 TagGroups:
     columns:
@@ -240,6 +241,8 @@ Gtu:
         nagoya: { type: string, notnull: true, default: 'not defined'}
         #ftheeten 2018 12 11
         expedition_ref: {type: ref}
+        iso3166: { type: string}
+        iso3166_subdivision: { type: string}
     relations:
         Tags:
             local: id
@@ -253,19 +256,19 @@ Gtu:
             local: id
             foreign : record_id
             class: DoctrineGtuComments
-        GtuComments:
-            local: id
-            foreign : record_id
-            class: GtuComments
-        GtuProperties:
-            local: id
-            foreign : record_id
-            class: GtuProperties
+        #GtuComments:
+        #    local: id
+        #    foreign : record_id
+        #    class: GtuComments
+        #GtuProperties:
+        #    local: id
+        #    foreign : record_id
+        #    class: GtuProperties
         Expeditions:
             local: expedition_ref
             foreign : id
             class: Expeditions
-
+ 
 Properties:
     columns:
         id: { type: integer, primary: true, autoincrement: true }
@@ -1730,6 +1733,7 @@ Multimedia:
         external_uri: { type: string }
         internet_protocol: { type: string }
         field_observations: { type: string }
+        access_rights: { type: integer}
 # This sub class is used for linking loans with actors
 LoanActors:
     inheritance:
@@ -1759,8 +1763,11 @@ Loans:
         collection_manager: { type: string}
         collection_manager_title: { type: string}
         collection_manager_mail: { type: string}
+        collection_manager_phone: { type: string}
         #ftheeten 2019 02 26
         non_cites: { type: boolean}
+        mail_receiver: { type: string}
+        phone_receiver: { type: string}
     relations:
         CataloguePeople:
             class: LoanActors
@@ -2280,6 +2287,7 @@ DoctrineTemporalInformationGtuGroup:
         array_to_date : {type : string}
         comments: {type : string}
         properties: {type : string}
+        country_ref: {type: integer}
     relations:
         Tags:
             local: id
@@ -2337,6 +2345,7 @@ DoctrineTemporalInformationGtuGroupUnnest:
         to_date: { type: string, notnull: true, default: '2038-12-31'}
         comments: {type : string}
         properties: {type : string}
+        country_ref: {type: integer}
 
 #ftheeten 2019 01 07
 DoctrineTemporalInformationGtuGroupTags:
@@ -2392,6 +2401,7 @@ DoctrineTemporalInformationGtuGroupTags:
         properties: {type : string}
         tag : {type : string}
         tag_indexed : {type : string}
+        country_ref: {type: integer}    
 
 #ftheeten 2019 01 07
 DoctrineTemporalInformationGtuGroupUnnestTags:
@@ -2446,6 +2456,7 @@ DoctrineTemporalInformationGtuGroupUnnestTags:
         properties: {type : string}
         tag : {type : string}
         tag_indexed : {type : string}
+        country_ref: {type: integer}
 
 StagingMultimedia:
     columns:
@@ -2641,3 +2652,119 @@ MvCodesSeries:
         code_full: {type: string},
         serie_indexed: {type: string}
         
+GtuIso3166:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true}            
+        iso3166_code: { type: string, notnull: true}
+        iso3166_name: { type: string, notnull: true}
+        iso3166_2_code: { type: string }
+        iso3166_2_name: { type: string }
+        level2_subdivision_code: { type: string }
+        level2_subdivision_name: { type: string }
+        search_field: { type: string }
+
+Georef:       
+    columns:
+        id: { type: integer, primary: true, autoincrement: true}
+        source: { type: string}
+        manual_offset: { type: boolean}
+        name: { type: string, notnull: true}
+        country: { type: string}
+        country_iso3166: { type: string}
+        osm_id: { type: string}
+        geonames_id: { type: string}
+        wikidata_id: { type: string}
+        osm_wkt: { type: string}
+        osm_url: { type: string}
+        osm_json: { type: string}
+        osm_metadata_json: { type: string}
+        osm_geo_type: { type: string}
+        osm_class: { type: string}
+        osm_type: { type: string}
+        osm_place_rank: { type: integer}
+        epsg: { type: string}
+        creation_date: { type: string, notnull: true, default: '0001-01-01'}
+        
+GtuToGeoref:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true}
+        gtu_ref: { type: integer, notnull: true}
+        georef_ref: { type: integer, notnull: true}
+    relations:
+        Gtu:
+            local: gtu_ref
+            foreign: id
+            class: Gtu
+        Georef:
+            local: georef_ref
+            foreign: id
+            class: Georef
+            
+VGeorefForInterface:       
+    columns:
+        id: { type: integer, primary: true, autoincrement: true}
+        source: { type: string}
+        manual_offset: { type: boolean}
+        name: { type: string, notnull: true}
+        country: { type: string}
+        country_iso3166: { type: string}
+        osm_id: { type: string}
+        geonames_id: { type: string}
+        wikidata_id: { type: string}
+        osm_wkt: { type: string}
+        osm_url: { type: string}
+        osm_json: { type: string}
+        osm_metadata_json: { type: string}
+        osm_geo_type: { type: string}
+        osm_class: { type: string}
+        osm_type: { type: string}
+        osm_place_rank: { type: integer}
+        epsg: { type: string}
+        wkt_from_geom: { type: string}
+        srid_from_geom: { type: string}
+        geojson_from_geom: { type: string}
+        creation_date: { type: string, notnull: true, default: '0001-01-01'}
+        
+GtuCountry:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true}
+        iso3166: { type: string, notnull: true}
+        name_en: { type: string}
+        lang_name_1: { type: string}
+        name_1: { type: string}
+        lang_name_2: { type: string}
+        name_2: { type: string}  
+        lang_name_3: { type: string}
+        name_3: { type: string}  
+        lang_name_4: { type: string}
+        name_4: { type: string}
+        lang_historical_name_1: { type: string}
+        historical_name_1: { type: string}
+        lang_historical_name_2: { type: string}
+        historical_name_2: { type: string}  
+        lang_historical_name_3: { type: string}
+        historical_name_3: { type: string}  
+        lang_historical_name_4: { type: string}
+        historical_name_4: { type: string}
+        from_date_mask: { type: integer, notnull: true, default:0}
+        from_date: {  type: string, notnull: true, default: '0001-01-01' }
+        to_date_mask: { type: integer, notnull: true, default:0}
+        to_date: {  type: string, notnull: true, default: '2038-12-31' }        
+        comments: { type: string}            
+        creation_date: { type: string, notnull: true, default: '0001-01-01'}
+        last_update_date: { type: string,  default: '0001-01-01'}
+
+GtuToCountry:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true}
+        gtu_ref:  { type: integer, notnull: true }
+        country_ref:  { type: integer, notnull: true }        
+    relations:
+        Gtu:
+            local: gtu_ref
+            foreign: id
+            class: Gtu
+        GtuCountry:
+            local: country_ref
+            foreign: id
+            class: GtuCountry

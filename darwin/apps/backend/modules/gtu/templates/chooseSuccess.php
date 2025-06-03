@@ -51,13 +51,16 @@ function chooseGtu(event)
   cell=el.find('td.item_name');
   //2019 02 28
   var referer = $("#http_referer").val();
-  if(referer.indexOf("/staging/edit/")!=-1)
-  {   
-    ref_element_name = el.find(".gtu_code").html();   
-  }
-  else
+  if(referer !== 'undefined')
   {
-    ref_element_name = cell.html();
+	  if(referer.indexOf("/staging/edit/")!=-1)
+	  {   
+		ref_element_name = el.find(".gtu_code").html();   
+	  }
+	  else
+	  {
+		ref_element_name = cell.html();
+	  }
   }
   //ftheeten 2018 12 13
   if($(event.target).attr("name")=="date_choose")
@@ -133,6 +136,15 @@ function chooseGtuInMap(id)
   ref_element_name = $('.map_result_id_'+id+' .item_name').html();
   $('body').trigger('close_modal');
 }
+
+/*function chooseGtuInMapOL(id)
+{
+  ref_element_id = id;
+  ref_element_name = "from map";
+  $('body').trigger('close_modal');
+}
+*/
+
 
 function getGtuId(el)
 {

@@ -86,7 +86,7 @@
                 <?php endif ; ?>
                 <?php if (isset($printable) && in_array($item->getId(), $printable->getRawValue())): ?>
 				  <td>
-                  <?php echo link_to("PDF", "http://172.16.11.138/merge_pdf?loan=".$item->getId(), array("target"=> "_blank"));?>
+                  <?php echo link_to("PDF", "http://ursidae1:8080/pentaho/api/repos/%3Apublic%3ADarwin2%3AReports_loans%3Aloans_prod.prpt/report?userid=Admin&password=password&output-target=pageable%2Fpdf&accepted-page=-1&showParameters=true&renderMode=REPORT&htmlProportionalWidth=true&LOAN_ID=".$item->getId(), array("target"=> "_blank"));?>
 				  </td>
                 <?php endif; ?>
               <?php else:?>

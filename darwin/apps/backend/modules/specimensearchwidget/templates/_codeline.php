@@ -23,7 +23,7 @@
    
     <tr>
       <td><?php echo $code['category'];?></td>
-      <td><?php echo $code['code_part'];?></td>
+      <td><?php echo $code['code_part'];?>  (use "*" for wildcard) </td>
       <td class="and_col">
         <?php echo link_to(image_tag('next.png'),'specimen/index', array('class'=>'code_between next'));?>
         <?php echo link_to(image_tag('previous.png'),'specimen/index', array('class'=>'code_between hidden prev'));?>

@@ -1,5 +1,8 @@
+<tr><th><?php print(__("Country"));?></th></tr>
+<tr><td><?php echo $form['country_ref'];?></td></tr>
+<tr><th><?php print(__("Location"));?></th></tr>
 <tr class="tag_line">
-  <td colspan="3">
+  <td colspan="3" style="vertical-align:top">
     <?php echo $form['tag'];?>
     <div class="purposed_tags" id="purposed_tags_<?php echo $row_line;?>"></div>
   </td>

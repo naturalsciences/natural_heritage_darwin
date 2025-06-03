@@ -339,7 +339,7 @@ function decodeBase64(s) {
 //http://www.1stwebmagazine.com/jquery-checkbox-and-radio-button-styling
 ;(function(){
 $.fn.customRadioCheck = function() {
-
+/*
   return this.each(function() {
 
     var $this = $(this);
@@ -370,6 +370,7 @@ $.fn.customRadioCheck = function() {
       blur: function() { $span.removeClass('focus'); }
     });
   });
+  */
 };
 }());
 
@@ -540,7 +541,8 @@ $.fn.customRadioCheck = function() {
     
     function GetNagoyaDateAcquisition()
     {
-    
+		console.log("nagoya_1");
+		
         var year_from=$("#specimen_acquisition_date_year").val();
         var month_from="01";
         var day_from="01";    
@@ -576,7 +578,7 @@ $.fn.customRadioCheck = function() {
     
          var GetNagoyaCollection=function(url)
          {           
-			
+			console.log("nagoya_2");
 			$.getJSON( 
 				url,
 				{id: $("#specimen_collection_ref").val()},
@@ -614,6 +616,7 @@ $.fn.customRadioCheck = function() {
        
        function GetNagoyaDateSampling(jquery_prefix)
        {
+			console.log("nagoya_3");
             var array_dates=calculate_date_range_generic(jquery_prefix);
             var date_from=array_dates["date_from"];
             var date_to=array_dates["date_to"];
@@ -640,6 +643,7 @@ $.fn.customRadioCheck = function() {
     
     	function GetNagoyaGTU()
         {
+		console.log("nagoya_4");
 		if ($("#specimen_gtu_ref_code").html() !== $gtu_ref_code || $gtu_ref_code == "") {
 			var url=location.protocol + '//' + "<?php print(parse_url(sfContext::getInstance()->getRequest()->getUri(),PHP_URL_HOST ));?>" + "/backend.php/specimen/getNagoyaGTU";
 			$.getJSON( 
@@ -660,97 +664,105 @@ $.fn.customRadioCheck = function() {
     
     function fillcheckandlabels($origin) 
     { 
-       
-
-		if (	$('#coll').val()=="ok" && $('#gtu').val()=="ok"  && 	($('#date_sampl').val()=="ok" || $('#date_acq').val()=="ok") )
+       console.log("nagoya_5");
+		var existing_value=$('.nagoya:checked').val();
+		if(existing_value=="not defined")
 		{
-			
-	
-			   $('#specimen_nagoya option[value="yes"]').attr('selected','selected');
-
-				$(".nagoya_uncheck").hide();
-				$(".nagoya_check").show();
-				$(".nagoya_doc").show();
-				$(".nagoya_notfilled").hide();
-				$(".nagoya_verify").show();
+		
+			if (	$('#coll').val()=="ok" && $('#gtu').val()=="ok"  && 	($('#date_sampl').val()=="ok" || $('#date_acq').val()=="ok") )
+			{
 				
-				$("#coll_label").text("- Collection is concerned by Nagoya protocol");
-				$("#GTU_label").text("- Sampling location is in a area concerned by Nagoya protocol");
-				$("#dates_label").text("- Dates of acquisition or collect are after 12/10/2014");
-		}
-		else if (	$('#coll').val()=="nok" || $('#gtu').val()=="nok" || ($('#date_sampl').val()=="nok" && $('#date_acq').val()=="nok") )
-		{
-				
-				
-					$('#specimen_nagoya option[value="no"]').attr('selected','selected');
-
-					$(".nagoya_uncheck").show();
-					$(".nagoya_check").hide();
-					$(".nagoya_doc").hide();
+		
+				   //$('#specimen_nagoya option[value="yes"]').attr('selected','selected');
+					$('#specimen_nagoya_yes').attr('checked','checked');
+					$(".nagoya_uncheck").hide();
+					$(".nagoya_check").show();
+					$(".nagoya_doc").show();
 					$(".nagoya_notfilled").hide();
 					$(".nagoya_verify").show();
 					
-					if(	$('#coll').val()=="" || $('#coll').val()=="not defined"){
-						$("#coll_label").text("- Collection is NOT chosen or Nagoya of Collection not defined");
-					}else	if(	$('#coll').val()=="ok"){
-						$("#coll_label").text("- Collection is concerned by Nagoya protocol");
-					}else{
-						$("#coll_label").text("- Collection is NOT concerned by Nagoya protocol");
-					}
-					
-					if(	$('#gtu').val()=="" || $('#gtu').val()=="not defined"){
-						$("#GTU_label").text("- Sampling location is NOT chosen or Nagoya of location not defined");
-					}else if($('#gtu').val()=="ok"){
-						$("#GTU_label").text("- Sampling location is in a area concerned by Nagoya protocol");
-					}else{
-						$("#GTU_label").text("- Sampling location is NOT in a area concerned by Nagoya protocol");
-					}
-					
-					if($('#date_sampl').val()=="not defined" || $('#date_acq').val()=="not defined") {
-						$("#dates_label").text("- Date of acquisition or collect are NOT filled");
-					}else if($('#date_sampl').val()=="ok" || $('#date_acq').val()=="ok") {
-						$("#dates_label").text("- Dates of acquisition or collect are after 12/10/2014");
-					}else{
-						$("#dates_label").text("- Dates of acquisition or collect are BEFORE 12/10/2014");
-					}
-			//}
-		}else{	
-	
-
-			$('#specimen_nagoya option[value="not defined"]').attr('selected','selected');
-	
-			$(".nagoya_uncheck").hide();
-			$(".nagoya_check").hide();
-			$(".nagoya_doc").hide();
-			$(".nagoya_notfilled").show();
-			$(".nagoya_verify").show();
-			
-			if(	$('#coll').val()=="" || $('#coll').val()=="not defined"){
-				$("#coll_label").text("- Collection is NOT chosen or Nagoya of Collection not defined");
-			}else	 if($('#coll').val()=="ok"){
-				$("#coll_label").text("- Collection is concerned by Nagoya protocol");
-			}else{
-				$("#coll_label").text("- Collection is NOT concerned by Nagoya protocol");
+					$("#coll_label").text("- Collection is concerned by Nagoya protocol");
+					$("#GTU_label").text("- Sampling location is in a area concerned by Nagoya protocol");
+					$("#dates_label").text("- Dates of acquisition or collect are after 12/10/2014");
 			}
-	
-			if(	$('#gtu').val()=="" || $('#gtu').val()=="not defined"){
-				$("#GTU_label").text("- Sampling location is NOT chosen or Nagoya of location not defined");
-			}else if($('#gtu').val()=="ok"){
-				$("#GTU_label").text("- Sampling location is in a area concerned by Nagoya protocol");
-			}else{
-				$("#GTU_label").text("- Sampling location is NOT in a area concerned by Nagoya protocol");
-			}
-		//	alert($('#date_sampl').val() +" ---  " + $('#date_acq').val());
-
-			if($('#date_sampl').val()=="not defined" || $('#date_acq').val()=="not defined") {
+			else if (	$('#coll').val()=="nok" || $('#gtu').val()=="nok" || ($('#date_sampl').val()=="nok" && $('#date_acq').val()=="nok") )
+			{
+					
+					
+						//$('#specimen_nagoya option[value="no"]').attr('selected','selected');
+						$('#specimen_nagoya_no').attr('checked','checked');
+						$(".nagoya_uncheck").show();
+						$(".nagoya_check").hide();
+						$(".nagoya_doc").hide();
+						$(".nagoya_notfilled").hide();
+						$(".nagoya_verify").show();
+						
+						if(	$('#coll').val()=="" || $('#coll').val()=="not defined"){
+							$("#coll_label").text("- Collection is NOT chosen or Nagoya of Collection not defined");
+						}else	if(	$('#coll').val()=="ok"){
+							$("#coll_label").text("- Collection is concerned by Nagoya protocol");
+						}else{
+							$("#coll_label").text("- Collection is NOT concerned by Nagoya protocol");
+						}
+						
+						if(	$('#gtu').val()=="" || $('#gtu').val()=="not defined"){
+							$("#GTU_label").text("- Sampling location is NOT chosen or Nagoya of location not defined");
+						}else if($('#gtu').val()=="ok"){
+							$("#GTU_label").text("- Sampling location is in a area concerned by Nagoya protocol");
+						}else{
+							$("#GTU_label").text("- Sampling location is NOT in a area concerned by Nagoya protocol");
+						}
+						
+						if($('#date_sampl').val()=="not defined" || $('#date_acq').val()=="not defined") {
+							$("#dates_label").text("- Date of acquisition or collect are NOT filled");
+						}else if($('#date_sampl').val()=="ok" || $('#date_acq').val()=="ok") {
+							$("#dates_label").text("- Dates of acquisition or collect are after 12/10/2014");
+						}else{
+							$("#dates_label").text("- Dates of acquisition or collect are BEFORE 12/10/2014");
+						}
 				
-				$("#dates_label").text("- Date of acquisition or collect are NOT filled");
-			}else if($('#date_sampl').val()=="ok" || $('#date_acq').val()=="ok") {
-				$("#dates_label").text("- Dates of acquisition or collect are after 12/10/2014");
-			}else{
-				$("#dates_label").text("- Dates of acquisition or collect are BEFORE 12/10/2014");
+			}
+			else
+			{	
+			
+				
+		
+				$('#specimen_nagoya option[value="not defined"]').attr('selected','selected');
+				$('#specimen_nagoya_yes').attr('checked','checked');
+		
+				$(".nagoya_uncheck").hide();
+				$(".nagoya_check").hide();
+				$(".nagoya_doc").hide();
+				$(".nagoya_notfilled").show();
+				$(".nagoya_verify").show();
+				
+				if(	$('#coll').val()=="" || $('#coll').val()=="not defined"){
+					$("#coll_label").text("- Collection is NOT chosen or Nagoya of Collection not defined");
+				}else	 if($('#coll').val()=="ok"){
+					$("#coll_label").text("- Collection is concerned by Nagoya protocol");
+				}else{
+					$("#coll_label").text("- Collection is NOT concerned by Nagoya protocol");
+				}
+		
+				if(	$('#gtu').val()=="" || $('#gtu').val()=="not defined"){
+					$("#GTU_label").text("- Sampling location is NOT chosen or Nagoya of location not defined");
+				}else if($('#gtu').val()=="ok"){
+					$("#GTU_label").text("- Sampling location is in a area concerned by Nagoya protocol");
+				}else{
+					$("#GTU_label").text("- Sampling location is NOT in a area concerned by Nagoya protocol");
+				}
+			//	alert($('#date_sampl').val() +" ---  " + $('#date_acq').val());
+
+				if($('#date_sampl').val()=="not defined" || $('#date_acq').val()=="not defined") {
+					
+					$("#dates_label").text("- Date of acquisition or collect are NOT filled");
+				}else if($('#date_sampl').val()=="ok" || $('#date_acq').val()=="ok") {
+					$("#dates_label").text("- Dates of acquisition or collect are after 12/10/2014");
+				}else{
+					$("#dates_label").text("- Dates of acquisition or collect are BEFORE 12/10/2014");
+				}	
 			}	
-		}	
+		}
 	};
     
         //ftheeten 2018 04 10

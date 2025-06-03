@@ -36,7 +36,7 @@ class savesearchActions extends sfActions
 
   public function executePin(sfWebRequest $request)
   {
-    if( in_array($request->getParameter('source',""), array('specimen')))
+    if( in_array($request->getParameter('source',""), array('specimen', 'gtu')))
     {
       $source =  $request->getParameter('source',"");
       if($request->getParameter('id') && ctype_digit($request->getParameter('id')))

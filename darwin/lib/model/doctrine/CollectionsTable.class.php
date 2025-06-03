@@ -179,7 +179,7 @@ class CollectionsTable extends DarwinTable
     //ftheeten 2018 04 27
   
   
-  public function countSpecimens($collectionID ="/", $year="", $creation_date_min="", $creation_date_max="", $ig_num="", $includeSubcollection=false, $detailSubCollections=false , $hide_private=false, $user=null)
+  public function countSpecimens($collectionID ="/", $year="", $creation_date_min="", $creation_date_max="", $ig_num="", $includeSubcollection=false, $detailSubCollections=false ,  $parent_only=false,$hide_private=false, $user=null)
   {
   
     $fields =Array();
@@ -234,8 +234,11 @@ class CollectionsTable extends DarwinTable
 		$groups[]="collection_ref";
 	
     }
-	
-   
+	if($detailSubCollections)
+	{
+		$fields[]="grscicoll_code";
+		$groups[]="grscicoll_code";
+	}
 
     if($includeSubcollection||$collectionID=="/")
     {
@@ -285,7 +288,7 @@ class CollectionsTable extends DarwinTable
     
     ksort($fields);
     
-    $all_fields=implode(", ", $fields);
+    
 	
    $hide_str="";
    $hide_str_where="";
@@ -315,8 +318,48 @@ class CollectionsTable extends DarwinTable
 			$where[]="(is_public=true OR db_user_type>= 2)";
 	   }
    }
+    $regex="";
+    if(strpos($collectionID, ","))
+	{
+			
+			$array_col_id=explode(",",$collectionID );
+			$regex="path ||id::varchar||'/' as full_path, regexp_replace(path ||id::varchar||'/', '(\/(".implode("|", $array_col_id ).")/\d+\/).*', '\\1') as group_coll ";
+			if($detailSubCollection)
+			{
+				$fields[]="group_coll";
+				$groups[]="full_path";
+				$groups[]="group_coll";
+			}
+    }
+	elseif($collectionID=="/")
+	{
+		
+		if($detailSubCollections)
+			{
+				$regex="path ||id::varchar||'/' as full_path,  regexp_replace(path ||id::varchar||'/', '(\/\d+/\d+\/).*', '\\1') as group_coll ";
+				$fields[]="group_coll";
+				$groups[]="full_path";
+				$groups[]="group_coll";
+			}
+	}
+	else
+	{
+		$regex="path ||id::varchar||'/' as full_path, regexp_replace(path ||id::varchar||'/', '(\/".$collectionID."/\d+\/).*', '\\1') as group_coll ";
+		if($detailSubCollection)
+			{
+				$fields[]="group_coll";
+				$groups[]="full_path";
+				$groups[]="group_coll";
+			}
+	}
+	if(strlen($regex)>0)
+	{
+		$regex=",".$regex;
+	}
+	
+	$all_fields=implode(", ", $fields);
     $sql ="
-	 WITH a AS (SELECT id, collection_path_text FROM v_rmca_collections_path_as_text)  
+	 WITH a AS (SELECT id, REPLACE(name_full_path,'|', '/') collection_path_text, grscicoll_code ".$regex." FROM v_collections_full_path_recursive_grscicoll)  , b as (
 	SELECT ".$all_fields." FROM v_reporting_count_all_specimens_by_collection_year_ig INNER JOIN a ON v_reporting_count_all_specimens_by_collection_year_ig.collection_ref=a.id ".$hide_str." WHERE ".implode(" AND ", $where);
     
     if(count($groups)>0)
@@ -330,6 +373,22 @@ class CollectionsTable extends DarwinTable
     }
     
     $conn = Doctrine_Manager::connection();
+	$sql=$sql.")";
+	
+	if($parent_only && $detailSubCollections)
+	{
+		$sql=$sql.", c as(
+		 SELECT 
+		 group_coll, sum(nb_database_records) nb_database_records,sum(nb_physical_specimens_low) nb_physical_specimens_low, sum(nb_physical_specimens_high) nb_physical_specimens_high
+		 FROM b group by group_coll
+			 )
+			 select a.collection_path_text,grscicoll_code, nb_database_records, nb_physical_specimens_low, nb_physical_specimens_high from c left join a on c.group_coll=a.full_path ORDER BY collection_path_text";
+	}
+	else
+	{
+		$sql=$sql."SELECT * FROM b";
+	}
+	
     $q = $conn->prepare($sql);
     
      if(strlen($year)>0)
@@ -372,7 +431,8 @@ class CollectionsTable extends DarwinTable
     }
        
    
-   
+
+
     $q->execute();
     
     $items=$q->fetchAll(PDO::FETCH_ASSOC);
@@ -380,21 +440,21 @@ class CollectionsTable extends DarwinTable
     return $items;
   }
   
-    public function countTypeSpecimens($collectionID ="/", $year="", $creation_date_min="", $creation_date_max="", $ig_num="", $includeSubcollection=false, $detailSubCollections=false , $hide_private=false,$user=null )
+    public function countTypeSpecimens($collectionID ="/", $year="", $creation_date_min="", $creation_date_max="", $ig_num="", $includeSubcollection=false, $detailSubCollections=false ,  $parent_only=false,$hide_private=false,$user=null )
   {
   
     $fields =Array();
     $groups =Array();
     $where =Array();
     $orders=Array();
-    if($detailSubCollection>0)
+    /*if($detailSubCollection>0)
     {
         $fields[0]="collection_name";
         $fields[1]="type";
         $groups[]="collection_name";
         $groups[]="type";
         
-    }
+    */
    
     if(strlen($year)>0)
     {
@@ -497,8 +557,12 @@ class CollectionsTable extends DarwinTable
     $where[]="type <> ''";
     
     ksort($fields);
-    
-    $all_fields=implode(", ", $fields);
+    if($detailSubCollections)
+	{
+		$fields[]="grscicoll_code";
+		$groups[]="grscicoll_code";
+	}
+   
    
    $hide_str="";
    if($user!==null)
@@ -525,18 +589,78 @@ class CollectionsTable extends DarwinTable
 			$where[]="(is_public=true OR db_user_type>= 2)";
 	   }
    }
-    $sql ="SELECT ".$all_fields." FROM v_reporting_count_all_specimens_type_by_collection_ref_year_ig ".$hide_str."  WHERE ".implode(" AND ", $where);
-    
-    if(count($groups)>0)
-    {
-        $sql = $sql." GROUP BY ".implode(", ", $groups);
+   if(strpos($collectionID, ",")&& $detailSubCollections)
+	{
+			
+			$array_col_id=explode(",",$collectionID );
+			$regex="path ||id::varchar||'/' as full_path, regexp_replace(path ||id::varchar||'/', '(\/(".implode("|", $array_col_id ).")/\d+\/).*', '\\1') as group_coll ";
+			$fields[]=$regex;
+			$groups[]="path";
+			$groups[]="id";
+			/*$fields[]="group_coll";
+			$groups[]="full_path";
+			$groups[]="group_coll";*/
+    }
+	elseif($collectionID=="/"&& $detailSubCollections)
+	{
+		$regex="path ||id::varchar||'/' as full_path,  regexp_replace(path ||id::varchar||'/', '(\/\d+/\d+\/).*', '\\1') as group_coll ";
+		$fields[]=$regex;
+		$groups[]="path";
+		$groups[]="id";
+		/*$fields[]="group_coll";
+		$groups[]="full_path";
+		$groups[]="group_coll";*/
+	}
+	elseif($detailSubCollections)
+	{
+		$regex="path ||id::varchar||'/' as full_path, regexp_replace(path ||id::varchar||'/', '(\/".$collectionID."/\d+\/).*', '\\1') as group_coll ";
+		$fields[]=$regex;
+		$groups[]="path";
+		$groups[]="id";
+		/*$fields[]="group_coll";
+		$groups[]="full_path";
+		$groups[]="group_coll";*/
+	}
+	
+    $all_fields=implode(", ", $fields);
+	if( $parent_only && $detailSubCollections)
+	{
+		$tmpsql ="SELECT ".$all_fields." FROM v_collections_full_path_recursive_grscicoll LEFT JOIN v_reporting_count_all_specimens_type_by_collection_ref_year_ig ON v_collections_full_path_recursive_grscicoll.id=collection_ref ".$hide_str."  WHERE ".implode(" AND ", $where);
+		if(count($groups)>0)
+		{
+			$tmpsql = $tmpsql." GROUP BY ".implode(", ", $groups);
+		}
+		
+		 if(count($orders)>0)
+		{
+			$tmpsql = $tmpsql." ORDER BY ".implode(", ", $orders);
+		}
+		$sql="with a as (".$tmpsql.") select 
+REPLACE(name_full_path,'|','/')	  collection_path_text,
+a.grscicoll_code,
+sum(nb_database_records) nb_database_records, 
+sum(nb_physical_specimens_low) nb_physical_specimens_low,
+sum(nb_physical_specimens_high) nb_physical_specimens_high
+from a 
+left join v_collections_full_path_recursive_grscicoll b
+on b.path||b.id::varchar||'/' = group_coll
+group by group_coll, name_full_path, a.grscicoll_code ORDER BY name_full_path;";
+	}
+	else
+	{
+		$sql ="SELECT ".$all_fields." FROM v_collections_full_path_recursive_grscicoll LEFT JOIN v_reporting_count_all_specimens_type_by_collection_ref_year_ig ON v_collections_full_path_recursive_grscicoll.id=collection_ref ".$hide_str."  WHERE ".implode(" AND ", $where);
+			if(count($groups)>0)
+		{
+			$sql = $sql." GROUP BY ".implode(", ", $groups);
+		}
+		
+		 if(count($orders)>0)
+		{
+			$sql = $sql." ORDER BY ".implode(", ", $orders);
+		}
     }
     
-     if(count($orders)>0)
-    {
-        $sql = $sql." ORDER BY ".implode(", ", $orders);
-    }
-    
+
     $conn = Doctrine_Manager::connection();
     $q = $conn->prepare($sql);
     
@@ -703,7 +827,11 @@ class CollectionsTable extends DarwinTable
    
     
     ksort($fields);
-    
+	if($detailSubCollections)
+	{
+		$fields[]="grscicoll_code";
+		$groups[]="grscicoll_code";
+    }
     $all_fields=implode(", ", $fields);
    
    $hide_str="";
@@ -731,7 +859,7 @@ class CollectionsTable extends DarwinTable
 			$where[]="(is_public=true OR db_user_type>= 2)";
 	   }
    }
-    $sql ="SELECT ".$all_fields." FROM v_reporting_count_all_specimens_mids_by_collection_ref_year_ig ".$hide_str."  WHERE ".implode(" AND ", $where);
+    $sql ="SELECT ".$all_fields." FROM v_collections_full_path_recursive_grscicoll LEFT JOIN v_reporting_count_all_specimens_mids_by_collection_ref_year_ig ON v_collections_full_path_recursive_grscicoll.id=collection_ref ".$hide_str."  WHERE ".implode(" AND ", $where);
     
     if(count($groups)>0)
     {
@@ -794,7 +922,177 @@ class CollectionsTable extends DarwinTable
     return $items;
   }
   
-  public function countTaxaInSpecimen($collectionID ="/", $year="", $creation_date_min="", $creation_date_max="", $ig_num="", $includeSubcollection=false, $detailSubCollections=false  , $hide_private=false, $all=false)
+   public function countCountriesInSpecimens($collectionID ="/", $year="", $creation_date_min="", $creation_date_max="", $ig_num="", $includeSubcollection=false, $detailSubCollections=false , $hide_private=false,$user=null )
+  {
+		$fields_agg =Array();
+		$fields =Array();
+		
+		$where_agg =Array();
+		$group_agg =Array();
+		$where =Array();
+		$orders=Array();
+		$params=Array();
+		$groups =Array();
+		
+		$agg_table1=" WITH a AS(SELECT id, path||id::varchar||'/' as collection_full_path, collection_type, code, name, name_indexed, code_full_path, name_full_path, name_indexed_full_path,grscicoll_code FROM darwin2.v_collections_full_path_recursive_grscicoll  ), b AS (SELECT INITCAP(regexp_replace(regexp_replace(regexp_replace(trim(gtu_country_tag_value),'\s+', ' ' ,'g') , '\s*;\s*' , ';','g'), ';+',';','g'))  gtu_country_tag_value , type, specimen_count_min,specimen_count_max, collection_full_path, from_date,from_date_mask, ig_num ";
+		$agg_table2.=" FROM  specimens INNER JOIN a  ON  specimens.collection_ref=a.id LEFT JOIN temporal_information ON specimens.id=temporal_information.specimen_ref ";
+		$agg_table3= ") , c AS (SELECT DISTINCT  gtu_country_tag_value, LOWER(type) as spec_type ";
+		$agg_table4= " , COUNT(*) as nb_database_records,
+			 sum(specimen_count_min)  nb_physical_specimens_low,  sum(specimen_count_max)  nb_physical_specimens_high FROM b  GROUP BY  gtu_country_tag_value, LOWER(type) ";
+		
+		$agg_table5=" ) SELECT  gtu_country_tag_value as countries ";
+		$agg_table6=" , SUM(nb_database_records) AS nb_database_records, string_agg(spec_type||':'||(nb_database_records::varchar),'; ' ORDER BY spec_type) AS nb_records_by_type , SUM(nb_physical_specimens_low) AS nb_physical_specimens_low, string_agg(spec_type||':'||(nb_physical_specimens_low::varchar),'; '  ORDER BY spec_type) AS nb_specimen_min_by_type, SUM(nb_physical_specimens_high) AS nb_physical_specimens_high, string_agg(spec_type||':'||(nb_physical_specimens_high::varchar),'; '  ORDER BY spec_type) AS nb_specimen_max_by_type FROM c ";
+		$agg_table7=" GROUP BY  gtu_country_tag_value";
+		$agg_table8=" ORDER BY  gtu_country_tag_value ";
+		
+		
+		if(strlen($year)>0 || strlen($creation_date_min)>0 || strlen($creation_date_max)>0)
+		{
+			$fields_agg[]="substring(fct_mask_date(from_date,  from_date_mask),1,4) as year";
+			$group_agg[]="substring(fct_mask_date(from_date,  from_date_mask),1,4)";
+			//$fields_agg[]="fct_mask_date(from_date,  from_date_mask) as year";
+			//$group_agg[]="fct_mask_date(from_date,  from_date_mask) ";
+			$fields[]="year";			
+			$groups[]="year";
+			if(strlen($creation_date_min)>0)
+			{
+				$tmp=explode("-",$creation_date_min);
+				
+					if(count($tmp)==3)
+					{
+						$tmp[1]=str_pad($tmp[1], 2, "0", STR_PAD_LEFT); 
+						$tmp[2]=str_pad($tmp[2], 2, "0", STR_PAD_LEFT); 
+						$creation_date_min=implode("-",$tmp);
+						$where_agg[]="specimen_creation_date >= '".$creation_date_min."' ";
+					}
+				
+				/*if(is_numeric(str_replace("-","",$creation_date_min)))
+				{
+					$where_agg[]="fct_mask_date(gtu_from_date,  gtu_from_date_mask) >= '".$creation_date_min."' ";
+				}*/
+			}
+			if(strlen($creation_date_max)>0)
+			{
+				/*if(is_numeric(str_replace("-","",$creation_date_max)))
+				{
+					$where_agg[]="NULLIF(fct_mask_date(gtu_from_date,  gtu_from_date_mask),'xxxx-xx-xx') >= '".$creation_date_max."' ";
+				}*/
+				$tmp=explode("-",$creation_date_max);
+				
+					if(count($tmp)==3)
+					{
+						$tmp[1]=str_pad($tmp[1], 2, "0", STR_PAD_LEFT); 
+						$tmp[2]=str_pad($tmp[2], 2, "0", STR_PAD_LEFT); 
+						$creation_date_max=implode("-",$tmp);
+						$where_agg[]="specimen_creation_date <= '".$creation_date_max."' ";
+					}
+				
+			}
+		}
+		if(strlen($ig_num)>0)
+		{
+			$fields_agg[]="ig_num";
+			$group_agg[]="ig_num";
+			$where_agg[]= "ig_num = :=ig_num" ;
+			$params[":ig_num"]=$ig_num;
+			$fields[]="ig_num";			
+			$groups[]="ig_num";
+			
+		}
+		
+		if($detailSubCollections)
+		{
+			
+			$fields_agg[]="name_full_path";	
+			
+			$group_agg[]="name_full_path";	
+			$groups[]	="name_full_path";			
+			
+			$fields[]="name_full_path";
+			
+			$fields_agg[]="grscicoll_code";
+			$group_agg[]="grscicoll_code";
+			$fields[]="grscicoll_code";
+			$groups[]="grscicoll_code";
+
+		}
+		
+		if($collectionID=="/")
+		{
+			$where_agg[]= "collection_full_path LIKE  :id||'%'";    
+			$params[":id"]=$collectionID;				
+		}
+		elseif(strpos($collectionID, ","))
+		{
+			$array_col_id=explode(",",$collectionID );
+			$whereTmp=Array();
+			foreach($array_col_id as $tmp_id)
+			{
+				if(is_numeric($tmp_id))
+				{
+					$whereTmp[]= "collection_full_path LIKE '%/$tmp_id/%'";
+				}
+			}
+			$where_agg[]="(".implode(" OR ", $whereTmp).")";
+		}
+		else
+		{
+			 $where_agg[]= "collection_full_path LIKE '%/'||:idb||'/%'";
+			 $params[":idb"]=$collectionID;				
+		}
+	
+		$fields_agg_str="";
+		if(count($fields_agg)>0)
+		{
+			$fields_agg_str=",".implode(",", $fields_agg);
+		}
+		
+		$group_agg_str="";
+		if(count($group_agg)>0)
+		{
+			$group_agg_str=",".implode(",", $group_agg);
+		}
+		
+		$where_agg_str="";
+		if(count($where_agg)>0)
+		{
+			$where_agg_str=" WHERE ".implode(" AND ", $where_agg);
+		}
+		
+		$fields_str="";
+		if(count($fields))
+		{
+			$fields_str=",".implode(",",$fields );
+		}
+		
+		$group_str="";
+		if(count($groups)>0)
+		{
+			$groups_str=",".implode(",", $groups);
+		}
+		
+		$query=$agg_table1.$fields_agg_str.$agg_table2.$where_agg_str.$agg_table3.$fields_agg_str.$agg_table4.$group_agg_str.$agg_table5.$fields_str.$agg_table6.$agg_table7.$groups_str.$agg_table8;
+		
+		
+		
+		$conn = Doctrine_Manager::connection();
+		
+		$q = $conn->prepare($query);
+		
+		foreach($params as $p=>$v)
+		{				
+			
+				$q->bindParam($p, $v, PDO::PARAM_STR);
+			
+		}
+		 $q->execute();
+		$items=$q->fetchAll(PDO::FETCH_ASSOC);
+		
+		return $items;
+  
+  }
+  
+  public function countTaxaInSpecimen($collectionID ="/", $year="", $creation_date_min="", $creation_date_max="", $ig_num="", $includeSubcollection=false, $detailSubCollections=false  ,$parent_only=false, $hide_private=false, $all=false)
   {
 	  
 	if($all)
@@ -805,12 +1103,12 @@ class CollectionsTable extends DarwinTable
 	{
 		$view_name="v_reporting_taxa_in_specimen_per_rank_collection_ref_year_ig";
 	}
-  
+    //$view_name="v_reporting_taxa_in_specimen_per_rank_collection_ref_year_ig";
     $fields =Array();
     $groups =Array();
     $where =Array();
     $orders=Array();
-    if($detailSubCollection>0)
+    if($detailSubCollection==true)
     {
         $fields[0]="collection_name";
         $fields[1]="level_name";
@@ -918,17 +1216,61 @@ class CollectionsTable extends DarwinTable
     
     
     ksort($fields);
-    
-    $all_fields=implode(", ", $fields);
+	if($detailSubCollections)
+	{
+		$fields[]="grscicoll_code";
+		$groups[]="grscicoll_code";
+	}
+   
    
    $hide_str="";
    if($hide_private)
    {
-	   $hide_str=" INNER JOIN collections ON $view_name.collection_ref=collections.id AND is_public=true ";
+	   $hide_str=" INNER JOIN v_collections_full_path_recursive_grscicoll ON $view_name.collection_ref=v_collections_full_path_recursive_grscicoll.id AND is_public=true ";
    }
-    $sql ="SELECT ".$all_fields." FROM $view_name ".$hide_str." WHERE ".implode(" AND ", $where);
+   else
+   {
+      $hide_str=" INNER JOIN v_collections_full_path_recursive_grscicoll ON $view_name.collection_ref=v_collections_full_path_recursive_grscicoll.id ";
+   }
+   
+    if(strpos($collectionID, ",")&& $detailSubCollections)
+	{
+			
+			$array_col_id=explode(",",$collectionID );
+			$regex="path ||id::varchar||'/' as full_path, regexp_replace(path ||id::varchar||'/', '(\/(".implode("|", $array_col_id ).")/\d+\/).*', '\\1') as group_coll ";
+			$fields[]=$regex;
+			$groups[]="path";
+			$groups[]="id";
+			/*$fields[]="group_coll";
+			$groups[]="full_path";
+			$groups[]="group_coll";*/
+    }
+	elseif($collectionID=="/"&& $detailSubCollections)
+	{
+		$regex="path ||id::varchar||'/' as full_path,  regexp_replace(path ||id::varchar||'/', '(\/\d+/\d+\/).*', '\\1') as group_coll ";
+		$fields[]=$regex;
+		$groups[]="path";
+		$groups[]="id";
+		/*$fields[]="group_coll";
+		$groups[]="full_path";
+		$groups[]="group_coll";*/
+	}
+	elseif($detailSubCollections)
+	{
+		$regex="path ||id::varchar||'/' as full_path, regexp_replace(path ||id::varchar||'/', '(\/".$collectionID."/\d+\/).*', '\\1') as group_coll ";
+		$fields[]=$regex;
+		$groups[]="path";
+		$groups[]="id";
+		/*$fields[]="group_coll";
+		$groups[]="full_path";
+		$groups[]="group_coll";*/
+	}
+   
+    $all_fields=implode(", ", $fields);
+	
+    //$sql ="SELECT ".$all_fields." FROM $view_name ".$hide_str." WHERE ".implode(" AND ", $where);
     
-    if(count($groups)>0)
+    /*if(count($groups)>0)
     {
         $sql = $sql." GROUP BY ".implode(", ", $groups);
     }
@@ -936,9 +1278,47 @@ class CollectionsTable extends DarwinTable
      if(count($orders)>0)
     {
         $sql = $sql." ORDER BY ".implode(", ", $orders);
-    }
-    
-  
+    }*/
+	
+	if( $parent_only && $detailSubCollections)
+	{
+		$tmpsql ="SELECT ".$all_fields." FROM $view_name ".$hide_str." WHERE ".implode(" AND ", $where);
+		if(count($groups)>0)
+		{
+			$tmpsql = $tmpsql." GROUP BY ".implode(", ", $groups);
+		}
+		
+		 if(count($orders)>0)
+		{
+			$tmpsql = $tmpsql." ORDER BY ".implode(", ", $orders);
+		}
+		$sql="with a as (".$tmpsql.") select 
+REPLACE(name_full_path,'|','/')	  collection_path_text,
+a.grscicoll_code,
+level_name, 
+sum(nb_database_records) nb_database_records
+from a 
+left join v_collections_full_path_recursive_grscicoll b
+on b.path||b.id::varchar||'/' = group_coll
+group by group_coll, name_full_path, a.grscicoll_code, level_name ORDER BY name_full_path;";
+	}
+	else
+	{
+		
+		$sql ="SELECT ".$all_fields." FROM $view_name ".$hide_str." WHERE ".implode(" AND ", $where);
+		
+		if(count($groups)>0)
+		{
+			$sql = $sql." GROUP BY ".implode(", ", $groups);
+		}
+		
+		 if(count($orders)>0)
+		{
+			$sql = $sql." ORDER BY ".implode(", ", $orders);
+		}
+	}
+ 
+ 
     $conn = Doctrine_Manager::connection();
     $q = $conn->prepare($sql);
     

@@ -389,7 +389,7 @@
 					  params: {'LAYERS': layer_name},
 					  ratio: 1,
 					  serverType: 'geoserver',
-					  projection: 'EPSG:4326',
+					  projection: 'EPSG:3857',
 					  transition: 0
 					}
 					)
@@ -480,8 +480,9 @@
 	function init_map(){
     
 		mousePositionControl= new ol.control.MousePosition({
-			 coordinateFormat: ol.coordinate.createStringXY(4),
-			projection:'EPSPG:4326',
+		 //coordinateFormat: ol.coordinate.createStringXY(4),
+			projection:'EPSPG:3857',
+			displayProjection:'EPSPG:4326',
 			className: "custom-mouse-position",
 			target: document.getElementById("mouse-position"),
 			undefinedHTML: "&nbsp;"
@@ -649,7 +650,8 @@
        		map = new ol.Map({
 				target: 'smap',
 				layers: layers,    
-				 
+				projection: "EPSG:3857" ,
+				displayProjection: "EPSG:4326" ,
 				view: new ol.View({                    
 				  center: ol.proj.fromLonLat([0,0]),
 				  zoom: 2

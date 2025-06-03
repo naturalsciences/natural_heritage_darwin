@@ -61,8 +61,17 @@ abstract class BaseLoansForm extends DarwinModelForm
     $this->widgetSchema   ['collection_manager_mail'] = new sfWidgetFormTextarea();
     $this->validatorSchema['collection_manager_mail'] = new sfValidatorString(array('required' => false));
 
+    $this->widgetSchema   ['collection_manager_phone'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['collection_manager_phone'] = new sfValidatorString(array('required' => false));
+
     $this->widgetSchema   ['non_cites'] = new sfWidgetFormInputCheckbox();
     $this->validatorSchema['non_cites'] = new sfValidatorBoolean(array('required' => false));
+
+    $this->widgetSchema   ['mail_receiver'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['mail_receiver'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema   ['phone_receiver'] = new sfWidgetFormTextarea();
+    $this->validatorSchema['phone_receiver'] = new sfValidatorString(array('required' => false));
 
     $this->widgetSchema   ['collection_ref'] = new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Collections'), 'add_empty' => true));
     $this->validatorSchema['collection_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Collections'), 'column' => 'id', 'required' => false));

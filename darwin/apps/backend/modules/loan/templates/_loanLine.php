@@ -52,10 +52,7 @@
   <td class="loan_actions_button">
 
     <?php echo $form['item_visible'];?>
-    <!--<?php if(! $lineObj->isNew()):?>
-      <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),'loanitem/view?id='.$lineObj->getId());?>
-      <?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))),'loanitem/edit?id='.$lineObj->getId());?>
-    <?php endif;?>-->
+
   </td>
 
   <td class="item_row_delete">

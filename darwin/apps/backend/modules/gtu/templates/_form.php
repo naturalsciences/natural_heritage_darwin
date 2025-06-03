@@ -90,6 +90,35 @@ $(document).ready(function ()
 	</tr>
 </table>
 
+
+<table style="margin-top:20px; margin-bottom: 20px">
+	<tr>
+		<td colspan="3">
+			 <?php include_partial('toiso3166', array('form' => $form));?>
+		</td>
+	</tr>
+	<!--<tr>
+		<th class="top_aligned"><?php echo __("Country") ?></th>
+		<td>          
+			<?php echo $form['iso3166_text']->renderError() ?>
+			<?php echo $form['iso3166_text'] ?>
+			<?php echo __("ISO 3166-1") ?>
+			<?php echo $form['iso3166']->renderError() ?>
+			<?php echo $form['iso3166'] ?>
+		</td>
+	</tr>-->
+	<tr>
+		<th class="top_aligned"><?php echo __("Administrative subdivision") ?></th>
+		<td>
+			<?php echo $form['iso3166_subdivision_text']->renderError() ?>
+			<?php echo $form['iso3166_subdivision_text'] ?>
+			<?php echo __("ISO 3166-2") ?>
+			<?php echo $form['iso3166_subdivision']->renderError() ?>
+			<?php echo $form['iso3166_subdivision'] ?>
+		</td>
+	</tr>
+	
+</table>
 <?php
 $tag_grouped = array();
 $avail_groups = TagGroups::getGroups(); 
@@ -377,6 +406,103 @@ $(document).ready(function () {
     
         //ftheeten 2016 09 15
     checkCoordSourceState();
+	
+	
+	    $('.iso3166').autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: "<?php echo url_for('gtu/get_iso_3166_country_code');?>",
+                dataType: 'json',
+                data: {q:request.term },
+                success: function (data) {
+                    data.unshift({'id': request.id, 'term': request.term});
+                    response(data.map(function (value) {
+                        return {
+                            'label': value.text,
+                            'value': value.id
+                        };  
+                    }));
+                } 
+            }); 
+        },
+
+        select : function(event, ui)
+         {
+              event.preventDefault();
+              set_iso3166(event, ui);
+			  console.log(ui.item);
+              $(".iso3166_value").val(ui.item.value);
+              
+              ui.item.value = ui.item.label;
+              $('.iso3166').val(ui.item.value);              
+                return false;
+              
+        },        
+       minLength: 2
+    });
+    var set_iso3166= function(e, ui) {
+       $( "select[name*='sub_group_name']" ).each( 
+        
+            function()
+            {                
+                if($(this).val().toLowerCase()=="country")
+                {
+                    
+                    var idx = $(this).attr('id').match(/\d+/)[0];                    
+                    $("#gtu_newVal_"+idx+"_tag_value").val(ui.item.label);
+                    $("#gtu_TagGroups_"+idx+"_tag_value").val(ui.item.label);             
+   
+                }
+            }
+        );
+    };
+    
+    $('.iso3166_subdivision').autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: "<?php echo url_for('gtu/get_iso_3166_level_2_code');?>",
+                dataType: 'json',
+                data: {  q:request.term},
+                success: function (data) {
+                    data.unshift({'returned_code': request.term, 'returned': request.term});
+                    response(data.map(function (value) {
+                        return {
+                            'value': value.iso3166_2_code,
+                            'label': value.iso3166_2_name
+                        };  
+                    }));
+                } 
+            }); 
+        },
+        select : function(event, ui)
+         {
+              event.preventDefault();
+              set_iso3166_subdivision(event, ui);
+              $(".iso3166_subdivision_value").val(ui.item.value);
+              
+              //ui.item.value = ui.item.label;
+              $('.iso3166_subdivision').val(ui.item.label);              
+                return false;
+              
+        },          
+        minLength: 2
+    });
+    
+      var set_iso3166_subdivision= function(e, ui)  {
+       $( "select[name*='sub_group_name']" ).each( 
+        
+            function()
+            {                
+                if($(this).val().toLowerCase()=="province")
+                {
+                    
+                    var idx = $(this).attr('id').match(/\d+/)[0];                    
+                    $("#gtu_newVal_"+idx+"_tag_value").val(ui.item.label);
+                    $("#gtu_TagGroups_"+idx+"_tag_value").val(ui.item.label);
+                }
+            }
+        );
+    };
 	
 
 });
@@ -957,6 +1083,6 @@ function initUTM(name, zone, direction )
 				}
 			);
 		
-
+	
 	
 </script>

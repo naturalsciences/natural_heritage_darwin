@@ -709,7 +709,8 @@ a.bt_close
   text-align:center;
 }
 
-.result_choose, .result_choose_coll_rights, .result_choose_collector, .result_choose_identifier
+/*** ftheeten 2016 06 07 added result_chose_all ***/
+.result_choose, .result_choose_coll_rights, .result_choose_collector, .result_choose_identifier, .result_choose_all
 {
   background-color:#5BAABD;
   color:white;
@@ -1973,7 +1974,7 @@ li.tag_size_5 { font-size: 20px; }
   display: table;
 }
 
-a.sub_group
+a.sub_group,a.link_as_button
 {
 
   padding: 2px;

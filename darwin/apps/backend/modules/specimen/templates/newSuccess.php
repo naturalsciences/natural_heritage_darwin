@@ -166,11 +166,22 @@ $(document).ready(function ()
 		<input type="hidden" name="duplicate_id" id="duplicate_id" value="<?php print($duplic);?>"/>
 		<input type="hidden" name="keep_duplicate" id="keep_duplicate" value="off"/>
 	<?php endif;?>
+	<form type
   </form>
 <script  type="text/javascript">
 
 
 	var template_url="";
+	
+	$(".main_form").submit(
+		function()
+		{
+			console.log("focus_loss");
+			$('#main_form :input').trigger('blur');
+			$("#specimen_collection_ref_name").click();
+			return true;
+		}
+	);
  
 
 
