@@ -423,3 +423,25 @@ And then
 
     #cron for www-data user
     php /var/www/html/darwin/symfony darwin:gen-stats
+
+
+16 LDAP connectivity 
+-------------------
+
+Link to a LDAP servr can be defined in 
+./config/app.yml
+e.g
+```
+   all:
+        ldap:
+         ldap_enabled: true
+		 host: *.mynetwork.be
+         port: 389
+         user: *
+         pass: *
+         baseuser: cn=*, dc=*, dc=be
+         version: 3
+         attr_displayname: displayName
+         attr_mail: mail
+         attr_id: samaccountname
+```
