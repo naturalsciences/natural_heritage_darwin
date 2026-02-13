@@ -7,6 +7,7 @@ log/*
 **/databases.yml
 config/darwin.yml
 config/app.yml
+config/app.yml.save
 web/favicon.ico
 uploads/*
 !uploads/report
