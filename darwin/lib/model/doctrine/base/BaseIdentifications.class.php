@@ -14,28 +14,52 @@
  * @property string $value_defined
  * @property string $value_defined_indexed
  * @property string $determination_status
+ * @property integer $identifications_count_min
+ * @property integer $identifications_count_max
+ * @property integer $identifications_count_males_min
+ * @property integer $identifications_count_males_max
+ * @property integer $identifications_count_females_min
+ * @property integer $identifications_count_females_max
+ * @property integer $identifications_count_juveniles_min
+ * @property integer $identifications_count_juveniles_max
  * @property integer $order_by
  * 
- * @method integer         getId()                    Returns the current record's "id" value
- * @method string          getReferencedRelation()    Returns the current record's "referenced_relation" value
- * @method integer         getRecordId()              Returns the current record's "record_id" value
- * @method string          getNotionConcerned()       Returns the current record's "notion_concerned" value
- * @method string          getNotionDate()            Returns the current record's "notion_date" value
- * @method integer         getNotionDateMask()        Returns the current record's "notion_date_mask" value
- * @method string          getValueDefined()          Returns the current record's "value_defined" value
- * @method string          getValueDefinedIndexed()   Returns the current record's "value_defined_indexed" value
- * @method string          getDeterminationStatus()   Returns the current record's "determination_status" value
- * @method integer         getOrderBy()               Returns the current record's "order_by" value
- * @method Identifications setId()                    Sets the current record's "id" value
- * @method Identifications setReferencedRelation()    Sets the current record's "referenced_relation" value
- * @method Identifications setRecordId()              Sets the current record's "record_id" value
- * @method Identifications setNotionConcerned()       Sets the current record's "notion_concerned" value
- * @method Identifications setNotionDate()            Sets the current record's "notion_date" value
- * @method Identifications setNotionDateMask()        Sets the current record's "notion_date_mask" value
- * @method Identifications setValueDefined()          Sets the current record's "value_defined" value
- * @method Identifications setValueDefinedIndexed()   Sets the current record's "value_defined_indexed" value
- * @method Identifications setDeterminationStatus()   Sets the current record's "determination_status" value
- * @method Identifications setOrderBy()               Sets the current record's "order_by" value
+ * @method integer         getId()                                  Returns the current record's "id" value
+ * @method string          getReferencedRelation()                  Returns the current record's "referenced_relation" value
+ * @method integer         getRecordId()                            Returns the current record's "record_id" value
+ * @method string          getNotionConcerned()                     Returns the current record's "notion_concerned" value
+ * @method string          getNotionDate()                          Returns the current record's "notion_date" value
+ * @method integer         getNotionDateMask()                      Returns the current record's "notion_date_mask" value
+ * @method string          getValueDefined()                        Returns the current record's "value_defined" value
+ * @method string          getValueDefinedIndexed()                 Returns the current record's "value_defined_indexed" value
+ * @method string          getDeterminationStatus()                 Returns the current record's "determination_status" value
+ * @method integer         getIdentificationsCountMin()             Returns the current record's "identifications_count_min" value
+ * @method integer         getIdentificationsCountMax()             Returns the current record's "identifications_count_max" value
+ * @method integer         getIdentificationsCountMalesMin()        Returns the current record's "identifications_count_males_min" value
+ * @method integer         getIdentificationsCountMalesMax()        Returns the current record's "identifications_count_males_max" value
+ * @method integer         getIdentificationsCountFemalesMin()      Returns the current record's "identifications_count_females_min" value
+ * @method integer         getIdentificationsCountFemalesMax()      Returns the current record's "identifications_count_females_max" value
+ * @method integer         getIdentificationsCountJuvenilesMin()    Returns the current record's "identifications_count_juveniles_min" value
+ * @method integer         getIdentificationsCountJuvenilesMax()    Returns the current record's "identifications_count_juveniles_max" value
+ * @method integer         getOrderBy()                             Returns the current record's "order_by" value
+ * @method Identifications setId()                                  Sets the current record's "id" value
+ * @method Identifications setReferencedRelation()                  Sets the current record's "referenced_relation" value
+ * @method Identifications setRecordId()                            Sets the current record's "record_id" value
+ * @method Identifications setNotionConcerned()                     Sets the current record's "notion_concerned" value
+ * @method Identifications setNotionDate()                          Sets the current record's "notion_date" value
+ * @method Identifications setNotionDateMask()                      Sets the current record's "notion_date_mask" value
+ * @method Identifications setValueDefined()                        Sets the current record's "value_defined" value
+ * @method Identifications setValueDefinedIndexed()                 Sets the current record's "value_defined_indexed" value
+ * @method Identifications setDeterminationStatus()                 Sets the current record's "determination_status" value
+ * @method Identifications setIdentificationsCountMin()             Sets the current record's "identifications_count_min" value
+ * @method Identifications setIdentificationsCountMax()             Sets the current record's "identifications_count_max" value
+ * @method Identifications setIdentificationsCountMalesMin()        Sets the current record's "identifications_count_males_min" value
+ * @method Identifications setIdentificationsCountMalesMax()        Sets the current record's "identifications_count_males_max" value
+ * @method Identifications setIdentificationsCountFemalesMin()      Sets the current record's "identifications_count_females_min" value
+ * @method Identifications setIdentificationsCountFemalesMax()      Sets the current record's "identifications_count_females_max" value
+ * @method Identifications setIdentificationsCountJuvenilesMin()    Sets the current record's "identifications_count_juveniles_min" value
+ * @method Identifications setIdentificationsCountJuvenilesMax()    Sets the current record's "identifications_count_juveniles_max" value
+ * @method Identifications setOrderBy()                             Sets the current record's "order_by" value
  * 
  * @package    darwin
  * @subpackage model
@@ -83,6 +107,38 @@ abstract class BaseIdentifications extends DarwinModel
              ));
         $this->hasColumn('determination_status', 'string', null, array(
              'type' => 'string',
+             ));
+        $this->hasColumn('identifications_count_min', 'integer', null, array(
+             'type' => 'integer',
+             'notnull' => true,
+             ));
+        $this->hasColumn('identifications_count_max', 'integer', null, array(
+             'type' => 'integer',
+             'notnull' => true,
+             ));
+        $this->hasColumn('identifications_count_males_min', 'integer', null, array(
+             'type' => 'integer',
+             'notnull' => true,
+             ));
+        $this->hasColumn('identifications_count_males_max', 'integer', null, array(
+             'type' => 'integer',
+             'notnull' => true,
+             ));
+        $this->hasColumn('identifications_count_females_min', 'integer', null, array(
+             'type' => 'integer',
+             'notnull' => true,
+             ));
+        $this->hasColumn('identifications_count_females_max', 'integer', null, array(
+             'type' => 'integer',
+             'notnull' => true,
+             ));
+        $this->hasColumn('identifications_count_juveniles_min', 'integer', null, array(
+             'type' => 'integer',
+             'notnull' => true,
+             ));
+        $this->hasColumn('identifications_count_juveniles_max', 'integer', null, array(
+             'type' => 'integer',
+             'notnull' => true,
              ));
         $this->hasColumn('order_by', 'integer', null, array(
              'type' => 'integer',

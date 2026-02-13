@@ -154,6 +154,7 @@ abstract class BasePeople extends DarwinModel
              array(
               0 => 'M',
               1 => 'F',
+              2 => 'U',
              ),
              ));
         $this->hasColumn('end_date_mask', 'integer', null, array(

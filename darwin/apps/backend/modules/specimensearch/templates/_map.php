@@ -87,12 +87,9 @@
 			</select>
 			<input id="put_layer" type="button" value="Add layers"></input>
 			<select id="layer-select">
-						   <!---<option value="Aerial">Aerial</option>
-						   <option value="AerialWithLabels" selected>Aerial with labels</option>
-						   <option value="Road">Road (static)</option>
-						   <option value="RoadOnDemand">Road (dynamic)</option>-->
-						   <option value="OSM">OpenStreetMap</option>
-						   <option value="esri_satelite">ESRI Web service</option>
+						   <option value="OSM" selected>OpenStreetMap</option>
+                       <option value="World_Imagery">ESRI Image service</option>
+					   <option value="World_Topo_Map">ESRI World topo map</option>
 						   
 			</select>
 			 <input type="button" id="export-png" value="Download PNG" ></input>
@@ -124,6 +121,8 @@ var overlay;
 var wfs_url="<?php print(sfConfig::get('dw_root_url_wfs'));?>";
 var globalLayers=Array();
 var displayed=true;
+	var styles =["World_Imagery", "World_Topo_Map"];
+	var layers = [];
 
 var ol_ext_inherits = function(child,parent) {
 		child.prototype = Object.create(parent.prototype);
@@ -307,17 +306,19 @@ var openSpecimen=function(id)
    
 	
  var init_map=function(){
-	var layers = [];
-	var styles=["esri_satelite"];
-	var esri= new ol.layer.Tile({
-		  source: new ol.source.XYZ({
-			url:
-			  'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+	
+	for (i = 0, ii = styles.length; i < ii; ++i) {
+			layers.push(new ol.layer.Tile({
+			  visible: false,
+			  preload: Infinity,
+			  source: new ol.source.XYZ({
+						url:
+			  'http://server.arcgisonline.com/ArcGIS/rest/services/'+styles[i]+'/MapServer/tile/{z}/{y}/{x}',
 	
 			  maxZoom:12
-		  }),
-		});
-		layers.push(esri);
+					})
+			}));
+		}
 	OSM_layer = new ol.layer.Tile({
 		    visible: false,
             source: new ol.source.OSM()
@@ -352,17 +353,10 @@ var openSpecimen=function(id)
     mousePositionControl.setProjection("EPSG:4326");
 	
 	var select = document.getElementById('layer-select');
-			function onChange() {
-			//console.log(select.value)
-			/*if(select.value!="OSM")
-			{
-				OSM_layer.setVisible(false);
-				var style = select.value;
-				for (var i = 0, ii = layers.length; i < ii; ++i) {
-				  layers[i].setVisible(styles[i] === style);
-				}
-			}*/
-			if(select.value=="esri_satelite")
+	function onChange() 
+	{
+			console.log(select.value)
+			if(select.value!="OSM")
 			{
 				OSM_layer.setVisible(false);
 				var style = select.value;
@@ -372,7 +366,7 @@ var openSpecimen=function(id)
 			}
 			else
 			{
-				//console.log("trye");
+				console.log("trye");
 				for (var i = 0, ii = layers.length; i < ii; ++i) {
 				  layers[i].setVisible(false);
 				}

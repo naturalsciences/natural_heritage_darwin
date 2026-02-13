@@ -100,20 +100,36 @@ class sfWidgetCollectionList extends sfWidgetFormChoice
   }
   
 
-  function displayTree(Collections $elem, $html, $value, $name, $user=null)
+  function displayTree(Collections $elem, $html, $value, $name, $user=null, $path=null)
   {
     $img_expand = 'blue_expand.png';
     $img_expand_up = 'blue_expand_up.png' ;
-
+	if($path===null)
+	{
+		$path=Array();
+	}
+	else
+	{
+		$path_tmp = new ArrayObject($path);
+		$path = $path_tmp->getArrayCopy();
+	}
+	
     if($elem->hasChild())
     {
       $html .= '<ul>';
+	 
       foreach( $elem->getChilds() as $child)
       {
+		  
+		$path_tmp = new ArrayObject($path);
+		$path_local = $path_tmp->getArrayCopy();
+		$path_local[]=$child->getId();
+		$path_str=implode("/", $path_local);
         $html .= "<li class=\"rid_".$child->getId()."\"";
         if($child->isEncodable())
           $html .= ' data-enc="true" ';
-        $html .= "><div class=\"col_name\">" ;
+        $html .="path_str=\"$path_str\" ";
+		$html .= "><div class=\"col_name\">" ;
         $html .= image_tag ($img_expand, array('alt' => '+', 'class'=> 'tree_cmd collapsed'));
         $html .= image_tag ($img_expand_up, array('alt' => '-', 'class'=> 'tree_cmd expanded hidden'));
         $html .=  "<span style='width:300px;'>".$child->getName()."</span>";
@@ -123,6 +139,7 @@ class sfWidgetCollectionList extends sfWidgetFormChoice
           'class' => 'col_check',
           'value' => $child->getId(),
           'name' => $name,
+		  'path_str' => $path_str,
         );
         if(is_array($value) && in_array($child->getId(), $value) )
           $options['checked'] = "checked";
@@ -154,7 +171,7 @@ class sfWidgetCollectionList extends sfWidgetFormChoice
         }
 
         $html .= "</div>" ;
-        $html .= $this->displayTree($child,'', $value, $name, $user).'</li>';
+        $html .= $this->displayTree($child,'', $value, $name, $user, $path_local).'</li>';
       }
       $html .= '</ul>';
     }

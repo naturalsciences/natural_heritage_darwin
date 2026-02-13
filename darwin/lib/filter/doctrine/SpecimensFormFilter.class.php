@@ -641,7 +641,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
        "choices"=> $part_tmp,
        'multiple' => true,
 	   
-    ), array("size"=>10, "class"=>"choice_hoover", "style"=>"width:100%"));
+    ), array("size"=>10, "class"=>"choice_hoover specimen_search_filter_part", "style"=>"width:100%"));
 
     $this->validatorSchema['part'] =  new sfValidatorChoice(
          array("choices"=> $part_tmp,
@@ -1019,14 +1019,27 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 	
 	$this->validatorSchema['determination_status'] = new sfValidatorPass();
   
-      $this->widgetSchema['category'] = new sfWidgetFormChoice(array(
+    $list_cat=Specimens::getCategories();
+	$list_cat=array_merge(array('ALL'=>'ALL'),$list_cat);
+	
+	
+	
+     $this->widgetSchema['category'] = new sfWidgetFormChoice(array(
+      'choices' => $list_cat
+    ));
+
+    $this->validatorSchema['category'] = new sfValidatorChoice(
+        array('choices'=>array_keys($list_cat),
+        "required"=> false));
+	
+	/*$this->widgetSchema['category'] = new sfWidgetFormChoice(array(
       'choices' => array_merge(array(''=>'ALL'),Specimens::getCategories()),
     ));
 
     $this->validatorSchema['category'] = new sfValidatorChoice(
         array('choices'=>array_keys(Specimens::getCategories()),
         "required"=> false));
-		
+	*/	
 	$this->widgetSchema['mids_level'] = new sfWidgetFormChoice(array(
       'choices' => array(-1=>"All",0=>"0",1=>"1", 2=>"2", 3=>"3")),
     );	
@@ -1482,7 +1495,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
   
     public function addCategoryQuery($query, $field, $val)
   {
-    if($val != '') {
+    if($val != '' && strtolower(trim($val))!="all") {
       $query->andWhere('s.category = ?', $val);
     }
     return $query ;

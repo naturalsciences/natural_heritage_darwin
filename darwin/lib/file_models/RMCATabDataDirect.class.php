@@ -1110,7 +1110,7 @@ class RMCATabDataDirect
 			if(strlen(trim($textCoord)))
 			{
 				$this->property = new ParsingProperties("original_coordinates") ;
-				$this->property->property->setLowerValue(htmlspecialchars($textCoord));
+				$this->property->property->setLowerValue(htmlspecialchars($textCoorde, ENT_NOQUOTES | ENT_SUBSTITUTE | ENT_HTML401));
 				$this->addProperty(true);//false, "SiteMeasurementsOrFact");
 				if($this->isset_and_not_null($this->gtu_object))
 				{
@@ -2187,7 +2187,7 @@ class RMCATabDataDirect
 		foreach($p_row as $key=>$value)
         {
             
-			$value=htmlspecialchars(trim($value));
+			$value=htmlspecialchars(trim($value), ENT_NOQUOTES | ENT_SUBSTITUTE | ENT_HTML401);
             $field_name=$this->headers[strtolower($key)];
            
 			if(strlen(trim($value))>0)

@@ -33,8 +33,8 @@ class UsersForm extends BaseUsersForm
                                                                          )
                                                                    );  
       $this->widgetSchema['is_physical'] = new sfWidgetFormInputCheckbox(array ('default' => 'true')); 
-      $this->widgetSchema['gender'] = new sfWidgetFormChoice(array('choices' => array('M' => 'M', 'F' => 'F'))) ;
-      $this->validatorSchema['gender'] = new sfValidatorChoice(array('choices' => array('M' => 'M', 'F' => 'F'), 'required' => false)); 
+      $this->widgetSchema['gender'] = new sfWidgetFormChoice(array('choices' => array('M' => 'M', 'F' => 'F', 'U'=>'U'))) ;
+      $this->validatorSchema['gender'] = new sfValidatorChoice(array('choices' => array('M' => 'M', 'F' => 'F', 'U'=>'U'), 'required' => false)); 
       $this->widgetSchema['title']->setAttributes(array('class'=>'small_size')) ;     
       $this->validatorSchema['title'] =  new sfValidatorString(array('required' => false));
       $this->validatorSchema['sub_type'] =  new sfValidatorString(array('required' => false));        

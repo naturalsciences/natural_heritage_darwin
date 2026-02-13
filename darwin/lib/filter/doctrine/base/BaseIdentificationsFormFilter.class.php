@@ -38,6 +38,30 @@ abstract class BaseIdentificationsFormFilter extends DarwinModelFormFilter
     $this->widgetSchema   ['determination_status'] = new sfWidgetFormFilterInput();
     $this->validatorSchema['determination_status'] = new sfValidatorPass(array('required' => false));
 
+    $this->widgetSchema   ['identifications_count_min'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['identifications_count_min'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
+
+    $this->widgetSchema   ['identifications_count_max'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['identifications_count_max'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
+
+    $this->widgetSchema   ['identifications_count_males_min'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['identifications_count_males_min'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
+
+    $this->widgetSchema   ['identifications_count_males_max'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['identifications_count_males_max'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
+
+    $this->widgetSchema   ['identifications_count_females_min'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['identifications_count_females_min'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
+
+    $this->widgetSchema   ['identifications_count_females_max'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['identifications_count_females_max'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
+
+    $this->widgetSchema   ['identifications_count_juveniles_min'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['identifications_count_juveniles_min'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
+
+    $this->widgetSchema   ['identifications_count_juveniles_max'] = new sfWidgetFormFilterInput(array('with_empty' => false));
+    $this->validatorSchema['identifications_count_juveniles_max'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
+
     $this->widgetSchema   ['order_by'] = new sfWidgetFormFilterInput(array('with_empty' => false));
     $this->validatorSchema['order_by'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
 
@@ -60,6 +84,14 @@ abstract class BaseIdentificationsFormFilter extends DarwinModelFormFilter
       'value_defined' => 'Text',
       'value_defined_indexed' => 'Text',
       'determination_status' => 'Text',
+      'identifications_count_min' => 'Number',
+      'identifications_count_max' => 'Number',
+      'identifications_count_males_min' => 'Number',
+      'identifications_count_males_max' => 'Number',
+      'identifications_count_females_min' => 'Number',
+      'identifications_count_females_max' => 'Number',
+      'identifications_count_juveniles_min' => 'Number',
+      'identifications_count_juveniles_max' => 'Number',
       'order_by' => 'Number',
     ));
   }

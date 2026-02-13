@@ -66,6 +66,20 @@ class specimenActions extends DarwinActions
   {
   }
 
+  public function executeGetSpecimenPart(sfWebRequest $request)
+  {
+      $type=$request->getParameter('type');
+	  if(strtolower(trim($type))=="all")
+	  {	
+		$items = Doctrine_Core::getTable('Specimens')->getDistinctParts();
+	  }
+	  else
+	  {
+		$items = Doctrine_Core::getTable('Specimens')->getDistinctPartsParent($type);
+      }   
+    return $this->renderPartial('options', array('items'=> $items ));
+  }
+
   public function executeGetStorage(sfWebRequest $request)
   {
     if($request->getParameter('item')=="container")

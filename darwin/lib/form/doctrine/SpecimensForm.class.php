@@ -63,7 +63,19 @@ class SpecimensForm extends BaseSpecimensForm
     $this->widgetSchema['category'] = new sfWidgetFormChoice(array(
       'choices' => Specimens::getCategories(),
     ));
-
+	
+	
+	
+    /*$this->widgetSchema['category'] = new widgetFormSelectComplete(array(
+      'model' => 'Specimens',
+      'table_method' => 'getDistinctCategoriesDict',
+      'method' => 'getCategory',
+      'key_method' => 'getCategory',
+      'add_empty' => false,
+      'change_label' => 'Pick category in the list',
+      'add_label' => 'Add another category',
+    ), array("style"=>"max-width: 420px", "class"=> "choice_hoover" ));
+  */
     $this->validatorSchema['category'] = new sfValidatorChoice(array('choices'=>array_keys(Specimens::getCategories())));
     
     /*ftheeten 2019 01 30*/
@@ -276,6 +288,7 @@ class SpecimensForm extends BaseSpecimensForm
       'add_label' => 'Add another part',
     ), array("style"=>"max-width: 420px", "class"=> "choice_hoover" ));
 
+	$this->setDefault('specimen_part', 'specimen');
     $this->widgetSchema['institution_ref'] = new widgetFormCompleteButtonRef(array(
       'model' => 'Institutions',
       'link_url' => 'institution/choose?with_js=1',
@@ -913,10 +926,13 @@ class SpecimensForm extends BaseSpecimensForm
     $this->embedForm('Identifications',$subForm);
     if($this->getObject()->getId() !='')
     {
+	$i=0;
       foreach(Doctrine_Core::getTable('Identifications')->getIdentificationsRelated('specimens', $this->getObject()->getId()) as $key=>$vals)
       {
         $form = new IdentificationsForm($vals);
+		$form->setIndex($i);
         $this->embeddedForms['Identifications']->embedForm($key, $form);
+		$i++;
       }
       //Re-embedding the container
       $this->embedForm('Identifications', $this->embeddedForms['Identifications']);
@@ -1342,7 +1358,7 @@ class SpecimensForm extends BaseSpecimensForm
       $value = $this->getValue('newIdentification');
       foreach($this->embeddedForms['newIdentification']->getEmbeddedForms() as $name => $form)
       {
-        if (!isset($value[$name]['value_defined']))
+        if (!isset($value[$name]['notion_concerned']))
         {
           unset($this->embeddedForms['newIdentification'][$name]);
         }
@@ -1367,7 +1383,7 @@ class SpecimensForm extends BaseSpecimensForm
       $value = $this->getValue('Identifications');
       foreach($this->embeddedForms['Identifications']->getEmbeddedForms() as $name => $form)
       {
-        if (!isset($value[$name]['value_defined']))
+        if (!isset($value[$name]['notion_concerned']))
         {
           $form->getObject()->delete();
           unset($this->embeddedForms['Identifications'][$name]);

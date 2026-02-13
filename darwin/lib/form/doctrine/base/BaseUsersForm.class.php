@@ -46,8 +46,8 @@ abstract class BaseUsersForm extends DarwinModelForm
     $this->widgetSchema   ['birth_date'] = new sfWidgetFormTextarea();
     $this->validatorSchema['birth_date'] = new sfValidatorString(array('required' => false));
 
-    $this->widgetSchema   ['gender'] = new sfWidgetFormChoice(array('choices' => array('M' => 'M', 'F' => 'F')));
-    $this->validatorSchema['gender'] = new sfValidatorChoice(array('choices' => array(0 => 'M', 1 => 'F'), 'required' => false));
+    $this->widgetSchema   ['gender'] = new sfWidgetFormChoice(array('choices' => array('M' => 'M', 'F' => 'F', 'U' => 'U')));
+    $this->validatorSchema['gender'] = new sfValidatorChoice(array('choices' => array(0 => 'M', 1 => 'F', 2 => 'U'), 'required' => false));
 
     $this->widgetSchema   ['db_user_type'] = new sfWidgetFormInputText();
     $this->validatorSchema['db_user_type'] = new sfValidatorInteger(array('required' => false));

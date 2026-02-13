@@ -88,7 +88,6 @@
     <?php endforeach;?>
   </tbody>
 </table>
-<?php echo image_tag('add_green.png');?><a title="<?php echo __('Add Synonymies');?>" class="link_catalogue" href="<?php echo url_for('synonym/add?table='.$table.'&id='.$eid); ?>"><?php echo __('Add');?></a>
 <?php if(count($other_synonyms)>0): ?>
 	<div style="margin-top:40px; margin-bottom:40px; font-weight:bold;">Other indirect synonyms <i>(read-only)</i>:</div>
 	<table class="catalogue_table">

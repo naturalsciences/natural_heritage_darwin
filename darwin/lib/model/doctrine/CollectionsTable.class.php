@@ -179,7 +179,7 @@ class CollectionsTable extends DarwinTable
     //ftheeten 2018 04 27
   
   
-  public function countSpecimens($collectionID ="/", $year="", $creation_date_min="", $creation_date_max="", $ig_num="", $includeSubcollection=false, $detailSubCollections=false ,  $parent_only=false,$hide_private=false, $user=null)
+  public function countSpecimens($collectionID ="/", $year="", $creation_date_min="", $creation_date_max="",$collecting_date_min="", $collecting_date_max="",  $ig_num="", $includeSubcollection=false, $detailSubCollections=false ,  $parent_only=false,$hide_private=false, $user=null)
   {
   
     $fields =Array();
@@ -223,6 +223,24 @@ class CollectionsTable extends DarwinTable
     $fields[5]="SUM(specimen_count_min) as nb_physical_specimens_low";
     $fields[6]="SUM(specimen_count_max) as nb_physical_specimens_high";
     
+	
+	if(strlen($collecting_date_min)>0)
+    {
+		//$orders[]="collecting_year";
+        //$fields[7]="collecting_year";
+        $where[]= "gtu_from_date >= :collecting_date_min::timestamp";
+        //$groups[]="collecting_year";
+    }
+	
+	if(strlen($collecting_date_max)>0)
+    {
+		//$orders[]="collecting_year";
+        //$fields[8]="collecting_year";
+        $where[]= "gtu_from_date <= :collecting_date_max::timestamp";
+        //$groups[]="collecting_year";
+    }
+	
+	
     if($detailSubCollections)
     {
         $orders[]="collection_path_text";
@@ -431,6 +449,15 @@ class CollectionsTable extends DarwinTable
     }
        
    
+    if(strlen($collecting_date_min)>0)
+    {
+         $q->bindParam(":collecting_date_min", $collecting_date_min, PDO::PARAM_STR);
+    }
+    
+    if(strlen($collecting_date_max)>0)
+    {
+        $q->bindParam(":collecting_date_max", $collecting_date_max, PDO::PARAM_STR);
+    }
 
 
     $q->execute();
@@ -440,7 +467,7 @@ class CollectionsTable extends DarwinTable
     return $items;
   }
   
-    public function countTypeSpecimens($collectionID ="/", $year="", $creation_date_min="", $creation_date_max="", $ig_num="", $includeSubcollection=false, $detailSubCollections=false ,  $parent_only=false,$hide_private=false,$user=null )
+    public function countTypeSpecimens($collectionID ="/", $year="", $creation_date_min="", $creation_date_max="",$collecting_date_min="", $collecting_date_max="", $ig_num="", $includeSubcollection=false, $detailSubCollections=false ,  $parent_only=false,$hide_private=false,$user=null )
   {
   
     $fields =Array();
@@ -490,6 +517,22 @@ class CollectionsTable extends DarwinTable
     $fields[4]="SUM(nb_records) as nb_database_records";
     $fields[5]="SUM(specimen_count_min) as nb_physical_specimens_low";
     $fields[6]="SUM(specimen_count_max) as nb_physical_specimens_high";
+	
+	if(strlen($collecting_date_min)>0)
+    {
+		//$orders[]="collecting_year";
+        //$fields[7]="collecting_year";
+        $where[]= "gtu_from_date >= :collecting_date_min::timestamp";
+        //$groups[]="collecting_year";
+    }
+	
+	if(strlen($collecting_date_max)>0)
+    {
+		//$orders[]="collecting_year";
+        //$fields[8]="collecting_year";
+        $where[]= "gtu_from_date <= :collecting_date_max::timestamp";
+        //$groups[]="collecting_year";
+    }
     
     $orders[]="type";
     $fields[1]="type";
@@ -703,6 +746,15 @@ group by group_coll, name_full_path, a.grscicoll_code ORDER BY name_full_path;";
         $q->bindParam(":creation_date_max", $creation_date_max, PDO::PARAM_STR);
     }
        
+	if(strlen($collecting_date_min)>0)
+    {
+         $q->bindParam(":collecting_date_min", $collecting_date_min, PDO::PARAM_STR);
+    }
+    
+    if(strlen($collecting_date_max)>0)
+    {
+        $q->bindParam(":collecting_date_max", $collecting_date_max, PDO::PARAM_STR);
+    }  
    
    
     $q->execute();
@@ -712,7 +764,589 @@ group by group_coll, name_full_path, a.grscicoll_code ORDER BY name_full_path;";
     return $items;
   }
   
-   public function countMidsSpecimens($collectionID ="/", $year="", $creation_date_min="", $creation_date_max="", $ig_num="", $includeSubcollection=false, $detailSubCollections=false , $hide_private=false,$user=null )
+  public function countCategoriesInSpecimens($collectionID ="/", $year="", $creation_date_min="", $creation_date_max="", $collecting_date_min="", $collecting_date_max="",$ig_num="", $includeSubcollection=false, $detailSubCollections=false ,  $parent_only=false,$hide_private=false,$user=null )
+  {
+  
+    $fields =Array();
+    $groups =Array();
+    $where =Array();
+    $orders=Array();
+  
+   
+    if(strlen($year)>0)
+    {
+        $fields[2]="year";
+        $where[]= "year = :year";
+        $groups[]="year";
+    }
+    
+    if(strlen($creation_date_min)>0)
+    {
+        $fields[2]="year";
+        $where[]= "COALESCE(specimen_creation_date,'1706-01-01 00:00:00') >= (date_trunc('day',:creation_date_min::timestamp with time zone))";
+        $groups[]="year";
+		 $orders[]="year";
+    }
+    
+    if(strlen($creation_date_max)>0)
+    {
+        $fields[2]="year";
+        $where[]= "COALESCE(specimen_creation_date,'1706-01-01 00:00:00') <= (date_trunc('day',:creation_date_max::timestamp with time zone)  + (24*60*60 - 1) * interval '1 second')";
+        $groups[]="year";
+		 $orders[]="year";
+    }
+    
+     if(strlen($ig_num)>0)
+    {
+        $fields[3]="ig_num";
+         $groups[]="ig_num";
+        $where[]= "ig_num = :ig_num";
+    }
+	
+	if(strlen($collecting_date_min)>0)
+    {
+		//$orders[]="collecting_year";
+        //$fields[7]="collecting_year";
+        $where[]= "gtu_from_date >= :collecting_date_min::timestamp";
+        //$groups[]="collecting_year";
+    }
+	
+	if(strlen($collecting_date_max)>0)
+    {
+		//$orders[]="collecting_year";
+        //$fields[8]="collecting_year";
+        $where[]= "gtu_from_date <= :collecting_date_max::timestamp";
+        //$groups[]="collecting_year";
+    }
+    
+    
+    $fields[4]="SUM(nb_records) as nb_database_records";
+    $fields[5]="SUM(specimen_count_min) as nb_physical_specimens_low";
+    $fields[6]="SUM(specimen_count_max) as nb_physical_specimens_high";
+    
+    $orders[]="category";
+    $fields[1]="category";
+    $groups[]="category";
+    
+    if($detailSubCollections)
+    {
+        
+        $orders[]="collection_name";
+        $fields[0]="collection_name";
+        
+        $groups[]="collection_name";
+        $includeSubcollection=true;
+    }
+    
+    if($includeSubcollection||$collectionID=="/")
+    {
+        
+        if($collectionID=="/")
+        {
+            $where[]= "collection_path LIKE  :id||'%'";            
+        }
+		elseif(strpos($collectionID, ","))
+		{
+			
+			$array_col_id=explode(",",$collectionID );
+			$whereTmp=Array();
+			foreach($array_col_id as $tmp_id)
+			{
+				if(is_numeric($tmp_id))
+				{
+					$whereTmp[]= "collection_path||'/'||v_reporting_count_all_spec_category_by_collection_ref_year_ig.collection_ref||'/' LIKE '%/$tmp_id/%'";
+				}
+			}
+			$where[]="(".implode(" OR ", $whereTmp).")";
+		}
+        else
+        {
+            //$where[]= "collections.id::varchar  = :ida";
+            $where[]= "collection_path||'/'||v_reporting_count_all_spec_category_by_collection_ref_year_ig.collection_ref||'/' LIKE '%/'||:idb||'/%'";
+        }       
+    }
+	elseif(strpos($collectionID, ","))
+	{
+			
+			$array_col_id=explode(",",$collectionID );
+			$whereTmp=Array();
+			foreach($array_col_id as $tmp_id)
+			{
+				if(is_numeric($tmp_id))
+				{
+					$whereTmp[]= "v_reporting_count_all_spec_category_by_collection_ref_year_ig.collection_ref = $tmp_id";
+				}
+			}
+			$where[]="(".implode(" OR ", $whereTmp).")";
+		}
+    else
+    {
+         $where[]= "v_reporting_count_all_spec_category_by_collection_ref_year_ig.collection_ref::varchar  = :id";
+    }
+    
+   
+    
+    ksort($fields);
+    if($detailSubCollections)
+	{
+		$fields[]="grscicoll_code";
+		$groups[]="grscicoll_code";
+	}
+   
+  
+   $hide_str="";
+   if($user!==null)
+   {
+	   $test_user=true;
+	   $user_role=$user->getDbUserType();
+	   $user_id=$user->getId();
+   }
+   if($hide_private)
+   {
+	   
+	   if($user_role==Users::ADMIN)
+	   {
+		   $hide_str="";
+	   }   
+	   elseif(!$test_user||$user_role==Users::ANONYMOUS)
+	   {
+			$hide_str=" INNER JOIN collections ON v_reporting_count_all_spec_category_by_collection_ref_year_ig.collection_ref=collections.id AND collections.is_public=true ";
+	   }
+	   else
+	   {
+		   $hide_str="LEFT JOIN collections_rights  ON v_reporting_count_all_spec_category_by_collection_ref_year_ig.collection_ref= collections_rights.collection_ref AND user_ref=".$user_id."
+					INNER JOIN collections ON v_reporting_count_all_spec_category_by_collection_ref_year_ig.collection_ref=collections.id ";
+			$where[]="(collections.is_public=true OR db_user_type>= 2)";
+	   }
+   }
+   if(strpos($collectionID, ",")&& $detailSubCollections)
+	{
+			
+			$array_col_id=explode(",",$collectionID );
+			$regex="v_collections_full_path_recursive_grscicoll.path ||v_collections_full_path_recursive_grscicoll.id::varchar||'/' as full_path, regexp_replace(v_collections_full_path_recursive_grscicoll.path ||v_collections_full_path_recursive_grscicoll.id::varchar||'/', '(\/(".implode("|", $array_col_id ).")/\d+\/).*', '\\1') as group_coll ";
+			$fields[]=$regex;
+			$groups[]="v_collections_full_path_recursive_grscicoll.path";
+			$groups[]="v_collections_full_path_recursive_grscicoll.id";
+			/*$fields[]="group_coll";
+			$groups[]="full_path";
+			$groups[]="group_coll";*/
+    }
+	elseif($collectionID=="/"&& $detailSubCollections)
+	{
+		$regex="v_collections_full_path_recursive_grscicoll.path ||v_collections_full_path_recursive_grscicoll.id::varchar||'/' as full_path,  regexp_replace(v_collections_full_path_recursive_grscicoll.path ||v_collections_full_path_recursive_grscicoll.id::varchar||'/', '(\/\d+/\d+\/).*', '\\1') as group_coll ";
+		$fields[]=$regex;
+		$groups[]="v_collections_full_path_recursive_grscicoll.path";
+		$groups[]="v_collections_full_path_recursive_grscicoll.id";
+		/*$fields[]="group_coll";
+		$groups[]="full_path";
+		$groups[]="group_coll";*/
+	}
+	elseif($detailSubCollections)
+	{
+		$regex="v_collections_full_path_recursive_grscicoll.path ||v_collections_full_path_recursive_grscicoll.id::varchar||'/' as full_path, regexp_replace(v_collections_full_path_recursive_grscicoll.path ||v_collections_full_path_recursive_grscicoll.id::varchar||'/', '(\/".$collectionID."/\d+\/).*', '\\1') as group_coll ";
+		$fields[]=$regex;
+		$groups[]="v_collections_full_path_recursive_grscicoll.path";
+		$groups[]="v_collections_full_path_recursive_grscicoll.id";
+		/*$fields[]="group_coll";
+		$groups[]="full_path";
+		$groups[]="group_coll";*/
+	}
+	
+    $all_fields=implode(", ", $fields);
+	if( $parent_only && $detailSubCollections)
+	{
+		$tmpsql ="SELECT ".$all_fields." FROM v_collections_full_path_recursive_grscicoll LEFT JOIN v_reporting_count_all_spec_category_by_collection_ref_year_ig ON v_collections_full_path_recursive_grscicoll.id=collection_ref ".$hide_str."  WHERE ".implode(" AND ", $where);
+		if(count($groups)>0)
+		{
+			$tmpsql = $tmpsql." GROUP BY ".implode(", ", $groups);
+		}
+		
+		 if(count($orders)>0)
+		{
+			$tmpsql = $tmpsql." ORDER BY ".implode(", ", $orders);
+		}
+		$sql="with a as (".$tmpsql.") select 
+REPLACE(name_full_path,'|','/')	  collection_path_text,
+a.grscicoll_code,
+category,
+sum(nb_database_records) nb_database_records, 
+sum(nb_physical_specimens_low) nb_physical_specimens_low,
+sum(nb_physical_specimens_high) nb_physical_specimens_high
+from a 
+left join v_collections_full_path_recursive_grscicoll b
+on b.path||b.id::varchar||'/' = group_coll
+group by group_coll, name_full_path, a.grscicoll_code, category ORDER BY name_full_path;";
+	}
+	else
+	{
+		$sql ="SELECT ".$all_fields." FROM v_collections_full_path_recursive_grscicoll LEFT JOIN v_reporting_count_all_spec_category_by_collection_ref_year_ig ON v_collections_full_path_recursive_grscicoll.id=collection_ref ".$hide_str."  WHERE ".implode(" AND ", $where);
+			if(count($groups)>0)
+		{
+			$sql = $sql." GROUP BY ".implode(", ", $groups);
+		}
+		
+		 if(count($orders)>0)
+		{
+			$sql = $sql." ORDER BY ".implode(", ", $orders);
+		}
+    }
+
+
+    $conn = Doctrine_Manager::connection();
+    $q = $conn->prepare($sql);
+    
+     if(strlen($year)>0)
+    {
+        $q->bindParam(":year", $year);
+    }
+    
+     if(strlen($ig_num)>0)
+    {
+       $q->bindParam(":ig_num", $ig_num, PDO::PARAM_STR);
+    }
+    
+    if($includeSubcollection||$collectionID=="/")    
+    {
+        
+        if($collectionID=="/")
+        {
+            $q->bindParam(":id", $collectionID, PDO::PARAM_STR);
+            
+        }
+        elseif(strpos($collectionID,",")===false)
+        {
+            //$q->bindParam(":ida", $collectionID, PDO::PARAM_STR);
+            $q->bindParam(":idb", $collectionID, PDO::PARAM_STR);
+        }       
+    }
+    elseif(strpos($collectionID,",")===false)
+    {
+         $q->bindParam(":id", $collectionID, PDO::PARAM_STR);
+    }
+    
+    if(strlen($creation_date_min)>0)
+    {
+         $q->bindParam(":creation_date_min", $creation_date_min, PDO::PARAM_STR);
+    }
+    
+    if(strlen($creation_date_max)>0)
+    {
+        $q->bindParam(":creation_date_max", $creation_date_max, PDO::PARAM_STR);
+    }
+       
+	if(strlen($collecting_date_min)>0)
+    {
+         $q->bindParam(":collecting_date_min", $collecting_date_min, PDO::PARAM_STR);
+    }
+    
+    if(strlen($collecting_date_max)>0)
+    {
+        $q->bindParam(":collecting_date_max", $collecting_date_max, PDO::PARAM_STR);
+    }   
+   
+   
+    $q->execute();
+
+    $items=$q->fetchAll(PDO::FETCH_ASSOC);
+
+    return $items;
+  }
+  
+  
+  public function countPartsInSpecimens($collectionID ="/", $year="", $creation_date_min="", $creation_date_max="", $collecting_date_min="", $collecting_date_max="", $ig_num="", $includeSubcollection=false, $detailSubCollections=false ,  $parent_only=false,$hide_private=false,$user=null )
+  {
+  
+    $fields =Array();
+    $groups =Array();
+    $where =Array();
+    $orders=Array();
+  
+   
+    if(strlen($year)>0)
+    {
+        $fields[2]="year";
+        $where[]= "year = :year";
+        $groups[]="year";
+    }
+    
+    if(strlen($creation_date_min)>0)
+    {
+        $fields[2]="year";
+        $where[]= "COALESCE(specimen_creation_date,'1706-01-01 00:00:00') >= (date_trunc('day',:creation_date_min::timestamp with time zone))";
+        $groups[]="year";
+		 $orders[]="year";
+    }
+    
+    if(strlen($creation_date_max)>0)
+    {
+        $fields[2]="year";
+        $where[]= "COALESCE(specimen_creation_date,'1706-01-01 00:00:00') <= (date_trunc('day',:creation_date_max::timestamp with time zone)  + (24*60*60 - 1) * interval '1 second')";
+        $groups[]="year";
+		 $orders[]="year";
+    }
+    
+     if(strlen($ig_num)>0)
+    {
+        $fields[3]="ig_num";
+         $groups[]="ig_num";
+        $where[]= "ig_num = :ig_num";
+    }
+    
+	
+	if(strlen($collecting_date_min)>0)
+    {
+		//$orders[]="collecting_year";
+        //$fields[7]="collecting_year";
+        $where[]= "gtu_from_date >= :collecting_date_min::timestamp";
+        //$groups[]="collecting_year";
+    }
+	
+	if(strlen($collecting_date_max)>0)
+    {
+		//$orders[]="collecting_year";
+        //$fields[8]="collecting_year";
+        $where[]= "gtu_from_date <= :collecting_date_max::timestamp";
+        //$groups[]="collecting_year";
+    }
+	
+    
+    $fields[4]="SUM(nb_records) as nb_database_records";
+    $fields[5]="SUM(specimen_count_min) as nb_physical_specimens_low";
+    $fields[6]="SUM(specimen_count_max) as nb_physical_specimens_high";
+    
+    $orders[]="specimen_part";
+    $fields[1]="specimen_part";
+    $groups[]="specimen_part";
+	
+	if(strlen($collecting_date_max)>0)
+    {
+		//$orders[]="collecting_year";
+        //$fields[8]="collecting_year";
+        $where[]= "gtu_from_date <= :collecting_date_max::timestamp";
+        //$groups[]="collecting_year";
+    }
+    
+    if($detailSubCollections)
+    {
+        
+        $orders[]="collection_name";
+        $fields[0]="collection_name";
+        
+        $groups[]="collection_name";
+        $includeSubcollection=true;
+    }
+    
+    if($includeSubcollection||$collectionID=="/")
+    {
+        
+        if($collectionID=="/")
+        {
+            $where[]= "collection_path LIKE  :id||'%'";            
+        }
+		elseif(strpos($collectionID, ","))
+		{
+			
+			$array_col_id=explode(",",$collectionID );
+			$whereTmp=Array();
+			foreach($array_col_id as $tmp_id)
+			{
+				if(is_numeric($tmp_id))
+				{
+					$whereTmp[]= "collection_path||'/'||v_reporting_count_all_spec_parts_by_collection_ref_year_ig.collection_ref||'/' LIKE '%/$tmp_id/%'";
+				}
+			}
+			$where[]="(".implode(" OR ", $whereTmp).")";
+		}
+        else
+        {
+            //$where[]= "collections.id::varchar  = :ida";
+            $where[]= "collection_path||'/'||v_reporting_count_all_spec_parts_by_collection_ref_year_ig.collection_ref||'/' LIKE '%/'||:idb||'/%'";
+        }       
+    }
+	elseif(strpos($collectionID, ","))
+	{
+			
+			$array_col_id=explode(",",$collectionID );
+			$whereTmp=Array();
+			foreach($array_col_id as $tmp_id)
+			{
+				if(is_numeric($tmp_id))
+				{
+					$whereTmp[]= "v_reporting_count_all_spec_parts_by_collection_ref_year_ig.collection_ref = $tmp_id";
+				}
+			}
+			$where[]="(".implode(" OR ", $whereTmp).")";
+		}
+    else
+    {
+         $where[]= "v_reporting_count_all_spec_parts_by_collection_ref_year_ig.collection_ref::varchar  = :id";
+    }
+    
+   
+    
+    ksort($fields);
+    if($detailSubCollections)
+	{
+		$fields[]="grscicoll_code";
+		$groups[]="grscicoll_code";
+	}
+   
+   
+   $hide_str="";
+   if($user!==null)
+   {
+	   $test_user=true;
+	   $user_role=$user->getDbUserType();
+	   $user_id=$user->getId();
+   }
+   if($hide_private)
+   {
+	   
+	   if($user_role==Users::ADMIN)
+	   {
+		   $hide_str="";
+	   }   
+	   elseif(!$test_user||$user_role==Users::ANONYMOUS)
+	   {
+			$hide_str=" INNER JOIN collections ON v_reporting_count_all_spec_parts_by_collection_ref_year_ig.collection_ref=collections.id AND collections.is_public=true ";
+	   }
+	   else
+	   {
+		   $hide_str="LEFT JOIN collections_rights  ON v_reporting_count_all_spec_parts_by_collection_ref_year_ig.collection_ref= collections_rights.collection_ref AND user_ref=".$user_id."
+					INNER JOIN collections ON v_reporting_count_all_spec_parts_by_collection_ref_year_ig.collection_ref=collections.id ";
+			$where[]="(collections.is_public=true OR db_user_type>= 2)";
+	   }
+   }
+   if(strpos($collectionID, ",")&& $detailSubCollections)
+	{
+			
+			$array_col_id=explode(",",$collectionID );
+			$regex="v_collections_full_path_recursive_grscicoll.path ||v_collections_full_path_recursive_grscicoll.id::varchar||'/' as full_path, regexp_replace(v_collections_full_path_recursive_grscicoll.path ||v_collections_full_path_recursive_grscicoll.id::varchar||'/', '(\/(".implode("|", $array_col_id ).")/\d+\/).*', '\\1') as group_coll ";
+			$fields[]=$regex;
+			$groups[]="v_collections_full_path_recursive_grscicoll.path";
+			$groups[]="v_collections_full_path_recursive_grscicoll.id";
+			
+    }
+	elseif($collectionID=="/"&& $detailSubCollections)
+	{
+		$regex="v_collections_full_path_recursive_grscicoll.path ||v_collections_full_path_recursive_grscicoll.id::varchar||'/' as full_path,  regexp_replace(v_collections_full_path_recursive_grscicoll.path ||v_collections_full_path_recursive_grscicoll.id::varchar||'/', '(\/\d+/\d+\/).*', '\\1') as group_coll ";
+		$fields[]=$regex;
+		$groups[]="v_collections_full_path_recursive_grscicoll.path";
+		$groups[]="v_collections_full_path_recursive_grscicoll.id";
+		
+	}
+	elseif($detailSubCollections)
+	{
+		$regex="v_collections_full_path_recursive_grscicoll.path ||v_collections_full_path_recursive_grscicoll.id::varchar||'/' as full_path, regexp_replace(v_collections_full_path_recursive_grscicoll.path ||v_collections_full_path_recursive_grscicoll.id::varchar||'/', '(\/".$collectionID."/\d+\/).*', '\\1') as group_coll ";
+		$fields[]=$regex;
+		$groups[]="v_collections_full_path_recursive_grscicoll.path";
+		$groups[]="v_collections_full_path_recursive_grscicoll.id";
+		
+	}
+	
+    $all_fields=implode(", ", $fields);
+	if( $parent_only && $detailSubCollections)
+	{
+		$tmpsql ="SELECT ".$all_fields." FROM v_collections_full_path_recursive_grscicoll LEFT JOIN v_reporting_count_all_spec_parts_by_collection_ref_year_ig ON v_collections_full_path_recursive_grscicoll.id=collection_ref ".$hide_str."  WHERE ".implode(" AND ", $where);
+		if(count($groups)>0)
+		{
+			$tmpsql = $tmpsql." GROUP BY ".implode(", ", $groups);
+		}
+		
+		 if(count($orders)>0)
+		{
+			$tmpsql = $tmpsql." ORDER BY ".implode(", ", $orders);
+		}
+		$sql="with a as (".$tmpsql.") select 
+REPLACE(name_full_path,'|','/')	  collection_path_text,
+a.grscicoll_code,
+sum(nb_database_records) nb_database_records, 
+sum(nb_physical_specimens_low) nb_physical_specimens_low,
+sum(nb_physical_specimens_high) nb_physical_specimens_high,
+specimen_part
+FROM a 
+LEFT JOIN v_collections_full_path_recursive_grscicoll b
+ON b.path||b.id::varchar||'/' = group_coll
+GROUP BY group_coll, name_full_path, a.grscicoll_code, specimen_part ORDER BY name_full_path;";
+	}
+	else
+	{
+		$sql ="SELECT ".$all_fields." FROM v_collections_full_path_recursive_grscicoll LEFT JOIN v_reporting_count_all_spec_parts_by_collection_ref_year_ig ON v_collections_full_path_recursive_grscicoll.id=collection_ref ".$hide_str."  WHERE ".implode(" AND ", $where);
+			if(count($groups)>0)
+		{
+			$sql = $sql." GROUP BY ".implode(", ", $groups);
+		}
+		
+		 if(count($orders)>0)
+		{
+			$sql = $sql." ORDER BY ".implode(", ", $orders);
+		}
+    }
+    
+
+    $conn = Doctrine_Manager::connection();
+    $q = $conn->prepare($sql);
+    
+     if(strlen($year)>0)
+    {
+        $q->bindParam(":year", $year);
+    }
+    
+     if(strlen($ig_num)>0)
+    {
+       $q->bindParam(":ig_num", $ig_num, PDO::PARAM_STR);
+    }
+    
+    if($includeSubcollection||$collectionID=="/")    
+    {
+        
+        if($collectionID=="/")
+        {
+            $q->bindParam(":id", $collectionID, PDO::PARAM_STR);
+            
+        }
+        elseif(strpos($collectionID,",")===false)
+        {
+            //$q->bindParam(":ida", $collectionID, PDO::PARAM_STR);
+            $q->bindParam(":idb", $collectionID, PDO::PARAM_STR);
+        }       
+    }
+    elseif(strpos($collectionID,",")===false)
+    {
+         $q->bindParam(":id", $collectionID, PDO::PARAM_STR);
+    }
+    
+    if(strlen($creation_date_min)>0)
+    {
+         $q->bindParam(":creation_date_min", $creation_date_min, PDO::PARAM_STR);
+    }
+    
+    if(strlen($creation_date_max)>0)
+    {
+        $q->bindParam(":creation_date_max", $creation_date_max, PDO::PARAM_STR);
+    }
+       
+	   
+	 if(strlen($collecting_date_min)>0)
+    {
+         $q->bindParam(":collecting_date_min", $collecting_date_min, PDO::PARAM_STR);
+    }
+    
+    if(strlen($collecting_date_max)>0)
+    {
+        $q->bindParam(":collecting_date_max", $collecting_date_max, PDO::PARAM_STR);
+    }
+
+   
+   
+    $q->execute();
+
+    $items=$q->fetchAll(PDO::FETCH_ASSOC);
+
+    return $items;
+  }
+  
+   public function countMidsSpecimens($collectionID ="/", $year="", $creation_date_min="", $creation_date_max="",$collecting_date_min="", $collecting_date_max="", $ig_num="", $includeSubcollection=false, $detailSubCollections=false , $hide_private=false,$user=null )
   {
   
     $fields =Array();
@@ -768,6 +1402,24 @@ group by group_coll, name_full_path, a.grscicoll_code ORDER BY name_full_path;";
     $fields[1]="mids_level";
     $groups[]="mids_level";
     
+	
+	if(strlen($collecting_date_min)>0)
+    {
+		//$orders[]="collecting_year";
+        //$fields[7]="collecting_year";
+        $where[]= "gtu_from_date >= :collecting_date_min::timestamp";
+        //$groups[]="collecting_year";
+    }
+	
+	if(strlen($collecting_date_max)>0)
+    {
+		//$orders[]="collecting_year";
+        //$fields[8]="collecting_year";
+        $where[]= "gtu_from_date <= :collecting_date_max::timestamp";
+        //$groups[]="collecting_year";
+    }
+	
+	
     if($detailSubCollections)
     {
         
@@ -913,7 +1565,15 @@ group by group_coll, name_full_path, a.grscicoll_code ORDER BY name_full_path;";
         $q->bindParam(":creation_date_max", $creation_date_max, PDO::PARAM_STR);
     }
        
-   
+   	 if(strlen($collecting_date_min)>0)
+    {
+         $q->bindParam(":collecting_date_min", $collecting_date_min, PDO::PARAM_STR);
+    }
+    
+    if(strlen($collecting_date_max)>0)
+    {
+        $q->bindParam(":collecting_date_max", $collecting_date_max, PDO::PARAM_STR);
+    }
    
     $q->execute();
     
@@ -922,7 +1582,7 @@ group by group_coll, name_full_path, a.grscicoll_code ORDER BY name_full_path;";
     return $items;
   }
   
-   public function countCountriesInSpecimens($collectionID ="/", $year="", $creation_date_min="", $creation_date_max="", $ig_num="", $includeSubcollection=false, $detailSubCollections=false , $hide_private=false,$user=null )
+   public function countCountriesInSpecimens($collectionID ="/", $year="", $creation_date_min="", $creation_date_max="",$collecting_date_min="", $collecting_date_max="" , $ig_num="", $includeSubcollection=false, $detailSubCollections=false , $hide_private=false,$user=null )
   {
 		$fields_agg =Array();
 		$fields =Array();
@@ -989,8 +1649,33 @@ group by group_coll, name_full_path, a.grscicoll_code ORDER BY name_full_path;";
 				
 			}
 		}
+		
+		if(strlen($collecting_date_min)>0)
+			{
+				//$orders[]="collecting_year";
+				//$fields[7]="collecting_year";
+				
+				//$params[":collecting_date_min"]=$collecting_date_min;
+				$where_agg[]= "(from_date >= :collecting_date_min::timestamp AND from_date_mask !=0) ";
+				//$groups[]="collecting_year";
+			}
+			
+			if(strlen($collecting_date_max)>0)
+			{
+				
+				//$orders[]="collecting_year";
+				//$fields[8]="collecting_year";
+				
+				//$params[":collecting_date_max"]=$collecting_date_max;
+				$where_agg[]= "(from_date <= :collecting_date_max::timestamp AND from_date_mask !=0 ) ";
+				//$groups[]="collecting_year";
+			}
+			
+			
 		if(strlen($ig_num)>0)
 		{
+		
+			
 			$fields_agg[]="ig_num";
 			$group_agg[]="ig_num";
 			$where_agg[]= "ig_num = :=ig_num" ;
@@ -1085,6 +1770,18 @@ group by group_coll, name_full_path, a.grscicoll_code ORDER BY name_full_path;";
 				$q->bindParam($p, $v, PDO::PARAM_STR);
 			
 		}
+		
+		if(strlen($collecting_date_min)>0)
+		{
+			 $q->bindParam(":collecting_date_min", $collecting_date_min, PDO::PARAM_STR);
+		}
+		
+		if(strlen($collecting_date_max)>0)
+		{
+			$q->bindParam(":collecting_date_max", $collecting_date_max, PDO::PARAM_STR);
+		}
+		
+		
 		 $q->execute();
 		$items=$q->fetchAll(PDO::FETCH_ASSOC);
 		
@@ -1092,7 +1789,7 @@ group by group_coll, name_full_path, a.grscicoll_code ORDER BY name_full_path;";
   
   }
   
-  public function countTaxaInSpecimen($collectionID ="/", $year="", $creation_date_min="", $creation_date_max="", $ig_num="", $includeSubcollection=false, $detailSubCollections=false  ,$parent_only=false, $hide_private=false, $all=false)
+  public function countTaxaInSpecimen($collectionID ="/", $year="", $creation_date_min="", $creation_date_max="",$collecting_date_min="", $collecting_date_max="", $ig_num="", $includeSubcollection=false, $detailSubCollections=false  ,$parent_only=false, $hide_private=false, $all=false)
   {
 	  
 	if($all)
@@ -1152,6 +1849,24 @@ group by group_coll, name_full_path, a.grscicoll_code ORDER BY name_full_path;";
    // $fields[5]="SUM(specimen_count_min) as nb_physical_specimens_low";
    // $fields[6]="SUM(specimen_count_max) as nb_physical_specimens_high";
     
+	
+	if(strlen($collecting_date_min)>0)
+    {
+		//$orders[]="collecting_year";
+        //$fields[7]="collecting_year";
+        $where[]= "gtu_from_date >= :collecting_date_min::timestamp";
+        //$groups[]="collecting_year";
+    }
+	
+	if(strlen($collecting_date_max)>0)
+    {
+		//$orders[]="collecting_year";
+        //$fields[8]="collecting_year";
+        $where[]= "gtu_from_date <= :collecting_date_max::timestamp";
+        //$groups[]="collecting_year";
+    }
+	
+	
     $orders[]="level_ref DESC";
     $groups[]="level_ref";
     $fields[1]="level_name";
@@ -1361,7 +2076,15 @@ group by group_coll, name_full_path, a.grscicoll_code, level_name ORDER BY name_
         $q->bindParam(":creation_date_max", $creation_date_max, PDO::PARAM_STR);
     }
        
-   
+    if(strlen($collecting_date_min)>0)
+    {
+         $q->bindParam(":collecting_date_min", $collecting_date_min, PDO::PARAM_STR);
+    }
+    
+    if(strlen($collecting_date_max)>0)
+    {
+        $q->bindParam(":collecting_date_max", $collecting_date_max, PDO::PARAM_STR);
+    }
    
     $q->execute();
     

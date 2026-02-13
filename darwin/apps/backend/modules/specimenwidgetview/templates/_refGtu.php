@@ -68,12 +68,9 @@
 					<div id="mouse-position"></div>    
 				</div>  
 				<select id="layer-select" >
-                       <!--<option value="Aerial">Aerial</option>
-                       <option value="AerialWithLabels" selected>Aerial with labels</option>
-                       <option value="Road">Road (static)</option>
-                       <option value="RoadOnDemand">Road (dynamic)</option>-->
-					   <option value="OSM">OpenStreetMap</option>
-					   <option value="esri_satelite">ESRI Web service</option>
+                        <option value="OSM" selected>OpenStreetMap</option>
+                       <option value="World_Imagery">ESRI Image service</option>
+					   <option value="World_Topo_Map">ESRI World topo map</option>
 					   
 				</select>	
 			<?php endif;?>
@@ -118,6 +115,8 @@ var mousePositionControl;
 		var map;
 		var featuresPoint = new Array();
 		var OSM_layer;
+		var styles =["World_Imagery", "World_Topo_Map"];
+		var layers = [];
 		
 		
 		
@@ -166,17 +165,19 @@ var mousePositionControl;
 			}));
 		}*/
 		
-		var layers = [];
-		var styles=["esri_satelite"];
-		var esri= new ol.layer.Tile({
-		  source: new ol.source.XYZ({
-			url:
-			  'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+		
+		for (i = 0, ii = styles.length; i < ii; ++i) {
+			layers.push(new ol.layer.Tile({
+			  visible: false,
+			  preload: Infinity,
+			  source: new ol.source.XYZ({
+						url:
+			  'http://server.arcgisonline.com/ArcGIS/rest/services/'+styles[i]+'/MapServer/tile/{z}/{y}/{x}',
 	
 			  maxZoom:12
-		  }),
-		});
-	   layers.push(esri);
+					})
+			}));
+		}
 	   OSM_layer = new ol.layer.Tile({
 		    visible: false,
             source: new ol.source.OSM()
@@ -222,17 +223,10 @@ var mousePositionControl;
                 
         //select background
       var select = document.getElementById('layer-select');
-		function onChange() {
+		function onChange() 
+		{
 			console.log(select.value)
-			/*if(select.value!="OSM")
-			{
-				OSM_layer.setVisible(false);
-				var style = select.value;
-				for (var i = 0, ii = layers.length; i < ii; ++i) {
-				  layers[i].setVisible(styles[i] === style);
-				}
-			}*/
-			if(select.value=="esri_satelite")
+			if(select.value!="OSM")
 			{
 				OSM_layer.setVisible(false);
 				var style = select.value;

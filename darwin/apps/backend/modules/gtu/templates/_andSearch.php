@@ -5,7 +5,7 @@
 <td><?php print($form['country_ref']);?></td>
 </tr>
 <tr class="tag_line" >
-	<th>Tag</th>
+	<th ><?php echo __("Locality name or description") ?></th>
 </tr>
 <tr class="tag_line" >	
 	<td><?php echo $form['tag'];?>    <div class="purposed_tags" id="purposed_tags_<?php echo $row_line;?>"></div></td>

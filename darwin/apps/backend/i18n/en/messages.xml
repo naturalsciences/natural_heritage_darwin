@@ -1376,8 +1376,8 @@
         <target>To</target>
       </trans-unit>
       <trans-unit id="394">
-        <source>This application requires an authentification.</source>
-        <target>This application requires an authentification.</target>
+        <source>This application requires an authentication.</source>
+        <target>This application requires an authentication.</target>
       </trans-unit>
       <trans-unit id="396">
         <source>Log in</source>

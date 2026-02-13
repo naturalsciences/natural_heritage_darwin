@@ -303,7 +303,13 @@ class DarwinActions extends sfActions
     $year="";
     $creation_date_min="";
     $creation_date_max="";
-    $ig_num="";
+    
+	
+	$collecting_date_min="";
+    $collecting_date_max="";
+	$ig_num="";
+	
+	
     $includeSubcollection=false;
     $detailSubCollections=false;
 	$parent_only=false;
@@ -332,6 +338,17 @@ class DarwinActions extends sfActions
     {
         $creation_date_max=$request->getParameter("creation_date_max");
     }
+	
+	if($request->hasParameter("collecting_date_min"))
+    {
+          $collecting_date_min=$request->getParameter("collecting_date_min");
+       
+    }
+    
+    if($request->hasParameter("collecting_date_max"))
+    {
+        $collecting_date_max=$request->getParameter("collecting_date_max");
+    }
     
     if($request->hasParameter("withdetails"))
     {
@@ -359,7 +376,7 @@ class DarwinActions extends sfActions
         }
     }
     
-    $items=Doctrine_Core::getTable('Collections')->countSpecimens($idCollections, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections , $parent_only, $hide_private, $this->getUser()) ;
+    $items=Doctrine_Core::getTable('Collections')->countSpecimens($idCollections, $year,$creation_date_min, $creation_date_max,$collecting_date_min, $collecting_date_max, $ig_num, $includeSubcollection, $detailSubCollections , $parent_only, $hide_private, $this->getUser()) ;
      
     if(count($items)>1)
     {
@@ -462,26 +479,46 @@ class DarwinActions extends sfActions
         }
     }
 	
+	if($request->hasParameter("collecting_date_min"))
+    {
+          $collecting_date_min=$request->getParameter("collecting_date_min");
+       
+    }
+    
+    if($request->hasParameter("collecting_date_max"))
+    {
+        $collecting_date_max=$request->getParameter("collecting_date_max");
+    }
+	
     if($table_name=="types")
     {
-        $items=Doctrine_Core::getTable('Collections')->countTypeSpecimens($idCollections, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections,  $parent_only,$hide_private, $this->getUser()) ;
+        $items=Doctrine_Core::getTable('Collections')->countTypeSpecimens($idCollections, $year,$creation_date_min, $creation_date_max,$collecting_date_min, $collecting_date_max,$ig_num, $includeSubcollection, $detailSubCollections,  $parent_only,$hide_private, $this->getUser()) ;
     }
     elseif($table_name=="taxa")
     {
-        $items=Doctrine_Core::getTable('Collections')->countTaxaInSpecimen($idCollections, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections, $parent_only,$hide_private,$this->getUser(), $false) ;
+        $items=Doctrine_Core::getTable('Collections')->countTaxaInSpecimen($idCollections, $year,$creation_date_min, $creation_date_max, $collecting_date_min, $collecting_date_max, $ig_num, $includeSubcollection, $detailSubCollections, $parent_only,$hide_private,$this->getUser(), $false) ;
     }
 	elseif($table_name=="all_taxa")
     {
-        $items=Doctrine_Core::getTable('Collections')->countTaxaInSpecimen($idCollections, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections, $parent_only,$hide_private,$this->getUser(), $true) ;
+        $items=Doctrine_Core::getTable('Collections')->countTaxaInSpecimen($idCollections, $year,$creation_date_min, $creation_date_max, $collecting_date_min, $collecting_date_max, $ig_num, $includeSubcollection, $detailSubCollections, $parent_only,$hide_private,$this->getUser(), $true) ;
     }
 	elseif($table_name=="mids")
     {
-        $items=Doctrine_Core::getTable('Collections')->countMidsSpecimens($idCollections, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections, $hide_private, $this->getUser()) ;
+        $items=Doctrine_Core::getTable('Collections')->countMidsSpecimens($idCollections, $year,$creation_date_min, $creation_date_max, $collecting_date_min, $collecting_date_max ,$ig_num, $includeSubcollection, $detailSubCollections, $hide_private, $this->getUser()) ;
     }
 	
 	elseif($table_name=="countries")
     {
-        $items=Doctrine_Core::getTable('Collections')->countCountriesInSpecimens($idCollections, $year,$creation_date_min, $creation_date_max, $ig_num, $includeSubcollection, $detailSubCollections, $hide_private, $this->getUser()) ;
+		
+        $items=Doctrine_Core::getTable('Collections')->countCountriesInSpecimens($idCollections, $year,$creation_date_min, $creation_date_max, $collecting_date_min, $collecting_date_max , $ig_num, $includeSubcollection, $detailSubCollections, $hide_private, $this->getUser()) ;
+    }
+	elseif($table_name=="categories")
+    {
+        $items=Doctrine_Core::getTable('Collections')->countCategoriesInSpecimens($idCollections, $year,$creation_date_min, $creation_date_max, $collecting_date_min, $collecting_date_max ,$ig_num, $includeSubcollection, $detailSubCollections, $hide_private, $this->getUser()) ;
+    }
+	elseif($table_name=="specimen_parts")
+    {
+        $items=Doctrine_Core::getTable('Collections')->countPartsInSpecimens($idCollections, $year,$creation_date_min, $creation_date_max, $collecting_date_min, $collecting_date_max,  $ig_num, $includeSubcollection, $detailSubCollections, $hide_private, $this->getUser()) ;
     }
     if(count($items)>1)
     {

@@ -8,6 +8,7 @@
 	$map_array["dna"]=[];
 	$map_array["links"]=[];
 	$map_array["multimedia"]=[];
+	$map_array["2d_orthanc"]=[];
 	$map_array["others"]=[];
 	$i=0;
 ?>
@@ -20,7 +21,7 @@
 				
 				foreach($array[$main_key] as $sub_key=>$link)
 				{
-				
+					print($link->getType());
 					if($link->getType()=="html_3d_snippet")
 					{
 						$tmp= '<a  class="link_catalogue_view" href="'.url_for("extlinks/sketchfabSnippet?id=".$link->getId()).'/model/undefined">'.$logo_array[$sub_key]."</a></td>";
@@ -28,7 +29,7 @@
 					elseif($link->getType()=="iiif")
 					{
 						$tmp= '<a  class="link_catalogue_view" href="'.url_for("extlinks/iiifViewer?id=".$link->getId()).'/model/undefined">'.$logo_array[$sub_key]."</a></td>";
-					}
+					}					
 					else
 					{
 						$tmp='<a href="'.$link->getUrl().'" target="_blank" class="complete_widget">'.$logo_array[$sub_key].'</a>'; 
@@ -88,7 +89,7 @@
 		$logo_array[$i]=image_tag('2d_polaroptica',array('title' =>'2d_polaroptica'));
         break;
 	case "2d_inside":
-        $map_array["multimedia"][$i]=$link;
+        $map_array["2d_orthanc"][$i]=$link;
 		$logo_array[$i]=image_tag('2d_inside',array('title' =>'2d_inside'));
         break;
 	case "3d_inside":
@@ -223,6 +224,75 @@
 		  <tr class="spacer"><td class="spacer"></td></tr>
 		<?php  $items=parse_links($map_array, "multimedia", $logo_array); ?>
 		<?php print(implode('',$items));?>
+		
+  <?php endif; ?>
+  <?php  if(count($map_array["2d_orthanc"])>0):?>
+		<script language="javascript">
+			
+					var get_orthanc_links=function(base_url, uuid, index)
+					{
+						//console.log(uuid);	
+						var url_orthanc_find=base_url+"/tools/find";
+						console.log(url_orthanc_find);
+						var query={};
+						query["PatientID"]=uuid;
+						var parent_patient="";
+						var data={}
+						data["Level"]="Study";
+						data["Expand"]=true;
+						data["Limit"]=100;
+						data["Query"]=query;						
+					    data["Full"]=true;
+						$.post( url_orthanc_find, JSON.stringify(data) , function( result ) {
+						 //
+						  if(result!==null)
+						  {
+							  console.log(result);
+							  
+							   var series=Array();
+							  for(var i=0;i<result.length;i++)
+							  {
+								 var tmp=result[i];
+								 //console.log(tmp);
+								 if("ParentPatient" in tmp)
+								 {
+									 parent_patient=tmp["ParentPatient"];
+								 }
+								 if("Series" in tmp)
+								 {
+									 for(var j=0;j<tmp["Series"].length;j++ )
+									 {
+										 series.push(tmp["Series"][j]);
+									 }
+									 
+								 }
+							  }
+							  //console.log(parent_patient); 
+							  var tbody=$("tbody.t_orthanc_links[row_id='"+index.toString()+"']")
+							  if(parent_patient.length>0)
+							  {
+								  var url_orthanc_1=base_url+"/app/explorer.html#patient?uuid="+parent_patient;
+								  $(tbody).append("<tr><td></td><td>Orthanc index</td><td><a target='_blank' href='"+url_orthanc_1+"' >To description </a></td></tr>")
+							  }
+							  //console.log(series); 
+							  var url_serie= url_orthanc_1=base_url+"/wsi/app/mirador.html?iiif-content=../iiif/series/";
+							  for(var j=0;j<series.length;j++)
+							  {
+								  var tmp_url=	url_serie+	series[j]+"/manifest.json";	
+									$(tbody).append("<tr><td></td><td>Orthanc IIIF (serie)</td><td><a target='_blank' href='"+tmp_url+"' >To image</a></td></tr>")								  
+							  }
+						  }
+						});
+					}
+				
+			
+		</script>
+		<?php $i_link=0;?>
+		<?php foreach($map_array["2d_orthanc"] as $k=>$v): ?>
+			
+			 <?php include_partial('specimenwidgetview/orthanc_link', array("base_url"=>$v->getUrl(), 'uuid'=>$uuid, 'i_link'=>$i_link)); ?>
+			<?php $i_link++; ?>
+		<?php endforeach; ?>
 		
   <?php endif; ?>
   <?php  if(count($map_array["others"])>0):?>

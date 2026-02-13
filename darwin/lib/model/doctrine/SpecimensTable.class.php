@@ -96,6 +96,11 @@ class SpecimensTable extends DarwinTable
       return array_map(array($i18n_object, '__'), self::$acquisition_category);
   }
 
+  public function getDistinctCategoriesDict()
+  {
+    $items = $this->createUniqFlatDistinct('specimens', 'category', 'category', true);
+    return $items;
+  }
 
   /**
   * Get Distincts Buildings of Part
@@ -185,6 +190,14 @@ class SpecimensTable extends DarwinTable
   {
     $items = $this->createUniqFlatDistinct('specimens', 'specimen_part', 'specimen_part', true);
     return $items;
+  }
+  
+  //2025 12 23
+    public function getDistinctPartsParent($type="")
+  {
+    $q = $this->createFlatDistinctDepend('specimens', 'specimen_part', $type, 'category');
+    $a =  DarwinTable::CollectionToArray($q->execute(), 'category');
+    return $a;
   }
 
   /**

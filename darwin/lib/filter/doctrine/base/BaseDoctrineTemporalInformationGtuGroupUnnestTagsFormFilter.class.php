@@ -122,6 +122,9 @@ abstract class BaseDoctrineTemporalInformationGtuGroupUnnestTagsFormFilter exten
     $this->widgetSchema   ['country_ref'] = new sfWidgetFormFilterInput();
     $this->validatorSchema['country_ref'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
 
+    $this->widgetSchema   ['expedition_ref'] = new sfWidgetFormFilterInput();
+    $this->validatorSchema['expedition_ref'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));
+
     $this->widgetSchema->setNameFormat('doctrine_temporal_information_gtu_group_unnest_tags_filters[%s]');
   }
 
@@ -169,6 +172,7 @@ abstract class BaseDoctrineTemporalInformationGtuGroupUnnestTagsFormFilter exten
       'tag' => 'Text',
       'tag_indexed' => 'Text',
       'country_ref' => 'Number',
+      'expedition_ref' => 'Number',
     ));
   }
 }

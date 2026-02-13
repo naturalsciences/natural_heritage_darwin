@@ -28,6 +28,23 @@ class IdentificationsTable extends DarwinTable
     return $q->execute();
   }
   
+   public function getLastIdentificationRelated($table, $specId)
+  {
+	//php 8 no default params in first position
+    if($table===null)
+	{
+		$table='specimens';
+	}
+	$q = Doctrine_Query::create()->
+         from('Identifications')->
+         where('referenced_relation = ?', $table)->
+         andWhere('record_id = ?', $specId)->
+         orderBy('order_by DESC, notion_date ASC, notion_concerned DESC');
+    $result=$q->execute()->getFirst();
+	return $result;
+	
+  }
+  
   public function getStagingIds($id)
   {
      $q = Doctrine_Query::create()->

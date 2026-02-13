@@ -107,7 +107,7 @@ $(document).ready(function ()
         </ul>
       <?php endif;?>
 	  <div>
-		<?php if($user_rights_on_spec>=4): ?>
+		<?php if($user_rights_on_spec>=2): ?>
 			<span class="specimen_actions">
 				<?php print(__("Non public")); ?> : <?php print($form["restricted_access"]); ?>
 			</span>

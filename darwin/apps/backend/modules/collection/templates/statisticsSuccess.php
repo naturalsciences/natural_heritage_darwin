@@ -30,7 +30,7 @@
  </td>
  </tr>
  <tr>
- <td> 
+ <td>  Encoding date
   <?php echo($form["from_date"]->renderLabel()); ?>
  </td>
  <td>
@@ -41,6 +41,20 @@
  </td>
  <td>
   <?php echo($form["to_date"]); ?>
+ </td>
+ </tr>
+ <tr>
+ <td> Collecting date
+  <?php echo($form["collecting_from_date"]->renderLabel()); ?>
+ </td>
+ <td>
+ <?php echo($form["collecting_from_date"]); ?>
+ </td>
+ <td> 
+  <?php echo($form["collecting_to_date"]->renderLabel()); ?>
+ </td>
+ <td>
+  <?php echo($form["collecting_to_date"]); ?>
  </td>
  </tr>
  <tr>
@@ -67,10 +81,16 @@
  <img src="<?php echo(public_path("images/loader.gif"));?>"></img>
  </div>
 <br/>
-Specimens count :
+Data count :
 <br/>
 <div  class="results_container">
     <table name="results1" id="results1" class="results" >
+    </table>
+</div>
+<br/>
+Categories of objects in collection:
+<div  class="results_container">
+    <table name="results7" id="results7" class="results" >
     </table>
 </div>
 <br/>
@@ -104,6 +124,14 @@ Countries in collection:
     <table name="results6" id="results6" class="results" >
     </table>
 </div>
+
+
+
+specimens parts in collection:
+<div  class="results_container">
+    <table name="results8" id="results8" class="results" >
+    </table>
+</div>
 <br/>
 </div>
 <script language="JavaScript">
@@ -115,10 +143,13 @@ var finishedAjax3=false;
 var finishedAjax4=false;
 var finishedAjax5=false;
 var finishedAjax6=false;
+var finishedAjax7=false;
+var finishedAjax8=false;
+
 
 var hideLoader=function()
 {
-    if(finishedAjax1&&finishedAjax2&&finishedAjax3&&finishedAjax4&&finishedAjax5&&finishedAjax6)
+    if(finishedAjax1&&finishedAjax2&&finishedAjax3&&finishedAjax4&&finishedAjax5&&finishedAjax6&&finishedAjax7&&finishedAjax8)
     {
         $("#div_loader").css("display", 'none');
     }
@@ -183,7 +214,7 @@ var LastDayOfMonth=function(Year, Month) {
 	return dateTmp.getDate();
 }
 
-var getStatistics = function(collection_ids, ig_num, from_date, to_date, includesub, displaysub, display_parent, selector)
+var getStatistics = function(collection_ids, ig_num, from_date, to_date, collecting_from_date, collecting_to_date, includesub, displaysub, display_parent, selector)
 	{
 		$("#to_specimens").attr("href", "<?php print(url_for("specimensearch/search/1"))."?specimen_search_filters[rec_per_page]=50";?>" ); 
 		console.log("_STAT");
@@ -233,6 +264,17 @@ var getStatistics = function(collection_ids, ig_num, from_date, to_date, include
 			$("#to_specimens").attr("href", _href );
 			dataTmp["creation_date_max"]=to_date;
 		}
+		
+		if(collecting_from_date.length>0)
+		{
+			dataTmp["collecting_date_min"]=collecting_from_date;
+		}
+		if(collecting_to_date.length>0)
+		{
+			dataTmp["collecting_date_max"]=collecting_to_date;
+		}
+
+		
 		if(includesub)
 		{          
 			var _href = $("#to_specimens").attr("href");
@@ -257,6 +299,8 @@ var getStatistics = function(collection_ids, ig_num, from_date, to_date, include
 			$("#results4 tr").remove();
 			$("#results5 tr").remove();
 			$("#results6 tr").remove();
+			$("#results7 tr").remove();
+			$("#results8 tr").remove();
             var request1 = $.ajax({
               url: detect_https("<?php echo url_for("collection/display_statistics_specimens");?>"),
               method: "GET",
@@ -341,6 +385,36 @@ var getStatistics = function(collection_ids, ig_num, from_date, to_date, include
                     hideLoader();
                 }
             );
+			
+			var request7 = $.ajax({
+              url: detect_https("<?php echo url_for("collection/display_statistics_categories");?>"),
+              method: "GET",
+              data: dataTmp,
+              dataType: "json"
+            }).done(
+                function(result)
+                {
+                    finishedAjax7 = true;                   
+                    buildHtmlTable(result, "#results7");
+                    hideLoader();
+                }
+            );
+			
+			var request8 = $.ajax({
+              url: detect_https("<?php echo url_for("collection/display_statistics_specimen_parts");?>"),
+              method: "GET",
+              data: dataTmp,
+              dataType: "json"
+            }).done(
+                function(result)
+                {
+                    finishedAjax8 = true;                   
+                    buildHtmlTable(result, "#results8");
+                    hideLoader();
+                }
+            );
+			
+			
         }
         else if($(selector).attr('id')=="search_csv")
         {
@@ -381,7 +455,8 @@ $(document).ready(
 				finishedAjax4=false;
 				finishedAjax5=false;
 				finishedAjax6=false;
-
+				finishedAjax7=false;
+				finishedAjax8=false;
                $("#div_loader").css("display", 'block');
                var date_from="";
 			   if($("#statistics_from_date_year").val().length>0)
@@ -402,6 +477,29 @@ $(document).ready(
 					else
 					{
 						date_from=date_from+"-01";
+					}
+				   
+			   }
+			   
+			   var collecting_date_from="";
+			   if($("#statistics_collecting_from_date_year").val().length>0)
+			   {
+				   collecting_date_from=$("#statistics_collecting_from_date_year").val();
+				    if($("#statistics_collecting_from_date_month").val().length>0)
+					{
+						collecting_date_from=collecting_date_from+"-"+$("#statistics_collecting_from_date_month").val();
+					}
+					else
+					{
+						collecting_date_from=collecting_date_from+"-01";
+					}
+					if($("#statistics_collecting_from_date_day").val().length>0)
+					{
+						collecting_date_from=collecting_date_from+"-"+$("#statistics_collecting_from_date_day").val();
+					}
+					else
+					{
+						collecting_date_from=collecting_date_from+"-01";
 					}
 				   
 			   }
@@ -429,6 +527,29 @@ $(document).ready(
 					}
 				   
 			   }
+			   
+			    var collecting_date_to="";
+			   if($("#statistics_collecting_to_date_year").val().length>0)
+			   {
+				   collecting_date_to=$("#statistics_collecting_to_date_year").val();
+				    if($("#statistics_collecting_to_date_month").val().length>0)
+					{
+						collecting_date_to=collecting_date_to+"-"+$("#statistics_collecting_to_date_month").val();
+					}
+					else
+					{
+						collecting_date_to=collecting_date_to+"-01";
+					}
+					if($("#statistics_collecting_to_date_day").val().length>0)
+					{
+						collecting_date_to=collecting_date_to+"-"+$("#statistics_collecting_to_date_day").val();
+					}
+					else
+					{
+						collecting_date_to=collecting_date_to+"-01";
+					}
+				   
+			   }
 				
 			    var selected_collections = [];
 				 $('.col_check:checked').each(function() {
@@ -440,7 +561,7 @@ $(document).ready(
 				{
 					$("#display_parent_only").prop("checked", true );
 				}
-				getStatistics(selected_collections, $(".ig_num").val(), date_from, date_to,$("#count_subcollections").is(":checked"), $("#display_subcollections").is(":checked"), $("#display_parent_only").is(":checked"), this )				
+				getStatistics(selected_collections, $(".ig_num").val(), date_from, date_to, collecting_date_from, collecting_date_to, $("#count_subcollections").is(":checked"), $("#display_subcollections").is(":checked"), $("#display_parent_only").is(":checked"), this )				
            }
        );
 	   
@@ -589,6 +710,30 @@ $(document).ready(
 				 $("#search").click();
 			}
 		);
+		
+		$('body').on("change", ".col_check", function(event) {
+			//console.log("checked");
+			if(!$(this).prop("checked"))
+			{
+				//console.log("================================");
+				var attr1=$(this).attr("class");
+				//console.log("attr1");
+				//console.log(attr1);
+				$(".all_collections").prop('checked', false); 
+				var attr = $(this).attr('path_str');
+				if (typeof attr !== 'undefined' && attr !== false) {
+					console.log(attr);
+					chunks=attr.split("/");
+					chunks.pop();
+					var parent_path=chunks.join("/")
+					//console.log(parent_path);
+					var tmp=$(".col_check[path_str='" + parent_path + "']").prop('checked', false);;
+					//console.log(tmp); //
+				}
+			}
+		});
+
+		
     }
 	
 	

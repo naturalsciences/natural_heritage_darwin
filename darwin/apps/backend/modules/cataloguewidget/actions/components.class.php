@@ -22,6 +22,9 @@ class cataloguewidgetComponents extends sfComponents
   
   public function executeExtLinks()
   {
+	$this->link_type_array=ExtLinks::getLinkTypes();  
+	$this->access_rights_array= array_merge(array("unspecified"=>"unspecified"),ExtLinks::getAccessRightsDefinition());
+	
     $this->links =  Doctrine_Core::getTable('ExtLinks')->findForTable($this->table, $this->eid);
   }  
 
@@ -106,5 +109,17 @@ class cataloguewidgetComponents extends sfComponents
   public function executePeopleSubTypes()
   {
 	  $this->sub_types = Doctrine_Core::getTable('PeopleSubTypes')->findByPeopleRef($this->eid); 
+  }
+  
+  //expedition read only (stats)
+    public function executeIgs()
+  {
+	  $this->igs = Array(); 
+  }
+  
+    //expedition read only (stats)
+   public function executeCollections()
+  {
+	  $this->collections = Array(); 
   }
 }

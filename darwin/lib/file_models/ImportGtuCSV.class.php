@@ -744,7 +744,7 @@ class ImportGtuCSV
 					foreach($p_row as $key=>$value)
 					{
 						
-						$value=htmlspecialchars(trim($value));
+						$value=htmlspecialchars(trim($value), ENT_NOQUOTES | ENT_SUBSTITUTE | ENT_HTML401);
 						$field_name=$this->headers[strtolower($key)];
 					   
 						if(strlen(trim($value))>0)
@@ -761,7 +761,8 @@ class ImportGtuCSV
 									//print('!!!!!!!!!!!!!!!!!');
 									//print($value);
 									//print('????????????');
-									$this->addProperties_free($obj, htmlspecialchars(trim($field_name)), $value);
+									//$this->addProperties_free($obj, htmlspecialchars(trim($field_name)), $value);
+									$this->addProperties_free($obj, htmlspecialchars(trim($field_name)), $value, ENT_NOQUOTES | ENT_SUBSTITUTE | ENT_HTML401);
 							}
 						}
 						
