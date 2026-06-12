@@ -40,6 +40,7 @@
  * @property string $comments
  * @property string $properties
  * @property integer $country_ref
+ * @property integer $expedition_ref
  * @property Doctrine_Collection $TagGroups
  * @property Doctrine_Collection $Tags
  * 
@@ -78,6 +79,7 @@
  * @method string                                    getComments()                Returns the current record's "comments" value
  * @method string                                    getProperties()              Returns the current record's "properties" value
  * @method integer                                   getCountryRef()              Returns the current record's "country_ref" value
+ * @method integer                                   getExpeditionRef()           Returns the current record's "expedition_ref" value
  * @method Doctrine_Collection                       getTagGroups()               Returns the current record's "TagGroups" collection
  * @method Doctrine_Collection                       getTags()                    Returns the current record's "Tags" collection
  * @method DoctrineTemporalInformationGtuGroupUnnest setId()                      Sets the current record's "id" value
@@ -115,6 +117,7 @@
  * @method DoctrineTemporalInformationGtuGroupUnnest setComments()                Sets the current record's "comments" value
  * @method DoctrineTemporalInformationGtuGroupUnnest setProperties()              Sets the current record's "properties" value
  * @method DoctrineTemporalInformationGtuGroupUnnest setCountryRef()              Sets the current record's "country_ref" value
+ * @method DoctrineTemporalInformationGtuGroupUnnest setExpeditionRef()           Sets the current record's "expedition_ref" value
  * @method DoctrineTemporalInformationGtuGroupUnnest setTagGroups()               Sets the current record's "TagGroups" collection
  * @method DoctrineTemporalInformationGtuGroupUnnest setTags()                    Sets the current record's "Tags" collection
  * 
@@ -250,6 +253,9 @@ abstract class BaseDoctrineTemporalInformationGtuGroupUnnest extends DarwinModel
              'type' => 'string',
              ));
         $this->hasColumn('country_ref', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('expedition_ref', 'integer', null, array(
              'type' => 'integer',
              ));
     }

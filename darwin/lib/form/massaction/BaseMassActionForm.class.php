@@ -55,6 +55,7 @@ class BaseMassActionForm extends sfFormSymfony
         'sampling_date' => self::getI18N()->__('Change Sampling date'),
 		'collectors' => self::getI18N()->__('Replace collectors'),
 		'donators' => self::getI18N()->__('Replace donators of sellers'),
+		'add_identification' => self::getI18N()->__('Add identification'),
     );
     return $result;
   }
@@ -145,7 +146,9 @@ class BaseMassActionForm extends sfFormSymfony
    elseif($action == 'collectors')
       return 'MaCollectorForm';	
    elseif($action == 'donators')
-      return 'MaDonatorForm';	 	  
+      return 'MaDonatorForm';	
+	elseif($action == 'add_identification')
+      return 'MaAddIdentificationForm';	 	 	  
 	  
     else
       return 'sfForm';
@@ -203,10 +206,10 @@ class BaseMassActionForm extends sfFormSymfony
   public function add_people($name_action, $num)
   {
 	 $tmp=$this->getEmbeddedForm('MassActionForm')->getEmbeddedForm($name_action)->addPeopleValue($num);
-	 return $tmp;
-	
+	 return $tmp;	
 	
   }
+  
 
   public function bind(array $taintedValues = null, array $taintedFiles = null)
   {

@@ -3,19 +3,23 @@
   <thead>
     <tr>
       <th></th>
+	  <th><?php echo __('Type');?></th>
       <th><?php echo __('Link');?></th>
       <th><?php echo __('Comment');?></th>
+	  <th><?php echo __('Access rights');?></th>
       <th></th>
     </tr>
   </thead>
-  <tbody>
+  <tbody>  
   <?php foreach($links as $link):?>
   <tr>
 
     <td>
       <?php echo link_to(image_tag('edit.png'),'extlinks/extLinks?table='.$table.'&cid='.$link->getId().'&id='.$eid,array('class' => 'link_catalogue','title' => __('Edit Url') )) ; ?>  
     </td>
-
+	<td>
+      <div ><?php print( $link_type_array[$link->getType()]);?></div>
+    </td>
     <td>
       <a href="<?php echo $link->getUrl();?>" target="_pop" class='complete_widget'>
         <?php echo truncate_text($link->getUrl(), 40);?>
@@ -23,6 +27,9 @@
     </td>
     <td>
       <div title="<?php echo $link->getComment();?>"><?php echo truncate_text($link->getComment(), 50);?></div>
+    </td>
+	<td>
+      <div ><?php print( $access_rights_array[$link->getAccessRights()]);?></div>
     </td>
     <td class="widget_row_delete">   
       <a class="widget_row_delete" href="<?php echo url_for('catalogue/deleteRelated?table=ext_links&id='.$link->getId());?>" title="<?php echo __('Delete Link') ?>"><?php echo image_tag('remove.png'); ?>

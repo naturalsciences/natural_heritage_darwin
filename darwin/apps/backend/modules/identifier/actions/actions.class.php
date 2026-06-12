@@ -7,39 +7,7 @@ class identifierActions extends DarwinActions
     $this->form = new IdentifiersFormFilter();
   }
 
-  /*public function executeSearch(sfWebRequest $request)
-  {
-    $this->forward404Unless($request->isMethod('post'));
-    $this->setCommonValues('identifier', 'referenced_relation', $request);
-    $this->form = new PeopleIdentifiersFormFilter();
 
-    if($request->getParameter('Identifiers_filters','') !== '')
-    {
-      $this->form->bind($request->getParameter('Identifiers_filters'));
-
-      if ($this->form->isValid())
-      {
-        $query = $this->form->getQuery()->orderBy($this->orderBy .' '.$this->orderDir);
-        $this->pagerLayout = new PagerLayoutWithArrows(
-          new DarwinPager(
-            $query,
-            $this->currentPage,
-            $this->form->getValue('rec_per_page')
-          ),
-          new Doctrine_Pager_Range_Sliding(
-            array('chunk' => $this->pagerSlidingSize)
-            ),
-          $this->getController()->genUrl($this->s_url.$this->o_url).'/page/{%page_number}'
-        );
-
-        // Sets the Pager Layout templates
-        $this->setDefaultPaggingLayout($this->pagerLayout);
-        // If pager not yet executed, this means the query has to be executed for data loading
-        if (! $this->pagerLayout->getPager()->getExecuted())
-           $this->items = $this->pagerLayout->execute();
-      }
-    }
-  }*/
 
   public function executeIdentifier(sfWebRequest $request)
   {

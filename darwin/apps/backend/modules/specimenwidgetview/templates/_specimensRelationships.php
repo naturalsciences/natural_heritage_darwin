@@ -10,7 +10,6 @@
       <th><?php echo __('Uuid'); ?></th>
     </tr>
   </thead>
-  <?php $test="test" ?>
   <?php foreach($spec_related as $val):?>
   <tr>
     <td><?php echo $val->getRelationshipType() ; ?></td>
@@ -39,6 +38,8 @@
         <strong><?php echo $val->Institutions->getFamilyName();?></strong>
       <?php endif ; ?>
     </td>
+   </tr>
+   <tr>
 	<td>
 	<?php if($val->getUnitType()=="specimens" ) : ?>
 		<?php print($val->SpecimenRelated->getUuid());?>
@@ -52,23 +53,12 @@
 <?php if($spec_related_inverse->count()>0): ?>
 <br><b>Inverse relationships:</b><br/><br/>
 <table class="catalogue_table_view">
-  <thead style="<?php echo ($spec_related_inverse->count()?'':'display: none;');?>">
-    <tr>
-      <th>
-        <?php echo __('Type'); ?>
-      </th>
-      <th>
-        <?php echo __('Extra'); ?>
-      </th>
-      <th></th>
-    </tr>
-  </thead>
+  
   <?php $cpt=0; foreach($spec_related_inverse as $val):?>
    <?php if($val->getSpecimenRef()!=$id_spec): ?>
-  <tr>
-	  <td style='max-width:20px;'><?php echo ++$cpt; ?></td>
-	  <td>UUID</td>
-	  <td colspan='2'><a target="_blank" href="<?php echo url_for('specimen/view?id='.$val->getSpecimenRef()) ?>"><?php echo __('Specimen'); ?> : <?php echo $val->Specimen->getUuid(); ?></a></td>
+  <tr><td><b></i><?php print($cpt+1);?>.</i></b></td></tr>
+  <tr>  
+	  <td colspan='2'>UUID: <a target="_blank" href="<?php echo url_for('specimen/view?id='.$val->getSpecimenRef()) ?>"><?php echo __('Specimen'); ?> : <?php echo $val->Specimen->getUuid(); ?></a></td>
   </tr>
   <tr>
     <td><?php echo $val->getRelationshipType() ; ?></td>
@@ -80,6 +70,8 @@
 			<?php echo $val->Specimen->getTaxonName(); ?>
 		</td>
 		<!--ftheeten 2015 09 10-->
+		<tr>
+		<tr/>
 		<td>
 				<?php echo ucfirst($val->Specimen->getSpecimenCreationDate())?'Date created: '.$val->Specimen->getSpecimenCreationDate():'';?>
 	    </td>
@@ -91,7 +83,12 @@
     <td>
     </td>
   </tr>
+  <tr>
+	<td colspan="2"><hr/></td>
+  </tr>
+  <?php $cpt++;?>
    <?php endif ; ?>
+   
   <?php endforeach;?>
 </table>
  <?php endif;?>

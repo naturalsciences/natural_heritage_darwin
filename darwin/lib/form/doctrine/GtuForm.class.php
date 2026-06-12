@@ -388,6 +388,7 @@ class GtuForm extends BaseGtuForm
     {
       if($values['latitude'] == '' || $values['longitude'] == '')
       {
+		
         $error = new sfValidatorError($validator, 'You must enter valid latitude And longitude' );
         $field = 'longitude';
         if($values['latitude'] == '') $field = 'latitude';
@@ -427,6 +428,16 @@ class GtuForm extends BaseGtuForm
 
     public function bind(array $taintedValues = null, array $taintedFiles = null)
     {
+
+		if(str_contains($taintedValues['latitude'], "," ))
+		{
+			$taintedValues['latitude']=str_replace(",",".", $taintedValues['latitude']);
+		}
+		if(str_contains($taintedValues['longitude'], ","  ))
+		{		
+			$taintedValues['longitude']=str_replace(",",".", $taintedValues['longitude']);
+		}
+		
 
       if(isset($taintedValues['newVal']))
       {

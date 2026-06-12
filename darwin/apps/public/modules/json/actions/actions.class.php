@@ -139,9 +139,9 @@ class jsonActions extends DarwinActions
 			$results["temporal_coverage"]=$temporal_coverage;
 			
 			$sub_collections=Array();
-			$coll_count_subs= Doctrine_Core::getTable("Collections")->countSpecimens($id, "", "", "", "", true);
+			$coll_count_subs= Doctrine_Core::getTable("Collections")->countSpecimens($id, "", "", "", "",  "", "", true);
 			$sub_collections["count_data"]=$coll_count_subs;
-			$coll_types_subs= Doctrine_Core::getTable("Collections")->countTypeSpecimens($id, "", "", "", "", true);
+			$coll_types_subs= Doctrine_Core::getTable("Collections")->countTypeSpecimens($id, "", "", "", "",  "", "", true);
 			$sub_collections["type_data"]=$coll_types_subs;
 			$spatial_coverage_subs= Doctrine_Core::getTable("Collections")->getSpatialCoverage($id, true);
 			$sub_collections["spatial_coverage"]=$spatial_coverage_subs;

@@ -44,8 +44,8 @@ abstract class BasePeopleFormFilter extends DarwinModelFormFilter
     $this->widgetSchema   ['birth_date'] = new sfWidgetFormFilterInput(array('with_empty' => false));
     $this->validatorSchema['birth_date'] = new sfValidatorPass(array('required' => false));
 
-    $this->widgetSchema   ['gender'] = new sfWidgetFormChoice(array('choices' => array('' => '', 'M' => 'M', 'F' => 'F')));
-    $this->validatorSchema['gender'] = new sfValidatorChoice(array('required' => false, 'choices' => array('M' => 'M', 'F' => 'F')));
+    $this->widgetSchema   ['gender'] = new sfWidgetFormChoice(array('choices' => array('' => '', 'M' => 'M', 'F' => 'F', 'U' => 'U')));
+    $this->validatorSchema['gender'] = new sfValidatorChoice(array('required' => false, 'choices' => array('M' => 'M', 'F' => 'F', 'U' => 'U')));
 
     $this->widgetSchema   ['end_date_mask'] = new sfWidgetFormFilterInput(array('with_empty' => false));
     $this->validatorSchema['end_date_mask'] = new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false)));

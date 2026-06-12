@@ -187,6 +187,10 @@ class importActions extends DarwinActions
       {
         $this->type="relationships";        
       }
+	  elseif($request->getParameter('format') == 'identifications')
+      {
+        $this->type="identifications";        
+      }
       else
       {
         $this->type="abcd";
@@ -258,6 +262,10 @@ class importActions extends DarwinActions
 				   elseif($this->type == 'relationships')
                   {
                     $this->redirect('import/indexRelationships');
+                  }
+				   elseif($this->type == 'identifications')
+                  {
+                    $this->redirect('import/indexIdentifications');
                   }
                   else
                   {          
@@ -353,6 +361,10 @@ class importActions extends DarwinActions
 	elseif($this->format == 'synonymies')
     {
       $this->s_url = 'import/searchSynonymies'.'?is_choose='.$this->is_choose;
+    }
+	elseif($this->format == 'identifications')
+    {
+      $this->s_url = 'import/searchIdentifications'.'?is_choose='.$this->is_choose;
     }
     elseif($this->format == 'abcd')
     {
@@ -486,6 +498,10 @@ class importActions extends DarwinActions
 					 elseif($importTmp->getFormat()=="relationships")
 					{
 						$this->redirect('import/indexRelationships');
+					}
+					 elseif($importTmp->getFormat()=="identifications")
+					{
+						$this->redirect('import/indexIdentifications');
 					}
 					else
 					{
@@ -1102,6 +1118,13 @@ public function executeViewUnimportedRelationships(sfWebRequest $request)
 		$this->form = new ImportsRelationshipsFormFilter(null,array('user' =>$this->getUser()));    
 		$this->setTemplate('index');
   }
+  
+  public function executeIndexIdentifications(sfWebRequest $request)
+  {
+		$this->format = 'identifications' ;
+		$this->form = new ImportsIdentificationsFormFilter(null,array('user' =>$this->getUser()));    
+		$this->setTemplate('index');
+  }
 
 
    public function executeSearchSynonymies(sfWebRequest $request)
@@ -1130,6 +1153,13 @@ public function executeViewUnimportedRelationships(sfWebRequest $request)
   {
     $this->form = new ImportsCodesFormFilter(null,array('user' =>$this->getUser()));
     $this->andSearch($request,'codes') ;
+    $this->setTemplate('search');
+  }
+  
+   public function executeSearchIdentifications(sfWebRequest $request)
+  {
+    $this->form = new ImportsIdentificationsFormFilter(null,array('user' =>$this->getUser()));
+    $this->andSearch($request,'identifications') ;
     $this->setTemplate('search');
   }
 
@@ -1161,6 +1191,21 @@ public function executeViewUnimportedRelationships(sfWebRequest $request)
 	  $this->redirect('import/indexSynonymies');
   }
   
+  
+  public function executeLoadidentifications(sfWebRequest $request)
+  {
+    $idImport=$request->getParameter("id");
+	  $currentDir=getcwd();
+
+      chdir(sfconfig::get('sf_root_dir')); 
+  
+       $cmd='darwin:import-identifications --id='.$idImport;          
+      exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+      chdir($currentDir);	
+    //print('nohup php symfony '.$cmd.'  >/dev/null &' );
+	 $this->redirect('import/indexIdentifications');
+  }
+  
     public function executeLoadproperties(sfWebRequest $request)
   {
     $idImport=$request->getParameter("id");
@@ -1170,6 +1215,7 @@ public function executeViewUnimportedRelationships(sfWebRequest $request)
   
        $cmd='darwin:import-properties --id='.$idImport;          
       exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+	
       chdir($currentDir);	
   
 	  $this->redirect('import/indexProperties');

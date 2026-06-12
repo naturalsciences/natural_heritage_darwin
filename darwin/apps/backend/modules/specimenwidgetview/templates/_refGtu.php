@@ -68,14 +68,30 @@
 					<div id="mouse-position"></div>    
 				</div>  
 				<select id="layer-select" >
-                       <!--<option value="Aerial">Aerial</option>
-                       <option value="AerialWithLabels" selected>Aerial with labels</option>
-                       <option value="Road">Road (static)</option>
-                       <option value="RoadOnDemand">Road (dynamic)</option>-->
-					   <option value="OSM">OpenStreetMap</option>
-					   <option value="esri_satelite">ESRI Web service</option>
+                        <option value="OSM" selected>OpenStreetMap</option>
+                       <option value="World_Imagery">ESRI Image service</option>
+					   <option value="World_Topo_Map">ESRI World topo map</option>
 					   
 				</select>	
+				<br/>
+				<form id="frm_rel_gis" target="_blank" action="<?php print(url_for("specimensearch/search/1")); ?>" method="post">
+				 View other records located nearby (radius) :<select id="related_radius" class="related_radius" name="related_radius" >
+					<option value="0"></option>
+					<option value="10">10</option>
+					<option value="20">20</option>
+					<option value="30">30</option>
+					<option value="50">50</option>
+					<option value="100">100</option>
+					<option value="500">500</option>
+					<option value="1000">1000</option>
+					<option value="2000">2000</option>
+					<option value="5000">5000</option>
+					<option value="10000">10000</option>
+					</select>m.
+					<input type="hidden" id="rel_wkt" name="specimen_search_filters[wkt_search]"></input>
+					<input type="submit"></input>
+					
+				</form>
 			<?php endif;?>
 		<div>
       </td>
@@ -118,10 +134,19 @@ var mousePositionControl;
 		var map;
 		var featuresPoint = new Array();
 		var OSM_layer;
+		var styles =["World_Imagery", "World_Topo_Map"];
+		var layers = [];
+		var center_point=null;
+		var center_point_buffered=null;
+		var center_point_buffered_4326=null;
+		var center_point_buffered_4326_wkt=null;
+		var radius_layer=null;
+		var init_radius=false;
 		
 		
 		
-		function init_map(){
+		function init_map()
+		{
     
 		mousePositionControl= new ol.control.MousePosition({
 			 coordinateFormat: ol.coordinate.createStringXY(4),
@@ -166,17 +191,19 @@ var mousePositionControl;
 			}));
 		}*/
 		
-		var layers = [];
-		var styles=["esri_satelite"];
-		var esri= new ol.layer.Tile({
-		  source: new ol.source.XYZ({
-			url:
-			  'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+		
+		for (i = 0, ii = styles.length; i < ii; ++i) {
+			layers.push(new ol.layer.Tile({
+			  visible: false,
+			  preload: Infinity,
+			  source: new ol.source.XYZ({
+						url:
+			  'http://server.arcgisonline.com/ArcGIS/rest/services/'+styles[i]+'/MapServer/tile/{z}/{y}/{x}',
 	
 			  maxZoom:12
-		  }),
-		});
-	   layers.push(esri);
+					})
+			}));
+		}
 	   OSM_layer = new ol.layer.Tile({
 		    visible: false,
             source: new ol.source.OSM()
@@ -199,7 +226,7 @@ var mousePositionControl;
 		style : styleLine
       });
 
-		  
+		  center_point=[<?php print($gtu->getLongitude());?>,<?php print($gtu->getLatitude());?>];
 		//layers[layers.length]=layer_point;
      
        		map = new ol.Map({
@@ -207,7 +234,7 @@ var mousePositionControl;
 				layers: layers,    
 				 
 				view: new ol.View({                    
-				  center: ol.proj.fromLonLat([<?php print($gtu->getLongitude());?>,<?php print($gtu->getLatitude());?>]),
+				  center: ol.proj.fromLonLat(center_point),
 				  zoom: 7
 				}),
 				controls: ol.control.defaults({
@@ -222,17 +249,10 @@ var mousePositionControl;
                 
         //select background
       var select = document.getElementById('layer-select');
-		function onChange() {
+		function onChange() 
+		{
 			console.log(select.value)
-			/*if(select.value!="OSM")
-			{
-				OSM_layer.setVisible(false);
-				var style = select.value;
-				for (var i = 0, ii = layers.length; i < ii; ++i) {
-				  layers[i].setVisible(styles[i] === style);
-				}
-			}*/
-			if(select.value=="esri_satelite")
+			if(select.value!="OSM")
 			{
 				OSM_layer.setVisible(false);
 				var style = select.value;
@@ -257,6 +277,70 @@ var mousePositionControl;
 	}
 	init_map();
 	
+	$(document).ready(
+		function()
+		{
+			$("#related_radius").change(
+				function()
+				{
+					console.log("change_radius");
+					var radius=$(this).val();
+					console.log(radius);
+					draw_radius(center_point, radius);
+				}
+			)
+			var styleWKT= new ol.style.Style({
+			  fill: new ol.style.Fill({
+				color: 'rgba(255, 255, 255, 0.2)'
+			  }),
+			  stroke: new ol.style.Stroke({
+				color: '#ffcc33',
+				width: 4
+			  }),
+			  image: new ol.style.Circle({
+				radius: 7,
+				fill: new ol.style.Fill({
+				  color: '#ffcc33'
+				})
+			  })
+			});
+			
+			var draw_radius=function(pt_4326, radius_m)
+			{
+				radius_m=parseInt(radius_m);
+				if(init_radius)
+				{
+					map.removeLayer(radius_layer);
+				}
+				if(radius_m!=0)
+				{
+					console.log(pt_4326)
+					//var tranformed=ol.proj.transform(pt_4326, 'EPSG:4326','EPSG:3857');		
+					center_point_buffered =ol.geom.Polygon.circular(pt_4326, radius_m, 64);
+					center_point_buffered_4326=	center_point_buffered.clone()			
+					center_point_buffered.transform('EPSG:4326','EPSG:3857');				
+					var format = new ol.format.WKT();						
+					center_point_buffered_4326_wkt=format.writeGeometry(center_point_buffered_4326);	
+					var  generic_feature = new ol.Feature({geometry: center_point_buffered});
+					var tmpSource=new ol.source.Vector();
+						tmpSource.addFeature(generic_feature);
+						
+						radius_layer = new ol.layer.Vector({								
+									source: tmpSource,
+									style: styleWKT	});
+									
+						
+						map.addLayer(radius_layer);
+						$("#rel_wkt").val(center_point_buffered_4326_wkt);
+						//map.getView().fit(radius_layer.getSource().getExtent());
+						init_radius=true;
+				}
+			}
+			
+		}
+		
+		
+	);
 	<?php endif;?>
     <?php endif;?>
   </script>

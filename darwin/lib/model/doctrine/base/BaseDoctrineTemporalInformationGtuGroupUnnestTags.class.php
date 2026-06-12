@@ -42,6 +42,7 @@
  * @property string $tag
  * @property string $tag_indexed
  * @property integer $country_ref
+ * @property integer $expedition_ref
  * @property Doctrine_Collection $TagGroups
  * @property Doctrine_Collection $Tags
  * 
@@ -82,6 +83,7 @@
  * @method string                                        getTag()                     Returns the current record's "tag" value
  * @method string                                        getTagIndexed()              Returns the current record's "tag_indexed" value
  * @method integer                                       getCountryRef()              Returns the current record's "country_ref" value
+ * @method integer                                       getExpeditionRef()           Returns the current record's "expedition_ref" value
  * @method Doctrine_Collection                           getTagGroups()               Returns the current record's "TagGroups" collection
  * @method Doctrine_Collection                           getTags()                    Returns the current record's "Tags" collection
  * @method DoctrineTemporalInformationGtuGroupUnnestTags setId()                      Sets the current record's "id" value
@@ -121,6 +123,7 @@
  * @method DoctrineTemporalInformationGtuGroupUnnestTags setTag()                     Sets the current record's "tag" value
  * @method DoctrineTemporalInformationGtuGroupUnnestTags setTagIndexed()              Sets the current record's "tag_indexed" value
  * @method DoctrineTemporalInformationGtuGroupUnnestTags setCountryRef()              Sets the current record's "country_ref" value
+ * @method DoctrineTemporalInformationGtuGroupUnnestTags setExpeditionRef()           Sets the current record's "expedition_ref" value
  * @method DoctrineTemporalInformationGtuGroupUnnestTags setTagGroups()               Sets the current record's "TagGroups" collection
  * @method DoctrineTemporalInformationGtuGroupUnnestTags setTags()                    Sets the current record's "Tags" collection
  * 
@@ -262,6 +265,9 @@ abstract class BaseDoctrineTemporalInformationGtuGroupUnnestTags extends DarwinM
              'type' => 'string',
              ));
         $this->hasColumn('country_ref', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('expedition_ref', 'integer', null, array(
              'type' => 'integer',
              ));
     }

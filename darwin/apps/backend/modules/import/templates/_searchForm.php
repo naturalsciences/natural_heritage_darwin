@@ -54,13 +54,18 @@
 			$path='import/searchRelationships';
 			
 		}
+		elseif($format=="identifications")
+		{
+			$path='import/searchIdentifications';
+			
+		}
 	
 		print(form_tag($path, array('class'=>'search_form','id'=>'import_filter')));?>
   <div class="container">
     <table class="search" id="search">
       <thead>
         <tr>
-          <th><?php if($format != 'taxon') echo $form['collection_ref']->renderLabel() ; ?></th>
+          <th><?php if($format != 'taxon' && $format != 'identifications') echo $form['collection_ref']->renderLabel() ; ?></th>
           <th><?php echo $form['filename']->renderLabel() ?></th>
           <th><?php echo $form['state']->renderLabel(); ?></th>
           <th><?php echo $form['show_finished']->renderLabel(); ?></th>
@@ -69,7 +74,7 @@
       </thead>
       <tbody>
         <tr>
-          <td><?php if($format != 'taxon') echo $form['collection_ref']->render() ; ?></td>
+          <td><?php if($format != 'taxon' && $format != 'identifications') echo $form['collection_ref']->render() ; ?></td>
           <td><?php echo $form['filename']->render() ?></td>
           <td><?php echo $form['state']->render() ?></td>
           <th><?php echo $form['show_finished']->render(); ?>
@@ -100,6 +105,8 @@
       <div class="new_link"><a href="<?php echo url_for('import/upload?format=properties') ?>"><?php echo __('Import Properties');?></a>
 	 <?php elseif($format == 'relationships') : ?>    
       <div class="new_link"><a href="<?php echo url_for('import/upload?format=relationships') ?>"><?php echo __('Import Relationships');?></a>
+	<?php elseif($format == 'identifications') : ?>    
+      <div class="new_link"><a href="<?php echo url_for('import/upload?format=identifications') ?>"><?php echo __('Import Identifications');?></a>
     <?php else : ?>
       <div class="new_link"><a href="<?php echo url_for('import/upload?format=abcd') ?>"><?php echo __('Import Specimens');?></a></div>
     <?php endif ; ?>

@@ -641,7 +641,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
        "choices"=> $part_tmp,
        'multiple' => true,
 	   
-    ), array("size"=>10, "class"=>"choice_hoover", "style"=>"width:100%"));
+    ), array("size"=>10, "class"=>"choice_hoover specimen_search_filter_part", "style"=>"width:100%"));
 
     $this->validatorSchema['part'] =  new sfValidatorChoice(
          array("choices"=> $part_tmp,
@@ -1019,14 +1019,27 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 	
 	$this->validatorSchema['determination_status'] = new sfValidatorPass();
   
-      $this->widgetSchema['category'] = new sfWidgetFormChoice(array(
+    $list_cat=Specimens::getCategories();
+	$list_cat=array_merge(array('ALL'=>'ALL'),$list_cat);
+	
+	
+	
+     $this->widgetSchema['category'] = new sfWidgetFormChoice(array(
+      'choices' => $list_cat
+    ));
+
+    $this->validatorSchema['category'] = new sfValidatorChoice(
+        array('choices'=>array_keys($list_cat),
+        "required"=> false));
+	
+	/*$this->widgetSchema['category'] = new sfWidgetFormChoice(array(
       'choices' => array_merge(array(''=>'ALL'),Specimens::getCategories()),
     ));
 
     $this->validatorSchema['category'] = new sfValidatorChoice(
         array('choices'=>array_keys(Specimens::getCategories()),
         "required"=> false));
-		
+	*/	
 	$this->widgetSchema['mids_level'] = new sfWidgetFormChoice(array(
       'choices' => array(-1=>"All",0=>"0",1=>"1", 2=>"2", 3=>"3")),
     );	
@@ -1482,7 +1495,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
   
     public function addCategoryQuery($query, $field, $val)
   {
-    if($val != '') {
+    if($val != '' && strtolower(trim($val))!="all") {
       $query->andWhere('s.category = ?', $val);
     }
     return $query ;
@@ -2296,17 +2309,42 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
   
      public function addIdentificationQuery($query, $field, $val, $notion) 
    {
+	  
+	  if($val!==null)
+	  {
 		if(strlen($val)>0)
 		{
+			// '%' || fulltoindex(?) || '%'
+			$str_val="fulltoindex(?)";
+			
+			$array_cond[]=Array();
+			$array_cond[]="*";
+			$array_cond[]="%";
+			$op=" = ";
+			$first=substr($val, 0, 1);
+			$last=substr($val, -1, 1);
+			if(in_array($first,$array_cond ))
+			{
+				$op=" LIKE ";
+				$str_val="'%'||".$str_val;
+			}
+			
+			if(in_array($last,$array_cond ))
+			{
+				$op=" LIKE ";
+				$str_val=$str_val."||'%'";
+			}
+			
 			if($notion=="all")
 			{
-				$query->andWhere( " EXISTS (SELECT i.id FROM identifications i WHERE i.referenced_relation = 'specimens'  AND i.value_defined_indexed=fulltoindex(?) AND i.record_id= s.id)" ,$val);
+				$query->andWhere( " EXISTS (SELECT i.id FROM identifications i WHERE i.referenced_relation = 'specimens'  AND i.value_defined_indexed ".$op." ".$str_val." AND i.record_id= s.id)" ,$val);
 			}
 			else
 			{
-				$query->andWhere( " EXISTS (SELECT i.id FROM identifications i WHERE i.referenced_relation = 'specimens' AND i.notion_concerned=? AND i.value_defined_indexed=fulltoindex(?) AND i.record_id= s.id)" ,array($notion,$val));
+				$query->andWhere( " EXISTS (SELECT i.id FROM identifications i WHERE i.referenced_relation = 'specimens' AND i.notion_concerned=? AND i.value_defined_indexed ".$op." ".$str_val." AND i.record_id= s.id)" ,array($notion,$val));
 			}
 		}
+	  }
     return $query ;
   }
 

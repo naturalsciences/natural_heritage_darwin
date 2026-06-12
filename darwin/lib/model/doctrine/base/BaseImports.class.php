@@ -36,6 +36,7 @@
  * @property Collections $Collections
  * @property Users $Users
  * @property Doctrine_Collection $Properties
+ * @property Doctrine_Collection $Identifications
  * @property Doctrine_Collection $Codes
  * @property Doctrine_Collection $SpecimensRelationships
  * @property Doctrine_Collection $Staging
@@ -77,6 +78,7 @@
  * @method Collections         getCollections()                       Returns the current record's "Collections" value
  * @method Users               getUsers()                             Returns the current record's "Users" value
  * @method Doctrine_Collection getProperties()                        Returns the current record's "Properties" collection
+ * @method Doctrine_Collection getIdentifications()                   Returns the current record's "Identifications" collection
  * @method Doctrine_Collection getCodes()                             Returns the current record's "Codes" collection
  * @method Doctrine_Collection getSpecimensRelationships()            Returns the current record's "SpecimensRelationships" collection
  * @method Doctrine_Collection getStaging()                           Returns the current record's "Staging" collection
@@ -117,6 +119,7 @@
  * @method Imports             setCollections()                       Sets the current record's "Collections" value
  * @method Imports             setUsers()                             Sets the current record's "Users" value
  * @method Imports             setProperties()                        Sets the current record's "Properties" collection
+ * @method Imports             setIdentifications()                   Sets the current record's "Identifications" collection
  * @method Imports             setCodes()                             Sets the current record's "Codes" collection
  * @method Imports             setSpecimensRelationships()            Sets the current record's "SpecimensRelationships" collection
  * @method Imports             setStaging()                           Sets the current record's "Staging" collection
@@ -255,6 +258,10 @@ abstract class BaseImports extends DarwinModel
              'foreign' => 'id'));
 
         $this->hasMany('Properties', array(
+             'local' => 'id',
+             'foreign' => 'import_ref'));
+
+        $this->hasMany('Identifications', array(
              'local' => 'id',
              'foreign' => 'import_ref'));
 

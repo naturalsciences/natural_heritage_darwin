@@ -282,7 +282,8 @@ abstract class sfWidgetForm extends sfWidget
    *
    * @return sfWidgetForm The current widget instance
    */
-  public function setParent(sfWidgetFormSchema $widgetSchema = null)
+  //public function setParent(sfWidgetFormSchema $widgetSchema = null)
+  public function setParent(sfWidgetFormSchema $widgetSchema)
   {
     $this->parent = $widgetSchema;
 

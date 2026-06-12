@@ -158,6 +158,14 @@ class ImportsForm extends BaseImportsForm
 		$this->widgetSchema['synonymy_taxonomy_ref']->setLabel("Syonymym taxonomy");
 		$this->validatorSchema['synonymy_taxonomy_ref'] = new sfValidatorInteger(array('required'=>false));
 	}
+	elseif($this->options['format'] == 'identifications')
+	{
+		$this->useFields(array('format')) ;
+		$category = array('identifications'=>$this->getI18N()->__('Identifications')) ;
+		$this->widgetSchema['collection_ref'] =  new sfWidgetFormInputHidden() ;
+		$this->validatorSchema['collection_ref'] = new sfValidatorPass();
+		
+	}
 	elseif($this->options['format'] == 'properties')
 	{
 		$this->useFields(array('format', 'update')) ;
@@ -226,7 +234,7 @@ class ImportsForm extends BaseImportsForm
 	
     
         //ftheeten 2018 12 14 collection also optional for taxon
-    if($this->options['format'] == 'locality' || $this->options['format'] == 'taxon' || $this->options['format'] == 'lithostratigraphy' || $this->options['format'] == 'synonymies' || $this->options['format'] == 'codes'  || $this->options['format'] == 'properties'|| $this->options['format'] == 'relationships')
+    if($this->options['format'] == 'locality' || $this->options['format'] == 'taxon' || $this->options['format'] == 'lithostratigraphy' || $this->options['format'] == 'synonymies' || $this->options['format'] == 'codes'  || $this->options['format'] == 'properties'|| $this->options['format'] == 'relationships'|| $this->options['format'] == 'identifications')
       {
          $this->validatorSchema['collection_ref'] = new sfValidatorInteger(array('required'=>false));
       }

@@ -231,6 +231,84 @@ function constructReportBaseUrl($name, $lang, $format){
     return $flagMenu;
   }
   
+  	function test_precise_imprecise($acc_field, $min_field, $max_field, $p_form)
+		{
+			$returned=1;
+			$min=test_is_counter($min_field, $p_form);
+			$max=test_is_counter($max_field, $p_form);
+			if($min==$max&&$min>0)
+			{
+				$returned=0;
+			}
+			return $returned;
+			
+		}
+		
+		function test_is_set($name_control, $p_form)
+		{
+			$returned=false;
+			$val_count=$p_form[$name_control]->getValue();
+			if(!is_null($val_count))
+			{
+				if(is_numeric($val_count))
+				{
+					if((int)$val_count>0)
+					{
+						$returned=true;
+					}
+				}
+			}
+			return $returned;
+		}
+		
+		function test_is_counter($name_control, $p_form)
+		{
+			$returned=-1;
+			$val_count=$p_form[$name_control]->getValue();
+			if(!is_null($val_count))
+			{
+				if(is_numeric($val_count))
+				{
+					if((int)$val_count>0)
+					{
+						$returned=(int)$val_count;
+					}
+				}
+			}
+			return $returned;
+		}
+		
+		function generate_search_query($p_params)
+		{
+			$query_array=[];
+			foreach($p_params as $field=>$val)
+			{
+				$field_query="specimen_search_filters[".$field."]=".$val;
+				$query_array[]=$field_query;
+			}
+			if(count($query_array)>0)
+			{
+				return implode("&", $query_array);
+			}
+			else
+			{
+				return "";
+			}
+		}
+		
+		function add_to_array_not_null($p_array, $p_field, $p_val)
+		{
+		
+			if($p_val!==null)
+			{
+				$tmp=(string)$p_val;
+				if(strlen($tmp)>0)
+				{
+					$p_array[$p_field]=$p_val;
+				}
+			}
+			return $p_array;
+		}
  
 
 ?>

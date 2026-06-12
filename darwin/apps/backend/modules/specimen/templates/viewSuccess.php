@@ -1,4 +1,4 @@
-<?php slot('title', __('View Specimen'));  ?>
+<?php slot('title', __('View'));  ?>
 <?php include_partial('widgets/list', array('widgets' => $widget_list, 'category' => 'specimen','eid'=> $specimen->getId(),'view' => true)); ?>
 <?php use_stylesheet('widgets.css') ?>
 <?php use_javascript('widgets.js') ?>
@@ -6,7 +6,7 @@
 <div class="page">
   <h3 class="spec">
   
-  <span class="title"><?php echo __('View Specimen');?></span>
+  <span class="title"><?php echo __('View');?></span>
     <span class="specimen_actions">
         <?php if($sf_user->isPinned($specimen->getId(), 'specimen')) {
           $txt = image_tag('blue_pin_on.png', array('class'=>'pin_but pin_on'));

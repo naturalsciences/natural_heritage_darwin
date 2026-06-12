@@ -130,6 +130,7 @@ class MySavedSearchesTable extends DarwinTable
       'part'=>'Part',
       'part_status'=>'Part Status',
       'object_name' => 'Object name',
+	  'comments'=>'Comments',
       'building'=>'Building',
       'floor'=>'Floor',
       'room'=>'Room',

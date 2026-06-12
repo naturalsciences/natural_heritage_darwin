@@ -369,9 +369,10 @@ return sfView::NONE;
 			
 			$currentDir=getcwd();
 			chdir(sfconfig::get('sf_root_dir'));
-			$cmd='darwin:get-tab-report --query_id='.$this->query_id. " --user_id=".$this->user_id. " --is_admin=".$is_adm." --type_report=specimens";  
+			$cmd='darwin:get-tab-report --query_id='.$this->query_id. " --user_id=".$this->user_id. " --is_admin=".$is_adm." --type_report=specimens";
       
 			exec('nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );
+			
 			chdir($currentDir);	
 		}		
 		
@@ -434,7 +435,7 @@ return sfView::NONE;
 			chdir(sfconfig::get('sf_root_dir'));
 
 			$cmd='darwin:get-tab-report --query_id='.$this->query_id. " --user_id=".$this->user_id. " --is_admin=".$is_adm." --type_report=label";  
-      
+			
 			exec('nohup '.sfconfig::get('dw_php_console').' symfony '.$cmd.'  >/dev/null &' );
 			chdir($currentDir);	
 		}		

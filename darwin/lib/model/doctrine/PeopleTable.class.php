@@ -96,6 +96,29 @@ class PeopleTable extends DarwinTable
       return $q->fetchOne(); 
     }
 	
+	//2026 06 03
+	/*mode normal, fuzzy*/
+  public function getPeopleByFormatedName($name, $mode="normal")
+  {
+	if($mode=="fuzzy")
+	{
+		$q = Doctrine_Query::create()
+      ->from('People p')
+      ->andWhere('p.id != 0')
+      ->andWhere('p.formated_name_indexed like concat(\'%\', fulltoindex(?, TRUE), \'%\' )',$name);
+    }
+	else
+	{
+		print($mode);
+		print("KEEP");
+		$q = Doctrine_Query::create()
+      ->from('People p')
+      ->andWhere('p.id != 0')
+      ->andWhere('p.formated_name_indexed like  fulltoindex(?, TRUE)',$name);
+	}
+	return $q->fetchOne();
+  }
+	
     public function getPeopleAsArray($id)
 	{
 		$sql="SELECT p.* FROM people p WHERE id=:id;";

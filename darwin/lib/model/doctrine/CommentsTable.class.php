@@ -113,12 +113,52 @@ class CommentsTable extends DarwinTable
   */
   public function getRelatedComment($table_name, $record_ids)
   {
-     if(empty($record_ids)) return array() ;
-     $q = Doctrine_Query::create()
-      ->from('Comments')
-      ->where('referenced_relation=?', $table_name)
-      ->andWherein('record_id', $record_ids)->orderby('notion_concerned asc, id asc');
-    return $q->execute() ;
+     if(empty($record_ids)) 
+	 {
+		 return array() ;
+     }
+	 else
+	 {
+		 $q = Doctrine_Query::create()
+		  ->from('Comments')
+		  ->where('referenced_relation=?', $table_name)
+		  ->andWherein('record_id', $record_ids)->orderby('notion_concerned asc, id asc');
+		return $q->execute() ;
+	 }
+  }
+  
+    public function getRelatedComment_as_array($table_name, $record_ids)
+  {
+     if(empty($record_ids)) 
+	 {
+		 return array() ;
+     }
+	 else
+	 {
+
+		$conn = Doctrine_Manager::connection();
+	    $sql = "select record_id, notion_concerned, comments.comment  FROM comments WHERE referenced_relation=:ref AND  record_id = ANY (:ids) ;";
+	    $q = $conn->prepare($sql);
+		$imploded="{".implode(",",$record_ids)."}" ;
+
+	    $q->execute(array(':ref'=> $table_name, ":ids"=> $imploded ));
+	    //$response = $q->fetchAll(PDO::FETCH_UNIQUE | PDO::FETCH_ASSOC);
+		$response=Array();
+		$tmp=$q->fetchAll( PDO::FETCH_ASSOC);
+		foreach($tmp as $item)
+		{
+	
+			if(!array_key_exists($item["record_id"], $response))
+			$response[$item["record_id"]]=Array();
+			if(!array_key_exists($item["notion_concerned"], $response[$item["record_id"]]))
+			{
+				$response[$item["record_id"]][$item["notion_concerned"]]=Array();
+			}
+			$response[$item["record_id"]][$item["notion_concerned"]][]=$item["comment"];
+			//foreach($comments_json)
+		}
+		 return $response;
+	 }
   }
 
   /**

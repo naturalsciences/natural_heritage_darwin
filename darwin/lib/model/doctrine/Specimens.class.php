@@ -62,6 +62,7 @@ class Specimens extends BaseSpecimens
       'physical' => 'Physical',
 	  'virtual_specimen' => 'Virtual specimen',
       'observation' => 'Observation',
+	  'photo' => 'Photo',
       'figurate' => 'Figurate',
       'figurate-physical' => 'Figurate-Physical',
 	  'composite-storage-unit' => 'Composite storage unit',

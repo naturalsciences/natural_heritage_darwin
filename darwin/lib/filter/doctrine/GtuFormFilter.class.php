@@ -11,6 +11,7 @@
 class GtuFormFilter extends BaseGtuFormFilter
 {
   protected $idxSubQuery=1;
+  public $only_this_tag_boolean="";
   public function configure()
   {
 
@@ -149,6 +150,15 @@ class GtuFormFilter extends BaseGtuFormFilter
 	$this->widgetSchema['wkt_search'] = new sfWidgetFormInputText();
     $this->widgetSchema['wkt_search']->setAttributes(array('class'=>'wkt_search'));
     $this->validatorSchema['wkt_search'] = new sfValidatorString(array('required' => false, 'trim' => true));
+	
+	$this->widgetSchema['no_coordinates'] = new sfWidgetFormInputCheckbox();
+	$this->widgetSchema['no_coordinates']->setAttributes(Array("class"=>"no_coordinates"));
+    $this->validatorSchema['no_coordinates'] = new sfValidatorPass();
+	
+	$this->widgetSchema['only_this_tag'] = new sfWidgetFormInputCheckbox();
+	$this->widgetSchema['only_this_tag']->setLabel("Only this word");
+	$this->widgetSchema['only_this_tag']->setAttributes(Array("class"=>"only_this_tag"));
+    $this->validatorSchema['only_this_tag'] = new sfValidatorPass();
   }
 
   public function addCodeColumnQuery($query, $field, $val)
@@ -188,48 +198,58 @@ class GtuFormFilter extends BaseGtuFormFilter
         $tagList=trim($tagList, ";");
         foreach(explode(";", $tagList  ) as $tagvalue)
         {
-            if(strlen(trim( $tagvalue))>0)
-            {
-                $tagvalue=str_replace('*', '.*', $tagvalue);
-				$tagPrefix="''";
-				$tagSuffix="''";
-				
-				
-                
-					if(strtolower($this->tag_boolean)=="and")
+			if(!$this->only_this_tag_boolean)
+			{
+				if(strlen(trim( $tagvalue))>0)
+				{
+					$tagvalue=str_replace('*', '.*', $tagvalue);
+					$tagPrefix="''";
+					$tagSuffix="''";
+					
+					
+					
+						if(strtolower($this->tag_boolean)=="and")
+						{
+							if(substr($tagvalue, 0,2)!=".*")
+						{					
+							$tagPrefix= "'(\s+|\{|\"|,)'";
+						}
+						if(substr($tagvalue, strlen($tagvalue)-2,2)!=".*")
+						{					
+							$tagSuffix= "'(\s+|\}|\"|,)'";
+						}
+						$tagvalue=trim($tagvalue);
+						$tagvalue = $conn_MGR->quote($tagvalue, 'string');
+						 $sqlClause[]="(tag_values_indexed::varchar ~ fulltoindex_add_prefix_suffix(fulltoindex($tagvalue, TRUE, TRUE),$tagPrefix, $tagSuffix))";
+					}
+					else
 					{
 						if(substr($tagvalue, 0,2)!=".*")
-					{					
-						$tagPrefix= "'(\s+|\{|\"|,)'";
+						{					
+							$tagPrefix= "'(\s+|^)'";
+						}
+						if(substr($tagvalue, strlen($tagvalue)-2,2)!=".*")
+						{					
+							$tagSuffix= "'(\s+|$)'";
+						}
+						$tagvalue=trim($tagvalue);
+						$tagvalue = $conn_MGR->quote($tagvalue, 'string');
+						$sqlClause[]="(tag_indexed::varchar ~ fulltoindex_add_prefix_suffix(fulltoindex($tagvalue, TRUE, TRUE),$tagPrefix, $tagSuffix))";
 					}
-					if(substr($tagvalue, strlen($tagvalue)-2,2)!=".*")
-					{					
-						$tagSuffix= "'(\s+|\}|\"|,)'";
-					}
-					$tagvalue=trim($tagvalue);
-					$tagvalue = $conn_MGR->quote($tagvalue, 'string');
-                     $sqlClause[]="(tag_values_indexed::varchar ~ fulltoindex_add_prefix_suffix(fulltoindex($tagvalue, TRUE, TRUE),$tagPrefix, $tagSuffix))";
-                }
-                else
-                {
-					if(substr($tagvalue, 0,2)!=".*")
-					{					
-						$tagPrefix= "'(\s+|^)'";
-					}
-					if(substr($tagvalue, strlen($tagvalue)-2,2)!=".*")
-					{					
-						$tagSuffix= "'(\s+|$)'";
-					}
-					$tagvalue=trim($tagvalue);
-					$tagvalue = $conn_MGR->quote($tagvalue, 'string');
-                    $sqlClause[]="(tag_indexed::varchar ~ fulltoindex_add_prefix_suffix(fulltoindex($tagvalue, TRUE, TRUE),$tagPrefix, $tagSuffix))";
-                }
-            }
+				}
+			}
+			else
+			{
+				$whereList[]=$tagvalue;
+				
+			}
         }
         //$query->andWhere(implode(" OR ",$sqlClause ));
         //$query->andWhere("tag_values_indexed && getTagsIndexedAsArray($tagList)");
-        $whereList[]=implode(" OR ",$sqlClause );
-		
+		if(!$this->only_this_tag_boolean)
+		{
+			$whereList[]=implode(" OR ",$sqlClause );
+		}
 		
 		
       }
@@ -247,9 +267,24 @@ class GtuFormFilter extends BaseGtuFormFilter
     }
     if(count($whereList)>0)
     {
-        $this->hasTags=True;
-        $query->andWhere("(". implode(" ".$this->tag_boolean." ",$whereList ).")");
-    }
+		if(!$this->only_this_tag_boolean)
+		{
+			$this->hasTags=True;
+			$query->andWhere("(". implode(" ".$this->tag_boolean." ",$whereList ).")");
+		}
+		else
+		{
+			
+			$this->hasTags=True;
+			$where_len=count($whereList);
+			foreach($whereList as $w)
+			{
+				$query->andWhere(" FULLTOINDEX(?, true)= ANY(tag_values_indexed) AND ARRAY_LENGTH(tag_values_indexed,1) = ".(string)$where_len ,$w );
+
+			}
+		}
+		
+	}
 	
 	if(count($countries)>0)
 	{
@@ -260,7 +295,7 @@ class GtuFormFilter extends BaseGtuFormFilter
 		$query->andWhere($str_country);
 	}
 	
-    if($this->hasTags)
+    if($this->hasTags && !$this->only_this_tag_boolean)
       {
 		    $query->select('d.*')->from('DoctrineTemporalInformationGtuGroupTags d');
 			$query->addOrderBy(" (select count(*) from Tags where gtu_Ref=d.id)");
@@ -273,7 +308,17 @@ class GtuFormFilter extends BaseGtuFormFilter
 
   public function addLatLonColumnQuery($query, $values)
   {
-    if( $values['lat_from'] != '' && $values['lon_from'] != '' && $values['lon_to'] != ''  && $values['lat_to'] != '' )
+	$no_coordinates_bool=false;
+	$no_coordinates=$values['no_coordinates'];
+	if($no_coordinates!==null)
+	{
+		if(strtolower($no_coordinates)=="on")
+		{
+			
+			$no_coordinates_bool=true;
+		}
+	}
+    if( $values['lat_from'] != '' && $values['lon_from'] != '' && $values['lon_to'] != ''  && $values['lat_to'] != '' && !$no_coordinates_bool)
     {
 		if(is_numeric($values['lat_from'])&&is_numeric($values['lon_from'])&&is_numeric($values['lon_to'])&&is_numeric($values['lat_to']))
 		{
@@ -283,7 +328,7 @@ class GtuFormFilter extends BaseGtuFormFilter
    }
    
     //2018 10 05
-    if( isset($values['wkt_search']))
+    if( isset($values['wkt_search']) && !$no_coordinates_bool)
     {
         if(strlen(trim($values['wkt_search'])))
         {
@@ -294,6 +339,11 @@ class GtuFormFilter extends BaseGtuFormFilter
             $query->andWhere($tmp);
         }
     }
+	if($no_coordinates_bool)
+	{
+			
+		$query->andWhere("location IS NULL");
+	}
     return $query;
   }
   
@@ -306,7 +356,7 @@ class GtuFormFilter extends BaseGtuFormFilter
         $query->andWhere("
    		(EXISTS (SELECT d.id
 			  FROM Expeditions e1 WHERE 
-			    e1.id = d.expedition_ref ))
+			    e1.id = d.expedition_ref AND e1.name_indexed=fulltoindex(?) ))
         OR 
         (
         EXISTS (SELECT s.gtu_ref FROM Specimens s , Expeditions e2   WHERE  s.gtu_ref=d.id AND s.expedition_ref=e2.id   AND e2.name_indexed=fulltoindex(?)) 
@@ -523,7 +573,15 @@ class GtuFormFilter extends BaseGtuFormFilter
 
   public function doBuildQuery(array $values)
   {    
-   
+   $only_this_tag=$values["only_this_tag"];
+	if($only_this_tag!==null)
+	{
+		if(strtolower($only_this_tag)=="on")
+		{
+			$this->only_this_tag_boolean=true;
+			
+		}
+	}
      $query = DQ::create()
         ->select('d.*')
       ->from('DoctrineTemporalInformationGtuGroup d');

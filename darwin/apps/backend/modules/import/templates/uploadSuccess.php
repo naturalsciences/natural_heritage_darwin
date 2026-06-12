@@ -11,6 +11,11 @@
 		echo __('Locality') ;
 		
 	}
+	elseif($type=='identifications')
+	{
+		echo __('Identifications') ;
+		
+	}
     elseif($type=='lithostratigraphy')
 	{
 		echo __('Lithostratigraphy') ;

@@ -25,10 +25,11 @@
 <a href="<?php echo url_for('specimen/new?duplicate_id='.$form->getObject()->getId().'&part_id='.$form->getObject()->getId());?>" class="duplicate_link"><?php echo __('Split into parts');?></a>
 </p>
 <script  type="text/javascript">
-<?php if(strpos($_SERVER['REQUEST_URI'],'/part_id/')):?>
-		$(document).ready(
+$(document).ready(
 		function()
 		{
+	<?php if(strpos($_SERVER['REQUEST_URI'],'/part_id/')):?>
+		
 			var partElem=$("#specimen_specimen_part_parent").find('.add_item_button')[0];
 			if(partElem)
 			{
@@ -36,9 +37,34 @@
 				
 			}
 			
-			$(window).scrollTop($('#table_part').offset().top-300);
-		}
-		);
+			$(window).scrollTop($('#table_part').offset().top-300);		
+		
 	<?php endif;?>
+		//2025 12 23
+		
+	    var get_specimen_part=function(p_val, p_default)
+		{
+			$.get("<?php echo url_for('specimen/GetSpecimenPart');?>/item/category/type/"+p_val, function (data) {
+			  data=data.replace('value="'+p_default+'"', 'value="'+p_default+'" selected');
+              $('select[name="specimen[specimen_part]"]').html(data);
+				});
+			
+		}
+		
+		/*var init=function()
+		{
+			var init_cat=$('select[name="specimen[category]"]').val();
+			get_specimen_part(init_cat);
+			
+		}*/
+		$('select[name="specimen[category]"]').change(function() {
+			
+			get_specimen_part($(this).val(), "<?php print($default_part);?>");
+		});	
+		
+		//init();
+		
+		
+	});
 </script>
 

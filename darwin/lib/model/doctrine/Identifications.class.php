@@ -17,7 +17,10 @@ class Identifications extends BaseIdentifications
 									'stage' => 'Stage', 
 									'social_status' => 'Social', 
 									'rock_form' => 'Rock',
-									'History - taxonomy'=> 'Taxon. (history)');
+									'History - taxonomy'=> 'Taxon. (history)',
+									'vernacular_name'=> 'Vernacular name',
+									'photographic_description'=> 'Photographic description',
+									);
 									
 									
   public function getNotionDateMasked ()
@@ -51,6 +54,74 @@ class Identifications extends BaseIdentifications
         $this->_set('notion_date_mask', $dateTime->getMask());
       }
     }
+  }
+  
+  public function getCountString()
+  {
+	  $elems=Array();
+	  if($this->getIdentificationsCountMin()!==null)
+	  {
+		  $tmp=$this->getIdentificationsCountMin();
+		 if($this->getIdentificationsCountMax()!==null)
+		  {
+			  if($this->getIdentificationsCountMax()>$this->getIdentificationsCountMin())
+			  {
+				  $tmp="BETWEEN ".$this->getIdentificationsCountMin()." AND ".$this->getIdentificationsCountMax() ;
+			  }
+		  }
+		$elems[]=$tmp." specimen(s)";		  
+	  }
+	  if($this->getIdentificationsCountMalesMin()!==null)
+	  {
+		  $tmp=$this->getIdentificationsCountMalesMin();
+		 if($this->getIdentificationsCountMalesMax()!==null)
+		  {
+			  if($this->getIdentificationsCountMalesMax()>$this->getIdentificationsCountMalesMin())
+			  {
+				  $tmp="BETWEEN ".$this->getIdentificationsCountMalesMin()." AND ".$this->getIdentificationsCountMalesMax() ;
+			  }
+		  }
+		$elems[]=$tmp." male(s)";	  
+	  }
+	   if($this->getIdentificationsCountFemalesMin()!==null)
+	  {
+		  $tmp=$this->getIdentificationsCountFemalesMin();
+		 if($this->getIdentificationsCountFemalesMax()!==null)
+		  {
+			  if($this->getIdentificationsCountFemalesMax()>$this->getIdentificationsCountFemalesMin())
+			  {
+				  $tmp="BETWEEN ".$this->getIdentificationsCountFemalesMin()." AND ".$this->getIdentificationsCountFemalesMax() ;
+			  }
+		  }
+		$elems[]=$tmp." female(s)"	;	  
+	  }
+	  
+	  if($this->getIdentificationsCountJuvenilesMin()!==null)
+	  {
+		  $tmp=$this->getIdentificationsCountJuvenilesMin();
+		 if($this->getIdentificationsCountJuvenilesMax()!==null)
+		  {
+			  if($this->getIdentificationsCountJuvenilesMax()>$this->getIdentificationsCountJuvenilesMin())
+			  {
+				  $tmp="BETWEEN ".$this->getIdentificationsCountJuvenilesMin()." AND ".$this->getIdentificationsCountJuvenilesMax() ;
+			  }
+		  }
+		$elems[]=$tmp." juvenile(s)";		  
+	  }
+	  
+	   if($this->getIdentificationsCountTypesMin()!==null)
+	  {
+		  $tmp=$this->getIdentificationsCountTypesMin();
+		 if($this->getIdentificationsCountTypesMax()!==null)
+		  {
+			  if($this->getIdentificationsCountTypesMax()>$this->getIdentificationsCountTypesMin())
+			  {
+				  $tmp="BETWEEN ".$this->getIdentificationsCountTypesMin()." AND ".$this->getIdentificationsCountTypesMax() ;
+			  }
+		  }
+		$elems[]=$tmp." type(s)";		  
+	  }
+	  return implode("; ", $elems);
   }
 
 }

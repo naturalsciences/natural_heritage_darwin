@@ -155,6 +155,12 @@
 </div>  
 <script type="text/javascript">
 
+var ajax_initialized={}
+var id_orthanc={};
+var current_id_orthanc=null;
+ajax_initialized["comments"]=false;
+
+
 function pin(ids, status) {
   var id_part = "";
   if( Object.prototype.toString.call( ids ) === '[object Array]' ) {
@@ -167,6 +173,135 @@ function pin(ids, status) {
       $('.pinned_specimens i').text('(' + Object.keys(data.pinned).length + ')');
     }
   });
+}
+
+var ajaxForComments=function()
+{
+	//console.log("ajax_for_comments");
+	var list_ids=Array();
+	$(".pin :checkbox").each(function() { 
+		  var tmp=$(this).val();
+		  //console.log(tmp);
+		  list_ids.push(tmp);
+		});
+	//console.log(list_ids);
+	var url_comment="<?php print(url_for('comment/get_comments_json'));?>";
+	//console.log(url_comment);
+	data={}
+	data["specimen_ids"]=JSON.stringify(list_ids);
+	$.ajax({
+	  type: "POST",
+	  url: url_comment,
+	  data: data,
+	  dataType: "json",
+	  success: function( result )
+	  {
+		  
+		  //console.log(result);
+		  $.each(result,function(id_dw,nested){ 
+			//console.log(id_dw);
+			//console.log(nested);
+			//console.log("td.col_comments [value_dw='"+id_dw+"']");
+			//var cell_comment=$("td.col_comments [value_dw='"+id_dw+"']");
+			
+			var tmp_html="<div class='general_gtu' style='display:grid'>";
+			$.each(nested,function(concept,list_values)
+			{
+				//console.log(concept);
+				//console.log(list_values);
+				tmp_html=tmp_html+"<strong>"+concept+"</strong><ul class='name_tags_view'>";
+				for(var i=0; i<list_values.length;i++)
+				{
+					tmp_html=tmp_html+"<li>"+list_values[i]+"</li>";
+				}
+				tmp_html=tmp_html+"</ul>";
+			});
+			//console.log(tmp_html);
+			//$(cell_comment).html(tmp_html);
+			tmp_html=tmp_html+"</div>";
+			$(".col_comments[value_dw='"+id_dw+"']").html(tmp_html);
+			//$(".spinner_comment").hide();
+			
+		  });
+		  $(".spinner_comment").hide();
+	  }
+	});
+	ajax_initialized["comments"]=true;
+}
+
+
+var display_orthanc_thumbnail=function(p_url, p_uuid)
+{
+	console.log("orthanc_thumbnail");
+	console.log(p_url);
+	console.log(p_uuid)
+	p_url=p_url.replace("manifest.json","full/!/0/default.jpg");
+	console.log(p_url);
+	var tmp_html="<img src='"+p_url+"' style='max-width:200px; height:auto;'></img>";
+	$(".specimen_orthanc_thumbnail[dw_uuid='"+p_uuid+"']").html(tmp_html);
+	$(".specimen_orthanc_thumbnail[dw_uuid='"+p_uuid+"']").show();
+}
+
+var ajaxForLinks=function()
+{
+	var list_ids=Array();
+	$(".pin :checkbox").each(function() { 
+		  var tmp=$(this).val();
+		  //console.log(tmp);
+		  list_ids.push(tmp);
+		});
+	//console.log(list_ids);
+	var url_links="<?php print(url_for('extlinks/get_ext_links_json'));?>";
+	//console.log(url_comment);
+	data={}
+	data["specimen_ids"]=JSON.stringify(list_ids);
+	$.ajax({
+	  type: "POST",
+	  url: url_links,
+	  data: data,
+	  dataType: "json",
+	  success: function( result )
+	  {
+		  
+		  //console.log(result);
+		  $.each(result,function(id_dw,nested)
+		  { 
+			console.log(id_dw);
+			console.log(nested);
+			 $.each(nested,function(id_dw2,nested2)
+			 {
+				 console.log(nested2);
+				 if(nested2["type"]=="2d_orthanc_general"&& nested2["access_rights"]=="public")
+				 {
+					 console.log("orthanc");
+					 
+					 var orthanc_url=nested2["url"];
+					 console.log(orthanc_url);
+					 var tmp_urls=Array();
+					 tmp_urls.push(orthanc_url);
+					 console.log("link_uuid");
+					 console.log( nested2["uuid"]);
+					 process_orthanc_iiif(tmp_urls, nested2["uuid"], display_orthanc_thumbnail, current_id_orthanc);
+					 
+				 }
+			 });
+		  }
+		  );
+		}
+	  });
+	
+}
+
+var additionalAjaxQueries=function()
+{
+	//console.log("test ajax search");
+	if($('.col_comments').is(':visible'))
+	{
+		//console.log("comment is visible");
+		ajaxForComments();
+	}
+	ajaxForLinks();
+	
 }
 
 $(document).ready(function () {
@@ -220,5 +355,7 @@ $(document).ready(function () {
     else
      $('.code_supp').addClass('hidden')
   });
+  
+  additionalAjaxQueries();
 });
 </script>

@@ -93,6 +93,9 @@
                 </li>         
               <?php endif ; ?>
             <?php endforeach; ?>
+			<li class="specimen_orthanc_thumbnail" style="display:none;" dw_uuid="<?php print($specimen->getUuid());?>">
+			
+			</li>
         </ul>
       <?php endif;?>
     </td>

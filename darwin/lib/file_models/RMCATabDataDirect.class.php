@@ -203,6 +203,7 @@ class RMCATabDataDirect
 		$this->prop_patterns=Array();
         //$this->prop_patterns[]="/sampling_property_\d+/i";
         $this->prop_patterns[]="/property_type_\d+/i";
+		$this->prop_patterns[]="/property_applies_to_\d+/i";
         $this->prop_patterns[]="/property_lower_value_\d+/i";
         $this->prop_patterns[]="/property_upper_value_\d+/i";
         $this->prop_patterns[]="/property_is_quantitative_\d+/i";
@@ -213,6 +214,7 @@ class RMCATabDataDirect
         $this->link_patterns[]="/link_url_\d+/i";
         $this->link_patterns[]="/link_comment_\d+/i";
         $this->link_patterns[]="/link_type_\d+/i";
+		$this->link_patterns[]="/link_access_rights_\d+/i";
 		/*
 		 private static $link_types = array(
 			'orthanc_3d' => 'Orthanc 3D',
@@ -1110,7 +1112,7 @@ class RMCATabDataDirect
 			if(strlen(trim($textCoord)))
 			{
 				$this->property = new ParsingProperties("original_coordinates") ;
-				$this->property->property->setLowerValue(htmlspecialchars($textCoord));
+				$this->property->property->setLowerValue(htmlspecialchars($textCoorde, ENT_NOQUOTES | ENT_SUBSTITUTE | ENT_HTML401));
 				$this->addProperty(true);//false, "SiteMeasurementsOrFact");
 				if($this->isset_and_not_null($this->gtu_object))
 				{
@@ -1288,7 +1290,7 @@ class RMCATabDataDirect
          }        
     }
 
-    public function handleFullProperty($property_type, $lower_value, $upper_value=null, $is_quantitative=null, $unit=null)
+    public function handleFullProperty($property_type, $lower_value, $upper_value=null, $is_quantitative=null, $unit=null, $applies_to=null)
 	{
 		if($this->isset_and_not_null($property_type) && $this->isset_and_not_null($lower_value))
 		{
@@ -1315,11 +1317,15 @@ class RMCATabDataDirect
 			{
 				$this->property->property->setPropertyUnit($unit) ;
 			}
+			if($this->isset_and_not_null($applies_to))
+			{
+				$this->property->property->setAppliesTo($applies_to) ;
+			}
 			$this->addProperty(true) ;
 		}
 	}
 	
-	   public function handleLink($url, $type,  $comment=null)
+	   public function handleLink($url, $type,  $comment=null,  $access_rights=null)
 	  {
 
 		if($this->isset_and_not_null($url) && $this->isset_and_not_null($type))
@@ -1348,6 +1354,15 @@ class RMCATabDataDirect
 			else
 			{
 				$link->setComment("");
+			}
+			
+			if($access_rights!==null)
+			{
+				$link->setAccessRights($access_rights);
+			}
+			else
+			{
+				$link->setAccessRights("");
 			}
 							
 			//$link->save();
@@ -1761,6 +1776,7 @@ class RMCATabDataDirect
 	  'environmental_sample'=> "Environmental Sample",
 	  'dna'=> "DNA",
 	  'environmental_dna'=> "Environmental DNA",
+	   'photo'=> "Photo",
 	   */
  
         $valTmp=$this->getCSVValue("specimenCategory");
@@ -2187,7 +2203,7 @@ class RMCATabDataDirect
 		foreach($p_row as $key=>$value)
         {
             
-			$value=htmlspecialchars(trim($value));
+			$value=htmlspecialchars(trim($value), ENT_NOQUOTES | ENT_SUBSTITUTE | ENT_HTML401);
             $field_name=$this->headers[strtolower($key)];
            
 			if(strlen(trim($value))>0)
@@ -2215,13 +2231,15 @@ class RMCATabDataDirect
 				$idx=str_ireplace('property_lower_value_','',$name_field);
 				$lower_val=$this->getCSVValue($name_field);
 				$prop_type_name="property_type_".$idx;
+				$prop_applies_to_name="property_applies_to_\d".$idx;
 				$prop_type=$this->getCSVValue($prop_type_name);
+				$prop_applies_to=$this->getCSVValue($prop_applies_to_name);
 				if($this->isset_and_not_null($lower_val) && $this->isset_and_not_null($prop_type) )
 				{
 					$upper_value=$this->getCSVValue('property_upper_value_'.$idx);
 					$is_quantitative=$this->getCSVValue('property_is_quantitative_'.$idx);
 					$unit=$this->getCSVValue('property_unit_'.$idx);
-					$this->handleFullProperty($prop_type , $lower_val, $upper_value, $is_quantitative, $unit);
+					$this->handleFullProperty($prop_type , $lower_val, $upper_value, $is_quantitative, $unit, $prop_applies_to);
 				}
 			}
 		}
@@ -2235,7 +2253,9 @@ class RMCATabDataDirect
 				$type=$this->getCSVValue($link_type_name);
 				$link_comment_name="link_comment_".$idx;
 				$comment=$this->getCSVValue($link_comment_name);
-				$this->handleLink($url, $type,  $comment);
+				$access_rights_name="link_access_rights_".$idx;
+				$access_rights=$this->getCSVValue($access_rights_name);
+				$this->handleLink($url, $type,  $comment, $access_rights);
 			}
 		}
         $this->addStorage();

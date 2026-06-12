@@ -252,7 +252,10 @@ class specimenwidgetComponents extends sfComponents
 
   public function executeSpecPart()
   {
+	
     $this->defineForm();
+	$this->default_part=$this->form->getDefault("specimen_part");
+	
   }
 
   public function executeComplete()
@@ -328,6 +331,11 @@ class specimenwidgetComponents extends sfComponents
   }
   
     public function executeMids()
+  {
+    $this->defineForm();
+  }
+  
+    public function executeOrthancCollection()
   {
     $this->defineForm();
   }

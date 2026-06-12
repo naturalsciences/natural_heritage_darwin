@@ -6,6 +6,7 @@
       <th><?php echo __('Subject'); ?></th>
       <th><?php echo __('Det. St.'); ?></th>
       <th><?php echo __("Identifiers") ; ?></th>
+	   <th><?php echo __("Count") ; ?></th>
     </tr>
   </thead>
   <?php foreach($identifications as $identification):?>
@@ -29,6 +30,9 @@
            <li><?php echo $identifier; ?></li>
         <?php endforeach ; ?>
         </ul>
+      </td>
+	  <td>
+        <?php echo $identification->getCountString();?>
       </td>
     </tr>
   </tbody>

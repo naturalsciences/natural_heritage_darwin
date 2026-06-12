@@ -31,25 +31,28 @@ function addIdentifierValue(people_ref,ref_table)
   return false;
 }
 </script>
+<div>
 <div id="identification_placeholder" style="visibility: hidden"></div>
-<table class="property_values" id="identifications">
+<table class="property_values" id="identifications" >
   <thead style="<?php echo ($form['Identifications']->count() || $form['newIdentification']->count())?'':'display: none;';?>" class="spec_ident_head">
     <tr>
       <th><?php echo $form['ident'];?></th>
       <th><?php echo __('Date'); ?></th>
       <th><?php echo __('Category');?></th>
       <th><?php echo __('Subject'); ?></th>
-      <th><?php echo __('Det. St.'); ?></th>
-      <th></th>
+      
+      
     </tr>
   </thead>   
     <?php $retainedKey = 0;?>
     <?php foreach($form['Identifications'] as $form_value):?>
-      <?php include_partial('specimen/spec_identifications', array('form' => $form_value, 'row_num'=>$retainedKey, 'module'=>$module, 'spec_id'=>$spec_id, 'individual_id'=>$individual_id, 'identification_id'=> $retainedKey));?>
+	 
+      <?php include_partial('specimen/spec_identifications', array('form' => $form_value, 'row_num'=>$retainedKey, 'module'=>$module, 'spec_id'=>$spec_id, 'individual_id'=>$individual_id, 'identification_id'=> $retainedKey, "is_new"=>false));?>
       <?php $retainedKey = $retainedKey+1;?>
     <?php endforeach;?>
     <?php foreach($form['newIdentification'] as $form_value):?>
-      <?php include_partial('specimen/spec_identifications', array('form' => $form_value, 'row_num'=>$retainedKey, 'module'=>$module, 'spec_id'=>$spec_id, 'individual_id'=>$individual_id));?>
+		
+      <?php include_partial('specimen/spec_identifications', array('form' => $form_value, 'row_num'=>$retainedKey, 'module'=>$module, 'spec_id'=>$spec_id, 'individual_id'=>$individual_id, "is_new"=>true));?>
       <?php $retainedKey = $retainedKey+1;?>
     <?php endforeach;?>
   <tfoot>
@@ -62,10 +65,98 @@ function addIdentifierValue(people_ref,ref_table)
     </tr>
   </tfoot>
 </table>
+</div>
+<?php
+
+	
+  ?>
 <?php echo javascript_include_tag('catalogue_people.js') ?>
 <script  type="text/javascript">
 
 $(document).ready(function () {
+	
+	
+	
+	$("body").on("click",".clear_identification",
+		function()
+		{
+			
+			var id_row=$(this).attr("id_row");
+			var name_ctrls="specimen[newIdentification]["+id_row.toString()+"]";
+			
+			parent_el = $(this).closest('tbody');
+
+			  $(parent_el).find('input[id$=\"_value_defined\"]').val('');
+			  $(parent_el).find('input[id$=\"_is_removed\"]').val('');
+
+			  $(parent_el).find('select').append("<option value=''></option>").val('');
+				//$(parent_el).html("");
+			  $(parent_el).hide();
+			  $(parent_el).remove();
+			  //reOrderIdent();
+			  reOrderIdentifiers("spec_ident_data_"+id_row)
+			  visibles = $('table#identifications tbody.spec_ident_data:visible').size();
+			  if(!visibles)
+			  {
+				$(this).closest('table#identifications').find('thead.spec_ident_head').hide();
+				$(this).closest('table#identifications').find('thead.spec_ident_head').attr("visibility", "hidden");
+				
+			  }
+			  
+
+			  $("#spec_ident_data_"+id_row).hide();
+			  $("#spec_ident_data_counter_"+id_row).hide();
+			  var to_remove=$('[name^="'+name_ctrls+'"]' );
+			  to_remove.remove();
+			 
+			
+		}
+	);
+	
+	$("body").on("click",".show_hide_ident_count",
+		function()
+		{
+			
+			var id_row=$(this).attr("id_row");
+			var list_rows =$("tr.toggle_count_ident[id_row='"+id_row+"']");	
+			list_rows.toggle();
+			
+		}
+	);
+	
+	
+	$("body").on("keypress", ".identification_subject", 
+		function()
+		{
+			console.log("click");
+			$(this).autocomplete({
+				  minLength: 3,
+				  source: function( request, response ) {
+					$.getJSON('<?php echo url_for('catalogue/completeName?table=taxonomy');?>', {term : request.term }, function( data) {
+						response( $.map( data, function( item ) {
+						  return {
+							label: item.label,
+							value: item.label
+						  }
+						}));
+
+					});
+				  }
+				});
+		}
+	
+	)
+	
+	<?php if(!$form->getObject()->isNew()): ?> 
+		console.log("EDIT");
+		
+		function init_ident_count()
+		{
+			console.log("init_ident_count");
+		}
+		
+		init_ident_count();
+	<?php endif; ?> 
 
     $('#add_identification').click(function()
     {
@@ -85,14 +176,29 @@ $(document).ready(function () {
         return false;
     });    
 
-       
+ 
 
 
     });
     
-    //ftheeten 2018 09 18
+    
 
-
+	function showHideCount_gen_ident(acc_fld, param, index, is_new)
+	{
+		var tmp_row=$('.identifications_count_max[id_row="'+index+'"]')
+		var test_check=acc_fld.val();
+		console.log(test_check);
+		if(test_check==1) 
+		{
+			
+			tmp_row.show();
+		}
+		else
+		{
+			tmp_row.hide();
+		}
+		
+  }
         onElementInserted('body', '.identification_subject', function(element)
         {
             $(element).val($("#specimen_taxon_ref_name").val());

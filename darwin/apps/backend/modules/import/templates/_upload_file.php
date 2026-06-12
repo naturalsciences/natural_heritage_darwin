@@ -40,7 +40,7 @@ $(document).ready(function ()
           <?php echo $form['format'] ?>
         </td>
       </tr>
-      <?php if($type != 'taxon'&&$type != 'lithostratigraphy'&& $type != 'taxonomy'&&$type != 'synonymies'&&$type != 'codes'&&$type != 'properties'&&$type != 'relationships') : ?>
+      <?php if($type != 'taxon'&&$type != 'lithostratigraphy'&& $type != 'taxonomy'&&$type != 'synonymies'&&$type != 'codes'&&$type != 'properties'&&$type != 'relationships'&&$type != 'identifications') : ?>
       <tr>
         <th><?php echo $form['collection_ref']->renderLabel() ?> :</th>
         <td>

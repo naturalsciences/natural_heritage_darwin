@@ -9,7 +9,7 @@
   </thead>
   <tbody>
 		<tr><th style="width:200px"><?php echo $form['identification_notion_concerned']->renderLabel();?></th><td><?php echo $form['identification_notion_concerned'];?></td></tr>
-		<tr><th style="width:200px"><?php echo $form['identification_value_defined']->renderLabel();?></th><td><?php echo $form['identification_value_defined'];?></td></tr>
+		<tr><th style="width:200px"><?php echo $form['identification_value_defined']->renderLabel();?></th><td><?php echo $form['identification_value_defined'];?> <i style="font-size: small;">use "*" as a Wildcard eg. "Accipiter*"</i></td></tr>
   <tbody>
 </table>
 <script type="text/javascript">

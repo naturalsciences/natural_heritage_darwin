@@ -314,25 +314,7 @@ $(document).ready(function () {
 
 
     $('.counter_date').text($('#gtu_temporal_information option').size()+" Value(s)");
-    /*$('.add_date').live('click', function(event)
-        {
-            //document.forms[0].submit();
-           //$("#submit").click();
-            //$("#submit").click();
-          // event.preventDefault();
-        }
-    );*/
-    
-     /*$('.remove_date').live('click', function(event)
-        {
-            
-             
-            $('#gtu_delete_mode').prop('checked', true);            
-            $("#submit").click();
-            //document.forms[0].submit();
-            event.preventDefault();
-        }
-    );*/
+  
     
     //ftheeten 2016 02 05
 
@@ -949,7 +931,7 @@ $(".convertDD2DMSGeneral").mouseleave(
 );
 
 //ftheeeten 20150610
-//to prevent accidental updates of coordibates on mouseleave (as the  GTU are always displayed in "edit" mode)
+//to prevent accidental updates of coordinates on mouseleave (as the  GTU are always displayed in "edit" mode)
 function detectBothValCoordExisting()
 {
 	var booleanAlreadyExisting=false;
@@ -1069,6 +1051,9 @@ function initUTM(name, zone, direction )
         //ftheteen 2016 09 15
         function update_point_on_map( lati, longi, accu)
         {
+			
+			lati=lati.replace(",",".");
+			longi=longi.replace(",",".");
             var latlng = L.latLng(lati, longi);
             drawPoint(latlng, accu );
         }

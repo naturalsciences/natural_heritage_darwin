@@ -353,6 +353,20 @@ class collectionActions extends DarwinActions
         return   $this->renderText(json_encode($this->execute_statistics_generic($request, "countries", true)));
   }
   
+      public function executeDisplay_statistics_categories(sfWebRequest $request)
+  {
+        $this->getResponse()->setHttpHeader('Content-type','application/json');
+        $this->setLayout('json');
+        return   $this->renderText(json_encode($this->execute_statistics_generic($request, "categories", true)));
+  }
+  
+  public function executeDisplay_statistics_specimen_parts(sfWebRequest $request)
+  {
+        $this->getResponse()->setHttpHeader('Content-type','application/json');
+        $this->setLayout('json');
+        return   $this->renderText(json_encode($this->execute_statistics_generic($request, "specimen_parts", true)));
+  }
+  
   public function executeDisplay_statistics_all_taxa(sfWebRequest $request)
   {
         $this->getResponse()->setHttpHeader('Content-type','application/json');
@@ -406,6 +420,24 @@ class collectionActions extends DarwinActions
 	$returned[]="";
     $returned[]="Countries in collection";
     $tmp=$this->execute_statistics_generic($request, "countries", true);
+    foreach($tmp as $row)
+    {
+        $returned[]=implode("\t", $row);
+    }
+    $returned[]="";
+	
+	$returned[]="";
+    $returned[]="Categories of objects";
+    $tmp=$this->execute_statistics_generic($request, "categories", true);
+    foreach($tmp as $row)
+    {
+        $returned[]=implode("\t", $row);
+    }
+    $returned[]="";
+	
+	$returned[]="";
+    $returned[]="Specimen parts";
+    $tmp=$this->execute_statistics_generic($request, "specimen_parts", true);
     foreach($tmp as $row)
     {
         $returned[]=implode("\t", $row);

@@ -1,4 +1,4 @@
-<?php slot('title', __( $form->isNew() ? 'Add specimen(s)' : 'Edit Specimen'));  ?>
+<?php slot('title', __( $form->isNew() ? 'Add' : 'Edit'));  ?>
 
 <script type="text/javascript">
 $(document).ready(function ()
@@ -43,10 +43,10 @@ $(document).ready(function ()
   <div class="page">
 
 <?php if($form->isNew()):?>
-  <h3 class="spec"><span class="title"><?php echo __( 'Add specimen(s)');?></span></h3>
+  <h3 class="spec"><span class="title"><?php echo __( 'Add');?></span></h3>
 <?php else:?>
   <h3 class="spec">
-  <span class="title"><?php echo __('Edit Specimen');?></span>
+  <span class="title"><?php echo __('Edit');?></span>
 	
     <span class="specimen_actions">
         <?php if($sf_user->isPinned($form->getObject()->getId(), 'specimen')) {
@@ -107,7 +107,7 @@ $(document).ready(function ()
         </ul>
       <?php endif;?>
 	  <div>
-		<?php if($user_rights_on_spec>=4): ?>
+		<?php if($user_rights_on_spec>=2): ?>
 			<span class="specimen_actions">
 				<?php print(__("Non public")); ?> : <?php print($form["restricted_access"]); ?>
 			</span>
@@ -341,6 +341,386 @@ if(duplicate_id!==undefined)
 	});
    
    browseErrors();
+   
+   
+    $(".set_accuracy").on("click",
+			function()
+			{
+				console.log("change (from main)")
+				var id_row=$(this).attr("id_row");
+				console.log(id_row);
+				var test_check=$(".set_accuracy[id_row='"+id_row+"']:checked").val();
+				console.log("val=");
+				console.log(test_check)
+				if(test_check==1) 
+				{
+					console.log("show");
+					$( ".ident_counter_max[id_row='"+id_row+"']" ).show();
+				}
+				else
+				{
+					$( ".ident_counter_max[id_row='"+id_row+"']" ).hide();
+				}
+			
+			}
+	   );
+	   
+	onElementInserted("body", ".set_accuracy", function(element) 
+	{
+
+			$(element).on("click", function() {
+				var id_row=$(element).attr("id_row");
+				console.log(id_row);
+				var test_check=$(".set_accuracy[id_row='"+id_row+"']:checked").val();
+				console.log("val=");
+				console.log(test_check)
+				if(test_check==1) 
+				{
+					console.log("show");
+					$( ".ident_counter_max[id_row='"+id_row+"']" ).show();
+				}
+				else
+				{
+					$( ".ident_counter_max[id_row='"+id_row+"']" ).hide();
+				}
+			});
+
+		});
+		
+		$(".set_accuracy_males").on("click",
+			function()
+			{
+				console.log("change (from main)")
+				var id_row=$(this).attr("id_row");
+				console.log(id_row);
+				var test_check=$(".set_accuracy_males[id_row='"+id_row+"']:checked").val();
+				console.log("val=");
+				console.log(test_check)
+				if(test_check==1) 
+				{
+					console.log("show");
+					$( ".ident_counter_males_max[id_row='"+id_row+"']" ).show();
+				}
+				else
+				{
+					$( ".ident_counter_males_max[id_row='"+id_row+"']" ).hide();
+				}
+			
+			}
+	   );
+	   
+	onElementInserted("body", ".set_accuracy_males", function(element) 
+	{
+
+			$(element).on("click", function() {
+				var id_row=$(element).attr("id_row");
+				console.log(id_row);
+				var test_check=$(".set_accuracy_males[id_row='"+id_row+"']:checked").val();
+				console.log("val=");
+				console.log(test_check)
+				if(test_check==1) 
+				{
+					console.log("show");
+					$( ".ident_counter_males_max[id_row='"+id_row+"']" ).show();
+				}
+				else
+				{
+					$( ".ident_counter_males_max[id_row='"+id_row+"']" ).hide();
+				}
+			});
+
+		});
+		
+	  $(".set_accuracy_females").on("click",
+			function()
+			{
+				console.log("change (from main)")
+				var id_row=$(this).attr("id_row");
+				console.log(id_row);
+				var test_check=$(".set_accuracy_females[id_row='"+id_row+"']:checked").val();
+				console.log("val=");
+				console.log(test_check)
+				if(test_check==1) 
+				{
+					console.log("show");
+					$( ".ident_counter_females_max[id_row='"+id_row+"']" ).show();
+				}
+				else
+				{
+					$( ".ident_counter_females_max[id_row='"+id_row+"']" ).hide();
+				}
+			
+			}
+	   );
+	   
+	onElementInserted("body", ".set_accuracy_females", function(element) 
+	{
+
+			$(element).on("click", function() {
+				var id_row=$(element).attr("id_row");
+				console.log(id_row);
+				var test_check=$(".set_accuracy_females[id_row='"+id_row+"']:checked").val();
+				console.log("val=");
+				console.log(test_check)
+				if(test_check==1) 
+				{
+					console.log("show");
+					$( ".ident_counter_females_max[id_row='"+id_row+"']" ).show();
+				}
+				else
+				{
+					$( ".ident_counter_females_max[id_row='"+id_row+"']" ).hide();
+				}
+			});
+
+		});
+		
+		$(".set_accuracy_juveniles").on("click",
+			function()
+			{
+				console.log("change (from main)")
+				var id_row=$(this).attr("id_row");
+				console.log(id_row);
+				var test_check=$(".set_accuracy_juveniles[id_row='"+id_row+"']:checked").val();
+				console.log("val=");
+				console.log(test_check)
+				if(test_check==1) 
+				{
+					console.log("show");
+					$( ".ident_counter_juveniles_max[id_row='"+id_row+"']" ).show();
+				}
+				else
+				{
+					$( ".ident_counter_juveniles_max[id_row='"+id_row+"']" ).hide();
+				}
+			
+			}
+	   );
+	   
+	onElementInserted("body", ".set_accuracy_juveniles", function(element) 
+	{
+
+			$(element).on("click", function() {
+				var id_row=$(element).attr("id_row");
+				console.log(id_row);
+				var test_check=$(".set_accuracy_juveniles[id_row='"+id_row+"']:checked").val();
+				console.log("val=");
+				console.log(test_check)
+				if(test_check==1) 
+				{
+					console.log("show");
+					$( ".ident_counter_juveniles_max[id_row='"+id_row+"']" ).show();
+				}
+				else
+				{
+					$( ".ident_counter_juveniles_max[id_row='"+id_row+"']" ).hide();
+				}
+			});
+
+		});
+		
+		//types
+		
+		$(".set_accuracy_types").on("click",
+			function()
+			{
+				console.log("change (from main)")
+				var id_row=$(this).attr("id_row");
+				console.log(id_row);
+				var test_check=$(".set_accuracy_types[id_row='"+id_row+"']:checked").val();
+				console.log("val=");
+				console.log(test_check)
+				if(test_check==1) 
+				{
+					console.log("show");
+					$( ".ident_counter_types_max[id_row='"+id_row+"']" ).show();
+				}
+				else
+				{
+					$( ".ident_counter_types_max[id_row='"+id_row+"']" ).hide();
+				}
+			
+			}
+	   );
+	   
+	onElementInserted("body", ".set_accuracy_types", function(element) 
+	{
+
+			$(element).on("click", function() {
+				var id_row=$(element).attr("id_row");
+				console.log(id_row);
+				var test_check=$(".set_accuracy_types[id_row='"+id_row+"']:checked").val();
+				console.log("val=");
+				console.log(test_check)
+				if(test_check==1) 
+				{
+					console.log("show");
+					$( ".ident_counter_types_max[id_row='"+id_row+"']" ).show();
+				}
+				else
+				{
+					$( ".ident_counter_types_max[id_row='"+id_row+"']" ).hide();
+				}
+			});
+
+		});
+	   
+	   //general
+	   $(".vident_counter_min").on("change",
+			function()
+			{
+				var tmp=$(this).val();
+				var id_row=$(this).attr("id_row");		
+				var test_acc=$(".set_accuracy[id_row='"+id_row+"']:checked").val();
+				if(test_acc!=1)
+				{
+					$(".vident_counter_max[id_row='"+id_row+"']").val(tmp);
+					
+				}			
+			}
+	   );
+	   
+	   onElementInserted("body", ".vident_counter_min", function(element) 
+	{
+
+			$(element).on("change", function() {
+				var tmp=$(element).val();
+				var id_row=$(element).attr("id_row");		
+				var test_acc=$(".set_accuracy[id_row='"+id_row+"']:checked").val();
+				if(test_acc!=1)
+				{
+					$(".vident_counter_max[id_row='"+id_row+"']").val(tmp);
+					
+				}	
+			});
+
+		});
+		
+		
+		
+		 //males
+	   $(".vident_counter_males_min").on("change",
+			function()
+			{
+				var tmp=$(this).val();
+				var id_row=$(this).attr("id_row");		
+				var test_acc=$(".set_accuracy_males[id_row='"+id_row+"']:checked").val();
+				if(test_acc!=1)
+				{
+					$(".vident_counter_males_max[id_row='"+id_row+"']").val(tmp);
+					
+				}			
+			}
+	   );
+	   
+	   onElementInserted("body", ".vident_counter_males_min", function(element) 
+	{
+
+			$(element).on("change", function() {
+				var tmp=$(element).val();
+				var id_row=$(element).attr("id_row");		
+				var test_acc=$(".set_accuracy_males[id_row='"+id_row+"']:checked").val();
+				if(test_acc!=1)
+				{
+					$(".vident_counter_males_max[id_row='"+id_row+"']").val(tmp);
+					
+				}	
+			});
+
+		});
+		
+		 //females
+	   $(".vident_counter_females_min").on("change",
+			function()
+			{
+				var tmp=$(this).val();
+				var id_row=$(this).attr("id_row");		
+				var test_acc=$(".set_accuracy_females[id_row='"+id_row+"']:checked").val();
+				if(test_acc!=1)
+				{
+					$(".vident_counter_females_max[id_row='"+id_row+"']").val(tmp);
+					
+				}			
+			}
+	   );
+	   
+	   onElementInserted("body", ".vident_counter_females_min", function(element) 
+	{
+
+			$(element).on("change", function() {
+				var tmp=$(element).val();
+				var id_row=$(element).attr("id_row");		
+				var test_acc=$(".set_accuracy_females[id_row='"+id_row+"']:checked").val();
+				if(test_acc!=1)
+				{
+					$(".vident_counter_females_max[id_row='"+id_row+"']").val(tmp);
+					
+				}	
+			});
+
+		});
+		
+		 //juveniles
+	   $(".vident_counter_juveniles_min").on("change",
+			function()
+			{
+				var tmp=$(this).val();
+				var id_row=$(this).attr("id_row");		
+				var test_acc=$(".set_accuracy_juveniles[id_row='"+id_row+"']:checked").val();
+				if(test_acc!=1)
+				{
+					$(".vident_counter_juveniles_max[id_row='"+id_row+"']").val(tmp);
+					
+				}			
+			}
+	   );
+	   
+	   onElementInserted("body", ".vident_counter_juveniles_min", function(element) 
+	{
+
+			$(element).on("change", function() {
+				var tmp=$(element).val();
+				var id_row=$(element).attr("id_row");		
+				var test_acc=$(".set_accuracy_juveniles[id_row='"+id_row+"']:checked").val();
+				if(test_acc!=1)
+				{
+					$(".vident_counter_juveniles_max[id_row='"+id_row+"']").val(tmp);
+					
+				}	
+			});
+
+		});
+		
+				 //types
+	   $(".vident_counter_types_min").on("change",
+			function()
+			{
+				var tmp=$(this).val();
+				var id_row=$(this).attr("id_row");		
+				var test_acc=$(".set_accuracy_types[id_row='"+id_row+"']:checked").val();
+				if(test_acc!=1)
+				{
+					$(".vident_counter_types_max[id_row='"+id_row+"']").val(tmp);
+					
+				}			
+			}
+	   );
+	   
+	onElementInserted("body", ".vident_counter_juveniles_min", function(element) 
+	{
+
+			$(element).on("change", function() {
+				var tmp=$(element).val();
+				var id_row=$(element).attr("id_row");		
+				var test_acc=$(".set_accuracy_types[id_row='"+id_row+"']:checked").val();
+				if(test_acc!=1)
+				{
+					$(".vident_counter_types_max[id_row='"+id_row+"']").val(tmp);
+					
+				}	
+			});
+
+		});
 });
 </script>
 </div></div>

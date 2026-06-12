@@ -84,4 +84,42 @@ class extLinksActions extends DarwinActions
         
   }
   
+   public function executeGet_ext_links_json($request)
+  {
+	  $results=Array();
+	  if($request->isMethod('post'))
+      {
+		  $criterias = $request->getPostParameters();
+		  if(array_key_exists("specimen_ids",  $criterias))
+		  {
+			  $record_ids_str=$criterias["specimen_ids"];
+			  if(strlen($record_ids_str)>0)
+			  {
+				$record_ids =json_decode($record_ids_str);
+				
+				if(count($record_ids)>0)
+				{
+					$results=Doctrine_Core::getTable('ExtLinks')->getRelatedLinks_as_array("specimens", $record_ids);
+				}
+			  }
+		  }
+	
+	  }
+	  elseif($request->isMethod('get'))
+      {
+		  if($request->hasParameter('specimen_ids'))
+		  {
+			  $specimen_ids=$request->getParameter('specimen_ids');
+			  $record_ids=explode(",", $specimen_ids);
+			  if(count($record_ids)>0)
+			  {
+				$results=Doctrine_Core::getTable('ExtLinks')->getRelatedLinks_as_array("specimens", $record_ids);
+			  }
+		  
+		  }
+	  }
+	  $this->getResponse()->setContentType('application/json');
+       return  $this->renderText(json_encode($results,JSON_UNESCAPED_SLASHES));
+  }
+  
 }

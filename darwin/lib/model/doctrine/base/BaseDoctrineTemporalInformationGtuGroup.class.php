@@ -40,6 +40,7 @@
  * @property string $comments
  * @property string $properties
  * @property integer $country_ref
+ * @property integer $expedition_ref
  * @property Tags $Tags
  * @property Doctrine_Collection $TagGroups
  * 
@@ -78,6 +79,7 @@
  * @method string                              getComments()                Returns the current record's "comments" value
  * @method string                              getProperties()              Returns the current record's "properties" value
  * @method integer                             getCountryRef()              Returns the current record's "country_ref" value
+ * @method integer                             getExpeditionRef()           Returns the current record's "expedition_ref" value
  * @method Tags                                getTags()                    Returns the current record's "Tags" value
  * @method Doctrine_Collection                 getTagGroups()               Returns the current record's "TagGroups" collection
  * @method DoctrineTemporalInformationGtuGroup setId()                      Sets the current record's "id" value
@@ -115,6 +117,7 @@
  * @method DoctrineTemporalInformationGtuGroup setComments()                Sets the current record's "comments" value
  * @method DoctrineTemporalInformationGtuGroup setProperties()              Sets the current record's "properties" value
  * @method DoctrineTemporalInformationGtuGroup setCountryRef()              Sets the current record's "country_ref" value
+ * @method DoctrineTemporalInformationGtuGroup setExpeditionRef()           Sets the current record's "expedition_ref" value
  * @method DoctrineTemporalInformationGtuGroup setTags()                    Sets the current record's "Tags" value
  * @method DoctrineTemporalInformationGtuGroup setTagGroups()               Sets the current record's "TagGroups" collection
  * 
@@ -242,6 +245,9 @@ abstract class BaseDoctrineTemporalInformationGtuGroup extends DarwinModel
              'type' => 'string',
              ));
         $this->hasColumn('country_ref', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('expedition_ref', 'integer', null, array(
              'type' => 'integer',
              ));
     }

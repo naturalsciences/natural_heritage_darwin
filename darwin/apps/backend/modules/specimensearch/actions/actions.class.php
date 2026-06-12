@@ -514,7 +514,7 @@ class specimensearchActions extends DarwinActions
               'part', 'object_name', 'part_status', 
               /*ftheeten 2019 01 28*/
               'col_peoples','ident_peoples', 'don_peoples',
-              
+              'comments',
               'building', 'floor', 'room', 'row', 'col' ,'shelf', 'container', 'container_type',  'container_storage', 'sub_container',
               'sub_container_type' , 'sub_container_storage', 'specimen_count','part_codes', 'loans',
               /*MA FT 2018 11 27*/
@@ -568,6 +568,7 @@ class specimensearchActions extends DarwinActions
     return $this->renderPartial('specimensearchwidget/codeline',array('code' => $form['Codes'][$number], 'row_line'=>$number));
   }
 
+// see also PreferenceFom.class.php and MySavedSearchesTable and MySavedSearchesTable.class.php  Doctrine_Core::getTable('MySavedSearches')->getAllFields('specimen') ;
   protected function defineFields($source)
   {
     $this->columns = array(
@@ -686,6 +687,9 @@ class specimensearchActions extends DarwinActions
         'part_status' => array(
           'specimen_status',
           $this->getI18N()->__('Part Status'),),
+		'comments' => array(
+          'comments',
+          $this->getI18N()->__('Comments'),),
         'building' => array(
           'building',
           $this->getI18N()->__('Building'),),
@@ -732,7 +736,7 @@ class specimensearchActions extends DarwinActions
 		'mids' => array(
           'mids_level',
           $this->getI18N()->__('MIDS level'),),
-
+		
         ));
       }
   }

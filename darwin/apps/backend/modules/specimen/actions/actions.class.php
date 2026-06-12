@@ -66,6 +66,20 @@ class specimenActions extends DarwinActions
   {
   }
 
+  public function executeGetSpecimenPart(sfWebRequest $request)
+  {
+      $type=$request->getParameter('type');
+	  if(strtolower(trim($type))=="all")
+	  {	
+		$items = Doctrine_Core::getTable('Specimens')->getDistinctParts();
+	  }
+	  else
+	  {
+		$items = Doctrine_Core::getTable('Specimens')->getDistinctPartsParent($type);
+      }   
+    return $this->renderPartial('options', array('items'=> $items ));
+  }
+
   public function executeGetStorage(sfWebRequest $request)
   {
     if($request->getParameter('item')=="container")
@@ -150,7 +164,7 @@ class specimenActions extends DarwinActions
     $order_by = intval($request->getParameter('order_by',0));
     $spec_form = $this->getSpecimenForm($request, false, 'spec_id');
     $spec_form->addIdentifications($number, $order_by);
-    return $this->renderPartial('spec_identifications',array('form' => $spec_form['newIdentification'][$number], 'row_num' => $number, 'module'=>'specimen', 'spec_id'=>$request->getParameter('spec_id',0),'individual_id'=>$request->getParameter('individual_id',0)));
+    return $this->renderPartial('spec_identifications',array('form' => $spec_form['newIdentification'][$number], 'row_num' => $number, 'module'=>'specimen', 'spec_id'=>$request->getParameter('spec_id',0),'individual_id'=>$request->getParameter('individual_id',0), "is_new"=>true));
   }
 
   public function executeAddIdentifier(sfWebRequest $request)
@@ -933,6 +947,8 @@ class specimenActions extends DarwinActions
     return $this->renderPartial('specimen/newmaintenance',array('form' => $form['newCollectionMaintenance'][$number], 'rownum'=>$number, 'module'=>'specimen', 'referenced_relation'=> 'specimens'));
     
  }
-  
+ 
+ 
+ 	
   
 }

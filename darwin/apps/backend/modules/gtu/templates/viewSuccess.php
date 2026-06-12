@@ -104,11 +104,10 @@
 					<div id="mouse-position"></div>    
 			</div>  
 				<select id="layer-select" >
-                       <option value="Aerial">Aerial</option>
-                       <option value="AerialWithLabels" selected>Aerial with labels</option>
-                       <option value="Road">Road (static)</option>
-                       <option value="RoadOnDemand">Road (dynamic)</option>
-					   <option value="OSM">OpenStreetMap</option>
+						<option value="OSM" selected>OpenStreetMap</option>
+                       <option value="World_Imagery">ESRI Image service</option>
+					   <option value="World_Topo_Map">ESRI World topo map</option>
+					   
 				</select>
                 <input type="button" id="export-png" value="Download PNG" ></input>
                 <input type="button" id="export-data" value="Download data" ></input>
@@ -203,15 +202,10 @@
 		
 		
 	  
-		var styles = [
-			'Road',
-			'RoadOnDemand',
-			'Aerial',
-			'AerialWithLabels'
-		  ];
+		var styles =["World_Imagery", "World_Topo_Map"];
 		var layers = [];
 		var i, ii;
-		for (i = 0, ii = styles.length; i < ii; ++i) {
+		/*for (i = 0, ii = styles.length; i < ii; ++i) {
 			layers.push(new ol.layer.Tile({
 			  visible: false,
 			  preload: Infinity,
@@ -223,7 +217,20 @@
 				// maxZoom: 19
 			  })
 			}));
+		}*/
+		for (i = 0, ii = styles.length; i < ii; ++i) {
+			layers.push(new ol.layer.Tile({
+			  visible: false,
+			  preload: Infinity,
+			  source: new ol.source.XYZ({
+						url:
+			  'http://server.arcgisonline.com/ArcGIS/rest/services/'+styles[i]+'/MapServer/tile/{z}/{y}/{x}',
+	
+			  maxZoom:12
+					})
+			}));
 		}
+		
 	   OSM_layer = new ol.layer.Tile({
 		    visible: false,
             source: new ol.source.OSM()

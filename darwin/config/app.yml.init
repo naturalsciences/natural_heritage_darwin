@@ -6,7 +6,7 @@ all:
     port: 389
     user: MyUserName@example.com
     pass: MYPassword
-    baseuser: cn=Users, dc=YourOganisation, dc=be
+    baseuser: ["cn=Users1, dc=yourorganisation, dc=be", "ou=Users2, dc=yourorganisation2, dc=be"]
     version: 3
     attr_displayname: displayName
     attr_mail: mail

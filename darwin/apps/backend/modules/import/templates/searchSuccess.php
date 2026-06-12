@@ -146,6 +146,10 @@
 			 <td>
                     <?php echo link_to("Load Synonyms",'import/loadsynonyms?id='.$import->getId()); ?>
 			</td>
+			<?php elseif($import->getState()==="to_be_loaded"&& !$import->getWorking()  &&  $format == 'identifications') :?>
+			 <td>
+                    <?php echo link_to("Load Identifications",'import/loadidentifications?id='.$import->getId()); ?>
+			</td>
 			<?php elseif($import->getState()==="to_be_loaded"&& !$import->getWorking()  &&  $format == 'properties') :?>
 			 <td>
                     <?php echo link_to("Load Properties",'import/loadproperties?id='.$import->getId()); ?>

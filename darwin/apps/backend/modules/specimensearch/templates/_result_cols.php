@@ -38,14 +38,33 @@ $(document).ready(function () {
 
 $(document).ready(function () {
 
+  var extra_test=function(ctrl)
+  {
+	  if($(ctrl).is(':checked'))
+	  {
+		  if($(ctrl).val()=="comments")
+	      {
+			  //console.log("show_comments");
+			  if(ajax_initialized["comments"]==false)
+			  {
+				ajaxForComments();
+			  }
+		  }
+		  
+	  }
+  }  
 
   $(".col_switcher :checkbox").change(function(){
     el = $('.col_' + $(this).val());
     if($(this).is(':checked'))
+	{
+		extra_test(this);
       el.show();
-    else
+    }
+	else
+	{	
       el.hide();
-
+    }
     //Update visible column list
     $('#specimen_search_filters_col_fields').val(getSearchColumnVisibilty());
   });

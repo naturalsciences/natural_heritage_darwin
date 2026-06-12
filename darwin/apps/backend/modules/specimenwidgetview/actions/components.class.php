@@ -162,7 +162,10 @@ class specimenwidgetviewComponents extends sfComponents
   }
 
   public function executeExtLinks()
-  {}
+  {	  
+	   $this->defineObject();
+	   $this->uuid=$this->spec->getUuid();
+  }
 
   public function executeSpecimensRelationships()
   {
@@ -248,6 +251,51 @@ class specimenwidgetviewComponents extends sfComponents
   public function executeMids()
   {
     $this->defineObject();
+  }
+  
+  public function executeOrthancCollection()
+  {
+	$this->orthanc_2d_links=Array();
+	//$this->orthanc_coll_keys=Array();
+    $this->defineObject();
+	$this->uuid=$this->spec->getUuid();
+	$this->links =  Doctrine_Core::getTable('ExtLinks')->findForTable("specimens", $this->eid);
+	
+	$this->has_2d_orthanc=false;
+	foreach($this->links as $link)
+	{
+		
+		if($link->getType()=="2d_orthanc_general")
+		{
+			$this->orthanc_2d_links[]=$link->getUrl();
+			$this->has_2d_orthanc=true;
+		}
+		
+	}
+	
+	$this->orthanc_2d_links_json=json_encode($this->orthanc_2d_links);
+	/*$link_test=Doctrine_Core::getTable("ExtLinks")->findForTable("collections", $coll_ref);
+	foreach($link_test as $link)
+	{
+		
+		if($link->getType()=="orthanc_iiif_collection")
+		{
+			if(!array_key_exists("orthanc_iiif_collection",$this->orthanc_coll_links ))
+			{
+				$this->orthanc_coll_links["orthanc_iiif_collection"]=Array();
+				$this->orthanc_coll_keys[]="orthanc_iiif_collection";
+			}
+			$this->orthanc_coll_links["orthanc_iiif_collection"][]=$link->getUrl();
+			if(count($this->orthanc_coll_links)>0)
+			{
+				$this->go_coll_orthanc=true;
+			}
+			$this->orthanc_coll_links=json_encode($this->orthanc_coll_links);
+		}
+	
+	}*/
+	//$this->orthanc_coll_links=null;
+
   }
   
 }

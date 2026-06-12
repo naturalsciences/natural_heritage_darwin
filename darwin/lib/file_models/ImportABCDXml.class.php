@@ -174,7 +174,10 @@ class ImportABCDXml implements ImportModelsInterface
         }       
         
         $line = fgets($fp);
-		$this->current_encoding=mb_detect_encoding($line);						 
+		$this->current_encoding=mb_detect_encoding($line);		
+		print("encoding");
+		print($this->current_encoding);
+		print($line);
         fclose($fp);
 		$fp = fopen($file, "r");
         $tabParser = new RMCATabDataDirect(
@@ -201,13 +204,16 @@ class ImportABCDXml implements ImportModelsInterface
 			{
 				if($this->csvLineIsNotEmpty($row))
 				{
+					$test_encoding_str=implode("\t", $row);
+					$tmp_encoding=mb_detect_encoding($test_encoding_str);
+					
 					if (array(null) !== $row) 
 					{ // ignore blank lines
 							//ftheeten 2018 02 28
 					     
 				
 						 
-						 $tabParser->parseLineAndSaveToDB($row,$this->current_encoding);
+						 $tabParser->parseLineAndSaveToDB($row,$tmp_encoding);
 					}
 				 }
 			}

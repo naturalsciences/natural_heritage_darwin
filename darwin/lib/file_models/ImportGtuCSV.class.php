@@ -115,7 +115,7 @@ class ImportGtuCSV
         $tags[17]="locality_text";
         $tags[18]="ecology_text";
         $tags[19]="habitat_text";
-         $tags[20]="ecology";
+        $tags[20]="ecology";
         $tags[21]="habitat";
 		$tags[22]="exact_site";
 		
@@ -125,6 +125,8 @@ class ImportGtuCSV
 		
 		//Cédric 2021
 		$tags[25]="biotope";
+		//Jim 2026
+		$tags[26]="wildlife_reserve";
 
 
 		$fields[0]="station_type";
@@ -744,7 +746,7 @@ class ImportGtuCSV
 					foreach($p_row as $key=>$value)
 					{
 						
-						$value=htmlspecialchars(trim($value));
+						$value=htmlspecialchars(trim($value), ENT_NOQUOTES | ENT_SUBSTITUTE | ENT_HTML401);
 						$field_name=$this->headers[strtolower($key)];
 					   
 						if(strlen(trim($value))>0)
@@ -761,7 +763,8 @@ class ImportGtuCSV
 									//print('!!!!!!!!!!!!!!!!!');
 									//print($value);
 									//print('????????????');
-									$this->addProperties_free($obj, htmlspecialchars(trim($field_name)), $value);
+									//$this->addProperties_free($obj, htmlspecialchars(trim($field_name)), $value);
+									$this->addProperties_free($obj, htmlspecialchars(trim($field_name)), $value, ENT_NOQUOTES | ENT_SUBSTITUTE | ENT_HTML401);
 							}
 						}
 						
@@ -932,6 +935,10 @@ class ImportGtuCSV
                 else if(in_array(strtolower($name_field),array("populated_place")))
                 {
                     $tag_obj->setGroupName("populated");
+                }
+				else if(in_array(strtolower($name_field),array("wildlife_reserve")))
+                {
+                    $tag_obj->setGroupName("area");
                 }
                 else
                 {

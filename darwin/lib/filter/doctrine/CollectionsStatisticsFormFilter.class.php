@@ -27,9 +27,22 @@ class CollectionsStatisticsFormFilter extends BaseCollectionsFormFilter
                                                                   );
     $this->widgetSchema->setNameFormat('statistics[%s]');
     $this->widgetSchema->setLabels(array('from_date' => 'Between',
-                                         'to_date' => 'and',
+                                         'to_date' => ' and ',
                                         )
                                   );
+								  
+	$this->widgetSchema['collecting_from_date'] = new widgetFormJQueryFuzzyDate($this->getDateItemOptions(),
+                                                                     array('class' => 'from_date', 'id' => 'collecting_from_date')
+                                                                    );
+    $this->widgetSchema['collecting_to_date'] = new widgetFormJQueryFuzzyDate($this->getDateItemOptions(),
+                                                                   array('class' => 'to_date', 'id' => 'collecting_to_date')
+                                                                  );
+    
+    $this->widgetSchema->setLabels(array('collecting_from_date' => 'Between',
+                                         'collecting_to_date' => ' and ',
+                                        )
+                                  );								  
+								  
     $this->widgetSchema['ig_num']->setAttributes(array('class'=>'small_size ig_num'));
     $this->validatorSchema['ig_num'] = new sfValidatorString(array('required' => false, 'trim' => true));
     $this->validatorSchema['from_date'] = new fuzzyDateValidator(array('required' => false,
@@ -57,7 +70,31 @@ class CollectionsStatisticsFormFilter extends BaseCollectionsFormFilter
                                             );
 	
 	
-  }
+		$this->validatorSchema['collecting_from_date'] = new fuzzyDateValidator(array('required' => false,
+                                                                       'from_date' => true,
+                                                                       'min' => $minDate,
+                                                                       'max' => $maxDate, 
+                                                                       'empty_value' => $dateLowerBound,
+                                                                      ),
+                                                                 array('invalid' => 'Date provided is not valid',)
+                                                                );
+    $this->validatorSchema['collecting_to_date'] = new fuzzyDateValidator(array('required' => false,
+                                                                     'from_date' => false,
+                                                                     'min' => $minDate,
+                                                                     'max' => $maxDate,
+                                                                     'empty_value' => $dateUpperBound,
+                                                                    ),
+                                                               array('invalid' => 'Date provided is not valid',)
+                                                              );
+    $this->validatorSchema->setPostValidator(new sfValidatorSchemaCompare('collecting_from_date', 
+                                                                          '<=', 
+                                                                          'collecting_to_date', 
+                                                                          array('throw_global_error' => true), 
+                                                                          array('invalid'=>'The "begin" date cannot be above the "end" date.')
+                                                                         )
+                                            );
+
+ }
   
   
   

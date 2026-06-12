@@ -201,6 +201,7 @@
 						<?php if($sf_user->getTaxonomicManager()) : ?>
 							<li><?php echo link_to(__('Synonymies'),'import/indexSynonymies');?></li>
 						<?php endif; ?>
+						<li><?php echo link_to(__('Identifications'),'import/indexIdentifications');?></li>
 						<li><?php echo link_to(__('Codes'),'import/indexCodes');?></li>
 						<li><?php echo link_to(__('Properties'),'import/indexProperties');?></li>
 						<li><?php echo link_to(__('Relations between specimens'),'import/indexRelationships');?></li>

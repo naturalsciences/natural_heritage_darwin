@@ -140,6 +140,19 @@
           <td>
              <a href="<?php echo url_for('gtu/andSearch');?>" class="and_tag"><?php echo image_tag('add_blue.png');?></a><?php print($form['tag_boolean']->render()); ?>
           </td>
+        </tr>		
+		
+		<tr>
+		  <th><?php echo $form['no_coordinates']->renderLabel() ?>:</th>
+		</tr>
+		<tr>
+          <td><?php echo $form['no_coordinates']->render() ?> </td>
+        </tr>
+		<tr>
+		  <th><?php echo $form['only_this_tag']->renderLabel() ?>:</th>
+		</tr>
+		<tr>
+          <td><?php echo $form['only_this_tag']->render() ?> </td>
         </tr>
 		<tr>		
 			<td colspan="3">
@@ -238,11 +251,9 @@
 					<div id="popup-content2"></div>
 				</div>				
 				<select id="layer-select-ol" >
-                       <option value="Aerial">Aerial</option>
-                       <option value="AerialWithLabels" selected>Aerial with labels</option>
-                       <option value="Road">Road (static)</option>
-                       <option value="RoadOnDemand">Road (dynamic)</option>
-					   <option value="OSM">OpenStreetMap</option>
+                        <option value="OSM" selected>OpenStreetMap</option>
+                       <option value="World_Imagery">ESRI Image service</option>
+					   <option value="World_Topo_Map">ESRI World topo map</option>
 				</select>
 				<?php echo $form['wkt_search']->renderLabel();?></td><td><?php echo $form['wkt_search']->render();?>
             
@@ -279,6 +290,8 @@
 		var content = document.getElementById('popup-content2');
 		var closer = document.getElementById('popup-closer2');
 		var overlay;
+		var styles =["World_Imagery", "World_Topo_Map"];
+		var layers = [];
 		
 		var openGtu=function(id)
 		{
@@ -476,27 +489,21 @@
 				});
 				scaleLineControl = new ol.control.ScaleLine();
 				
-				var styles = [
-					'Road',
-					'RoadOnDemand',
-					'Aerial',
-					'AerialWithLabels'
-				  ];
-				var layers = [];
-				var i, ii;
-				for (i = 0, ii = styles.length; i < ii; ++i) {
-					layers.push(new ol.layer.Tile({
-					  visible: false,
-					  preload: Infinity,
-					  source: new ol.source.BingMaps({
-						key: " <?php print(sfConfig::get('dw_bing_key'));?>",
-						imagerySet: styles[i],
-						// use maxZoom 19 to see stretched tiles instead of the BingMaps
-						// "no photos at this zoom level" tiles
-						// maxZoom: 19
-					  })
-					}));
-				}
+				
+				
+					for (i = 0, ii = styles.length; i < ii; ++i) 
+					{
+						layers.push(new ol.layer.Tile({
+						  visible: false,
+						  preload: Infinity,
+						  source: new ol.source.XYZ({
+									url:
+						  'http://server.arcgisonline.com/ArcGIS/rest/services/'+styles[i]+'/MapServer/tile/{z}/{y}/{x}',
+				
+						  maxZoom:12
+								})
+						}));
+					}
 			   OSM_layer = new ol.layer.Tile({
 					visible: false,
 					source: new ol.source.OSM()
@@ -616,25 +623,26 @@
 						
 				//select background
 			  var select = document.getElementById('layer-select-ol');
-				function onChange() {
-					console.log(select.value)
-					if(select.value!="OSM")
-					{
-						OSM_layer.setVisible(false);
-						var style = select.value;
-						for (var i = 0, ii = layers.length; i < ii; ++i) {
-						  layers[i].setVisible(styles[i] === style);
+				function onChange() 
+				{
+						//console.log(select.value)
+						if(select.value!="OSM")
+						{
+							OSM_layer.setVisible(false);
+							var style = select.value;
+							for (var i = 0, ii = layers.length; i < ii; ++i) {
+							  layers[i].setVisible(styles[i] === style);
+							}
+						}
+						else
+						{
+							console.log("trye");
+							for (var i = 0, ii = layers.length; i < ii; ++i) {
+							  layers[i].setVisible(false);
+							}
+							OSM_layer.setVisible(true);
 						}
 					}
-					else
-					{
-						console.log("try");
-						for (var i = 0, ii = layers.length; i < ii; ++i) {
-						  layers[i].setVisible(false);
-						}
-						OSM_layer.setVisible(true);
-					}
-				}
 				select.addEventListener('change', onChange);
 				map.on('dblclick', function(evt) { 
 		

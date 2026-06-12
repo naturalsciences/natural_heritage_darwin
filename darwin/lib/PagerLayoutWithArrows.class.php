@@ -47,20 +47,30 @@ class PagerLayoutWithArrows extends Doctrine_Pager_Layout
 			
 				function()
 				{					
-					var first=$('ul.pager_nav a:first-child');					
-					var shortcut_page=$('.page_shortcut').val();					
-					if(Math.floor(shortcut_page) == shortcut_page && $.isNumeric(shortcut_page))
-					{						
-						if(parseInt(shortcut_page)>=1&&parseInt(shortcut_page)<='".$last."')
-						{							
-							var tmplink_str=$(first[0]).attr('href');
-							var tmplink=tmplink_str.split('/');
-							tmplink[tmplink.length-1]=shortcut_page;
-							$('.hidden_shortcut').attr('href',tmplink.join('/'));
-							$('.hidden_shortcut').click();
-							
+					var first=$('ul.pager_nav a:first-child');	
+				    var tmp=$(this).closest('.pager_nav').find('.page_shortcut');	
+					if($(tmp).length>0)
+					{
+						var shortcut_page=$(tmp).val();		
+						if(Math.floor(shortcut_page) == shortcut_page && $.isNumeric(shortcut_page))
+						{						
+							if(parseInt(shortcut_page)>=1&&parseInt(shortcut_page)<='".$last."')
+							{							
+								var tmplink_str=$(first[0]).attr('href');
+								var tmplink=tmplink_str.split('/');
+								tmplink[tmplink.length-1]=shortcut_page;
+								$('.hidden_shortcut').attr('href',tmplink.join('/'));
+								$('.hidden_shortcut').click();
+								
+							}
 						}
 					}
+					else
+					{
+						
+						console.log('pas trouvé');
+					}	
+					
 				}
 			);
 		

@@ -28,7 +28,7 @@ People:
         additional_names: { type: string}
         birth_date_mask: { type: integer, notnull: true, default:0}
         birth_date: { type: string, notnull: true, default: '0001-01-01'}
-        gender: { type: enum, values: ['M','F'] }
+        gender: { type: enum, values: ['M','F', 'U'] }
         end_date_mask:  { type: integer, notnull: true, default:0}
         end_date: { type: string, notnull: true, default: '2038-12-31'}
         activity_date_from: { type: string, notnull: true, default: '0001-01-01'}
@@ -316,7 +316,29 @@ Identifications:
         value_defined:  { type: string}
         value_defined_indexed: { type: string}
         determination_status: { type: string}
+        #2025 11 07
+        identifications_count_min: { type: integer, notnull: true}
+        identifications_count_max: { type: integer, notnull: true}
+        #2025 11 07
+        identifications_count_males_min: { type: integer, notnull: true}
+        identifications_count_males_max: { type: integer, notnull: true}
+        #2025 11 07
+        identifications_count_females_min: { type: integer, notnull: true}
+        identifications_count_females_max: { type: integer, notnull: true}
+        #2025 11 07
+        identifications_count_juveniles_min: { type: integer, notnull: true}
+        identifications_count_juveniles_max: { type: integer, notnull: true}
+        #2025 11 07
+        identifications_count_types_min: { type: integer, notnull: true}
+        identifications_count_types_max: { type: integer, notnull: true}
         order_by: { type: integer, notnull: true, default: 1}
+        comments: { type: string}
+        import_ref: {type: integer}
+    relations:
+        Imports:
+            class: Imports
+            local: import_ref
+            foreign: id
 
 VernacularNames:
     columns:
@@ -359,7 +381,7 @@ Users:
         additional_names: { type: string}
         birth_date_mask: { type: integer, notnull: true, default:0}
         birth_date: { type: string, notnull: true, default: '0001-01-01'}
-        gender: { type: enum, values: ['M','F'] }
+        gender: { type: enum, values: ['M','F', 'U'] }
         db_user_type: { type: integer, notnull: true, default: 1}
         people_id: { type: integer}
         selected_lang: { type: string,notnull:true, default:en}
@@ -2288,6 +2310,7 @@ DoctrineTemporalInformationGtuGroup:
         comments: {type : string}
         properties: {type : string}
         country_ref: {type: integer}
+        expedition_ref: {type: integer}
     relations:
         Tags:
             local: id
@@ -2346,7 +2369,8 @@ DoctrineTemporalInformationGtuGroupUnnest:
         comments: {type : string}
         properties: {type : string}
         country_ref: {type: integer}
-
+        expedition_ref: {type: integer}
+        
 #ftheeten 2019 01 07
 DoctrineTemporalInformationGtuGroupTags:
     columns:
@@ -2401,7 +2425,8 @@ DoctrineTemporalInformationGtuGroupTags:
         properties: {type : string}
         tag : {type : string}
         tag_indexed : {type : string}
-        country_ref: {type: integer}    
+        country_ref: {type: integer}   
+        expedition_ref: {type: integer}        
 
 #ftheeten 2019 01 07
 DoctrineTemporalInformationGtuGroupUnnestTags:
@@ -2457,6 +2482,7 @@ DoctrineTemporalInformationGtuGroupUnnestTags:
         tag : {type : string}
         tag_indexed : {type : string}
         country_ref: {type: integer}
+        expedition_ref: {type: integer}
 
 StagingMultimedia:
     columns:
@@ -2768,3 +2794,24 @@ GtuToCountry:
             local: country_ref
             foreign: id
             class: GtuCountry
+            
+HierarchicalKeyword:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true}
+        word:  { type: string, notnull: true }
+        parent_ref:  { type: integer}  
+    relations:
+        HierarchicalKeyword:
+            local: parent_ref
+            foreign: parent_ref
+            class: HierarchicalKeyword
+            
+VHierarchicalKeywordRecursive:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true}
+        word:  { type: string, notnull: true }
+        parent_ref:  { type: integer}  
+        level:  { type: integer, notnull: true}  
+        parent_word:  { type: string, notnull: true }
+        hstore_hierarchy:  { type: string, notnull: true }
+    

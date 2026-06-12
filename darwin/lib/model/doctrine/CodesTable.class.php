@@ -88,13 +88,13 @@ class CodesTable extends DarwinTable
     return $q->execute();
   }
   
-   public function getByCodesFull( $code, $table='specimens',$case_insensitive=true)
+   public function getByCodesFull( $code, $table='specimens',$case_insensitive=true, $is_main=false)
   {
     
 	if($case_insensitive)
 	{
-		$clause="LOWER(concat( concat(COALESCE(code_prefix,''), COALESCE(code_prefix_separator,''),  COALESCE(code,'') ), 
-        COALESCE(code_suffix_separator,''), COALESCE(code_suffix,'')))=LOWER(?)";
+		$clause="REPLACE(LOWER(concat( concat(COALESCE(code_prefix,''), COALESCE(code_prefix_separator,''),  COALESCE(code,'') ), 
+        COALESCE(code_suffix_separator,''), COALESCE(code_suffix,''))), ' ','')=REPLACE(LOWER(?), ' ','')";
 	}
 	else
 	{
@@ -106,9 +106,13 @@ class CodesTable extends DarwinTable
         COALESCE(code_suffix_separator,''), COALESCE(code_suffix,'')) as full_code")->
       from('Codes')->
       where('referenced_relation = ?', $table)->
-      andWhere($clause,$code)->
-      orderBy('code_category ASC,  full_code_indexed ASC');
-	  
+      andWhere($clause,$code);
+     
+	  if($is_main)
+	  {
+		   $q->andWhere('code_category =?', 'main');
+	  }
+	  $q-> orderBy('code_category ASC,  full_code_indexed ASC');
     return $q->execute();
   }
   

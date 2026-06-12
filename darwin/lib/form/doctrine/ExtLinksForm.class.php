@@ -39,7 +39,7 @@ class ExtLinksForm extends BaseExtLinksForm
 	$this->widgetSchema['access_rights'] = new sfWidgetFormChoice(array(
       'choices' =>$access_rights_array,
     ));	
-    $this->validatorSchema['access_rights'] = new sfValidatorChoice(array("required"=> true,'choices'=>array_keys($access_rights_array)), array('required'=> 'Type of link is missing') );
+    $this->validatorSchema['access_rights'] = new sfValidatorChoice(array("required"=> true,'choices'=>array_keys($access_rights_array)), array('required'=> 'access right is missing') );
 	
 
 	//$this->validatorSchema['access_rights']= new sfValidatorPass();
